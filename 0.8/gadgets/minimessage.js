@@ -1,39 +1,35 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
  * @fileoverview Library for creating small dismissible messages in gadgets.
+ * Typical use cases:
+ * <ul>
+ * <li> status messages, e.g. loading, saving, etc.
+ * <li> promotional messages, e.g. new features, new gadget, etc.
+ * <li> debug/error messages, e.g. bad input, failed connection to server
+ * </ul>
  */
 
 /**
- * @class MiniMessage class,
- * used to create messages that will appear to the user within the
+ * @class MiniMessage class.
+ *
+ * @description Used to create messages that will appear to the user within the
  *     gadget.
- * Typical use cases:
- * <ul>
- * <li> Status messages &mdash; loading, saving, etc.
- * <li> Promotional messages &mdash; new features, new gadget, etc.
- * <li> Debug/error messages &mdash; bad input, failed connection to server, etc.
- * </ul>
- * @description Creates a MiniMessage.
- * @param {String} opt_moduleId Optional module ID
- * @param {HTMLElement} opt_container Optional HTML container element where
- *                                mini-messages will appear
+ * @param {String} opt_moduleId Optional module Id
+ * @param {Element} opt_container Optional HTML container element where
+ *                                mini-messages will appear.
  */
 gadgets.MiniMessage = function(opt_moduleId, opt_container) {};
 
@@ -44,7 +40,7 @@ gadgets.MiniMessage = function(opt_moduleId, opt_container) {};
  * @param {String | Object} message The message as an HTML string or DOM element
  * @param {Function} opt_callback Optional callback function to be called when
  *                                the message is dismissed
- * @return {HTMLElement} HTML element of the created message
+ * @return {Element} HTML element of the created message
  */
 gadgets.MiniMessage.prototype.createDismissibleMessage = function(message,
     opt_callback) {};
@@ -58,7 +54,7 @@ gadgets.MiniMessage.prototype.createDismissibleMessage = function(message,
  *                         the message
  * @param {Function} opt_callback Optional callback function to be called when
  *                                the message is dismissed
- * @return {HTMLElement} HTML element of the created message
+ * @return {Element} HTML element of the created message
  */
 gadgets.MiniMessage.prototype.createTimerMessage = function(message, seconds,
     opt_callback) {};
@@ -67,12 +63,12 @@ gadgets.MiniMessage.prototype.createTimerMessage = function(message, seconds,
  * Creates a static message that can only be dismissed programmatically
  * (by calling dismissMessage()).
  * @param {String | Object} message The message as an HTML string or DOM element
- * @return {HTMLElement} HTML element of the created message
+ * @return {Element} HTML element of the created message
  */
 gadgets.MiniMessage.prototype.createStaticMessage = function(message) {};
 
 /**
  * Dismisses the specified message.
- * @param {HTMLElement} message HTML element of the message to remove
+ * @param {Element} message HTML element of the message to remove
  */
 gadgets.MiniMessage.prototype.dismissMessage = function(message) {};

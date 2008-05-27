@@ -28,248 +28,156 @@ gadgets.io = function() {
     /**
      * Fetches content from the provided URL and feeds that content into the
      * callback function.
+     *
      * Example:
      * <pre>
      * var params = {};
-     * params[[]gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
+     * params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
      * gadgets.io.makeRequest(url, callback, params);
      * </pre>
      *
-     * <h4>Signed authorization</h4>
-     * 
-     * <p>
-     * If <code><em>opt_params</em>[[]gadgets.io.RequestParameters.AUTHORIZATION]</code> is set to
-     * <code>gadgets.io.AuthorizationType.SIGNED</code>,
-     * the container needs to vouch
-     * for the user's identity to
-     * the destination server.
-     * The container does this by doing the following:
-     * </p>
      *
-     * <ol>
-     * <li><p>
-     *   Removing any request parameters with names that begin with <code>oauth</code>, <code>xoauth</code>,
-     *      or <code>opensocial</code> (case insensitive). </p> </li>
-     * <li><p>
-     *   Adding the following parameters to the request query string:</p>
-     *   <dl>
-     *   <dt>
-     *      opensocial_viewer_id</dt>
-     *   <dd><em>Optional.</em><br />
-     *        The ID of the current viewer, which
-     *        matches the <code>getId()</code> value on the viewer person object.</dd>
-         <dt>
-     *      opensocial_owner_id</dt>
-     *   <dd><b>Required.</b><br />
-     *       The ID of the current owner, which
-     *        matches the <code>getId()</code> value on the owner person object.</dd>
-     *   <dt>
-     *      opensocial_app_url</dt>
-     *   <dd><b>Required.</b><br />
-     *       The URL of the application making the
+     * If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
+     * gadgets.io.AuthorizationType.SIGNED:
+     *
+     * This indicates that the container needs to vouch for the user's identity to
+     * the destination server.
+     *
+     * The container will
+     *   - remove any request parameters with names that begin with oauth, xoauth,
+     *      or opensocial (ignoring whether the parameter names are upper or lower
+     *      case.
+     *   - add the following parameters to the request query string
+     *      opensocial_viewer_id: (optional) The id of the current viewer, which
+     *        will match the getId() value on the viewer person object.
+     *      opensocial_owner_id: (required) The id of the current owner, which
+     *        will match the getId() value on the owner person object.
+     *      opensocial_app_url: (required) The URL of the application making the
      *        request. Containers may alias multiple application URLs to a single
      *        canonical application URL in the case where an application changes
-     *        URLs. </dd>
-     *    <dt> 
-     *      opensocial_instance_id</dt>
-     *   <dd><em>Optional.</em><br />
-     *        An opaque identifier
+     *        URLs.
+     *      opensocial_instance_id: (optional) An opaque identifier
      *        used to distinguish between multiple instances of the same application
      *        in a single container.  If a container does not allow multiple
      *        instances of the same application to coexist, this parameter may be
-     *        omitted.  The combination of <code>opensocial_app_url</code> and
-     *        <code>opensocial_instance_id</code>
-     *        uniquely identify an instance of an
-     *        application in a container. </dd>
-     *      <dt>
-     *      opensocial_app_id</dt>
-     *   <dd><em>Optional.</em><br />
-     *          An opaque identifier for the
-     *        application, unique to a particular container.  
-     *        Containers that wish to maintain backwards compatibility
+     *        omitted.  The combination of opensocial_app_url and
+     *        opensocial_instance_id will always uniquely identify an instance of an
+     *        application in a container.
+     *      opensocial_app_id: (optional) An opaque identifier for the
+     *        application, unique to a particular container.  This parameter is
+     *        optional.  Containers that wish to maintain backwards compatibility
      *        with the opensocial-0.7 specification may include this parameter.
-     *      <dt>
-     *      xoauth_public_key</dt>
-     *   <dd><em>Optional.</em><br />
-     *          An opaque identifier for the
+     *      xoauth_public_key: (optional) An opaque identifier for the
      *        public key used to sign the request.  This parameter may be omitted by
      *        containers that do not use public keys to sign requests, or if the
      *        container arranges other means of key distribution with the target of
-     *        the request. </dd>
-     *    </dl>
-     *   <li><p>
-     *      Signing the resulting request according to section 9 of the
-     *      <a href="http://oauth.net/core/1.0/#signing_process">OAuth
-     *       specification</a>.</p>
-     *    </li>
-     *    </ul>
+     *        the request.
+     *   - sign the resulting request according to section 9 of the OAuth
+    *       specification (http://oauth.net/core/1.0/#signing_process)
      *
-     * <h4>
-     * Key management for gadgets.io.AuthorizationType.SIGNED
-     * </h4>
+     * Key management for gadgets.io.AuthorizationType.SIGNED:
      *
-     * <p>
-     * If a container uses public keys to sign requests,
-     * the container may choose to
-     * use either self-signed certificates
-     * or certificates signed by a well-known
+     * If a container uses public keys to sign request, the container may choose to
+     * use either self-signed certificates or certificates signed by a well-known
+     * certificate authority. If a container does not distribute their oauth signing
+     * key over https, they should use a certificate signed by a well-known
      * certificate authority.
-     * If a container does not distribute its OAuth signing
-     * key over HTTPS, it should use a certificate signed by a well-known
-     * certificate authority.
-     * </p>
      *
-     * <p>
-     * The <code>commonName</code> attribute of the certificate should match the
+     * The commonName attribute of the certificate should match the
      * hostname of the container server, and should also match the value of
-     * the <code>oauth_consumer_key</code> parameter specified in the request.
-     * </p>
+     * the oauth_consumer_key parameter specified in the request.
      *
-     * <p>
-     * The container should make its public key available for download
+     * The container should make their public key available for download
      * at a well-known location. The location
-     * <code>https://<em>container-hostname</em>/opensocial/certificates/<em>xoauth_public_keyvalue</em></code>
+     * https://<container-hostname>/opensocial/certificates/<xoauth_public_keyvalue>
      * is recommended.
-     * </p>
      *
-     * <p>
      * Recipients of signed requests must verify that the signature on
      * the request is correct, and that the timestamp on the request is
-     * within a reasonable time window.  A time window of
-     * 5 minutes before and after
+     * within a reasonable time window.  A time window of +-5 minutes from
      * the current time is recommended.
-     * </p>
      *
-     * <p>
-     * Recipients of signed requests may use the <code>oauth_consumer_key</code> and
-     * <code>xoauth_public_key</code> parameters to automatically detect when a container
+     * Recipients of signed requests may use the oauth_consumer_key and
+     * xoauth_public_key parameters to automatically detect when a container
      * deploys new certificates.  If the container deploys certificates at a
      * well-known location, the recipient may automatically download the new
-     * certificate.  Recipients that automatically download new certificates
+     * certificate.  Recipients who automatically download new certificates
      * should cache the resulting certificates.
-     * </p>
      *
-     * <p>
      * If a container's certificate is not downloaded from
-     * <code>https://<em>container-hostname</em></code>, the recipient should verify that the
-     * certificate is signed by a well-known certificate authority before
+     * https://<container-hostname>, the recipient should verify that the
+     * certificat is signed by a well-known certificate authority before
      * trusting the certificate.
-     * </p>
      *
-     * <h4>OAuth authorization</h4>
      *
-     * <p>
-     * If <code><em>opt_params</em>[[]gadgets.io.RequestParameters.AUTHORIZATION]</code> is set
-     * to <code>gadgets.io.AuthorizationType.OAUTH</code>,
-     * the container needs to use OAuth to gain access to
+     * If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set
+     * to gadgets.io.AuthorizationType.OAUTH:
+     *
+     * This indicates that the container needs to use OAuth to gain access to
      * the resource specified in the request.
      * This may require that the gadget obtain the user's content by
      * directing the user to the service provider to gain access.
-     * </p>
      *
-     * <h4>Additional parameters</h4>
-     * <p>
-     * The following additional parameters may be specified in <code>opt_params</code>:
-     * </p>
-     * 
-     * <dl>
-     * <dt>
-     * gadgets.io.RequestParameters.OAUTH_SERVICE_NAME
-     * </dt>
-     * <dd>
-     *   The nickname the gadget uses to refer to the OAuth &lt;Service>
-     * element from its XML spec.  If unspecified, defaults to "".
-     * </dd>
+     * The following additional parameters may be specified in opt_params:
+     * gadgets.io.RequestParameters.OAUTH_SERVICE_NAME:
+     *   The nickname the gadget uses to refer to the OAuth <Service>
+     * element from it's XML spec.  If unspecified, defaults to "".
      *
-     * <dt>
-     * gadgets.io.RequestParameters.OAUTH_TOKEN_NAME
-     * </dt>
-     * <dd>
-     *   The nickname the gadget uses to refer to an OAuth token granting
+     * gadgets.io.RequestParameters.OAUTH_TOKEN_NAME:
+     *   The nickname the gadget uses to refer to an oauth token granting
      * access to a particular resources.  If unspecified, defaults to "".
      *   Gadgets can use multiple token names if they have access to
      * multiple resources from the same service provider.  For example, a
      * gadget with access to a contact list and a calendar might use a token
      * name of "contacts" to use the contact list token, and a contact list
      * of "calendar" to use the calendar token.
-     * </dd>
      *
-     * <dt>
      * gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN
-     * </dt>
-     * <dd>
      *    A service provider may be able to automatically provision a
      * gadget with a request token that is preapproved for access to a
      * resource. The gadget can use that token with the OAUTH_REQUEST_TOKEN
      * parameter. This parameter is optional.
-     * </dd>
      *
-     * <dt>
-     * gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET
-     * </dt>
-     * <dd>
+     * gadgets.io.RequestParamters.OAUTH_REQUEST_TOKEN_SECRET
      *   The secret corresponding to a preapproved request token.  This
      * parameter is optional.
-     * </dd>
-     * </dl>
      *
-     * <p>
      * If OAuth is used, the container should execute the OAuth protocol on
      * behalf of the gadget.  If the gadget has not registered a consumer key
      * for use with this service provider, the container may choose to use a
      * default RSA signing key corresponding to a well-known certificate to sign
      * requests.  If the container uses a default consumer key, it will include
-     * an additional OAuth parameter <code>xoauth_app_url</code> that identifies the gadget
+     * an additional OAuth parameter xoauth_app_url that identifies the gadget
      * making the request.
-     * </p>
      *
-     * <h4>The callback parameter</h4>
+     * The makeRequest callback parameter is passed a javascript object with
+     * several OAuth specific fields in addition to the normal values returned
+     * by makeRequest:
      *
-     * <p>
-     * The <code>makeRequest()</code> callback parameter
-     * is passed a javascript object with
-     * several OAuth-specific fields in addition to the normal values returned
-     * by <code>makeRequest()</code>:
-     * </p>
-     *
-     * <dl>
-     * <dt>
-     * "oauthApprovalUrl"</dt>
-     * <dd>
-     * If this value is specified, the user needs to
+     * "oauthApprovalUrl": if this value is specified, the user needs to
      * visit an external page to approve the gadget's request to access
      * data.  Use of a pop-up window to direct the user to the external
      * page is recommended.  Once the user has approved access, the gadget
-     * can repeat the makeRequest call to retrieve the data.
-     * </dd>
+     * can repeate the makeRequest call to retrieve the data.
      *
-     * <dt>
-     * "oauthError"</dt>
-     * <dd>
-     * If this value is specified, it indicates an OAuth-related
-     * error occurred.  The value will be one of a set of string
+     * "oauthError": if this value is specified, it indicates an OAuth
+     * related error occurred.  The value will one of a set of string
      * constants that can be used for programmatically detecting errors.
      * The constants are undefined for opensocial-0.8, but implementers
      * should attempt to agree on a set of useful constant values for
      * standardization in opensocial-0.9.
-     * </dd>
      *
-     * <dt>
-     * "oauthErrorText"</dt>
-     * <dd>If this value is specified, it indicates an
-     * OAuth-related error occurred.  The value is free-form text that
+     * "oauthErrorText": if this value is specified, it indicates an
+     * OAuth related error occurred.  The value is free-form text that
      * can be used to provide debugging information for gadget developers.
-     * </dd>
-     * </dl>
      *
      * @param {String} url The URL where the content is located
      * @param {Function} callback The function to call with the data from the
      *     URL once it is fetched
      * @param {Map.&lt;gadgets.io.RequestParameters, Object&gt;} opt_params
      *     Additional
-     *     <a href="gadgets.io.RequestParameters.html">request parameters</a> or
-     *     <a href="gadgets.io.ProxyUrlRequestParameters">proxy 
-     *       	request parameters</a>
+     *     <a href="gadgets.io.RequestParameters.html">parameters</a>
+     *     to pass to the request
      *
      * @member gadgets.io
      */
@@ -280,7 +188,7 @@ gadgets.io = function() {
      * (key=value&amp;...)
      *
      * @param {Object} fields The post fields you wish to encode
-     * @return {String} The processed post data; this includes a trailing
+     * @return {String} The processed post data; this will include a trailing
      *    ampersand (&)
      *
      * @member gadgets.io
@@ -291,7 +199,7 @@ gadgets.io = function() {
      * Gets the proxy version of the passed-in URL.
      *
      * @param {String} url The URL to get the proxy URL for
-     * @param {Map&lt;String, String>} opt_params Additional optional
+     * @param {Map<String, String} opt_params Additional optional
      *     <a href="gadgets.io.ProxyUrlRequestParameters.html">parameters</a>
      *     to pass to the request
      * @return {String} The proxied version of the URL
@@ -314,7 +222,7 @@ gadgets.io.RequestParameters = {
   /**
    * The method to use when fetching content from the URL;
    * defaults to <code>MethodType.GET</a></code>.
-   * Valid values are specified by
+   * Specified as a
    * <a href="gadgets.io.MethodType.html">MethodType</a>.
    *
    * @member gadgets.io.RequestParameters
@@ -385,9 +293,9 @@ gadgets.io.RequestParameters = {
 /**
  * @static
  * @class
- * Defines values for
- * <a href="#gadgets.io.RequestParameters.METHOD">
- * RequestParameters.METHOD</a>.
+ * Used by
+ * <a href="gadgets.io.RequestParameters.html">
+ * RequestParameters</a>.
  * @name gadgets.io.MethodType
  */
 gadgets.io.MethodType = {
@@ -398,25 +306,25 @@ gadgets.io.MethodType = {
   GET : 'GET',
 
   /**
-   * Container support for this method type is OPTIONAL.
+   * Not supported by all containers.
    * @member gadgets.io.MethodType
    */
   POST : 'POST',
 
   /**
-   * Container support for this method type is OPTIONAL.
+   * Not supported by all containers.
    * @member gadgets.io.MethodType
    */
   PUT : 'PUT',
 
   /**
-   * Container support for this method type is OPTIONAL.
+   * Not supported by all containers.
    * @member gadgets.io.MethodType
    */
   DELETE : 'DELETE',
 
   /**
-   * Container support for this method type is OPTIONAL.
+   * Not supported by all containers.
    * @member gadgets.io.MethodType
    */
   HEAD : 'HEAD'
@@ -451,7 +359,7 @@ gadgets.io.ContentType = {
   JSON : 'JSON',
 
   /**
-   * Returns a JSON representation of an RSS or Atom feed.
+   * Returns a JSON representation of a feed.
    * @member gadgets.io.ContentType
    */
   FEED : 'FEED'
@@ -480,7 +388,7 @@ gadgets.io.AuthorizationType = {
   SIGNED : 'SIGNED',
 
   /**
-   * The container will use OAuth for authentication.
+   * The container will use oauth for authentication.
    * @member gadgets.io.AuthorizationType
    */
   OAUTH : 'OAUTH'
@@ -497,12 +405,12 @@ gadgets.io.AuthorizationType = {
 gadgets.io.ProxyUrlRequestParameters = {
   /**
    * Attempt to use content caching. The Refresh Interval is the number
-   * of seconds we want to cache the given response. By default the HTTP headers
-   * will be respected. If there aren't any HTTP headers this value will default
-   * to 3600 (one hour). Note that Signed requests and objects with POST_DATA
+   * of seconds we want to cache the given response. By default the http headers
+   * will be respected. If there aren't any http headers this value will default
+   * to 3600(1 hour). Note that Signed requests and objects with POST_DATA
    * present will generally not be cached.
    *
-   * @member gadgets.io.ProxyUrlRequestParameters
+   * @member gadgets.io.AuthorizationType
    */
   REFRESH_INTERVAL : 'REFRESH_INTERVAL'
 };

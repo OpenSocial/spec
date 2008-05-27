@@ -1,19 +1,15 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements. See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership. The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /**
@@ -23,13 +19,7 @@
 
 /**
  * @static
- * @class Provides operations for dealing with views.
- *
- * <p>
- * <b>See also: </b>
- * <a href="gadgets.views.View.html"><code>gadgets.views.View</code></a>
- * </p>
- *
+ * @class Provides operations for dealing with Views.
  * @name gadgets.views
  */
 gadgets.views = gadgets.views || {};
@@ -42,8 +32,8 @@ gadgets.views = gadgets.views || {};
  * @param {gadgets.views.View} view The view to navigate to
  * @param {Map.&lt;String, String&gt;} opt_params Parameters to pass to the
  *     gadget after it has been navigated to on the surface
- * @param {String} opt_ownerId The ID of the owner of the page to navigate to;
- *     defaults to the current owner
+ * @param {String} opt_ownerId The id of the owner of the page to navigate to.
+ *     Defaults to the current owner.
  *
  * @member gadgets.views
  */
@@ -69,36 +59,18 @@ gadgets.views.getSupportedViews = function() {};
 
 /**
  * Returns the parameters passed into this gadget for this view. Does not
- * include all URL parameters, only the ones passed into
- * gadgets.views.requestNavigateTo.
+ * include all url parameters, only the ones passed into
+ * gadgets.views.requestNavigateTo
  *
  * @return {Map.&lt;String, String&gt;} The parameter map
  * @member gadgets.views
  */
 gadgets.views.getParams = function() {};
 
-/**
- * Binds a URL template with variables in the passed environment
- * to produce a URL string.
- * 
- * <p>
- * <b>See also: </b>
- * <a href="#View.getUrlTemplate"><code>View.getUrlTemplate()</code></a>
- * </p>
- * @param urlTemplate A url template for a container view
- * @param environment A set of named variables 
- *       (for example, [[]OWNER | PATH | PARAMS | NAME]) of type string.
- * 
- * @return {String} A URL string
- * @member gadgets.views
- */
-gadgets.views.bind = function() {};
-
 
 /**
  * @class Base interface for all view objects.
  * @name gadgets.views.View
- * @description PENDING: CONSTRUCTOR SHOULD NOT BE DOCUMENTED
  */
 
 /**
@@ -124,85 +96,6 @@ gadgets.views.View.prototype.getName = function() {};
  */
 gadgets.views.View.prototype.isOnlyVisibleGadget = function() {};
 
-/**
- * Returns a string URI template conforming to the
- * <a href=
- * "http://bitworking.org/projects/URI-Templates/spec/draft-gregorio-uritemplate-03.html">
- * IETF spec draft</a> with variables for substitution.
- *  
- * <p>
- * Four variables are supported:
- * </p>
- *
- * <dl>
- * <dt>name</dt>
- *   <dd>The name or ID of the application</dd>
- * <dt>owner</dt>
- *   <dd>The ID of the owner of the page</dd>
- * <dt>path</dt>
- *   <dd>An array of path steps</dd>
- * <dt>params</dt>
- *   <dd>Associative array or array[[]param1,value1,param2,value2,...]</dd>
- * </dl>
- *
- * <h4>Example</h4>
- * <p>
- * Here are two valid URL template strings:
- * </p>
- *
- * <pre>
- * http://container.com/{-list|/|name,owner,path}?{-join|&|params}
- * http://container.com/apps/{name}/{owner}{-prefix|/|path}{-opt|?os_|params}{-join|&os_|params} 
- * </pre>
- * 
- * <p>
- * Here are some parameters:
- * </p>
- *
- * <pre>{ 
- *   name : 'Wilma',
- *   owner : 'Betty',
- *   path : ['dino','car'], 
- *   params = { a : 'Barney', b : 'Fred'}
- * }</pre>
- *
- * <p>
- * With those parameters, the two example URL template strings
- * resolve to the following URLs:
- * </p>
- * 
- * <pre>
- * http://container.com/Wilma/Betty/dino/car?a=Barney&b=Fred
- * http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&os_b=Fred
- * </pre>
- *
- * <p>
- * <b>See also: </b>
- * <a href="#bind"><code>bind()</code></a>
- * </p>
- * 
- * @return {String} A template that can be used to construct URLs
- *     that navigate to this view
- * @member gadgets.views.View
- */
-gadgets.views.View.prototype.getUrlTemplate = function() {};
-
-/**
- * Binds the view's URL template with variables in the passed environment
- * to produce a URL string.
- * 
- * <p>
- * <b>See also: </b>
- * <a href="#getUrlTemplate"><code>getUrlTemplate()</code></a>
- * </p>
- *
- * @param environment A set of named variables 
- *       (for example, [[]OWNER | PATH | PARAMS | NAME]) of type string.
- * 
- * @return {String} A URL string
- * @member gadgets.views.View
- */
-gadgets.views.View.prototype.bind = function() {};
 
 /**
  * @static

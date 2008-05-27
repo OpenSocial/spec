@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Module">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ModulePrefs" minOccurs="0">
+          <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="Require" type="GadgetFeatureType"/>
+              <xs:element name="Optional" type="GadgetFeatureType"/>
+              <xs:element name="Preload">
+                <xs:complexType>
+                  <xs:attribute name="href" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Icon">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="mode">
+                        <xs:simpleType>
+                          <xs:restriction base="xs:string">
+                            <xs:enumeration value="base64"/>
+                          </xs:restriction>
+                        </xs:simpleType>
+                      </xs:attribute>
+                      <xs:attribute name="type" type="xs:string"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Locale">
+                <xs:complexType>
+                  <xs:attribute name="lang" type="xs:string" use="optional"/>
+                  <xs:attribute name="country" type="xs:string" use="optional"/>
+                  <xs:attribute name="messages" type="xs:string" use="optional"/>
+                  <xs:attribute name="language_direction">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="ltr"/>
+                        <xs:enumeration value="rtl"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="Link">
+                <xs:complexType>
+                  <xs:attribute name="href" type="xs:string" use="required"/>
+                  <xs:attribute name="rel" type="xs:string" use="required">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="gadgets.help"/>
+                        <xs:enumeration value="gadgets.support"/>
+                        <xs:enumeration value="icon"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+            </xs:choice>
+            <xs:attribute name="title" type="xs:string" use="optional"/>
+            <xs:attribute name="title_url" type="xs:string" use="optional"/>
+            <xs:attribute name="description" type="xs:string" use="optional"/>
+            <xs:attribute name="author" type="xs:string" use="optional"/>
+            <xs:attribute name="author_email" type="xs:string" use="optional"/>
+            <xs:attribute name="screenshot" type="xs:string" use="optional"/>
+            <xs:attribute name="thumbnail" type="xs:string" use="optional"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="UserPref" minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="EnumValue" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="value" type="xs:string" use="required"/>
+                  <xs:attribute name="display_value" type="xs:string" use="optional"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string" use="required"/>
+            <xs:attribute name="display_name" type="xs:string" use="optional"/>
+            <xs:attribute name="default_value" type="xs:string" use="optional"/>
+            <xs:attribute name="required" type="xs:string" use="optional"/>
+            <xs:attribute name="datatype" default="string">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="string"/>
+                  <xs:enumeration value="hidden"/>
+                  <xs:enumeration value="bool"/>
+                  <xs:enumeration value="enum"/>
+                  <xs:enumeration value="list"/>
+                  <xs:enumeration value="number"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Content" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="type" use="optional" default="html">
+                  <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                      <xs:enumeration value="html"/>
+                      <xs:enumeration value="url"/>
+                    </xs:restriction>
+                  </xs:simpleType>
+                </xs:attribute>
+                <xs:attribute name="href" type="xs:string" use="optional"/>
+                <xs:attribute name="view" type="xs:string" use="optional"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="GadgetFeatureType">
+    <xs:sequence>
+      <xs:element name="Param" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="feature" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:schema>
