@@ -27,17 +27,18 @@ gadgets.window = gadgets.window || {};
 
 /**
  * Detects the inner dimensions of a frame.
- * See: http://www.quirksmode.org/viewport/compatibility.html for more
- * information.
- * @returns {Object} An object with width and height properties.
+ * See <a href="http://www.quirksmode.org/dom/w3c_cssom.html">http://www.quirksmode.org/dom/w3c_cssom.html</a>
+ * for more information.
+ *
+ * @returns {Object} An object with width and height properties
  * @member gadgets.window
  */
 gadgets.window.getViewportDimensions = function() {};
 
 /**
- * Adjusts the gadget height
- * @param {Number} opt_height An optional preferred height in pixels. If not
- *     specified, will attempt to fit the gadget to its content.
+ * Adjusts the gadget height.
+ * @param {Number} opt_height An optional preferred height in pixels; If not
+ *     specified, will attempt to fit the gadget to its content
  * @member gadgets.window
  */
 gadgets.window.adjustHeight = function(opt_height) {};

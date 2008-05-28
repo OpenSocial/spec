@@ -59,7 +59,7 @@ gadgets.skins.Property = {
   BG_COLOR : 'BG_COLOR',
 
   /**
-   * The color that the main font should use.
+   * The color in which the main font should be rendered.
    * @member gadgets.skins.Property
    */
   FONT_COLOR : 'FONT_COLOR',

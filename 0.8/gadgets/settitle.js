@@ -22,8 +22,8 @@ gadgets.window = gadgets.window || {};
 
 /**
  * Sets the gadget title.
- * @param {String} title The preferred title.
- * @scope gadgets.window
+ * @param {String} title The preferred title
+ * @member gadgets.window
  */
 gadgets.window.setTitle = function(title) {};
 

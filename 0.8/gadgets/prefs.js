@@ -18,21 +18,11 @@
  * Provides access to user prefs, module dimensions, and messages.
  *
  * Clients can access their preferences by constructing an instance of
- * gadgets.Prefs and passing in their module id.  Example:
+ * gadgets.Prefs and passing in their module ID.  Example:
  *
  *   var prefs = new gadgets.Prefs();
  *   var name = prefs.getString("name");
  *   var lang = prefs.getLang();
- *
- * Modules with type=url can also use this library to parse arguments passed
- * by URL, but this is not the common case:
- *
- *   &lt;script src="http://apache.org/shindig/prefs.js"&gt;&lt;/script&gt;
- *   &lt;script&gt;
- *   gadgets.Prefs.parseUrl();
- *   var prefs = new gadgets.Prefs();
- *   var name = prefs.getString("name");
- *   &lt;/script&lg;
  */
 
 /**
@@ -40,7 +30,7 @@
  * Provides access to user preferences, module dimensions, and messages.
  *
  * Clients can access their preferences by constructing an instance of
- * gadgets.Prefs and passing in their module id.  Example:
+ * gadgets.Prefs and passing in their module ID.  Example:
  *
 <pre>var prefs = new gadgets.Prefs();
 var name = prefs.getString("name");
@@ -48,7 +38,7 @@ var lang = prefs.getLang();</pre>
  *
  * @description Creates a new Prefs object.
  * @param {String | Number} opt_moduleId An optional parameter specifying the
- *     module id to create prefs for; if not provided, the default module id
+ *     module ID to create prefs for; if not provided, the default module ID
  *     is used
  */
 gadgets.Prefs = function(opt_moduleId) {};
@@ -140,8 +130,8 @@ gadgets.Prefs.prototype.getCountry = function() {};
 gadgets.Prefs.prototype.getLang = function() {};
 
 /**
- * Gets the module id for the current instance.
+ * Gets the module ID for the current instance.
  *
- * @return {String | Number} The module id for this module instance
+ * @return {String | Number} The module ID for this module instance
  */
 gadgets.Prefs.prototype.getModuleId = function() {};

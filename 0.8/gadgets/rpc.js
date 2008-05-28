@@ -19,15 +19,17 @@
 
 /**
  * @static
- * @class Provides operations for making rpc calls.
+ * @class Provides operations for making remote procedure calls
+ * for gadget-to-container,
+ * container-to-gadget, and gadget-to-gadget communication.
  * @name gadgets.rpc
  */
 gadgets.rpc = function() {
   return /** @scope gadgets.rpc */ {
     /**
      * Registers an RPC service.
-     * @param {String} serviceName Service name to register.
-     * @param {Function} handler Service handler.
+     * @param {String} serviceName Service name to register
+     * @param {Function} handler Service handler
      *
      * @member gadgets.rpc
      */
@@ -35,23 +37,23 @@ gadgets.rpc = function() {
 
   /**
      * Unregisters an RPC service.
-     * @param {String} serviceName Service name to unregister.
+     * @param {String} serviceName Service name to unregister
      *
      * @member gadgets.rpc
      */
     unregister: function(serviceName) {},
 
   /**
-     * Registers a default service handler to processes all unknown
-     * RPC calls which fail silently by default.
-     * @param {Function} handler Service handler.
+     * Registers a default service handler to process all unknown
+     * remote procedure calls, which fail silently by default.
+     * @param {Function} handler Service handler
      *
      * @member gadgets.rpc
      */
     registerDefault: function(handler) {},
 
   /**
-     * Unregisters the default service handler. Future unknown RPC
+     * Unregisters the default service handler. Future unknown remote procedure
      * calls will fail silently.
      *
      * @member gadgets.rpc
@@ -60,12 +62,12 @@ gadgets.rpc = function() {
 
   /**
      * Calls an RPC service.
-     * @param {String} targetId Id of the RPC service provider.
-     *                          Empty if calling the parent container.
-     * @param {String} serviceName Service name to call.
+     * @param {String} targetId ID of the RPC service provider;
+     *                          empty if calling the parent container
+     * @param {String} serviceName Service name to call
      * @param {Function|null} callback Callback function (if any) to process
-     *                                 the return value of the RPC request.
-     * @param {*} var_args Parameters for the RPC request.
+     *                                 the return value of the RPC request
+     * @param {*} var_args Parameters for the RPC request
      *
      * @member gadgets.rpc
      */

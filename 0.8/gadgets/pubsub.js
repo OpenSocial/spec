@@ -30,6 +30,7 @@ gadgets.pubsub = gadgets.pubsub || {};
  *
  * @param {String} channelName The name of the channel
  * @param {String} message The message to publish
+ * @member gadgets.pubsub
  */
  gadgets.pubsub.publish = function(channelName, message) {};
 
@@ -39,7 +40,8 @@ gadgets.pubsub = gadgets.pubsub || {};
  *
  * @param {String} channelName The name of the channel
  * @param {Function} callback A function that will be called with the channel
- *     messages.
+ *     messages
+ * @member gadgets.pubsub
  */
  gadgets.pubsub.subscribe = function(channelName, callback) {};
 
@@ -48,7 +50,6 @@ gadgets.pubsub = gadgets.pubsub || {};
  * Unsubscribes the gadget from a message channel.
  *
  * @param {String} channelName The name of the channel
- * @param {Function} callback A function that will be called with the channel
- *     messages.
+ * @member gadgets.pubsub
  */
  gadgets.pubsub.unsubscribe = function(channelName) {};
