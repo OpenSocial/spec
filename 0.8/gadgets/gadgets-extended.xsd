@@ -11,6 +11,18 @@
               <xs:element name="Preload">
                 <xs:complexType>
                   <xs:attribute name="href" type="xs:string" use="required"/>
+                  <xs:attribute name="authz" default="none">
+                     <xs:simpleType>
+                      <xs:restriction base="xs:string">
+                        <xs:enumeration value="none"/>
+                        <xs:enumeration value="signed"/>
+                        <xs:enumeration value="oauth"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:attribute>
+                  <xs:attribute name="sign_owner" type="xs:boolean" default="true"/>
+                  <xs:attribute name="sign_viewer" type="xs:boolean" default="true"/>
+                  <xs:attribute name="views" type="xs:string" use="optional"/>
                 </xs:complexType>
               </xs:element>
               <xs:element name="Icon">
@@ -42,6 +54,16 @@
                       </xs:restriction>
                     </xs:simpleType>
                   </xs:attribute>
+                  <xs:element name="msg" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="name" type="xs:string" use="required"/>
+                          <xs:attribute name="desc" type="xs:string" use="optional"/>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
                 </xs:complexType>
               </xs:element>
               <xs:element name="Link">
@@ -141,6 +163,8 @@
                 </xs:attribute>
                 <xs:attribute name="href" type="xs:string" use="optional"/>
                 <xs:attribute name="view" type="xs:string" use="optional"/>
+                <xs:attribute name="preferred_height" type="xs:integer" use="optional"/>
+                <xs:attribute name="preferred_width" type="xs:integer" use="optional"/>
               </xs:extension>
             </xs:simpleContent>
           </xs:complexType>
