@@ -60,7 +60,7 @@ opensocial.IdSpec = function() {};
  */
 opensocial.IdSpec.Field = {
   /**
-   * A string representing the user id.
+   * A string or an array of strings representing the user id.
    * @member opensocial.IdSpec.Field
    */
   USER_ID : 'userId',

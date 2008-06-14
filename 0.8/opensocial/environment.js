@@ -104,7 +104,7 @@ opensocial.Environment.ObjectType = {
   /**
    * @member opensocial.Environment.ObjectType
    */
-  ACTIVITY_MEDIA_ITEM : 'activityMediaItem',
+  MEDIA_ITEM : 'mediaItem',
   /**
    * @member opensocial.Environment.ObjectType
    */

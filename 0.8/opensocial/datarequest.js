@@ -39,7 +39,7 @@
  * <pre>function requestMe() {
   var req = opensocial.newDataRequest();
   req.add(req.newFetchPersonRequest(
-            opensocial.DataRequest.PersonId.VIEWER),
+            opensocial.IdSpec.PersonId.VIEWER),
           "viewer");
   req.send(handleRequestMe);
 };
@@ -298,8 +298,8 @@ opensocial.DataRequest.DataRequestFields = {
  * Map&lt;String,
  * Object&gt;&gt; object. All of the data values returned will be valid json.
  *
- * @param {Array.&lt;opensocial.IdSpec&gt; | opensocial.IdSpec} idSpec An IdSpec, or array of IdSpecs
- *    used to specify which people to fetch. See also <a href="opensocial.IdSpec.html">IdSpec</a>.
+ * @param {opensocial.IdSpec} idSpec An IdSpec used to specify
+ *    which people to fetch. See also <a href="opensocial.IdSpec.html">IdSpec</a>.
  * @param {Array.&lt;String&gt; | String} keys The keys you want data for; this
  *     can be an array of key names, a single key name, or "*" to mean
  *     "all keys"
@@ -350,8 +350,8 @@ opensocial.DataRequest.prototype.newRemovePersonAppDataRequest = function(id,
  * When processed, returns a Collection&lt;Activity&gt;.
  * </p>
  *
- * @param {Array.&lt;opensocial.IdSpec&gt; | opensocial.IdSpec} idSpec An IdSpec, or array of IdSpecs
- *    used to specify which people to fetch. See also <a href="opensocial.IdSpec.html">IdSpec</a>.
+ * @param {opensocial.IdSpec} idSpec An IdSpec used to specify
+ *    which people to fetch. See also <a href="opensocial.IdSpec.html">IdSpec</a>.
  * @param {Map.&lt;opensocial.DataRequest.ActivityRequestFields, Object&gt;}
  *  opt_params
  *    Additional parameters

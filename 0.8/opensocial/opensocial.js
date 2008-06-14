@@ -70,7 +70,7 @@ var opensocial = function() {};
  * @member opensocial
  */
 opensocial.requestSendMessage = function(recipients, message, opt_callback,
-                                         opt_params) {};
+    opt_params) {};
 
 
 /**
@@ -110,7 +110,7 @@ opensocial.requestSendMessage = function(recipients, message, opt_callback,
  * @member opensocial
  */
 opensocial.requestShareApp = function(recipients, reason, opt_callback,
-                                      opt_params) {};
+    opt_params) {};
 
 
 /**
@@ -374,6 +374,19 @@ opensocial.EscapeType = {
   NONE : 'none'
 };
 
+
+/**
+ * Creates an IdSpec object.
+ *
+ * @param {Map.&lt;opensocial.IdSpec.Field, Object&gt;} parameters
+ *     Parameters defining the id spec.
+ * @return {opensocial.IdSpec} The new
+ *     <a href="opensocial.IdSpec.html">IdSpec</a> object
+ * @member opensocial
+ */
+opensocial.newIdSpec = function(params) {};
+
+
 /**
  * Creates a NavigationParameters object.
  * <p>
@@ -383,9 +396,10 @@ opensocial.EscapeType = {
  *
  *
  * @param {Map.&lt;opensocial.NavigationParameters.Field, Object&gt;} parameters
- *    Parameters defining the navigation
+ *     Parameters defining the navigation
  * @return {opensocial.NavigationParameters} The new
- *    <a href="opensocial.NavigationParameters.html">NavigationParameters</a> object
+ *     <a href="opensocial.NavigationParameters.html">NavigationParameters</a> 
+ *     object
  * @member opensocial
  */
 opensocial.newNavigationParameters = function(params) {};
