@@ -74,9 +74,13 @@ opensocial.IdSpec.Field = {
   /**
    * An optional numeric parameter, used to specify how many "hops"
    * are allowed between two people still considered part of the
-   * same group.
-   * Defaults to 1 (they must be the same person or
-   * directly be connected by the group).
+   * same group. This is 0 based, for example:
+   *
+   * A value of 0 means that the people are the same person.
+   * 1 would mean that the people were friends. 
+   * And 2 would mean that there was a friend of a friend relationship. 
+   *
+   * Defaults to 1 (they are both friends or directly in the same group).
    *
    * Not all containers will support networkDistances greater than 1.
    *
