@@ -179,11 +179,11 @@
         <xs:enumeration value="POST"/>
       </xs:restriction>
     </xs:attribute>
-    <xs:attribute name="param_location" use="optional" default="header">
+    <xs:attribute name="param_location" use="optional" default="auth-header">
       <xs:restriction base="xs:string">
-        <xs:enumeration value="header"/>
-        <xs:enumeration value="url"/>
-        <xs:enumeration value="body"/>
+        <xs:enumeration value="auth-header"/>
+        <xs:enumeration value="uri-query"/>
+        <xs:enumeration value="post-body"/>
       </xs:restriction>
     </xs:attribute>
   </xs:complexType>
