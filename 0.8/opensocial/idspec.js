@@ -29,15 +29,15 @@
  * Base interface for all id spec objects. Use this class when specifying which
  * people you want to fetch.
  *
- * For example, opensocial.createIdSpec({userId : 'VIEWER', groupId : 'FRIENDS'})
+ * For example, opensocial.newIdSpec({userId : 'VIEWER', groupId : 'FRIENDS'})
  *                means you are looking for all of the viewer's friends.
- * For example, opensocial.createIdSpec({userId : 'VIEWER',
+ * For example, opensocial.newIdSpec({userId : 'VIEWER',
  *                                       groupId : 'FRIENDS', networkDistance : 2})
  *                means you are looking for all of the viewer's friends of friends.
- * For example, opensocial.createIdSpec({userId : 'OWNER'})
+ * For example, opensocial.newIdSpec({userId : 'OWNER'})
  *                means you are looking for the owner.
  *
- * Private, see opensocial.createIdSpec() for usage.
+ * Private, see opensocial.newIdSpec() for usage.
  *
  * @private
  * @constructor
