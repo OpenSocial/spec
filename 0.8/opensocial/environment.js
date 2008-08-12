@@ -126,7 +126,7 @@ opensocial.Environment.ObjectType = {
 
 /**
  * Returns true if the specified field is supported in this container on the
- * given object type.
+ * given object type, and returns false otherwise.
  *
  * @param {opensocial.Environment.ObjectType} objectType
  *    The <a href="opensocial.Environment.ObjectType.html">object type</a>
