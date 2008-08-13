@@ -56,7 +56,8 @@ opensocial.Person.Field = {
   NAME : 'name',
 
   /**
-   * A String representing the person's nickname.
+   * A String representing the person's nickname. This represents the casual 
+   * way to address this person in real life. 
    * @member opensocial.Person.Field
    */
   NICKNAME : 'nickname',
