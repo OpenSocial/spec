@@ -125,9 +125,9 @@ opensocial.ResponseItem.prototype.getErrorMessage = function() {};
 
 
 /**
- * Returns the original data request.
+ * Returns the original data request item.
  *
- * @return {opensocial.DataRequest} The data request used to fetch this data
+ * @return {Object} The request item used to fetch this data
  *    response
  */
 opensocial.ResponseItem.prototype.getOriginalDataRequest = function() {};
