@@ -378,7 +378,21 @@ gadgets.io.RequestParameters = {
    *
    * @member gadgets.io.RequestParameters
    */
-  GET_SUMMARIES : 'GET_SUMMARIES'
+  GET_SUMMARIES : 'GET_SUMMARIES',
+
+  /**
+   * Explicitly sets the lifespan of cached content. The Refresh Interval is
+   * the number of seconds the container should cache the given response. By
+   * default, the HTTP caching headers will be respected for fetched content.
+   * If the refresh interval is set, this value will take precedence over any
+   * HTTP cache headers.  If this value is not set and there are no HTTP
+   * caching headers specified, this value will default to 3600 (one hour).
+   * Note that Signed requests and objects with POST_DATA present will
+   * generally not be cached.
+   *
+   * @member gadgets.io.RequestParameters
+   */
+  REFRESH_INTERVAL : 'REFRESH_INTERVAL'
 };
 
 
@@ -496,11 +510,14 @@ gadgets.io.AuthorizationType = {
  */
 gadgets.io.ProxyUrlRequestParameters = {
   /**
-   * Attempt to use content caching. The Refresh Interval is the number
-   * of seconds we want to cache the given response. By default the HTTP headers
-   * will be respected. If there aren't any HTTP headers this value will default
-   * to 3600 (one hour). Note that Signed requests and objects with POST_DATA
-   * present will generally not be cached.
+   * Explicitly sets the lifespan of cached content. The Refresh Interval is
+   * the number of seconds the container should cache the given response. By
+   * default, the HTTP caching headers will be respected for fetched content.
+   * If the refresh interval is set, this value will take precedence over any
+   * HTTP cache headers.  If this value is not set and there are no HTTP
+   * caching headers specified, this value will default to 3600 (one hour).
+   * Note that Signed requests and objects with POST_DATA present will
+   * generally not be cached.
    *
    * @member gadgets.io.ProxyUrlRequestParameters
    */
