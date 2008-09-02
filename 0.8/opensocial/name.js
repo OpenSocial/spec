@@ -45,42 +45,42 @@ opensocial.Name = function() {};
 opensocial.Name.Field = {
   /**
    * The family name, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'familyName'.
    * @member opensocial.Name.Field
    */
   FAMILY_NAME : 'familyName',
 
   /**
    * The given name, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'givenName'.
    * @member opensocial.Name.Field
    */
   GIVEN_NAME : 'givenName',
 
   /**
    * The additional name, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'additionalName'.
    * @member opensocial.Name.Field
    */
   ADDITIONAL_NAME : 'additionalName',
 
   /**
    * The honorific prefix, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'honorificPrefix'.
    * @member opensocial.Name.Field
    */
   HONORIFIC_PREFIX : 'honorificPrefix',
 
   /**
    * The honorific suffix, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'honorificSuffix'.
    * @member opensocial.Name.Field
    */
   HONORIFIC_SUFFIX : 'honorificSuffix',
 
   /**
    * The unstructured name, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'unstructured'.
    * @member opensocial.Name.Field
    */
   UNSTRUCTURED : 'unstructured'

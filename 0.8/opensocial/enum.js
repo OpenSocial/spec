@@ -95,21 +95,45 @@ opensocial.Enum.prototype.getDisplayValue = function() {};
  * @name opensocial.Enum.Smoker
  */
 opensocial.Enum.Smoker = {
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'NO'.
+   * @member opensocial.Enum.Smoker 
+   */
   NO : 'NO',
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'YES'.
+   * @member opensocial.Enum.Smoker 
+   */
   YES : 'YES',
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'SOCIALLY'.
+   * @member opensocial.Enum.Smoker 
+   */
   SOCIALLY : 'SOCIALLY',
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'OCCASIONALLY'.
+   * @member opensocial.Enum.Smoker 
+   */
   OCCASIONALLY : 'OCCASIONALLY',
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'REGULARLY'.
+   * @member opensocial.Enum.Smoker 
+   */
   REGULARLY : 'REGULARLY',
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'HEAVILY'.
+   * @member opensocial.Enum.Smoker 
+   */
   HEAVILY : 'HEAVILY',
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'QUITTING'.
+   * @member opensocial.Enum.Smoker 
+   */
   QUITTING : 'QUITTING',
-  /** @member opensocial.Enum.Smoker */
+  /** 
+   * This field may be used interchangeably with the string 'QUIT'.
+   * @member opensocial.Enum.Smoker 
+   */
   QUIT : 'QUIT'
 };
 
@@ -126,21 +150,45 @@ opensocial.Enum.Smoker = {
  * @name opensocial.Enum.Drinker
  */
 opensocial.Enum.Drinker = {
-  /** @member opensocial.Enum.Drinker */
+  /** 
+   * This field may be used interchangeably with the string 'NO'.
+   * @member opensocial.Enum.Drinker 
+   */
   NO : 'NO',
-  /** @member opensocial.Enum.Drinker */
+  /** 
+   * This field may be used interchangeably with the string 'YES'.
+   * @member opensocial.Enum.Drinker 
+   */
   YES : 'YES',
-  /** @member opensocial.Enum.Drinker */
+  /** 
+   * This field may be used interchangeably with the string 'SOCIALLY'.
+   * @member opensocial.Enum.Drinker 
+   */
   SOCIALLY : 'SOCIALLY',
-  /** @member opensocial.Enum.Drinker */
+  /** 
+   * This field may be used interchangeably with the string 'OCCASIONALLY'. 
+   * @member opensocial.Enum.Drinker 
+   */
   OCCASIONALLY : 'OCCASIONALLY',
-  /** @member opensocial.Enum.Drinker */
+  /**
+   * This field may be used interchangeably with the string 'REGULARLY'.  
+   * @member opensocial.Enum.Drinker 
+   */
   REGULARLY : 'REGULARLY',
-  /** @member opensocial.Enum.Drinker */
+  /** 
+   * This field may be used interchangeably with the string 'HEAVILY'.
+   * @member opensocial.Enum.Drinker 
+   */
   HEAVILY : 'HEAVILY',
-  /** @member opensocial.Enum.Drinker */
+  /** 
+   * This field may be used interchangeably with the string 'QUITTING'.
+   * @member opensocial.Enum.Drinker 
+   */
   QUITTING : 'QUITTING',
-  /** @member opensocial.Enum.Drinker */
+  /** 
+   * This field may be used interchangeably with the string 'QUIT'.
+   * @member opensocial.Enum.Drinker 
+   */
   QUIT : 'QUIT'
 };
 
@@ -157,9 +205,15 @@ opensocial.Enum.Drinker = {
  * @name opensocial.Enum.Gender
  */
 opensocial.Enum.Gender = {
-  /** @member opensocial.Enum.Gender */
+  /** 
+   * This field may be used interchangeably with the string 'MALE'.
+   * @member opensocial.Enum.Gender 
+   */
   MALE : 'MALE',
-  /** @member opensocial.Enum.Gender */
+  /** 
+   * This field may be used interchangeably with the string 'FEMALE'.
+   * @member opensocial.Enum.Gender 
+   */
   FEMALE : 'FEMALE'
 };
 
@@ -176,17 +230,35 @@ opensocial.Enum.Gender = {
  * @name opensocial.Enum.LookingFor
  */
 opensocial.Enum.LookingFor = {
-  /** @member opensocial.Enum.LookingFor */
+  /** 
+   * This field may be used interchangeably with the string 'DATING'.
+   * @member opensocial.Enum.LookingFor 
+   */
   DATING : 'DATING',
-  /** @member opensocial.Enum.LookingFor */
+  /** 
+   * This field may be used interchangeably with the string 'FRIENDS'.
+   * @member opensocial.Enum.LookingFor 
+   */
   FRIENDS : 'FRIENDS',
-  /** @member opensocial.Enum.LookingFor */
+  /** 
+   * This field may be used interchangeably with the string 'RELATIONSHIP'.
+   * @member opensocial.Enum.LookingFor 
+   */
   RELATIONSHIP : 'RELATIONSHIP',
-  /** @member opensocial.Enum.LookingFor */
+  /** 
+   * This field may be used interchangeably with the string 'NETWORKING'.
+   * @member opensocial.Enum.LookingFor 
+   */
   NETWORKING : 'NETWORKING',
-  /** @member opensocial.Enum.LookingFor */
+  /** 
+   * This field may be used interchangeably with the string 'ACTIVITY_PARTNERS'.
+   * @member opensocial.Enum.LookingFor 
+   */
   ACTIVITY_PARTNERS : 'ACTIVITY_PARTNERS',
-  /** @member opensocial.Enum.LookingFor */
+  /** 
+   * This field may be used interchangeably with the string 'RANDOM'.
+   * @member opensocial.Enum.LookingFor 
+   */
   RANDOM : 'RANDOM'
 };
 
@@ -205,32 +277,41 @@ opensocial.Enum.LookingFor = {
 opensocial.Enum.Presence = {
   /**
    * The entity or resource is off line.
+   * This field may be used interchangeably with the string 'OFFLINE'.
+   *
    * @member opensocial.Enum.Presence
    */
   OFFLINE : 'OFFLINE',
   /**
    * The entity or resource is on line.
+   * This field may be used interchangeably with the string 'ONLINE'.
+   *
    * @member opensocial.Enum.Presence
    */
   ONLINE : 'ONLINE',
   /**
    * The entity or resource is temporarily away.
+   * This field may be used interchangeably with the string 'AWAY'.
+   *
    * @member opensocial.Enum.Presence
    */
   AWAY : 'AWAY',
   /**
    * The entity or resource is actively interested in chatting.
+   * This field may be used interchangeably with the string 'CHAT'.
    * @member opensocial.Enum.Presence
    */
   CHAT : 'CHAT',
   /**
    * The entity or resource is busy (dnd = "Do Not Disturb").
+   * This field may be used interchangeably with the string 'DND'.
    * @member opensocial.Enum.Presence
    */
   DND : 'DND',
   /**
    * The entity or resource is away for an extended period
    * (xa = "eXtended Away").
+   * This field may be used interchangeably with the string 'XA'.
    * @member opensocial.Enum.Presence
    */
   XA : 'XA'

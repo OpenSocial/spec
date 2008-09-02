@@ -50,11 +50,20 @@ opensocial.MediaItem = function() {};
  * @name opensocial.MediaItem.Type = {
  */
 opensocial.MediaItem.Type = {
-  /** @member opensocial.MediaItem.Type */
+  /** 
+   * This field may be used interchangeably with the string 'image'.
+   * @member opensocial.MediaItem.Type 
+   */
   IMAGE : 'image',
-  /** @member opensocial.MediaItem.Type */
+  /** 
+   * This field may be used interchangeably with the string 'video'.
+   * @member opensocial.MediaItem.Type 
+   */
   VIDEO : 'video',
-  /** @member opensocial.MediaItem.Type */
+  /** 
+   * This field may be used interchangeably with the string 'audio'.
+   * @member opensocial.MediaItem.Type 
+   */
   AUDIO : 'audio'
 }
 
@@ -77,18 +86,21 @@ opensocial.MediaItem.Field = {
    * The type of media, specified as a
    * <a href="opensocial.MediaItem.Type.html">
    * <code>MediaItem.Type</code></a> object.
+   * This field may be used interchangeably with the string 'type'.
    * @member opensocial.MediaItem.Field
    */
   TYPE : 'type',
 
   /**
    * The MIME type of media, specified as a string.
+   * This field may be used interchangeably with the string 'mimeType'.
    * @member opensocial.MediaItem.Field
    */
   MIME_TYPE : 'mimeType',
 
   /**
    * A string specifying the URL where the media can be found.
+   * This field may be used interchangeably with the string 'url'.
    * @member opensocial.MediaItem.Field
    */
   URL : 'url'

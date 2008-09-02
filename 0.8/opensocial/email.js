@@ -46,14 +46,14 @@ opensocial.Email.Field = {
   /**
    * The email type or label, specified as a string.
    * Examples: work, my favorite store, my house, etc.
-   *
+   * This field may be used interchangeably with the string 'type'.
    * @member opensocial.Email.Field
    */
   TYPE : 'type',
 
   /**
    * The email address, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'address'.
    * @member opensocial.Email.Field
    */
   ADDRESS : 'address'

@@ -62,6 +62,7 @@ opensocial.IdSpec.Field = {
   /**
    * A string or an array of strings representing the user id. Can be 
    * one of the opensocial.IdSpec.PersonId values. 
+   * This field may be used interchangeably with the string 'userId'.
    * @member opensocial.IdSpec.Field
    */
   USER_ID : 'userId',
@@ -69,6 +70,7 @@ opensocial.IdSpec.Field = {
   /**
    * A string representing the group id or one of the
    * opensocial.IdSpec.GroupId values. Defaults to SELF.
+   * This field may be used interchangeably with the string 'groupId'.
    * @member opensocial.IdSpec.Field
    */
   GROUP_ID : 'groupId',
@@ -86,6 +88,7 @@ opensocial.IdSpec.Field = {
    *
    * Not all containers will support networkDistances greater than 1.
    *
+   * This field may be used interchangeably with the string 'networkDistance'.
    * @member opensocial.IdSpec.Field
    */
   NETWORK_DISTANCE : 'networkDistance'
@@ -100,10 +103,12 @@ opensocial.IdSpec.Field = {
  */
 opensocial.IdSpec.PersonId = {
  /**
+  * This field may be used interchangeably with the string 'OWNER'.
   * @member opensocial.IdSpec.PersonId
   */
   OWNER : 'OWNER',
  /**
+  * This field may be used interchangeably with the string 'VIEWER'.
   * @member opensocial.IdSpec.PersonId
   */
   VIEWER : 'VIEWER'
@@ -118,14 +123,17 @@ opensocial.IdSpec.PersonId = {
  */
 opensocial.IdSpec.GroupId = {
  /**
+  * This field may be used interchangeably with the string 'SELF'.
   * @member opensocial.IdSpec.GroupId
   */
   SELF : 'SELF',
  /**
+  * This field may be used interchangeably with the string 'FRIENDS'.
   * @member opensocial.IdSpec.GroupId
   */
   FRIENDS : 'FRIENDS',
  /**
+  * This field may be used interchangeably with the string 'ALL'.
   * @member opensocial.IdSpec.GroupId
   */
   ALL : 'ALL'

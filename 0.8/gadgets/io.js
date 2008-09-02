@@ -316,7 +316,7 @@ gadgets.io.RequestParameters = {
    * defaults to <code>MethodType.GET</a></code>.
    * Valid values are specified by
    * <a href="gadgets.io.MethodType.html">MethodType</a>.
-   *
+   * This field may be used interchangeably with the string 'METHOD'.
    * @member gadgets.io.RequestParameters
    */
    METHOD : 'METHOD',
@@ -327,7 +327,7 @@ gadgets.io.RequestParameters = {
    * Specified as a
    * <a href="gadgets.io.ContentType.html">
    * ContentType</a>.
-   *
+   * This field may be used interchangeably with the string 'CONTENT_TYPE'.
    * @member gadgets.io.RequestParameters
    */
   CONTENT_TYPE : "CONTENT_TYPE",
@@ -336,7 +336,7 @@ gadgets.io.RequestParameters = {
    * The data to send to the URL using the POST method;
    * defaults to null.
    * Specified as a <code>String</code>.
-   *
+   * This field may be used interchangeably with the string 'POST_DATA'.
    * @member gadgets.io.RequestParameters
    */
   POST_DATA : "POST_DATA",
@@ -345,7 +345,7 @@ gadgets.io.RequestParameters = {
    * The HTTP headers to send to the URL;
    * defaults to null.
    * Specified as a <code>Map.&lt;String,String&gt;</code>.
-   *
+   * This field may be used interchangeably with the string 'HEADERS'.
    * @member gadgets.io.RequestParameters
    */
   HEADERS : "HEADERS",
@@ -356,7 +356,7 @@ gadgets.io.RequestParameters = {
    * Specified as an
    * <a href="gadgets.io.AuthorizationType.html">
    * AuthorizationType</a>.
-   *
+   * This field may be used interchangeably with the string 'AUTHORIZATION'.
    * @member gadgets.io.RequestParameters
    */
   AUTHORIZATION : 'AUTHORIZATION',
@@ -366,7 +366,7 @@ gadgets.io.RequestParameters = {
    * If the content is a feed, the number of entries to fetch;
    * defaults to 3.
    * Specified as a <code>Number</code>.
-   *
+   * This field may be used interchangeably with the string 'NUM_ENTRIES'.
    * @member gadgets.io.RequestParameters
    */
   NUM_ENTRIES : 'NUM_ENTRIES',
@@ -375,7 +375,7 @@ gadgets.io.RequestParameters = {
    * If the content is a feed, whether to fetch summaries for that feed;
    * defaults to false.
    * Specified as a <code>Boolean</code>.
-   *
+   * This field may be used interchangeably with the string 'GET_SUMMARIES'.
    * @member gadgets.io.RequestParameters
    */
   GET_SUMMARIES : 'GET_SUMMARIES',
@@ -389,7 +389,7 @@ gadgets.io.RequestParameters = {
    * caching headers specified, this value will default to 3600 (one hour).
    * Note that Signed requests and objects with POST_DATA present will
    * generally not be cached.
-   *
+   * This field may be used interchangeably with the string 'REFRESH_INTERVAL'.
    * @member gadgets.io.RequestParameters
    */
   REFRESH_INTERVAL : 'REFRESH_INTERVAL'
@@ -407,30 +407,35 @@ gadgets.io.RequestParameters = {
 gadgets.io.MethodType = {
   /**
    * The default type.
+   * This field may be used interchangeably with the string 'GET'.
    * @member gadgets.io.MethodType
    */
   GET : 'GET',
 
   /**
    * Container support for this method type is OPTIONAL.
+   * This field may be used interchangeably with the string 'POST'.
    * @member gadgets.io.MethodType
    */
   POST : 'POST',
 
   /**
    * Container support for this method type is OPTIONAL.
+   * This field may be used interchangeably with the string 'PUT'.
    * @member gadgets.io.MethodType
    */
   PUT : 'PUT',
 
   /**
    * Container support for this method type is OPTIONAL.
+   * This field may be used interchangeably with the string 'DELETE'.
    * @member gadgets.io.MethodType
    */
   DELETE : 'DELETE',
 
   /**
    * Container support for this method type is OPTIONAL.
+   * This field may be used interchangeably with the string 'HEAD'.
    * @member gadgets.io.MethodType
    */
   HEAD : 'HEAD'
@@ -448,24 +453,28 @@ gadgets.io.MethodType = {
 gadgets.io.ContentType = {
   /**
    * Returns text; used for fetching HTML.
+   * This field may be used interchangeably with the string 'TEXT'.
    * @member gadgets.io.ContentType
    */
   TEXT : 'TEXT',
 
   /**
    * Returns a DOM object; used for fetching XML.
+   * This field may be used interchangeably with the string 'DOM'.
    * @member gadgets.io.ContentType
    */
   DOM : 'DOM',
 
   /**
    * Returns a JSON object.
+   * This field may be used interchangeably with the string 'JSON'.
    * @member gadgets.io.ContentType
    */
   JSON : 'JSON',
 
   /**
    * Returns a JSON representation of an RSS or Atom feed.
+   * This field may be used interchangeably with the string 'FEED'.
    * @member gadgets.io.ContentType
    */
   FEED : 'FEED'
@@ -483,18 +492,21 @@ gadgets.io.ContentType = {
 gadgets.io.AuthorizationType = {
   /**
    * No authorization.
+   * This field may be used interchangeably with the string 'NONE'.
    * @member gadgets.io.AuthorizationType
    */
   NONE : 'NONE',
 
   /**
    * The request will be signed by the container.
+   * This field may be used interchangeably with the string 'SIGNED'.
    * @member gadgets.io.AuthorizationType
    */
   SIGNED : 'SIGNED',
 
   /**
    * The container will use OAuth for authentication.
+   * This field may be used interchangeably with the string 'OAUTH'.
    * @member gadgets.io.AuthorizationType
    */
   OAUTH : 'OAUTH'
@@ -518,7 +530,7 @@ gadgets.io.ProxyUrlRequestParameters = {
    * caching headers specified, this value will default to 3600 (one hour).
    * Note that Signed requests and objects with POST_DATA present will
    * generally not be cached.
-   *
+   * This field may be used interchangeably with the string 'REFRESH_INTERVAL'.
    * @member gadgets.io.ProxyUrlRequestParameters
    */
   REFRESH_INTERVAL : 'REFRESH_INTERVAL'

@@ -47,6 +47,7 @@ opensocial.BodyType.Field = {
   /**
    * The build of the person's body, specified as a string.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'build'.
    * @member opensocial.BodyType.Field
    */
   BUILD : 'build',
@@ -54,6 +55,7 @@ opensocial.BodyType.Field = {
   /**
    * The height of the person in meters, specified as a number.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'height'.
    * @member opensocial.BodyType.Field
    */
   HEIGHT : 'height',
@@ -61,6 +63,7 @@ opensocial.BodyType.Field = {
   /**
    * The weight of the person in kilograms, specified as a number.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'weight'.
    * @member opensocial.BodyType.Field
    */
   WEIGHT : 'weight',
@@ -68,6 +71,7 @@ opensocial.BodyType.Field = {
   /**
    * The eye color of the person, specified as a string.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'eyeColor'.
    * @member opensocial.BodyType.Field
    */
   EYE_COLOR : 'eyeColor',
@@ -75,6 +79,7 @@ opensocial.BodyType.Field = {
   /**
    * The hair color of the person, specified as a string.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'hairColor'.
    * @member opensocial.BodyType.Field
    */
   HAIR_COLOR : 'hairColor'

@@ -68,14 +68,14 @@ opensocial.NavigationParameters = function() {};
 opensocial.NavigationParameters.Field = {
   /**
    * The <a href="gadgets.views.View.html">View</a> to navigate to.
-   *
+   * This field may be used interchangeably with the string 'view'.
    * @member opensocial.NavigationParameters.Field
    */
   VIEW : 'view',
 
   /**
    * A string representing the owner id. 
-   *
+   * This field may be used interchangeably with the string 'owner'.
    * @member opensocial.NavigationParameters.Field
    */
   OWNER : 'owner',
@@ -83,8 +83,7 @@ opensocial.NavigationParameters.Field = {
   /**
    * An optional list of parameters passed to the gadget once the new view,
    * with the new owner, has been loaded.
-   *
-   *
+   * This field may be used interchangeably with the string 'parameters'.
    * @member opensocial.NavigationParameters.Field
    */
   PARAMETERS : 'parameters'
@@ -126,9 +125,16 @@ opensocial.NavigationParameters.prototype.setField = function(key, data) {};
  * @name opensocial.NavigationParameters.DestinationType
  */
 opensocial.NavigationParameters.DestinationType = {
-  /** @member opensocial.NavigationParameters.DestinationType */
+  /** 
+   * This field may be used interchangeably with the string 'viewerDestination'.
+   * @member opensocial.NavigationParameters.DestinationType 
+   */
   VIEWER_DESTINATION : "viewerDestination",
 
-  /** @member opensocial.NavigationParameters.DestinationType  */
+  /** 
+   * This field may be used interchangeably with the string 
+   * 'recipientDestination'.
+   * @member opensocial.NavigationParameters.DestinationType  
+   */
   RECIPIENT_DESTINATION : "recipientDestination"
 };

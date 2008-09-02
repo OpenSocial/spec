@@ -48,7 +48,7 @@ opensocial.Address.Field = {
   /**
    * The address type or label, specified as a string.
    * Examples: work, my favorite store, my house, etc.
-   *
+   * This field may be used interchangeably with the string 'type'.
    * @member opensocial.Address.Field
    */
   TYPE : 'type',
@@ -59,70 +59,71 @@ opensocial.Address.Field = {
    * specified as a string. Use
    * opensocial.getEnvironment().supportsField to see which fields are
    * supported.
-   *
+   * This field may be used interchangeably with the string 
+   * 'unstructuredAddress'.
    * @member opensocial.Address.Field
    */
   UNSTRUCTURED_ADDRESS : 'unstructuredAddress',
 
   /**
    * The P.O. box of the address, if there is one; specified as a string.
-   *
+   * This field may be used interchangeably with the string 'poBox'.
    * @member opensocial.Address.Field
    */
   PO_BOX : 'poBox',
 
   /**
    * The street address, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'streetAddress'.
    * @member opensocial.Address.Field
    */
   STREET_ADDRESS : 'streetAddress',
 
   /**
    * The extended street address, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'extendedAddress'.
    * @member opensocial.Address.Field
    */
   EXTENDED_ADDRESS : 'extendedAddress',
 
   /**
    * The region, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'region'.
    * @member opensocial.Address.Field
    */
   REGION : 'region',
 
   /**
    * The locality, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'locality'.
    * @member opensocial.Address.Field
    */
   LOCALITY : 'locality',
 
   /**
    * The postal code, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'postalCode'.
    * @member opensocial.Address.Field
    */
   POSTAL_CODE : 'postalCode',
 
   /**
    * The country, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'country'.
    * @member opensocial.Address.Field
    */
   COUNTRY : 'country',
 
   /**
    * The latitude, specified as a number.
-   *
+   * This field may be used interchangeably with the string 'latitude'.
    * @member opensocial.Address.Field
    */
   LATITUDE : 'latitude',
 
   /**
    * The longitude, specified as a number.
-   *
+   * This field may be used interchangeably with the string 'longitude'.
    * @member opensocial.Address.Field
    */
   LONGITUDE : 'longitude'

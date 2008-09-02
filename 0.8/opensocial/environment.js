@@ -66,58 +66,72 @@ opensocial.Environment.prototype.getDomain = function() {};
  */
 opensocial.Environment.ObjectType = {
   /**
+   * This field may be used interchangeably with the string 'person'.
    * @member opensocial.Environment.ObjectType
    */
   PERSON : 'person',
   /**
+   * This field may be used interchangeably with the string 'address'.
    * @member opensocial.Environment.ObjectType
    */
   ADDRESS : 'address',
   /**
+   * This field may be used interchangeably with the string 'bodyType'.
    * @member opensocial.Environment.ObjectType
    */
   BODY_TYPE : 'bodyType',
   /**
+   * This field may be used interchangeably with the string 'email'.
    * @member opensocial.Environment.ObjectType
    */
   EMAIL : 'email',
   /**
+   * This field may be used interchangeably with the string 'name'.
    * @member opensocial.Environment.ObjectType
    */
   NAME : 'name',
   /**
+   * This field may be used interchangeably with the string 'organization'.
    * @member opensocial.Environment.ObjectType
    */
   ORGANIZATION : 'organization',
   /**
+   * This field may be used interchangeably with the string 'phone'.
    * @member opensocial.Environment.ObjectType
    */
   PHONE : 'phone',
   /**
+   * This field may be used interchangeably with the string 'url'.
    * @member opensocial.Environment.ObjectType
    */
   URL : 'url',
   /**
+   * This field may be used interchangeably with the string 'activity'.
    * @member opensocial.Environment.ObjectType
    */
   ACTIVITY : 'activity',
   /**
+   * This field may be used interchangeably with the string 'mediaItem'.
    * @member opensocial.Environment.ObjectType
    */
   MEDIA_ITEM : 'mediaItem',
   /**
+   * This field may be used interchangeably with the string 'message'.
    * @member opensocial.Environment.ObjectType
    */
   MESSAGE : 'message',
   /**
+   * This field may be used interchangeably with the string 'messageType'.
    * @member opensocial.Environment.ObjectType
    */
   MESSAGE_TYPE : 'messageType',
   /**
+   * This field may be used interchangeably with the string 'sortOrder'.
    * @member opensocial.Environment.ObjectType
    */
   SORT_ORDER : 'sortOrder',
   /**
+   * This field may be used interchangeably with the string 'filterType'.
    * @member opensocial.Environment.ObjectType
    */
   FILTER_TYPE : 'filterType'

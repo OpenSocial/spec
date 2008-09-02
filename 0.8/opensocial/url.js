@@ -46,21 +46,21 @@ opensocial.Url.Field = {
   /**
    * The URL number type or label, specified as a string.
    * Examples: work, blog feed, website, etc.
-   *
+   * This field may be used interchangeably with the string 'type'.
    * @member opensocial.Url.Field
    */
   TYPE : 'type',
 
   /**
    * The text of the link, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'linkText'.
    * @member opensocial.Url.Field
    */
   LINK_TEXT : 'linkText',
 
   /**
    * The address the URL points to, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'address'.
    * @member opensocial.Url.Field
    */
   ADDRESS : 'address'

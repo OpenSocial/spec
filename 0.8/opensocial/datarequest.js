@@ -120,12 +120,13 @@ opensocial.DataRequest.prototype.send = function(opt_callback) {};
 opensocial.DataRequest.SortOrder = {
   /**
    * When used will sort people by the container's definition of top friends.
+   * This field may be used interchangeably with the string 'topFriends'.
    * @member opensocial.DataRequest.SortOrder
    */
   TOP_FRIENDS : 'topFriends',
   /**
    * When used will sort people alphabetically by the name field.
-   *
+   * This field may be used interchangeably with the string 'name'.
    * @member opensocial.DataRequest.SortOrder
    */
   NAME : 'name'
@@ -142,7 +143,7 @@ opensocial.DataRequest.SortOrder = {
 opensocial.DataRequest.FilterType = {
   /**
    * Retrieves all friends.
-   *
+   * This field may be used interchangeably with the string 'all'.
    * @member opensocial.DataRequest.FilterType
    */
   ALL : 'all',
@@ -152,14 +153,14 @@ opensocial.DataRequest.FilterType = {
    * Note: Containers may define "use" in any manner they deem appropriate for
    * their functionality, and it is not expected that this field will have
    * the exact same semantics across containers.
-   *
+   * This field may be used interchangeably with the string 'hasApp'.
    * @member opensocial.DataRequest.FilterType
    */
   HAS_APP : 'hasApp',
   /**
    * Retrieves only the user's top friends as defined by the container.
    * Container support for this filter type is OPTIONAL.
-   *
+   * This field may be used interchangeably with the string 'topFriends'.
    * @member opensocial.DataRequest.FilterType
    */
   TOP_FRIENDS : 'topFriends',
@@ -168,6 +169,7 @@ opensocial.DataRequest.FilterType = {
    * the given <a href="opensocial.IdSpec.html">idSpec</a>. Expects a filterOptions parameter to be passed with the
    *    following fields defined:
    *  - idSpec The <a href="opensocial.IdSpec.html">idSpec</a> that each person must be friends with.
+   * This field may be used interchangeably with the string 'isFriendsWith'.
   */
   IS_FRIENDS_WITH: 'isFriendsWith'
 };
@@ -186,7 +188,7 @@ opensocial.DataRequest.PeopleRequestFields = {
    * specifying what profile data to fetch
    * for each of the person objects. The server will always include
    * ID, NAME, and THUMBNAIL_URL.
-   *
+   * This field may be used interchangeably with the string 'profileDetail'.
    * @member opensocial.DataRequest.PeopleRequestFields
    */
   PROFILE_DETAILS : 'profileDetail',
@@ -195,7 +197,7 @@ opensocial.DataRequest.PeopleRequestFields = {
    * A sort order for the people objects; defaults to TOP_FRIENDS.
    * Possible values are defined by
    * <a href="opensocial.DataRequest.SortOrder.html">SortOrder</a>.
-   *
+   * This field may be used interchangeably with the string 'sortOrder'.
    * @member opensocial.DataRequest.PeopleRequestFields
    */
   SORT_ORDER : 'sortOrder',
@@ -204,7 +206,7 @@ opensocial.DataRequest.PeopleRequestFields = {
    * How to filter the people objects; defaults to ALL.
    * Possible values are defined by
    * <a href="opensocial.DataRequest.FilterType.html">FilterType</a>.
-   *
+   * This field may be used interchangeably with the string 'filter'.
    * @member opensocial.DataRequest.PeopleRequestFields
    */
   FILTER : 'filter',
@@ -212,7 +214,7 @@ opensocial.DataRequest.PeopleRequestFields = {
   /**
    * Additional options to be passed into the filter,
    * specified as a Map&lt;String, Object>.
-   *
+   * This field may be used interchangeably with the string 'filterOptions'.
    * @member opensocial.DataRequest.PeopleRequestFields
    */
   FILTER_OPTIONS: 'filterOptions',
@@ -220,7 +222,7 @@ opensocial.DataRequest.PeopleRequestFields = {
   /**
    * When paginating, the index of the first item to fetch;
    * specified as a number.
-   *
+   * This field may be used interchangeably with the string 'first'.
    * @member opensocial.DataRequest.PeopleRequestFields
    */
   FIRST : 'first',
@@ -230,7 +232,7 @@ opensocial.DataRequest.PeopleRequestFields = {
    * specified as a number; defaults to 20. If set to a larger
    * number, a container may honor the request, or may limit the number to a
    * container-specified limit of at least 20.
-   *
+   * This field may be used interchangeably with the string 'max'.
    * @member opensocial.DataRequest.PeopleRequestFields
    */
   MAX : 'max'
@@ -284,7 +286,7 @@ opensocial.DataRequest.DataRequestFields = {
    * How to escape person data returned from the server; defaults to HTML_ESCAPE.
    * Possible values are defined by
    * <a href="opensocial.EscapeType.html">EscapeType</a>.
-   *
+   * This field may be used interchangeably with the string 'escapeType'.
    * @member opensocial.DataRequest.DataRequestFields
    */
   ESCAPE_TYPE : 'escapeType'

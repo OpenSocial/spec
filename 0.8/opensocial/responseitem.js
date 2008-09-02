@@ -56,7 +56,7 @@ opensocial.ResponseItem.prototype.hadError = function() {};
 opensocial.ResponseItem.Error = {
   /**
    * This container does not support the request that was made.
-   *
+   * This field may be used interchangeably with the string 'notImplemented'.
    * @member opensocial.ResponseItem.Error
    */
   NOT_IMPLEMENTED : 'notImplemented',
@@ -66,21 +66,21 @@ opensocial.ResponseItem.Error = {
    * To get access, use
    * <a href="opensocial.html#requestPermission">
    * opensocial.requestPermission()</a>.
-   *
+   * This field may be used interchangeably with the string 'unauthorized'.
    * @member opensocial.ResponseItem.Error
    */
   UNAUTHORIZED : 'unauthorized',
 
   /**
    * The gadget can never have access to the requested data.
-   *
+   * This field may be used interchangeably with the string 'forbidden'.
    * @member opensocial.ResponseItem.Error
    */
   FORBIDDEN : 'forbidden',
 
    /**
    * The request was invalid. Example: 'max' was -1.
-   *
+   * This field may be used interchangeably with the string 'badRequest'.
    * @member opensocial.ResponseItem.Error
    */
   BAD_REQUEST : 'badRequest',
@@ -88,7 +88,7 @@ opensocial.ResponseItem.Error = {
   /**
    * The request encountered an unexpected condition that
    * prevented it from fulfilling the request.
-   *
+   * This field may be used interchangeably with the string 'internalError'.
    * @member opensocial.ResponseItem.Error
    */
   INTERNAL_ERROR : 'internalError',
@@ -97,7 +97,7 @@ opensocial.ResponseItem.Error = {
    * The gadget exceeded a quota on the request. Example quotas include a
    * max number of calls per day, calls per user per day, calls within a
    * certain time period and so forth.
-   *
+   * This field may be used interchangeably with the string 'limitExceeded'.
    * @member opensocial.ResponseItem.Error
    */
   LIMIT_EXCEEDED : 'limitExceeded'

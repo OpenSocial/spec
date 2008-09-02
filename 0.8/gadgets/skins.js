@@ -48,24 +48,28 @@ gadgets.skins.getProperty = function(propertyKey) {};
 gadgets.skins.Property = {
   /**
    * An image to use in the background of the gadget.
+   * This field may be used interchangeably with the string 'BG_IMAGE'.
    * @member gadgets.skins.Property
    */
   BG_IMAGE : 'BG_IMAGE',
 
   /**
    * The color of the background of the gadget.
+   * This field may be used interchangeably with the string 'BG_COLOR'.
    * @member gadgets.skins.Property
    */
   BG_COLOR : 'BG_COLOR',
 
   /**
    * The color in which the main font should be rendered.
+   * This field may be used interchangeably with the string 'FONT_COLOR'.
    * @member gadgets.skins.Property
    */
   FONT_COLOR : 'FONT_COLOR',
 
   /**
    * The color that anchor tags should use.
+   * This field may be used interchangeably with the string 'ANCHOR_COLOR'.
    * @member gadgets.skins.Property
    */
   ANCHOR_COLOR : 'ANCHOR_COLOR'

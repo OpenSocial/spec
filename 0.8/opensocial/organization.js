@@ -48,6 +48,7 @@ opensocial.Organization.Field = {
    * The name of the organization, specified as a string.
    * For example, could be a school name or a job company. 
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'name'.
    * @member opensocial.Organization.Field
    */
   NAME : 'name',
@@ -56,6 +57,7 @@ opensocial.Organization.Field = {
    * The title or role the person has in the organization, specified as a
    * string. This could be graduate student, or software engineer.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'title'.
    * @member opensocial.Organization.Field
    */
   TITLE : 'title',
@@ -65,6 +67,7 @@ opensocial.Organization.Field = {
    * specified as a string. This could be the courses taken by a student, or a
    * more detailed description about a Organization role.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'description'.
    * @member opensocial.Organization.Field
    */
   DESCRIPTION : 'description',
@@ -73,6 +76,7 @@ opensocial.Organization.Field = {
    * The field the organization is in, specified as a string. This could be the
    * degree pursued if the organization is a school.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'field'.
    * @member opensocial.Organization.Field
    */
   FIELD : 'field',
@@ -80,6 +84,7 @@ opensocial.Organization.Field = {
   /**
    * The subfield the Organization is in, specified as a string.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'subField'.
    * @member opensocial.Organization.Field
    */
   SUB_FIELD : 'subField',
@@ -87,6 +92,7 @@ opensocial.Organization.Field = {
   /**
    * The date the person started at the organization, specified as a Date.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'startDate'.
    * @member opensocial.Organization.Field
    */
   START_DATE : 'startDate',
@@ -96,6 +102,7 @@ opensocial.Organization.Field = {
    * A null date indicates that the person is still involved with the
    * organization.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'endDate'.
    * @member opensocial.Organization.Field
    */
   END_DATE : 'endDate',
@@ -104,6 +111,7 @@ opensocial.Organization.Field = {
    * The salary the person receieves from the organization, specified as a
    * string.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'salary'.
    * @member opensocial.Organization.Field
    */
   SALARY : 'salary',
@@ -111,6 +119,7 @@ opensocial.Organization.Field = {
  /**
    * The address of the organization, specified as an opensocial.Address.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'address'.
    * @member opensocial.Organization.Field
    */
   ADDRESS : 'address',
@@ -118,6 +127,7 @@ opensocial.Organization.Field = {
  /**
    * A webpage related to the organization, specified as a string.
    * Container support for this field is OPTIONAL.
+   * This field may be used interchangeably with the string 'webpage'.
    * @member opensocial.Organization.Field
    */
   WEBPAGE : 'webpage'

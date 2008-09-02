@@ -174,7 +174,7 @@ opensocial.CreateActivityPriority = {
    * If the activity is of high importance, it will be created even if this
    * requires asking the user for permission. This may cause the container to
    * open a user flow which may navigate away from your gagdet.
-   *
+   * This field may be used interchangeably with the string 'HIGH'.
    * @member opensocial.CreateActivityPriority
    */
   HIGH : 'HIGH',
@@ -184,7 +184,7 @@ opensocial.CreateActivityPriority = {
    * user has not given permission for the current app to create activities.
    * With this priority, the requestCreateActivity call will never open a user
    * flow.
-   *
+   * This field may be used interchangeably with the string 'LOW'.
    * @member opensocial.CreateActivityPriority
    */
   LOW : 'LOW'
@@ -250,7 +250,7 @@ opensocial.requestPermission = function(permissions, reason, opt_callback) {};
 opensocial.Permission = {
   /**
    * Access to the viewer person object
-   *
+   * This field may be used interchangeably with the string 'viewer'.
    * @member opensocial.Permission
    */
   VIEWER : 'viewer'
@@ -363,12 +363,13 @@ opensocial.newMessage = function(body, opt_params) {};
 opensocial.EscapeType = {
   /**
    * When used will HTML-escape the data.
+   * This field may be used interchangeably with the string 'htmlEscape'.
    * @member opensocial.EscapeType
    */
   HTML_ESCAPE : 'htmlEscape',
   /**
    * When used will not escape the data.
-   *
+   * This field may be used interchangeably with the string 'none'.
    * @member opensocial.EscapeType
    */
   NONE : 'none'

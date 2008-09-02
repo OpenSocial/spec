@@ -46,14 +46,14 @@ opensocial.Phone.Field = {
   /**
    * The phone number type or label, specified as a string.
    * Examples: work, my favorite store, my house, etc.
-   *
+   * This field may be used interchangeably with the string 'type'.
    * @member opensocial.Phone.Field
    */
   TYPE : 'type',
 
   /**
    * The phone number, specified as a string.
-   *
+   * This field may be used interchangeably with the string 'number'.
    * @member opensocial.Phone.Field
    */
   NUMBER : 'number'

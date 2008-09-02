@@ -209,7 +209,7 @@ gadgets.views.ViewType = {
  /**
   * A view where the gadget is displayed in a small area usually on a page with
   * other gadgets. Typically the viewer is the same as the owner.
-  *
+  * This field may be used interchangeably with the string 'HOME'.
   * @member gadgets.views.ViewType
   */
   HOME : 'HOME',
@@ -217,7 +217,7 @@ gadgets.views.ViewType = {
  /**
   * A view where the gadget is displayed in a small area usually on a page with
   * other gadgets. The viewer is not always the same as the owner.
-  *
+  * This field may be used interchangeably with the string 'PROFILE'.
   * @member gadgets.views.ViewType
   */
   PROFILE : 'PROFILE',
@@ -226,14 +226,14 @@ gadgets.views.ViewType = {
   * A view where the gadget is displayed in a very large mode. It is typically
   * the main content on the page. The viewer is not always the same as the
   * owner.
-  *
+  * This field may be used interchangeably with the string 'CANVAS'.
   * @member gadgets.views.ViewType
   */
   CANVAS : 'CANVAS',
 
  /**
   * A demo view of the gadget. In this view the owner and viewer are not known.
-  *
+  * This field may be used interchangeably with the string 'PREVIEW'.
   * @member gadgets.views.ViewType
   */
   PREVIEW : 'PREVIEW'

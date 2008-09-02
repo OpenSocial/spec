@@ -62,6 +62,7 @@ opensocial.Message = function() {};
 opensocial.Message.Field = {
   /**
    * The title of the message, specified as an opensocial.Message.Type.
+   * This field may be used interchangeably with the string 'type'.
    * @member opensocial.Message.Field
    */
   TYPE : 'type',
@@ -69,6 +70,7 @@ opensocial.Message.Field = {
   /**
    * The title of the message. HTML attributes are allowed and are
    * sanitized by the container.
+   * This field may be used interchangeably with the string 'title'.
    * @member opensocial.Message.Field
    */
   TITLE : 'title',
@@ -76,6 +78,7 @@ opensocial.Message.Field = {
   /**
    * The main text of the message. HTML attributes are allowed and are
    * sanitized by the container.
+   * This field may be used interchangeably with the string 'body'.
    * @member opensocial.Message.Field
    */
   BODY : 'body',
@@ -83,6 +86,7 @@ opensocial.Message.Field = {
   /**
    * The title of the message as a message template. Specifies the
    * message ID to use in the gadget xml.
+   * This field may be used interchangeably with the string 'titleId'.
    * @member opensocial.Message.Field
    */
   TITLE_ID : 'titleId',
@@ -90,6 +94,7 @@ opensocial.Message.Field = {
   /**
    * The main text of the message as a message template. Specifies the
    * message ID to use in the gadget xml.
+   * This field may be used interchangeably with the string 'bodyId'.
    * @member opensocial.Message.Field
    */
   BODY_ID : 'bodyId'
@@ -106,27 +111,28 @@ opensocial.Message.Field = {
 opensocial.Message.Type = {
   /**
    * An email.
-   *
+   * This field may be used interchangeably with the string 'email'.
    * @member opensocial.Message.Type
    */
   EMAIL : 'email',
 
   /**
    * A short private message.
-   *
+   * This field may be used interchangeably with the string 'notification'.
    * @member opensocial.Message.Type
    */
   NOTIFICATION : 'notification',
 
   /**
    * A message to a specific user that can be seen only by that user.
-   *
+   * This field may be used interchangeably with the string 'privateMessage'.
    * @member opensocial.Message.Type
    */
   PRIVATE_MESSAGE : 'privateMessage',
 
   /**
    * A message to a specific user that can be seen by more than that user.
+   * This field may be used interchangeably with the string 'publicMessage'.
    * @member opensocial.Message.Type
    */
   PUBLIC_MESSAGE : 'publicMessage'
