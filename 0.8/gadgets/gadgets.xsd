@@ -23,6 +23,10 @@
                   <xs:attribute name="sign_owner" type="xs:boolean" default="true"/>
                   <xs:attribute name="sign_viewer" type="xs:boolean" default="true"/>
                   <xs:attribute name="views" type="xs:string" use="optional"/>
+                  <xs:attribute name="oauth_service_name" type="xs:string" use="optional"/>
+                  <xs:attribute name="oauth_token_name" type="xs:string" use="optional"/>
+                  <xs:attribute name="oauth_request_token" type="xs:string" use="optional"/>
+                  <xs:attribute name="oauth_request_token_secret" type="xs:string" use="optional"/>
                 </xs:complexType>                
               </xs:element>
               <xs:element name="Icon">
