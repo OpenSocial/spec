@@ -43,6 +43,18 @@
               </xs:element>
               <xs:element name="Locale">
                 <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="msg" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="name" type="xs:string" use="required"/>
+                            <xs:attribute name="desc" type="xs:string" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
                   <xs:attribute name="lang" type="xs:string" use="optional"/>
                   <xs:attribute name="country" type="xs:string" use="optional"/>
                   <xs:attribute name="messages" type="xs:string" use="optional"/>
@@ -54,16 +66,6 @@
                       </xs:restriction>
                     </xs:simpleType>
                   </xs:attribute>
-                  <xs:element name="msg" minOccurs="0" maxOccurs="unbounded">
-                    <xs:complexType>
-                      <xs:simpleContent>
-                        <xs:extension base="xs:string">
-                          <xs:attribute name="name" type="xs:string" use="required"/>
-                          <xs:attribute name="desc" type="xs:string" use="optional"/>
-                        </xs:extension>
-                      </xs:simpleContent>
-                    </xs:complexType>
-                  </xs:element>
                 </xs:complexType>
               </xs:element>
               <xs:element name="Link">
@@ -82,17 +84,21 @@
               </xs:element>
               <xs:element name="OAuth" minOccurs="0" maxOccurs="1">
                 <xs:complexType>
-                  <xs:element name="Service" maxOccurs="unbounded">
-                    <xs:complexType>
-                      <xs:element name="Request" type="OAuthResourceType" minOccurs="0"/>
-                      <xs:element name="Access" type="OAuthResourceType" minOccurs="0"/>
-                      <xs:element name="Authorization" minOccurs="0">
-                        <xs:complexType>
-                          <xs:attribute name="url" type="xs:string" use="required"/>
-                        </xs:complexType>
-                      </xs:element>
-                    </xs:complexType>
-                  </xs:element>
+                  <xs:sequence>
+                    <xs:element name="Service" maxOccurs="unbounded">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="Request" type="OAuthResourceType" minOccurs="0"/>
+                          <xs:element name="Access" type="OAuthResourceType" minOccurs="0"/>
+                          <xs:element name="Authorization" minOccurs="0">
+                            <xs:complexType>
+                              <xs:attribute name="url" type="xs:string" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
                   <xs:attribute name="name" type="xs:string" use="optional"/>
                 </xs:complexType>
               </xs:element>
@@ -205,17 +211,21 @@
   <xs:complexType name="OAuthResourceType">
     <xs:attribute name="url" type="xs:string" use="required"/>
     <xs:attribute name="method" use="optional" default="GET">
-      <xs:restriction base="xs:string">
-        <xs:enumeration value="GET"/>
-        <xs:enumeration value="POST"/>
-      </xs:restriction>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="GET"/>
+          <xs:enumeration value="POST"/>
+        </xs:restriction>
+      </xs:simpleType>
     </xs:attribute>
     <xs:attribute name="param_location" use="optional" default="header">
-      <xs:restriction base="xs:string">
-        <xs:enumeration value="header"/>
-        <xs:enumeration value="url"/>
-        <xs:enumeration value="body"/>
-      </xs:restriction>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="header"/>
+          <xs:enumeration value="url"/>
+          <xs:enumeration value="body"/>
+        </xs:restriction>
+      </xs:simpleType>
     </xs:attribute>
   </xs:complexType>
 </xs:schema>
