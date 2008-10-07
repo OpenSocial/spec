@@ -170,6 +170,7 @@ opensocial.DataRequest.FilterType = {
    *    following fields defined:
    *  - idSpec The <a href="opensocial.IdSpec.html">idSpec</a> that each person must be friends with.
    * This field may be used interchangeably with the string 'isFriendsWith'.
+   * @member opensocial.DataRequest.FilterType
   */
   IS_FRIENDS_WITH: 'isFriendsWith'
 };
