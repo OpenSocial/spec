@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<!--<!DOCTYPE rfc SYSTEM 'rfcXXXX.dtd'>-->
+<rfc ipr="full3978" docName="draft-opensocial-data-pipelining-specification-v0_9">
+	<front>
+		<title abbrev="OpenSocial REST">OpenSocial Data Pipelining Specification v0.9</title>
+		<author surname="opensocial"  
+			fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+			<address>
+				<email>opensocial-and-gadgets-spec@googlegroups.com</email>
+			</address>
+		</author>
+        <date month="January" year="2009"/>
+        <area>General</area>
+        <keyword>OpenSocial</keyword>
+        <keyword>social networking</keyword>
+        <keyword>REST</keyword>
+        <keyword>XML</keyword>
+        <keyword>Extensible Markup Language</keyword>
+        <keyword>JSON</keyword>
+        <keyword>JavaScript Object Notation</keyword>
+        <keyword>Atom</keyword>
+	</front>
+	<middle>
+		<section title="Notation and Conventions">
+			<t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", 
+			"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described 
+			in <xref target="RFC2119">RFC2119</xref>. Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+		</section>
+		<section title="Overview">
+			<t>
+				Data Pipelining is a declarative syntax for defining the data you want the container 
+				to provide to you for processing. Examples would be &lt;os:PersonRequest id="@viewer"/&gt; or 
+				&lt;os:DataRequest href="http://www.developer.com/api"&gt;.
+			</t>
+			<t>
+				The data that is retreived will be available in three contexts:
+				<list style="numbers">
+					<t>Proxied content requests. This data will be POSTed to the developer party server with requests for proxied content.</t>
+					<t>OpenSocial Templates. The data will be available as named variables in OpenSocial templates.</t>
+					<t>JavaScript. This data will be available in the JavaScript API.</t>
+				</list>
+				Developers will insert the following &lt;os:*&gt; namespaced tags within a &lt;Content&gt; block to specify 
+				what data should be provided to the gadget.
+			</t>
+			<t>
+				RESTful call equivalents: 
+				<list style="numbers">
+					<t>&lt;os:PeopleRequest&gt; - request to get profile information for a group or list of people</t>
+					<t>&lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt; - request to get the viewer or owner's profile</t>
+					<t>&lt;os:ActivitiesRequest&gt; - request to get activities</t>
+					<t>&lt;os:DataRequest&gt;, equivalent to gadgets.io.makeRequest
+						<list style="symbols">
+							<t>This is a call to an arbitrary URL.</t>
+						</list>
+					</t>
+				</list>
+				<figure>
+					<artwork>		
+&lt;Content type="html"&gt;
+  &lt;script type="text/os-data"&gt;
+    &lt;os:ViewerRequest key="vwr" fields="name,birthday"/&gt;
+    &lt;os:DataRequest key="mydata" href="http://developer.com/api"/&gt;
+  &lt;/script&gt;
+  ... HTML content here ...
+&lt;/Content&gt;
+					</artwork>
+				</figure>
+				Note that we only have equivalents for REST calls that get data - calls that update data cannot be 
+				safely used in Data Pipelining. 
+			</t>
+		</section>
+		<section title="Common request processing">
+			<t>
+				All XML tags MUST have an @key string attribute. This is used to identify the data in the response back.
+			</t>
+			<t>
+				Calls with corresponding REST APIs have a 1:1 mapping between the XML attributes and the 
+				RESTful API parameters. See the OpenSocial RESTful Protocol for an overview of the REST calls.
+			</t>
+		</section>
+		<section title="Tag: &lt;os:PeopleRequest&gt;">
+			<t>
+				Request to get profile information for a group or list of people.
+			</t>
+			<t>
+				Attributes
+				<list style="symbols">
+					<t>@key {string}</t>
+					<t>@userId {list&lt;string&gt;} Comma delimited IDs of the users to use with "@groupId". Each item can be one of "@me", "@viewer", "@owner", or a user ID.</t>
+					<t>@groupId {string} The group of users to get. Defaults to "@self", which returns the actual users listed in @userId. Other values are "@friends" to get friends, or any other string to get an arbitrary group.</t>
+					<t>@fields {list&lt;string&gt;} Comma-delimited list of strings of OpenSocial profile fields to return. Optional.</t>
+					<t>@startPage {int} Current page to return results from. Optional.</t>
+					<t>@startIndex {int: Starting index to return results from. Optional. Behavior is undefined if you send both startPage and startIndex.</t>
+					<t>@count {int} Number of people to return. Optional.</t>
+					<t>@sortBy {string} Specifies the field name whose value is be used to order the returned people. The sort order is determine by the sortOrder parameter. Optional.</t>
+					<t>@sortOrder {string} The order in which the sortBy parameter is applied. Can either be "ascending" or "descending", defaults to ascending. Optional.</t>
+					<t>@filterBy, @filterOp, @filterValue all {string} Filter to apply over users to retrieve, matches REST specification.</t>
+				</list>
+				Returns
+				<list style="symbols">
+					<t>An array of OpenSocial person JSON objects.</t>
+				</list>
+				<figure>
+					<preamble>Example:</preamble>
+					<artwork>
+&lt;os:PeopleRequest key="PagedFriends" userId="@owner" groupId="@friends" startPage="2" count="20"/&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Tags: &lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt;">
+			<t>
+				Requests to get the viewer's or owner's profile. 
+			</t>
+			<t>
+				Attributes
+				<list style="symbols">
+					<t>@key {string}</t>
+					<t>@fields {list&lt;string&gt;} Comma-delimited list of strings of OpenSocial profile fields to return. Optional.</t>
+				</list>
+				Returns
+				<list style="symbols">
+					<t>An OpenSocial person JSON object.</t>
+				</list>
+				<figure>
+					<preamble>Example:</preamble>
+					<artwork>
+&lt;os:ViewerRequest key="Viewer" fields="name, birthday"/&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Tag: &lt;os:ActivitiesRequest&gt;">
+			<t>
+				Request to get activities. 
+			</t>
+			<t>
+				Attributes
+				<list style="symbols">
+					<t>@key {string}</t>
+					<t>@userId {list&lt;string&gt;} Comma delimited IDs of the users to use with "@groupId". Each item can be one of "@me", "@viewer", "@owner", or a user ID. Required.</t>
+					<t>@groupId {string} The group of users to get activities for. Defaults to "@self", which returns the actual users listed in @userid. Other values are "@friends" to get friends, or any other string to get an arbitrary group. Optional.</t>
+					<t>@activityIds {list&lt;string&gt;} Comma delimited list of strings of activity ids to retreive. If set, @userid and @groupId will be ignored. Optional.</t>
+					<t>@appId {String} ID of app to get information for. Defaults to current app, and containers are not required to support other values. Optional.</t>
+					<t>@fields {list&lt;string&gt;} Comma-delimited list of strings of OpenSocial activity fields to return. Optional.</t>
+					<t>@startPage {int} Current page to return results from. Optional.</t>
+					<t>@startIndex {int: Starting index to return results from. Optional. Behavior is undefined if you send both startPage and startIndex.</t>
+					<t>@count {int} Number of activities to return. Optional.</t>
+				</list>
+				Returns
+				<list style="symbols">
+					<t>An array of OpenSocial activity JSON objects.</t>
+				</list>
+				<figure>
+					<preamble>Example:</preamble>
+					<artwork>
+&lt;os:ActivitiesRequest key="ViewerActivities" userid="@viewer" startIndex="40" count="20"/&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Tag: &lt;os:DataRequest&gt;">
+			<t>
+				Request for arbitrary URL data, equiavlent to gadgets.io.makeRequest().
+			</t>
+			<t>
+				This tag has additional attributes to match the functionality of 
+				<xref target="GadgetsSpec">gadgets.io.makeRequest</xref>.
+			</t>
+			<t>
+				Attributes
+				<list style="symbols">
+					<t>@key {string}</t>
+					<t>@href {string} The URL to send data to. Optional if not set the method contains 
+					be a full RPC method (see @method).</t>
+					<t>@params {string} Additional URL parameters, of format "a=b&amp;c=d". Optional.</t>
+					<t>@method {string} HTTP method to use, one of "get" or "post". Defaults to "get". Optional.
+						<list style="symbols">
+							<t>If method is "post", than the "@params" parameters are sent as POST content. 
+							If method is "get", then the params are appended to the URL.</t>
+							<t>Note that POSTing arbitrary content is not supported.</t>
+						</list>
+					</t>  
+		  
+    				<t>@format {string} Format data is returned in for processing, values are "json" or "text". 
+					Defaults to "json". Optional.
+						<list style="symbols">
+							<t>There is no ability to set arbitrary POST content, this just determined whether the 
+							key/value pair parameters are sent as a POST body.</t>
+							<t>Containers MAY optionally support full [RPC] methods, such as "people.get", or 
+							extensions, such as "email.get".</t>
+						</list>
+					</t>
+					<t>@refreshInterval {int} Period of time for which the cotnainer can cache the data. If 
+					this parameter is set, it overrides the HTTP response header sent back from the makeRequest(). Optional.</t>
+					<t>@authz. String, one of "none", "signed", "oauth", defaults to "none". This tells the 
+					gadget what authorization method to use when sending data to the remote server.</t>
+					<t>@sign_viewer {boolean} Sign the request and include the current viewer id. Defaults to true.</t>
+					<t>@sign_owner {boolean} Sign the request and include the current owner id. Defaults to true.</t>
+					<t>@oauth_service_name {string} Identifies the service element in the gadget spec to use for 
+					this request. Default is "".</t>
+					<t>@oauth_token_name {string} Identifies the OAuth token used to make a request to the service 
+					provider. Default is "".</t>
+					<t>@oauth_request_token {string}. Identify a token that is pre-approved by the provider for 
+					access to the resource.</t>
+					<t>@oauth_request_token_secret {string}. Secret associated with the pre-approved request token.</t>
+					<t>@oauth_use_token {string}. Control whether an OAuth token should be used with the request. 
+					Allowed values are: "always" | "if_available" | "never"</t>
+ 				</list>
+				<figure>
+					<preamble>Example:</preamble>
+					<artwork>
+&lt;os:DataRequest key="Pets" href="http://pets.com/api" authz="signed"/&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title='Embedding in @type="html" content'>
+			<t>
+				When embedding data pipelining a HTML content (either in CDATA or content returned with 
+				Content-Type:text/html from a proxied request), data pipelining tags are enclosed in a 
+				&lt;script type="text/os-data"&gt; block. 
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+&lt;Content type="html"&gt;&lt;![CDATA[ 
+  &lt;script type="text/os-data"&gt;
+    &lt;os:PeopleRequest key="vf" userid="@viewer" groupid="@friends"/&gt;
+  &lt;/script&gt;
+  &lt;script type="text/os-template"&gt;
+    &lt;div repeat="${vf}"&gt;${Name} is a friend.&lt;/div&gt;
+  &lt;/script&gt;
+]]&gt;
+&lt;/Content&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				The first &lt;script&gt; block of type text/os-data must be processed by the data pipeline 
+				processor. Behavior is undefined with multiple script blocks.
+			</t>
+			<t>
+				There is a general goal to be able to remove &lt;script&gt; blocks, but there are concerns 
+				in not having this &lt;script&gt; marker for processing, both in server and client-side 
+				implementations. We will experiment in the initial implementation and propose a streamlined 
+				syntax for the 1.0 OpenSocial release if possible. 
+			</t>
+		</section>
+		<section title="Proxied content">
+			<t>
+				Data pipelining tags can be top level elements in the &lt;Content&gt; section of a gadget using 
+				<xref target="GadgetsSpec">Proxied Content</xref>.
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+&lt;Content href="http://developer.com/canvas"&gt;
+  &lt;os:PeopleRequest key="vf" userid="@viewer" groupid="@friends"/&gt;
+&lt;/Content&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				The results of the data pipelining requests will be sent to the href of the &lt;Content&gt; 
+				section as POSTed JSON data. The structure will be in <xref target="RPCProtocol">Batch JSON</xref> format.
+			</t>
+			<t>
+				Elements in a data pipeline referencing the viewer (via @viewer, @me) will return a 403 
+				(Forbidden) error response if the container is unable to also send the opensocial_viewer 
+				URL parameter to the 3rd party server. The same holds true for @owner and opensocial_owner 
+				URL parameter. 
+			</t>
+		</section>
+		<section title="JavaScript API">
+			<t>
+				There will be new JavaScript APIs created to access the pipelined data on the client, 
+				all on the opensocial.data.DataContext object. 
+			</t>
+			<t>
+				There will be APIs to get the data returned from the data pipeline, set additional 
+				data, and listen to changes in data of a given key: 
+				<list style="symbols">
+					<t>opensocial.data.getContext() - Gets the DataContext associated with the gadget.</t>
+					<t>opensocial.data.DataContext.getDataSet(string key) - Retrieves the object data that is currently mapped to the specified key.</t>
+					<t>opensocial.data.DataContext.putDataSet(stringkey, json|object value) - Puts additional data into the data context keyed by the key.</t>
+					<t>opensocial.data.DataContext.registerListener (array&lt;String&gt;|string keys, Function(array&lt;String&gt; keys) callback) - Listen for any updates to data keyed by one of "keys". You can also pass in the wildcard key "*" to listen to all keys.
+						<list style="symbols">
+				        	<t>The callback function is returned with an array of the keys that have changed.</t>
+						</list>
+					</t>
+				</list>
+				<figure>
+					<preamble>Examples</preamble>
+					<artwork>
+var viewer = opensocial.data.getContext().getDataSet('Viewer');
+alert('Hello ' + viewer.name);
+
+os.data.getDataContext().putDataSet('Params', {"Page": 2, "PageSize": 10});
+
+opensocial.data.getDataContext().registerListener('Friends', function(key) {
+   var el = document.getElementById('friend-details');
+   el.style.display = 'show';
+});
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Handling of unrecognized tags">
+			<t>
+				Containers should ignore unrecognized tags or return error code 404 (Not Found). 
+				If a tag is ignored, the JSON structure can either include a null value for the 
+				request key or just not include the request key. 
+			</t>
+		</section>
+		<section title="Namespace">
+			<t>
+				XML namespace for all of the Data Pipelining tags is http://ns.opensocial.org/2008/markup. 
+			</t>
+		</section>
+		<section title="Dynamic parameters">
+			<t>
+				Data requests often need to change based on input parameters. Two key use cases:
+				<list style="symbols">
+					<t>Passing gadgets view parameters to a request, for example the current page in a paginated list.</t>
+					<t>Passing OpenSocial data to a following &lt;os:DataRequest&gt;, specifically IDs of 
+					(viewer, owner, viewer friends, owner friends).</t>
+				</list>
+				
+				Data pipelining will support a limited subset of the expression language used in OpenSocial 
+				templates (based on <xref target="JSPEL">JSP EL</xref>):
+				<list style="symbols">
+					<t>Expressions of format ${A.B} will be supported, where "A" is the key and "B" is the property.</t>
+					<t>The key "ViewParams" is reserved and refers to the parameters passed into the gadget rendering, 
+					equivalent to <xref target="GadgetsSpec">gadgets.views.getParams()</xref>.</t>
+					<t>The key "UserPrefs" is reserved and refers to gadget user preferences - 
+					${UserPrefs.PREF} will return the value of gadgets.Prefs.getString('PREF') - see [API].</t>
+				</list>
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+&lt;os:PeopleRequest key="PagedFriends" userid="@owner" groupid="@friends" startPage="${ViewParams.page}" count="20"/&gt;
+&lt;os:DataRequest href="http://developersite.com/api?ids=${PagedFriends.ids}"/&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+	</middle>
+	<back>
+		<references>
+		    <reference anchor='RFC2119'>
+		        <front>
+		            <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+		            <author initials='S.' surname='Bradner'
+		                    fullname='Scott Bradner'>
+		                <organization abbrev='HarvardU'>
+		                Harvard University
+		                </organization>
+		            </author>
+		            <date month='March' year='1997' />
+		        </front>
+		        <seriesInfo name='RFC' value='2119' />
+		    </reference>
+		    <reference anchor='RFC2606'>
+		        <front>
+		            <title>Reserved Top Level DNS Names</title>
+		            <author initials='D.' surname='Eastlake'
+		                    fullname='Donald E. Eastlake 3rd'>
+		                <organization abbrev='IBM'>
+		                IBM
+		                </organization>
+		            </author>
+		            <author initials='A.' surname='Panitz'
+		                    fullname='Aliza R. Panitz'>
+		            </author>
+		            <date month='June' year='1999' />
+		        </front>
+		        <seriesInfo name='RFC' value='2606' />
+		    </reference>
+			<reference anchor="GadgetsSpec" target="./Gadgets-API-Specification.xml">
+				<front>
+					<title>Gadgets API Specification 0.9</title>
+		            <author initials='o.' surname='social'
+		                    fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+		            </author>
+					<date month='January' year='2009' />
+				</front>
+			</reference>
+			<reference anchor="RPCProtocol" target="./RPC-Protocol.xml">
+				<front>
+					<title>OpenSocial RPC Protocol Specification v0.9</title>
+		            <author initials='o.' surname='social'
+		                    fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+		            </author>
+					<date month='January' year='2009' />
+				</front>
+			</reference>
+		    <reference anchor='JSPEL' target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
+		        <front>
+		            <title>Java Server Pages Expression Language</title>
+		            <author initials='K.' surname='Chung'
+		                    fullname='Kin-Man Chung'>
+		            </author>
+		            <author initials='P.' surname='DeLisle'
+		                    fullname='Pierre Delisle'>
+		            </author>
+		            <author initials='M.' surname='Roth'
+		                    fullname='Mark Roth'>
+		            </author>
+		            <date month='May' year='2006' />
+		        </front>
+		    </reference>
+			<reference anchor="osspec" target="./Opensocial-Specification.xml">
+				<front>
+					<title>OpenSocial Specification v0.9</title>
+		            <author initials='o.' surname='social'
+		                    fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+		            </author>
+					<date month='January' year='2000' />
+				</front>
+			</reference>
+		</references>
+	</back>
+</rfc>

@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<!--<!DOCTYPE rfc SYSTEM 'rfcXXXX.dtd'>-->
+<rfc ipr="full3978" docName="draft-opensocial-templating-specification-v0_9">
+	<front>
+		<title abbrev="OpenSocial REST">OpenSocial Templating Specification v0.9</title>
+		<author surname="opensocial"  
+			fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+			<address>
+				<email>opensocial-and-gadgets-spec@googlegroups.com</email>
+			</address>
+		</author>
+        <date month="January" year="2009"/>
+        <area>General</area>
+        <keyword>OpenSocial</keyword>
+        <keyword>social networking</keyword>
+        <keyword>REST</keyword>
+        <keyword>XML</keyword>
+        <keyword>Extensible Markup Language</keyword>
+        <keyword>JSON</keyword>
+        <keyword>JavaScript Object Notation</keyword>
+        <keyword>Atom</keyword>
+	</front>
+	<middle>
+		<section title="Notation and Conventions">
+			<t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", 
+			"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described 
+			in <xref target="RFC2119">RFC2119</xref>. Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+		</section>
+		<section title="Overview">
+			<t>
+			</t>
+			<section title="What is OpenSocial Template?">
+				<t>
+					OpenSocial Template (OST) provides a declarative way for gadget developers to create 
+					templates by copying and pasting HTML, then making minor modifications to that HTML. 
+					Because OST is part of OpenSocial, it also provides a means to bind to the OpenSocial 
+					APIs and custom, developer defined variables. OST accomplishes this through tag libraries 
+					and special markup.
+				</t>
+				<section title="Limitations">
+					<t>
+						An OST implementation can fetch, inject, cache, and store data requests for the 
+						application before any client side code executes. OST does not represent a full 
+						replacement for JavaScript. OST assumes that applications can fallback to JavaScript 
+						whenever a combination of application and container cannot make use of a given OST feature.
+					</t>
+				</section>
+			</section>
+		</section>
+		<section title="Gadget Feature Name">
+			<t>
+				OST creates a new feature name for use in the Gadgets Specification: opensocial-templates. 
+				When a Module requires OST, the Module must contain this XML:
+				<figure>
+					<artwork>
+&lt;ModulePrefs&gt;
+  &lt;Require feature="opensocial-templates"/&gt;
+&lt;/ModulePrefs&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				A common usage of the feature would be with other OpenSocial features. 
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+
+&lt;ModulePrefs title="Hello World"&gt;
+  &lt;Require feature="opensocial-0.9"/&gt;
+  &lt;!-- Allows templates --&gt;
+  &lt;Require feature="opensocial-templates"/&gt;
+  &lt;!-- Allows multiple views to be defined and thus rendered client or server --&gt;
+  &lt;Require feature="views"/&gt;
+&lt;/ModulePrefs&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Template Format">
+			<t>
+				The canonical template format is a well-formed XML document. This document can 
+				include HTML tags which will be output directly when rendering the template, and 
+				custom tags which will be evaluated when rendering the template. 
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+&lt;Template&gt;
+  &lt;div style="font-size: 20px"&gt;Hello world!&lt;/div&gt;
+&lt;/Template&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				A common use case will be embedding this XML into an HTML document. The following 
+				snippet can be embedded directly into a gadget &lt;Content&gt; section or HTML document:
+				<figure>
+					<artwork>
+&lt;script type="text/os-template" name="my:HelloWorld"&gt;
+  &lt;div style="font-size: 20px"&gt;Hello world!&lt;/div&gt;
+&lt;/script&gt;
+					</artwork>
+				</figure>
+				Templates can also define template markup libraries, which will map to XML namespaces. 
+			</t>
+		</section>
+		<section title="Expressions">
+			<t>
+				Expressions can be embedded into the template XML using the syntax ${Expr}. 
+				<figure>
+					<preamble>Example template content with an expression</preamble>
+					<artwork>
+&lt;div&gt;Hello ${Viewer.Name}&lt;/div&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				Expressions are defined using a subset of the <xref target="JSPEL">JSP Expression Language</xref>, with a 
+				couple of minor modifications. We use a subset of the JSP Expression Language 
+				specification. This allows for expressions that are raw variable references, as 
+				in the example above, or expressions with operators:
+				<figure>
+					<artwork>
+&lt;div&gt;Next step is ${Step + 1}&lt;/div&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				JSP Expression Language allows you to use most standard operators (comparison, 
+				arithmetic, etc.), although some operators have an alternate name for use in XML. 
+				${a &lt; b} becomes ${a lt b}, ${a &gt; b} becomes ${a gt b}, ${a &amp;&amp; b} 
+				becomes ${a and b}, etc.
+			</t>
+			<t>
+				Expressions are usually evaluated as strings. The only exception is when expressions
+				are in attributes without additional text content, and in this case, the value of 
+				the expression is the object referenced, and this object is passed to the template 
+				for processing. In the following example, the viewer is passed in to the 
+				os:ShowPerson template.
+				<figure>
+					<artwork>
+&lt;os:ShowPerson person="${Viewer}"/&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				Strings are escaped before inserting into the HTML document. By default strings 
+				are HTML escaped, however based on context they may be URL encoded or escaped as 
+				JavaScript strings, depending on context. 
+			</t>
+		</section>
+		<section title="Variables">
+			<t>
+				Data is passed into all calls to render templates - i.e.: opensocial.template.processAll(data). 
+				The data passed in can be a JSON object, or as an object with a "getProp" method (example below). 
+				The templates will have two 'types' of variables. One set is a set of global objects with 
+				reserved names. The other set includes everything else or all other declared JavaScript variables. 
+			</t>
+			<section title="Special Variables">
+				<t>
+					Template processing reserves a small set of variables. 
+				</t>
+				<section title="Top">
+					<t>
+						${Top} refers to the data context passed into the template rendering - i.e. 
+						opensocial.template.renderAll(data) -&gt; ${Top} == data. 
+					</t>
+				</section>
+				<section title="Content">
+					<t>
+						${Context} is a holding area for additional variables needed when processing templates. 
+						${Context} will include the following set of properties:
+						<list style="symbols">
+							<t>${Context.UniqueId} A unique ID of the template being rendered. This value is useful for generating HTML IDs.</t>
+							<t>${Context.Index} The index of the current item in the list that is being processed via a "repeat" tag.</t>
+							<t>${Context.Count} The count of items in the list that is being processed via a "repeat" tag.</t>
+						</list>
+ 					</t>
+				</section>
+				<section title="Cur">
+					<t>
+						${Cur} refers to the current item being processed within a repeater. 
+					</t>
+				</section>
+				<section title="My">
+					<t>
+						${My} refers to data that is passed into a template. Child elements of tags that 
+						are used to call templates are passed as parameters to the template and are accessible 
+						via the ${My} variable. If these elements have content inside of them, this content 
+						can be rendered using &lt;os:Render content="tagName"/&gt;.
+						<figure>
+							<preamble>Example of defining a template that uses &lt;os:Render/&gt; and calling this template</preamble>
+							<artwork>
+&lt;script type="text/os-template" tag="myapp:BoxWithTitle"&gt;
+  &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
+  &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
+&lt;/script&gt;
+&lt;script type="text/os-template"&gt;
+  &lt;myapp:BoxWithTitle&gt;
+    &lt;title&gt;This is the title&lt;/title&gt;
+    &lt;body&gt;
+      &lt;div style="font-size:40px"&gt;Boo!&lt;/div&gt;
+      &lt;div&gt;from &lt;os:ShowPerson person="${Top.Viewer}"/&gt;&lt;/div&gt;
+    &lt;body&gt;
+  &lt;/myapp:BoxWithTitle&gt;
+&lt;/script&gt;
+							</artwork>
+						</figure>
+					</t>
+					<t>
+						Note that the passed in content can include other template tags. These tags 
+						are displayed as part of calling &lt;os:Render/&gt;.
+					</t>
+					<t>
+						You can also call &lt;os:Render&gt; without a "content" attribute. This will 
+						render all children of the calling node - this is a useful shorthand for tags 
+						with only one content section.
+						<figure>
+							<preamble>Example</preamble>
+							<artwork>
+&lt;script type="text/os-template" tag="myapp:JsLink"&gt;
+  &lt;a href="#" onclick="${My.action}; return false;"&gt;&lt;os:Render/&gt;&lt;/a&gt;
+&lt;/script&gt;
+&lt;script type="text/os-template"&gt;
+  This is a &lt;myapp:JsLink action="alert('boo')"&gt;javascript link&lt;/a&gt;.
+&lt;/script&gt;
+							</artwork>
+						</figure>
+					</t>
+				</section>
+				<section title="Precedence Rules for Special Variables">
+					<t>
+						Special variable names are optional. Expressions will be evaluated against each 
+						of the special variable contexts. The first matching variable will be the result 
+						of expression evaluation. The order of precedence is $My, $Cur, $Context, and then 
+						$Top. For example, ${Cur.Name} == ${Name} unless there exists ${My.Name}. The 
+						following examples show why this is helpful:
+
+						<figure>
+							<preamble>Example with special variables in place</preamble>
+							<artwork>
+&lt;div repeat="${Top.ViewerFriends}"&gt;
+  &lt;div&gt;${Cur.Name}"&lt;/div&gt;
+  &lt;div repeat="${Cur.Phone}"&gt;${Cur.Number} of type ${Cur.Type}&lt;/div&gt;
+&lt;/div&gt;
+							</artwork>
+						</figure>
+						<figure>
+							<preamble>Equivalent script using precedence rules</preamble>
+							<artwork>
+&lt;div repeat="${ViewerFriends}"&gt;
+  &lt;div&gt;${Name}"&lt;/div&gt;
+  &lt;div repeat="${Phone}"&gt;${Number} of type ${Type}&lt;/div&gt;
+&lt;/div&gt;
+							</artwork>
+						</figure>
+					</t>
+					<t>	
+						"Top" refers to the data context passed in via Javascript, so ${Top} will return the 
+						data passed in during template rendering.
+					</t>
+					<t>	
+						Variables are accessed using Foo.Bar (or Foo.Bar.Baz) notation. .Bar maps to 
+						getting the property Bar on the JSON object. If Top and Viewer are JSON objects, then
+						<figure>
+							<artwork>
+${Top.Viewer.Name}
+							</artwork>
+						</figure>
+						evaluates to
+						<figure>
+							<artwork>
+data['Viewer']['Name']
+							</artwork>
+						</figure>
+					</t>
+					<t>
+						If an object has a getProp method, then this method is called instead of using the 
+						property notation. So if Top and Viewer support this interface, then
+						<figure>
+							<artwork>
+${Top.Viewer.Name}
+							</artwork>
+						</figure>
+						evaluates to
+						<figure>
+							<artwork>
+data.getProp('Viewer').getProp('Name')
+							</artwork>
+						</figure>
+					</t>
+					<t>
+						OpenSocial core objects will be modified to add getProp() support so that you can access properties by name.
+					</t>
+					<t>
+						Variables can also be accessed using the foo[x] notation, where x is a string, number, or 
+						expression that evaluates to a string or number. If ${foo} is an expression that maps to the 
+						JS object bar, then ${foo[x]} maps to bar[x] if bar is JSON, or bar.getAt(x) if bar is an object. 
+					</t>
+				</section>
+			</section>
+		</section>
+		<section title="Calling Templates">
+			<t>
+				Templates can be called by other templates. You can add a "name" attribute to any template (both on the &lt;Template&gt; element or on the &lt;script&gt; tag for embedded templates). This allows the template to be called by using an XML element of the same name.
+				<figure>
+					<preamble>Example of defining a template and then calling it</preamble>
+					<artwork>
+&lt;script type="text/os-template" tag="myapp:HelloWorld"&gt;
+  &lt;div style="font-size: 40px"&gt;Hello World&lt;/div&gt;
+&lt;/script&gt;
+&lt;script type="text/os-template"&gt;
+  &lt;myapp:HelloWorld/&gt;
+&lt;/script&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				Parameters can be passed into templates as XML attributes or elements. These parameters 
+				are accessed using the special variable ${My}:
+				<figure>
+					<artwork>
+&lt;script type="text/os-template" tag="myapp:HelloWorld"&gt;
+  &lt;div style="color: ${My.MessageStyle.color}"&gt;Your message is: ${My.message}&lt;/div&gt;
+&lt;/script&gt;
+ 
+&lt;script type="text/os-template"&gt;
+  &lt;myapp:HelloWorld message="Hello World"&gt;
+    &lt;MessageStyle color="blue"/&gt;
+  &lt;/myapp&gt;
+&lt;/script&gt;
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				${My.foo} will first look for an attribute named foo in the calling template, and 
+				next will look for an element named foo. 
+			</t>
+			<section title="Context Attribute">
+				<t>
+					The scope of data to evaluate can be explicitly set with the @context attribute. 
+					For example, to repeat over Interests of the first object in Friends, you can use this expression:
+					<figure>
+						<artwork>
+&lt;div context="Friends[0]"&gt;
+  &lt;div repeat="Interests"&gt;
+    ${Title}
+  &lt;/div&gt;
+&lt;/div&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
+		</section>
+		<section title="Conditional Content">
+			<t>
+				Content can be displayed conditionally based on evaluation of an expression.
+				Elements with an @if attribute will only be displayed if the if attribute 
+				evaluates to true. For example, the following will only be displayed if 
+				Top.YourScore == Top.HighScore:
+				<figure>
+					<artwork>
+&lt;div if="Top.YourScore == Top.HighScore"&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
+					</artwork>
+				</figure>
+				Note: An @if attribute takes only an expression, so the surrounding '${}' is allowed, but optional.
+			</t>
+			<t>
+				The contents of an &lt;os:If&gt; element are only displayed if the condition attribute 
+				evaluates to true. 
+				<figure>
+					<preamble>The example above rewritten using the &lt;os:If&gt; element</preamble>
+					<artwork>
+
+&lt;os:If condition="Top.YourScore == Top.HighScore"&gt;
+  &lt;div&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
+&lt;/os:If&gt;
+					</artwork>
+				</figure>
+				The @if attribute can be used on any element within a template, some examples are as follows:
+				<figure>
+					<artwork>
+
+&lt;!-- Custom tags --&gt;
+&lt;os:ShowPerson person="${Top.Owner}" if="Top.HasOwner"/&gt;
+ 
+&lt;!-- Repeated elements (see below) --&gt;
+&lt;div repeat="Top.ViewerFriends" if="Cur.ProfileUrl"&gt;
+  Link to: &lt;a href="${Cur.ProfileUrl}"&gt;${Cur.Name}&lt;/a&gt;
+&lt;/div&gt;
+ 
+&lt;!-- Tag contents --&gt;
+&lt;os:Button&gt;
+  &lt;title&gt;Click me!&lt;/title&gt;
+  &lt;help if="Top.Viewer.NeedsHelp"&gt;You need help.&lt;/help&gt;
+&lt;/os:Button&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Repeated Elements">
+			<t>
+				Tags can be rendered multiple times based on evaluation of an expression.
+			</t>
+			<t>
+				Tags with a @repeat attribute are displayed once for each item in evaluating the expression 
+				in the repeat attribute. The current item in the repeated list will be put into the ${Cur} variable. 
+				Note: As with @if, the ${} expression syntax is optional, but allowed.
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+&lt;div repeat="Top.ViewerFriends"&gt;
+  Your friend's name is ${Cur.Name}
+&lt;/div&gt;
+					</artwork>
+				</figure>
+				In addition, both the variable and the index can be renamed, by adding a @var attribute and 
+				@index attribute respectively.
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+&lt;!-- Renaming variable $Cur --&gt;
+&lt;div repeat="${Top.ViewerFriends}" var="Friend"&gt;
+  Your friend's name is ${Friend.Name}
+&lt;/div&gt;
+ 
+&lt;!-- Specifying an Index variable --&gt;
+&lt;div repeat="rows" index="x"&gt;
+  &lt;div repeat="cols" index="y"&gt;
+    &lt;myapp:DrawPoint row="${x}" col="${y}"/&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+					</artwork>
+				</figure>
+				There are two context variables available during list processing. ${Context.Count} is 
+				the count of items in the list and ${Context.Index} is the index of the current item. 
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+&lt;div repeat="${Top.ViewerFriends}"&gt;
+  Showing friend ${Context.Index} of ${Context.Count}: 
+  Your friend's name is ${Cur.Name}
+&lt;/div&gt;
+					</artwork>
+				</figure>
+				The contents of an &lt;os:Repeat&gt; element displayed once for each item in 
+				evaluating the expression in the expression attribute. The current item in the 
+				repeated list will be put into the ${Cur} variable, and a @var attribute can also 
+				be used to rename the iteration variable.
+				<figure>
+					<artwork>
+&lt;os:Repeat expression="${Top.ViewerFriends}"&gt;
+  &lt;div&gt;
+    Your friend's name is ${Cur.Name}
+  &lt;/div&gt;
+&lt;/os:Repeat&gt;
+					</artwork>
+				</figure>
+				and
+				<figure>
+					<artwork>
+&lt;os:Repeat expression="${Top.ViewerFriends}" var="Friend"&gt;
+  &lt;div&gt;
+    Your friend's name is ${Friend.Name}
+  &lt;/div&gt;
+&lt;/os:Repeat&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Template Libraries">
+			<t>
+				While inline templates can be useful for visualizing data, eventually you may want to 
+				create standalone, reusable templates. In that regard, templates can be packaged into a 
+				standalone XML file of the following format:
+				<figure>
+					<artwork>
+&lt;Templates xmlns:foo="http://foo.com/"&gt;
+  &lt;Namespace prefix="foo" url="http://foo.com/"/&gt;
+ 
+  &lt;Style&gt;
+    &lt;!-- Set global CSS for your library here --&gt;
+    .warning { color: red; }
+  &lt;/Style&gt;
+ 
+  &lt;JavaScript&gt;
+    &lt;!-- Define global functions for your library here --&gt;
+    function usedByAllTemplates() { ... };
+  &lt;/JavaScript&gt;
+ 
+  &lt;!-- Simple declarative tag foo:bar --&gt;
+  &lt;Template tag="foo:bar"&gt;
+    &lt;!-- Define markup for foo:bar here --&gt;
+  &lt;/Template&gt;
+ 
+  &lt;!-- Complex tag foo:baz with local CSS and JavaScript --&gt;
+  &lt;TemplateDef tag="foo:baz"&gt;
+    &lt;Template&gt; &lt;!-- Define markup for foo:baz here --&gt; &lt;/Template&gt;
+    &lt;Style&gt; &lt;!-- Set CSS for foo:baz here --&gt; &lt;/Style&gt;
+    &lt;JavaScript&gt;
+      &lt;!-- Define functions for the foo:baz template here --&gt;
+      function usedByFooBaz() { ... };
+    &lt;/JavaScript&gt;
+  &lt;/TemplateDef&gt;
+&lt;/Templates&gt;
+					</artwork>
+				</figure>
+
+				<figure>
+					<preamble>For example</preamble>
+					<artwork>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Templates xmlns:os="http://opensocial.org/templates"&gt;
+  &lt;Namespace prefix="os" url="http://opensocial.org/templates"&gt;
+  &lt;Style&gt;
+    large-font: {
+      font-size: 20px;
+    }
+  &lt;/Style&gt;
+  &lt;Template name="os:HelloWorld"&gt;
+    &lt;div style="large-font"&gt;Hello World!&lt;/div&gt;
+  &lt;/Template&gt;
+  &lt;TemplateDef tag="os:ShowPerson"&gt;
+    &lt;Style&gt;
+      profile-image: {
+        padding-right: 5px;
+        width: 32px;
+        height: 32px;
+      }
+    &lt;/Style&gt;
+    &lt;Template&gt;
+      &lt;img if="${My.person.ThumbnailUrl}" src="${My.person.ThumbnailUrl}"
+          class="profile-image"/&gt;
+      &lt;a href="${My.person.ProfileUrl}" target="_top"&gt;${My.person.Name}&lt;/a&gt;
+    &lt;/Template&gt;
+  &lt;/TemplateDef&gt;
+&lt;/Templates&gt;
+					</artwork>
+				</figure>
+
+				Syntax:
+				<list style="symbols">
+					<t>&lt;Templates&gt;: Declares all the namespaces used in this library to the XML parser. 
+					You must put this tag at the outer-most level of your XML file and list all the custom 
+					and pre-defined namespaces that you use in this library. Use the syntax 
+					xmlns:namespace_prefix="namespace_URL" for each namespace. For example, if you use 
+					any tags in the OpenSocial namespace via the OpenSocial Templates library, you must 
+					include xmlns:os="http://www.opensocial.org/".</t>
+					<t>&lt;Namespace&gt;: Declares your custom namespace to the OpenSocial Templates API. 
+					You should only create one namespace per library file. Set the values of your namespace's 
+					prefix and URL using the syntax prefix="namespace_prefix" url="namespace_URL".</t>
+					<t>&lt;Style&gt;: Defines style settings in CSS for your library (at the top-level of 
+					the XML file) or individual templates (within &lt;TemplateDef/&gt; tags).</t>
+					<t>&lt;JavaScript&gt;: Defines JavaScript functions for your library (at the top-level 
+					of the XML file) or individual templates (within &lt;TemplateDef/&gt; tags).</t>
+					<t>&lt;Template&gt;: Sets declarative markup for a template.</t>
+					<t>&lt;TemplateDef&gt;: Defines a more complex template, which can enclose its own 
+					local &lt;Template/&gt;, &lt;Style/&gt;, and &lt;JavaScript/&gt; tags.</t>
+				</list>
+				Containers should load the &lt;os:*&gt; template tags by default, and it is not required 
+				that they be defined as a standalone XML file. Other tag libraries can be loaded by default 
+				in a container - for example, Example.com might have a set of &lt;example:*&gt; tags available. 
+			</t>
+		</section>
+		<section title="Localization">
+			<t>
+				Templates will have the ability to substitute localized text content on a per-language basis.
+			</t>
+			<t>
+				Gadgets already have a facility for defining localized messages. In the gadget prefs, 
+				you can specify the URL for localized message bundles on a per-language basis:
+				<figure>
+					<artwork>
+&lt;ModulePrefs title="ListenToThis"&gt; 
+  &lt;Locale messages="http://www.listentostuff.com/messages.xml"/&gt; 
+  &lt;Locale lang="de" messages="http://www.listentostuff.com/messages-DE.xml"/&gt; 
+&lt;/ModulePrefs&gt;
+					</artwork>
+				</figure>
+				Each bundle is a list of &lt;msg&gt; elements with localized content inside:
+				<figure>
+					<preamble>For example</preamble>
+					<artwork>
+&lt;messagebundle&gt; 
+  &lt;msg name="PLAY_SONG"&gt;Click here to play ${song.title}&lt;/msg&gt; 
+&lt;/messagebundle&gt;
+					</artwork>
+				</figure>
+				Also note that in OpenSocial API 0.9, you will be able to inline &lt;msg&gt; elements 
+				into the gadget directly without creating separate files for each locale.
+			</t>
+			<t>
+				Localized messages will be accessible via the ${Msg} variable:
+				<figure>
+					<preamble>For example</preamble>
+					<artwork>
+&lt;a href="${song.url}"&gt;${Msg.PLAY_SONG}&lt;/a&gt;
+					</artwork>
+				</figure>
+				Any ${} markup in the message body will be honored - in the above example, the ${song.title} 
+				reference in the message will be evaluated at the time of template rendering. Repeaters and 
+				conditionals in messages will not be processed. Variable markup will be evaluated in the 
+				context in which the message is placed. (Note how the message in the example references the 
+				${song} variable available at the point of message inclusion.)
+			</t>
+			<t>
+				It's important to realize that this sets ${Msg} apart from other variable inclusion markup - 
+				variable references will NOT be processed in any other output.
+			</t>
+			<t>
+				If a particular message is undefined for a locale and missing from the default bundle 
+				(prefs.getMsg(key) returns null in these cases), an error message should be rendered in 
+				its place for easy debugging. 
+			</t>
+		</section>
+	</middle>
+	<back>
+		<references>
+		    <reference anchor='RFC2119'>
+		        <front>
+		            <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+		            <author initials='S.' surname='Bradner'
+		                    fullname='Scott Bradner'>
+		                <organization abbrev='HarvardU'>
+		                Harvard University
+		                </organization>
+		            </author>
+		            <date month='March' year='1997' />
+		        </front>
+		        <seriesInfo name='RFC' value='2119' />
+		    </reference>
+		    <reference anchor='RFC2606'>
+		        <front>
+		            <title>Reserved Top Level DNS Names</title>
+		            <author initials='D.' surname='Eastlake'
+		                    fullname='Donald E. Eastlake 3rd'>
+		                <organization abbrev='IBM'>
+		                IBM
+		                </organization>
+		            </author>
+		            <author initials='A.' surname='Panitz'
+		                    fullname='Aliza R. Panitz'>
+		            </author>
+		            <date month='June' year='1999' />
+		        </front>
+		        <seriesInfo name='RFC' value='2606' />
+		    </reference>
+		    <reference anchor='JSPEL' target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
+		        <front>
+		            <title>Java Server Pages Expression Language</title>
+		            <author initials='K.' surname='Chung'
+		                    fullname='Kin-Man Chung'>
+		            </author>
+		            <author initials='P.' surname='DeLisle'
+		                    fullname='Pierre Delisle'>
+		            </author>
+		            <author initials='M.' surname='Roth'
+		                    fullname='Mark Roth'>
+		            </author>
+		            <date month='May' year='2006' />
+		        </front>
+		    </reference>
+		</references>
+	</back>
+</rfc>

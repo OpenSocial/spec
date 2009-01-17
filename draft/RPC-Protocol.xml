@@ -1,0 +1,1212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<!--<!DOCTYPE rfc SYSTEM 'rfcXXXX.dtd'>-->
+<rfc ipr="full3978" docName="draft-opensocial-rpc-protocol-specification-v0_9">
+	<front>
+		<title abbrev="OpenSocial REST">OpenSocial RPC Protocol Specification v0.9</title>
+		<author surname="opensocial"  
+			fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+			<address>
+				<email>opensocial-and-gadgets-spec@googlegroups.com</email>
+			</address>
+		</author>
+        <date month="January" year="2009"/>
+        <area>General</area>
+        <keyword>OpenSocial</keyword>
+        <keyword>social networking</keyword>
+        <keyword>REST</keyword>
+        <keyword>XML</keyword>
+        <keyword>Extensible Markup Language</keyword>
+        <keyword>JSON</keyword>
+        <keyword>JavaScript Object Notation</keyword>
+        <keyword>Atom</keyword>
+	</front>
+	<middle>
+		<section title="Notation and Conventions">
+			<t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", 
+			"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described 
+			in <xref target="RFC2119">RFC2119</xref>. Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+		</section>
+		<section title="Overview">
+			<t>
+				This proposal defines an RPC alternative to the <xref target="RESTful Protocol Specification"/>. The intent is 
+				to support the same data and operations as the RESTful API in a form that is more natural 
+				for the JSON data format. Any batch of RPCs should be programatically convertible to a 
+				sequence or batch of RESTful calls and maintain the same semantics, any exception to this 
+				will be called out explicitly.
+			</t>
+			<t>
+				It shares the following with the RESTful spec:
+				<list format="numbers">
+					<t>The JSON/XML format of the OpenSocial data types for Person, Activity, Group &amp; AppData are identical.</t>
+					<t>HTTP status codes are used to represent common error cases where applicable.</t>
+					<t><xref target="OAuth Core 1.0"/> is supported for authentication and authorization in addition to other 
+					authorization schemes a container may choose to support. A single OAuth token can 
+					be used for a batch of operations or each operation can specify its own OAuth token.</t>
+					<t>Concurrency control is optional.</t>
+				</list>
+				It differs from the RESTful spec in the following ways:
+				<list format="numbers">
+					<t>All structural elements in the protocol are represented using the JSON or XML notation.</t>
+					<t>Batch support is required.</t>
+					<t>HTTP is used primarily as a transport and not to indicate the semantics of the request.</t>
+					<t>Automated discovery happens in two steps. XRDS can be used to discover the RPC endpoint. 
+					The service can then be introspected by executing an RPC for "system.listMethods" to discover 
+					the list of available services and operations using conventions defined by XML-RPC Introspection 
+					Within a running gadget the address of the RPC endpoint should be available as a Javascript 
+					variable (name and mechanism TBD). In general it is expected that a large percentage of 
+					consumers will bypass automated discovery and rely on simpy hardcoding references to the 
+					endpoints of various popular containers.</t>
+				</list>			
+			</t>
+			<t>
+				This document presents all of its examples in the JSON format but the RPC protocol is 
+				equally applicable to an XML format. The data structure returned is equivalent in both formats; 
+				the only difference is in the encoding of the data. Singular fields are encoded as string key/value 
+				pairs in JSON and tags with text content in XML, e.g. "field": "value" and &lt;field&gt;value&lt;/field&gt; 
+				respectively. Plural fields are encoded as arrays in JSON and repeated tags in XML, e.g. "fields": 
+				[ "value1", "value2" ] and&lt;fields&gt;value1&lt;/field&gt;&lt;fields&gt;value2&lt;/field&gt; respectively. Nodes with 
+				multiple sub-nodes are represented as objects in JSON and tags with sub-tags in XML, e.g. "field": 
+				{ "subfield1": "value1", "subfield2": "value2" } and&lt;field&gt;&lt;subfield1&gt;value1&lt;/subfield1&gt;&lt;subfield2&gt;
+				value2&lt;/subfield2&gt;&lt;/field&gt; respectively.
+			</t>
+		</section>
+		<section title="Examples">
+			<t>
+			</t>
+			<section title="Single element request &amp; response for the Person associated with principal in the OAuth token">
+				<t>
+					This maps to fetching /people/@me/@self using the RESTful API.
+				</t>
+				<t>
+					Notes:
+					<list style="symbols">
+						<t>The params groupId and userId are included here for completeness even though 
+						they are the default parameter values for the operation.</t>
+						<t>The "method" field identifies both the service "people" 
+						and the operation "get" which has the same semantics as an HTTP GET request in the RESTful spec. </t>
+						<t>"json-rpc" as defined in JSON-RPC is not passed in the request but requests MUST be 
+						interpreted as if "json-rpc" : "2.0" was supplied.</t>
+						<t>"id" is an optional identifier the caller may choose to associate with the call, this field is
+						propagated to the response.</t> 
+						<t>The "result" field in the response is the returned object, in this case an 
+						opensocial.Person object.</t>
+						<t>URL addressable equivalent is 
+						http://api.example.org/rpc?method=people.get&amp;id=myself&amp;userId=@me&amp;groupId=@self.</t>
+					</list>
+					<figure>
+						<artwork>
+
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;Auth token&gt;
+Content-Type: application/json
+{
+  "method" : "people.get",
+  "id" : "myself"
+  "params" : {
+    "userId" : "@me",
+    "groupId" : "@self"
+  }
+}
+
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "myself"
+   "result" : {
+     "id" : "example.org:34KJDCSKJN2HHF0DW20394",
+     "name" : { "unstructured" : "Jane Doe"},
+     "gender" : "female"
+  }
+}
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Multi-element batch request &amp; response for person associated with principal in the OAuth token and their friends"
+				anchor="personEx">
+				<t>
+					This maps to fetching /people/@me/@self &amp; /people/@me/@friends using the RESTful API.
+				</t>
+				<t>
+					Notes:
+					<list style="symbols">
+						<t>A batch request is detected by examining the request to see if it is a 
+						JSON array of requests. Any request id's specified in a batch SHOULD be unique.</t>
+						<t>The request for "myself" succeeded but the one for "myfriends" failed because the 
+						OAuth token does not grant access to this resource. The failure of the "friends" 
+						request is indicated by the existence of an "error" object which contains a "code" 
+						field which uses the numerical value of the HTTP status code UNAUTHORIZED.  
+						See <xref target="JSON-RPC Error">JSON-RPC.Error</xref>.</t>
+						<t>The batch response elements are returned in an array in the same order as
+						the corresponding batch request elements. The "id" of the corresponding request 
+						in the batch request is carried over to the response.</t>
+						<t>In this example parameters are omitted where they match the defaults. If 
+						the call has no parameters the "params" field can be omitted completely.</t>
+					</list>
+					<figure>
+						<artwork>
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;Auth token&gt;
+Content-Type: application/json
+[
+  {
+    "method" : "people.get",
+    "id" : "myself"
+  },
+  {
+    "method" : "people.get",
+    "id" : "myfriends"
+    "params: {
+      "groupId" : "@friends"
+    }
+  }
+]
+
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+[
+  {
+    "id" : "myself",
+    "result" : {
+      "id" : "example.org:34KJDCSKJN2HHF0DW20394",
+      "name" : { "unstructured" : "Jane Doe"},
+      "gender" : "female"
+    }
+  },
+  {
+    "id" : "myfriends"
+    "error" : {
+      "code" : 401
+    }
+  }
+]							
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Multi-element batch request &amp; response with per-request auth-token override">
+				<t>
+					This maps to fetching /people/@me/@self using the 1st auth-token and fetching /people/@me/@friends using the 2nd auth-token with the
+					RESTful API.
+				</t>
+				<t>
+					Notes:
+					<list style="symbols">
+						<t>The auth token in the header is used for requests which do not specify an "auth" parameter explicitly.</t>
+					</list>
+					<figure>
+						<artwork>
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;1st Auth token&gt;
+Content-Type: application/json
+[
+  {
+    "method" : "people.get",
+    "id" : "a9fd76"
+  },
+  {
+    "method" : "people.get",
+    "id" : "e453a",
+    "params: {
+      "groupId" : "@friends",
+      "auth" : "&lt;2nd Auth token&gt;"
+    }
+  }
+]
+
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+[
+   {
+    "result" : {
+      ...
+    }
+  },
+  {
+    "result" : {
+      ...
+    }
+  }
+]
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Request &amp; response for collection of Person objects">
+				<t>
+					This example maps to fetching /people/@me/@friends with the RESTful API.
+				</t>
+				<t>
+					Notes:
+					<list style="sybmols">
+						<t>A response that contains a list of information will contain a "list" field in the result.</t>
+						<t>The result will also  include details about the number of elements returned in the "list" 
+						field as well as information about how to request additional elements using either paging 
+						or indexing. The example shown is for a list that is addressed by indexing.</t>
+						<t>Indices are always 0 based, so valid indices in the list are 0..totalResults-1. </t>
+						<t>URL addressable equivalent is 
+						http://api.example.org/rpc?method=people.get&amp;id=myfriends&amp;userId=@me&amp;groupId=@friends.</t>
+					</list>
+					<figure>
+						<artwork>
+
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+    "method" : "people.get",
+    "id" : "myfriends"
+    "params: {
+      "userId" : "@me",
+      "groupId" : "@friends"
+    }
+}
+
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+  "result" : {
+    "totalResults" : 100,  
+    "startIndex" : 0,
+    "itemsPerPage" : 10,
+    "list" : [
+      {..},
+      {..},
+    ]
+  }
+} 
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Updating application app-data for a user">
+				<t>
+					This example maps to PUTing or POSTing a set of key-values 
+					to /appdata/@me/@self/app12345 with the RESTful API. This is a fairly simple example of an update.
+				</t>
+				<t>
+					Notes:
+					<list style="symbols">
+						<t>The userId and groupId params are omitted because they match the defaults.</t>
+						<t>The appId param can be omitted if the auth-token used for the 
+						call can be used to derive the value for the appId.</t>
+						<t>The return value on success is VOID, represented by an empty JSON structure.</t>
+						<t>URL addressable equivalent is 
+						http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app12345&amp;data.pokes=3&amp;data.lastPoke=2008-02-13T18:30:02Z.</t>
+					</list>
+					<figure>
+						<artwork>
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+    "method" : "appdata.update",
+    "id" : "setMyData"
+    "params: {
+      "appId" : "app12345",
+      "data" : {
+        "pokes" : 3,
+        "lastPoke" : "2008-02-13T18:30:02Z"
+      }
+   }
+}
+
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+  "result" : {
+  }
+}  
+
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Creating a friend relationship to another user. ">
+				<t>
+					This example maps to PUTing an opensocial.Person object /people/@me/@friends with the 
+					RESTful API. This example is a use-case not covered by the OpenSocial JS API and is 
+					given here to show how additional operations that a container may want to support can be 
+					defined within this framework. This effect of this call may be different based on how the 
+					container models the social graph. This may be interpreted as send an invite to the specified 
+					person to create a bi-drection friend relationship which may be accepted or rejected later. 
+					Depending on the semantics of the group the result of the call can vary and the person added 
+					may not be immediately visible in a subsequent person.get call on the same group.
+				</t>
+				<t>
+					Notes:
+					<list style="symbols">
+						<t>The return value on success is VOID, represented by an empty JSON structure.</t>
+						<t>userId &amp; groupId could be omitted as they match the operation default. Shown for completeness.</t>
+						<t>URL addressable equivalent is 
+						http://api.example.org/rpc?method=people.create&amp;id=createFriend&amp;userId=@me&amp;groupId=@friends&amp;person.id=example.org:FF256337.</t>
+					</list>
+					<figure>
+						<artwork>
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+    "method" : "people.create",
+    "id" : "createFriend"
+    "params: {
+      "userId" : "@me",
+      "groupId" : "@friends",
+      "person" : {
+        "id" : "example.org:FF256337"
+      }
+    }
+}
+
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+  "result" : {
+  }
+}  
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Failed attempt to update profile information due to conflicting change">
+				<t>
+					This example maps to POSTing an opensocial.Person object /people/@me/@self with the 
+					RESTful API. This example again is not one covered by the OpenSocial JS but may be 
+					supported by containers.  The example shown demonstrates the use of etags to detect an 
+					incompatible update to the profile of the user identified in the auth token. The request 
+					is attempting to update the 'books' field and passes the etag the client received when 
+					it retrieved the person object prior to update. The etag is added to the update request 
+					shown below but an inervening update from another client has made the change incompatible 
+					and so the update is rejected.
+				</t>
+				<t>
+					Notes:
+					<list style="symbols">
+						<t>The error code 409 is the HTTP Conflict status code.</t>
+						<t>The error object "data" field contains a limited representation of the 
+						latest version of the person object including an up-to-date etag value. 
+						Containers may choose to omit this data from conflict error responses.</t>
+					</list>
+					<figure>
+						<artwork>
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+    "method" : "person.update",
+    "id" : "setMyData"
+    "params: {
+      "userId" : "@me",
+      "groupId" : "@self",
+      "person" : {
+        "etag" : "767ffdef7",
+        "books" : ["The Prince", "Hotel New Hampshire"]
+      }
+    }
+}
+
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "myself",
+   "error" : {
+     "code" : 409
+     "message" : "Conflict detected",
+     "data" : {
+       "etag" : "8543de12",
+       "books" : ["The Right Stuff", "About a boy"]
+     }
+   }
+}
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Uploading content with an RPC post">
+				<t>
+					A multipart form-data request mechanism ("Content-Type: multipart/form-data") enables 
+					upload of content. Such a request has the POST body segmented into several sections 
+					(fields) with each field identified by a name. The field name "request" is reserved 
+					and contains request operation details (same as the contents on the POST body in the 
+					vanilla POST operation).
+				</t>
+				<t>
+					The fields with any other name contain content to be uploaded to the OpenSocial container. 
+					To allow batching and multiple file uploads in a single call, multiple fields (identified 
+					with unique field names) are allowed. The OpenSocial request can refer to the content being 
+					uploaded by setting the URL to "@field:&lt;fieldname&gt;". The container may host the uploaded file 
+					and replace the URL field with a fully qualified URL for future access.
+				</t>
+				<t>
+					For a successful upload, the response code of the request will be associated with the 
+					response code of the action request on the resource. However, in case of a failure due 
+					to a file size exceeding limits, an error code of 413 ("Request Entity Too Large") MUST 
+					be returned. The requested action associated with the file upload MUST NOT be executed.
+				</t>
+				<t>
+					<figure>
+						<preamble>Example:</preamble>
+						<artwork>
+&lt;usual headers&gt;
+Content-type: multipart/form-data; boundary=------------abcdef012345xyZ
+Content-length: &lt;contentLength&gt;
+
+------------abcdef012345xyZ
+Content-Disposition: form-data; name="request"
+
+[{
+  "method":"activities.create",
+  "params": {
+    "userId":["@viewer"],
+    "groupId":"@self",
+    "appId":"@app",
+    "activity": {
+      "title": "hello world!",
+      "mediaItems": [ {
+        "mimeType":"image",
+        "url":"@field:image1"
+      } ]
+    }
+  },
+  "id":"key"
+}
+------------abcdef012345xyZ
+Content-Disposition: form-data; name="image1"
+
+GIF89....&lt;image data&gt;
+
+------------abcdef012345xyZ
+						</artwork>
+					</figure>
+				</t>
+			</section>
+		</section>
+		<section title="Naming Conventions">
+			<t>
+				In addition to conforming with the JSON-RPC specification for a 
+				container to be an OpenSocial RPC provider they MUST conform to the following conventions.
+			</t>
+			<section title="RPC Methods">
+				<t>
+					The value of the "method" field in an OpenSocial RPC request uses a format of 
+					"&lt;service-name&gt;.&lt;operation&gt;". &lt;service-name&gt; is a string 
+					[A-Za-z0-9_]+ that identifies one of the services listed in [Services] and &lt;operation&gt; 
+					is a string [A-Za-z0-9_]+ that identifies an operation supported by that service.
+				</t>
+				<t>
+					All OpenSocial services MUST expose a "get" [TBD query, fetch are valid alternatives] 
+					operation. Operations with the names get, create, update and delete should map to the 
+					HTTP equivalent operations in the RESTful API of GET, PUT, POST &amp; DELETE.		
+				</t>
+			</section>
+			<section title="Services">
+				<t>
+					The names of the RPC services MUST match the names used in the OpenSocial namespace 
+					E.g http://ns.opensocial.org/2008/opensocial/messages.
+				</t>
+			</section>
+		</section>
+		<section title="Batches">
+			<t>
+				Calls to the RPC endpoint for batch execution MUST only be supported for HTTP POST requests. 
+				A batch of RPC's is an ordered array of requests and the return is an ordered array of responses 
+				in the same order. I.e
+				<figure>
+					<artwork>
+[ &lt;rpc-request1&gt;, &lt;rpc-request2&gt;, ...] -&gt; [ &lt;rpc-response1&gt;,  &lt;rpc-response2&gt;, ...]
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Lists">
+			<t>
+				Many service operations return a list of OpenSocial resources. Lists are always returned 
+				in the "list" field of the result. Lists can either be the full set of resources or a 
+				pageable subset. If the returned list represents the entire set of resources the 
+				response is simply:
+				<figure>
+					<artwork>
+{
+  "result" : {
+    "list" : [ ... ]
+ }
+}
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				If the operation supports random access indexing of the full list it will support 
+				the "startIndex" and "count" parameters which control what sublist of the full list is 
+				returned. If the response contains a sublist obtained via random access indexing it will 
+				have the general form:
+				<figure>
+					<artwork>
+{
+  "result" : {
+    "totalResults" : &lt;total number of elements in the full list&gt;,
+    "startIndex" : &lt;0 based offset in the full-list of the returned sublist&gt;,
+    "itemsPerPage" : &lt;total number of elements in the returned sublist&gt;,
+    "list" : [ ... the sublist ...]
+  }
+}
+					</artwork>
+				</figure>				
+			</t>
+			<t>
+				If the operation supports access through an indexable list of pages of the full 
+				list it will support the "startPage" parameter that controls which page is selected. 
+				A response that contains a sublist obtained via indexed pages has the form:
+				<figure>
+					<artwork>
+{
+  "result" : {
+    "itemsPerPage" : &lt;total number of elements in the returned sublist&gt;,
+    "firstPage" : &lt;index of the first page. This field is optional but recommended&gt;,
+    "prevPage" : &lt;index of the previous page. If this is the first page this field is omitted, otherwise it is required&gt;,
+    "nextPage" : &lt;index of the next page. If this is the last page this field is omitted, otherwise it is required&gt;,
+    "lastPage" : &lt;index of the last page. This field is optional but recommended&gt;
+    "list" : [ ... the sublist ...]
+  }
+}
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				The paging mechanisms described here are based on the OpenSearch standard with the 
+				additional requirement that all indexes are 0 based.
+			</t>
+		</section>
+		<section title="URL Addressing" anchor="urlAddressing">
+			<t>
+				Containers MUST give access to the RPC services using a URL addressing scheme to invoke a 
+				single RPC via HTTP GET. This encoding can also be used to support RPC execution 
+				via form posts including file-uploads as parameters to RPCs. It is recommended that 
+				only services that are idempotent are exported in this manner. Containers MUST use the 
+				following canonical transformation between the RPC structure and its URL encoding:
+				<list style="symbols">
+					<t>The RPC method is defined by the 'method' query parameter</t>
+					<t>The RPC id is defined by the 'id' query parameter</t>
+					<t>All other query parameters are assumed to belong to the RPC params element and are encoded from JSON 
+						using &lt;field path dot notation&gt;=&lt;scalar value&gt; | &lt;comma separated array of scalars&gt;. 
+						When a field represents an array of non-scalars then elements of the array are identified by 
+						enclosing the index in parenthesis. Strings which match [0-9]+ MUST be single-quoted, Strings 
+						which match [A-Za-z_]+ MUST be unquoted, all other strings retain their original quoting.
+						<list style="symbols">
+							<t>{ "field" : "value" } -&gt; field=value</t>
+							<t>{ "field" : [1,2,3,4,5]} -&gt; field=1,2,3,4,5</t>
+							<t>{ "field" : "12" } -&gt; field='12'</t>
+							<t>{ "field" : [identifier,anotheridentifier]} -&gt; field=identifier,anotheridentifier</t>
+							<t>{ "field" : ["value","another value"]} -&gt; field=value,"another value"</t>
+							<t>{ "field" : ['value','another value']} -&gt; field=value,'another value'</t>
+							<t>{"field" : { "nested" : "value" }} -&gt; field.nested=value</t>
+							<t>{"field" : [ { "nested1" : "value1" }, { "nested2" : "value2" }]} -&gt; field(0).nested1=value1&amp;field(1).nested2=value2</t>
+						</list>
+					</t>
+				</list>
+			</t>
+			<t>
+				This scheme is intentionally verbose and is designed for simple representation of requests with a 
+				limited set of parameters. While more compact URL friendly encodings of JSON exist (e.g. <xref target="Rison"/>) 
+				this encoding seems more suitable for the intended use case.
+			</t>
+			<t>
+				Some examples:
+				<list style="symbols">
+					<t>{ "method" : "people.get", "id" : "myfriends",  "params": {"userId" : "@me", "groupId" : "@friends" }} -&gt; http://api.example.org/rpc?method=people.get&amp;id=myfriends&amp;params.userId=@me&amp;params.groupId=@friends</t>
+				</list>
+			</t>
+		</section>
+		<section title="Request Authentication and Authorization Context">
+			<t>
+				This specification has the same requirements as the RESTful API for authentication and 
+				authorization. In addition Containers SHOULD also support a request context compatible 
+				with use by a gadget running the OpenSocial JS in the containers UI.
+			</t>
+			<t>
+				When OAuth is used for authorization on a single RPC the OAuth signature uses the <xref target="urlAddressing">URL 
+				Addressing</xref> representation of the request without the auth param to calculate the signature base string.
+				When OAuth is used for authorization on a batch of RPCs the generation of the OAuth 
+				signature base string uses the same technique as <xref target="urlAddressing">URL 
+				Addressing</xref> to convert a sub-request 
+				into a list of query parameters with the addition of adding the method field into the query 
+				parameter list. Each parameter in the query string is prepended with the id of the sub-request 
+				for which it was generated and '.' . The conversion for <xref target="personEx"/> would look like:
+				<figure>
+					<artwork>
+a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e453a.method=people.get&amp;e453a.id=e453a&amp;e453a.params.userId=@me&amp;e453a.params.groupId=@friends
+					</artwork>
+				</figure>
+			</t>
+			<t>
+				The remainder of the signing process is as per the OAuth spec i.e the query parameters are 
+				lexicographically sorted and a nonce and timestamp are added before the signing.
+			</t>
+			<t>
+				This allows for singing the full content of the request. In the case where a sub-request 
+				specifies its own Auth then that whole subrequest is omitted from the OAuth signature and 
+				a separate signature calculated for that sub-request.
+			</t>
+		</section>
+		<section title="Services">
+			<t>
+				We use a hybrid method call syntax to document the operation supported by a service. 
+				The types of parameters are described using the same syntax used by the OpenSocial JavaScript 
+				documentation. Most parameter defaults are literal values such as "@me" and some are derived 
+				from the calling context and have the following definitions:
+				<list style="symbols">
+					<t>
+						HttpRequest.Authorization - A parsed version of the authorization information stored in 
+						the HTTP Authorization header or that is associated with the request in a container specific manner.
+					</t>
+					<t>
+    					auth.AppId - The application id is derived from the authorization token if it is available.
+					</t>
+					<t>
+    					User Ids - userId parameters to service operations MUST match the format described 
+						in http://code.google.com/apis/opensocial/docs/0.8/spec.html#people 
+						or MUST be one of the reserved userId placeholders. All containers must support 
+						the @me placeholder value which is used to denote the user identified by the 
+						authorization token associated with the request. Any userId value that begins with 
+						'@' is reserved by the specification for future use. 
+					</t>
+					<t>
+    					Group Ids - groupId parameters to service operations MAY be a simple string or 
+						one of the reserved groupId placeholders. All containers must support the @self &amp; 
+						@friends placeholders values. Any groupId value that begins with '@' is reserved 
+						by the specification for future use as a placeholder. 
+					</t>
+				</list>
+			</t>
+			<section title="People">
+				<t>
+					service-name = "people"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>get</c>
+						<c>
+							AuthToken auth = HttpRequest.Authorization,  String or Array.&lt;String&gt; userId = "@me", String groupId = "@self", Array.&lt;String&gt; fields, int count,  int startIndex,  int startPage
+						</c>
+						<c>opensocial.Person or Array.&lt;opensocial.Person&gt;</c>
+						<c>create</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@friends", opensocial.Person person</c>
+						<c>opensocial.Person</c>
+						<c>update</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self", opensocial.Person person</c>
+						<c>opensocial.Person</c>
+						<c>delete</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self"</c>
+						<c>void</c>
+					</texttable>
+				</t>
+				<section title="get">
+					<t>
+						Retrieve a single person or list of opensocial.Person objects.  Supports returning a limited set of fields on 
+						returned Person objects and control of the order and paging in a returned list. 
+					</t>
+				</section>
+				<section title="create">
+					<t>
+						Support creating opensocial.Activity objects as the targets of a relationship with the 
+						specified user, this is a generalization of many use cases including invitation, contact 
+						creation etc. Implementation of this method is not required to be OpenSocial compliant.
+					</t>
+				</section>
+				<section title="update">
+					<t>
+						Support updating the properties of an opensocial.Person object identified by its relationship to the specified user.
+						Implementation of this method is not required to be OpenSocial compliant.
+					</t>
+				</section>
+				<section title="delete">
+					<t>
+						Support removing the relationship between an opensocial.Person and the specified user. 
+						Implementation of this method is not required to be OpenSocial compliant.
+					</t>
+				</section>
+			</section>
+			<section title="Activities">
+				<t>
+					service-name = "activity"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>get</c>
+						<c>
+							AuthToken auth = HttpRequest.Authorization,  String or Array&lt;String&gt; userId = "@me", String groupId = "@self",  String appId = auth.AppId,  Array&lt;String&gt; activityIds = [], Array.&lt;String&gt; fields,  int count,  int startIndex,  int startPage
+						</c>
+						<c>opensocial.Activity or Array.&lt;opensocial.Activity&gt;</c>
+						<c>create</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId,  opensocial.Activity activity</c>
+						<c>opensocial.Activity</c>
+						<c>update</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId,  opensocial.Activity activity</c>
+						<c>opensocial.Activity</c>
+						<c>delete</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId,  String activityId</c>
+						<c>void</c>
+					</texttable>
+				</t>
+				<section title="get">
+					<t>
+						Retrieve a one or list of opensocial.Activity objects.  Supports returning a limited set of fields on 
+						returned Activity objects and control of the order and paging in a returned list. 
+					</t>
+				</section>
+				<section title="create">
+					<t>
+						Support creating opensocial.Activity objects as the targets of a relationship with the 
+						specified user, the specifically supported use case is posting a new activity to the stream 
+						of a single user i.e activity.create(userId="@me",groupId="@self", &lt;some activity&gt;) Support 
+						for other parameterizations is not required to be OpenSocial compliant.
+					</t>
+				</section>
+				<section title="update">
+					<t>
+						Support updating opensocial.Activity objects as the targets of a relationship with the specified user. 
+						Implementation of this method is not required to be OpenSocial compliant.
+					</t>
+				</section>
+				<section title="delete">
+					<t>
+						Support removing the relationship between an opensocial.Activity and the specified user. 
+						Implementation of this method is not required to be OpenSocial compliant.
+					</t>
+				</section>
+			</section>
+			<section title="AppData">
+				<t>
+					service-name = "appdata"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>get</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String or Array.&lt;String&gt; userId = "@me", String groupId = "@self",  String appId = auth.AppId, Array.&lt;String&gt; keys</c>
+						<c>	Map.&lt;String, String&gt;</c>
+						<c>update</c>
+						<c>
+							AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Map.&lt;String, String&gt; data
+						</c>
+						<c>void</c>
+						<c>delete</c>
+						<c>
+							AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Array.&lt;String&gt; keys</c>
+						<c>Map.&lt;String, String&gt;</c>
+					</texttable>
+				</t>
+				<section title="get">
+					<t>
+						Retrieve a map of key-value pairs for the list of specified keys.
+					</t>
+				</section>
+				<section title="update">
+					<t>
+						Add or replace key-value pairs stored in a users appdata with the key-vaues in the data parameter.
+					</t>
+				</section>
+				<section title="delete">
+					<t>
+						Remove the specifed keys from a users appdata and returned the values associated with those removed keys.
+					</t>
+				</section>
+			</section>
+			<section title="Messaging">
+				<t>
+					service-name = "messages"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>send</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", opensocial.Message message</c>
+						<c>void</c>
+					</texttable>
+					<figure>
+						<preamble>Sample JSON for Message as one is not defined in the RESTful spec yet.</preamble>
+						<artwork>
+{
+   "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+   "title" : "You have an invitation from Joe",
+   "body" : "Some content",
+   "type" : "EMAIL"
+}
+						</artwork>
+					</figure>							
+				</t>
+				<section title="send">
+					<t>
+						Send an opensocial.Message object to its defined recipients.
+					</t>
+				</section>
+			</section>
+			<section title="System">
+				<t>
+					The system service is used to introspect the endpoint for the set of available services and operations and for metadata about those services.
+				</t>
+				<t>
+					service-name = "system"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>listMethods</c>
+						<c></c>
+						<c>Array.&lt;String&gt;</c>
+						<c>methodSignatures</c>
+						<c>String methodName</c>
+						<c>Signature</c>
+						<c>methodHelp</c>
+						<c>String methodName</c>
+						<c>Content</c>
+					</texttable>
+				</t>
+			</section>
+			<section title="Albums">
+				<t>
+					service-name = "albums"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>get</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String or Array.&lt;String&gt; userId = "@me", String groupId = "@self",  String appId = auth.AppId, Array.&lt;String&gt; id</c>
+						<c>Map.&lt;String, Album&gt;</c>
+						<c>create</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Map.&lt;String, String&gt; data</c>
+						<c>String</c>
+						<c>update</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Map.&lt;String, String&gt; data</c>
+						<c>void</c>
+						<c>delete</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Array.&lt;String&gt; ids</c>
+						<c>void</c>
+					</texttable>
+				</t>
+			</section>
+			<section title="MediaItem">
+				<t>
+					service-name = "mediaItems"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>get</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String or Array.&lt;String&gt; userId = "@me", String groupId = "@self",  String appId = auth.AppId, Array.&lt;String&gt; id</c>
+						<c>Map.&lt;String, MediaItem&gt;</c>
+						<c>create</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Map.&lt;String, String&gt; data</c>
+						<c>String</c>
+						<c>update</c>
+						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Map.&lt;String, String&gt; data</c>
+						<c>void</c>
+						<c>delete</c>
+						<c>
+							AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId, Array.&lt;String&gt; ids</c>
+						<c>void</c>
+					</texttable>
+				</t>
+			</section>
+			<section title="listMethods">
+				<t>
+					Containers MUST imlpement this operation which takes no parameters and returns an array of all methods 
+					supported by the endpoint including the system methods. 
+					For a container which only supports read access to people and read and create access for 
+					activities the result would be:
+					<figure>
+						<artwork>
+["people.get", "activities.get", "activities.create",  "system.listMethods", "system.methodSignatures", "system.methodHelp"]							
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="methodSignatures">
+				<t>
+					Containers MUST implement this operation that returns a method signature describing the 
+					types of the parameters, their default values and the type of the return value for a given 
+					operation. Note that this scheme does not match that used for XML-RPC definition of method 
+					signatures which only specifies a mapping for positional parameters. Type definitions used 
+					here match the scheme used in the OpenSocial Javascript API. The example below is the Signature 
+					response for people.get.
+					<figure>
+						<artwork>
+{
+    "return" : ["opensocial.Person", "Array.&lt;opensocial.Person&gt;"],
+    "auth" : {
+       "default" : null,
+       "type" : "AuthToken"
+     },
+     "userId" : {
+       "default" : "@me",
+       "type" : ["String", "Array.&lt;String&gt;"]
+     },
+     "groupId" : {
+       "default" : "@self",
+       "type" : "String"
+     },
+     "fields" : {
+       "default" : ["id","name","thumbnailUrl","profileUrl"],
+       "type" : "Array.&lt;String&gt;"
+     },
+     "count" : {
+       "type" : "int",
+       "required" : false
+     },
+     "startIndex" : {
+       "type" : "int",
+       "required" : false
+     }
+     "startPage" : {
+       "type" : "int",
+       "required" : false
+     }
+}
+						</artwork>
+					</figure>
+					The "return" field indicates the type of the result. If the service can return more 
+					than one type then the value is an array of the possible return types. Each named 
+					field in the response maps to a parameter of the operation and contains information 
+					about the types and values accepted for that parameter. The existence of "default" in 
+					the parameter detail indicates the parameter has a default value. The value of a default 
+					may be null which means that its not introspectable and usually means that it is some 
+					complex derivation. Parameters are assumed to be required unless otherwise indicated by 
+					the existence of the "required" field with a value of false. 
+				</t>
+			</section>
+			<section title="methodHelp">
+				<t>
+					Containers MAY implement this operation that returns a textual description of the operation 
+					identified by the methodName parameter. A container can choose to return 
+					either plaintext or HTML as the response.
+				</t>
+			</section>
+		</section>
+		<section title="Standard Errors">
+			<t>
+				A common set of error codes are used to represent failure modes that apply generally to 
+				operations and so are reserved for use by this specification.
+				<texttable>
+					<ttcol align="left">Code</ttcol>
+					<ttcol align="left">Meaning</ttcol>
+					<c>-32700 (Parse error)</c>
+					<c>Invalid JSON. An error occurred on the server while parsing the JSON text.</c>
+					<c>-32600 (Invalid Request)</c>
+					<c>The received JSON not a valid JSON-RPC or batch of JSON-RPCs.</c>
+					<c>-32601 (Method not found)</c>
+					<c>The requested remote-procedure does not exist / is not available.</c>
+					<c>-32602 (Invalid params)</c>
+					<c>Invalid method parameters.</c>
+					<c>-32603 (Internal server error)</c>
+					<c>Internal server error.</c>
+					<c>-32099..-32000</c>
+					<c>Reserved for implementation-defined server-errors.</c>
+					<c>401 (Unauthorized)</c>
+					<c>Access token does not grant access to the resource,</c>
+					<c>404 (Not Found)</c>
+					<c>The requested resource was not found.</c>
+					<c>409 (Conflict)</c>
+					<c>The requested update conflicts with a prior change.</c>
+					<c>0-1000</c>
+					<c>Reserved for future use by this specification.</c>
+				</texttable>
+			</t>
+		</section>
+		<section title="Optimistic Concurrency">
+			<t>
+				Containers MAY choose to implement an optimistic concurrency scheme for updates. If this 
+				facility is supported by the container an "etag" field will be embedded in the updatable 
+				object when it is retrieved. When the container receives a request to update an object 
+				and an etag is present in the request the container MAY choose to deny the request because 
+				it has detected a conflicting update. Containers are free to allow updates even in the 
+				presence of conflicting etags at their own discretion but SHOULD document when such behavior is allowed.
+			</t>
+		</section>
+		<section title="Alternative Response Types">
+			<t>
+				In situations where containers support the <xref target="urlAddressing">URL Addressing</xref> scheme to perform an RPC the 
+				container MAY return arbitrary content types in the response other than application/json. 
+				The system.methodHelp operation relies on this to provide browseable documentation.
+			</t>
+		</section>
+		<section title="Multi-part Uploads">
+			<t>
+				A container MAY choose to support file uploads from browsers to the RPC endpoint and 
+				have the uploaded files be passed as parameters to the RPC. This is achieved by browsers 
+				posting a form which contains the files to the endpoint and including a form-parameter 
+				called "rpc" which contains the form-encoded RPC request. The form input element names 
+				for the uploaded files will be bound to the corresponding parameter names on execution.
+			</t>
+		</section>
+	</middle>
+	<back>
+		<references>
+		    <reference anchor='RFC2119'>
+		        <front>
+		            <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+		            <author initials='S.' surname='Bradner'
+		                    fullname='Scott Bradner'>
+		                <organization abbrev='HarvardU'>
+		                Harvard University
+		                </organization>
+		            </author>
+		            <date month='March' year='1997' />
+		        </front>
+		        <seriesInfo name='RFC' value='2119' />
+		    </reference>
+		    <reference anchor='RFC2606'>
+		        <front>
+		            <title>Reserved Top Level DNS Names</title>
+		            <author initials='D.' surname='Eastlake'
+		                    fullname='Donald E. Eastlake 3rd'>
+		                <organization abbrev='IBM'>
+		                IBM
+		                </organization>
+		            </author>
+		            <author initials='A.' surname='Panitz'
+		                    fullname='Aliza R. Panitz'>
+		            </author>
+		            <date month='June' year='1999' />
+		        </front>
+		        <seriesInfo name='RFC' value='2606' />
+		    </reference>
+			<reference anchor="XML-RPC Introspection" target="http://xmlrpc-c.sourceforge.net/introspection.html">
+				<front>
+					<title>XML-RPC Introspection</title>
+		            <author  surname='opensocial-and-gadgets-spec@googlegroups.com'
+		                    fullname='OpenSocial and Gadgets Specification Group'>
+		            </author>
+					<date month='January' year='2000' />
+				</front>
+			</reference>
+			<reference anchor="RESTful Protocol Specification" target="./REST-API.xml">
+				<front>
+					<title>RESTful Protocol Specification 0.9</title>
+		            <author initials='o.' surname='social'
+		                    fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+		            </author>
+					<date month='January' year='2009' />
+				</front>
+			</reference>
+			<reference anchor="JSON-RPC" target="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal?pli=1">
+				<front>
+					<title>JSON-RPC 2.0 Specification proposal</title>
+		            <author surname='JSON-RPC Working Group'
+		                    fullname='JSON-RPC Working Group &lt;json-rpc(at)googlegroups.com&gt;'>
+		            </author>
+					<date month='November' year='2008' />
+				</front>
+			</reference>
+			<reference anchor="JSON-RPC Error" target="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal?pli=1#error-object">
+				<front>
+					<title>JSON-RPC Error Object</title>
+		            <author surname='JSON-RPC Working Group'
+		                    fullname='JSON-RPC Working Group &lt;json-rpc(at)googlegroups.com&gt;'>
+		            </author>
+					<date month='November' year='2008' />
+				</front>
+			</reference>
+			<reference anchor="Rison" target="http://mjtemplate.org/examples/rison.html">
+				<front>
+					<title>Rison - Compact Data in URIs</title>
+				</front>
+			</reference>
+			<reference anchor='OAuth Core 1.0' target='http://oauth.net/core/1.0/'>
+		        <front>
+		            <title>OAuth Core 1.0</title>
+		            <author initials='M.' surname='Atwood'
+		                    fullname='Mark Atwood'>
+		            </author>
+		            <author initials='R. M.' surname='Conlan'
+		                    fullname='Richard M. Conlan'>
+		                <organization>Google</organization>
+		            </author>
+		            <author initials='B.' surname='Cook'
+		                    fullname='Blaine Cook'>
+		                <organization>Twitter</organization>
+		            </author>
+		            <author initials='L.' surname='Culver'
+		                    fullname='Leah Culver'>
+		                <organization>Pownce</organization>
+		            </author>
+		            <author initials='K.' surname='Elliott-McCrea'
+		                    fullname='Kellan Elliott-McCrea'>
+		                <organization>Flickr</organization>
+		            </author>
+		            <author initials='L.' surname='Halff'
+		                    fullname='Larry Halff'>
+		                <organization>ma.gnolia</organization>
+		            </author>
+		            <author initials='E.' surname='Hammer-Lahav'
+		                    fullname='Eran Hammer-Lahav'>
+		            </author>
+		            <author initials='B.' surname='Laurie'
+		                    fullname='Ben Laurie'>
+		                <organization>Google</organization>
+		            </author>
+		            <author initials='C.' surname='Messina'
+		                    fullname='Chris Messina'>
+		            </author>
+		            <author initials='J.' surname='Panzer'
+		                    fullname='John Panzer'>
+		            </author>
+		            <author initials='S.' surname='Quigley'
+		                    fullname='Sam Quigley'>
+		                <organization>Twitter</organization>
+		            </author>
+		            <author initials='D.' surname='Recordon'
+		                    fullname='David Recordon'>
+		                <organization>six apart</organization>
+		            </author>
+		            <author initials='E.' surname='Sandler'
+		                    fullname='Eran Sandler'>
+		                <organization>Yedda</organization>
+		            </author>
+		            <author initials='J.' surname='Sergent'
+		                    fullname='Jonathan Sergent'>
+		                <organization>ma.gnolia</organization>
+		            </author>
+		            <author initials='B.' surname='Slesinsky'
+		                    fullname='Brian Slesinsky'>
+		            </author>
+		            <author initials='A.' surname='Smith'
+		                    fullname='Andy Smith'>
+		                <organization>Jaiku</organization>
+		            </author>
+					<date month='December' year='2007' />
+		        </front>
+		    </reference>
+		</references>
+	</back>
+</rfc>

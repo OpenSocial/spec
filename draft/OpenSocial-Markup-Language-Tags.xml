@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<!--<!DOCTYPE rfc SYSTEM 'rfcXXXX.dtd'>-->
+<rfc ipr="full3978" docName="draft-opensocial-markup-language-tags-specification-v0_9">
+	<front>
+		<title abbrev="OpenSocial REST">OpenSocial Markup Language Tags Specification v0.9</title>
+		<author surname="opensocial"  
+			fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+			<address>
+				<email>opensocial-and-gadgets-spec@googlegroups.com</email>
+			</address>
+		</author>
+		<date month="December" year="2008"/>
+		<area>General</area>
+		<keyword>OpenSocial</keyword>
+		<keyword>social networking</keyword>
+		<keyword>REST</keyword>
+		<keyword>XML</keyword>
+		<keyword>Extensible Markup Language</keyword>
+		<keyword>JSON</keyword>
+		<keyword>JavaScript Object Notation</keyword>
+		<keyword>Atom</keyword>
+		<abstract>TODO: Add abstract</abstract>
+	</front>
+	<middle>
+		<section title="Notation and Conventions">
+			<t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", 
+			"RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described 
+			in <xref target="RFC2119">RFC2119</xref>. Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+		</section>
+		<section title="Overview">
+			<t>
+				OpenSocial Markup Language tags defines a set of tags that every OpenSocial compliant 
+				container makes available to an OpenSocial application.
+			</t>
+		</section>
+		<section title="Gadget Feature Name">
+			<t>
+				To use OSML tags, you need to add the "osml" feature to your gadget spec:
+				<figure>
+					<artwork>
+&lt;Require feature="osml"&gt;
+					</artwork>
+				</figure>
+				OSML tags are a strict subset of OpenSocial Templating, you can also use tags if you use 
+				the "opensocial-templates" feature:
+				<figure>
+					<artwork>
+&lt;Require feature="opensocial-templates"&gt;
+					</artwork>
+				</figure>
+				The reason for separate require features is that templates may not be supported on 
+				all views for all containers, due to processing and/or latency costs. OSML tags 
+				must be supported in all views. 
+			</t>
+		</section>
+		<section title="Tags">
+			<section title="&lt;os:Name&gt;">
+				<t>
+					Inline tag to show a person's name, linked if the a profile URL an may have additional container bling (i.e. more information on hover)
+				</t>
+				<t>
+					Attributes:
+					<list style="symbols">
+						<t>@person {string|Object} The person object or DataContext key referring to a 
+						person object. (required)</t>
+					</list>
+					<figure>
+						<preamble>Example</preamble>
+						<artwork>
+Welcome, &lt;os:Name person="${Viewer}"/&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="&lt;os:PeopleSelector&gt;">
+				<t>
+					Tag to show a UI that chooses from a list of people, and set a form field with the associated value. 
+				</t>
+				<t>
+					Attributes:
+					<list style="symbols">
+						<t>@group {string|Object} An array of person objects or DataContext key referring to an array 
+						of person objects.</t>
+						<t>@inputName {string} Name of the form input element that will contain selected id(s). 
+						Containers can provide a default here. (optional)</t>
+						<t>@multiple {boolean} Allow multiple selections? (optional)</t>
+						<t>@max {number} Maximum number of people that can be selected. (optional)</t>
+						<t>@var{string} Name of the top level data context variable that is set with the 
+						selected id(s). (optional)</t>
+						<t>@onselect {string|function} Client side script function to invoke when a person 
+						is selected. (optional)</t>
+					</list>
+					<figure>
+						<preamble>Example</preamble>
+						<artwork>
+&lt;form action="/top_friends.php" method="POST"&gt;
+  Select your top 8 friends:
+  &lt;os:PeopleSelector group="${ViewerFriends}" multiple="true" max="8" inputName="top8"/&gt;
+&lt;/form&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="&lt;os:Badge&gt;">
+				<t>
+					Block level tag to show information about a person in the style of the container, usually with an image. 
+				</t>
+				<t>
+					Attributes:
+					<list style="symbols">
+						<t>@person {string|Object} The person object or DataContext key referring to
+						a person object. (required)</t>
+					</list>
+					<figure>
+						<preamble>Example</preamble>
+						<artwork>
+My top friends:&lt;br/&gt;
+&lt;os:Badge repeat="${TopFriends}" person="${Cur}"/&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="&lt;os:Get&gt;">
+				<t>
+					Tag that loads HTML content from a URL and inserts into the DOM of the page. 
+					<list style="symbols">
+						<t>Content is sanitized before insertion.</t>
+						<t>No authorization credentials are sent with the request; request must be for public data.</t>
+						<t>Containers will cache the request based on HTTP headers
+							<list style="symbols">
+								<t>Cached data will be invalidated by the Invalidation APIs: JavaScript, REST.</t>
+							</list>
+						</t>
+						<t>Content must be directly inlinable into the DOM. External CSS or &lt;script&gt;
+						 file references are ignored.</t>
+					</list>
+				</t>
+				<t>
+					Attributes:
+					<list style="symbols">
+						<t>@href {string} The URL from which to retrieve HTML content (required)</t>
+					</list>
+					<figure>
+						<preamble>Example</preamble>
+						<artwork>
+${Viewer.Name}'s pet information
+&lt;os:Get href="http://developer.superpetstore.com/petHtml?petId=${viewer.appData.petId}"/&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
+		</section>
+		<section title="Non-Tags">
+			<t>
+				There are a number of potential tags that can be better supported using templating, for reasons outlined below. 
+			</t>
+			<section title="Non-Tag: Inserting Text Content">
+				<t>
+					For generating text content, expressions are used instead of tags.
+				</t>
+				<t>
+					Example:
+					<list style="symbols">
+						<t>${Viewer.name} or</t>
+						<t>${Owner.jobs[0].Title} instead of</t>
+						<t>&lt;os:Name&gt; (note that &lt;os:Name&gt; is for showing a linked name, not for inserting text only). </t>
+					</list>
+					Reasoning:
+					<list style="symbols">
+						<t>Extends to all OpenSocial fields (see <xref target="OS">OpenSocial</xref>,
+						 opensocial.Person.Field for a list).</t>
+						<t>Can be used in attributes, such as &lt;input type="submit" value="Share with ${Name}"&gt;.</t>
+					</list>
+				</t>
+				<section title="Non-Tags: Flow Control">
+					<t>
+						For conditional content, a conditional statement in OpenSocial templating is used along with an expression.
+					</t>
+					<t>
+						Example:
+						<list style="symbols">
+							<t>&lt;div if="${!viewer.hasApp}"&gt;&lt;a href="..."&gt;Click here to install!&lt;/a&gt;&lt;/div&gt; or</t>
+							<t>&lt;div if="${jobs[0].Title}"&gt;${name}'s job is ${jobs[0].Title}"&lt;/div&gt;</t>
+						</list>
+						instead of
+						<list style="symbols">
+							<t>&lt;os:HasApp&gt; etc.</t>
+						</list>
+						Reasoning:
+						<list style="symbols">
+							<t>Extends well to a large number of conditional constructs (no need for one tag per condition).</t>
+							<t>Equivalently simple to use.</t>
+						</list>
+					</t>
+				</section>
+				<section title="Non-Tags: Pronoun">
+					<t>
+						For pronouns, conditional HTML blocks based on gender are used.
+					</t>
+					<t>
+						Example:
+						<list style="symbols">
+							<t>&lt;span if="${person.gender == 'MALE'}"&gt;He said "boo"&lt;/span&gt; &lt;span if="${person.gender 
+							== 'FEMALE'}"&gt;She said "boo"&lt;/span&gt; instead of</t>
+							<t>&lt;span&gt;&lt;os:Pronoun&gt; said "boo"&lt;/span&gt;</t>
+						</list>
+						Reasoning:
+						<list style="symbols">
+							<t>You need full sentences to localize properly.</t>
+						</list>
+					</t>
+				</section>
+			</section>
+		</section>
+		<section title="Interaction with Proxied Content">
+			<t>
+				The combination of tags, templates, and proxied content leads to a number of combinations for developer to use.
+			</t>
+			<t>
+				Here are a few common use cases and how developers might handle them. This is for informational purposes only - it doesn't 
+				extend the proposal, but hopefully clarifies a few use cases. 				
+			</t>
+			<section title="Flow control and repeated elements">
+				<t>
+					OpenSocial data will be posted on the developer server and flow control will be handled 
+					on the developers own server, in PHP, JSP, ASP, or the language of the developer's choice.
+
+					<figure>
+						<preamble>Example Gadget XML</preamble>
+						<artwork>
+&lt;Content href="http://developer.com/canvas"&gt;
+  &lt;os:PeopleRequest userId="@viewer" groupId="@friends" fields="name,birthday" key="ViewerFriends"&gt;
+&lt;/Content&gt;
+						</artwork>
+					</figure>
+					<figure>
+						<preamble>Example PHP</preamble>
+						<artwork>
+&lt;?php
+// Some code that pulls POST param into $ViewerFriends here
+foreach ($ViewerFriends as $friend) {
+  if ($friend['birthday']) {
+    echo "&lt;div&gt;".$friend['name']."'s birthday is".$friend['birthday']"&lt;/div&gt;";
+  }
+}
+?&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Tags">
+				<t>
+					Tags can be inserted into the output and will be processed by the container or JavaScript on the client side. 
+
+					<figure>
+						<preamble>Example Gadget XML</preamble>
+						<artwork>
+&lt;Content href="http://developer.com/canvas"&gt;
+  &lt;os:PersonRequest userId="@owner" key="Owner"/&gt;
+&lt;/Content&gt;
+						</artwork>
+					</figure>
+					<figure>
+						<preamble>Example PHP</preamble>
+						<artwork>
+&lt;?php
+// Some code that pulls POST param into $Owner
+echo "High score for &lt;os:Name person=\"${Owner}\"&gt; is ".getHighScore($Owner['id']);
+?&gt;
+ 
+or 
+ 
+&lt;?php
+echo "High score for &lt;script type=\"text/os-template\"&gt;&lt;os:Name person=\"${Owner}\"&gt;&lt;/script&gt; is ".getHighScore($Owner[['id']);
+?&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
+		</section>
+	</middle>
+	<back>
+		<references>
+		    <reference anchor='RFC2119'>
+		        <front>
+		            <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+		            <author initials='S.' surname='Bradner'
+		                    fullname='Scott Bradner'>
+		                <organization abbrev='HarvardU'>
+		                Harvard University
+		                </organization>
+		            </author>
+		            <date month='March' year='1997' />
+		        </front>
+		        <seriesInfo name='RFC' value='2119' />
+		    </reference>
+		    <reference anchor='RFC2606'>
+		        <front>
+		            <title>Reserved Top Level DNS Names</title>
+		            <author initials='D.' surname='Eastlake'
+		                    fullname='Donald E. Eastlake 3rd'>
+		                <organization abbrev='IBM'>
+		                IBM
+		                </organization>
+		            </author>
+		            <author initials='A.' surname='Panitz'
+		                    fullname='Aliza R. Panitz'>
+		            </author>
+		            <date month='June' year='1999' />
+		        </front>
+		        <seriesInfo name='RFC' value='2606' />
+		    </reference>
+			<reference anchor="OS" target="./Opensocial-Specification.xml">
+				<front>
+					<title>OpenSocial Specification v0.9</title>
+		            <author initials='o.' surname='social'
+		                    fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+		            </author>
+					<date month='January' year='2009' />
+				</front>				
+			</reference>
+		</references>
+	</back>
+</rfc>
