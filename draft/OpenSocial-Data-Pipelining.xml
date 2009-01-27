@@ -35,7 +35,7 @@
 				&lt;os:DataRequest href="http://www.developer.com/api"&gt;.
 			</t>
 			<t>
-				The data that is retreived will be available in three contexts:
+				The data that is retrieved will be available in three contexts:
 				<list style="numbers">
 					<t>Proxied content requests. This data will be POSTed to the developer party server with requests for proxied content.</t>
 					<t>OpenSocial Templates. The data will be available as named variables in OpenSocial templates.</t>
@@ -70,6 +70,19 @@
 				Note that we only have equivalents for REST calls that get data - calls that update data cannot be 
 				safely used in Data Pipelining. 
 			</t>
+			<t>
+				Data Pipelining creates a new feature name for use in
+				the Gadgets Specification: opensocial-data.  When data
+				pipelining elements are embedded in type=@html, the
+				Module must contain this XML:
+				<figure>
+					<artwork>		
+&lt;ModulePrefs&gt;
+ &lt;Require feature="opensocial-data"/&gt;
+&lt;/ModulePrefs&gt;
+					</artwork>
+				</figure>
+			</t>
 		</section>
 		<section title="Common request processing">
 			<t>
@@ -91,8 +104,7 @@
 					<t>@userId {list&lt;string&gt;} Comma delimited IDs of the users to use with "@groupId". Each item can be one of "@me", "@viewer", "@owner", or a user ID.</t>
 					<t>@groupId {string} The group of users to get. Defaults to "@self", which returns the actual users listed in @userId. Other values are "@friends" to get friends, or any other string to get an arbitrary group.</t>
 					<t>@fields {list&lt;string&gt;} Comma-delimited list of strings of OpenSocial profile fields to return. Optional.</t>
-					<t>@startPage {int} Current page to return results from. Optional.</t>
-					<t>@startIndex {int: Starting index to return results from. Optional. Behavior is undefined if you send both startPage and startIndex.</t>
+					<t>@startIndex {int}: Starting index to return results from. Optional.</t>
 					<t>@count {int} Number of people to return. Optional.</t>
 					<t>@sortBy {string} Specifies the field name whose value is be used to order the returned people. The sort order is determine by the sortOrder parameter. Optional.</t>
 					<t>@sortOrder {string} The order in which the sortBy parameter is applied. Can either be "ascending" or "descending", defaults to ascending. Optional.</t>
@@ -105,7 +117,7 @@
 				<figure>
 					<preamble>Example:</preamble>
 					<artwork>
-&lt;os:PeopleRequest key="PagedFriends" userId="@owner" groupId="@friends" startPage="2" count="20"/&gt;
+&lt;os:PeopleRequest key="PagedFriends" userId="@owner" groupId="@friends" startIndex="40" count="20"/&gt;
 					</artwork>
 				</figure>
 			</t>
@@ -145,8 +157,7 @@
 					<t>@activityIds {list&lt;string&gt;} Comma delimited list of strings of activity ids to retreive. If set, @userid and @groupId will be ignored. Optional.</t>
 					<t>@appId {String} ID of app to get information for. Defaults to current app, and containers are not required to support other values. Optional.</t>
 					<t>@fields {list&lt;string&gt;} Comma-delimited list of strings of OpenSocial activity fields to return. Optional.</t>
-					<t>@startPage {int} Current page to return results from. Optional.</t>
-					<t>@startIndex {int: Starting index to return results from. Optional. Behavior is undefined if you send both startPage and startIndex.</t>
+					<t>@startIndex {int}: Starting index to return results from. Optional.</t>
 					<t>@count {int} Number of activities to return. Optional.</t>
 				</list>
 				Returns
@@ -180,18 +191,15 @@
 						<list style="symbols">
 							<t>If method is "post", than the "@params" parameters are sent as POST content. 
 							If method is "get", then the params are appended to the URL.</t>
-							<t>Note that POSTing arbitrary content is not supported.</t>
+							<t>Containers MAY optionally support full [RPC] methods, such as "people.get", or 
+							extensions, such as "email.get".</t>
+							<t>There is no ability to set arbitrary POST content, this just determined whether the 
+							key/value pair parameters are sent as a POST body.</t>
 						</list>
 					</t>  
 		  
     				<t>@format {string} Format data is returned in for processing, values are "json" or "text". 
 					Defaults to "json". Optional.
-						<list style="symbols">
-							<t>There is no ability to set arbitrary POST content, this just determined whether the 
-							key/value pair parameters are sent as a POST body.</t>
-							<t>Containers MAY optionally support full [RPC] methods, such as "people.get", or 
-							extensions, such as "email.get".</t>
-						</list>
 					</t>
 					<t>@refreshInterval {int} Period of time for which the cotnainer can cache the data. If 
 					this parameter is set, it overrides the HTTP response header sent back from the makeRequest(). Optional.</t>
@@ -260,6 +268,13 @@
 &lt;/Content&gt;
 					</artwork>
 				</figure>
+								
+				When preparing a request for proxied content, a
+				container MUST process data pipelining elements that are
+				direct children of the proxied content's &lt;Content&gt;
+				element. Data pipelining elements are ALWAYS valid when
+				preparing a request for proxied content, even if the
+				opensocial-data feature is not present.
 			</t>
 			<t>
 				The results of the data pipelining requests will be sent to the href of the &lt;Content&gt; 
@@ -290,6 +305,13 @@
 						</list>
 					</t>
 				</list>
+				
+				Pipelined data is only available to the client when
+				embedded in @type="html" content or content returned by a
+				proxied content request.  Data posted as part of a
+				pipelined data request MUST not be available on the
+				client.
+
 				<figure>
 					<preamble>Examples</preamble>
 					<artwork>
@@ -326,20 +348,66 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 					<t>Passing OpenSocial data to a following &lt;os:DataRequest&gt;, specifically IDs of 
 					(viewer, owner, viewer friends, owner friends).</t>
 				</list>
+			</t>
 				
+			<t>
 				Data pipelining will support a limited subset of the expression language used in OpenSocial 
 				templates (based on <xref target="JSPEL">JSP EL</xref>):
 				<list style="symbols">
-					<t>Expressions of format ${A.B} will be supported, where "A" is the key and "B" is the property.</t>
+					<t>Expressions of format ${A(.B)*} will be
+					supported, where "A" is the key and "B" is any
+					number of properties.  Examples:  ${UserPrefs.size},
+					${ViewParams.nav.first}.</t>
+					<t>Multiple expressions may appear within a single
+					attribute, and mixed with non-expression text.  The
+					result of all non-expression text and expression
+					evaluations will be concatenated.</t>
 					<t>The key "ViewParams" is reserved and refers to the parameters passed into the gadget rendering, 
 					equivalent to <xref target="GadgetsSpec">gadgets.views.getParams()</xref>.</t>
 					<t>The key "UserPrefs" is reserved and refers to gadget user preferences - 
 					${UserPrefs.PREF} will return the value of gadgets.Prefs.getString('PREF') - see [API].</t>
 				</list>
+
+				The results of expression evaluation are treated as if
+				the results were inserted as the literal string value of
+				the XML attribute.  JSON arrays within ViewParams are
+				output as "a,b", not "[a,b]".  The results of expression
+				evaluation for URL-typed attributes - specifically,
+				@href and @param on &lt;os:DataRequest&gt; - MUST be
+				<eref target="http://www.ietf.org/rfc/rfc1738.txt">RFC
+				1738, Section 2.2 encoded (URL encoded)</eref> before
+				being inserted into a final string.
+			</t>
+
+			<t>				
+				The following attributes support expressions:
+				
+				<list style="symbols">
+					<t>@userId</t>
+					<t>@groupId</t>
+					<t>@fields</t>
+					<t>@startIndex</t>
+					<t>@count</t>
+					<t>@sortBy</t>
+					<t>@sortOrder</t>
+					<t>@filterBy</t>
+					<t>@filterOp</t>
+					<t>@filterValue</t>
+					<t>@activityIds</t>
+					<t>@href</t>
+					<t>@params</t>
+				</list>
+				
+				An implementation MUST evaluate dynamic properties for
+				these attributes and MUST NOT evaluate dynamic
+				properties for attributes not on this list.
+			</t>
+
+			<t>				
 				<figure>
 					<preamble>Example</preamble>
 					<artwork>
-&lt;os:PeopleRequest key="PagedFriends" userid="@owner" groupid="@friends" startPage="${ViewParams.page}" count="20"/&gt;
+&lt;os:PeopleRequest key="PagedFriends" userid="@owner" groupid="@friends" startIndex="${ViewParams.first}" count="20"/&gt;
 &lt;os:DataRequest href="http://developersite.com/api?ids=${PagedFriends.ids}"/&gt;
 					</artwork>
 				</figure>
