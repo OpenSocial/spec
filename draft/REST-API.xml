@@ -1032,48 +1032,52 @@ X-HTTP-Method-Override: PUT
 				   <t>If the client received an X-XRDS-Location: header, follow it to get the discovery document.</t>
 
 				</list>
+                Once the client has the XRDS document, they have the complete set of services supported by that service.
+                All OpenSocial service types declare the base URI in the XRDS URI element. Each service type declares the root
+                URI for the service. Service specific parameters are passed to each endpoint using a fixed URI format. 
+                This format is defined by each service. 
 				The discovery document is an XML file in the same format used for OpenID and OAuth discovery, 
 				defined at http://xrds-simple.net/core/1.0/:
 				<figure>
 					<artwork>
 &lt;XRDS xmlns="xri://$xrds"&gt;
-   &lt;XRD xmlns:simple="http://xrds-simple.net/core/1.0" xmlns="xri://$XRD*($v*2.0)" xmlns:os="http://ns.opensocial.org/2008/opensocial" version="2.0"&gt;
+   &lt;XRD xmlns:simple="http://xrds-simple.net/core/1.0" xmlns="xri://$XRD*($v*2.0)" version="2.0"&gt;
        &lt;Type&gt;xri://$xrds*simple&lt;/Type&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/people&lt;/Type&gt;
-         &lt;os:URI-Template&gt;http://api.example.org/people/{guid}/{selector}{-prefix|/|pid}&lt;/os:URI-Template&gt;
+         &lt;URI&gt;http://api.example.org/people&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/groups&lt;/Type&gt;
-         &lt;os:URI-Template&gt;http://api.example.org/groups/{guid}&lt;/os:URI-Template&gt;
+         &lt;URI&gt;http://api.example.org/groups&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/activities&lt;/Type&gt;
-         &lt;os:URI-Template&gt;http://api.example.org/activities/{guid}/{appid}/{selector}&lt;/os:URI-Template&gt;
+         &lt;URI&gt;http://api.example.org/activities&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org//2008/opensocial/appData&lt;/Type&gt;
-         &lt;os:URI-Template&gt;http://api.example.org/appData/{guid}/{appid}/{selector}&lt;/os:URI-Template&gt;
+         &lt;URI&gt;http://api.example.org/appData&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/userpreferences&lt;/Type&gt;
-         &lt;os:URI-Template&gt;http://api.example.org/userpreferences/{guid}/{preferenceType}&lt;/os:URI-Template&gt;
+         &lt;URI&gt;http://api.example.org/userPreferences&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/invalidate&lt;/Type&gt;
-         &lt;os:URI-Template&gt;http://api.example.org/invalidate&lt;/os:URI-Template&gt;
+         &lt;URI&gt;http://api.example.org/invalidate&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/messages&lt;/Type&gt;
-         &lt;os:URI-Template&gt;http://api.example.org/messages/{guid}/{selector}&lt;/os:URI-Template&gt;
+         &lt;URI&gt;http://api.example.org/messages&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
           &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/albums&lt;/Type&gt;
-          &lt;os:URI-Template&gt;http://api.example.org/albums/{userId}/{groupId}/{optionalAlbumId}&lt;/os:URI-Template&gt;
+          &lt;URI&gt;http://api.example.org/albums&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
           &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/mediaItems&lt;/Type&gt;
-          &lt;os:URI-Template&gt;http://api.example.org/mediaitems/{userId}/{groupId}/{optionalAlbumId}/{optionalMediaItemId}&lt;/os:URI-Template&gt;
+          &lt;URI&gt;http://api.example.org/mediaItems&lt;/URI&gt;
        &lt;/Service&gt;
    &lt;/XRD&gt;
 &lt;/XRDS&gt;				   		
@@ -1103,8 +1107,28 @@ X-HTTP-Method-Override: PUT
 				allowed operations SHOULD provide an HTTP Allow: header for each resource listing 
 				the allowed operations.
 			</t>
+            <t>
+                Each service type defines an associated partial URI format. The base URI for each service is found
+                in the URI element associated with the service in the discovery document. Each service type accepts 
+                parameters via the URL path. Definitions are of the form
+                <figure>
+                    <artwork>
+{a}/{b}/{c}
+                    </artwork>
+                </figure>
+                Parameters must be filled in using left to right ordering. If a positional pattern is missing, no 
+                parameters to the right of that parameter may be filled in. For example, if the preceding pattern was used and
+                only the value of the a parameter was known and set to @me, the complete URL would be expressed as:
+                <figure>
+                    <artwork>
+[Discovery URI]/@me
+                    </artwork>
+                </figure>
+                
+            </t>
 			<section title="People" >
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/people</t>
+                <t>URI structure: {guid}/{selector}/{pid}</t>
 				<t>guid : Container-globally-unique user identifier; identifies 
 				owner of the people data, or @me to indicate the requestor should be used.</t>
 				<t>selector : One of
@@ -1142,16 +1166,6 @@ X-HTTP-Method-Override: PUT
 					</texttable>
 				</t>
 				<t>
-					Note that a given container may use alternative URI formats; for example,
-					<figure>
-						<artwork>
-/people.cgi?guid={guid}&amp;groupid={groupid}
-						</artwork>
-					</figure>
-					is a valid URI pattern given the appropriate XRDS discovery document which allows clients to map 
-					the parameters to a concrete URI.
-				</t>
-				<t>
 					Friends MAY be added by POSTing to the appropriate collection (e.g., /people/{guid}/@friends). 
 					Containers MAY require a dual opt-in process before the friend record appears in the collection, 
 					and in this case SHOULD return a 202 Accepted response, indicating that the request is 
@@ -1164,6 +1178,7 @@ X-HTTP-Method-Override: PUT
 			</section>
 			<section title="Groups">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/groups</t>
+                <t>URI structure: {guid}</t>
 				<t>guid : Container-globally-unique user identifier; identifies owner of the people data; 
 				can be @me to indicate auth[nz] requestor should be used.</t>
 				<t>Groups URI examples: 
@@ -1177,6 +1192,7 @@ X-HTTP-Method-Override: PUT
 			</section>
 			<section title="Activities">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/activities</t>
+                <t>URI structure: {guid}/{selector}/{appId}</t>
 				<t>guid : Container-globally-unique user identifier; owner or 
 				recipient of the activity data, or @me to indicate the requestor should be used</t>
 				<t>selector : One of
@@ -1213,6 +1229,7 @@ X-HTTP-Method-Override: PUT
 			</section>
 			<section title="AppData">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/appData</t>
+                <t>URI structure: {selector}/{appId}</t>
 				<t>selector : One of
 					<list style="numbers">
 						<t>A user-defined local group name to select appData from people in the group (a collection)</t>
@@ -1237,6 +1254,7 @@ X-HTTP-Method-Override: PUT
 			</section>
 			<section title="UserPreferences">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/userpreferences</t>
+                <t>URI structure: {guid}/{preferenceType}</t>
 				<t>guid: Container-globally-unique user identifier or @me to indicate the requestor should be used.</t>
 				<t>preferenceType: One of [stringValues, numberValues, boolValues, arrayValues]. If not present, 
 				this is requesting/putting the entire set of UserPreferences for the guid/appid.</t>
@@ -1265,7 +1283,8 @@ X-HTTP-Method-Override: PUT
 			</section>
 			<section title="Albums">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/albums</t>
-				<t>userId: ID of the user  or @me to indicate the requestor should be used</t>
+                <t>URI structure: {guid}/{groupId}/{optionalAlbumId}</t>
+				<t>guid: ID of the user  or @me to indicate the requestor should be used</t>
 				<t>groupId:
 					<list style="symbols">
 						<t>@self: albums for the userId (support for this parameter is optional)</t>
@@ -1294,7 +1313,8 @@ X-HTTP-Method-Override: PUT
 			</section>
 			<section title="MediaItems">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/mediaItems</t>
-				<t>userId: ID of the user  or @me to indicate the requestor should be used.</t>
+                <t>URI structure: {guid}/{groupId}/{optionalAlbumId}/{optionalMediaItemId}</t>
+				<t>guid: ID of the user  or @me to indicate the requestor should be used.</t>
 				<t>groupId:
 					<list style="symbols">
 						<t>@self: Media Items for the userId (support for this parameter is optional)</t>
@@ -1324,6 +1344,7 @@ X-HTTP-Method-Override: PUT
 			</section>
 			<section title="Invalidation">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/invalidate</t>
+                <t>URI structure: n/a-- URI only accepts POST data.</t>
 				<t>An application can execute an invalidation request as a POST to the REST endpoint described 
 				in the containers XRDS or as a JSON-RPC call. Response codes have the following meanings:
 					<list style="symbols">
@@ -1515,6 +1536,7 @@ Content-Type application/json
 				the JS API's requestSendMessage.
 			</t>
 			<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/messages</t>
+            <t>URI structure: {guid}/{msgcolluid}/{msgid}</t>
 			<t>guid: as defined for people above. Generally a unique user id, however could also 
 			refer to a community, or @me to refer to the current authentication context.</t>
 			<t>msgcolluid : Container-globally-unique message collection identifier can be:
@@ -1532,11 +1554,8 @@ Content-Type application/json
 					<artwork>
 &lt;Service&gt;
 	&lt;Type&gt;http://ns.opensocial.org/messages/0.8&lt;/Type&gt;
-	
-	&lt;os:URI-Template&gt;http://api.example.org/messages/{guid}{-prefix|/|msgcollid}{-prefix|/|msgid}&lt;/os:URI-Template&gt;
-
+	&lt;URI&gt;http://api.example.org/messages/&lt;/URI&gt;
 &lt;/Service&gt;
-
 					</artwork>
 				</figure>
 			</section>
@@ -1592,13 +1611,13 @@ Content-Type application/json
 	"id" : "http://example.org/inbox/message/{msgid}",
  	"recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
 	"sender" : "{ "id" : ... }",
- 	"title" : "You have a new messge from Joe",
+	"title" : "You have a new messge from Joe",
 	"titleId" : "541141091700",
-    "body" : "Short message from Joe to some friend\/s",
+	"body" : "Short message from Joe to some friend\/s",
 	"bodyId" : "5491155811231",  
-    "type" : "privateMessage",
-    "status" : "unread",
-  	"data" : "..."
+	"type" : "privateMessage",
+	"status" : "unread",
+	"data" : "..."
 }
 						</artwork>
 					</figure>
@@ -1606,20 +1625,20 @@ Content-Type application/json
 						<preamble>application/xml representation</preamble>
 							<artwork>
 &lt;message xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-&lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
+    &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
     &lt;recipient&gt;example.org:AD38B3886625AAF&lt;/recipient&gt;
         &lt;recipient&gt;example.org:997638BAA6F25AD&lt;/recipient&gt;
-&lt;sender&gt;
-   &lt;person&gt;...&lt;/person&gt;
-&lt;/sender&gt;
- &lt;title&gt;You have a new messge from Joe&lt;/title&gt;
-&lt;titleId&gt;541141091700&lt;/titleId&gt;
- &lt;updated&gt;2008-09-29T23:35:37.266Z&lt;/updated&gt;
-&lt;body&gt;Short message from Joe to some friend\/s&lt;/body&gt;
-&lt;bodyId&gt;5491155811231&lt;/bodyId&gt;
- &lt;type&gt;privateMessage&lt;/type&gt;
-&lt;status&gt;unread&lt;/status&gt;
- &lt;data&gt;...&lt;/data&gt;
+        &lt;sender&gt;
+           &lt;person&gt;...&lt;/person&gt;
+        &lt;/sender&gt;
+        &lt;title&gt;You have a new messge from Joe&lt;/title&gt;
+        &lt;titleId&gt;541141091700&lt;/titleId&gt;
+        &lt;updated&gt;2008-09-29T23:35:37.266Z&lt;/updated&gt;
+        &lt;body&gt;Short message from Joe to some friend\/s&lt;/body&gt;
+        &lt;bodyId&gt;5491155811231&lt;/bodyId&gt;
+        &lt;type&gt;privateMessage&lt;/type&gt;
+        &lt;status&gt;unread&lt;/status&gt;
+        &lt;data&gt;...&lt;/data&gt;
 &lt;/message&gt;
 						</artwork>
 					</figure>
@@ -1627,15 +1646,15 @@ Content-Type application/json
 						<preamble>application/atom+xml representation</preamble>
 						<artwork>
 &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
-&lt;osapi:recipient&gt;example.org:AD38B3886625AAF&lt;/osapi:recipient&gt;
-&lt;osapi:recipient&gt;example.org:997638BAA6F25AD&lt;/osapi:recipient&gt;
-&lt;sender&gt;&lt;person&gt;...&lt;/person&gt;&lt;/sender&gt;
-&lt;title&gt;You have a new message from Joe&lt;/title&gt;
+    &lt;osapi:recipient&gt;example.org:AD38B3886625AAF&lt;/osapi:recipient&gt;
+    &lt;osapi:recipient&gt;example.org:997638BAA6F25AD&lt;/osapi:recipient&gt;
+    &lt;sender&gt;&lt;person&gt;...&lt;/person&gt;&lt;/sender&gt;
+    &lt;title&gt;You have a new message from Joe&lt;/title&gt;
     &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
-        &lt;link rel="alternate" href="http://app.example.org/inbox/message/{msgid}"/&gt;
-&lt;content&gt;Short message from Joe to some friend/s&lt;/content&gt;
-&lt;status&gt;UNREAD&lt;/status&gt;
-&lt;data&gt;...&lt;/data&gt;
+    &lt;link rel="alternate" href="http://app.example.org/inbox/message/{msgid}"/&gt;
+    &lt;content&gt;Short message from Joe to some friend/s&lt;/content&gt;
+    &lt;status&gt;UNREAD&lt;/status&gt;
+    &lt;data&gt;...&lt;/data&gt;
 &lt;/entry&gt;
 						</artwork>
 					</figure>
