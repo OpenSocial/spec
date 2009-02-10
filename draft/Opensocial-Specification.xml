@@ -1124,9 +1124,7 @@ Namespace for additional request*() functions with no REST/RPC equivalent Object
                 &lt;static&gt;               Type: {<xref target="opensocial.Message">opensocial.Message</xref>} opensocial.newMessage(body, opt_params)
               </t>
               <t>
-                Description: Creates a media item associated with an activity.
-                Represents images, movies, and audio.
-                Used when creating activities on the server.
+                Description: Creates a new message object for use with opensocial.requestSendMessage.
               </t>
               <t>
                 Parameters:                	<texttable>
@@ -2561,7 +2559,7 @@ function handleRequestMe(data) {
             </section>
             <section title="newFetchMediaItemsRequest" anchor="opensocial.DataRequest.newFetchMediaItemsRequest">
               <t>              Type: {Object} newFetchMediaItemsRequest(An, albumId, opt_params)</t>
-              <t>              Description: The newFetchAlbumsRequest() creates an object for DataRequest to request albums.</t>
+              <t>              Description: The newFetchMediaItemsRequest() creates an object for DataRequest to request mediaItems.</t>
               <t>
                 Parameters:                	<texttable>
                   <ttcol>Name</ttcol>
