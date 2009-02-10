@@ -2055,6 +2055,9 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" name="group" type="tns:Group" /&gt;
       &lt;xs:element minOccurs="0" name="activity" type="tns:Activity" /&gt;
       &lt;xs:element minOccurs="0" name="person" type="tns:Person" /&gt;
+      &lt;xs:element minOccurs="0" name="album" type="tns:Album" /&gt;
+      &lt;xs:element minOccurs="0" name="mediaItem" type="tns:MediaItem" /&gt;
+      &lt;xs:element minOccurs="0" name="message" type="tns:Message" /&gt;
       &lt;xs:element minOccurs="0" name="userPreferences" type="tns:UserPreferences" /&gt;
       &lt;xs:element minOccurs="0"  maxOccurs="unbounded" name="entry" type="tns:Entry" /&gt;
       &lt;!--  this is to allow responses to create to validate --&gt;
