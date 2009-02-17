@@ -2222,42 +2222,43 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
         </section>
       </section>
 
-      <section title="gadgets.oauth" anchor="gadgets.oauth">
+      <section title="gadgets.oauth.Popup" anchor="gadgets.oauth.Popup">
         <!-- ============================== class summary ========================== -->
         <t>
-            OAuth class for gadgets.
-            You create OAuth popup windows using the oauth popup() method.
-	    </t>
-          <t>
-            Expected usage:
-            <list style="numbers">
-              <t>
-                Gadget attempts to fetch OAuth data for the user and discovers that
-                approval is needed.  The gadget creates two new UI elements:
-                <list style="symbols">
-                  <t>a "personalize this gadget" button or link</t>
-                  <t>a "personalization done" button or link, which is initially hidden.</t>
-                </list>
-
-                With any luck, the user will never need to click the "personalization done"
-                button, but it should be created and displayed in case we can't
-                automatically detect when the user has approved access to their gadget.
-              </t>
-
-              <t>
-                Gadget creates a popup object and associates event handlers with the UI
-                elements:
-                <figure>
-                  <artwork>
+          OAuth popup window manager.
+	      </t>
+        <t>
+          Expected usage:
+          <list style="numbers">
+            <t>
+              Gadget attempts to fetch OAuth data for the user and discovers that
+              approval is needed.  The gadget creates two new UI elements:
+              <list style="symbols">
+                <t>a "personalize this gadget" button or link</t>
+                <t>a "personalization done" button or link, which is initially hidden.</t>
+              </list>
+              The "personalization done" button may be unnecessary.  The popup
+              window manager will attempt to detect when the window closes.
+              However, the "personalization done" button should still be
+              displayed to handle cases where the popup manager is unable to
+              detect that a window has closed.  This allows the user to signal
+              approval manually.
+            </t>
+            <t>
+              Gadget creates a popup object and associates event handlers with
+              the UI elements:
+              <figure>
+                <artwork>
+// Called when the user opens the popup window.
 var onOpen = function() {
-    $("personalizeDone").style.display = "block"
+  $("personalizeDone").style.display = "block"
 }
+// Called when the user closes the popup window.
 var onClose = function() {
-    $("personalizeDone").style.display = "none"
-    $("personalizeDone").style.display = "none"
-    fetchData();
+  $("personalizeDone").style.display = "none"
+  fetchData();
 }
-var popup =  gadgets.oauth.popup(
+var popup = new gadgets.oauth.Popup(
     response.oauthApprovalUrl,
     "height=300,width=200",
     onOpen,
@@ -2266,44 +2267,69 @@ var popup =  gadgets.oauth.popup(
 
 personalizeButton.onclick = popup.createOpenerOnClick();
 personalizeDoneButton.onclick = popup.createApprovedOnClick();
-                  </artwork>
-                </figure>
-              </t>
-              <t>
-                When the user clicks the personalization button/link, a window is opened
-                to the approval URL.
-              </t>
-              <t>
-                When the window is closed, the oauth popup calls the onClose function
-                and the gadget attempts to fetch the user's data.
-              </t>
-            </list>
-          </t>
-        <!-- ============================== constructor details ==================== -->
-        <section title="Method Details">
-          <section title="popup" anchor="gadgets.oauth.popup">
-            <t>              &lt;static&gt;                gadgets.oauth.popup(destination, window_options, open_callback, close_callback)</t>
-            <t>              Description: Initialize a new OAuth popup manager.</t>
+                </artwork>
+              </figure>
+            </t>
             <t>
-              Parameters:                	<texttable>
-                <ttcol>Name</ttcol>
+              When the user clicks the personalization button/link, a window
+              is opened to the approval URL.  The onOpen function is called
+              to notify the gadget that the window was opened.
+            </t>
+            <t>
+              When the window is closed, the popup manager calls the onClose
+              function and the gadget attempts to fetch the user's data.
+            </t>
+          </list>
+        </t>
+        <!-- ============================== constructor details ==================== -->
+        <section title="Constructor" anchor="gadgets.oauth.Poup.ctor">
+          <t>       gadgets.oauth.Popup(destination, windowOptions, openCallback, closeCallback)</t>
+          <t>       Description: used to create a new OAuth popup window manager.</t>
+          <t>
+            Parameters:<texttable>
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>destination</c>
+              <c>String</c>
+              <c>Target URL for the popup window.</c>
+              <c>windowOptions</c>
+              <c>String</c>
+              <c>
+                Options for window.open, used to specify
+                look and feel of the window.
+              </c>
+              <c>openCallback</c>
+              <c>Function</c>
+              <c>Function to call when the window is opened.</c>
+              <c>closeCallback</c>
+              <c>Function</c>
+              <c>Function to call when the window is closed.</c>
+            </texttable>
+          </t>
+        </section>
+        <section title="Method Details">
+          <section title="createOpenerOnClick" anchor="gadgets.oauth.Popup.createOpenerOnClick">
+            <t>   Type: {Function} createOpenerOnClick()</t>
+            <t>
+              Returns:<texttable>
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
-                <c>destination</c>
-                <c>String</c>
-                <c>Target URL for the popup window.</c>
-                <c>window_options</c>
-                <c>String</c>
-                <c>
-                  Options for window.open, used to specify
-                  look and feel of the window.
-                </c>
-                <c>open_callback</c>
-                <c>function</c>
-                <c>Function to call when the window is opened.</c>
-                <c>close_callback</c>
-                <c>function</c>
-                <c>Function to call when the window is closed.</c>
+                <c>Function</c>
+                <c>an onclick handler for the "open the approval window" link.</c>
+              </texttable>
+            </t>
+          </section>
+          <section title="createApprovedOnClick" anchor="gadgets.oauth.Popup.createApprovedOnClick">
+            <t>   Type: {Function} createApprovedOnClick()</t>
+            <t>
+              Returns:<texttable>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>Function</c>
+                <c>an onclick handler for the "I've approved" link. This may not ever be
+                   called. If we successfully detect that the window was closed, this
+                   link is unnecessary.</c>
               </texttable>
             </t>
           </section>
