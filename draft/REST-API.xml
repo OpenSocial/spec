@@ -803,43 +803,114 @@ The container may ignore this formatting when rendering the activity.
 					</t>
 				</section>
 			</section>
-			<section title="Content Upload" anchor="contentUpload">
-				<t>The content upload mechanism is REQUIRED on the <xref target="MediaItems">MediaItem service type</xref>. 
-                    The content contains two form values:
-                    <list style="symbols">
-                        <t>mediaItem: Details about the media item being uploaded. A container MAY rewrite the mediaItem.ID, 
-                        mediaItem.url, and mediaItem.thumbnailUrl fields.</t>
-                        <t>mediaItemFile: The file being uploaded.</t>
-                    </list> 
-                    One indicates the format of the uploaded data and the response format via the standard format query string value.
-                    format may take one of the following values: json, xml, atom.
-                    <t>
-                        The POST content may also be just the file to upload. In this case, the POST may indicate the media type 
-                        via the mediaType query string parameter.
-                    </t>
-					<figure>
-						<preamble>Request</preamble>
-						<artwork>
-POST /album/112233/mediaitem/?format=json HTTP/1.1
+			<section title="Content Upload">
+				<section title="Two Step Upload">
+					<t>Content Upload is a generic mechanism to allow for a standard way to upload content. A common 
+					place to apply content upload will be against an existing Album or MediaItem endpoint. In 
+					most scenarios an uploaded content is associated with creation of an entity. Creation of 
+					the entity routinely precedes upload of content. For example, a request to create a new 
+					media item precedes the step of uploading a photo. The requests look like:
+					<list>
+						<t>Step 1: Create Media Item placeholder for image</t>
+						<t>Step 2: Upload Photo</t>
+					</list>
+					The two step request process is illustrated below.</t>
+					<t>Step 1: Creating a media item (place holder for an image) in album (id:112233) 
+					by a POST request using ATOM (see section 2.7 for examples of JSON and XML)
+						<figure>
+							<preamble>Request</preamble>
+							<artwork>
+POST /album/112233/mediaitem/ HTTP/1.1
 &lt;usual headers&gt;
-Accept-Type: application/json
-Content-Type=multipart/form-data; boundary=---------------------------265001916915724
+Content-Type: application/atom+xml
 Content-Length: length
 
-POSTDATA =-----------------------------265001916915724
-Content-Disposition: form-data; name="mediaItem"
+&lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+  &lt;content type="application/xml"&gt;
+    &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+      &lt;caption&gt;Lena&lt;/caption&gt;
+      &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+    &lt;/mediaitem&gt;
+  &lt;/content&gt;
+  &lt;title /&gt;
+  &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+  &lt;author /&gt;
+&lt;/entry&gt;							
+							</artwork>
+						</figure>
+						<figure>
+							<preamble>Response</preamble>
+							<artwork>
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:ossearch="http://a9.com/-/spec/opensearch/1.1/"&gt;
+  &lt;author&gt;&lt;uri&gt;urn:guid:example.org:33445577722&lt;/uri&gt;&lt;/author&gt;
+  &lt;link rel="next" href="http://api.example.org/..." /&gt;
+  &lt;ossearch:totalResults&gt;100&lt;/ossearch:totalResults&gt;
+  &lt;ossearch:startIndex&gt;1&lt;/ossearch:startIndex&gt;
+  &lt;ossearch:itemsPerPage&gt;10&lt;/ossearch:itemsPerPage&gt;
+  &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;content type="application/xml"&gt;
+      &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;caption&gt;Lena&lt;/caption&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+      &lt;/mediaitem&gt;
+    &lt;/content&gt;
+    &lt;title /&gt;
+    &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+    &lt;author /&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;							
+							</artwork>
+						</figure>
+						The response indicates that the media item was created and media item id is 223344.
+					</t>
+					<t>
+						Step 2: Upload the image in the media item place holder
+						<figure>
+							<preamble>Request</preamble>
+							<artwork>
+POST /album/112233/mediaitem/223344 HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/xml
+Content-Type: image/gif
+Content-Length: length
 
-{'caption' :'Lena','mediaType':'IMAGE',}}
------------------------------265001916915724
-Content-Disposition: form-data; name="mediaItemFile"; filename="Lena.jpg"
-Content-Type: image/jpeg
-
-GIF89a....&lt;binary data&gt;								
+GIF89a....&lt;binary data&gt;
 						</artwork>
 					</figure>
 					<figure>
 						<preamble>Response</preamble>
 						<artwork>
+&lt;response&gt;
+  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+  &lt;itemsPerPage&gt; 1 &lt;/itemsPerPage&gt;
+  &lt;totalResults&gt; 1 &lt;/totalResults&gt;
+  &lt;entry&gt; ... &lt;/entry&gt;
+&lt;/response&gt;							
+							</artwork>
+						</figure>
+					</t>
+				</section>
+				<section title="Shortcut Upload Method">
+					<t>The shortcut upload mechanism is OPTIONAL. This two step process shown above 
+					can be merged into one by a single POST request with the content type set to the
+					item being uploaded. The POST URL can optionally pass the attributes. The Accept-type 
+					indicates the format of the response expected.
+						<figure>
+							<preamble>Request</preamble>
+							<artwork>
+POST /album/112233/mediaitem/?caption=Lena&amp;media_type=IMAGE HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/json
+Content-Type: image/gif
+Content-Length: length
+
+GIF89a....&lt;binary data&gt;								
+							</artwork>
+						</figure>
+						<figure>
+							<preamble>Response</preamble>
+							<artwork>
 {
   "startIndex" : 1,
   "itemsPerPage" : 1,
@@ -847,12 +918,13 @@ GIF89a....&lt;binary data&gt;
   "entry" : {
     "id" : "223344",
     "caption" : "Lena",
-    "mediaType" : "IMAGE",
+    "media_type" : "IMAGE",
   }
 }								
-        				</artwork>
-        			</figure>
-        		</t>
+							</artwork>
+						</figure>
+					</t>
+				</section>
 			</section>
 			
 			<section title="Invalidation">
@@ -1239,7 +1311,7 @@ X-HTTP-Method-Override: PUT
 					</texttable>
 				</t>
 			</section>
-			<section title="MediaItems" anchor="MediaItems">
+			<section title="MediaItems">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/mediaItems</t>
                 <t>URI structure: {guid}/{groupId}/{optionalAlbumId}/{optionalMediaItemId}</t>
 				<t>guid: ID of the user  or @me to indicate the requestor should be used.</t>
@@ -1269,7 +1341,6 @@ X-HTTP-Method-Override: PUT
 						<c>Deletes the media item.</c>
 					</texttable>
 				</t>
-                <t>For details on content upload, see <xref target="contentUpload">Content Upload</xref>.</t>
 			</section>
 			<section title="Invalidation">
 				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/invalidate</t>
@@ -1983,9 +2054,6 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" name="isUpdatedSince" type="xs:boolean" /&gt;
       &lt;xs:element minOccurs="0" name="group" type="tns:Group" /&gt;
       &lt;xs:element minOccurs="0" name="activity" type="tns:Activity" /&gt;
-      &lt;xs:element minOccurs="0" name="album" type="tns:Album" /&gt;
-      &lt;xs:element minOccurs="0" name="mediaItem" type="tns:MediaItem" /&gt;
-      &lt;xs:element minOccurs="0" name="message" type="tns:Message" /&gt;
       &lt;xs:element minOccurs="0" name="person" type="tns:Person" /&gt;
       &lt;xs:element minOccurs="0" name="album" type="tns:Album" /&gt;
       &lt;xs:element minOccurs="0" name="mediaItem" type="tns:MediaItem" /&gt;
