@@ -31,8 +31,11 @@
 		<section title="Overview">
 			<t>
 				Data Pipelining is a declarative syntax for defining the data you want the container 
-				to provide to you for processing. Examples would be &lt;os:PersonRequest id="@viewer"/&gt; or 
-				&lt;os:DataRequest href="http://www.developer.com/api"&gt;.
+				to provide to you for processing. Examples would be &lt;os:DataRequest method="people.get"
+				userId="@viewer"/&gt; or  &lt;os:HttpRequest href="http://www.developer.com/api"&gt;.
+				The &lt;os:DataRequest&gt; element provides access to OpenSocial data, and the
+				&lt;os:HttpRequest&gt; element provides access to content from any HTTP endpoint.
+				Several convenience elements provide simplified access to OpenSocial data.
 			</t>
 			<t>
 				The data that is retrieved will be available in three contexts:
@@ -47,24 +50,27 @@
 			<t>
 				RESTful call equivalents: 
 				<list style="numbers">
-					<t>&lt;os:PeopleRequest&gt; - request to get profile information for a group or list of people</t>
-					<t>&lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt; - request to get the viewer or owner's profile</t>
-					<t>&lt;os:ActivitiesRequest&gt; - request to get activities</t>
-					<t>&lt;os:DataRequest&gt;, equivalent to gadgets.io.makeRequest
+					<t>&lt;os:DataRequest&gt; - request to OpenSocial data, including person data, activity data, and
+					    any container-specific endpoints</t>
+					<t>&lt;os:HttpRequest&gt;, equivalent to gadgets.io.makeRequest
 						<list style="symbols">
 							<t>This is a call to an arbitrary URL.</t>
 						</list>
 					</t>
+					<t>&lt;os:PeopleRequest&gt; - convenience element to get profile information for a group or list of people</t>
+					<t>&lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt; - convenience elements to get the viewer or owner's profile</t>
+					<t>&lt;os:ActivitiesRequest&gt; - convenience element to get activities</t>
 				</list>
 				<figure>
 					<artwork>		
-&lt;Content type="html"&gt;
-  &lt;script type="text/os-data"&gt;
-    &lt;os:ViewerRequest key="vwr" fields="name,birthday"/&gt;
-    &lt;os:DataRequest key="mydata" href="http://developer.com/api"/&gt;
+&lt;Content type="html"&gt;&lt;![CDATA[
+  &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
+    &lt;os:DataRequest key="vwr" method="people.get" userId="@viewer" fields="name,birthday"/&gt;
+    &lt;os:ViewerRequest key="vwr2" fields="name,birthday"/&gt;
+    &lt;os:HttpRequest key="mydata" href="http://developer.com/api"/&gt;
   &lt;/script&gt;
   ... HTML content here ...
-&lt;/Content&gt;
+]]&gt;&lt;/Content&gt;
 					</artwork>
 				</figure>
 				Note that we only have equivalents for REST calls that get data - calls that update data cannot be 
@@ -93,9 +99,90 @@
 				RESTful API parameters. See the OpenSocial RESTful Protocol for an overview of the REST calls.
 			</t>
 		</section>
+		<section title="Tag: &lt;os:DataRequest&gt;">
+			<t>
+				Request to get OpenSocial data, including person data, activity
+				data, and any container-specific endpoints.
+			</t>
+			<t>
+				Attributes
+				<list style="symbols">
+					<t>@key {string}</t>
+					<t>@method {string} The name of the REST endpoint and operation called.  Implementations MUST support "people.get" and "activities.get",
+    					and MUST NOT support ".update", ".create", or ".delete" operations.</t>
+					<t>All other attributes will be passed as string parameters to the endpoint.  See the OpenSocial RESTful protocol for information
+					on the parameters available for each endpoint.</t>
+				</list>
+				Returns
+				<list style="symbols">
+					<t>JSON object (typically, an array) representing the results of invoking the endpoint.</t>
+				</list>
+				<figure>
+					<preamble>Example:</preamble>
+					<artwork>
+&lt;os:DataRequest key="PagedFriends" method="people.get" userId="@owner" groupId="@friends" startIndex="40" count="20"/&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Tag: &lt;os:HttpRequest&gt;">
+			<t>
+				Request for arbitrary URL data, equivalent to gadgets.io.makeRequest().
+			</t>
+			<t>
+				This tag has additional attributes to match the functionality of 
+				<xref target="GadgetsSpec">gadgets.io.makeRequest</xref>.  Containers will
+				typically cache the results of these requests;   see the
+				<xref target="GadgetsSpec">Gadget section 4.2</xref> and
+				<xref target="osspec">OpenSocial section 4.2.6</xref>
+				specifications for more information.
+			</t>
+			<t>
+				Attributes
+				<list style="symbols">
+					<t>@key {string}</t>
+					<t>@href {string} The URL to send a request to.</t>
+					<t>@params {string} Additional URL parameters, of format "a=b&amp;c=d". Optional.</t>
+					<t>@method {string} HTTP method to use, one of "get" or "post". Defaults to "get". Optional.
+						<list style="symbols">
+							<t>If method is "post", then the "@params" parameters are sent as POST content
+							with a content type of "application/x-www-form-urlencoded". 
+							If method is "get", then the params are appended to the URL.</t>
+							<t>There is no ability to set arbitrary POST content, this just determines whether the 
+							key/value pair parameters are sent as a POST body.</t>
+						</list>
+					</t>
+    				<t>@format {string} Format data is returned in for processing, values are "json" or "text". 
+					Defaults to "json". Optional.
+					</t>
+					<t>@refreshInterval {int} Period of time for which the container can cache the data. If 
+					this parameter is set, it overrides the HTTP response header sent back from the makeRequest(). Optional.</t>
+					<t>@authz. String, one of "none", "signed", "oauth", defaults to "none". This tells the 
+					gadget what authorization method to use when sending data to the remote server.</t>
+					<t>@sign_viewer {boolean} Sign the request and include the current viewer id. Defaults to true.</t>
+					<t>@sign_owner {boolean} Sign the request and include the current owner id. Defaults to true.</t>
+					<t>@oauth_service_name {string} Identifies the service element in the gadget spec to use for 
+					this request. Default is "".</t>
+					<t>@oauth_token_name {string} Identifies the OAuth token used to make a request to the service 
+					provider. Default is "".</t>
+					<t>@oauth_request_token {string}. Identify a token that is pre-approved by the provider for 
+					access to the resource.</t>
+					<t>@oauth_request_token_secret {string}. Secret associated with the pre-approved request token.</t>
+					<t>@oauth_use_token {string}. Control whether an OAuth token should be used with the request. 
+					Allowed values are: "always" | "if_available" | "never"</t>
+ 				</list>
+				<figure>
+					<preamble>Example:</preamble>
+					<artwork>
+&lt;os:HttpRequest key="Pets" href="http://pets.com/api" authz="signed"/&gt;
+					</artwork>
+				</figure>
+			</t>
+		</section>
 		<section title="Tag: &lt;os:PeopleRequest&gt;">
 			<t>
-				Request to get profile information for a group or list of people.
+				Request to get profile information for a group or list of people.  This is equivalent to using &lt;os:DataRequest&gt; with
+				@method of "people.get".
 			</t>
 			<t>
 				Attributes
@@ -124,7 +211,8 @@
 		</section>
 		<section title="Tags: &lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt;">
 			<t>
-				Requests to get the viewer's or owner's profile. 
+				Requests to get the viewer's or owner's profile.  This is equivalent to using &lt;os:DataRequest&gt; with
+				@method of "people.get", with @userId of either "@viewer" or "@owner".
 			</t>
 			<t>
 				Attributes
@@ -146,7 +234,8 @@
 		</section>
 		<section title="Tag: &lt;os:ActivitiesRequest&gt;">
 			<t>
-				Request to get activities. 
+				Request to get activities.  This is equivalent to using &lt;os:DataRequest&gt; with
+				@method of "activities.get".
 			</t>
 			<t>
 				Attributes
@@ -172,59 +261,6 @@
 				</figure>
 			</t>
 		</section>
-		<section title="Tag: &lt;os:DataRequest&gt;">
-			<t>
-				Request for arbitrary URL data, equiavlent to gadgets.io.makeRequest().
-			</t>
-			<t>
-				This tag has additional attributes to match the functionality of 
-				<xref target="GadgetsSpec">gadgets.io.makeRequest</xref>.
-			</t>
-			<t>
-				Attributes
-				<list style="symbols">
-					<t>@key {string}</t>
-					<t>@href {string} The URL to send data to. Optional if not set the method contains 
-					be a full RPC method (see @method).</t>
-					<t>@params {string} Additional URL parameters, of format "a=b&amp;c=d". Optional.</t>
-					<t>@method {string} HTTP method to use, one of "get" or "post". Defaults to "get". Optional.
-						<list style="symbols">
-							<t>If method is "post", than the "@params" parameters are sent as POST content. 
-							If method is "get", then the params are appended to the URL.</t>
-							<t>Containers MAY optionally support full [RPC] methods, such as "people.get", or 
-							extensions, such as "email.get".</t>
-							<t>There is no ability to set arbitrary POST content, this just determined whether the 
-							key/value pair parameters are sent as a POST body.</t>
-						</list>
-					</t>  
-		  
-    				<t>@format {string} Format data is returned in for processing, values are "json" or "text". 
-					Defaults to "json". Optional.
-					</t>
-					<t>@refreshInterval {int} Period of time for which the cotnainer can cache the data. If 
-					this parameter is set, it overrides the HTTP response header sent back from the makeRequest(). Optional.</t>
-					<t>@authz. String, one of "none", "signed", "oauth", defaults to "none". This tells the 
-					gadget what authorization method to use when sending data to the remote server.</t>
-					<t>@sign_viewer {boolean} Sign the request and include the current viewer id. Defaults to true.</t>
-					<t>@sign_owner {boolean} Sign the request and include the current owner id. Defaults to true.</t>
-					<t>@oauth_service_name {string} Identifies the service element in the gadget spec to use for 
-					this request. Default is "".</t>
-					<t>@oauth_token_name {string} Identifies the OAuth token used to make a request to the service 
-					provider. Default is "".</t>
-					<t>@oauth_request_token {string}. Identify a token that is pre-approved by the provider for 
-					access to the resource.</t>
-					<t>@oauth_request_token_secret {string}. Secret associated with the pre-approved request token.</t>
-					<t>@oauth_use_token {string}. Control whether an OAuth token should be used with the request. 
-					Allowed values are: "always" | "if_available" | "never"</t>
- 				</list>
-				<figure>
-					<preamble>Example:</preamble>
-					<artwork>
-&lt;os:DataRequest key="Pets" href="http://pets.com/api" authz="signed"/&gt;
-					</artwork>
-				</figure>
-			</t>
-		</section>
 		<section title='Embedding in @type="html" content'>
 			<t>
 				When embedding data pipelining a HTML content (either in CDATA or content returned with 
@@ -234,8 +270,8 @@
 					<preamble>Example</preamble>
 					<artwork>
 &lt;Content type="html"&gt;&lt;![CDATA[ 
-  &lt;script type="text/os-data"&gt;
-    &lt;os:PeopleRequest key="vf" userid="@viewer" groupid="@friends"/&gt;
+  &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
+    &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
   &lt;/script&gt;
   &lt;script type="text/os-template"&gt;
     &lt;div repeat="${vf}"&gt;${Name} is a friend.&lt;/div&gt;
@@ -263,8 +299,8 @@
 				<figure>
 					<preamble>Example</preamble>
 					<artwork>
-&lt;Content href="http://developer.com/canvas"&gt;
-  &lt;os:PeopleRequest key="vf" userid="@viewer" groupid="@friends"/&gt;
+&lt;Content href="http://developer.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
+  &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
 &lt;/Content&gt;
 					</artwork>
 				</figure>
@@ -281,7 +317,7 @@
 				section as POSTed JSON data. The structure will be in <xref target="RPCProtocol">Batch JSON</xref> format.
 			</t>
 			<t>
-				Elements in a data pipeline referencing the viewer (via @viewer, @me) will return a 403 
+				Elements in a data pipeline with @userId referencing the viewer (via @viewer, @me) will return a 403 
 				(Forbidden) error response if the container is unable to also send the opensocial_viewer 
 				URL parameter to the 3rd party server. The same holds true for @owner and opensocial_owner 
 				URL parameter. 
@@ -298,7 +334,7 @@
 				<list style="symbols">
 					<t>opensocial.data.getContext() - Gets the DataContext associated with the gadget.</t>
 					<t>opensocial.data.DataContext.getDataSet(string key) - Retrieves the object data that is currently mapped to the specified key.</t>
-					<t>opensocial.data.DataContext.putDataSet(stringkey, json|object value) - Puts additional data into the data context keyed by the key.</t>
+					<t>opensocial.data.DataContext.putDataSet(string key, json|object value) - Puts additional data into the data context keyed by the key.</t>
 					<t>opensocial.data.DataContext.registerListener (array&lt;String&gt;|string keys, Function(array&lt;String&gt; keys) callback) - Listen for any updates to data keyed by one of "keys". You can also pass in the wildcard key "*" to listen to all keys.
 						<list style="symbols">
 				        	<t>The callback function is returned with an array of the keys that have changed.</t>
@@ -337,15 +373,18 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 		</section>
 		<section title="Namespace">
 			<t>
-				XML namespace for all of the Data Pipelining tags is http://ns.opensocial.org/2008/markup. 
+				The XML namespace for all of the Data Pipelining tags is http://ns.opensocial.org/2008/markup. 
+				(Note that namespace declarations on &lt;Content&gt; and &lt;Module&gt; elements
+				do not apply to content inside of CDATA sections, so namespaces must be declared
+				within CDATA.)
 			</t>
 		</section>
 		<section title="Dynamic parameters">
 			<t>
-				Data requests often need to change based on input parameters. Two key use cases:
+				Data and HTTP requests often need to change based on input parameters. Two key use cases:
 				<list style="symbols">
 					<t>Passing gadgets view parameters to a request, for example the current page in a paginated list.</t>
-					<t>Passing OpenSocial data to a following &lt;os:DataRequest&gt;, specifically IDs of 
+					<t>Passing OpenSocial data to a following &lt;os:HttpRequest&gt;, specifically IDs of 
 					(viewer, owner, viewer friends, owner friends).</t>
 				</list>
 			</t>
@@ -373,7 +412,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 				the XML attribute.  JSON arrays within ViewParams are
 				output as "a,b", not "[a,b]".  The results of expression
 				evaluation for URL-typed attributes - specifically,
-				@href and @param on &lt;os:DataRequest&gt; - MUST be
+				@href and @param on &lt;os:HttpRequest&gt; - MUST be
 				<eref target="http://www.ietf.org/rfc/rfc1738.txt">RFC
 				1738, Section 2.2 encoded (URL encoded)</eref> before
 				being inserted into a final string.
@@ -383,6 +422,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 				The following attributes support expressions:
 				
 				<list style="symbols">
+					<t>Any attribute on os:DataRequest other than @key and @method</t>
 					<t>@userId</t>
 					<t>@groupId</t>
 					<t>@fields</t>
@@ -407,8 +447,8 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 				<figure>
 					<preamble>Example</preamble>
 					<artwork>
-&lt;os:PeopleRequest key="PagedFriends" userid="@owner" groupid="@friends" startIndex="${ViewParams.first}" count="20"/&gt;
-&lt;os:DataRequest href="http://developersite.com/api?ids=${PagedFriends.ids}"/&gt;
+&lt;os:PeopleRequest key="PagedFriends" userId="@owner" groupId="@friends" startIndex="${ViewParams.first}" count="20"/&gt;
+&lt;os:HttpRequest href="http://developersite.com/api?ids=${PagedFriends.ids}"/&gt;
 					</artwork>
 				</figure>
 			</t>
@@ -484,7 +524,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 		            <author initials='o.' surname='social'
 		                    fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
 		            </author>
-					<date month='January' year='2000' />
+					<date month='January' year='2009' />
 				</front>
 			</reference>
 		</references>
