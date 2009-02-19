@@ -513,186 +513,6 @@ The container may ignore this formatting when rendering the activity.
 					</t>
 				</section>
 			</section>
-			<section title="User Preferences">
-				<t>UserPreferences stores user preferences on behalf of an application. The
-					standard unit of UserPreferences is all of the preference information
-					stored for a given application on behalf of a given user. The API also
-					supports other types of queries, described in <xref target="standardQueryParameters"/>. To retrieve a
-					subset of fields, use the fields= selector syntax, described in 
-					<xref target="standardQueryParameters"/>. 
-				</t>
-				<t>This example is of a preference request returning all preferences for an application and user: 
-					<figure>
-						<preamble>application/json representation:</preamble>
-						<artwork>
-{
-       "lang": "en",
-       "country": "US",
-       "moduleId": "24341",
-       "arrayValues": {
-              "favoriteColors": [ "blue", "red"],
-              "statusMessages": [ "online", "offline"]
-       },
-       "boolValues": {
-              "boolVal1": "true",
-              "boolVal2": "false"
-       },
-       "numberValues":  {
-              "millisecondsOnline": "1234567",
-              "highScore": "8600",
-              "e": "2.71828",
-              "pi": "3.14159"
-       },
-       "stringValues": {
-              "stringVal1": "hi",
-              "stringVal2": "bye"
-       }
-}
-
-							
-						</artwork>
-					</figure>
-					<figure>
-						<preamble>application/xml representation:</preamble>
-						<artwork>
-&lt;userPreferences xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-  &lt;lang&gt;en&lt;/lang&gt;
-  &lt;country&gt;US&lt;/country&gt;
-  &lt;moduleId&gt;24341&lt;/moduleId&gt;
-  &lt;arrayValues&gt;
-    &lt;entry&gt;
-      &lt;key&gt;favoriteColors&lt;/key&gt;
-      &lt;value&gt;
-        &lt;entry&gt;blue&lt;/entry&gt;
-        &lt;entry&gt;red&lt;/entry&gt;
-      &lt;/value&gt;
-    &lt;/entry&gt;
-    &lt;entry&gt;
-      &lt;key&gt;statusMessages&lt;/key&gt;
-      &lt;value&gt;
-        &lt;entry&gt;online&lt;/entry&gt;
-        &lt;entry&gt;offline&lt;/entry&gt;
-      &lt;/value&gt;
-    &lt;/entry&gt;
-  &lt;/arrayValues&gt;
-  &lt;boolValues&gt;
-    &lt;entry&gt;
-      &lt;key&gt;boolVal1&lt;/key&gt;
-      &lt;value&gt;true&lt;/value&gt;
-    &lt;/entry&gt;
-    &lt;entry&gt;
-      &lt;key&gt;boolVal2&lt;/key&gt;
-      &lt;value&gt;false&lt;/value&gt;
-    &lt;/entry&gt;
-  &lt;/boolValues&gt;
-  &lt;numberValues&gt;
-    &lt;entry&gt;
-      &lt;key&gt;millisecOnline&lt;/key&gt;
-      &lt;value&gt;1234567&lt;/value&gt;
-    &lt;/entry&gt;
-    &lt;entry&gt;
-      &lt;key&gt;highScore&lt;/key&gt;
-      &lt;value&gt;8600&lt;/value&gt;
-    &lt;/entry&gt;
-    &lt;entry&gt;
-      &lt;key&gt;e&lt;/key&gt;
-      &lt;value&gt;2.71828&lt;/value&gt;
-    &lt;/entry&gt;
-    &lt;entry&gt;
-      &lt;key&gt;pi&lt;/key&gt;
-      &lt;value&gt;3.14159&lt;/value&gt;
-    &lt;/entry&gt;
-  &lt;/numberValues&gt;
-  &lt;stringValues&gt;
-    &lt;entry&gt;
-      &lt;key&gt; stringVal1&lt;/key&gt;
-      &lt;value&gt;hi&lt;/value&gt;
-    &lt;/entry&gt;
-    &lt;entry&gt;
-      &lt;key&gt; stringVal2&lt;/key&gt;
-      &lt;value&gt;bye&lt;/value&gt;
-    &lt;/entry&gt;
-  &lt;/stringValues&gt;
-&lt;/userPreferences&gt;							
-						</artwork>
-					</figure>
-					<figure>
-						<preamble>application/atom+xml representation:</preamble>
-						<artwork>
-&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
-  &lt;content type="application/xml"&gt;
-    &lt;userPreferences xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-      &lt;lang&gt;en&lt;/lang&gt;
-      &lt;country&gt;US&lt;/country&gt;
-      &lt;moduleId&gt;24341&lt;/moduleId&gt;
-      &lt;arrayValues&gt;
-        &lt;entry&gt;
-          &lt;key&gt;favoriteColors&lt;/key&gt;
-          &lt;value&gt;
-            &lt;entry&gt;blue&lt;/entry&gt;
-            &lt;entry&gt;red&lt;/entry&gt;
-          &lt;/value&gt;
-        &lt;/entry&gt;
-        &lt;entry&gt;
-          &lt;key&gt;statusMessages&lt;/key&gt;
-          &lt;value&gt;
-            &lt;entry&gt;online&lt;/entry&gt;
-            &lt;entry&gt;offline&lt;/entry&gt;
-          &lt;/value&gt;
-        &lt;/entry&gt;
-      &lt;/arrayValues&gt;
-      &lt;boolValues&gt;
-        &lt;entry&gt;
-          &lt;key&gt;boolVal1&lt;/key&gt;
-          &lt;value&gt;true&lt;/value&gt;
-        &lt;/entry&gt;
-        &lt;entry&gt;
-          &lt;key&gt;boolVal2&lt;/key&gt;
-          &lt;value&gt;false&lt;/value&gt;
-        &lt;/entry&gt;
-      &lt;/boolValues&gt;
-      &lt;numberValues&gt;
-        &lt;entry&gt;
-          &lt;key&gt;millisecOnline&lt;/key&gt;
-          &lt;value&gt;1234567&lt;/value&gt;
-        &lt;/entry&gt;
-        &lt;entry&gt;
-          &lt;key&gt;highScore&lt;/key&gt;
-          &lt;value&gt;8600&lt;/value&gt;
-        &lt;/entry&gt;
-        &lt;entry&gt;
-          &lt;key&gt;e&lt;/key&gt;
-          &lt;value&gt;2.71828&lt;/value&gt;
-        &lt;/entry&gt;
-        &lt;entry&gt;
-          &lt;key&gt;pi&lt;/key&gt;
-          &lt;value&gt;3.14159&lt;/value&gt;
-        &lt;/entry&gt;
-      &lt;/numberValues&gt;
-      &lt;stringValues&gt;
-        &lt;entry&gt;
-          &lt;key&gt; stringVal1&lt;/key&gt;
-          &lt;value&gt;hi&lt;/value&gt;
-        &lt;/entry&gt;
-        &lt;entry&gt;
-          &lt;key&gt; stringVal2&lt;/key&gt;
-          &lt;value&gt;bye&lt;/value&gt;
-        &lt;/entry&gt;
-      &lt;/stringValues&gt;
-    &lt;/userPreferences&gt;
-  &lt;/content&gt;
-  &lt;title/&gt;
-  &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
-  &lt;author&gt;
-    &lt;url&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/url&gt;
-  &lt;/author&gt;
-  &lt;id&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
-&lt;/entry&gt;							
-						</artwork>
-					</figure>
-				</t>
-			</section>
-
 			<section title="Albums/MediaItem">
 				<section title="Albums">
 					<t>Albums support collections of media items (video, image, sound). 
@@ -1060,10 +880,6 @@ X-HTTP-Method-Override: PUT
          &lt;URI&gt;http://api.example.org/appData&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
-         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/userpreferences&lt;/Type&gt;
-         &lt;URI&gt;http://api.example.org/userPreferences&lt;/URI&gt;
-       &lt;/Service&gt;
-       &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/invalidate&lt;/Type&gt;
          &lt;URI&gt;http://api.example.org/invalidate&lt;/URI&gt;
        &lt;/Service&gt;
@@ -1249,35 +1065,6 @@ X-HTTP-Method-Override: PUT
 						<c>All app data for friends of user {guid} and app {appid}; read-only (only GET and HEAD supported)</c>
 						<c>/appData/{guid}/@self/{appid}?fields=highscore</c>
 						<c>Just the highscore field for user {guid}, app {appid}</c>
-					</texttable>
-				</t>
-			</section>
-			<section title="UserPreferences">
-				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/userpreferences</t>
-                <t>URI structure: {guid}/{preferenceType}</t>
-				<t>guid: Container-globally-unique user identifier or @me to indicate the requestor should be used.</t>
-				<t>preferenceType: One of [stringValues, numberValues, boolValues, arrayValues]. If not present, 
-				this is requesting/putting the entire set of UserPreferences for the guid/appid.</t>
-				<t>App ID is always mapped using the OAuth parameters.</t>
-				<t>UserPreferences reserves the following field names:
-					<list style="symbols">
-						<t>country: Gets the current country, returned as an ISO 3166-1 alpha-2 code.</t>
-						<t>lang: Gets the language to use when communicating with the user, returned as an ISO 639-1 code.</t>
-						<t>moduleId: Gets the module ID for the current application instance.</t>
-					</list>
-				</t>
-				<t>When no fields= filter is present in the query string, all preferences for the {guid} and {appid} are returned. 
-				</t>
-				<t>User Preferences URI examples: 
-					<texttable>
-						<ttcol align="left">URI Fragment</ttcol>
-						<ttcol align="left">Description</ttcol>
-						<c>/userpreferences/@me/stringValues</c>
-						<c>Returns all string preferences associated with the current user.</c>
-						<c>/userpreferences/@me</c>
-						<c>Returns all preferences for the current user.</c>
-						<c>/userpreferences/@me?fields=avatar,backgroundColor</c>
-						<c>Returns the avatar and backgroundColor values.</c>
 					</texttable>
 				</t>
 			</section>
@@ -2038,7 +1825,6 @@ Content-Type application/json
   &lt;xs:element name="group" type="tns:Group" /&gt;
   &lt;xs:element name="activity" type="tns:Activity" /&gt;
   &lt;xs:element name="appData" type="tns:Appdata" /&gt;
-  &lt;xs:element name="userPreferences" type="tns:UserPreferences" /&gt;
 
   &lt;xs:element name="response" type="tns:Response" /&gt;
 
@@ -2058,7 +1844,6 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" name="album" type="tns:Album" /&gt;
       &lt;xs:element minOccurs="0" name="mediaItem" type="tns:MediaItem" /&gt;
       &lt;xs:element minOccurs="0" name="message" type="tns:Message" /&gt;
-      &lt;xs:element minOccurs="0" name="userPreferences" type="tns:UserPreferences" /&gt;
       &lt;xs:element minOccurs="0"  maxOccurs="unbounded" name="entry" type="tns:Entry" /&gt;
       &lt;!--  this is to allow responses to create to validate --&gt;
       &lt;xs:element minOccurs="0" name="map" type="xs:anyType" /&gt;
@@ -2071,7 +1856,6 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" name="person" type="tns:Person" /&gt;
       &lt;xs:element minOccurs="0" name="group" type="tns:Group" /&gt;
       &lt;xs:element minOccurs="0" name="appData" type="tns:Appdata" /&gt;
-      &lt;xs:element minOccurs="0" name="userPreferences" type="tns:UserPreferences" /&gt;
       &lt;xs:element minOccurs="0" name="album" type="tns:Album" /&gt;
       &lt;xs:element minOccurs="0" name="mediaItem" type="tns:MediaItem" /&gt;
     &lt;/xs:choice&gt;
@@ -2133,18 +1917,6 @@ Content-Type application/json
     &lt;xs:sequence&gt;
       &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="entry" type="xs:string"/&gt;
     &lt;/xs:sequence&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="UserPreferences"&gt;
-    &lt;xs:all minOccurs="0"&gt;
-      &lt;xs:element minOccurs="0" name="lang" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="country" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="moduleId" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="arrayValues" type="tns:ArrayKeyValueArray" /&gt;
-      &lt;xs:element minOccurs="0" name="boolValues" type="tns:BoolKeyValueArray" /&gt;
-      &lt;xs:element minOccurs="0" name="numberValues" type="tns:NumberKeyValueArray" /&gt;
-      &lt;xs:element minOccurs="0" name="stringValues" type="tns:StringKeyValueArray" /&gt;
-    &lt;/xs:all&gt;
   &lt;/xs:complexType&gt;
 
   &lt;xs:complexType name="Activity"&gt;
