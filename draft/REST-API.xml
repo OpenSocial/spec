@@ -164,7 +164,7 @@
 					<figure>
 						<preamble>xml representation:</preamble>
 						<artwork>
-&lt;response&gt;
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
    &lt;startIndex&gt; 1 &lt;/startIndex&gt;
    &lt;itemsPerPage&gt; 10 &lt;/itemsPerPage&gt;
    &lt;totalResults&gt; 100 &lt;/totalResults&gt;
@@ -177,7 +177,7 @@
 					<figure>
 						<preamble>or, for only one item:</preamble>
 						<artwork>
-&lt;response&gt;
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
    &lt;startIndex&gt; 1 &lt;/startIndex&gt;
    &lt;itemsPerPage&gt; 10 &lt;/itemsPerPage&gt;
    &lt;totalResults&gt; 100 &lt;/totalResults&gt;
@@ -701,7 +701,7 @@ GIF89a....&lt;binary data&gt;
 					<figure>
 						<preamble>Response</preamble>
 						<artwork>
-&lt;response&gt;
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
   &lt;startIndex&gt; 1 &lt;/startIndex&gt;
   &lt;itemsPerPage&gt; 1 &lt;/itemsPerPage&gt;
   &lt;totalResults&gt; 1 &lt;/totalResults&gt;
@@ -1861,64 +1861,6 @@ Content-Type application/json
     &lt;/xs:choice&gt;
   &lt;/xs:complexType&gt;
 
-  &lt;xs:complexType name="BoolKeyValueArray"&gt;
-    &lt;xs:sequence minOccurs="0" maxOccurs="unbounded"&gt;
-      &lt;xs:element minOccurs="0" name="entry" type="tns:BoolKeyValue"/&gt;
-    &lt;/xs:sequence&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="BoolKeyValue"&gt;
-    &lt;xs:all&gt;
-      &lt;xs:element minOccurs="1" name="key" type="xs:string"/&gt;
-      &lt;xs:element minOccurs="0" name="value" type="xs:boolean"/&gt;
-    &lt;/xs:all&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="NumberKeyValueArray"&gt;
-    &lt;xs:sequence minOccurs="0" maxOccurs="unbounded"&gt;
-      &lt;xs:element minOccurs="0" name="entry" type="tns:NumberKeyValue"/&gt;
-    &lt;/xs:sequence&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="NumberKeyValue"&gt;
-    &lt;xs:all&gt;
-      &lt;xs:element minOccurs="1" name="key" type="xs:string"/&gt;
-      &lt;xs:element minOccurs="0" name="value" type="xs:double"/&gt;
-    &lt;/xs:all&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="StringKeyValueArray"&gt;
-    &lt;xs:sequence minOccurs="0" maxOccurs="unbounded"&gt;
-      &lt;xs:element minOccurs="0" name="entry" type="tns:StringKeyValue"/&gt;
-    &lt;/xs:sequence&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="StringKeyValue"&gt;
-    &lt;xs:all&gt;
-      &lt;xs:element minOccurs="1" name="key" type="xs:string"/&gt;
-      &lt;xs:element minOccurs="0" name="value" type="xs:string"/&gt;
-    &lt;/xs:all&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="ArrayKeyValueArray"&gt;
-    &lt;xs:sequence minOccurs="0" maxOccurs="unbounded"&gt;
-      &lt;xs:element minOccurs="0" name="entry" type="tns:ArrayKeyValue"/&gt;
-    &lt;/xs:sequence&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="ArrayKeyValue"&gt;
-    &lt;xs:all&gt;
-      &lt;xs:element minOccurs="1" name="key" type="xs:string"/&gt;
-      &lt;xs:element minOccurs="0" name="value" type="tns:StringEntryArray"/&gt;
-    &lt;/xs:all&gt;
-  &lt;/xs:complexType&gt;
-
-  &lt;xs:complexType name="StringEntryArray"&gt;
-    &lt;xs:sequence&gt;
-      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="entry" type="xs:string"/&gt;
-    &lt;/xs:sequence&gt;
-  &lt;/xs:complexType&gt;
-
   &lt;xs:complexType name="Activity"&gt;
     &lt;xs:choice minOccurs="0" maxOccurs="unbounded"&gt;
       &lt;xs:element minOccurs="0" name="appId" type="xs:string" /&gt;
@@ -2130,7 +2072,7 @@ Content-Type application/json
     &lt;xs:all&gt;
       &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="created" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="created" type="xs:dateTime" /&gt;
       &lt;xs:element minOccurs="0" name="thumbnailUrl" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="description" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="duration" type="xs:integer" /&gt;
@@ -2138,7 +2080,7 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" name="language" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="albumId" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="fileSize" type="xs:long" /&gt;
-      &lt;xs:element minOccurs="0" name="startTime" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="startTime" type="xs:dateTime" /&gt;
       &lt;xs:element minOccurs="0" name="rating" type="xs:integer" /&gt;
       &lt;xs:element minOccurs="0" name="numVotes" type="xs:integer" /&gt;
       &lt;xs:element minOccurs="0" name="numComments" type="xs:integer" /&gt;
@@ -2237,7 +2179,7 @@ Content-Type application/json
   &lt;/xs:complexType&gt;
 
   &lt;xs:complexType name="Message"&gt;
-    &lt;xs:all&gt;
+    &lt;xs:choice&gt;
       &lt;xs:element minOccurs="0" name="body" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="bodyId" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
@@ -2245,15 +2187,15 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="recipients" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="senderId" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="timeSent" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="timeSent" type="xs:dateTime" /&gt;
       &lt;xs:element minOccurs="0" name="inReplyTo" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="replies" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="status" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="appUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="appUrl" type="tns:Url" /&gt;
       &lt;xs:element minOccurs="0" name="collectionIds" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="updated" type="xs:string" /&gt;
-      &lt;xs:element minOccurs="0" name="urls" type="xs:string" /&gt;
-    &lt;/xs:all&gt;
+      &lt;xs:element minOccurs="0" name="updated" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="urls" type="tns:Url" /&gt;
+    &lt;/xs:choice&gt;
   &lt;/xs:complexType&gt;
 
   &lt;xs:complexType name="MessageType"&gt;
