@@ -335,9 +335,13 @@
 					<t>opensocial.data.getContext() - Gets the DataContext associated with the gadget.</t>
 					<t>opensocial.data.DataContext.getDataSet(string key) - Retrieves the object data that is currently mapped to the specified key.</t>
 					<t>opensocial.data.DataContext.putDataSet(string key, json|object value) - Puts additional data into the data context keyed by the key.</t>
+					<t>opensocial.data.DataContext.putDataSets(object dataSets) - Puts many data sets into the data context at once, with appropriate listeners firing after all the updates are done.</t>
+					            <list style="symbols">
+					<t>dataSets is an object whose property names are data set keys, and whose properties are actual data sets.</t>
+					            </list>
 					<t>opensocial.data.DataContext.registerListener (array&lt;String&gt;|string keys, Function(array&lt;String&gt; keys) callback) - Listen for any updates to data keyed by one of "keys". You can also pass in the wildcard key "*" to listen to all keys.
 						<list style="symbols">
-				        	<t>The callback function is returned with an array of the keys that have changed.</t>
+				        	<t>The callback function is invoked with an array of the keys that have changed as a parameter.</t>
 						</list>
 					</t>
 				</list>
