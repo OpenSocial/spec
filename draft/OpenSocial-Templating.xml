@@ -137,23 +137,61 @@
 				are in attributes without additional text content, and in this case, the value of 
 				the expression is the object referenced, and this object is passed to the template 
 				for processing. In the following example, the viewer is passed in to the 
-				os:ShowPerson template.
+				os:Name template.
 				<figure>
 					<artwork>
-&lt;os:ShowPerson person="${Viewer}"/&gt;
+&lt;os:Name person="${Viewer}"/&gt;
 					</artwork>
 				</figure>
 			</t>
 			<t>
 				Strings are escaped before inserting into the HTML document. By default strings 
 				are HTML escaped, however based on context they may be URL encoded or escaped as 
-				JavaScript strings, depending on context. 
+				JavaScript strings or CSS content. 
 			</t>
+			<section title="Variable evaluation in Expressions">
+                                                <t>         
+                                                            Variables are accessed using Foo.Bar (or Foo.Bar.Baz) notation. .Bar maps to 
+                                                            getting the property Bar on the JSON object. If Top and Viewer are JSON objects, then
+                                                            <figure>
+                                                                       <artwork>
+${Top.Viewer.Name}
+                                                                       </artwork>
+                                                            </figure>
+                                                            evaluates to
+                                                            <figure>
+                                                                       <artwork>
+data['Viewer']['Name']
+                                                                       </artwork>
+                                                            </figure>
+                                                </t>
+                                                <t>
+                                                            Properties of DOM Nodes have special evaluation rules. For a given
+                                                            Node object, ${Node.Param} will attempt to evaluate as follows:
+                                                            <list style="symbols">
+                                                                        <t>First look for the @Param attribute on the node. If it exists, its string value is returned.</t>
+                                                                        <t>
+                                                                                    Next, look for child nodes with the local name "Param" (namespaces are not supported for DOM property evaluation).
+                                                                                    If no nodes are found, return null. If a single node is found, it is returned. 
+                                                                                    Otherwise a NodeList containing all the found nodes is returned.
+                                                                        </t>
+                                                            </list>
+                                                </t>  	
+                                                <t>
+                                                            Evaluation of Nodes or lists of Nodes as strings results in the merged text content
+                                                            of these nodes. So &lt;Color&gt;Red&lt;/Color&gt; would become the string "Red". 
+                                                            This is mostly applicable to results of ${My} evaluation (see below).
+                                                </t>
+                                    </section>					
 		</section>
 		<section title="Variables">
 			<t>
-				Data is passed into all calls to render templates - i.e.: opensocial.template.processAll(data). 
-				The data passed in can be a JSON object, or as an object with a "getProp" method (example below). 
+				Data is used with all calls to render templates. When rendering templates through Javascript,
+				- i.e.: opensocial.template.getTemplate('foo').renderInto(div, data) - data can be passed in explicitly.
+				When no data is supplied, such as when templates are automatically rendered,
+				the default application Data Context, which can be populated declaratively via Data Pipelining,
+				will be used. 
+				The data passed in must be a JSON object. 
 				The templates will have two 'types' of variables. One set is a set of global objects with 
 				reserved names. The other set includes everything else or all other declared JavaScript variables. 
 			</t>
@@ -163,13 +201,14 @@
 				</t>
 				<section title="Top">
 					<t>
-						${Top} refers to the data context passed into the template rendering - i.e. 
-						opensocial.template.renderAll(data) -&gt; ${Top} == data. 
+						${Top} refers to the data context passed into the template rendering - i.e.: 
+						for automatic rendering, ${Top} == Data Context; for programmatic rendering via 
+						template.renderInto(div, data) -&gt; ${Top} == data. 
 					</t>
 				</section>
 				<section title="Content">
 					<t>
-						${Context} is a holding area for additional variables needed when processing templates. 
+						${Context} is a holding area for additional variables generated while processing templates. 
 						${Context} will include the following set of properties:
 						<list style="symbols">
 							<t>${Context.UniqueId} A unique ID of the template being rendered. This value is useful for generating HTML IDs.</t>
@@ -180,61 +219,47 @@
 				</section>
 				<section title="Cur">
 					<t>
-						${Cur} refers to the current item being processed within a repeater. 
+						${Cur} refers to the current data item being processed, either within a repeater, or specified via the @cur 
+						attribute (see below). At the top of the template rendering stack ${Cur} == ${Top}. When a custom tag is invoked without
+						a @cur attribute, ${Cur} will start out as null. 
 					</t>
 				</section>
 				<section title="My">
 					<t>
-						${My} refers to data that is passed into a template. Child elements of tags that 
-						are used to call templates are passed as parameters to the template and are accessible 
-						via the ${My} variable. If these elements have content inside of them, this content 
-						can be rendered using &lt;os:Render content="tagName"/&gt;.
+						${My} refers to data that is passed into a template via Custom Tag XML. 
+						${My} is only available within templates invoked as Custom Tags. 
+                                                            </t>
+                                                            <t>						
+						The ${My} variable evaluates to a the XML template node of that was used to invoke the current Custom Tag, 
+						with all expressions, conditional elements and repeated elements already processed.
+				            </t>
+				            <t>
+						Properties of ${My} are evaluated as with any other DOM node (see above), with one exception:
+						any attribute expressions that would normally evaluate to Objects are not converted to string
+						by default. So, for &lt;foo:Bar person="${Viewer}"/&gt;, ${My.Viewer} will resolve to an Object whose
+						properties can be further accessed: ${My.Viewer.name.formatted}.
 						<figure>
-							<preamble>Example of defining a template that uses &lt;os:Render/&gt; and calling this template</preamble>
-							<artwork>
-&lt;script type="text/os-template" tag="myapp:BoxWithTitle"&gt;
-  &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
-  &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
-&lt;/script&gt;
-&lt;script type="text/os-template"&gt;
-  &lt;myapp:BoxWithTitle&gt;
-    &lt;title&gt;This is the title&lt;/title&gt;
-    &lt;body&gt;
-      &lt;div style="font-size:40px"&gt;Boo!&lt;/div&gt;
-      &lt;div&gt;from &lt;os:ShowPerson person="${Top.Viewer}"/&gt;&lt;/div&gt;
-    &lt;body&gt;
-  &lt;/myapp:BoxWithTitle&gt;
-&lt;/script&gt;
-							</artwork>
+						            <preamble>Example of a template that uses ${My}</preamble>
+						            <artwork>
+&lt;script type="text/os-template" xmlns:myapp="http://myapp.com" tag="myapp:EmployeeCard"&gt;
+  &lt;div class="card" style="background: ${My.color};"&lt; 
+    &lt;img src="${My.employee.photo}"/&gt; ${My.employee.name}
+  &lt;/div&gt;
+&lt;/script&gt;					            
+&lt;script type="text/os-template" xmlns:myapp="http://myapp.com"&gt;
+  &lt;myapp:EmployeeCard color="red" employee="${Viewer}"/>
+&lt;/script&gt;                                                                     
+						            </artwork>
 						</figure>
-					</t>
-					<t>
-						Note that the passed in content can include other template tags. These tags 
-						are displayed as part of calling &lt;os:Render/&gt;.
-					</t>
-					<t>
-						You can also call &lt;os:Render&gt; without a "content" attribute. This will 
-						render all children of the calling node - this is a useful shorthand for tags 
-						with only one content section.
-						<figure>
-							<preamble>Example</preamble>
-							<artwork>
-&lt;script type="text/os-template" tag="myapp:JsLink"&gt;
-  &lt;a href="#" onclick="${My.action}; return false;"&gt;&lt;os:Render/&gt;&lt;/a&gt;
-&lt;/script&gt;
-&lt;script type="text/os-template"&gt;
-  This is a &lt;myapp:JsLink action="alert('boo')"&gt;javascript link&lt;/a&gt;.
-&lt;/script&gt;
-							</artwork>
-						</figure>
-					</t>
+				             </t> 
 				</section>
 				<section title="Precedence Rules for Special Variables">
 					<t>
-						Special variable names are optional. Expressions will be evaluated against each 
-						of the special variable contexts. The first matching variable will be the result 
-						of expression evaluation. The order of precedence is $My, $Cur, $Context, and then 
-						$Top. For example, ${Cur.Name} == ${Name} unless there exists ${My.Name}. The 
+						Special variable names are optional for all but ${Context}. 
+						Expressions will be evaluated against each 
+						of the other special variable contexts. The first matching variable will be the result 
+						of expression evaluation. The order of precedence is ${Cur}, ${My} and then ${Top}.
+						For example, ${Top.Name} == ${Name} unless there exists ${Cur.Name} or ${My.Name}. The 
 						following examples show why this is helpful:
 
 						<figure>
@@ -275,75 +300,145 @@ data['Viewer']['Name']
 							</artwork>
 						</figure>
 					</t>
-					<t>
-						If an object has a getProp method, then this method is called instead of using the 
-						property notation. So if Top and Viewer support this interface, then
-						<figure>
-							<artwork>
-${Top.Viewer.Name}
-							</artwork>
-						</figure>
-						evaluates to
-						<figure>
-							<artwork>
-data.getProp('Viewer').getProp('Name')
-							</artwork>
-						</figure>
-					</t>
-					<t>
-						OpenSocial core objects will be modified to add getProp() support so that you can access properties by name.
-					</t>
-					<t>
-						Variables can also be accessed using the foo[x] notation, where x is a string, number, or 
-						expression that evaluates to a string or number. If ${foo} is an expression that maps to the 
-						JS object bar, then ${foo[x]} maps to bar[x] if bar is JSON, or bar.getAt(x) if bar is an object. 
-					</t>
 				</section>
 			</section>
 		</section>
 		<section title="Calling Templates">
 			<t>
-				Templates can be called by other templates. You can add a "name" attribute to any template (both on the &lt;Template&gt; element or on the &lt;script&gt; tag for embedded templates). This allows the template to be called by using an XML element of the same name.
-				<figure>
-					<preamble>Example of defining a template and then calling it</preamble>
-					<artwork>
-&lt;script type="text/os-template" tag="myapp:HelloWorld"&gt;
+			            Templates can be rendered automatically, or via a Javascript API available under the 
+			            opensocial.template namespace (see below). An implementing container may disable the Javascript API for 
+			            some or all application Views. In this case templates will only be renderable automatically
+			            when the application loads. 
+			</t>
+			<section title="Automatic Rendering of Templates">
+			            <t>
+			                       Templates embedded into the application markup via &lt;script&gt; elements will be processed automatically when
+			                       the application loads. By default, templates will be rendered into the application content in the place where they
+			                       appear in the markup.
+			                       <figure>
+			                                 <preamble>Example of an automatically rendered template</preamble>
+			                                 <artwork>
+&lt;h1&gt;
+  &lt;script type="text/os-template"&gt;
+    Hello, &lt;os:Name person="${Viewer}"/&gt;
+  &lt;/script&gt;
+&lt;/h1&gt;
+			                                 </artwork>
+			                       </figure>
+                                                           <figure>
+                                                                     <preamble>Result of rendering such markup</preamble>
+                                                                     <artwork>
+&lt;h1&gt;
+  Hello, &lt;span class="name"&gt;John Doe&lt;/span&gt;
+&lt;/h1&gt;
+                                                                     </artwork>
+                                                            </figure>
+                                                </t>
+                                                <t>
+                                                           Automatic rendering is done against the application Data Context which can be populated declaratively via 
+                                                           Data Pipelining, or programmatically via opensocial.data.DataContext.putDataSet().                                                             
+			            </t>
+			            <t>
+			                       Automatic rendering can be prevented by setting the "disableAutoProcessing" parameter of the opensocial-templates 
+			                       feature in the gadget spec
+                                                           <figure>
+                                                                     <artwork>
+&lt;Require feature="opensocial-templates"&gt;
+  &lt;Param name="disableAutoProcessing"&gt;true&lt;/Param&gt;
+&lt;/Require&gt;
+                                                                     </artwork>
+                                                            </figure> 
+                                                </t>			                       
+			</section>
+			<section title="Required Data">
+			            <t>
+			                        Data required for rendering of inline templates can be specified using the @require attribute.
+			                        The attribute value must be a coma-separated list of top-level variable names required to render this
+			                        template. If the application Data Context does not have any of these variables set, automatic rendering of
+			                        the template will be deferred until the time they become available.  
+                                                            <figure>
+                                                                     <preamble>This template will only render when both ${Viewer} and ${Owner} are set</preamble>
+                                                                     <artwork>
+&lt;script type="text/os-template" require="Viewer, Owner"&gt;
+  Hello, &lt;os:Name person="${Viewer}"/&gt;, welcome to &lt;os:Name person="${Owner}"/&gt;'s application 
+&lt;/script&gt;
+                                                                     </artwork>
+                                                            </figure>     			                        
+			            </t>
+			</section>
+			<section title="Automatic Re-Rendering">
+			            <t>
+			                         It is possible to request that the template be re-rendered when any of its required data
+			                         changes. This is done by setting @autoUpdate attribute to "true". When this is set, 
+			                         the template will re-render any time any of its required data is modified via
+			                         opensocial.data.DataContext.putDataSet(key, data).
+			                         <figure>
+			                                 <preamble>Example of using @autoUpdate</preamble>
+			                                 <artwork>
+&lt;script type="text/os-template" require="Friend" autoUpdate="true"&gt;
+  You have selected, &lt;os:Name person="${Friend}"/&gt;. 
+&lt;/script&gt;
+
+&lt;script type="text/javascript"&gt;
+  function setFriend(friend) {
+    opensocial.data.DataContext.putDataSet("Friend", friend);
+  }
+&lt;/script&gt;
+			                                 </artwork>
+			                         </figure>
+			            </t>
+			</section>
+			<section title="Custom Tags">
+				<t>
+					During rendering templates can call other templates via Custom Tags. You can add a @tag attribute to any template 
+					(both on the &lt;Template&gt; element or on the &lt;script&gt; tag for embedded templates). This 
+					allows the template to be called by using an XML element of the same name.
+				</t>
+				<t>
+				            The value of the @tag attribute must be a namespaced string. Creating custom tags in the default 
+				            (HTML) namespace is not allowed.
+				</t>
+				<t>
+				            Templates defined via inline &lt;script&gt; element that also specify a @tag attribute do not get rendered
+				            in place automatically.
+					<figure>
+						<preamble>Example of defining a custom tag and then calling it</preamble>
+						<artwork>
+&lt;script type="text/os-template" xmlns:myapp="http://example.com/myapp" tag="myapp:HelloWorld"&gt;
   &lt;div style="font-size: 40px"&gt;Hello World&lt;/div&gt;
 &lt;/script&gt;
+
 &lt;script type="text/os-template"&gt;
   &lt;myapp:HelloWorld/&gt;
 &lt;/script&gt;
-					</artwork>
-				</figure>
-			</t>
-			<t>
-				Parameters can be passed into templates as XML attributes or elements. These parameters 
-				are accessed using the special variable ${My}:
-				<figure>
-					<artwork>
-&lt;script type="text/os-template" tag="myapp:HelloWorld"&gt;
+						</artwork>
+					</figure>
+				</t>
+				<t>
+					Parameters can be passed into templates as XML attributes or elements. These parameters 
+					are accessed using the special variable ${My}:
+					<figure>
+						<artwork>
+&lt;script type="text/os-template" xmlns:myapp="http://example.com/myapp" tag="myapp:HelloWorld"&gt;
   &lt;div style="color: ${My.MessageStyle.color}"&gt;Your message is: ${My.message}&lt;/div&gt;
 &lt;/script&gt;
  
 &lt;script type="text/os-template"&gt;
   &lt;myapp:HelloWorld message="Hello World"&gt;
     &lt;MessageStyle color="blue"/&gt;
-  &lt;/myapp&gt;
+  &lt;/myapp:HelloWorld&gt;
 &lt;/script&gt;
-					</artwork>
-				</figure>
-			</t>
-			<t>
-				${My.foo} will first look for an attribute named foo in the calling template, and 
-				next will look for an element named foo. 
-			</t>
-			<section title="Context Attribute">
+						</artwork>
+					</figure>
+				</t>
+			</section>
+			<section title="Data Attribute">
 				<t>
-					The scope of data to evaluate can be explicitly set with the @context attribute. 
+					The scope of data to evaluate (${Cur}) can be explicitly set with the @cur attribute. 
 					For example, to repeat over Interests of the first object in Friends, you can use this expression:
 					<figure>
 						<artwork>
-&lt;div context="Friends[0]"&gt;
+&lt;div data="Friends[0]"&gt;
   &lt;div repeat="Interests"&gt;
     ${Title}
   &lt;/div&gt;
@@ -356,7 +451,7 @@ data.getProp('Viewer').getProp('Name')
 		<section title="Conditional Content">
 			<t>
 				Content can be displayed conditionally based on evaluation of an expression.
-				Elements with an @if attribute will only be displayed if the if attribute 
+				Elements with an @if attribute will only be displayed if the @if attribute 
 				evaluates to true. For example, the following will only be displayed if 
 				Top.YourScore == Top.HighScore:
 				<figure>
@@ -364,32 +459,38 @@ data.getProp('Viewer').getProp('Name')
 &lt;div if="Top.YourScore == Top.HighScore"&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
 					</artwork>
 				</figure>
-				Note: An @if attribute takes only an expression, so the surrounding '${}' is allowed, but optional.
 			</t>
-			<t>
-				The contents of an &lt;os:If&gt; element are only displayed if the condition attribute 
-				evaluates to true. 
-				<figure>
-					<preamble>The example above rewritten using the &lt;os:If&gt; element</preamble>
-					<artwork>
+                                    <t>
+                                                The contents of an &lt;os:If&gt; element are only displayed if the @condition attribute 
+                                                evaluates to true. 
+                                                <figure>
+                                                            <preamble>The example above rewritten using the &lt;os:If&gt; element</preamble>
+                                                            <artwork>
 
-&lt;os:If condition="Top.YourScore == Top.HighScore"&gt;
+&lt;os:If condition="${Top.YourScore == Top.HighScore}"&gt;
   &lt;div&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
 &lt;/os:If&gt;
-					</artwork>
-				</figure>
-				The @if attribute can be used on any element within a template, some examples are as follows:
+                                                            </artwork>
+                                                </figure>
+                                    </t>
+                                    <t>
+                                                Note: The @if attribute, and the @condition attribute of &lt;os:If/&gt; will be evaluated as a boolean.
+                                                This means null or empty string values will evaluate to "false". A Node, NodeList or non-empty string
+                                                will evaluate to "true".
+                                    </t>                                                                   
+                                                			
+                                    <t>
+                                                The use of @if and @repeat attributes on &lt;os:If/&gt; is not supported.
+                                    </t>                                    
+			<t>
+				The @if attribute can be used on any element within a template other than &lt;os:If/&gt; and &lt;os:Repeat/&gt;.
+				Some examples are as follows:
 				<figure>
 					<artwork>
 
 &lt;!-- Custom tags --&gt;
-&lt;os:ShowPerson person="${Top.Owner}" if="Top.HasOwner"/&gt;
- 
-&lt;!-- Repeated elements (see below) --&gt;
-&lt;div repeat="Top.ViewerFriends" if="Cur.ProfileUrl"&gt;
-  Link to: &lt;a href="${Cur.ProfileUrl}"&gt;${Cur.Name}&lt;/a&gt;
-&lt;/div&gt;
- 
+&lt;os:Name person="${Top.Owner}" if="${Top.HasOwner}"/&gt;
+  
 &lt;!-- Tag contents --&gt;
 &lt;os:Button&gt;
   &lt;title&gt;Click me!&lt;/title&gt;
@@ -405,75 +506,127 @@ data.getProp('Viewer').getProp('Name')
 			</t>
 			<t>
 				Tags with a @repeat attribute are displayed once for each item in evaluating the expression 
-				in the repeat attribute. The current item in the repeated list will be put into the ${Cur} variable. 
-				Note: As with @if, the ${} expression syntax is optional, but allowed.
-				<figure>
-					<preamble>Example</preamble>
-					<artwork>
-&lt;div repeat="Top.ViewerFriends"&gt;
-  Your friend's name is ${Cur.Name}
-&lt;/div&gt;
-					</artwork>
-				</figure>
-				In addition, both the variable and the index can be renamed, by adding a @var attribute and 
-				@index attribute respectively.
-				<figure>
-					<preamble>Example</preamble>
-					<artwork>
-&lt;!-- Renaming variable $Cur --&gt;
-&lt;div repeat="${Top.ViewerFriends}" var="Friend"&gt;
-  Your friend's name is ${Friend.Name}
-&lt;/div&gt;
- 
-&lt;!-- Specifying an Index variable --&gt;
-&lt;div repeat="rows" index="x"&gt;
-  &lt;div repeat="cols" index="y"&gt;
-    &lt;myapp:DrawPoint row="${x}" col="${y}"/&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
-					</artwork>
-				</figure>
-				There are two context variables available during list processing. ${Context.Count} is 
-				the count of items in the list and ${Context.Index} is the index of the current item. 
+				in the repeat attribute. The current item in the repeated list will be put into the ${Cur} variable.
+			</t>
+			<t>	 
+				The value of the @repeat attribute will be evaluated as a list. If the result is a scalar value,
+				(including mixed content which evaluates to a string) it will be treated as a list of one element.
+				
 				<figure>
 					<preamble>Example</preamble>
 					<artwork>
 &lt;div repeat="${Top.ViewerFriends}"&gt;
-  Showing friend ${Context.Index} of ${Context.Count}: 
   Your friend's name is ${Cur.Name}
 &lt;/div&gt;
 					</artwork>
 				</figure>
-				The contents of an &lt;os:Repeat&gt; element displayed once for each item in 
-				evaluating the expression in the expression attribute. The current item in the 
-				repeated list will be put into the ${Cur} variable, and a @var attribute can also 
-				be used to rename the iteration variable.
-				<figure>
-					<artwork>
+                                                The contents of an &lt;os:Repeat&gt; element is displayed once for each item in 
+	                                    evaluating the expression in the @expression attribute. The current item in the 
+	                                    repeated list will be put into the ${Cur} variable, and a @var attribute can also 
+	                                    be used to rename the iteration variable.
+	                                    <figure>
+	                                                <artwork>
 &lt;os:Repeat expression="${Top.ViewerFriends}"&gt;
   &lt;div&gt;
     Your friend's name is ${Cur.Name}
   &lt;/div&gt;
 &lt;/os:Repeat&gt;
-					</artwork>
-				</figure>
-				and
-				<figure>
-					<artwork>
+                                                            </artwork>
+                                                </figure>
+                                                and
+                                                <figure>
+                                                            <artwork>
 &lt;os:Repeat expression="${Top.ViewerFriends}" var="Friend"&gt;
   &lt;div&gt;
     Your friend's name is ${Friend.Name}
   &lt;/div&gt;
 &lt;/os:Repeat&gt;
-					</artwork>
-				</figure>
-			</t>
+                                                            </artwork>
+                                                </figure>				
+		            </t>
+		            <t>
+		                        The use of @if and @repeat attributes on &lt;os:Repeat/&gt; is not supported.
+		            </t>
+		            <t>
+		                        Repeating over an expression that evaluates to a NodeList or a single Node (such as
+		                        the result of ${My.tag}) will result in one iteration rendering for each Node found.
+		                        In this case, the ${Cur} variable will be set to the current node for each successive
+		                        iteration.
+		            </t>
+		            <t>
+		                        Repeaters are evaluated before conditionals on the same element. This allows
+		                        a conditional to apply to each iteration of a repeater. The following template,
+		                        for example, would list all the viewer's friends with a profile URL:
+		                        <figure>
+		                                  <preamble>Repeated elements evaluated on each iteration.</preamble>
+		                                  <artwork>
+&lt;div repeat="${Top.ViewerFriends}" if="${Cur.ProfileUrl}"&gt;
+  Link to: &lt;a href="${Cur.ProfileUrl}"&gt;${Cur.Name}&lt;/a&gt;
+&lt;/div&gt;
+		                                  </artwork>
+		                        </figure>
+                                                <figure>
+                                                          <preamble>This is equivalent to</preamble>
+                                                          <artwork>
+&lt;os:Repeat expression="${Top.ViewerFriends}"&gt;
+  &lt;os:If condition="${Cur.ProfileUrl}"&gt;
+    &lt;div&gt;Link to: &lt;a href="${Cur.ProfileUrl}"&gt;${Cur.Name}&lt;/a&gt;&lt;/div&gt;
+  &lt;/os:If&gt;
+&lt;/os:Repeat&gt;
+                                                          </artwork>
+                                                </figure>
+		            </t>
+                                    <section title="Loop Context">
+                                                <t>
+                                                            The ${Context} special variables can be used during repeater processing to
+                                                            access repeater state. Its properties are ${Context.Count} which holds the 
+                                                            total number of elements in the repeater list, and ${Context.Index} which is
+                                                            the number of the current iteration, a value from 0 to ${Context.Count} - 1.
+                                                            <figure>
+                                                                        <preamble>Example</preamble>
+                                                                        <artwork>
+&lt;div repeat="${Top.ViewerFriends}"&gt;
+  Showing friend ${Context.Index + 1} of ${Context.Count}: 
+  Your friend's name is ${Cur.Name}
+&lt;/div&gt;
+                                                                        </artwork>
+                                                            </figure>
+                                                </t>
+                                    </section>		            
+		            <section title="Nested Repeaters">
+			            <t>
+					To support nested repeaters, custom names can be specified for the current item variable and
+					the current context variable via the @var and @context attributes respectively.
+					The values are then made available as variables specified, as well as with their default names.
+					(So when @var="Foo" is used, each item is made available in ${Cur} and in ${Foo}.)
+					<figure>
+						<preamble>Example</preamble>
+						<artwork>
+&lt;!-- Renaming variable ${Cur} --&gt;
+&lt;ul repeat="${Top.ViewerFriends}" var="Friend"&gt;
+  &lt;li repeat="${Friend.Activities}"&gt;
+    &lt;!-- Here ${Name} refers to ${Cur.Name}, a property of Activity --&gt;
+    ${Friend.Name} was ${Name}
+  &lt;/li&gt;  
+&lt;/ul&gt;
+ 
+&lt;!-- Specifying an Context variable --&gt;
+&lt;div repeat="rows" context="Outer"&gt;
+  &lt;div repeat="cols" context="Inner"&gt;
+    &lt;myapp:DrawPoint row="${Outer.Index}" col="${Inner.Index}"/&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+						</artwork>
+					</figure>
+				</t>
+			</section>
 		</section>
 		<section title="Template Libraries">
 			<t>
 				While inline templates can be useful for visualizing data, eventually you may want to 
-				create standalone, reusable templates. In that regard, templates can be packaged into a 
-				standalone XML file of the following format:
+				create standalone, reusable templates. A template library can define one or more
+				template custom tags, but all of them must be in a single namespace. 
+				Template libraries are packaged into a sandalone XML file of the following format:
 				<figure>
 					<artwork>
 &lt;Templates xmlns:foo="http://foo.com/"&gt;
@@ -562,6 +715,42 @@ data.getProp('Viewer').getProp('Name')
 				that they be defined as a standalone XML file. Other tag libraries can be loaded by default 
 				in a container - for example, Example.com might have a set of &lt;example:*&gt; tags available. 
 			</t>
+			<section title="Loading Template Libraries">
+			            <t>
+			                         If an application requires a template library to work, it can request the library be
+			                         loaded before any template processing takes place. This can be done via a &lt;Param name="requireLibrary"&gt;
+			                         tag placed inside the &lt;Require feature="opensocial-templates"&gt; tag:
+			                         <figure>
+			                                 <artwork>
+&lt;Require feature="opensocial-templates"&gt;
+  &lt;Param name="requireLibrary"&gt;http://www.example.com/templates.xml&lt;/Param&gt;
+&lt;/Require&gt;			                                 
+			                                 </artwork>
+			                         </figure>
+			                         The Param content must be a URL pointing to a valid Template library XML file. Relative
+			                         URLs are interpreted in relation to the location of the Gadget Spec XML file.			                         
+			            </t>
+			            <t>
+			                         Multiple libraries may be requested by listing their URLs separated by whitespace:
+                                                             <figure>
+                                                                     <artwork>
+&lt;Require feature="opensocial-templates"&gt;
+  &lt;Param name="requireLibrary"&gt;
+    http://www.example.com/templates.xml
+    http://www.example.com/moretemplates.xml
+  &lt;/Param&gt;
+&lt;/Require&gt;                                                                 
+                                                                     </artwork>
+                                                             </figure>
+                                                             The container will trim all whitespace around each URL. For URLs that legitimately contain whitespace, it must be
+                                                             properly encoded.
+			            </t>
+			            <t>
+			                         NOTE: Implementing containers may disallow loading third party template libraries on some
+			                         or all gadget Views. Additionally, containers may disallow template libraries to inject
+			                         Javascript code on some or all of the Views.
+			            </t>
+			</section>
 		</section>
 		<section title="Localization">
 			<t>
@@ -613,6 +802,150 @@ data.getProp('Viewer').getProp('Name')
 				(prefs.getMsg(key) returns null in these cases), an error message should be rendered in 
 				its place for easy debugging. 
 			</t>
+		</section>
+		<section title="Javascript API">
+		            <t>
+		                        Template-related Javascript API may be exposed by implementing containers for some or all 
+		                        views. Such API will allow developers to render templates programmatically.
+		            </t>
+		            <t>
+		                        Templates can be named for use with the Javascript API, by giving them a @name attribute.
+		                        This is supported both for inline templates defined via &lt;script&gt; tags, and library
+		                        templates defined via &lt;Template&gt; tags.
+		                        <figure>
+		                                  <artwork>
+&lt;script type="text/os-template" name="loading"&gt;
+  &lt;img src="throbber.gif"/&gt;
+  Please wait while we load ${content}  
+&lt;/script&gt;
+		                                  </artwork>
+		                        </figure>
+		                        Templates with a @name attribute will not get rendered automatically, but can be scripted
+		                        via the Javascript API.
+		            </t>
+		            <section title="opensocial.template" anchor="opensocial.template">
+		                        <!-- ============================== class summary ========================== -->
+		                        <t>Template-related functionality will be exposed via the opensocial.template namespace object.</t>
+		                        <!-- ============================= method details ========================== -->
+		                        <section title="Method Details">
+                                                            <section title="getTemplate">
+                                                                        <t>        &lt;static&gt;        Type: {opensocial.template.Template} opensocial.template.getTemplate(name)</t>
+                                                                        <t>        Description: Returns the Template object (see below) registered with "name", or null if it doesn't exist.</t>
+                                                                        <t> Parameters: 
+                                                                                    <texttable>
+							                <ttcol>Name</ttcol>
+							                <ttcol>Type</ttcol>
+							                <ttcol>Description</ttcol>
+							                <c>name</c>
+							                <c>String</c>
+							                <c>The name of the template to get</c>
+                                                                                    </texttable>
+                                                                        </t>
+                                                                        <t> Returns: 
+                                                                                    <texttable>
+                                                                                                    <ttcol>Type</ttcol>
+                                                                                                    <ttcol>Description</ttcol>
+                                                                                                    <c>opensocial.template.Template</c>
+                                                                                                    <c>The Template object registered with the specified name, or null if no such template exists</c>
+                                                                                    </texttable>
+                                                                        </t>
+                                                            </section>
+                                                            <section title="process">
+                                                                        <t>        &lt;static&gt;        Type: {void} opensocial.template.process()</t>
+                                                                        <t>        Description: (Re)processes the application templates, rendering ones that are ready.</t>                                                                        
+                                                            </section>
+                                                            <section title="disableAutoProcessing">
+                                                                        <t>        &lt;static&gt;        Type: {void} opensocial.template.disableAutoProcessing()</t>
+                                                                        <t>        Description: Prevent automatic template processing. 
+                                                                                   Equivalent to setting the "disableAutoProcessing" Param. If processing has already happened, this will throw 
+                                                                                   an exception. After automatic processing is disabled, the templates can be processed by calling
+                                                                                   opensocial.template.process() manually.
+                                                                        </t>
+                                                            </section>
+                                                </section>
+		            </section>
+		            <section title="opensocial.template.Template" anchor="opensocial.template.Template">
+                                                <!-- ============================== class summary ========================== -->
+                                                <t>The result of calling opensocial.template.getTemplate(name) is a Template object that can be rendered programmatically.</t>
+                                                <!-- ============================= method details ========================== -->
+		                        <section title="Method Details">
+		                                   <section title="render">
+		                                              <t>         Type:        {Element} opensocial.template.Template.render(data)</t>
+		                                              <t>         Description: Renders the template with supplied JSON data, and returns the DOM Node containing the result.</t>
+		                                              <t>         Parameters:
+		                                                          <texttable>
+		                                                                      <ttcol>Name</ttcol>
+		                                                                      <ttcol>Type</ttcol>
+		                                                                      <ttcol>Description</ttcol>
+		                                                                      <c>data</c>
+		                                                                      <c>Object</c>
+		                                                                      <c>The JSON data to use for rendering. This becomes ${Top} in variable evaluation. If this is omitted,
+		                                                                         opensocial.data.DataContext will be used by default</c>		                                                                         
+		                                                          </texttable>
+		                                              </t>
+		                                              <t>         Returns:
+		                                                          <texttable>
+		                                                                      <ttcol>Type</ttcol>
+		                                                                      <ttcol>Description</ttcol>
+		                                                                      <c>Element</c>
+		                                                                      <c>The Element containing DOM created by rendering the template.</c>
+		                                                          </texttable>
+		                                              </t>
+		                                   </section>
+		                                   <section title="renderInto">
+		                                              <t>         Type:        {void} opensocial.template.Template.renderInto(element, data)</t>
+		                                              <t>         Description: Renders the template with supplied JSON data and inserts the result into the specified DOM element, replacing any previous content</t>
+		                                              <t>         Parameters:
+		                                                          <texttable>
+		                                                                      <ttcol>Name</ttcol>
+		                                                                      <ttcol>Type</ttcol>
+		                                                                      <ttcol>Description</ttcol>
+		                                                                      <c>element</c>
+		                                                                      <c>Element</c>
+		                                                                      <c>The DOM element to host the render result. Any current content in this element will be cleared by this method</c>
+		                                                                      <c>data</c>
+                                                                                              <c>Object</c>
+                                                                                              <c>The JSON data to use for rendering. This becomes ${Top} in variable evaluation. If this is omitted,
+                                                                                                 opensocial.data.DataContext will be used by default</c>                                                                                         
+		                                                          </texttable>
+		                                              </t>
+		                                   </section>
+		                        </section>
+                                    </section>		                        
+		            <section title="Example of Javascript API use">
+		                        <t>
+		                                    <figure>
+		                                                <preamble>Example of using Javascript API</preamble>
+                                                                        <artwork>
+&lt;script type="text/os-template" name="songs"&gt;
+  &lt;h1&gt;Songs in ${playlist}&lt;/h1&gt;
+  &lt;ul&gt;
+    &lt;li repeat="songs" var="song"&gt;
+       ${Context.Index + 1}: ${song.Title} by ${song.Artist} (${song.SongLength}) 
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/script&gt;
+
+&lt;script type="text/javascript"&gt;
+  function showSongs(playlistName, songArray) {
+    var template = opensocial.template.getTemplate("songs");
+    var data = {
+      playlist: playlistName,
+      songs: songArray
+    }
+    var outputDiv = document.getElementById("songDiv");
+    template.renderInto(outputDiv, data);
+  }
+  . . .
+  showSongs("My Playlist", [
+    { Title: "Yesterday", Artist: "Beatles", SongLength: "2:35" },
+    { Title: "Thriller", Artist: "Michael Jackson", SongLength: "37:21" }
+  ]); 
+&lt;/script&gt;                                   
+		                                                </artwork>
+		                                    </figure>
+		                        </t>
+		            </section>
 		</section>
 	</middle>
 	<back>
