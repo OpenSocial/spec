@@ -624,38 +624,71 @@ The container may ignore this formatting when rendering the activity.
 				</section>
 			</section>
 			<section title="Content Upload">
-				<section title="Two Step Upload">
+				<section title="Two Step Upload" anchor="twoStepUpload">
 					<t>Content Upload is a generic mechanism to allow for a standard way to upload content. A common 
 					place to apply content upload will be against an existing Album or MediaItem endpoint. In 
-					most scenarios an uploaded content is associated with creation of an entity. Creation of 
-					the entity routinely precedes upload of content. For example, a request to create a new 
-					media item precedes the step of uploading a photo. The requests look like:
+					most scenarios an uploaded content is associated with creation of an entity. Upload of content 
+                    routinely causes the creation of the entity. For example, uploading a photo causes the container
+                    to create a new media item. The application can then update that MediaItem and set attributes
+                    via a second request at some later time. The requests look like:
 					<list>
-						<t>Step 1: Create Media Item placeholder for image</t>
-						<t>Step 2: Upload Photo</t>
+						<t>Step 1: Upload Photo</t>
+						<t>Step 2: Update Photo attributes (caption, description, etc.)</t>
 					</list>
 					The two step request process is illustrated below.</t>
-					<t>Step 1: Creating a media item (place holder for an image) in album (id:112233) 
-					by a POST request using ATOM (see section 2.7 for examples of JSON and XML)
+					<t>
+						Step 1: Upload the image in the album.
 						<figure>
 							<preamble>Request</preamble>
 							<artwork>
-POST /album/112233/mediaitem/ HTTP/1.1
+POST /album/112233?mediaType=IMAGE HTTP/1.1
 &lt;usual headers&gt;
-Content-Type: application/atom+xml
+Accept-Type: application/xml
+Content-Type: image/gif
 Content-Length: length
 
+GIF89a....&lt;binary data&gt;
+						</artwork>
+					</figure>
+					<figure>
+						<preamble>Response</preamble>
+						<artwork>
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:ossearch="http://a9.com/-/spec/opensearch/1.1/"&gt;
+  &lt;author&gt;&lt;uri&gt;urn:guid:example.org:33445577722&lt;/uri&gt;&lt;/author&gt;
+  &lt;link rel="next" href="http://api.example.org/..." /&gt;
+  &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;content type="application/xml"&gt;
+      &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+      &lt;/mediaitem&gt;
+    &lt;/content&gt;
+    &lt;title /&gt;
+    &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+    &lt;author /&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+							</artwork>
+						</figure>
+					</t>
+					<t>Step 2: PUT MediaItem details to MediaItem (id:223344)
+						<figure>
+							<preamble>Request</preamble>
+							<artwork>
 &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
   &lt;content type="application/xml"&gt;
     &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-      &lt;caption&gt;Lena&lt;/caption&gt;
-      &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
+        &lt;caption&gt;Lena&lt;/caption&gt;
     &lt;/mediaitem&gt;
   &lt;/content&gt;
   &lt;title /&gt;
   &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
   &lt;author /&gt;
 &lt;/entry&gt;							
+						
 							</artwork>
 						</figure>
 						<figure>
@@ -671,18 +704,19 @@ Content-Length: length
     &lt;content type="application/xml"&gt;
       &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
         &lt;id&gt;223344&lt;/id&gt;
-        &lt;caption&gt;Lena&lt;/caption&gt;
         &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
+        &lt;caption&gt;Lena&lt;/caption&gt;
       &lt;/mediaitem&gt;
     &lt;/content&gt;
     &lt;title /&gt;
     &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
     &lt;author /&gt;
   &lt;/entry&gt;
-&lt;/feed&gt;							
+&lt;/feed&gt;
 							</artwork>
 						</figure>
-						The response indicates that the media item was created and media item id is 223344.
+						The response indicates that the media item was updated.
 					</t>
 					<t>
 						Step 2: Upload the image in the media item place holder
@@ -711,6 +745,7 @@ GIF89a....&lt;binary data&gt;
 						</figure>
 					</t>
 				</section>
+			    
 				<section title="Shortcut Upload Method">
 					<t>The shortcut upload mechanism is OPTIONAL. This two step process shown above 
 					can be merged into one by a single POST request with the content type set to the
