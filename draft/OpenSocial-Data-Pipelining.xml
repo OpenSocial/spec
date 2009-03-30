@@ -32,7 +32,7 @@
 			<t>
 				Data Pipelining is a declarative syntax for defining the data you want the container 
 				to provide to you for processing. Examples would be &lt;os:DataRequest method="people.get"
-				userId="@viewer"/&gt; or  &lt;os:HttpRequest href="http://www.example.com/api"&gt;.
+				userId="@viewer"/&gt; or  &lt;os:HttpRequest href="http://www.developer.com/api"&gt;.
 				The &lt;os:DataRequest&gt; element provides access to OpenSocial data, and the
 				&lt;os:HttpRequest&gt; element provides access to content from any HTTP endpoint.
 				Several convenience elements provide simplified access to OpenSocial data.
@@ -67,7 +67,7 @@
   &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
     &lt;os:DataRequest key="vwr" method="people.get" userId="@viewer" fields="name,birthday"/&gt;
     &lt;os:ViewerRequest key="vwr2" fields="name,birthday"/&gt;
-    &lt;os:HttpRequest key="mydata" href="http://example.com/api"/&gt;
+    &lt;os:HttpRequest key="mydata" href="http://developer.com/api"/&gt;
   &lt;/script&gt;
   ... HTML content here ...
 ]]&gt;&lt;/Content&gt;
@@ -174,7 +174,7 @@
 				<figure>
 					<preamble>Example:</preamble>
 					<artwork>
-&lt;os:HttpRequest key="Pets" href="http://example.com/api" authz="signed"/&gt;
+&lt;os:HttpRequest key="Pets" href="http://pets.com/api" authz="signed"/&gt;
 					</artwork>
 				</figure>
 			</t>
@@ -299,7 +299,7 @@
 				<figure>
 					<preamble>Example</preamble>
 					<artwork>
-&lt;Content href="http://example.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
+&lt;Content href="http://developer.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
   &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
 &lt;/Content&gt;
 					</artwork>
@@ -452,7 +452,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 					<preamble>Example</preamble>
 					<artwork>
 &lt;os:PeopleRequest key="PagedFriends" userId="@owner" groupId="@friends" startIndex="${ViewParams.first}" count="20"/&gt;
-&lt;os:HttpRequest href="http://example.com/api?ids=${PagedFriends.ids}"/&gt;
+&lt;os:HttpRequest href="http://developersite.com/api?ids=${PagedFriends.ids}"/&gt;
 					</artwork>
 				</figure>
 			</t>
