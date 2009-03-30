@@ -1116,6 +1116,8 @@ X-HTTP-Method-Override: PUT
 					</list>
 				</t>
 				<t>optionalAlbumId: Id of the album. When specified, returns media items from the album.</t>
+                <t>The URI may contain a query string value of mediaType whose value is [IMAGE|VIDEO|AUDIO] when
+                the POST verb is used. An example is shown below.</t>
 				<t>Album URI examples: 
 					<texttable>
 						<ttcol align="left">URI Fragment</ttcol>
@@ -1128,6 +1130,10 @@ X-HTTP-Method-Override: PUT
 						<c>Returns only the specified album.</c>
 						<c>PUT /albums/@me/@self/albumId</c>
 						<c>Updates the specified album.</c>
+                        <c>POST /albums/@me/@self/albumId?mediaType=[IMAGE|VIDEO|AUDIO]</c>
+                        <c>Adds a MediaItem of the specified type to the album. The request body 
+                        contains the item to be added. See <xref target="twoStepUpload">Two Step Upload</xref>.
+                        On success, the response contains a representation of the newly created MediaItem.</c>
 						<c>DELETE /albums/@me/@self/albumId</c>
 						<c>Deletes the specified album.</c>
 					</texttable>
