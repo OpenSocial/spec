@@ -230,7 +230,7 @@ data['Viewer']['Name']
 						${My} is only available within templates invoked as Custom Tags. 
                                                             </t>
                                                             <t>						
-						The ${My} variable evaluates to a the XML template node of that was used to invoke the current Custom Tag, 
+						The ${My} variable evaluates to the XML template node that was used to invoke the current Custom Tag, 
 						with all expressions, conditional elements and repeated elements already processed.
 				            </t>
 				            <t>
@@ -353,7 +353,7 @@ data['Viewer']['Name']
 			<section title="Required Data">
 			            <t>
 			                        Data required for rendering of inline templates can be specified using the @require attribute.
-			                        The attribute value must be a coma-separated list of top-level variable names required to render this
+			                        The attribute value must be a comma-separated list of top-level variable names required to render this
 			                        template. If the application Data Context does not have any of these variables set, automatic rendering of
 			                        the template will be deferred until the time they become available.  
                                                             <figure>
@@ -399,7 +399,7 @@ data['Viewer']['Name']
 				            (HTML) namespace is not allowed.
 				</t>
 				<t>
-				            Templates defined via inline &lt;script&gt; element that also specify a @tag attribute do not get rendered
+				            Templates defined via inline &lt;script&gt; elements that also specify a @tag attribute do not get rendered
 				            in place automatically.
 					<figure>
 						<preamble>Example of defining a custom tag and then calling it</preamble>
@@ -438,8 +438,8 @@ data['Viewer']['Name']
 					For example, to repeat over Interests of the first object in Friends, you can use this expression:
 					<figure>
 						<artwork>
-&lt;div data="Friends[0]"&gt;
-  &lt;div repeat="Interests"&gt;
+&lt;div cur="${Friends[0]}"&gt;
+  &lt;div repeat="${Interests}"&gt;
     ${Title}
   &lt;/div&gt;
 &lt;/div&gt;
@@ -456,7 +456,7 @@ data['Viewer']['Name']
 				Top.YourScore == Top.HighScore:
 				<figure>
 					<artwork>
-&lt;div if="Top.YourScore == Top.HighScore"&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
+&lt;div if="${Top.YourScore == Top.HighScore}"&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
 					</artwork>
 				</figure>
 			</t>
@@ -494,7 +494,7 @@ data['Viewer']['Name']
 &lt;!-- Tag contents --&gt;
 &lt;os:Button&gt;
   &lt;title&gt;Click me!&lt;/title&gt;
-  &lt;help if="Top.Viewer.NeedsHelp"&gt;You need help.&lt;/help&gt;
+  &lt;help if="${Top.Viewer.NeedsHelp}"&gt;You need help.&lt;/help&gt;
 &lt;/os:Button&gt;
 					</artwork>
 				</figure>
@@ -920,7 +920,7 @@ data['Viewer']['Name']
 &lt;script type="text/os-template" name="songs"&gt;
   &lt;h1&gt;Songs in ${playlist}&lt;/h1&gt;
   &lt;ul&gt;
-    &lt;li repeat="songs" var="song"&gt;
+    &lt;li repeat="${songs}" var="song"&gt;
        ${Context.Index + 1}: ${song.Title} by ${song.Artist} (${song.SongLength}) 
     &lt;/li&gt;
   &lt;/ul&gt;
