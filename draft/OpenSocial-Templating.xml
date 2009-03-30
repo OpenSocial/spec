@@ -97,14 +97,29 @@
 				snippet can be embedded directly into a gadget &lt;Content&gt; section or HTML document:
 				<figure>
 					<artwork>
-&lt;script type="text/os-template" name="my:HelloWorld"&gt;
-  &lt;div style="font-size: 20px"&gt;Hello world!&lt;/div&gt;
+&lt;script type="text/os-template"&gt;
+  &lt;div style="font-size: 20px"&gt;Hello ${Viewer.name.formatted}!&lt;/div&gt;
 &lt;/script&gt;
 					</artwork>
 				</figure>
 				Templates can also define template markup libraries, which will map to XML namespaces. 
 			</t>
 		</section>
+        <section title="Reserved Attributes">
+            <t>
+                Blocks of markup using OSML appear embedded in other markup within script tags. The type of an OSML script is set to "text/os-template".
+                The only attribute that an OpenSocial OSML processor MUST understand is @tag. The OSML processor MUST ignore any 
+                attributes it does not recognize. The OpenSocial specification reserves the following attribute names
+                for future usage:
+                <list style="symbols">
+                    <t>@autoRender</t>
+                    <t>@id</t>
+                    <t>@name</t>
+                </list>
+                Containers MAY choose to experiment with these attributes to define a consistent meaning and behavior for the attributes
+                in a future release of OpenSocial.
+            </t>
+        </section>
 		<section title="Expressions">
 			<t>
 				Expressions can be embedded into the template XML using the syntax ${Expr}. 
@@ -241,12 +256,12 @@ data['Viewer']['Name']
 						<figure>
 						            <preamble>Example of a template that uses ${My}</preamble>
 						            <artwork>
-&lt;script type="text/os-template" xmlns:myapp="http://myapp.com" tag="myapp:EmployeeCard"&gt;
+&lt;script type="text/os-template" xmlns:myapp="http://example.com" tag="myapp:EmployeeCard"&gt;
   &lt;div class="card" style="background: ${My.color};"&lt; 
     &lt;img src="${My.employee.photo}"/&gt; ${My.employee.name}
   &lt;/div&gt;
 &lt;/script&gt;					            
-&lt;script type="text/os-template" xmlns:myapp="http://myapp.com"&gt;
+&lt;script type="text/os-template" xmlns:myapp="http://example.com"&gt;
   &lt;myapp:EmployeeCard color="red" employee="${Viewer}"/>
 &lt;/script&gt;                                                                     
 						            </artwork>
@@ -621,6 +636,138 @@ data['Viewer']['Name']
 				</t>
 			</section>
 		</section>
+        <section title="os:Render">
+            <t>
+                A template may also define locations to render custom blocks of content. This is done using the &lt;os:Render&gt; tag 
+                and the content block is always identified by the @content attribute. The @content attribute names an immediate child
+                node of the template instance or current repeater item if it is a DOM element. The contents of the designated node
+                will be rendered in place of the &lt;os:Render&gt; tag. If multiple child elements match,
+                the container MUST merge the results of all matches into one, concatenated element. If 2 or more &lt;os:Render&gt; elements
+                have the same value for @content, then the resulting evaluation appears once per &lt;os:Render&gt; element.
+                A container MUST ignore any XML elements or other content within the &lt;os:Render&gt; tag. 
+                The container MAY emit a diagnostic error to gadgets.log indicating the content being ignored. 
+                The container MUST ignore any namespace prefixes on the value of the @content attribute. @content="foo" will 
+                match "foo" elements in the same namespace as the template. 
+            </t>
+            <t>
+                For example, consider the following template:
+                <figure>
+                    <artwork>
+&lt;script type="text/os-template" tag="myapp:BoxWithTitle"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates" &gt;
+  &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
+  &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
+&lt;/script&gt;
+                    </artwork>
+                </figure> 
+                The preceding example declares two os:Render elements: title and body. When evaluating a usage of this template, 
+                the container will look for two elements at the following paths, ignoring any XML namespace on the elements
+                (<eref target="http://www.w3.org/TR/xpath#section-Node-Set-Functions">XPath</eref>) :
+                <list style="symbols">
+                    <t>/myapp:BoxWithTitle/child::(local-name() = title)</t>
+                    <t>/myapp:BoxWithTitle/child::(local-name() = body)</t>
+	            </list>
+                
+                Because of the existing processing rules, the contents of the elements will have already been 
+                processed by the container. The results of that evaluation are copied into the
+                template in place of the &lt;os:Render&gt; element. Returning to the previous example, a developer may write:
+                <figure>
+                    <artwork>
+&lt;script type="text/os-template"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates" &gt;
+  &lt;myapp:BoxWithTitle&gt;
+    &lt;myapp:title&gt;This is the title&lt;/myapp:title&gt;
+    &lt;myapp:body&gt;
+      &lt;div style="font-size:40px"&gt;Boo!&lt;/div&gt;
+      &lt;div&gt;from &lt;os:Name person="${Top.Viewer}"/&gt;&lt;/div&gt;
+    &lt;myapp:body&gt;
+  &lt;/myapp:BoxWithTitle&gt;
+&lt;/script&gt;
+                    </artwork>
+                </figure> 
+                When evaluating the above content, a container follows these steps:
+                <list style="numbers">
+                    <t>
+                        Evaluate the content of the myapp:BoxWithTitle tag. The result nodes will be used to
+                        fullfill os:Render directives.
+                    </t>
+                    <t>
+                        Begin evaluation of the myapp:BoxWithTitle template.
+                    </t>
+                    <t>
+                        For each os:Render tag encountered, find the appropriate tags from step (1)
+                        that match os:Render's @content.  
+                    </t>
+                    <t>
+                        Replace the os:Render tag with child nodes of all the tags found in step (3).
+                    </t>
+                    <t>
+                        Replace the entire myapp:BoxWithTitle tag with the result of rendering the m:BWT template.
+                    </t>
+                </list>                
+            </t>
+            <t>
+                <figure>
+                    <preamble>Example: Resulting HTML DOM</preamble>
+                    <artwork>
+&lt;div class="box-title"&gt;This is the title&lt;/div&gt;
+&lt;div class="box-content"&gt;
+   &lt;div style="font-size:40px"&gt;Boo!&lt;/div&gt;
+   &lt;div&gt;from &lt;a href="http://www.example.com/profile/1234"&gt;Scott&lt;/a&gt;&lt;/div&gt;
+&lt;/div&gt;
+                    </artwork>
+                </figure>
+            </t>
+
+            <section title="Nesting">
+                <t>
+                    The nature of this feature allows for templates to nest within os:Render tags. Given the evaluation rules, the myapp:BoxWithTitle 
+                    example could also be used as this:
+                    <figure>
+                        <preamble>Template</preamble>
+                        <artwork>
+&lt;script type="text/os-template" tag="myapp:BoxWithTitle"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates"&gt;
+  &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
+  &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
+  &lt;div&gt;Hi {$My.parameter}&lt;div&gt;
+&lt;/script&gt;
+                        </artwork>
+                    </figure>
+                    <figure>
+                        <preamble>Gadget Markup</preamble>
+                        <artwork>
+&lt;script type="text/os-template"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates"&gt;
+  &lt;myapp:BoxWithTitle parameter="scott"&gt;
+    &lt;myapp:title&gt;This is the title&lt;/myapp:title&gt;
+    &lt;myapp:body&gt;
+      &lt;myapp:BoxWithTitle parameter="chris"&gt;
+          &lt;myapp:title&gt;Inner Title&lt;/myapp:title&gt;
+          &lt;myapp:body&gt;This is goofy&lt;/myapp:body&gt;
+      &lt;/myapp:BoxWithTitle&gt;
+    &lt;/myapp:body&gt;
+  &lt;/myapp:BoxWithTitle&gt;
+&lt;/script&gt;
+                        </artwork>
+                    </figure>
+                    <figure>
+                        <preamble>Rendered version</preamble>
+                        <artwork>
+&lt;div class="box-title"&gt;This is the title&lt;/div&gt;
+&lt;div class="box-content"&gt;
+    &lt;div class="box-title"&gt;Inner Title&lt;/div&gt;
+    &lt;div class="box-content"&gt;This is goofy
+        &lt;div&gt;Hi chris&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div&gt;Hi scott&lt;/div&gt;
+&lt;/div&gt;
+                        </artwork>
+                    </figure>
+                </t>
+            </section>
+
+        </section>
 		<section title="Template Libraries">
 			<t>
 				While inline templates can be useful for visualizing data, eventually you may want to 
@@ -671,7 +818,7 @@ data['Viewer']['Name']
       font-size: 20px;
     }
   &lt;/Style&gt;
-  &lt;Template name="os:HelloWorld"&gt;
+  &lt;Template tag="os:HelloWorld"&gt;
     &lt;div style="large-font"&gt;Hello World!&lt;/div&gt;
   &lt;/Template&gt;
   &lt;TemplateDef tag="os:ShowPerson"&gt;
@@ -731,14 +878,12 @@ data['Viewer']['Name']
 			                         URLs are interpreted in relation to the location of the Gadget Spec XML file.			                         
 			            </t>
 			            <t>
-			                         Multiple libraries may be requested by listing their URLs separated by whitespace:
+			                         Multiple libraries may be requested by repeated occurrences of the requireLibrary Param:
                                                              <figure>
                                                                      <artwork>
 &lt;Require feature="opensocial-templates"&gt;
-  &lt;Param name="requireLibrary"&gt;
-    http://www.example.com/templates.xml
-    http://www.example.com/moretemplates.xml
-  &lt;/Param&gt;
+  &lt;Param name="requireLibrary"&gt;http://www.example.com/templates.xml&lt;/Param&gt;
+  &lt;Param name="requireLibrary"&gt;http://www.example.com/moretemplates.xml&lt;/Param&gt;
 &lt;/Require&gt;                                                                 
                                                                      </artwork>
                                                              </figure>
@@ -808,37 +953,22 @@ data['Viewer']['Name']
 		                        Template-related Javascript API may be exposed by implementing containers for some or all 
 		                        views. Such API will allow developers to render templates programmatically.
 		            </t>
-		            <t>
-		                        Templates can be named for use with the Javascript API, by giving them a @name attribute.
-		                        This is supported both for inline templates defined via &lt;script&gt; tags, and library
-		                        templates defined via &lt;Template&gt; tags.
-		                        <figure>
-		                                  <artwork>
-&lt;script type="text/os-template" name="loading"&gt;
-  &lt;img src="throbber.gif"/&gt;
-  Please wait while we load ${content}  
-&lt;/script&gt;
-		                                  </artwork>
-		                        </figure>
-		                        Templates with a @name attribute will not get rendered automatically, but can be scripted
-		                        via the Javascript API.
-		            </t>
 		            <section title="opensocial.template" anchor="opensocial.template">
 		                        <!-- ============================== class summary ========================== -->
 		                        <t>Template-related functionality will be exposed via the opensocial.template namespace object.</t>
 		                        <!-- ============================= method details ========================== -->
 		                        <section title="Method Details">
-                                                            <section title="getTemplate">
-                                                                        <t>        &lt;static&gt;        Type: {opensocial.template.Template} opensocial.template.getTemplate(name)</t>
-                                                                        <t>        Description: Returns the Template object (see below) registered with "name", or null if it doesn't exist.</t>
-                                                                        <t> Parameters: 
-                                                                                    <texttable>
+                                    <section title="getTemplate">
+                                                <t>&lt;static&gt;        Type: {opensocial.template.Template} opensocial.template.getTemplate(tag)</t>
+                                                <t>Description: Returns the Template object (see below) registered with "tag", or null if it doesn't exist.</t>
+                                                <t> Parameters: 
+                                                            <texttable>
 							                <ttcol>Name</ttcol>
 							                <ttcol>Type</ttcol>
 							                <ttcol>Description</ttcol>
-							                <c>name</c>
+							                <c>tag</c>
 							                <c>String</c>
-							                <c>The name of the template to get</c>
+							                <c>The tag used to identify the template.</c>
                                                                                     </texttable>
                                                                         </t>
                                                                         <t> Returns: 
@@ -846,7 +976,7 @@ data['Viewer']['Name']
                                                                                                     <ttcol>Type</ttcol>
                                                                                                     <ttcol>Description</ttcol>
                                                                                                     <c>opensocial.template.Template</c>
-                                                                                                    <c>The Template object registered with the specified name, or null if no such template exists</c>
+                                                                                                    <c>The Template object registered with the specified tag, or null if no such template exists</c>
                                                                                     </texttable>
                                                                         </t>
                                                             </section>
@@ -917,7 +1047,7 @@ data['Viewer']['Name']
 		                                    <figure>
 		                                                <preamble>Example of using Javascript API</preamble>
                                                                         <artwork>
-&lt;script type="text/os-template" name="songs"&gt;
+&lt;script type="text/os-template" tag="myapp:songs" xmlns:myapp="http://example.com/myapp"&gt;
   &lt;h1&gt;Songs in ${playlist}&lt;/h1&gt;
   &lt;ul&gt;
     &lt;li repeat="${songs}" var="song"&gt;
@@ -928,7 +1058,7 @@ data['Viewer']['Name']
 
 &lt;script type="text/javascript"&gt;
   function showSongs(playlistName, songArray) {
-    var template = opensocial.template.getTemplate("songs");
+    var template = opensocial.template.getTemplate("myapp:songs");
     var data = {
       playlist: playlistName,
       songs: songArray
