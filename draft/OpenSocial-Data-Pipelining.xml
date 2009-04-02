@@ -178,6 +178,58 @@
 					</artwork>
 				</figure>
 			</t>
+			<t>
+			    os:HttpRequest produces a standard JSON-RPC object with "id", "error", and "data" properties.  The "data" object is not
+			    available for 4xx or 5xx responses.  When available, the "data" object in turn contains:
+			    <list style="symbols">
+			    	<t>content {object} If @format is "text", the string content of the response.  If @format is "json", the parsed JSON
+			    	  object or array of the response.  If a JSON response cannot be parsed, a 406 (Not Acceptable) error code will be produced.</t>
+			    	<t>headers {object} An optional object with response header names as keys, and the header values as per-key arrays.</t>
+			    	<t>status {int} The HTTP status code.</t>
+			    </list>
+			    
+			    For errors, the "message" property MUST NOT contain the response body, but
+			    SHOULD contain a descriptive message describing the HTTP error.
+			    The error MAY contain a data block providing the content and headers.
+				<figure>
+					<preamble>Examples:</preamble>
+					<artwork>
+// @format='text' example
+{data: {
+	content: 'Hi there!',
+	status: 200,
+	headers: {'Content-Type': ['text/plain;charset=utf-8']}
+}}
+
+// @format='json' example
+{data: {
+	content: {'hi': 'there!'},
+	status: 200,
+	headers: {'Content-Type': ['application/json;charset=utf-8']}
+}}
+
+// 404 error
+{error: {
+	code: 404,
+	message: 'Resource not found',
+	// Optional data block
+	data: {
+		content : {'&lt;html&gt;&lt;body&gt;File not found... '},
+	 	headers: {'Content-Type': ['text/html; charset=iso-8859-1']}
+	}
+}}
+
+// Unparseable JSON
+{error: {
+	message: "JSON could not be parsed",
+	code: 406,
+	data: {
+		content: {'This isn't JSON'}
+	}
+}}
+					</artwork>
+				</figure>
+			</t>
 		</section>
 		<section title="Tag: &lt;os:PeopleRequest&gt;">
 			<t>
@@ -364,6 +416,30 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
    var el = document.getElementById('friend-details');
    el.style.display = 'show';
 });
+					</artwork>
+				</figure>
+			</t>
+		</section>
+		<section title="Handling of errors">
+			<t>
+				With pipelined data prepared for proxied content, errors are simply delivered to the href
+				of the &lt;Content&gt; element as POSTed JSON data with the JSON-RPC error format unmodified.
+			</t>
+			<t>
+				With pipelined data prepared for the Javascript API, or otherwise embedded in @type="html" content,
+				per-item errors are not modified, but errors that fail the entire request are modified by cloning
+				the error into each item.
+				<figure>
+					<preamble>Example</preamble>
+					<artwork>
+  &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
+    &lt;os:ViewerRequest key="vwr"/&gt;
+    &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
+  &lt;/script&gt;
+					</artwork>
+	If the above request failed with a server error, the resulting dataset would contain content resembling:
+					<artwork>
+	{vwr: {error: {message: 'Server error', code: 500}}, vf: {error: {message: 'Server error', code: 500}}}  
 					</artwork>
 				</figure>
 			</t>
