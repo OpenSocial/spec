@@ -55,21 +55,39 @@
 				must be supported in all views. 
 			</t>
 		</section>
+		<section title="Tag Invocation">
+		            <t>
+		                        An OSML tag is invoked much like an OpenSocial template. It needs to be surrounded by
+		                        a &lt;script&gt; tag with @type="text/os-template":
+		                        <figure>
+		                                   <artwork>
+Welcome, &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;&lt;os:Name person="${Viewer}"/&gt;&lt;/script&gt;!		                                   
+		                                   </artwork>
+		                        </figure> 
+		            </t>
+		</section>
 		<section title="Tags">
+		            <t>
+		                        An implementing Container MUST support at least the tags listed in this section.
+		                        A Container MAY support additional tags - an effort will be made to make such support 
+		                        as consistent as possible across different Containers, and tags that are deemed useful may
+		                        be adopted into this specification in the future.
+		            </t>
 			<section title="&lt;os:Name&gt;">
 				<t>
-					Inline tag to show a person's name, linked if the a profile URL an may have additional container bling (i.e. more information on hover)
+					Inline tag to show a person's name. If a profile URL is available it will be linked to. 
+					The tag may display additional container bling (i.e. more information on hover), but
+					must do so without breaking up text flow.
 				</t>
 				<t>
 					Attributes:
 					<list style="symbols">
-						<t>@person {string|Object} The person object or DataContext key referring to a 
-						person object. (required)</t>
+						<t>@person {Object} The person object. (required)</t>
 					</list>
 					<figure>
 						<preamble>Example</preamble>
 						<artwork>
-Welcome, &lt;os:Name person="${Viewer}"/&gt;
+&lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;Welcome, &lt;os:Name person="${Viewer}"/&gt;&lt;/script&gt;
 						</artwork>
 					</figure>
 				</t>
@@ -81,23 +99,25 @@ Welcome, &lt;os:Name person="${Viewer}"/&gt;
 				<t>
 					Attributes:
 					<list style="symbols">
-						<t>@group {string|Object} An array of person objects or DataContext key referring to an array 
-						of person objects.</t>
+						<t>@group {Object} An array of person objects.</t>
 						<t>@inputName {string} Name of the form input element that will contain selected id(s). 
 						Containers can provide a default here. (optional)</t>
 						<t>@multiple {boolean} Allow multiple selections? (optional)</t>
 						<t>@max {number} Maximum number of people that can be selected. (optional)</t>
-						<t>@var{string} Name of the top level data context variable that is set with the 
-						selected id(s). (optional)</t>
-						<t>@onselect {string|function} Client side script function to invoke when a person 
-						is selected. (optional)</t>
+						<t>@var{string} Name of the top level DataContext variable that is set with the 
+						selected person object (or array of objects). (optional)</t>
+						<t>@onselect {string|function} Client side script function to invoke when a selection is
+						made. The function will get the selected person object (or array of objects) as a parameter. 
+						(optional)</t>
 					</list>
 					<figure>
 						<preamble>Example</preamble>
 						<artwork>
 &lt;form action="/top_friends.php" method="POST"&gt;
   Select your top 8 friends:
-  &lt;os:PeopleSelector group="${ViewerFriends}" multiple="true" max="8" inputName="top8"/&gt;
+  &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
+    &lt;os:PeopleSelector group="${ViewerFriends}" multiple="true" max="8" inputName="top8"/&gt;
+  &lt;/script&gt;  
 &lt;/form&gt;
 						</artwork>
 					</figure>
@@ -116,37 +136,8 @@ Welcome, &lt;os:Name person="${Viewer}"/&gt;
 					<figure>
 						<preamble>Example</preamble>
 						<artwork>
-My top friends:&lt;br/&gt;
-&lt;os:Badge repeat="${TopFriends}" person="${Cur}"/&gt;
-						</artwork>
-					</figure>
-				</t>
-			</section>
-			<section title="&lt;os:Get&gt;">
-				<t>
-					Tag that loads HTML content from a URL and inserts into the DOM of the page. 
-					<list style="symbols">
-						<t>Content is sanitized before insertion.</t>
-						<t>No authorization credentials are sent with the request; request must be for public data.</t>
-						<t>Containers will cache the request based on HTTP headers
-							<list style="symbols">
-								<t>Cached data will be invalidated by the Invalidation APIs: JavaScript, REST.</t>
-							</list>
-						</t>
-						<t>Content must be directly inlinable into the DOM. External CSS or &lt;script&gt;
-						 file references are ignored.</t>
-					</list>
-				</t>
-				<t>
-					Attributes:
-					<list style="symbols">
-						<t>@href {string} The URL from which to retrieve HTML content (required)</t>
-					</list>
-					<figure>
-						<preamble>Example</preamble>
-						<artwork>
-${Viewer.Name}'s pet information
-&lt;os:Get href="http://developer.superpetstore.com/petHtml?petId=${viewer.appData.petId}"/&gt;
+My best friend is:&lt;br/&gt;
+&lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;&lt;os:Badge person="${TopFriend}"/&gt;&lt;/script&gt;
 						</artwork>
 					</figure>
 				</t>
@@ -156,6 +147,10 @@ ${Viewer.Name}'s pet information
 			<t>
 				There are a number of potential tags that can be better supported using templating, for reasons outlined below. 
 			</t>
+                                    <t>
+                                                Note that most of these capabilities will require using the "opensocial-templates" feature.  
+                                    </t>
+
 			<section title="Non-Tag: Inserting Text Content">
 				<t>
 					For generating text content, expressions are used instead of tags.
@@ -212,6 +207,23 @@ ${Viewer.Name}'s pet information
 						</list>
 					</t>
 				</section>
+				<section title="Non-Tags: Get">
+				            <t>
+				                        Inlining of remote HTML markup is possible via a combination of Data Pipelining's &lt;os:HttpRequest&gt; tag
+				                        and OpenSocial Templates variable inlining via the ${data} syntax. Thus a dedicated &lt;os:Get&gt; tag is not needed.
+				            </t>
+				            <t>
+				                        Example:
+				                        <list style="symbols">
+				                                    <t>&lt;os:HttpRequest key="Data" href="http://example.com/data.html" format="text"&gt;</t>
+				                                    <t>Then use &lt;os:Html code="${Data}"/&gt; in your template.</t>
+				                        </list>
+				                        Reasoning:
+				                        <list style="symbols">
+				                                    <t>Re-using existing capabilities avoids doing the same thing in two different ways.</t>
+				                        </list>
+				            </t>
+				</section>
 			</section>
 		</section>
 		<section title="Interaction with Proxied Content">
@@ -230,7 +242,7 @@ ${Viewer.Name}'s pet information
 					<figure>
 						<preamble>Example Gadget XML</preamble>
 						<artwork>
-&lt;Content href="http://developer.com/canvas"&gt;
+&lt;Content href="http://developer.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
   &lt;os:PeopleRequest userId="@viewer" groupId="@friends" fields="name,birthday" key="ViewerFriends"&gt;
 &lt;/Content&gt;
 						</artwork>
@@ -257,7 +269,7 @@ foreach ($ViewerFriends as $friend) {
 					<figure>
 						<preamble>Example Gadget XML</preamble>
 						<artwork>
-&lt;Content href="http://developer.com/canvas"&gt;
+&lt;Content href="http://developer.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
   &lt;os:PersonRequest userId="@owner" key="Owner"/&gt;
 &lt;/Content&gt;
 						</artwork>
@@ -265,18 +277,36 @@ foreach ($ViewerFriends as $friend) {
 					<figure>
 						<preamble>Example PHP</preamble>
 						<artwork>
+&lt;?php // Let the Container know that the Owner object is needed for post-processing ?&gt;  				
+&lt;script type="text/os-data" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
+  &lt;os:PersonRequest userId="@owner" key="Owner"/&gt;
+&lt;/script&gt;
+
 &lt;?php
 // Some code that pulls POST param into $Owner
-echo "High score for &lt;os:Name person=\"${Owner}\"&gt; is ".getHighScore($Owner['id']);
-?&gt;
- 
-or 
- 
-&lt;?php
-echo "High score for &lt;script type=\"text/os-template\"&gt;&lt;os:Name person=\"${Owner}\"&gt;&lt;/script&gt; is ".getHighScore($Owner[['id']);
+echo "High score for &lt;script type=\"text/os-template\" xmlns:os=\"http://ns.opensocial.org/2008/markup\"&gt;"
+  . "&lt;os:Name person=\"${Owner}\"&gt;&lt;/script&gt; is " . getHighScore($Owner['id']);
 ?&gt;
 						</artwork>
 					</figure>
+                                                            <figure>
+                                                                        <preamble>PHP Output</preamble>
+                                                                        <artwork>                                     
+&lt;script type="text/os-data" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
+  &lt;os:PersonRequest userId="@owner" key="Owner"/&gt;
+&lt;/script&gt;
+
+High score for 
+&lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;&lt;os:Name person="${Owner}"&gt;&lt;/script&gt;
+is 100
+                                                                        </artwork>
+                                                            </figure>
+                                                            <figure>
+                                                                        <preamble>Final Container output after OSML is processed</preamble>
+                                                                        <artwork>
+High score for John Doe is 100
+                                                                        </artwork>
+                                                            </figure>
 				</t>
 			</section>
 		</section>
