@@ -766,8 +766,8 @@ gadgets.util.hasFeature(featureName)
         </section>
         <section title="Method Details">
           <section title="log" anchor="gadgets.log">
-            <t>              &lt;static&gt;                gadgets.log(message, opt_logLevel)</t>
-            <t>              Description: Logs a log message if output console is available, and log threshold is met.</t>
+            <t>              &lt;static&gt;                gadgets.log(message)</t>
+	    <t>              Description: Log an informational message.</t>
             <t>
               Parameters:                	<texttable>
                 <ttcol>Name</ttcol>
@@ -775,15 +775,37 @@ gadgets.util.hasFeature(featureName)
                 <ttcol>Description</ttcol>
                 <c>message</c>
                 <c>Object</c>
-                <c>- the message to log</c>
-                <c>opt_logLevel</c>
-                <c>Number</c>
-                <c>
-                  - the level to log with. Optional, defaults to
-                  gadgets.log.INFO.
-                </c>
+                <c>The message to log</c>
               </texttable>
             </t>
+          </section>
+	  <section title="warn" anchor="gadgets.warn">
+		  <t>              &lt;static&gt;                gadgets.warn(message)</t>
+		  <t>              Description: Log a warning message.</t>
+		  <t>
+			  Parameters:                	<texttable>
+				  <ttcol>Name</ttcol>
+				  <ttcol>Type</ttcol>
+				  <ttcol>Description</ttcol>
+				  <c>message</c>
+				  <c>Object</c>
+				  <c>The message to log</c>
+			  </texttable>
+		  </t>
+          </section>
+	  <section title="error" anchor="gadgets.error">
+		  <t>              &lt;static&gt;                gadgets.error(message)</t>
+		  <t>              Description: Log an error message.</t>
+		  <t>
+			  Parameters:                	<texttable>
+				  <ttcol>Name</ttcol>
+				  <ttcol>Type</ttcol>
+				  <ttcol>Description</ttcol>
+				  <c>message</c>
+				  <c>Object</c>
+				  <c>The message to log</c>
+			  </texttable>
+		  </t>
           </section>
           <section title="setLogLevel" anchor="gadgets.setLogLevel">
             <t>              &lt;static&gt;                gadgets.setLogLevel(logLevel)</t>
@@ -795,11 +817,35 @@ gadgets.util.hasFeature(featureName)
                 <ttcol>Description</ttcol>
                 <c>logLevel</c>
                 <c>Number</c>
-                <c>- New log level threshold.</c>
+                <c>New log level threshold.</c>
               </texttable>
             </t>
           </section>
         </section>
+	<section title="gadgets.log" anchor="gadgets.log">
+		<t>
+			Used by
+			<xref target="gadgets.log.setLogLevel">
+				gadgets.log.setLogLevel
+			</xref>.
+        	</t>
+		<section title="INFO" anchor="gadgets.log.INFO">
+			<t>              &lt;static&gt;                Member of: gadgets.log</t>
+			<t>              Description: Log level for informational logging.</t>
+		</section>
+		<section title="WARN" anchor="gadgets.log.WARN">
+			<t>              &lt;static&gt;                Member of: gadgets.log</t>
+			<t>              Description: Log level for warning logging.</t>
+		</section>
+		<section title="ERROR" anchor="gadgets.log.ERROR">
+			<t>              &lt;static&gt;                Member of: gadgets.log</t>
+			<t>              Description: Log level for error logging.</t>
+		</section>
+		<section title="NONE" anchor="gadgets.log.NONE">
+			<t>              &lt;static&gt;                Member of: gadgets.log</t>
+			<t>              Description: Log level for no logging.</t>
+		</section>
+	</section>
       </section>
 
       <section title="gadgets.io.AuthorizationType" anchor="gadgets.io.AuthorizationType">
