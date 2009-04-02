@@ -672,6 +672,14 @@ gadgets.util.hasFeature(featureName)
             country: The country of the user viewing the page as specified in Section 3 i under Process
             in this document.
           </t>
+          <t>
+            opensocial_proxied_content: MUST be present and set to 1.  Servers can use this
+            to distinguish proxied content renders from gadgets.io.makeRequest() calls.
+            Remote sites that expect proxied content requests SHOULD reject requests
+            that do not have opensocial_proxied_content set to 1.  If a remote site
+            fails to implement this check, any content in the POST body may be
+            spoofed by a malicious user or application.
+          </t>
         </list>
       </t>
       <t>
