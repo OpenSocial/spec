@@ -131,6 +131,10 @@
 				</figure>
 			</t>
 			<t>
+			            Expressions are honored inside text nodes and attribute values. They will 
+			            be ignored inside tag and attribute names. 
+			</t>
+			<t>
 				Expressions are defined using a subset of the <xref target="JSPEL">JSP Expression Language</xref>, with a 
 				couple of minor modifications. We use a subset of the JSP Expression Language 
 				specification. This allows for expressions that are raw variable references, as 
@@ -164,6 +168,34 @@
 				are HTML escaped, however based on context they may be URL encoded or escaped as 
 				JavaScript strings or CSS content. 
 			</t>
+                                    <section title="Expressions and special HTML attributes">                                    
+			            <t>
+			                        HTML specified some element attributes whose mere presence affects
+			                        browser behavior. For example, the @selected attribute of the &lt;option&gt; 
+			                        tag. An exception is made for this small subset of attributes: if their
+			                        value contains an expression which evaluates to a "false-like" value 
+			                        (that is any of, null/undefined, the boolean false, the number 0, empty string, or the literal string "false"), 
+			                        the attribute will be removed during template processing. 
+			            </t>
+			            <t>
+			                        This allows markup like the following to work as expected and cause the Viewer option to become selected:
+			                        <figure>
+			                                 <artwork>
+&lt;select&gt;
+  &lt;option repeat="${friends}" selected="${Cur.id == Viewer.id}" &gt;${Cur.name.formatted}&lt;/option&gt;
+&lt;/select&gt;			                                 
+			                                 </artwork>
+			                        </figure>
+			            </t>
+			            <t>
+			                        Some examples of tag-attribute combinations to which special processing will apply:
+			                        <list style="symbols">
+			                                 <t>@selected attribute of the &lt;option&gt; tag</t>
+			                                 <t>@checked attribute of the &lt;input&gt; tag</t>
+			                                 <t>@disabled attribute of the &lt;input&gt;, &lt;button&gt;, &lt;select&gt; and &lt;textarea&gt; tags</t>
+			                        </list>
+			            </t>
+			</section>
 			<section title="Variable evaluation in Expressions">
                                                 <t>         
                                                             Variables are accessed using Foo.Bar (or Foo.Bar.Baz) notation. .Bar maps to 
@@ -235,8 +267,8 @@ data['Viewer']['Name']
 				<section title="Cur">
 					<t>
 						${Cur} refers to the current data item being processed, either within a repeater, or specified via the @cur 
-						attribute (see below). At the top of the template rendering stack ${Cur} == ${Top}. When a custom tag is invoked without
-						a @cur attribute, ${Cur} will start out as null. 
+						attribute (see below). At the top of the template rendering stack ${Cur} == ${Top}. When a custom tag is invoked,
+						${Cur} will start out as null. 
 					</t>
 				</section>
 				<section title="My">
@@ -636,6 +668,29 @@ data['Viewer']['Name']
 				</t>
 			</section>
 		</section>
+        <section title="os:Html">
+            <t>
+                As stated above, all expression evaluation results will be treated as a String, and escaped in a context-appropriate 
+                manner. However, there are cases where HTML markup from trusted sources needs to be injected into the template
+                from the DataContext. For such use cases, the built-in &lt;os:Html&gt; tag may be used.
+            </t>
+            <t>
+                The &lt;os:Html&gt; tag will evaluate its @code attribute as a string, and render the resulting code as HTML.
+                <figure>
+                        <preamble>Example of using &lt;os:Html&gt;:</preamble>
+                        <artwork>
+&lt;div repeat="${BlogEntries}"&gt;
+  &lt;h2&gt;${Cur.Title}&lt;/h2&gt;
+  &lt;p&gt;&lt;os:Html code="${Cur.Summary}"/&gt;&lt;/p&gt;
+  &lt;a href="${Cur.Url}"&gt;Read more...&lt;/a&gt;
+&lt;/div&gt;
+                        </artwork>
+                </figure>
+                Containers may chose to define what subset of HTML will be honored by the &lt;os:Html&gt; tag, and what will
+                be sanitized away. Containers should allow minimal functionality such as making text bold or changing its color,
+                as well as creating links and inserting images.  
+            </t>
+        </section>
         <section title="os:Render">
             <t>
                 A template may also define locations to render custom blocks of content. This is done using the &lt;os:Render&gt; tag 
