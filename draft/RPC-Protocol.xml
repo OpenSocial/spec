@@ -48,6 +48,7 @@
 				</list>
 				It differs from the RESTful spec in the following ways:
 				<list format="numbers">
+          <t>Conforms to the <xref target="JSON-RPC"/> specification</t>
 					<t>All structural elements in the protocol are represented using the JSON or XML notation.</t>
 					<t>Batch support is required.</t>
 					<t>HTTP is used primarily as a transport and not to indicate the semantics of the request.</t>
@@ -243,7 +244,7 @@ Content-Type: application/json
 				</t>
 				<t>
 					Notes:
-					<list style="sybmols">
+					<list style="symbols">
 						<t>A response that contains a list of information will contain a "list" field in the result.</t>
 						<t>The result will also  include details about the number of elements returned in the "list" 
 						field as well as information about how to request additional elements using either paging 
@@ -525,7 +526,9 @@ GIF89....&lt;image data&gt;
 [ &lt;rpc-request1&gt;, &lt;rpc-request2&gt;, ...] -&gt; [ &lt;rpc-response1&gt;,  &lt;rpc-response2&gt;, ...]
 					</artwork>
 				</figure>
-			</t>
+        If processing of the entire batch fails, as opposed to a single request within the batch, then the returned value is a
+        single JSON-RPC response object with the appropriate error message and code.
+      </t>
 		</section>
 		<section title="Lists">
 			<t>
@@ -555,30 +558,14 @@ GIF89....&lt;image data&gt;
     "totalResults" : &lt;total number of elements in the full list&gt;,
     "startIndex" : &lt;0 based offset in the full-list of the returned sublist&gt;,
     "itemsPerPage" : &lt;total number of elements in the returned sublist&gt;,
+    "isFiltered" : &lt;boolean indicating if the result honors filter params in the request&gt;,
+    "isUpdatedSince" : &lt;boolean indicating if the result honors the updatedSince param in the request&gt;,
+    "itemsPerPage" : &lt;total number of elements in the returned sublist&gt;,
     "list" : [ ... the sublist ...]
   }
 }
 					</artwork>
 				</figure>				
-			</t>
-			<t>
-				If the operation supports access through an indexable list of pages of the full 
-				list it will support the "startPage" parameter that controls which page is selected. 
-				A response that contains a sublist obtained via indexed pages has the form:
-				<figure>
-					<artwork>
-{
-  "result" : {
-    "itemsPerPage" : &lt;total number of elements in the returned sublist&gt;,
-    "firstPage" : &lt;index of the first page. This field is optional but recommended&gt;,
-    "prevPage" : &lt;index of the previous page. If this is the first page this field is omitted, otherwise it is required&gt;,
-    "nextPage" : &lt;index of the next page. If this is the last page this field is omitted, otherwise it is required&gt;,
-    "lastPage" : &lt;index of the last page. This field is optional but recommended&gt;
-    "list" : [ ... the sublist ...]
-  }
-}
-					</artwork>
-				</figure>
 			</t>
 			<t>
 				The paging mechanisms described here are based on the OpenSearch standard with the 
@@ -686,7 +673,50 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</t>
 				</list>
 			</t>
-			<section title="People">
+      <section title="Standard Arguments">
+				<t>
+            The following arguments are supported by each of the exposed services. The parameters
+            startIndex and count are interpreted according to <xref target="OpenSearch"/>.
+        </t>
+        <t>
+					<texttable>
+						<ttcol align="left">Parameter Name</ttcol>
+						<ttcol align="left">Description</ttcol>
+						<c>count</c>
+						<c>The page size for a paged collection. If no parameter is specified the container
+						can choose how many items in the collection should be returned. However, the container
+						SHOULD support a large default count value so that all items can be returned by default.</c>
+						<c>filterBy</c>
+						<c>For a collection, return entries filtered by the given field name.</c>
+						<c>filterOp</c>
+						<c>The operation to use when filtering a collection by a field specified in 'filterBy', defaults to "contains".
+						Valid values are 'contains', 'equals', 'startsWith', and 'present'.</c>
+						<c>filterValue</c>
+						<c>The value to use when filtering a collection. For example,
+						{ ... filterBy : name, filterOp : startsWith, filterValue : "John" ...}
+						return all items whose name field starts with John. Johnny and John Doe
+						would both be included.) </c>
+            <c>sortOrder</c>
+            <c>Can either be 'ascending' or 'descending', defaults to ascending. Used to sort objects in a collection.</c>
+            <c>fields</c>
+						<c>An array of field names to include in the representation or in the members of a collection.
+						If no fields are specified in the request it is up to the container to decide which fields to return,
+						however, the response MUST always include a minimum set of fields. For people this is [id,
+						name, thumbnailUrl]. For activities this is [id, title]. In place of an array '@all' is accepted to
+						indicate returning all available fields.</c>
+						<c>networkDistance</c>
+						<c>Modifies group-relative requests (@friends, etc.) to include the transitive closure of all friends up to
+							the specified distance away.  MAY NOT be honored by the container.</c>
+						<c>startIndex</c>
+						<c>Index into a paged collection.</c>
+						<c>updatedSince</c>
+						<c>When specified the container should only return items whose updated date &amp; time is equal to or
+						more recent then the specified value. The value MUST be a valid <xref target="xs:dateTime"/>
+							(e.g. 2008-01-23T04:56:22Z).</c>
+					</texttable>
+				</t>
+			</section>
+      <section title="People">
 				<t>
 					service-name = "people"
 				</t>
@@ -698,7 +728,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 						<ttcol align="left">Return</ttcol>
 						<c>get</c>
 						<c>
-							AuthToken auth = HttpRequest.Authorization,  String or Array.&lt;String&gt; userId = "@me", String groupId = "@self", Array.&lt;String&gt; fields, int count,  int startIndex,  int startPage
+							AuthToken auth = HttpRequest.Authorization,  String or Array.&lt;String&gt; userId = "@me", String groupId = "@self"
 						</c>
 						<c>opensocial.Person or Array.&lt;opensocial.Person&gt;</c>
 						<c>create</c>
@@ -714,8 +744,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 				</t>
 				<section title="get">
 					<t>
-						Retrieve a single person or list of opensocial.Person objects.  Supports returning a limited set of fields on 
-						returned Person objects and control of the order and paging in a returned list. 
+						Retrieve a single person or list of opensocial.Person objects.
 					</t>
 				</section>
 				<section title="create">
@@ -740,7 +769,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 			</section>
 			<section title="Activities">
 				<t>
-					service-name = "activity"
+					service-name = "activities"
 				</t>
 				<t>
 					Operations Summary:
@@ -750,8 +779,8 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 						<ttcol align="left">Return</ttcol>
 						<c>get</c>
 						<c>
-							AuthToken auth = HttpRequest.Authorization,  String or Array&lt;String&gt; userId = "@me", String groupId = "@self",  String appId = auth.AppId,  Array&lt;String&gt; activityIds = [], Array.&lt;String&gt; fields,  int count,  int startIndex,  int startPage
-						</c>
+							AuthToken auth = HttpRequest.Authorization,  String or Array&lt;String&gt; userId = "@me", String groupId = "@self",  String appId = auth.AppId,  Array&lt;String&gt; activityIds = []
+            </c>
 						<c>opensocial.Activity or Array.&lt;opensocial.Activity&gt;</c>
 						<c>create</c>
 						<c>AuthToken auth = HttpRequest.Authorization,  String userId = "@me", String groupId = "@self",  String appId = auth.AppId,  opensocial.Activity activity</c>
@@ -766,8 +795,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 				</t>
 				<section title="get">
 					<t>
-						Retrieve a one or list of opensocial.Activity objects.  Supports returning a limited set of fields on 
-						returned Activity objects and control of the order and paging in a returned list. 
+						Retrieve one or a list of opensocial.Activity objects.
 					</t>
 				</section>
 				<section title="create">
@@ -863,31 +891,6 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</t>
 				</section>
 			</section>
-			<section title="System">
-				<t>
-					The system service is used to introspect the endpoint for the set of available services and operations and for metadata about those services.
-				</t>
-				<t>
-					service-name = "system"
-				</t>
-				<t>
-					Operations Summary:
-					<texttable>
-						<ttcol align="left">Operation</ttcol>
-						<ttcol align="left">Parameters</ttcol>
-						<ttcol align="left">Return</ttcol>
-						<c>listMethods</c>
-						<c></c>
-						<c>Array.&lt;String&gt;</c>
-						<c>methodSignatures</c>
-						<c>String methodName</c>
-						<c>Signature</c>
-						<c>methodHelp</c>
-						<c>String methodName</c>
-						<c>Content</c>
-					</texttable>
-				</t>
-			</section>
 			<section title="Albums">
 				<t>
 					service-name = "albums"
@@ -939,26 +942,50 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</texttable>
 				</t>
 			</section>
-			<section title="listMethods">
+      <section title="System">
 				<t>
-					Containers MUST imlpement this operation which takes no parameters and returns an array of all methods 
-					supported by the endpoint including the system methods. 
-					For a container which only supports read access to people and read and create access for 
+					The system service is used to introspect the endpoint for the set of available services and operations and for metadata about those services.
+				</t>
+				<t>
+					service-name = "system"
+				</t>
+				<t>
+					Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>listMethods</c>
+						<c></c>
+						<c>Array.&lt;String&gt;</c>
+						<c>methodSignatures</c>
+						<c>String methodName</c>
+						<c>Signature</c>
+						<c>methodHelp</c>
+						<c>String methodName</c>
+						<c>Content</c>
+					</texttable>
+				</t>
+        <section title="listMethods">
+				<t>
+					Containers MUST implement this operation which takes no parameters and returns an array of all methods
+					supported by the endpoint including the system methods.
+					For a container which only supports read access to people and read and create access for
 					activities the result would be:
 					<figure>
 						<artwork>
-["people.get", "activities.get", "activities.create",  "system.listMethods", "system.methodSignatures", "system.methodHelp"]							
+["people.get", "activities.get", "activities.create",  "system.listMethods", "system.methodSignatures", "system.methodHelp"]
 						</artwork>
 					</figure>
 				</t>
 			</section>
-			<section title="methodSignatures">
+        <section title="methodSignatures">
 				<t>
-					Containers MUST implement this operation that returns a method signature describing the 
-					types of the parameters, their default values and the type of the return value for a given 
-					operation. Note that this scheme does not match that used for XML-RPC definition of method 
-					signatures which only specifies a mapping for positional parameters. Type definitions used 
-					here match the scheme used in the OpenSocial Javascript API. The example below is the Signature 
+					Containers MUST implement this operation that returns a method signature describing the
+					types of the parameters, their default values and the type of the return value for a given
+					operation. Note that this scheme does not match that used for XML-RPC definition of method
+					signatures which only specifies a mapping for positional parameters. Type definitions used
+					here match the scheme used in the OpenSocial Javascript API. The example below is the Signature
 					response for people.get.
 					<figure>
 						<artwork>
@@ -988,30 +1015,27 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
        "type" : "int",
        "required" : false
      }
-     "startPage" : {
-       "type" : "int",
-       "required" : false
-     }
 }
 						</artwork>
 					</figure>
-					The "return" field indicates the type of the result. If the service can return more 
-					than one type then the value is an array of the possible return types. Each named 
-					field in the response maps to a parameter of the operation and contains information 
-					about the types and values accepted for that parameter. The existence of "default" in 
-					the parameter detail indicates the parameter has a default value. The value of a default 
-					may be null which means that its not introspectable and usually means that it is some 
-					complex derivation. Parameters are assumed to be required unless otherwise indicated by 
-					the existence of the "required" field with a value of false. 
+					The "return" field indicates the type of the result. If the service can return more
+					than one type then the value is an array of the possible return types. Each named
+					field in the response maps to a parameter of the operation and contains information
+					about the types and values accepted for that parameter. The existence of "default" in
+					the parameter detail indicates the parameter has a default value. The value of a default
+					may be null which means that its not introspectable and usually means that it is some
+					complex derivation. Parameters are assumed to be required unless otherwise indicated by
+					the existence of the "required" field with a value of false.
 				</t>
 			</section>
-			<section title="methodHelp">
+        <section title="methodHelp">
 				<t>
-					Containers MAY implement this operation that returns a textual description of the operation 
-					identified by the methodName parameter. A container can choose to return 
+					Containers MAY implement this operation that returns a textual description of the operation
+					identified by the methodName parameter. A container can choose to return
 					either plaintext or HTML as the response.
 				</t>
 			</section>
+      </section>
 		</section>
 		<section title="Standard Errors">
 			<t>
@@ -1072,7 +1096,17 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 	</middle>
 	<back>
 		<references>
-		    <reference anchor='RFC2119'>
+      <reference anchor='OpenSearch' target='http://www.opensearch.org/Specifications/OpenSearch/1.1/Draft_3'>
+          <front>
+              <title>OpenSearch 1.1, Draft 3</title>
+              <author initials='D.' surname='Clinton'
+                      fullname='DeWitt Clinton'>
+                  <organization>OpenSearch.org</organization>
+              </author>
+        <date month='November' year='2008' />
+          </front>
+      </reference>
+        <reference anchor='RFC2119'>
 		        <front>
 		            <title>Key words for use in RFCs to Indicate Requirement Levels</title>
 		            <author initials='S.' surname='Bradner'
@@ -1142,7 +1176,21 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					<title>Rison - Compact Data in URIs</title>
 				</front>
 			</reference>
-			<reference anchor='OAuth Core 1.0' target='http://oauth.net/core/1.0/'>
+      <reference anchor="xs:dateTime" target="http://www.w3.org/TR/xmlschema-2/#dateTime">
+				<front>
+					<title>XML Schema Part 2: Datatypes Second Edition</title>
+		            <author initials='P.V.' surname='Biron'
+		                    fullname='Paul V. Biron'>
+		                <organization>Kaiser Permanente, for Health Level Seven</organization>
+		            </author>
+		            <author initials='A.' surname='Malhotra'
+		                    fullname='Ashok Malhotra'>
+		                <organization>Microsoft</organization>
+		            </author>
+					<date month='October' year='2004' />
+				</front>
+			</reference>
+      <reference anchor='OAuth Core 1.0' target='http://oauth.net/core/1.0/'>
 		        <front>
 		            <title>OAuth Core 1.0</title>
 		            <author initials='M.' surname='Atwood'
