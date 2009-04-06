@@ -385,8 +385,7 @@ The container may ignore this formatting when rendering the activity.
 				the API supports other types of queries (detailed below). To retrieve a subset of fields, 
 				use the fields= selector syntax (detailed below).</t>
 				<t>The data within each field is assumed to be in JSON format and is otherwise uninterpreted.</t>
-
-				<section title="An isolated AppData example.">
+				<section title="An isolated AppData example." anchor="appdataIsolatedExample">
 					<t>
 						The first example is of a collection of key/value pairs for a particular application/user pair:
 						<figure>
@@ -1025,6 +1024,22 @@ X-HTTP-Method-Override: PUT
 				<t>
 					If the guid is set to -1, the value for the anonymous user MUST be returned. The value for the 
 					name and nickname fields can either be blank or set to an appropriate value such as 'Guest', 'Anonymous', etc.
+				</t>
+				<t>
+				  All AppData for the person or collection of people returned by a given query may be fetched by 
+				  specifying the field "appdata" in the fields query parameter.  If only a subset of AppData fields
+				  are desired, they may be fetched by specifying "appdata.&lt;fieldname&gt;" for each field
+				  that needs to be fetched.
+				</t>
+				<t>Examples:
+				  <texttable>
+						<ttcol align="left">URI Fragment</ttcol>
+						<ttcol align="left">Description</ttcol>
+				    <c>/people/@me/@self?fields=appdata</c>
+						<c align="left">All appdata for the requestor.</c>
+				    <c>/people/@me/@self?fields=appdata.key1,appdata.key2</c>
+						<c align="left">Appdata stored under the keys "key1" and "key2" for the requestor.</c>
+				  </texttable>
 				</t>
 			</section>
 			<section title="Groups">
@@ -1693,6 +1708,8 @@ Content-Type application/json
 							(organization Element).</c>
 							<c>accounts</c>
 							<c>An online account held by this Person, as described in <xref target="accountElement"/> (account Element).</c>
+							<c>appdata</c>
+							<c>A collection of AppData keys and values, as described in <xref target="appdataIsolatedExample"/> (an isolated AppData example).</c>
 						</texttable>
 						The following additional Plural Fields are defined, based on their specification in OpenSocial: 
 						activities, books, cars, children,food, heroes, interests, jobInterests, languages, languagesSpoken, 
@@ -1936,6 +1953,7 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="addresses" type="tns:Address" /&gt;
       &lt;xs:element minOccurs="0" name="age" type="xs:string"/&gt;
       &lt;xs:element minOccurs="0" name="anniversary" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="appData" type="tns:Appdata" /&gt;
       &lt;xs:element minOccurs="0" name="birthday" type="xs:dateTime" /&gt;
       &lt;xs:element minOccurs="0" name="bodyType" type="tns:BodyType" /&gt;
       &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="books" type="xs:string" /&gt;

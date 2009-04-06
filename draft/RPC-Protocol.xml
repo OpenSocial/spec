@@ -746,6 +746,39 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					<t>
 						Retrieve a single person or list of opensocial.Person objects.
 					</t>
+					<t>
+					  All AppData for the person or collection of people returned by a given query may be fetched by specifying 
+					  the field "appdata" in the fields parameter. If only a subset of AppData fields are desired, they may be 
+					  fetched by specifying "appdata.&lt;fieldname&gt;" for each field that needs to be fetched.
+					</t>
+					<t>Example: Fetching all AppData for the requestor:
+					<artwork>
+{
+  "method":"people.get",
+  "params": {
+    "userId":["@me"],
+    "groupId":"@self",
+    "params": {
+      "fields": "appdata"
+    }
+  }
+}
+					</artwork>
+				  </t>
+					<t>Example: Fetching the AppData keys "key1", and "key2" for the requestor:
+					<artwork>
+{
+  "method":"people.get",
+  "params": {
+    "userId":["@me"],
+    "groupId":"@self",
+    "params": {
+      "fields": ["appdata.key1", "appdata.key2"]
+    }
+  }
+}
+					</artwork>
+				  </t>
 				</section>
 				<section title="create">
 					<t>

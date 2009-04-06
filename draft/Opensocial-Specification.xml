@@ -130,6 +130,10 @@
               you want the container to provide to you for processing.
             </t>
           </t>
+          <t>
+            Containers that support the creation of and updating AppData SHOULD provide 
+            at least 10KB of space per user per application for storage.
+          </t>
         </list>
       </t>
     </section>
@@ -794,15 +798,23 @@ osapi.activities.create({userId: '@viewer', activity: {title: 'Hello!', url: 'ht
                   <t>
                     Functions:
                     <list style="symbols">
-	                    <t>osapi.appdata.update() - maps to the app data update endpoint (all app data sets are updates).</t>
-	                    <t>osapi.appdata.delete() - maps to the app data delete endpoint.</t>
-	                    <t>Note: appdata.get RESTful endpoint is deprecated - app data will be returned on person JSON.</t>
+	                    <t>osapi.appdata.update() - maps to the app data update endpoint (all app data sets are updates).
+	                      <list style="symbols">
+	                        <t>Note: userId and groupId are not required for this call.  If omitted, "@viewer" and "@self" will be implied, respectively.</t>
+	                      </list>
+	                    </t>
+	                    <t>osapi.appdata.delete() - maps to the app data delete endpoint.
+	                      <list style="symbols">
+	                        <t>Note: userId and groupId are not required for this call.  If omitted, "@viewer" and "@self" will be implied, respectively.</t>
+	                      </list>
+	                    </t>
                     </list>
                     <figure>
                         <preamble>Example</preamble>
                         <artwork>
 osapi.appdata.get({userId: '@viewer', groupId: '@friends', keys: ['gifts']}, batch('gifts'));
 osapi.appdata.update({userId: '@viewer', data: {gifts: 'a crazed monkey'}}, batch('updateAppData'));
+osapi.appdata.delete({keys: ['gifts']}, batch('deleteAppData'));
                         </artwork>
                     </figure>
                   </t>
@@ -2826,8 +2838,7 @@ function handleRequestMe(data) {
                 Description: Creates an item to request an update of an app field for the current VIEWER.
                 When processed, does not return any data.
                 App Data is stored as a series of key value pairs of strings, scoped per
-                person, per application. Containers supporting this request SHOULD provide
-                at least 10KB of space per user per application for this data.
+                person, per application. 
               </t>
               <t>
                 Parameters:                	<texttable>
