@@ -99,7 +99,7 @@
 				RESTful API parameters. See the OpenSocial RESTful Protocol for an overview of the REST calls.
 			</t>
 		</section>
-		<section title="Tag: &lt;os:DataRequest&gt;">
+		<section title="Tag: &lt;os:DataRequest&gt;" anchor="DataRequest">
 			<t>
 				Request to get OpenSocial data, including person data, activity
 				data, and any container-specific endpoints.
@@ -125,7 +125,7 @@
 				</figure>
 			</t>
 		</section>
-		<section title="Tag: &lt;os:HttpRequest&gt;">
+		<section title="Tag: &lt;os:HttpRequest&gt;" anchor="HttpRequest">
 			<t>
 				Request for arbitrary URL data, equivalent to gadgets.io.makeRequest().
 			</t>
@@ -231,7 +231,7 @@
 				</figure>
 			</t>
 		</section>
-		<section title="Tag: &lt;os:PeopleRequest&gt;">
+		<section title="Tag: &lt;os:PeopleRequest&gt;" anchor="PeopleRequest">
 			<t>
 				Request to get profile information for a group or list of people.  This is equivalent to using &lt;os:DataRequest&gt; with
 				@method of "people.get".
@@ -261,7 +261,7 @@
 				</figure>
 			</t>
 		</section>
-		<section title="Tags: &lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt;">
+		<section title="Tags: &lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt;"  anchor="ViewerRequest">
 			<t>
 				Requests to get the viewer's or owner's profile.  This is equivalent to using &lt;os:DataRequest&gt; with
 				@method of "people.get", with @userId of either "@viewer" or "@owner".
@@ -284,7 +284,7 @@
 				</figure>
 			</t>
 		</section>
-		<section title="Tag: &lt;os:ActivitiesRequest&gt;">
+		<section title="Tag: &lt;os:ActivitiesRequest&gt;"  anchor="ActivitiesRequest">
 			<t>
 				Request to get activities.  This is equivalent to using &lt;os:DataRequest&gt; with
 				@method of "activities.get".

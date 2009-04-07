@@ -6,7 +6,7 @@
   <front>
     <title abbrev="OpenSocial REST">OpenSocial Specification v0.9</title>
     <author surname="opensocial"
-			fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+      fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
       <address>
         <email>opensocial-and-gadgets-spec@googlegroups.com</email>
       </address>
@@ -582,297 +582,1279 @@
         </section>
       </section>
       <section title="Lightweight JavaScript API" anchor="LightweightJSAPI">
+        <section title="Summary">
           <t>
-             The lightweight JS APIs are a simplified JavaScript APIs that maps to REST equivalents using JSON as input and output.  
+             The Lightweight Javascript API, or OS Lite, is more natural to JavaScript developers and more succinct for creating OpenSocial gadgets than the existing JS APIs. It relies on the existing JSON-RPC protocol handlers, and is marked by the use of simple JSON objects as input and output. Note: this implementation follows the JSON-RPC spec 1:1, but could also be implemented over REST.  
           </t>
-          <section title="API Signature">
-              <t>
-                Lightweight JS APIs expose a consistent function signature for for all data access methods. Every API method:
+          <t>
+            For compatibility purposes, the existing JS APIs are still in place, and we may consider deprecating them in the 1.0 timeframe if developers move to these new APIs. 
+          </t>
+          <section title="Highlights">
+            <list style="symbols">
+              <t>Introduces standard method signature for data requests - JSON in, JSON out</t>
+              <t>Input and output parameters match JSON-RPC calls 1:1 and share documentation</t>
+              <t>Data requests look like functions on "service" objects, e.g., osapi.people.get(), instead of opensocial.DataRequest.newXXXRequest()</t>
+              <t>Data requests can be called individually or as part of a batch</t>
+              <t>Batch calls are designed for call chaining. The newBatch() call returns the batch, as does add, so that you can succinctly add more requests to the batch and execute it.</t>
+              <t>Located in the osapi namespace</t>
+            </list>
+          </section>
+          <section title="Examples">
+            <figure>
+              <preamble>A Person request, the most basic example:</preamble>
+              <artwork>
+osapi.people.getViewer().execute(function(result) {
+  if (!result.error) {
+    alert('Your name is ' + result.name + '!');
+  }
+});
+              </artwork>
+            </figure>
+            <figure>
+              <preamble>A Person request with a JSON request parameter object specifying which fields to retrieve:</preamble>
+              <artwork>
+osapi.people.getViewer({fields: ['name', 'birthday']}).execute(function(result) {
+  if (!result.error) {
+    alert('Your name is ' + result.name + '!');
+    alert('Your birthday is ' + result.birthday + '!');
+  }
+});
+              </artwork>
+            </figure>
+            <figure>
+              <preamble>Batch request to retrieve a Person and Activities:</preamble>
+              <artwork>
+var batch = osapi.newBatch().
+    add("viewer", osapi.people.getViewer()).
+    add('activities', osapi.activities.get({ userId : '@viewer', groupId : '@self'})).
+
+batch.execute(function(result) {
+  if (!result.error) {
+    alert('Hi, ' + result.viewer.name + '!');
+    alert('You have ' + result.activities.length + ' activities.');
+  }
+});
+              </artwork>
+            </figure>
+          </section>
+        </section>
+        <section title="Detailed Description">
+          <t>A container MUST emit the OS Lite JavaScript libraries and data files required by the libraries if an application includes &lt;Require feature="osapi"/&gt; in the ModulePrefs section of the gadget XML file.  The container SHOULD emit the OS Lite JavaScript libraries and data files required by the libraries if an application optionally requests the feature by including &lt;Optional feature="osapi"/&gt; in the ModulePrefs of the gadget XML file.</t>
+          <t>The services available on the client are determined by the server from which the JavaScript is delivered. The server SHOULD generate service methods for all available services. Developers wanting to write gadgets safely can test for the existence of a service and method before making their call.</t>
+          <figure>
+            <preamble>Example:</preamble>
+            <artwork>
+if (osapi.people &amp;&amp; osapi.people.getViewer) {
+  osapi.people.getViewer().execute(function(result) {
+    if (!result.error) {
+      alert('Your name is ' + result.name + '!');
+    }
+  });
+}
+            </artwork>
+          </figure>
+          <section title="Service Objects">
+            <section title="osapi.people" anchor="osapi.people">
+              <t>Service object with functions that map to the <eref target="./RPC-Protocol.xml#People">JSON-RPC people endpoint</eref>.</t>
+              <section title="Method Details">
+                <section title="get" anchor="osapi.people.get">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.people.get(params)
+                  </t>
+                  <t>
+                    Description: Builds a request to retrieve information from the JSON-RPC People service.  When no parameter is specified, the server defaults, { userId : @me, groupId : @self}, will be used and the viewer's information will be returned.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        String or Array.&lt;String&gt; userId = "@me",
+                        <vspace blankLines='0' />
+                        String groupId = "@self", 
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; fields,
+                        <vspace blankLines='0' />
+                        int count,
+                        <vspace blankLines='0' />
+                        int startIndex,
+                        <vspace blankLines='0' />
+                        int startPage
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the get operation of the <eref target="./RPC-Protocol.xml#People">JSON-RPC people endpoint</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#People">JSON-RPC People service</eref>.
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="getViewer" anchor="osapi.people.getViewer">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.people.getViewer(params)
+                  </t>
+                  <t>
+                    Description: A convenience over osapi.people.get() that builds a request to retrieve the viewer, as specified in the security token, from the people JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; fields,
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the get operation of the <eref target="./RPC-Protocol.xml#People">JSON-RPC people endpoint</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#People">JSON-RPC People service</eref>.
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="getViewerFriends" anchor="osapi.people.getViewerFriends">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.people.getViewerFriends(params)
+                  </t>
+                  <t>
+                    Description: A convenience over osapi.people.get() that builds a request to retrieve the viewer's friends, as specified in the security token, from the people JSON-RPC service. 
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; fields,
+                        <vspace blankLines='0' />
+                        int count,
+                        <vspace blankLines='0' />
+                        int startIndex,
+                        <vspace blankLines='0' />
+                        int startPage
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the get operation of the <eref target="./RPC-Protocol.xml#People">JSON-RPC people endpoint</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#People">JSON-RPC People service</eref>.
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="getOwner" anchor="osapi.people.getOwner">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.people.get(params)
+                  </t>
+                  <t>
+                    Description: A convenience over osapi.people.get() that builds a request to retrieve the owner, as specified in the security token, from the people JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; fields,
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the get operation of the <eref target="./RPC-Protocol.xml#People">JSON-RPC people endpoint</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#People">JSON-RPC People service</eref>.
+                      </c>
+                    </texttable>
+                  </t>
+                </section>
+                <section title="getOwnerFriends" anchor="osapi.people.getOwnerFriends">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.people.get(params)
+                  </t>
+                  <t>
+                    Description: A convenience over osapi.people.get() that builds a request to retrieve the owner's friends, as specified in the security token, from the people JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; fields,
+                        <vspace blankLines='0' />
+                        int count,
+                        <vspace blankLines='0' />
+                        int startIndex,
+                        <vspace blankLines='0' />
+                        int startPage
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the get operation of the <eref target="./RPC-Protocol.xml#People">JSON-RPC people endpoint</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#People">JSON-RPC People service</eref>.
+                      </c>
+                    </texttable>
+                  </t>
+                </section>
+              </section>
+              <section title="Examples">
+                <figure>
+                  <preamble>A simple example to request the owner's friends:</preamble>
+                  <artwork>
+osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
+  if (!result.error) {
+    alert('You have ' + ownerFriends.length + ' friends');
+  }
+});
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>An example that illustrates all available request parameters:</preamble>
+                  <artwork>
+var params = {
+    auth: {"default" : null, "type" : "AuthToken"},
+    userId: "@owner", 
+    groupId: "@friends",
+    fields: "@all",
+    count: 10,
+    startIndex: 0, 
+    startPage: 0
+};
+osapi.people.get(params).execute(function(ownerFriends) {
+  if (!result.error) {
+    alert('You have ' + ownerFriends.length + ' friends');
+  }
+});
+                  </artwork>
+                </figure>
+              </section>
+            </section>
+            <section title="osapi.activities" anchor="osapi.activities">
+              <t>Service object with functions that map to the <eref target="./RPC-Protocol.xml#Activities">JSON-RPC activities endpoint</eref>.</t>
+              <section title="Method Details">
+                <section title="get" anchor="osapi.activities.get">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.activities.get(params)
+                  </t>
+                  <t>
+                    Description: Builds a request to retrieve activities from the Activities JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        String or Array.&lt;String&gt; userId = "@me",
+                        <vspace blankLines='0' />
+                        String groupId = "@self", 
+                        <vspace blankLines='0' />                        
+                        String appId = auth.AppId,
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; activityIds = [],
+                        <vspace blankLines='0' />                        
+                        Array.&lt;String&gt; fields,
+                        <vspace blankLines='0' />
+                        int count,
+                        <vspace blankLines='0' />
+                        int startIndex,
+                        <vspace blankLines='0' />
+                        int startPage
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the get operation of the <eref target="./RPC-Protocol.xml#Activities">JSON-RPC Activities service</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#Activities">JSON-RPC Activities service</eref>.
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="create" anchor="osapi.activities.create">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.activities.get(params)
+                  </t>
+                  <t>
+                    Description: Builds a request to create an activity using the Activities JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        String or Array.&lt;String&gt; userId = "@me",
+                        <vspace blankLines='0' />
+                        String groupId = "@self", 
+                        <vspace blankLines='0' />                        
+                        String appId = auth.AppId,
+                        <vspace blankLines='0' />
+                        opensocial.Activity activity,
+                        <vspace blankLines='0' />                        
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the create operation of the <eref target="./RPC-Protocol.xml#Activities">JSON-RPC Activities service</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#Activities">JSON-RPC Activities service</eref>.
+                      </c>
+                    </texttable>
+                  </t>
+                </section>
+              </section>
+              <section title="Examples">
+                <figure>
+                  <preamble>A simple example to retrieve the activities of the viewer's friends:</preamble>
+                  <artwork>
+osapi.activities.get({userId: '@viewer', groupId: '@friends', count: 20}).execute(myCallback);
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>An example illustrating all available request parameters for osapi.activites.get():</preamble>
+                  <artwork>
+var params = {
+    auth: {"default" : null, "type" : "AuthToken"},
+    userId: "@me", 
+    groupId: "@self",
+    appId: "XXXXXXX",
+    activityIds = ["YYYYYYY", "ZZZZZZZ"],
+    fields: "@all",
+    count: 10,
+    startIndex: 0, 
+    startPage: 0
+};
+osapi.activities.get(params).execute(myCallback);
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>A simple example to create an activity for the viewer:</preamble>
+                  <artwork>
+osapi.activities.create({userId: '@viewer', activity: {title: 'Hello!', url: 'http://mysite.com'}}).execute(myCallback);
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>An example illustrating all available request parameters for osapi.activites.create():</preamble>
+                  <artwork>
+var params = {
+    auth: {"default" : null, "type" : "AuthToken"},
+    userId: "@viewer", 
+    groupId: "@self",
+    appId: "XXXXXXX",
+    activity: {title: 'Hello!', url: 'http://mysite.com'}
+};
+osapi.activities.create(params).execute(myCallback);
+                  </artwork>
+                </figure>
+              </section>
+            </section>
+            <section title="osapi.appdata" anchor="osapi.appdata">
+              <t>Service object with functions that map to the <eref target="./RPC-Protocol.xml#AppData">JSON-RPC app data endpoint</eref>.</t>
+              <section title="Method Details">
+                <section title="get" anchor="osapi.appdata.get">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.appdata.get(params)
+                  </t>
+                  <t>
+                    Description: Builds a request to retrieve data from the AppData JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        String or Array.&lt;String&gt; userId = "@me",
+                        <vspace blankLines='0' />
+                        String groupId = "@self", 
+                        <vspace blankLines='0' />                        
+                        String appId = auth.AppId,
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; keys,
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the get operation of the <eref target="./RPC-Protocol.xml#AppData">JSON-RPC AppData service</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#AppData">JSON-RPC AppData service</eref>.
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="update" anchor="osapi.appdata.update">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.appdata.update(params)
+                  </t>
+                  <t>
+                    Description: Builds a request to create or update data from the AppData JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        String or Array.&lt;String&gt; userId = "@me",
+                        <vspace blankLines='0' />
+                        String groupId = "@self", 
+                        <vspace blankLines='0' />                        
+                        String appId = auth.AppId,
+                        <vspace blankLines='0' />
+                        Map.&lt;String, String&gt; data,
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the update operation of the <eref target="./RPC-Protocol.xml#AppData">JSON-RPC AppData service</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#AppData">JSON-RPC AppData service</eref>.
+                      </c>
+                    </texttable>
+                  </t>             
+                </section>
+                <section title="delete" anchor="osapi.appdata.delete">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.appdata.delete(params)
+                  </t>
+                  <t>
+                    Description: Builds a request to delete data from the AppData JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        String or Array.&lt;String&gt; userId = "@me",
+                        <vspace blankLines='0' />
+                        String groupId = "@self", 
+                        <vspace blankLines='0' />                        
+                        String appId = auth.AppId,
+                        <vspace blankLines='0' />
+                        Array.&lt;String&gt; keys,
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the delete operation of the <eref target="./RPC-Protocol.xml#AppData">JSON-RPC AppData service</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#AppData">JSON-RPC AppData service</eref>.
+                      </c>
+                    </texttable>
+                  </t>   
+                </section>                
+              </section>
+              <section title="Examples">
+                <figure>
+                  <preamble>A simple example to retrieve, update, and delete a piece of app data:</preamble>
+                  <artwork>
+osapi.appdata.get({userId: '@viewer', groupId: '@friends', keys: ['gifts']}).execute(myGetCallback);
+osapi.appdata.update({userId: '@viewer', data: {gifts: 'a crazed monkey'}}).execute(myUpdateCallback);
+osapi.appdata.delete({keys: ['gifts']}).execute(myDeleteCallback)
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>An example illustrating all available request parameters for osapi.appdata.get():</preamble>
+                  <artwork>
+var getParams = {
+    auth: {"default" : null, "type" : "AuthToken"},
+    userId: "@viewer", 
+    groupId: "@friends",
+    appId: "XXXXXXX",
+    keys: ['gifts', 'wishlist']
+};
+osapi.appdata.get(getParams).execute(myGetCallback);
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>An example illustrating all available request parameters for osapi.appdata.update():</preamble>
+                  <artwork>
+var updateParams = {
+    auth: {"default" : null, "type" : "AuthToken"},
+    userId: "@viewer", 
+    groupId: "@friends",
+    appId: "XXXXXXX",
+    data: {gifts: 'a crazed monkey', wishlist: 'a banana peel'}
+};
+osapi.appdata.update(updateParams).execute(myUpdateCallback);
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>An example illustrating all available request parameters for osapi.appdata.delete():</preamble>
+                  <artwork>
+var deleteParams = {
+    auth: {"default" : null, "type" : "AuthToken"},
+    userId: "@viewer", 
+    groupId: "@friends",
+    appId: "XXXXXXX",
+    keys: ['gifts', 'wishlist']
+};
+osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
+                  </artwork>
+                </figure>
+              </section>
+            </section>
+            <section title="osapi.messages" anchor="osapi.messages">
+              <t>Service object with functions that map to the <eref target="./RPC-Protocol.xml#Messages">JSON-RPC Messages endpoint</eref>.</t>
+              <section title="Method Details">
+                <section title="send" anchor="osapi.messages.send">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.messages.send(params)
+                  </t>
+                  <t>
+                    Description: Builds a request to send a message from the Messages JSON-RPC service.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        AuthToken auth = HttpRequest.Authorization,
+                        <vspace blankLines='0' />
+                        String userId = "@me",
+                        <vspace blankLines='0' />
+                        opensocial.Message message 
+                        <vspace blankLines='0' />                        
+                        }</c>
+                      <c>An optional JSON object containing request parameters.  See the send operation of the <eref target="./RPC-Protocol.xml#Messages">JSON-RPC Messages service</eref> for more details.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information from the <eref target="./RPC-Protocol.xml#Messages">JSON-RPC Messages service</eref>.
+                      </c>
+                    </texttable>
+                  </t>   
+                </section>                
+              </section>
+              <section title="Examples">
+                <figure>
+                  <preamble>An example illustrating how to send a message using osapi.messages.send():</preamble>
+                  <artwork>
+var params = {
+    auth: {"default" : null, "type" : "AuthToken"},
+    message: {
+        "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+        "title" : "You have a message from Joe",
+        "body" : "Some content",
+        "type" : "EMAIL"
+    },
+};
+osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
+                  </artwork>
+                </figure>
+              </section>
+            </section>
+            <section title="osapi.http" anchor="osapi.http">
+              <t>Service object for making HTTP requests to third party servers. This is not a JSON-RPC endpoint, but a third party web service.</t>
+              <section title="Method Details">
+                <section title="head" anchor="osapi.http.head">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.http.head(params)
+                  </t>
+                  <t>
+                    Description: Creates a HEAD request to an arbitrary URL. 
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>url</c>
+                      <c>String</c>
+                      <c>The URL where the content is located</c>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        Map.&lt;String, Array.&lt;String&gt;&gt; headers,
+                        <vspace blankLines='0' />
+                        String format = "json",
+                        <vspace blankLines='0' />
+                        int refreshInterval,
+                        <vspace blankLines='0' />
+                        String authz = "none",
+                        <vspace blankLines='0' />
+                        Boolean sign_viewer = true,
+                        <vspace blankLines='0' />
+                        Boolean sign_owner = true,
+                        <vspace blankLines='0' />
+                        String oauth_service_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_token_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_request_token,
+                        <vspace blankLines='0' />
+                        String oauth_request_token_secret,
+                        <vspace blankLines='0' />
+                        String oauth_use_token,
+                        <vspace blankLines='0' />
+                        }</c>
+                      <c>Takes an optional parameter that is a JSON object containing parameters and values similar to the attributes of the <eref target="./OpenSocial-Data-Pipelining.xml#HttpRequest">&lt;os:HttpRequest&gt;</eref> tag.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information an arbitrary URL.
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="get" anchor="osapi.http.get">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.http.get(params)
+                  </t>
+                  <t>
+                    Description: Creates a GET request to an arbitrary URL. 
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>url</c>
+                      <c>String</c>
+                      <c>The URL where the content is located</c>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        Map.&lt;String, Array.&lt;String&gt;&gt; headers,
+                        <vspace blankLines='0' />
+                        String format = "json",
+                        <vspace blankLines='0' />
+                        int refreshInterval,
+                        <vspace blankLines='0' />
+                        String authz = "none",
+                        <vspace blankLines='0' />
+                        Boolean sign_viewer = true,
+                        <vspace blankLines='0' />
+                        Boolean sign_owner = true,
+                        <vspace blankLines='0' />
+                        String oauth_service_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_token_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_request_token,
+                        <vspace blankLines='0' />
+                        String oauth_request_token_secret,
+                        <vspace blankLines='0' />
+                        String oauth_use_token,
+                        <vspace blankLines='0' />
+                        }</c>
+                        <c>Takes an optional parameter that is a JSON object containing parameters and values similar to the attributes of the <eref target="./OpenSocial-Data-Pipelining.xml#HttpRequest">&lt;os:HttpRequest&gt;</eref> tag.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information an arbitrary URL.
+                      </c>
+                    </texttable>
+                  </t>
+                </section>
+                <section title="put" anchor="osapi.http.put">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.http.put(params)
+                  </t>
+                  <t>
+                    Description: Creates a PUT request to an arbitrary URL. 
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>url</c>
+                      <c>String</c>
+                      <c>The URL where the content is located</c>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        Map.&lt;String, Array.&lt;String&gt;&gt; headers,
+                        <vspace blankLines='0' />
+                        String body,
+                        <vspace blankLines='0' />
+                        String format = "json",
+                        <vspace blankLines='0' />
+                        int refreshInterval,
+                        <vspace blankLines='0' />
+                        String authz = "none",
+                        <vspace blankLines='0' />
+                        Boolean sign_viewer = true,
+                        <vspace blankLines='0' />
+                        Boolean sign_owner = true,
+                        <vspace blankLines='0' />
+                        String oauth_service_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_token_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_request_token,
+                        <vspace blankLines='0' />
+                        String oauth_request_token_secret,
+                        <vspace blankLines='0' />
+                        String oauth_use_token,
+                        <vspace blankLines='0' />
+                        }</c>
+                        <c>Takes an optional parameter that is a JSON object containing parameters and values similar to the attributes of the <eref target="./OpenSocial-Data-Pipelining.xml#HttpRequest">&lt;os:HttpRequest&gt;</eref> tag.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information an arbitrary URL.
+                      </c>
+                    </texttable>
+                  </t>
+                </section>
+                <section title="post" anchor="osapi.http.post">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.http.post(params)
+                  </t>
+                  <t>
+                    Description: Creates a POST request to an arbitrary URL. 
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>url</c>
+                      <c>String</c>
+                      <c>The URL where the content is located</c>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        Map.&lt;String, Array.&lt;String&gt;&gt; headers,
+                        <vspace blankLines='0' />
+                        String body,
+                        <vspace blankLines='0' />
+                        String format = "json",
+                        <vspace blankLines='0' />
+                        int refreshInterval,
+                        <vspace blankLines='0' />
+                        String authz = "none",
+                        <vspace blankLines='0' />
+                        Boolean sign_viewer = true,
+                        <vspace blankLines='0' />
+                        Boolean sign_owner = true,
+                        <vspace blankLines='0' />
+                        String oauth_service_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_token_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_request_token,
+                        <vspace blankLines='0' />
+                        String oauth_request_token_secret,
+                        <vspace blankLines='0' />
+                        String oauth_use_token,
+                        <vspace blankLines='0' />
+                        }</c>
+                        <c>Takes an optional parameter that is a JSON object containing parameters and values similar to the attributes of the <eref target="./OpenSocial-Data-Pipelining.xml#HttpRequest">&lt;os:HttpRequest&gt;</eref> tag.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information an arbitrary URL.
+                      </c>
+                    </texttable>
+                  </t>
+                </section>
+                <section title="delete" anchor="osapi.http.delete">
+                  <t>
+                    &lt;static&gt; Type: {<xref target="osapi.Request">osapi.Request</xref>} osapi.http.delete(params)
+                  </t>
+                  <t>
+                    Description: Creates a DELETE request to an arbitrary URL. 
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>url</c>
+                      <c>String</c>
+                      <c>The URL where the content is located</c>
+                      <c>params</c>
+                      <c>
+                        {
+                        <vspace blankLines='0' />
+                        Map.&lt;String, Array.&lt;String&gt;&gt; headers,
+                        <vspace blankLines='0' />
+                        String format = "json",
+                        <vspace blankLines='0' />
+                        int refreshInterval,
+                        <vspace blankLines='0' />
+                        String authz = "none",
+                        <vspace blankLines='0' />
+                        Boolean sign_viewer = true,
+                        <vspace blankLines='0' />
+                        Boolean sign_owner = true,
+                        <vspace blankLines='0' />
+                        String oauth_service_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_token_name = "",
+                        <vspace blankLines='0' />
+                        String oauth_request_token,
+                        <vspace blankLines='0' />
+                        String oauth_request_token_secret,
+                        <vspace blankLines='0' />
+                        String oauth_use_token,
+                        <vspace blankLines='0' />
+                        }</c>
+                        <c>Takes an optional parameter that is a JSON object containing parameters and values similar to the attributes of the <eref target="./OpenSocial-Data-Pipelining.xml#HttpRequest">&lt;os:HttpRequest&gt;</eref> tag.</c>
+                    </texttable>
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.Request">osapi.Request</xref>
+                      </c>
+                      <c>
+                        A request to retrieve information an arbitrary URL.
+                      </c>
+                    </texttable>
+                  </t>
+                </section>
+              </section>
+              <section title="Examples">
+                <figure>
+                  <preamble>A simple example:</preamble>
+                  <artwork>
+osapi.http.get('http://www.somephotosite.com/latestphotos').execute(function(result) {
+  if (!result.error) {
+    alert('There are ' + result.photos.length + ' new photos');
+  }
+});
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>An example illustrating some available request parameters:</preamble>
+                  <artwork>
+var params = {
+    'format': 'json',
+    'headers': {'Content-Type': ['application/json;charset=utf-8'], "Accept-Language": ["en-us"]},
+    'body': {'numResults': 100, theme: 'beach'},
+    'authz': 'SIGNED',
+};
+osapi.http.post('http://www.somephotosite.com/prefs?uid=1234', params).execute(function(result) {
+  if (!result.error) {
+    alert('Request to update user preferences was successful');
+  }
+});
+                  </artwork>
+                </figure>
+              </section>
+            </section>
+          </section>
+          <section title="Service Requests">
+            <section title="Single Request Objects" anchor="osapi.Request">
+              <t>All methods of OS Lite service objects (e.g. osapi.people.get()) return a JavaScript object representing the request.  These objects MUST support the following method(s):</t>
+              <section title="Method Details">
+                <section title="execute" anchor="osapi.Request.execute">
+                  <t>
+                    &lt;static&gt; osapi.Request.execute(callback)
+                  </t>
+                  <t>
+                    Description: Executes the service request. Takes a callback for response processing.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>callback</c>
+                      <c>Function</c>
+                      <c>A callback function to handle the response.</c>
+                    </texttable>
+                  </t>   
+                </section>
+              </section>
+              <section title="Examples">
+                <figure>
+                  <preamble>A simple example to request the owner's friends:</preamble>
+                  <artwork>
+          osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
+            if (!result.error) {
+              alert('You have ' + ownerFriends.length + ' friends');
+            }
+          });
+                  </artwork>
+                </figure>
+              </section>
+            </section>
+            <section title="Batch Request Objects" anchor="osapi.BatchRequest">
+              <t>Service requests can be combined into a single batch request using the following methods:</t>
+              <section title="Method Details">
+                <section title="newBatch" anchor="osapi.newBatch">
+                  <t>&lt;static&gt; Type: {<xref target="osapi.BatchRequest">osapi.BatchRequest</xref>} osapi.newBatch()</t>
+                  <t>
+                    Description: Creates a new batch request.
+                  </t>
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.BatchRequest">osapi.BatchRequest</xref>
+                      </c>
+                      <c>
+                        A new batch request.
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="add" anchor="osapi.BatchRequest.add">
+                  <t>&lt;static&gt; Type: {<xref target="osapi.BatchRequest">osapi.BatchRequest</xref>} osapi.add(key, request)</t>
+                  <t>
+                    Description: Adds a service request to the batch associated with the specified key. A single batch request can contain both JSON-RPC calls (e.g. osapi.people.get()) and HTTP calls to third parties (e.g. osapi.http.get()).
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>key</c>
+                      <c>String</c>
+                      <c>A key to access the result of the given request from the parameter sent to the callback function.</c>
+                      <c>request</c>
+                      <c><xref target="osapi.Request">osapi.Request</xref></c>
+                      <c>A request to add to the batch.</c>
+                    </texttable>
+                  </t>   
+                  <t>
+                    Returns:
+                    <texttable>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>
+                        <xref target="osapi.BatchRequest">osapi.BatchRequest</xref>
+                      </c>
+                      <c>
+                        A batch request containing the given request (and any previously added requests).
+                      </c>
+                    </texttable>
+                  </t>                  
+                </section>
+                <section title="execute" anchor="osapi.BatchRequest.execute">
+                  <t>
+                    &lt;static&gt; osapi.Request.execute(callback)
+                  </t>
+                  <t>
+                    Description: Executes all of the requests in the batch.  Takes a callback for response processing, which is passed a JSON object mapping each request key to a JSON response object.
+                  </t>
+                  <t>
+                    Parameters:
+                    <texttable>
+                      <ttcol>Name</ttcol>
+                      <ttcol>Type</ttcol>
+                      <ttcol>Description</ttcol>
+                      <c>callback</c>
+                      <c>Function</c>
+                      <c>A callback function to handle the response.</c>
+                    </texttable>
+                  </t>   
+                </section>
+              </section>  
+              <section title="Examples">
+                <figure>
+                  <preamble>An example illustrating two requests batched together:</preamble>
+                  <artwork>
+          var batch = osapi.newBatch().
+             add("viewer", osapi.people.getViewer()).
+             add('activities', osapi.activities.get({ userId : '@viewer', groupId : '@self'})).
+
+          batch.execute(function(result) {
+            if (!result.error) {
+              alert('Hi, ' + result.viewer.name + '!');
+              alert('You have ' + result.activities.length + ' activities.');
+            }
+          });
+                  </artwork>
+                </figure>
+              </section>
+            </section>
+          </section>
+          <section title="Error Handling">
+            <t>The error handling works exactly as it does for the JSON-RPC interface, since this api is based on that protocol. The JSON object returned reflects any errors that occurred in the request. This breaks down into 3 types of errors:</t>
+            <list style="symbols">
+              <t>Network error, these return a top level error. For example, in the callback, the object passed will have an error object. 
+                <figure>
+                  <preamble>Example:</preamble>
+                  <artwork>
+osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
+  if (ownerFriends.error) {
+    alert('Error occurred: ' + error.message);
+  } else {
+    alert('You have ' + ownerFriends.length + ' friends');
+  }
+});
+                  </artwork>
+                </figure>
+              </t>
+              <t>Application Error for Single Request
+                <t>In this case, a top-level error object is set. Note, this is just like the previous error case.</t>
+                <figure>
+                  <preamble>Example:</preamble>
+                  <artwork>
+osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
+  if (ownerFriends.error) {
+    alert('Error occurred: ' + error.message);
+  } else {
+    alert('You have ' + ownerFriends.length + ' friends');
+  }
+});
+                  </artwork>
+                </figure>
+              </t>
+              <t>Application Error for a Batched Request. 
+                <t>In this case, a top-level error is set, but results are still returned for all individual requests that succeeded, if any. The individual request that failed has an error set.</t>
+                <t>Note that 'error' is reserved and may not be used</t>
                 <list style="symbols">
-	                <t>Has an input parameter which is a map of key/value pairs. These pairs match the named 
-                    parameters in the REST and RPC protocols.</t>
-	                <t>Returns JSON matching the JSON output of the REST and RPC protocols.</t>
-	                <t>APIs also include
-                        <list style="symbols">
-    	                    <t>Convenience functions (people.getViewer()), which set default parameters for existing 
-                            calls (people.get).</t>
-    	                    <t>Calls that may interact with the currently logged in user (osapi.ui.requestPermission()).</t>
-                        </list>
-                    </t>
-	                <t>Lightweight JS APIs will be in the "opensocial.data" namespace. "opensocial.data" will also be aliased as "osapi" for notational convenience.</t>
+                  <t>as a key to batch.add()</t>
+                  <t>as a property of a JSON RPC batch response item.
+                    <figure>
+                      <preamble>Example: Bailing out if there is any error in the batch:</preamble>
+                      <artwork>
+var batch = osapi.newBatch().
+    add("viewer", osapi.people.getViewer()).
+    add('activities', osapi.activities.get({ userId : '@viewer', groupId : '@self'})).
+
+batch.execute(function(result) {
+  if (result.error) {
+    alert("This batch had an error: " + error.message);
+  } else {alert('Hi, ' + result.viewer.name + '!');
+    alert('You have ' + result.activities.length + ' activities.');
+  }
+});
+                      </artwork>
+                    </figure>
+                    <figure>
+                      <preamble>Example: Processing any sub requests in the batch that succeeded:</preamble>
+                      <artwork>
+var batch = osapi.newBatch().
+   add('v', osapi.people.getViewer()).
+   add('vf', osapi.people.getViewerFriends());
+
+batch.execute(function(result) {
+ for (var name in result) {
+   if (result.hasOwnProperty(name)) {
+     if (result[name].error) {
+       gadgets.log("Found an error: ", result[name].error.message);
+     } else {
+       gadgets.log("Got some data: ", result[name]);
+     }
+   }
+ }
+});
+                      </artwork>
+                    </figure>
+                  </t>
                 </list>
               </t>
-              <section title="API Callbacks">
-                  <t>
-                      <list style="symbols">
-	                    <t>API methods be called individually with a callback function parameter. This callback is 
-                        returned with one parameter, which is the JSON object returned from the REST/RPC call.</t>
-	                    <t>API methods called as part of a request group. A request group includes a number of  API 
-                        calls, and the developer receives a callback when all requests have completed. The parameter 
-                        to the callback is an object of Batch JSON format (equivalent to the results of a batch RPC request).
-                          <list style="symbols">
-	                        <t>All items in a request group will be executed - errors within one item in the request group 
-                            do not affect processing of other items.</t>
-	                        <t>The container must execute all items in a request group must serially or in a manner 
-                            that is indistinguishable to serial execution.</t>
-                          </list>
-                        </t>
-	                    <t>All callbacks (for individual functions or for request groups) are executed asynchronously - 
-                        after the current JavaScript thread has finished processing. </t>
-                      </list>
-
-Implementations are not required to implement the request group as a JSON-RPC batch - the requests can be executed with separate HTTP requests from the browser.                       
-                  </t>
-              </section>
-              <section title="Method Signature">
-                  <t>
-                      <list style="symbols">
-	                    <t>Function signature is: restFunction(object json, function callback).</t>
-	                    <t>Second parameter is a callback function.
-                          <list style="symbols">
-	                        <t>This can be an explicit callback, defined by the developer.</t>
-	                        <t>If the developer needs to wait for N requests to execute before processing, 
-                            the developer will pass in batch('key') as the second parameter.</t>
-	                        <t>batch('key') creates a function that can be called back directly for queue 
-                            based implementations, but also can participate in HTTP batches for implementations 
-                            that combine multiple HTTP requests.</t>
-                          </list>
-                        </t>
-	                    <t>Output is a the JSON result of calling the underlying REST endpoint.</t>
-                      </list>
-
-                      Examples in the sections below will help clarify. 
-                  </t>
-              </section>
-              <section title="request*() Methods">
-                  <t>
-                    There are a number of API calls that allow for user interaction. User interaction may occur for two reasons:
-                    <list style="symbols">
-	                    <t>The container needs to ask permission of the user to complete the operation</t>
-	                    <t>The user is prompted to fill in request details (such as who to share the app with).</t>
-                    </list>
-                    API calls that start with "request" are UI calls. These calls:
-                    <list style="symbols">
-	                    <t>Can not participate in a request group. They must be called with a direct callback function.</t>
-	                    <t>May navigate away from the page. The contract is that either the callback function is called 
-                        or the container will navigate away from the app.</t>
-                    </list>
-                    Request calls often have equivalent REST/RPC calls. When they do, the parameters will be equivalent to 
-                    the RPC call and not documented in this proposal, and when not the parameters will be documented here.
-                  </t>
-                  <t>
-                    It is permissible to have a request*() API and a lightweight JS API equivalent, i.e. 
-                    activities.create() and activities.requestCreate(). The first will only succeed or fail, 
-                    but never prompt the user. 
-                  </t>
-              </section>
+            </list>
           </section>
-          <section title="Classes and Methods">
-              <t>
-                  Note that the documentation for functions that map to REST/RPC calls is intentionally minimal - these calls 
-                  are meant to map 1:1 with their RESTful counterparts, and we should refer to  
-                  <xref target="RESTful Protocol Specification"/> and <xref target="RPC Protocol Specification"/> for details.
-              </t>
-              <section title="osapi">
-                  <t>
-                    Base namespace for accessing data services is "osapi", which is an alias to "opensocial.data".
-                  </t>
-                  <t>
-                    Functions and properties:
-                    <list style="symbols">
-	                    <t>osapi.people - the PeopleService</t>
-	                    <t>osapi.activities - the ActivitesService</t>
-	                    <t>osapi.appdata - the AppDataService</t>
-	                    <t>osapi['SERVICE'] - returns the service named 'SERVICE'</t>
-	                    <t>osapi.newBatch() - creates a new Batch for execution</t>
-	                    <t>osapi.makeRequest() - makes a request to an arbitrary URL or JSON-RPC endpoint.</t>
-                    </list>
-                   </t>
-              </section>
-              <section title="osapi.Batch">
-                  <t>
-                    Class to support grouping of requests by the developer.
-                  </t>
-                  <t>
-                    Functions:
-                    <list style="symbols">
-	                    <t>osapi.Batch(string key) - Returns a callback that can be used as the 2nd parameter to a data requtst.</t>
-	                    <t>osapi.Batch.execute(callback) - executes all of the requests in the batch. 
-                        Callback is called with a JSON object with a key -> JSON map of all the responses.</t>
-                    </list>
-                    <figure>
-                        <preamble>Example</preamble>
-                        <artwork>
-var batch = osapi.newBatch();
-osapi.people.getViewer({fields: ['name', 'birthday']}, batch('viewer'));
-osapi.people.get({userId: '@owner', groupId: '@friends', batch('ownerFriends'));
-batch.execute(function(result) {
-  alert('Your name is ' + result.viewer.name + '!');
-  alert('You have ' + result.ownerFriends.length + ' friends!');
-});
-                        </artwork>
-                    </figure>
-                  </t>
-              </section>
-              <section title="osapi.makeRequest">
-                  <t>
-                    Call to make a request to an arbitrary URL or JSON-RPC endpoint.
-                  </t>
-                  <t>
-                    Functions:
-                    <list style="symbols">
-	                    <t>osapi.makeRequest(string urlOrMethod, object json, function callback) - 
-                        If urlOrMethod contains "/" char, it is interpreted as a URL, otherwise it is 
-                        interpretted as an RPC method of format "&lt;service-name&gt;.&lt;operation&gt;".</t> 
-                    </list>
-                    <figure>
-                        <preamble>Example</preamble>
-                        <artwork>
-var batch = osapi.newBatch();
-osapi.makeRequest('http://www.somephotosite.com', {userId: '123'}, batch('photos'));
-osapi.makeRequest('videos.get', {userId: '123'}, batch('videos'));
-osapi.people.get({userId: '@owner', groupId: '@friends', batch('ownerFriends'));
-batch.execute(function(result) {
-  alert('You have ' + result.photos.length + ' photos');
-  alert('You have ' + result.videos.length + ' videos');
-});
-
-osapi.makeRequest('videos.get', {userId: '123'}, function(result) {
-  alert('You have ' + result.videos.length + ' videos');
-});
-                        </artwork>
-                    </figure>
-                  </t>
-              </section>
-              <section title="osapi.people">
-                  <t>
-                    Object with functions that map to the people endpoint
-                  </t>
-                  <t>
-                    Functions:
-                    <list style="symbols">
-	                    <t>osapi.people.get() - maps to the people get endpoint. Returns an array of person JSON objects.</t>
-	                    <t>osapi.people.getViewer() - maps to the people get endpoint, with default userId of "@viewer". 
-                        Returns a single person.</t>
-	                    <t>osapi.people.getOwner() - maps to the people get endpoint, with default userId of "@owner". 
-                        Returns a single person.</t>
-                    </list>
-                    <figure>
-                        <preamble>Example</preamble>
-                        <artwork>
-osapi.people.getViewer(fields: ['name', 'birthday']}, batch('viewer'));
- 
-osapi.people.get({userId: '@owner', groupId: '@friends', function(ownerFriends) {
-  alert('You have ' + ownerFriends.length + ' friends');
-});
-                        </artwork>
-                    </figure>
-                  </t>
-              </section>
-              <section title="osapi.activities">
-                  <t>
-                    Object with functions that map to the activities endpoint
-                  </t>
-                  <t>
-                    Functions:
-                    <list style="symbols">
-	                    <t>osapi.activities.get() - maps to the activities get endpoint. Returns an array of activity JSON objects.</t>
-	                    <t>osapi.activities.create() - maps to the activities create endpoint.</t>
-	                    <t>osapi.ui.activity.requestCreate() - If the container allows the request to process, maps 
-                        to the activity.create endpoint.</t>
-                    </list>
-                    <figure>
-                        <preamble>Example</preamble>
-                        <artwork>
-osapi.activities.get({userId: '@viewer', groupId: '@friends', count: 20}, batch('activities'));
-osapi.activities.create({userId: '@viewer', activity: {title: 'Hello!', url: 'http://mysite.com'}}, batch('createActivity'));
-                        </artwork>
-                    </figure>
-
-                  </t>
-              </section>
-              <section title="osapi.appdata">
-                  <t>
-                    Object with functions that map to the app data endpoint.
-                  </t>
-                  <t>
-                    Functions:
-                    <list style="symbols">
-	                    <t>osapi.appdata.update() - maps to the app data update endpoint (all app data sets are updates).
-	                      <list style="symbols">
-	                        <t>Note: userId and groupId are not required for this call.  If omitted, "@viewer" and "@self" will be implied, respectively.</t>
-	                      </list>
-	                    </t>
-	                    <t>osapi.appdata.delete() - maps to the app data delete endpoint.
-	                      <list style="symbols">
-	                        <t>Note: userId and groupId are not required for this call.  If omitted, "@viewer" and "@self" will be implied, respectively.</t>
-	                      </list>
-	                    </t>
-                    </list>
-                    <figure>
-                        <preamble>Example</preamble>
-                        <artwork>
-osapi.appdata.get({userId: '@viewer', groupId: '@friends', keys: ['gifts']}, batch('gifts'));
-osapi.appdata.update({userId: '@viewer', data: {gifts: 'a crazed monkey'}}, batch('updateAppData'));
-osapi.appdata.delete({keys: ['gifts']}, batch('deleteAppData'));
-                        </artwork>
-                    </figure>
-                  </t>
-              </section>
-              <section title="osapi.messages">
-                  <t>
-                    Object with functions that map to the messages endpoint.
-                  </t>
-                  <t>
-                    Functions:
-                    <list style="symbols">
-	                    <t>osapi.messages.requestSend() - If the container allows the request to process, maps to the 
-                        messages.send RPC endpoint.</t>
-                    </list>
-
-                  </t>
-              </section>
-              <section title="osapi.ui">
-                  <t>
-Namespace for additional request*() functions with no REST/RPC equivalent Object with functions that may be intercepted by the container and interact with the user.
-                  </t>
-                  <t>
-                    Functions:
-                    <list style="symbols">
-	                    <t>osapi.ui.requestShareApp() - If the container allows the request to process, the container will send a sharing message to the users or groups represented in the "recipients" field, or prompt the viewer for recipients if not provided.
-                         <list style="symbols">
-         	                <t>There is no REST equivalent to this call.</t>
-         	                <t>Takes JSON object with two named fields:
-                                <list style="symbols">
-         	                        <t>recipients: Optional comma separated list of entity IDs, where entity can be a user or a group. 
-                                    See [recipient discussion] for details of the format.</t>
-         	                        <t>reason: Required string, reason why the application is being shared.</t>
-                                </list>
-                            </t>
-         	                <t>Returns success if the share request was accepted by the container
-                                <list style="symbols">
-         	                        <t>Note that this does not guarantee that the request makes it to the recipient.</t>
-                                </list>
-                            </t>
-                            <t>Returns a [standard error] if the request failed</t>
-                         </list>
-                        </t>
-	                    <t>osapi.ui.requestPermission() - Method to ask the container for prompt the user for additional permissions
-                            <list style="symbols">
-	                            <t>There is no REST equivalent to this call.</t>
-	                            <t>Takes JSON object with two named fields:
-                                    <list style="symbols">
-	                                    <t>permissions: comma separated list of string permissions requested.</t>
-	                                    <t>reason: string reason that the container will show the user why the app 
-                                        is asking for this permission.</t>
-                                    </list>
-                                </t>
-                            </list>
-                        </t>
-                     </list>
-                  </t>
-              </section>
-          </section>
+        </section>
       </section>
       <section title="API Class Reference">
         <section title="opensocial" anchor="opensocial">

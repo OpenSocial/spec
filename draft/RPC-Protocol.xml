@@ -737,7 +737,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</texttable>
 				</t>
 			</section>
-      <section title="People">
+			<section title="People" anchor="People">
 				<t>
 					service-name = "people"
 				</t>
@@ -821,7 +821,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</t>
 				</section>
 			</section>
-			<section title="Activities">
+			<section title="Activities" anchor="Activities">
 				<t>
 					service-name = "activities"
 				</t>
@@ -873,7 +873,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</t>
 				</section>
 			</section>
-			<section title="AppData">
+			<section title="AppData" anchor="AppData">
 				<t>
 					service-name = "appdata"
 				</t>
@@ -913,7 +913,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</t>
 				</section>
 			</section>
-			<section title="Messaging">
+			<section title="Messages" anchor="Messages">
 				<t>
 					service-name = "messages"
 				</t>
@@ -945,7 +945,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</t>
 				</section>
 			</section>
-			<section title="Albums">
+			<section title="Albums" anchor="Albums">
 				<t>
 					service-name = "albums"
 				</t>
@@ -970,7 +970,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</texttable>
 				</t>
 			</section>
-			<section title="MediaItem">
+			<section title="MediaItem" anchor="MediaItem">
 				<t>
 					service-name = "mediaItems"
 				</t>
@@ -996,7 +996,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</texttable>
 				</t>
 			</section>
-			<section title="Cache">
+			<section title="Cache" anchor="Cache">
 			  <t>
 			    The cache service is used to manage the resources cached by the container for a given application.
 			  </t>
@@ -1039,7 +1039,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 						<c>Content</c>
 					</texttable>
 				</t>
-        <section title="listMethods">
+  			<section title="listMethods" anchor="listMethods">
 				<t>
 					Containers MUST implement this operation which takes no parameters and returns an array of all methods
 					supported by the endpoint including the system methods.
@@ -1052,7 +1052,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</figure>
 				</t>
 			</section>
-        <section title="methodSignatures">
+			<section title="methodSignatures" anchor="methodSignatures">
 				<t>
 					Containers MUST implement this operation that returns a method signature describing the
 					types of the parameters, their default values and the type of the return value for a given
@@ -1101,7 +1101,7 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					the existence of the "required" field with a value of false.
 				</t>
 			</section>
-        <section title="methodHelp">
+			<section title="methodHelp" anchor="methodHelp">
 				<t>
 					Containers MAY implement this operation that returns a textual description of the operation
 					identified by the methodName parameter. A container can choose to return
