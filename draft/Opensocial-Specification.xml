@@ -935,19 +935,9 @@ Namespace for additional request*() functions with no REST/RPC equivalent Object
                 </texttable>
               </t>
             </section>
-            <section title="invalidateKeys" anchor="opensocial.invalidateKeys">
-              <t>              &lt;static&gt;                opensocial.invalidateKeys(invalidationKeys)</t>
-              <t>              Description: Invalidates a given collection of caching keys</t>
-              <t>
-                Parameters:                	<texttable>
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  <c>invalidationKeys</c>
-                  <c>string[]</c>
-                  <c>The list of keys to invalidate for this user and this application.</c>
-                </texttable>
-              </t>
+            <section title="invalidateCache" anchor="opensocial.invalidateCache">
+              <t>              &lt;static&gt;                opensocial.invalidateCache()</t>
+              <t>              Description: Invalidates all resources cached for the current viewer.</t>
             </section>
             <section title="newActivity" anchor="opensocial.newActivity">
               <t>

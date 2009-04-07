@@ -103,7 +103,7 @@
 			<t>Examples of the primary types of data follow. Each example shows representations in XML, JSON, and Atom, 
 			with the payload data highlighted for ease of comparison.</t>
 			<section title="Responses">
-			<t>The structure of the response object returned from a successful request for the JSON or XML 
+      <t>The structure of the response object returned from a successful request for the JSON or XML 
 			formats is as follows. The root element isresponse, which is shown explicitly as the root element 
 			in XML format, and is the anonymous root object returned when the format is json (i.e. in JSON, 
 			the response returned is the object value of the response node). The response node MUST contain 
@@ -782,10 +782,13 @@ GIF89a....&lt;binary data&gt;
 			</section>
 			
 			<section title="Invalidation">
-				<t>To invalidate content a developer's backend notifies the container of the content it 
-				wishes to invalidate by making a 2-legged OAuth call to the REST/RPC endpoint with one
-				or many keys to be invalidated. The consumer key in the 2-legged OAuth call is used by 
-				the container to identify the calling application. Keys have the following general form:
+				<t>
+				  Containers MUST support the invalidation endpoint even if they do not perform any
+				  caching and MUST provide an entry for it in their XRDS. To invalidate content a
+				  developer's backend notifies the container of the content it wishes to invalidate by
+				  making a 2-legged OAuth call to the REST/RPC endpoint with one or many keys to be
+				  invalidated. The consumer key in the 2-legged OAuth call is used by the container to
+				  identify the calling application. Keys have the following general form:
 					<figure>
 						<artwork>
 &lt;invalidation-key&gt; = url | &lt;opensocial id&gt;
@@ -793,8 +796,10 @@ GIF89a....&lt;binary data&gt;
 					</figure>
 					When invalidating opensocial id's containers MUST support invalidating both fully 
 					qualified opensocial ids of the form "&lt;domain&gt;:&lt;domain relative id&gt;", 
-					"&lt;domain&gt;.&lt;domain relative id&gt;", as well as ids of the form "&lt;domain relative id&gt;".
-					Each request accepts a repeated group of ids.
+					"&lt;domain&gt;.&lt;domain relative id&gt;", as well as ids of the form "&lt;domain
+					relative id&gt;".  Keys that refer to URLs MUST include a protocol prefix (e.g. 
+					'http://') so they can be distinguished from ids. Each request accepts a repeated group
+					of ids.
 					<figure>
 						<preamble>application/json representation:</preamble>
 						<artwork>
@@ -914,8 +919,8 @@ X-HTTP-Method-Override: PUT
          &lt;URI&gt;http://api.example.org/appData&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
-         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/invalidate&lt;/Type&gt;
-         &lt;URI&gt;http://api.example.org/invalidate&lt;/URI&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/cache/invalidate&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/cache/invalidate&lt;/URI&gt;
        &lt;/Service&gt;
        &lt;Service&gt;
          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/messages&lt;/Type&gt;
@@ -1180,7 +1185,7 @@ X-HTTP-Method-Override: PUT
 				</t>
 			</section>
 			<section title="Invalidation">
-				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/invalidate</t>
+				<t>XRDS Type: http://ns.opensocial.org/2008/opensocial/cache/invalidate</t>
                 <t>URI structure: n/a-- URI only accepts POST data.</t>
 				<t>An application can execute an invalidation request as a POST to the REST endpoint described 
 				in the containers XRDS or as a JSON-RPC call. Response codes have the following meanings:
@@ -1200,25 +1205,11 @@ X-HTTP-Method-Override: PUT
 					<figure>
 						<preamble>Invalidate the gadget spec and message bundle of an application using REST</preamble>
 						<artwork>
-POST /api/rest/invalidate
+POST /api/rest/cache/invalidate
 HOST opensocial.example.org
 Content-Type application/json
 {
-   invalidationKeys : [ "http://www.myapp.com/gadgetpec.xml", "http://www.myapp.com/messagebundle.xml"]
-}
- 						</artwork>
-					</figure>
-					<figure>
-						<preamble>Invalidate content for a set of users using JSON-RPC</preamble>
-						<artwork>
-POST /api/rpc
-HOST opensocial.example.org
-Content-Type application/json
-{
-   method : "invalidate.post",
-   params : {
-     invalidationKeys : [ "example.org:12345", "example.org:4567", "3456778"]
-   }
+   invalidationKeys : [ "http://www.myapp.com/gadgetspec.xml", "http://www.myapp.com/messagebundle.xml"]
 }
  						</artwork>
 					</figure>
@@ -2398,69 +2389,6 @@ Content-Type application/json
 			OpenSocial RESTful Protocol spec or the Portable Contacts spec should be considered in the context 
 			of both communities, and we should strive not to break compatibility unless it is truly necessary, 
 			e.g. if the goals of the two communities diverge significantly in the future. </t>
-		</section>
-		<section title="Cached Content Invalidation">
-			<t> Containers MUST support the invalidation endpoint even if they do not perform any caching and 
-			MUST provide an entry for it in their XRDS. To invalidate content a developers backend notifies 
-			the container of the content it wishes to invalidate by making a 2-legged OAuth call to the REST/RPC 
-			endpoint with one or many keys to be invalidated. The consumer key in the 2-legged OAuth call is used 
-			by the container to identify the calling application. Keys have the following general form
-				<figure>
-					<artwork>
-&lt;invalidation-key&gt; = url | &lt;opensocial id&gt;
-					</artwork>
-				</figure>
-			</t>
-			<t>
-				When invalidating opensocial id's containers MUST support invalidating both fully qualified 
-				opensocial ids of the form "&lt;domain&gt;:&lt;domain relative id&gt;" as well as 
-				ids of the form "&lt;domain relative id&gt;". 
-			</t>
-			<t>Each request accepts a repeated group of ids. 
-				<figure>
-					<preamble>application/json representation</preamble>
-					<artwork>
-{ invalidationKeys : [ &lt;invalidation-key&gt;, &lt;invalidation-key&gt;, ...] }
-					</artwork>
-				</figure>
-				<figure>
-					<preamble>application/xml representation</preamble>
-					<artwork>
-&lt;invalidationKeys&gt;
-   &lt;invalidationKey&gt;...&lt;/invalidationKey&gt;
-   &lt;invalidationKey&gt;...&lt;/invalidationKey&gt;
-&lt;/invalidationKeys&gt;
-					</artwork>
-				</figure>	
-			</t>					
-			<t>An application can execute an invalidation request as a POST to the 
-			REST endpoint described in the containers XRDS or as a JSON-RPC call. 
-			Response codes have the following meanings:
-				<list style="symbols">
-					<t>200 - Success, all invalidations processed successfully.</t>
-					<t>403 - Forbidden because authentication failed.</t>
-					<t>409 - The request was partially processed, the set of invalidation keys 
-					that were not honored MUST be included in the response body in the format the request was made.</t>
-				</list>
-			</t>
-			<t>Containers MAY reject invalidation requests for policy reasons. Containers MAY continue to serve content that 
-			has already been invalidated until the container is able to successfully fetch a replacement from it original source.</t>
-			<section title="Examples">
-				<t>
-					<figure>
-						<preamble>Invalidate the gadget spec and message bundle of an application using REST</preamble>
-						<artwork>
-POST /api/rest/invalidate
-HOST opensocial.example.org
-Content-Type application/json
-
-{
-   invalidationKeys : [ "http://www.myapp.com/gadgetpec.xml", "http://www.myapp.com/messagebundle.xml"]
-}							
-						</artwork>
-					</figure>
-				</t>
-			</section>
 		</section>
 	</middle>
 	<back>

@@ -490,6 +490,27 @@ GIF89....&lt;image data&gt;
 					</figure>
 				</t>
 			</section>
+			<section title="Invalidate content for a set of users">
+			  <t>
+			    This example illustrates how information for users and a static resources can be invalidated using the cache service.  The example shows how to specify a user with a global ID (which include the domain of the container) or a relative ID.  The static resource in this example is the gadget spec itself, but it could also be an image or message bundle file.
+		    </t>
+		    <t>
+  				<figure>
+	  				<preamble>Example:</preamble>
+		  			<artwork>
+POST /api/rpc
+HOST opensocial.example.org
+Content-Type application/json
+{
+   method : "cache.invalidate",
+   params : {
+     invalidationKeys : [ "example.org:12345", "example.org:4567", "3456778", "http://www.myapp.com/gadgetpec.xml"]
+   }
+}
+ 		  			</artwork>
+			  	</figure>
+		  	</t>
+			</section>
 		</section>
 		<section title="Naming Conventions">
 			<t>
@@ -975,6 +996,25 @@ a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e
 					</texttable>
 				</t>
 			</section>
+			<section title="Cache">
+			  <t>
+			    The cache service is used to manage the resources cached by the container for a given application.
+			  </t>
+		    <t>
+		      service-name = "cache"
+	      </t>
+	      <t>
+	        Operations Summary:
+					<texttable>
+						<ttcol align="left">Operation</ttcol>
+						<ttcol align="left">Parameters</ttcol>
+						<ttcol align="left">Return</ttcol>
+						<c>invalidate</c>
+						<c>AuthToken auth = HttpRequest.Authorization, Array.&lt;String&gt; invalidationKeys</c>
+						<c>void</c>
+					</texttable>
+				</t>
+		  </section>
       <section title="System">
 				<t>
 					The system service is used to introspect the endpoint for the set of available services and operations and for metadata about those services.
