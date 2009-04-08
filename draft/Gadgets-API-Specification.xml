@@ -21,7 +21,6 @@
     <keyword>JSON</keyword>
     <keyword>JavaScript Object Notation</keyword>
     <keyword>Atom</keyword>
-    <abstract>TODO: Add abstract</abstract>
   </front>
   <middle>
     <section title="Notation and Conventions">
@@ -825,8 +824,8 @@ gadgets.util.hasFeature(featureName)
 	<section title="gadgets.log" anchor="gadgets.log">
 		<t>
 			Used by
-			<xref target="gadgets.log.setLogLevel">
-				gadgets.log.setLogLevel
+			<xref target="gadgets.setLogLevel">
+				gadgets.setLogLevel
 			</xref>.
         	</t>
 		<section title="INFO" anchor="gadgets.log.INFO">
