@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
 <?rfc toc="yes"?>
-<!--<!DOCTYPE rfc SYSTEM 'rfcXXXX.dtd'>-->
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+                     "http://xml.resource.org/authoring/rfc2629.dtd" >
 <rfc ipr="full3978" docName="draft-opensocial-restful-protocol-specification-v0_9">
 	<front>
 		<title abbrev="OpenSocial REST">OpenSocial RESTful Protocol Specification v0.9</title>
