@@ -1143,7 +1143,7 @@ Content-Type application/json
 				A container MAY choose to support file uploads from browsers to the RPC endpoint and 
 				have the uploaded files be passed as parameters to the RPC. This is achieved by browsers 
 				posting a form which contains the files to the endpoint and including a form-parameter 
-				called "rpc" which contains the form-encoded RPC request. The form input element names 
+				called "request" which contains the form-encoded RPC request. The form input element names 
 				for the uploaded files will be bound to the corresponding parameter names on execution.
 			</t>
 		</section>
