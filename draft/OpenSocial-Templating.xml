@@ -402,7 +402,7 @@ data['Viewer']['Name']
 			            <t>
 			                        Data required for rendering of inline templates can be specified using the @require attribute.
 			                        The attribute value must be a comma-separated list of top-level variable names required to render this
-			                        template. If the application Data Context does not have any of these variables set, automatic rendering of
+			                        template. If the application Data Context does not have all of these variables set, automatic rendering of
 			                        the template will be deferred until the time they become available.  
                                                             <figure>
                                                                      <preamble>This template will only render when both ${Viewer} and ${Owner} are set</preamble>
