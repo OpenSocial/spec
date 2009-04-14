@@ -643,26 +643,6 @@ Content-Type application/json
 			<t>
 				When OAuth is used for authorization on a single RPC the OAuth signature uses the <xref target="urlAddressing">URL 
 				Addressing</xref> representation of the request without the auth param to calculate the signature base string.
-				When OAuth is used for authorization on a batch of RPCs the generation of the OAuth 
-				signature base string uses the same technique as <xref target="urlAddressing">URL 
-				Addressing</xref> to convert a sub-request 
-				into a list of query parameters with the addition of adding the method field into the query 
-				parameter list. Each parameter in the query string is prepended with the id of the sub-request 
-				for which it was generated and '.' . The conversion for <xref target="personEx"/> would look like:
-				<figure>
-					<artwork>
-a9fd76.method=people.get&amp;a9fd76.id=a9fd76&amp;a9fd76.params.userId=@me&amp;e453a.method=people.get&amp;e453a.id=e453a&amp;e453a.params.userId=@me&amp;e453a.params.groupId=@friends
-					</artwork>
-				</figure>
-			</t>
-			<t>
-				The remainder of the signing process is as per the OAuth spec i.e the query parameters are 
-				lexicographically sorted and a nonce and timestamp are added before the signing.
-			</t>
-			<t>
-				This allows for singing the full content of the request. In the case where a sub-request 
-				specifies its own Auth then that whole subrequest is omitted from the OAuth signature and 
-				a separate signature calculated for that sub-request.
 			</t>
 		</section>
 		<section title="Services">
