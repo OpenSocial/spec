@@ -652,9 +652,9 @@ data['Viewer']['Name']
 						<artwork>
 &lt;!-- Renaming variable ${Cur} --&gt;
 &lt;ul repeat="${Top.ViewerFriends}" var="Friend"&gt;
-  &lt;li repeat="${Friend.Activities}"&gt;
-    &lt;!-- Here ${Name} refers to ${Cur.Name}, a property of Activity --&gt;
-    ${Friend.Name} was ${Name}
+  &lt;li repeat="${Friend.Books}"&gt;
+    &lt;!-- Here ${Cur} refers to the current Book --&gt;
+    ${Friend.Name} likes to read ${Cur}
   &lt;/li&gt;  
 &lt;/ul&gt;
  
