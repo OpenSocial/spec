@@ -1,20 +1,25 @@
 #!/bin/bash
-
-if test $# -eq 0 ; then
-  echo usage: "${0##/*} [Dir name]"
+if test $# -lt 2 ; then
+  echo usage: "${0##/*} [Source dir name] [Target dir name]"
   exit
 fi
 
-for file in $(find $1 -type f -not -path "*/.svn*" -not -name "*tidy*" -name "*.xml") ; 
+output=$2
+
+rm -rf $output
+mkdir $output
+
+for filepath in $(find $1 -type f -not -path "*/.svn*" -not -name "*tidy*" -name "*.xml");
 do
+  file=${filepath#*/}
   filename=${file%.*}
   ext=${file#*.}
-  echo 
+  echo
   echo "Working on $filename.$ext"
-  
+
   # Add ASP tags so tidy won't wrap the <artwork> fields.
-  awk '{gsub(/<artwork>/, "<artwork><%"); gsub(/<\/artwork>/, "%></artwork>"); print}' $file > $filename.temp
-  
+  awk '{gsub(/<artwork>/, "<artwork><%"); gsub(/<\/artwork>/, "%></artwork>"); print}' $filepath > $output/$filename.temp
+
   # Run tidy
   tidy --input-xml yes \
        --wrap 80 \
@@ -29,21 +34,23 @@ do
        --char-encoding utf8 \
        --literal-attributes yes \
        --quiet yes \
-       $filename.temp > $filename.temp.tidy
+       $output/$filename.temp > $output/$filename.temp.tidy
   echo "Tidy exited with status $?"
-        
+
   # Remove the added ASP tags.
-  awk '{gsub(/^[ ]*<%/, ""); gsub(/^[ ]*%>/, "")}/./' $filename.temp.tidy > $filename.tidy.$ext
+  awk '{gsub(/^[ ]*<%/, ""); gsub(/^[ ]*%>/, "")}/./' $output/$filename.temp.tidy > $output/$filename.$ext
 
-  # Add a space after <xref ... /> unless it is followed by . or )
-  sed -i '' 's/\(<xref[^>]*\/>\)\([^.)]\)/\1 \2/g' $filename.tidy.$ext
+  # Add a space after <xref ... /> or <eref ... /> unless it is followed by ., or )
+  sed -i '' 's/\(<[ex]ref[^>]*\/>\)\([^.),]\)/\1 \2/g' $output/$filename.$ext
 
-  # Add a space after <xref ... >...</xref> unless it is followed by . or )
-  sed -i '' 's/\(<xref.*<\/xref>\)\([^.)]\)/\1 \2/g' $filename.tidy.$ext
+  # Add a space after </xref> or </eref> unless it is followed by ., or )
+  sed -i '' 's/\(<\/[ex]ref>\)\([^.),]\)/\1 \2/g' $output/$filename.$ext
 
-  echo "Rewrote <xref> tags"
+  echo "Rewrote <eref> and <xref> tags"
   
   # Clean up
-  rm $filename.temp $filename.temp.tidy
+  rm $output/$filename.temp $output/$filename.temp.tidy
 done
+
+cp $1/rfc2629.xslt $output
 
