@@ -180,15 +180,15 @@
 				</figure>
 			</t>
 			<t>
-			    os:HttpRequest produces a standard JSON-RPC object with "id", "error", and "data" properties.  The "data" object is not
-			    available for 4xx or 5xx responses.  When available, the "data" object in turn contains:
+			    os:HttpRequest produces a standard JSON-RPC object with "id", "error", and "result" properties.  The "result" object is not
+			    available for 4xx or 5xx responses.  When available, the "result" object in turn contains:
 			    <list style="symbols">
 			    	<t>content {object} If @format is "text", the string content of the response.  If @format is "json", the parsed JSON
 			    	  object or array of the response.  If a JSON response cannot be parsed, a 406 (Not Acceptable) error code will be produced.</t>
 			    	<t>headers {object} An optional object with response header names as keys, and the header values as per-key arrays.</t>
 			    	<t>status {int} The HTTP status code.</t>
 			    </list>
-			    
+
 			    For errors, the "message" property MUST NOT contain the response body, but
 			    SHOULD contain a descriptive message describing the HTTP error.
 			    The error MAY contain a data block providing the content and headers.
@@ -196,14 +196,14 @@
 					<preamble>Examples:</preamble>
 					<artwork>
 // @format='text' example
-{data: {
+{result: {
 	content: 'Hi there!',
 	status: 200,
 	headers: {'Content-Type': ['text/plain;charset=utf-8']}
 }}
 
 // @format='json' example
-{data: {
+{result: {
 	content: {'hi': 'there!'},
 	status: 200,
 	headers: {'Content-Type': ['application/json;charset=utf-8']}
@@ -231,7 +231,7 @@
 					</artwork>
 				</figure>
 			</t>
-		</section>
+    </section>
 		<section title="Tag: &lt;os:PeopleRequest&gt;" anchor="PeopleRequest">
 			<t>
 				Request to get profile information for a group or list of people.  This is equivalent to using &lt;os:DataRequest&gt; with
@@ -584,21 +584,21 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
 					<date month='January' year='2009' />
 				</front>
 			</reference>
-		    <reference anchor='JSPEL' target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
-		        <front>
-		            <title>Java Server Pages Expression Language</title>
-		            <author initials='K.' surname='Chung'
-		                    fullname='Kin-Man Chung'>
-		            </author>
-		            <author initials='P.' surname='DeLisle'
-		                    fullname='Pierre Delisle'>
-		            </author>
-		            <author initials='M.' surname='Roth'
-		                    fullname='Mark Roth'>
-		            </author>
-		            <date month='May' year='2006' />
-		        </front>
-		    </reference>
+	    <reference anchor='JSPEL' target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
+	        <front>
+	            <title>Java Server Pages Expression Language</title>
+	            <author initials='K.' surname='Chung'
+	                    fullname='Kin-Man Chung'>
+	            </author>
+	            <author initials='P.' surname='DeLisle'
+	                    fullname='Pierre Delisle'>
+	            </author>
+	            <author initials='M.' surname='Roth'
+	                    fullname='Mark Roth'>
+	            </author>
+	            <date month='May' year='2006' />
+	        </front>
+	    </reference>
 			<reference anchor="osspec" target="./Opensocial-Specification.xml">
 				<front>
 					<title>OpenSocial Specification v0.9</title>

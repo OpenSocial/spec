@@ -1617,11 +1617,23 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
               </section>
               <section title="Examples">
                 <figure>
-                  <preamble>A simple example:</preamble>
+                  <preamble>Suppose a request to http://www.somephotosite.com/latest returns the following JSON:</preamble>
                   <artwork>
-osapi.http.get('http://www.somephotosite.com/latestphotos').execute(function(result) {
+{
+  photos : [ "http://www.somephotosite.com/photos/1.jpg",
+             "http://www.somephotosite.com/photos/2.jpg",
+             "http://www.somephotosite.com/photos/3.jpg",
+           ],
+  lastUpdate : "Mon, 13 Apr 2009 23:17:04 GMT"
+}
+                  </artwork>
+                </figure>
+                <figure>
+                  <preamble>The data can be retrieved and accessed as follows:</preamble>
+                  <artwork>
+osapi.http.get('http://www.somephotosite.com/latest').execute(function(result) {
   if (!result.error) {
-    alert('There are ' + result.photos.length + ' new photos');
+    alert('There are ' + result.content.photos.length + ' new photos');
   }
 });
                   </artwork>
