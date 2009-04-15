@@ -847,91 +847,6 @@ gadgets.util.hasFeature(featureName)
 		</section>
 	</section>
       </section>
-
-      <section title="gadgets.io.AuthorizationType" anchor="gadgets.io.AuthorizationType">
-        <!-- ============================== class summary ========================== -->
-        <t>
-          Used by
-          <xref target="gadgets.io.RequestParameters">
-            RequestParameters
-          </xref>.
-        </t>
-        <!-- ============================== constructor details ==================== -->
-        <section title="Constructor" anchor="gadgets.io.AuthorizationType.ctor">
-          <t>        gadgets.io.AuthorizationType</t>
-          <t>
-          </t>
-        </section>
-        <section title="Field Details">
-          <section title="NONE" anchor="gadgets.io.AuthorizationType.NONE">
-            <t>              &lt;static&gt;               Member of: gadgets.io.AuthorizationType.NONE</t>
-            <t>
-              Description: No authorization.
-              This field may be used interchangeably with the string 'NONE'.
-            </t>
-          </section>
-          <section title="OAUTH" anchor="gadgets.io.AuthorizationType.OAUTH">
-            <t>              &lt;static&gt;               Member of: gadgets.io.AuthorizationType.OAUTH</t>
-            <t>
-              Description: The container will use OAuth for authentication.
-              This field may be used interchangeably with the string 'OAUTH'.
-            </t>
-          </section>
-          <section title="SIGNED" anchor="gadgets.io.AuthorizationType.SIGNED">
-            <t>              &lt;static&gt;               Member of: gadgets.io.AuthorizationType.SIGNED</t>
-            <t>
-              Description: The request will be signed by the container.
-              This field may be used interchangeably with the string 'SIGNED'.
-            </t>
-          </section>
-        </section>
-      </section>
-      <section title="gadgets.io.ContentType" anchor="gadgets.io.ContentType">
-        <!-- ============================== class summary ========================== -->
-        <t>
-          Used by
-          <xref target="gadgets.io.RequestParameters">
-            RequestParameters
-          </xref>.
-        </t>
-        <!-- ============================== constructor details ==================== -->
-        <section title="Constructor" anchor="gadgets.io.ContentType.ctor">
-          <t>        gadgets.io.ContentType</t>
-          <t>
-          </t>
-        </section>
-        <section title="Field Details">
-          <section title="DOM" anchor="gadgets.io.ContentType.DOM">
-            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.DOM</t>
-            <t>
-              Description: Returns a DOM object; used for fetching XML.
-              This field may be used interchangeably with the string 'DOM'.
-            </t>
-          </section>
-          <section title="FEED" anchor="gadgets.io.ContentType.FEED">
-            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.FEED</t>
-            <t>
-              Description: Returns a JSON representation of an RSS or Atom feed.
-              This field may be used interchangeably with the string 'FEED'.
-            </t>
-          </section>
-          <section title="JSON" anchor="gadgets.io.ContentType.JSON">
-            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.JSON</t>
-            <t>
-              Description: Returns a JSON object.
-              This field may be used interchangeably with the string 'JSON'.
-            </t>
-          </section>
-          <section title="TEXT" anchor="gadgets.io.ContentType.TEXT">
-            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.TEXT</t>
-            <t>
-              Description: Returns text; used for fetching HTML.
-              This field may be used interchangeably with the string 'TEXT'.
-            </t>
-          </section>
-        </section>
-      </section>
-
       <section title="gadgets.io" anchor="gadgets.io">
         <!-- ============================== class summary ========================== -->
         <t>    Provides remote content retrieval functions.</t>
@@ -1167,6 +1082,90 @@ gadgets.io.makeRequest(url, callback, params);
             </section>
           </section>
 
+        </section>
+      </section>
+
+      <section title="gadgets.io.AuthorizationType" anchor="gadgets.io.AuthorizationType">
+        <!-- ============================== class summary ========================== -->
+        <t>
+          Used by
+          <xref target="gadgets.io.RequestParameters">
+            RequestParameters
+          </xref>.
+        </t>
+        <!-- ============================== constructor details ==================== -->
+        <section title="Constructor" anchor="gadgets.io.AuthorizationType.ctor">
+          <t>        gadgets.io.AuthorizationType</t>
+          <t>
+          </t>
+        </section>
+        <section title="Field Details">
+          <section title="NONE" anchor="gadgets.io.AuthorizationType.NONE">
+            <t>              &lt;static&gt;               Member of: gadgets.io.AuthorizationType.NONE</t>
+            <t>
+              Description: No authorization.
+              This field may be used interchangeably with the string 'NONE'.
+            </t>
+          </section>
+          <section title="OAUTH" anchor="gadgets.io.AuthorizationType.OAUTH">
+            <t>              &lt;static&gt;               Member of: gadgets.io.AuthorizationType.OAUTH</t>
+            <t>
+              Description: The container will use OAuth for authentication.
+              This field may be used interchangeably with the string 'OAUTH'.
+            </t>
+          </section>
+          <section title="SIGNED" anchor="gadgets.io.AuthorizationType.SIGNED">
+            <t>              &lt;static&gt;               Member of: gadgets.io.AuthorizationType.SIGNED</t>
+            <t>
+              Description: The request will be signed by the container.
+              This field may be used interchangeably with the string 'SIGNED'.
+            </t>
+          </section>
+        </section>
+      </section>
+      <section title="gadgets.io.ContentType" anchor="gadgets.io.ContentType">
+        <!-- ============================== class summary ========================== -->
+        <t>
+          Used by
+          <xref target="gadgets.io.RequestParameters">
+            RequestParameters
+          </xref>.
+        </t>
+        <!-- ============================== constructor details ==================== -->
+        <section title="Constructor" anchor="gadgets.io.ContentType.ctor">
+          <t>        gadgets.io.ContentType</t>
+          <t>
+          </t>
+        </section>
+        <section title="Field Details">
+          <section title="DOM" anchor="gadgets.io.ContentType.DOM">
+            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.DOM</t>
+            <t>
+              Description: Returns a DOM object; used for fetching XML.
+              This field may be used interchangeably with the string 'DOM'.
+            </t>
+          </section>
+          <section title="FEED" anchor="gadgets.io.ContentType.FEED">
+            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.FEED</t>
+            <t>
+              Description: Returns a JSON representation of an RSS or Atom feed.
+              This field may be used interchangeably with the string 'FEED'.
+            </t>
+          </section>
+          <section title="JSON" anchor="gadgets.io.ContentType.JSON">
+            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.JSON</t>
+            <t>
+              Description: Returns a JSON object.
+              This field may be used interchangeably with the string 'JSON'.
+            </t>
+          </section>
+          <section title="TEXT" anchor="gadgets.io.ContentType.TEXT">
+            <t>              &lt;static&gt;               Member of: gadgets.io.ContentType.TEXT</t>
+            <t>
+              Description: Returns text; used for fetching HTML.
+              This field may be used interchangeably with the string 'TEXT'.
+            </t>
+          </section>
         </section>
       </section>
 
