@@ -4,10 +4,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="draft-opensocial-specification-v0_9">
+     docName="opensocial-specification-v0_9">
  <front>
-  <title abbrev="OpenSocial REST">OpenSocial Specification v0.9</title>
-  <author surname="opensocial"
+  <title abbrev="OpenSocial Specificaton">OpenSocial Specification v0.9</title>
+  <author surname="OpenSocial and Gadgets Specification Group"
           fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>

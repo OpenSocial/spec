@@ -4,11 +4,11 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="draft-opensocial-rpc-protocol-specification-v0_9">
+     docName="opensocial-rpc-protocol-specification-v0_9">
  <front>
-  <title abbrev="OpenSocial REST">OpenSocial RPC Protocol Specification
+  <title abbrev="OpenSocial RPC">OpenSocial RPC Protocol Specification
   v0.9</title>
-  <author surname="opensocial"
+  <author surname="OpenSocial and Gadgets Specification Group"
           fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>

@@ -2048,12 +2048,14 @@
   <!-- default case -->
   <xsl:if test="not($xml2rfc-private)">
     <myns:item>OpenSocial</myns:item>
+<!--
     <myns:item>
        <xsl:choose>
         <xsl:when test="/rfc/@ipr and not(/rfc/@number)">OpenSocial Draft</xsl:when>
         <xsl:otherwise>Request for Comments: <xsl:value-of select="/rfc/@number"/></xsl:otherwise>
       </xsl:choose>
     </myns:item>
+-->
     <xsl:if test="/rfc/@docName and $mode!='nroff'">
       <myns:item>
         &lt;<xsl:value-of select="/rfc/@docName" />&gt;
@@ -2087,6 +2089,7 @@
           <xsl:if test="not(/rfc/@number)"> (if approved)</xsl:if>
       </myns:item>
     </xsl:if>
+<!--    
     <xsl:if test="$mode!='nroff'">
       <myns:item>
         <xsl:choose>
@@ -2100,6 +2103,7 @@
         <xsl:call-template name="get-category-long" />
       </myns:item>
     </xsl:if>
+-->
   </xsl:if>
     
   <!-- private case -->

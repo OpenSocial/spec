@@ -4,11 +4,11 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="draft-opensocial-data-pipelining-specification-v0_9">
+     docName="opensocial-data-pipelining-specification-v0_9">
  <front>
-  <title abbrev="OpenSocial REST">OpenSocial Data Pipelining Specification
-  v0.9</title>
-  <author surname="opensocial"
+  <title abbrev="OpenSocial Data Pipelining">OpenSocial Data Pipelining 
+  Specification v0.9</title>
+  <author surname="OpenSocial and Gadgets Specification Group"
           fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>

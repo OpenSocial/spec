@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
 <?rfc toc="yes"?>
-<!--<!DOCTYPE rfc SYSTEM 'rfcXXXX.dtd'>-->
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="draft-opensocial-specification-release-notes">
+     docName="opensocial-specification-release-notes">
  <front>
   <title abbrev="OpenSocial Specification Release Notes">OpenSocial
   Specification Release Notes</title>
-  <author surname="opensocial"
+  <author surname="OpenSocial and Gadgets Specification Group"
           fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
