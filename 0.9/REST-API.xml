@@ -1,0 +1,2737 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+<?rfc toc="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-restful-protocol-specification-v0_9">
+ <front>
+  <title abbrev="OpenSocial REST">OpenSocial RESTful Protocol Specification
+  v0.9</title>
+  <author surname="OpenSocial and Gadgets Specification Group"
+          fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="April"
+        year="2009" />
+  <area>General</area>
+  <keyword>OpenSocial</keyword>
+  <keyword>social networking</keyword>
+  <keyword>REST</keyword>
+  <keyword>XML</keyword>
+  <keyword>Extensible Markup Language</keyword>
+  <keyword>JSON</keyword>
+  <keyword>JavaScript Object Notation</keyword>
+  <keyword>Atom</keyword>
+ </front>
+ <middle>
+  <section title="Notation and Conventions">
+   <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in 
+   <xref target="RFC2119">RFC2119</xref>. Domain name examples use 
+   <xref target="RFC2606">RFC2606</xref>.</t>
+  </section>
+  <section title="Overview">
+   <t>This API defines a language and platform neutral protocol for clients to
+   interact with OpenSocial container servers outside of gadgets on a web page.
+   As a protocol, it is intended to be reasonably easy to implement in any
+   language and on any platform. It should also be usable across a range of
+   clients, from gadgets operating within a web page to servers communicating
+   to synchronize data about a user.</t>
+   <t>The protocol operates primarily in terms of resources and operations on
+   them. It is defined on top of the HTTP protocol, and uses the standard HTTP
+   methods (GET, POST, PUT, DELETE, etc.) to retrieve and change server
+   state.</t>
+   <t>No single data representation is ideal for every client. This protocol
+   defines representations for each resource in three widely supported formats,
+   
+   <xref target="RFC4627">JSON</xref>, XML, and 
+   <xref target="RFC4287">Atom</xref> /
+   <xref target="RFC5023">AtomPub</xref>, using a set of generic mapping rules.
+   The mapping rules allow a server to write to a single interface rather than
+   implementing the protocol three times.</t>
+   <t>OpenSocial container servers are free to define additional
+   representations but MUST support at least the JSON and Atom formats for all
+   resources and XML for the people calls. XML MAY be supported for the rest of
+   the resources.</t>
+   <t>The protocol defines Activity, Person, Group, and AppData resources. Most
+   operations consist of retrieving (GET), updating (PUT), creating (POST or
+   PUT), or destroying (DELETE) these resources. It also specifies an optional
+   partial update feature which avoids sending large resources over the wire to
+   update just one field.</t>
+   <t>OpenSocial API Background details the underlying concepts used below;
+   this document assumes familiarity with the OpenSocial model.</t>
+  </section>
+  <section title="Data Representations"
+           anchor="dataRepresentations">
+   <t>Each resource has three representations, as JSON, XML, and Atom. All data
+   must be representable in each format. The XML and JSON formats have a one to
+   one mapping while the Atom format is defined separately for each type of
+   object and collection. Throughout this document, examples will only be given
+   in JSON and Atom. The XML representation can be mapped directly from the
+   JSON and MUST conform to the XSD in 
+   <xref target="XML_format_XSD" />.</t>
+   <t>Each resource is represented as a hierarchical tree of elements. Ordering
+   of elements within a parent element may or may not be significant, depending
+   on the context. Mapping consists of converting between the internal
+   hierarchy and the JSON/XML or Atom protocol format.</t>
+   <t>The set of allowed fields in each type of data is the same as the set
+   documented in 
+   <xref target="fieldNames" />.</t>
+   <t>The general rules for mapping between the Atom and JSON formats are as
+   follows. Each data type may add additional aliasing rules. 
+   <list style="symbols">
+    <t>The default location for all data in the Atom format is in
+    atom:entry/atom:content/datatype, where datatype is a root node naming the
+    type of data delivered: &lt;person&gt;, &lt;group&gt;, &lt;activity&gt;, or
+    &lt;appdata&gt;.</t>
+    <t>The field names are specified at the end of this document in
+    camelCase.</t>
+    <t>Strings are represented as strings in both formats.</t>
+    <t>Dates and timestamps are represented as strings using 
+    <xref target="RFC3339">RFC3339 Timestamps</xref> format date-time elements.
+    These are also known as "XSD Dates". In cases where only a day-of-the-year
+    is desired, e.g., a birthday, the year SHOULD be specified as 0000.</t>
+    <t>Enums are represented as objects with "displayvalue" (localizable,
+    customizable string) and "key" (key) fields.</t>
+    <t>Arrays are represented as arrays in the JSON representation and as
+    repeated fields in the XML representation.</t>
+    <t>Sub-objects are represented as sub-elements in both formats.</t>
+    <t>Fields are placed directly in the root object in the JSON format. In the
+    Atom format, they are by default placed under atom:content/datatype (e.g.,
+    atom:content/person for person data). Some fields are 'hoisted' and aliased
+    to standard Atom fields directly underneath atom:entry. There are three
+    standard aliases that apply to all data types: 
+    <list style="symbols">
+     <t>atom:entry/atom:id aliases the "id" field. The JSON format id is the
+     OpenSocial globally unique ID, which consists of the container domain
+     (e.g., example.org) followed by a colon and the container's id for that
+     person. The container specific id can only contain letters (A-Za-z),
+     numbers (0-9), dots (.), hyphens (-) and underscores (_). For example,
+     example.org:78gh37261ddfdf. In the Atom format, it is translated into the
+     required URI data type by prepending "urn:guid:" to the OpenSocial ID
+     string. These rules are intended to make mapping IDs between the RESTful
+     API and the JS API straightforward while preserving global uniqueness.</t>
+     <t>atom:entry/atom:updated aliases the JSON field indicating the most
+     recent update time if available (POSTED_TIME for Activity), or the
+     generation time if no better information is available.</t>
+     <t>atom:entry/atom:published aliases the JSON field indicating creation
+     time (POSTED_TIME for Activity).</t>
+    </list></t>
+   </list></t>
+   <t>Examples of the primary types of data follow. Each example shows
+   representations in XML, JSON, and Atom, with the payload data highlighted
+   for ease of comparison.</t>
+   <section title="Responses">
+    <t>The structure of the response object returned from a successful request
+    for the JSON or XML formats is as follows. The root element isresponse,
+    which is shown explicitly as the root element in XML format, and is the
+    anonymous root object returned when the format is json (i.e. in JSON, the
+    response returned is the object value of the response node). The response
+    node MUST contain the following child nodes, and MAY contain additional
+    nodes that the Service Provider wishes to add to expose additional data.
+    Note thatstartIndex, itemsPerPage, and totalResults are based on 
+    <xref target="OpenSearch" />.</t>
+    <t>
+     <list style="symbols">
+      <t>startIndex: the index of the first result returned in this response,
+      relative to the starting index of all results that would be returned if
+      no startIndex had been requested. In general, this will be equal to the
+      value requested by the startIndex, or 0 if no specific startIndex was
+      requested.</t>
+      <t>itemsPerPage: the number of results returned per page in this
+      response. In general, this will be equal to the count Query Parameter,
+      but MAY be less if the Service Provider is unwilling to return as many
+      results per page as requested, or if there are less than the requested
+      number of results left to return when starting at the current startIndex.
+      This field MUST be present if and only if a value for count is specified
+      in the request.</t>
+      <t>totalResults: the total number of contacts that would be returned if
+      there were no startIndex or count specified. This value tells the
+      Consumer how many total results to expect, regardless of the current
+      pagination being used, but taking into account the current filtering
+      options in the request.</t>
+      <t>entry: an array of objects, one for each item matching the request, as
+      defined in 
+      <xref target="personFields" />. For consistency of parsing, if the
+      request could possibly return multiple items (as is normally the case),
+      this value MUST always be an array of results, even if there happens to
+      be 0 or 1 matching results. If the request is specifically for a single
+      contact (e.g. because the request contains Additional Path Information
+      like /@me/@all/{id} or /@me/@self), then entry MUST be an object
+      containing the single item returned (i.e. "entry": [ { /* first item */ }
+      ] and "entry": { /* only item */ } respectively).</t>
+     </list>
+    </t>
+    <t>For example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+   "startIndex" : 1,
+   "itemsPerPage" : 10,
+   "totalResults" : 100,
+   "entry" : [
+      {...first item...},
+      {...second item...}
+      ...
+   ]
+}
+</artwork>
+    </figure>
+    <figure>
+     <preamble>or, for only one item:</preamble>
+     <artwork xml:space="preserve">
+{
+  "startIndex" : 1,
+  "itemsPerPage" : 10,
+  "totalResults" : 100,
+  "entry" : {...only item...}
+}
+</artwork>
+    </figure>
+    <figure>
+     <preamble>xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+   &lt;itemsPerPage&gt; 10 &lt;/itemsPerPage&gt;
+   &lt;totalResults&gt; 100 &lt;/totalResults&gt;
+   &lt;entry&gt;...first item...&lt;/entry&gt;
+   &lt;entry&gt;...second item...&lt;/entry&gt; 
+      ...
+&lt;/response&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>or, for only one item:</preamble>
+     <artwork xml:space="preserve">
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+   &lt;itemsPerPage&gt; 10 &lt;/itemsPerPage&gt;
+   &lt;totalResults&gt; 100 &lt;/totalResults&gt;
+   &lt;entry&gt;...first item...&lt;/entry&gt;
+&lt;/response&gt;
+</artwork>
+    </figure></t>
+    <t>The atom format uses the JSON to Atom mapping rules described above and
+    has a different base format than the XML: 
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlos:osearch="http://a9.com/-/spec/opensearch/1.1"&gt;
+  &lt;author&gt;&lt;uri&gt;urn:guid:example.org:58UIDCSIOP233FDKK3HD44&lt;/uri&gt;&lt;/author&gt;
+  &lt;link rel="next" href="http://api.example.org/..." /&gt;
+  &lt;osearch:totalResults&gt;100&lt;/osearch:totalResults&gt;
+  &lt;osearch:startIndex&gt;1&lt;/osearch:startIndex&gt;
+  &lt;osearch:itemsPerPage&gt;10&lt;/osearch:itemsPerPage&gt;
+  &lt;entry&gt;...first item...&lt;/entry&gt;
+  &lt;entry&gt;...second item...&lt;/entry&gt;
+  ...
+&lt;/feed&gt;
+</artwork>
+    </figure></t>
+   </section>
+   <section title="Person">
+    <t>A Person contains social network data about a single person. The same
+    record is used for contacts/friends and for profiles. See 
+    <xref target="personFields" /> for a full list of available fields and their
+    types. See also the general mapping rules in 
+    <xref target="dataRepresentations" />.</t>
+    <t>A minimal Person example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "example.org:34KJDCSKJN2HHF0DW20394",
+ "displayName" : "Janey",
+ "name" : {"formatted" : "Jane Doe"},
+ "gender" : "female"
+}       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;person xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+  &lt;displayName&gt;Janey&lt;/displayName&gt;
+  &lt;name&gt;
+    &lt;formatted&gt;Jane Doe&lt;/formatted&gt;
+  &lt;/name&gt;
+  &lt;gender&gt;female&lt;/gender&gt;
+&lt;/person&gt;       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;&lt;!-- person.id --&gt;
+ &lt;title&gt;Janey&lt;/title&gt;&lt;!-- person.displayName --&gt;
+ &lt;updated&gt;2008-03-15T10:00:00Z&lt;/updated&gt;&lt;!-- last profile edit, or datetime.utcnow() --&gt;
+ &lt;author&gt;&lt;name&gt;Janey&lt;/name&gt;&lt;/author&gt;&lt;!-- person.displayName --&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;person xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+     &lt;displayName&gt;Janey&lt;/displayName&gt;
+     &lt;name&gt;
+       &lt;formatted&gt;Jane Doe&lt;/formatted&gt;
+     &lt;/name&gt;
+     &lt;gender&gt;female&lt;/gender&gt;
+   &lt;/person&gt;
+ &lt;/content&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>Note: The atom:summary element is the appropriate place to put a
+    text or HTML representation of the structured data present in the content
+    element, and the atom:title element is the appropriate place to copy a
+    short descriptive name for the entry, such as name.unstructured. Servers
+    MAY choose to add these or other fields to make their feeds more useful for
+    generic aggregators or tools.</t>
+   </section>
+   <section title="Group">
+    <t>OpenSocial Groups are owned by people, and are used to tag or categorize
+    people and their relationships. The RESTful API supports querying for the
+    available groups for a given user. The groups are returned as a collection.
+    Each group has a display name, an identifier which is unique within the
+    groups owned by that person, and a URI link. A Group example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "example.org:34KJDCSKJN2HHF0DW20394/friends",
+ "title" : "Peeps",
+}       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;group xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;
+  &lt;title&gt;Peeps&lt;/title&gt;
+&lt;/group&gt;       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;&lt;!-- group.id --&gt;
+ &lt;title&gt;Friends of John Smith&lt;/title&gt;&lt;!-- group.title + person.displayName --&gt;
+ &lt;updated&gt;2008-03-15T10:00:00Z&lt;/updated&gt;&lt;!-- last significant group change, or datetime.utcnow() --&gt;
+ &lt;author&gt;&lt;name&gt;John Smith&lt;/name&gt;&lt;/author&gt;&lt;!-- person.displayName --&gt;
+ &lt;link rel="alternate" type="application/json" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends" /&gt;
+ &lt;link rel="alternate" type="application/atom+xml" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends?format=atom" /&gt;
+ &lt;link rel="alternate" type="application/xml" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends?format=xml" /&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;group xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;
+     &lt;title&gt;Peeps&lt;/title&gt;
+   &lt;/group&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>Groups only appear within Group Collections and are used to
+    retrieve a list of available groups for a given person.</t>
+   </section>
+   <section title="Activity">
+    <t>An OpenSocial Activity represents a short summary or notification of a
+    timestamped event, often with pointers for more information. See 
+    <xref target="activityFields" /> for a full list of available fields and
+    their types. Activities have extensive Atom hoisting rules to ensure
+    maximum compatibility with standard feed processing code: 
+    <list style="symbols">
+     <t>atom:entry/atom:title aliases "title"</t>
+     <t>atom:entry/atom:summary aliases "body"</t>
+     <t>atom:entry/atom:link@rel="self" aliases "url"</t>
+     <t>atom:entry/atom:icon aliases "faviconUrl"</t>
+     <t>atom:entry/atom:source/atom:title aliases "streamTitle"</t>
+     <t>atom:entry/atom:source/atom:link@rel="self" aliases "streamUrl"</t>
+     <t>atom:entry/atom:generator/atom:uri aliases "appId"</t>
+     <t>atom:entry/atom:author/atom:uri aliases "userId"</t>
+    </list>A minimal Activity example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "http://example.org/activities/example.org:87ead8dead6beef/self/af3778",
+ "title" : "&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;",
+ "updated" : "2008-02-20T23:35:37.266Z",
+ "body" : "Some details for some activity",
+ "bodyId" : "383777272",
+ "url" : "http://api.example.org/activity/feeds/.../af3778",
+ "userId" : "example.org:34KJDCSKJN2HHF0DW20394"
+}      
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;activity xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+  &lt;title&gt;&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;&lt;/title&gt;
+  &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;
+  &lt;body&gt;Some details for some activity&lt;/body&gt;
+  &lt;bodyId&gt;383777272&lt;/bodyId&gt;
+  &lt;url&gt;http://api.example.org/activity/feeds/.../af3778&lt;/url&gt;
+  &lt;userId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/userId&gt;
+&lt;/activity&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+ &lt;title&gt;some activity&lt;/title&gt;&lt;!-- activity.title or activity.titleId --&gt;
+ &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;&lt;!-- postedTime, or datetime.utcnow() --&gt;
+ &lt;author&gt;
+   &lt;uri&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/uri&gt;
+   &lt;name&gt;John Smith&lt;/name&gt; 
+ &lt;/author&gt;
+ &lt;link rel="self" type="application/atom+xml" href="http://api.example.org/activity/feeds/.../af3778" /&gt;
+ &lt;link rel="alternate" type="application/json" href="http://example.org/activities/example.org:87ead8dead6beef/self/af3778" /&gt;&lt;!-- alternate JSON response --&gt;
+ &lt;content type="application/xml"&gt;
+    &lt;activity xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+      &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+      &lt;title type="html"&gt;&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;&lt;/title&gt;
+      &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;
+      &lt;body&gt;Some details for some activity&lt;/body&gt;
+      &lt;bodyId&gt;383777272&lt;/bodyId&gt;
+      &lt;url&gt;http://api.example.org/activity/feeds/.../af3778&lt;/url&gt;
+      &lt;userId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/userId&gt;
+    &lt;/activity&gt;
+ &lt;/content&gt;
+&lt;/entry&gt;       
+</artwork>
+    </figure>Note: The title field is a string that may only have the following
+    html tags: &lt;b&gt;, &lt;i&gt;, &lt;a&gt;, &lt;span&gt;. The container may
+    ignore this formatting when rendering the activity.</t>
+   </section>
+   <section title="AppData">
+    <t>AppData stores uninterpreted key/value pairs on behalf of an
+    application. The standard unit of AppData is all of the key/value pairs
+    stored for a given app on behalf of a given user; however, the API supports
+    other types of queries (detailed below). To retrieve a subset of fields,
+    use the fields= selector syntax (detailed below).</t>
+    <t>The data within each field is assumed to be in JSON format and is
+    otherwise uninterpreted.</t>
+    <section title="An isolated AppData example."
+             anchor="appdataIsolatedExample">
+     <t>The first example is of a collection of key/value pairs for a
+     particular application/user pair: 
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+ "pokes" : 3,
+ "last_poke" : "2008-02-13T18:30:02Z"
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;entry&gt;
+    &lt;key&gt;pokes&lt;/key&gt;
+    &lt;value&gt;3&lt;/value&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;key&gt;last_poke&lt;/key&gt;
+    &lt;value&gt;2008-02-13T18:30:02Z&lt;/value&gt;
+  &lt;/entry&gt;
+&lt;/appData&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;  
+       &lt;pokes&gt;3&lt;/pokes&gt;
+       &lt;last_poke&gt;2008-02-13T18:30:02Z&lt;/last_poke&gt;
+   &lt;/appData&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;
+   &lt;url&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/url&gt;
+   &lt;name&gt;John Smith&lt;/name&gt;  
+ &lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+&lt;/entry&gt;        
+</artwork>
+     </figure></t>
+    </section>
+    <section title="An AppData Collection Example">
+     <t>In this example, a client has requested a collection of data that spans
+     multiple users. The result is a collection which, by default, is given a
+     special default JSON representation as a mapping from users to their data.
+     
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+ "entry" : {
+   "example.org:34KJDCSKJN2HHF0DW20394" : {"pokes" : 3, "last_poke" : "2008-02-13T18:30:02Z" },
+   "example.org:58UIDCSIOP233FDKK3HD44" : {"pokes" : 2, "last_poke" : "2007-12-16T18:30:02Z" }
+ }
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry&gt;
+ &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;personId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/personId&gt;
+   &lt;entry&gt;
+     &lt;key&gt;pokes&lt;/key&gt;
+     &lt;value&gt;3&lt;/value&gt;
+   &lt;/entry&gt;
+   &lt;entry&gt;
+     &lt;key&gt;last_poke&lt;/key&gt;
+     &lt;value&gt;2008-02-13T18:30:02Z&lt;/value&gt;
+   &lt;/entry&gt;
+ &lt;/appData&gt;        
+ &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;personId&gt;example.org:58UIDCSIOP233FDKK3HD44&lt;/personId&gt;
+   &lt;entry&gt;
+     &lt;key&gt;pokes&lt;/key&gt;
+     &lt;value&gt;2&lt;/value&gt;
+   &lt;/entry&gt;
+   &lt;entry&gt;
+     &lt;key&gt;last_poke&lt;/key&gt;
+     &lt;value&gt;2007-12-16T18:30:02Z&lt;/value&gt;
+   &lt;/entry&gt;
+ &lt;/appData&gt;
+&lt;/entry&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom&gt;
+ &lt;id&gt;...&lt;/id&gt;
+ &lt;title&gt;...&lt;/title&gt;
+ &lt;entry&gt;
+   &lt;content type="text/xml"&gt;
+     &lt;appData&gt;
+       &lt;pokes&gt;3&lt;/pokes&gt;
+       &lt;last_poke&gt;"2008-02-13T18:30:02Z"&lt;/last_poke&gt;
+     &lt;/appData&gt;
+   &lt;/content&gt;
+   &lt;title/&gt;
+   &lt;updated&gt;2008-02-13T18:30:02Z&lt;/updated&gt;
+   &lt;author&gt;&lt;url&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/url&gt;&lt;/author&gt;
+   &lt;id&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+ &lt;/entry&gt;
+ &lt;entry&gt;
+   &lt;content type="text/xml"&gt;
+     &lt;appData&gt;
+       &lt;pokes&gt;2&lt;/pokes&gt;
+       &lt;last_poke&gt;"2007-12-16T18:30:02Z"&lt;/last_poke&gt;
+     &lt;/appData&gt;
+   &lt;/content&gt;
+   &lt;title/&gt;
+   &lt;updated&gt;2007-12-16T18:30:02Z&lt;/updated&gt;
+   &lt;author&gt;&lt;url&gt;uurn:guid:example.org:58UIDCSIOP233FDKK3HD44&lt;/url&gt;&lt;/author&gt;
+   &lt;id&gt;urn:guid:example.org:58UIDCSIOP233FDKK3HD44&lt;/id&gt;  
+ &lt;/entry&gt;
+&lt;/feed&gt;        
+</artwork>
+     </figure></t>
+    </section>
+   </section>
+   <section title="Albums/MediaItem">
+    <section title="Albums">
+     <t>Albums support collections of media items (video, image, sound). 
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "44332211",
+  "thumbnailUrl" : "http://pages.example.org/albums/4433221-tn.png",
+  "caption" : "Example Album",
+  "description" : "This is an example album, and this text is an example description",
+  "location" : { "latitude": 0, "longitude": 0 },
+  "ownerId" : "example.org:55443322"
+}       
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;44332211&lt;/id&gt;
+  &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
+  &lt;caption&gt;Example Album&lt;/caption&gt;
+  &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
+  &lt;location&gt;
+     &lt;latitude&gt;0&lt;/latitude&gt;
+     &lt;longitude&gt;0&lt;/longitude&gt;
+  &lt;/location&gt;
+  &lt;ownerId&gt;example.org:55443322&lt;/ownerId&gt;
+&lt;/album&gt;       
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;44332211&lt;/id&gt;
+     &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
+     &lt;caption&gt;Example Album&lt;/caption&gt;
+     &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
+     &lt;location&gt;
+       &lt;latitude&gt;0&lt;/latitude&gt;
+       &lt;longitude&gt;0&lt;/longitude&gt;
+     &lt;/location&gt;
+     &lt;ownerId&gt;example.org:55443322&lt;/ownerId&gt;
+   &lt;/album&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;&lt;url&gt;example.org:55443322&lt;/url&gt;&lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:44332211&lt;/id&gt;
+&lt;/entry&gt;    
+</artwork>
+     </figure></t>
+    </section>
+    <section title="MediaItem">
+     <t>A minimal media item example: 
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "11223344",
+  "thumbnail_url" : "http://pages.example.org/images/11223344-tn.png",
+  "mime_type" : "image/png",
+  "type" : "image",
+  "url" : "http://pages.example.org/images/11223344.png",
+  "album_id" : "44332211"
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;MediaItem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;11223344&lt;/id&gt;
+  &lt;thumbnail_url&gt;http://pages.example.org/images/11223344-tn.png&lt;/thumbnail_url&gt;
+  &lt;mimeType&gt;image/png&lt;/mimeType&gt;
+  &lt;type&gt;image&lt;/type&gt;
+  &lt;url&gt;http://pages.example.org/images/11223344.png&lt;/url&gt;
+  &lt;albumId&gt;44332211&lt;/albumId&gt;
+&lt;MediaItem&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;mediaItem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;11223344&lt;/id&gt;
+     &lt;thumbnail_url&gt;http://pages.example.org/images/11223344-tn.png&lt;/thumbnail_url&gt;
+     &lt;mimeType&gt;image/png&lt;/mimeType&gt;
+     &lt;type&gt;image&lt;/type&gt;
+     &lt;url&gt;http://pages.example.org/images/11223344.png&lt;/url&gt;
+     &lt;albumId&gt;44332211&lt;/albumId&gt;
+   &lt;mediaItem&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;&lt;url&gt;example.org:55443322&lt;/url&gt;&lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:11223344&lt;/id&gt;
+&lt;/entry&gt;        
+</artwork>
+     </figure></t>
+    </section>
+   </section>
+   <section title="Content Upload">
+    <section title="Two Step Upload"
+             anchor="twoStepUpload">
+     <t>Content Upload is a generic mechanism to allow for a standard way to
+     upload content. A common place to apply content upload will be against an
+     existing Album or MediaItem endpoint. In most scenarios an uploaded
+     content is associated with creation of an entity. Upload of content
+     routinely causes the creation of the entity. For example, uploading a
+     photo causes the container to create a new media item. The application can
+     then update that MediaItem and set attributes via a second request at some
+     later time. The requests look like: 
+     <list>
+      <t>Step 1: Upload Photo</t>
+      <t>Step 2: Update Photo attributes (caption, description, etc.)</t>
+     </list>The two step request process is illustrated below.</t>
+     <t>Step 1: Upload the image in the album. 
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+POST /album/112233?mediaType=IMAGE HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/xml
+Content-Type: image/gif
+Content-Length: length
+GIF89a....&lt;binary data&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:ossearch="http://a9.com/-/spec/opensearch/1.1/"&gt;
+  &lt;author&gt;&lt;uri&gt;urn:guid:example.org:33445577722&lt;/uri&gt;&lt;/author&gt;
+  &lt;link rel="next" href="http://api.example.org/..." /&gt;
+  &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;content type="application/xml"&gt;
+      &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+      &lt;/mediaitem&gt;
+    &lt;/content&gt;
+    &lt;title /&gt;
+    &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+    &lt;author /&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+</artwork>
+     </figure></t>
+     <t>Step 2: PUT MediaItem details to MediaItem (id:223344) 
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+  &lt;content type="application/xml"&gt;
+    &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
+        &lt;caption&gt;Lena&lt;/caption&gt;
+    &lt;/mediaitem&gt;
+  &lt;/content&gt;
+  &lt;title /&gt;
+  &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+  &lt;author /&gt;
+&lt;/entry&gt;       
+      
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:ossearch="http://a9.com/-/spec/opensearch/1.1/"&gt;
+  &lt;author&gt;&lt;uri&gt;urn:guid:example.org:33445577722&lt;/uri&gt;&lt;/author&gt;
+  &lt;link rel="next" href="http://api.example.org/..." /&gt;
+  &lt;ossearch:totalResults&gt;100&lt;/ossearch:totalResults&gt;
+  &lt;ossearch:startIndex&gt;1&lt;/ossearch:startIndex&gt;
+  &lt;ossearch:itemsPerPage&gt;10&lt;/ossearch:itemsPerPage&gt;
+  &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;content type="application/xml"&gt;
+      &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
+        &lt;caption&gt;Lena&lt;/caption&gt;
+      &lt;/mediaitem&gt;
+    &lt;/content&gt;
+    &lt;title /&gt;
+    &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+    &lt;author /&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+</artwork>
+     </figure>The response indicates that the media item was updated.</t>
+     <t>Step 2: Upload the image in the media item place holder 
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+POST /album/112233/mediaitem/223344 HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/xml
+Content-Type: image/gif
+Content-Length: length
+GIF89a....&lt;binary data&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+  &lt;itemsPerPage&gt; 1 &lt;/itemsPerPage&gt;
+  &lt;totalResults&gt; 1 &lt;/totalResults&gt;
+  &lt;entry&gt; ... &lt;/entry&gt;
+&lt;/response&gt;       
+</artwork>
+     </figure></t>
+    </section>
+    <section title="Shortcut Upload Method">
+     <t>The shortcut upload mechanism is OPTIONAL. This two step process shown
+     above can be merged into one by a single POST request with the content
+     type set to the item being uploaded. The POST URL can optionally pass the
+     attributes. The Accept-type indicates the format of the response expected.
+     
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+POST /album/112233/mediaitem/?caption=Lena&amp;media_type=IMAGE HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/json
+Content-Type: image/gif
+Content-Length: length
+GIF89a....&lt;binary data&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+{
+  "startIndex" : 1,
+  "itemsPerPage" : 1,
+  "totalResults" : 1,
+  "entry" : {
+    "id" : "223344",
+    "caption" : "Lena",
+    "media_type" : "IMAGE",
+  }
+}        
+</artwork>
+     </figure></t>
+    </section>
+   </section>
+   <section title="Invalidation">
+    <t>Containers MUST support the invalidation endpoint even if they do not
+    perform any caching and MUST provide an entry for it in their XRDS. To
+    invalidate content a developer's backend notifies the container of the
+    content it wishes to invalidate by making a 2-legged OAuth call to the
+    REST/RPC endpoint with one or many keys to be invalidated. The consumer key
+    in the 2-legged OAuth call is used by the container to identify the calling
+    application. Keys have the following general form: 
+    <figure>
+     <artwork xml:space="preserve">
+&lt;invalidation-key&gt; = url | &lt;opensocial id&gt;
+</artwork>
+    </figure>When invalidating opensocial id's containers MUST support
+    invalidating both fully qualified opensocial ids of the form
+    "&lt;domain&gt;:&lt;domain relative id&gt;", "&lt;domain&gt;.&lt;domain
+    relative id&gt;", as well as ids of the form "&lt;domain relative id&gt;".
+    Keys that refer to URLs MUST include a protocol prefix (e.g. 'http://') so
+    they can be distinguished from ids. Each request accepts a repeated group
+    of ids. 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+ { invalidationKeys : [ &lt;invalidation-key&gt;, &lt;invalidation-key&gt;, ...] }        
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+ &lt;invalidationKeys&gt;
+    &lt;invalidationKey&gt;...&lt;/invalidationKey&gt;
+    &lt;invalidationKey&gt;...&lt;/invalidationKey&gt;
+ &lt;/invalidationKeys &gt;       
+</artwork>
+    </figure></t>
+   </section>
+  </section>
+  <section title="Operations">
+   <t>OpenSocial uses standard HTTP methods: GET to retrieve, PUT to update in
+   place, POST to create new, and DELETE to remove. POST is special; it
+   operates on collections and creates new activities, persons, or app data
+   within those collections, and returns the base URI for the created resource
+   in the Location: header, per AtomPub semantics. Restricted clients, or
+   clients behind restricted clients, which cannot use PUT or DELETE SHOULD
+   translate PUT and DELETE to POST operations with an additional
+   X-HTTP-Method-Override: header: 
+   <figure>
+    <artwork xml:space="preserve">
+POST /... HTTP/1.1
+...
+X-HTTP-Method-Override: PUT
+</artwork>
+   </figure>Servers SHOULD respond to POST+X-HTTP-Method-Override as if the
+   content of the header were the actual operation sent. Note: OpenSocial 0.9
+   does not support cross-domain JSONP (GET with callback), but servers MAY
+   offer this as an extension. It is RECOMMENDED that such servers implement
+   appropriate security and authorization controls.</t>
+  </section>
+  <section title="Request Authentication and Authorization Context">
+   <t>Each RESTful operation has a request context that usually includes
+   authentication and authorization information. Typically, the context
+   information includes the requestor id (the user initiating the request) and
+   app ID (the application, or whatever is acting as the user's agent). It may
+   include other container-specific information.</t>
+   <t>Containers MUST be an 
+   <xref target="OAuth Core 1.0" /> Service Provider (a web application that
+   allows access via OAuth). Containers MAY also support other ways to
+   establish a request context. Containers MUST also support the Consumer
+   Request OAuth extension, in which the end user has not directly authorized
+   the operation. Applications SHOULD ensure that the users have given prior
+   consent, implicitly or explicitly, to the operation or class of operations.
+   However, containers MAY require an additional prior trust relationship be
+   established by the app in order to allow use of Consumer Request OAuth.</t>
+   <t>If a Consumer has a user identifier and wishes to indicate that the
+   operation is being done on behalf of that particular user, it SHOULD provide
+   the OAuth extension parameter xoauth_requestor_id with the OAuth signed
+   parameters. Consumers SHOULD only provide this if the user has given prior
+   consent, implicitly or explicitly, to the operation or class of operations,
+   as it indicates that the operation is being done on behalf of the user.
+   Container SPs MUST either honor the parameter or ignore it as if it were not
+   provided.</t>
+   <t>Thus, a request context usually includes the requesting application (the
+   OAuth Consumer), and MAY include the requesting user, either implicitly via
+   an oauth_token or explicitly via xoauth_requestor_id. It may also include
+   additional information via extensions or other channels (cookies, URI
+   parameters, client SSL certificates, etc.) A container may also accept
+   requests with no authentication or authorization (authnz) information at all
+   for public data. A container may provide a public version (e.g., of a
+   profile) if no authnz information is provided.</t>
+   <t>Note that the data provided for a given RESTful URI MAY vary per
+   requestor or app. Thus, the meaning of the resource at a given URI is "the
+   view of the information available to the current requestor/app combination".
+   In the case where no information is available due to lack of authorization,
+   an HTTP 401 Unauthorized response SHOULD be returned to the client. In the
+   case where at least some view of the information is available, it SHOULD be
+   returned using a 200 status, with a standard OAuth WWW-Authenticate: header
+   indicating that additional information may be available when using a
+   different authnz context.</t>
+  </section>
+  <section title="Discovery">
+   <t>A container declares what collection and features it supports, and
+   provides templates for discovering them, via a simple discovery document. A
+   client starts the discovery process at the container's identifier URI (e.g.,
+   example.org). The full flow is available athttp://xrds-simple.net/core/1.0/;
+   in a nutshell: 
+   <list style="numbers">
+    <t>Client GETs {container-url} with Accept: application/xrds+xml</t>
+    <t>Container responds with either an X-XRDS-Location: header pointing to
+    the discovery document, or the document itself.</t>
+    <t>If the client received an X-XRDS-Location: header, follow it to get the
+    discovery document.</t>
+   </list>Once the client has the XRDS document, they have the complete set of
+   services supported by that service. All OpenSocial service types declare the
+   base URI in the XRDS URI element. Each service type declares the root URI
+   for the service. Service specific parameters are passed to each endpoint
+   using a fixed URI format. This format is defined by each service. The
+   discovery document is an XML file in the same format used for OpenID and
+   OAuth discovery, defined at http://xrds-simple.net/core/1.0/: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;XRDS xmlns="xri://$xrds"&gt;
+   &lt;XRD xmlns:simple="http://xrds-simple.net/core/1.0" xmlns="xri://$XRD*($v*2.0)" version="2.0"&gt;
+       &lt;Type&gt;xri://$xrds*simple&lt;/Type&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/people&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/people&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/groups&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/groups&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/activities&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/activities&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org//2008/opensocial/appData&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/appData&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/cache/invalidate&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/cache/invalidate&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/messages&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/messages&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/albums&lt;/Type&gt;
+          &lt;URI&gt;http://api.example.org/albums&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/mediaItems&lt;/Type&gt;
+          &lt;URI&gt;http://api.example.org/mediaItems&lt;/URI&gt;
+       &lt;/Service&gt;
+   &lt;/XRD&gt;
+&lt;/XRDS&gt;         
+</artwork>
+   </figure></t>
+   <t>Each Service advertises a service provided by the container. Each
+   container MUST support the service Types documented below and MAY support
+   others by advertising them in the discovery document. Each service comprises
+   a set of resources defined by the given URI Template (or URI, if there is
+   only a single resource). Clients follow the URIs and instantiate the
+   templates to find and operate on specific resources. (URI Template syntax is
+   documented at
+   http://www.ietf.org/internet-drafts/draft-gregorio-uritemplate-03.txt.)</t>
+   <t>The set of substitution variables is fixed for each service Type. The
+   core set of service Types and their substitution variables is documented
+   below. Extensions to OpenSocial SHOULD document their substitution
+   variables; note that a reasonable place to put human readable documentation
+   is at the namespace URI.</t>
+  </section>
+  <section title="The Core OpenSocial Service Types">
+   <t>This section defines the core types that every OpenSocial container MUST
+   support, their XRDS types, and their semantics. Unless otherwise specified,
+   all HTTP operations are generally allowed for any URI endpoint; a container
+   which wishes to specify the allowed operations SHOULD provide an HTTP Allow:
+   header for each resource listing the allowed operations.</t>
+   <t>Each service type defines an associated partial URI format. The base URI
+   for each service is found in the URI element associated with the service in
+   the discovery document. Each service type accepts parameters via the URL
+   path. Definitions are of the form 
+   <figure>
+    <artwork xml:space="preserve">
+{a}/{b}/{c}
+</artwork>
+   </figure>Parameters must be filled in using left to right ordering. If a
+   positional pattern is missing, no parameters to the right of that parameter
+   may be filled in. For example, if the preceding pattern was used and only
+   the value of the a parameter was known and set to @me, the complete URL
+   would be expressed as: 
+   <figure>
+    <artwork xml:space="preserve">
+[Discovery URI]/@me
+</artwork>
+   </figure></t>
+   <section title="People">
+    <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/people</t>
+    <t>URI structure: {guid}/{selector}/{pid}</t>
+    <t>guid : Container-globally-unique user identifier; identifies owner of
+    the people data, or @me to indicate the requestor should be used.</t>
+    <t>selector : One of 
+    <list style="symbols">
+     <t>A user-defined local group name to select a group of contacts (a
+     collection)</t>
+     <t>@self to select the person record for guid</t>
+     <t>@all to select all the universal set of contacts (a collection)</t>
+     <t>@friends to select the subset of contacts which are friends (a
+     collection)</t>
+    </list></t>
+    <t>pid : In the context of a collection selector, picks a single person
+    record from that collection. The pid value MAY be relative to that
+    collection.</t>
+    <t>People URI examples: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>/people/{guid}/@all</c>
+     <c>Collection of all people connected to user {guid}</c>
+     <c>/people/{guid}/@friends</c>
+     <c align="left">Collection of all friends of user {guid}; subset of
+     @all</c>
+     <c>/people/{guid}/{groupid}</c>
+     <c align="left">Collection of all people connected to user {guid} in group
+     {groupid}</c>
+     <c>/people/{guid}/@all/{pid}</c>
+     <c align="left">Individual person record for a specific person known to
+     {guid}; shows {guid}'s view of {pid}.</c>
+     <c>/people/{guid}/@self</c>
+     <c align="left">Profile record for user {guid}</c>
+     <c>/people/@me/@self</c>
+     <c align="left">Profile record for requestor</c>
+     <c>/people/@supportedFields</c>
+     <c align="left">Returns all of the fields that the container supports on
+     people objects as an array in json and a repeated list in atom.</c>
+     <c>/people/{guid}/@deleted</c>
+     <c align="left">This is an OPTIONAL api that will return all of the people
+     connected to the user {guid} that have been deleted. This should usually
+     be combined with a updatedSince param.</c>
+    </texttable></t>
+    <t>Friends MAY be added by POSTing to the appropriate collection (e.g.,
+    /people/{guid}/@friends). Containers MAY require a dual opt-in process
+    before the friend record appears in the collection, and in this case SHOULD
+    return a 202 Accepted response, indicating that the request is 'in flight'
+    and may or may not be ultimately successful.</t>
+    <t>If the guid is set to -1, the value for the anonymous user MUST be
+    returned. The value for the name and nickname fields can either be blank or
+    set to an appropriate value such as 'Guest', 'Anonymous', etc.</t>
+    <t>All AppData for the person or collection of people returned by a given
+    query may be fetched by specifying the field "appdata" in the fields query
+    parameter. If only a subset of AppData fields are desired, they may be
+    fetched by specifying "appdata.&lt;fieldname&gt;" for each field that needs
+    to be fetched.</t>
+    <t>Examples: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>/people/@me/@self?fields=appdata</c>
+     <c align="left">All appdata for the requestor.</c>
+     <c>/people/@me/@self?fields=appdata.key1,appdata.key2</c>
+     <c align="left">Appdata stored under the keys "key1" and "key2" for the
+     requestor.</c>
+    </texttable></t>
+   </section>
+   <section title="Groups">
+    <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/groups</t>
+    <t>URI structure: {guid}</t>
+    <t>guid : Container-globally-unique user identifier; identifies owner of
+    the people data; can be @me to indicate auth[nz] requestor should be
+    used.</t>
+    <t>Groups URI examples: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>/groups/{guid}</c>
+     <c>Collection of groups associated with user {guid}</c>
+    </texttable></t>
+   </section>
+   <section title="Activities">
+    <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/activities</t>
+    <t>URI structure: {guid}/{selector}/{appId}</t>
+    <t>guid : Container-globally-unique user identifier; owner or recipient of
+    the activity data, or @me to indicate the requestor should be used</t>
+    <t>selector : One of 
+    <list style="numbers">
+     <t>A user-defined local group name to select activities from people in the
+     group (a collection)</t>
+     <t>@self to select the activities for user guid (a collection)</t>
+     <t>@all to select all the universal set of contacts (a collection)</t>
+     <t>@friends to select the activities from friends only (a collection)</t>
+    </list></t>
+    <t>appId : The app id to select activities for, or @app to indicate the
+    currently requesting application.</t>
+    <t>Activity URI examples: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>/activities/{guid}/@self</c>
+     <c>Collection of activities generated by given user</c>
+     <c>/activities/{guid}/@self/{appid}</c>
+     <c>Collection of activities generated by an app for a given user</c>
+     <c>/activities/{guid}/@friends</c>
+     <c>Collection of activities for friends of the given user {guid}</c>
+     <c>/activities/{guid}/@friends/{appid}</c>
+     <c>Collection of activities generated by an app for friends of the given
+     user {guid}</c>
+     <c>/activities/{guid}/{groupid}</c>
+     <c>Collection of activities for people in group {groupid} belonging to
+     given user {uid}</c>
+     <c>/activities/{guid}/{groupid}/{appid}</c>
+     <c>Collection of activities generated by an app for people in group
+     {groupid} belonging to given user {uid}</c>
+     <c>/activities/{guid}/@self/{appid}/{activityid}</c>
+     <c>Individual activity resource; usually discovered from collection</c>
+     <c>/activities/@supportedFields</c>
+     <c>Returns all of the fields that the container supports on activity
+     objects as an array in json and a repeated list in atom.</c>
+    </texttable></t>
+   </section>
+   <section title="AppData">
+    <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/appData</t>
+    <t>URI structure: {selector}/{appId}</t>
+    <t>selector : One of 
+    <list style="numbers">
+     <t>A user-defined local group name to select appData from people in the
+     group (a collection)</t>
+     <t>@self to select the appData for user guid only (a collection)</t>
+     <t>@all to select all the universal set of contacts (a collection)</t>
+     <t>@friends to select the appData from friends of guid only (a
+     collection)</t>
+    </list></t>
+    <t>appId : The app id to select activities for, or @app to indicate the
+    currently requesting application.</t>
+    <t>AppData URI examples: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>/appData/{guid}/@self/{appid}</c>
+     <c>All app data for user {guid}, app {appid}</c>
+     <c>/appData/{guid}/@friends/{appid}</c>
+     <c>All app data for friends of user {guid} and app {appid}; read-only
+     (only GET and HEAD supported)</c>
+     <c>/appData/{guid}/@self/{appid}?fields=highscore</c>
+     <c>Just the highscore field for user {guid}, app {appid}</c>
+    </texttable></t>
+   </section>
+   <section title="Albums">
+    <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/albums</t>
+    <t>URI structure: {guid}/{groupId}/{optionalAlbumId}</t>
+    <t>guid: ID of the user or @me to indicate the requestor should be used</t>
+    <t>groupId: 
+    <list style="symbols">
+     <t>@self: albums for the userId (support for this parameter is
+     optional)</t>
+     <t>@friends: friends of the userId</t>
+     <t>@all: Albums for all of the people in that user's group.</t>
+     <t>@groupId: Albums for all of the people in a specific group.</t>
+    </list></t>
+    <t>optionalAlbumId: Id of the album. When specified, returns media items
+    from the album.</t>
+    <t>Album URI examples: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>GET /albums/@me/@self</c>
+     <c>Returns a list of albums.</c>
+     <c>POST /albums/@me/@self</c>
+     <c>Creates a new album.</c>
+     <c>GET /albums/@me/@self/albumId</c>
+     <c>Returns only the specified album.</c>
+     <c>PUT /albums/@me/@self/albumId</c>
+     <c>Updates the specified album.</c>
+     <c>DELETE /albums/@me/@self/albumId</c>
+     <c>Deletes the specified album.</c>
+    </texttable></t>
+   </section>
+   <section title="MediaItems">
+    <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/mediaItems</t>
+    <t>URI structure:
+    {guid}/{groupId}/{optionalAlbumId}/{optionalMediaItemId}</t>
+    <t>guid: ID of the user or @me to indicate the requestor should be
+    used.</t>
+    <t>groupId: 
+    <list style="symbols">
+     <t>@self: Media Items for the userId (support for this parameter is
+     optional)</t>
+     <t>@friends: friends of the userId</t>
+     <t>@all: Media Items for all of the people in that user's group.</t>
+     <t>@groupId: Media Items for all of the people in a specific group.</t>
+    </list></t>
+    <t>optionalAlbumId: Id of the album. When specified, returns media items
+    from the album.</t>
+    <t>optionalMediaItemId: Id of a media item within an album. optionalAlbumId
+    is required to get to a specific media item.</t>
+    <t>MediaItem URI examples: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>GET /mediaitems/@me/@self/albumId</c>
+     <c>Returns the media items in the album.</c>
+     <c>POST /mediaitems/@me/@self/albumId</c>
+     <c>Creates a new media item.</c>
+     <c>GET /mediaitems/@me/@self/albumId/mediaItemId</c>
+     <c>Returns the media item.</c>
+     <c>PUT /mediaitems/@me/@self/albumId/mediaItemId</c>
+     <c>Updates the media item.</c>
+     <c>DELETE /mediaitems/@me/@self/albumId/mediaItemId</c>
+     <c>Deletes the media item.</c>
+    </texttable></t>
+   </section>
+   <section title="Invalidation">
+    <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/cache/invalidate</t>
+    <t>URI structure: n/a-- URI only accepts POST data.</t>
+    <t>An application can execute an invalidation request as a POST to the REST
+    endpoint described in the containers XRDS or as a JSON-RPC call. Response
+    codes have the following meanings: 
+    <list style="symbols">
+     <t>200 - Success, all invalidations processed successfully.</t>
+     <t>403 - Forbidden because authentication failed.</t>
+     <t>409 - The request was partially processed, the set of invalidation keys
+     that were not honored MUST be included in the response body in the format
+     the request was made.</t>
+    </list></t>
+    <t>Containers MAY reject invalidation requests for policy reasons.
+    Containers MAY continue to serve content that has already been invalidated
+    until the container is able to successfully fetch a replacement from it
+    original source.</t>
+    <t>Examples 
+    <figure>
+     <preamble>Invalidate the gadget spec and message bundle of an application
+     using REST</preamble>
+     <artwork xml:space="preserve">
+POST /api/rest/cache/invalidate
+HOST opensocial.example.org
+Content-Type application/json
+{
+   invalidationKeys : [ "http://www.myapp.com/gadgetspec.xml", "http://www.myapp.com/messagebundle.xml"]
+}
+</artwork>
+    </figure></t>
+   </section>
+   <section title="Standard Query Parameters"
+            anchor="standardQueryParameters">
+    <t>These additional query parameters may be used with any URI above. The
+    parameters startIndex and count are interpreted according to 
+    <xref target="OpenSearch" />. 
+    <texttable>
+     <ttcol align="left">Querystring Parameter</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>count={count}</c>
+     <c>Requests page size for paged collection. If no parameter is specified
+     the container can choose how many items in the collection should be
+     returned. However, the container SHOULD support a large default count
+     value so that all items can be returned by default.</c>
+     <c>filterBy={fieldname}</c>
+     <c>For a collection, return entries filtered by the given field.</c>
+     <c>filterOp={operation}</c>
+     <c>The operation to use when filtering a collection, defaults to
+     "contains". Valid values are contains, equals, startsWith, and
+     present.</c>
+     <c>filterValue={value}</c>
+     <c>The value to use when filtering a collection. For example,
+     filterBy=name&amp;filterOp=startsWith&amp;filterValue=John will return all
+     items whose name field starts with John. Johnny and John Doe would both be
+     included.)</c>
+     <c>format={format}</c>
+     <c>Format desired; one of (atom, json, xml); default is json if not
+     provided</c>
+     <c>fields={-join|,|field}</c>
+     <c>List of fields to include in representation or in the members of a
+     collection. If no fields are provided it is up to the container to decide
+     which fields to return. However, the set MUST include the minimum set of
+     fields. For people this is id, name, and thumbnailUrl. For activities this
+     is id and title. @all is accepted to indicate returning all available
+     fields.</c>
+     <c>networkDistance={networkDistance}</c>
+     <c>Modifies group-relative requests (@friends, etc.) to include the
+     transitive closure of all friends up to {networkDistance} links away. MAY
+     NOT be honored by the container.</c>
+     <c>sortBy={fieldname}</c>
+     <c>For a collection, return entries sorted by the given field.</c>
+     <c>sortOrder={order}</c>
+     <c>Can either be "ascending" or "descending", defaults to ascending. Used
+     to sort objects in a collection.</c>
+     <c>startIndex={startIndex}</c>
+     <c>Index into a paged collection.</c>
+     <c>updatedSince={xsdDateTime}</c>
+     <c>When specified the container should only return items whose updated
+     date is equal to or more recent then the specified value.</c>
+    </texttable>
+    <figure>
+     <preamble>Behavior of query parameters to determine if two people are
+     friends (important part is the query string):</preamble>
+     <artwork xml:space="preserve">
+/people/@me/@self?filterBy=@friends&amp;filterOp=contains&amp;filterValue=&lt;someUserId&gt;
+</artwork>
+    </figure>This will return nothing if the other ID is not a friend, the
+    current user if the two are friends. filterValue may take a specific person
+    identifier of @owner or @viewer. 
+    <figure>
+     <preamble>To determine the mutual friends between two people (important
+     part is the query string):</preamble>
+     <artwork xml:space="preserve">
+/people/@me/@friends?filterBy=@friends&amp;filterOp=contains&amp;filterValue=&lt;someUserId&gt;
+</artwork>
+    </figure>This will return the set of mutual friends between the current
+    user and someUserId. filterValue may take a specific person identifier of
+    @owner or @viewer.</t>
+    <t>Note: The container is not required to support all values for filtering,
+    sorting and getting the last set of updated items from a collection. If the
+    container does not respect the filer, sort or updatedSince param the
+    response should contain "filtered : false", "sorted : false", or
+    "updatedSince : false".</t>
+   </section>
+  </section>
+  <section title="Security Considerations">
+   <t>Containers SHOULD carefully consider security. Containers MUST support 
+   <xref target="OAuth Core 1.0" /> but SHOULD use appropriate policies to
+   determine allowed operations on a per-Consumer and per-user basis. Per 
+   <xref target="OAuth Core 1.0" />, Containers SHOULD document how a Consumer
+   can direct a user to a Container web page to obtain an oauth_token for
+   future use. Note that this is a vector for phishing if the user is required
+   to enter their credentials.</t>
+   <t>Containers SHOULD support SSL connections for sensitive data as OAuth on
+   its own does not provide encryption or message body integrity checking.
+   Containers should base their security decisions on the type of client in
+   use; a generally available desktop client, for example, cannot effectively
+   protect a Consumer Secret that is installed with each client. The security
+   of communications with a partner service, on the other hand, is dependent on
+   the effectiveness of that service's security procedures. Containers may wish
+   to rate limit requests from unknown clients, or require registration, in
+   order to mitigate risk.</t>
+   <t>Containers SHOULD scope oauth_tokens as narrowly as possible (e.g., allow
+   reading but not writing if a client only performs reads).</t>
+  </section>
+  <section title="Concurrency Control (Optional)">
+   <t>This feature allows a container and client to cooperate in order to
+   prevent multiple containers from overwriting each other's data. It uses the
+   standard HTTP/AtomPub optimistic concurrency mechanism based on ETags (see
+   section 9.5 of 
+   <xref target="RFC5023" /> for details; the same mechanism applies regardless
+   of the data format used for the body of the PUT).</t>
+   <section title="Discovery">
+    <t>Concurrency control is available on a resource-by-resource basis. When
+    an updateable resource supports concurrency control, the container SHOULD
+    supply an ETag encoding the resource's current state when supplying a
+    representation to clients. If a resource does not support optimistic
+    concurrency, it MUST respond to an update request containing an If-Match:
+    header with a 403 Not Implemented error.</t>
+    <t>A server which chooses not to support optimistic concurrency SHOULD omit
+    ETags on its responses for updateable resources. A client SHOULD assume
+    that optimistic concurrency is not available if no ETag is present.</t>
+   </section>
+   <section title="Semantics">
+    <t>When a client is given an ETag, it MAY supply that ETag in an If-Match:
+    header on subsequent updates. The semantics are that the client can supply
+    the new representation and the previous ETag; the server inspects the
+    current state of the resource and applies the update if the client supplied
+    ETag matches (meaning no intervening updates have happened), otherwise
+    responds with a 409 Conflict error and the new ETag. Clients may then take
+    appropriate actions to resolve the conflict, or fail the operation,
+    depending on their needs. Clients are also free to use PUT to simply
+    overwrite a resource with a new state at any time, ignoring possible
+    overwriting problems.</t>
+    <t>If partial updates are supported (see below), a server MUST accept an
+    ETag given for either a base resource or a projection of that resource upon
+    a subsequent PUT for that resource. That is, it is legal to supply an ETag
+    you received when GETting the full representation of a resource even if you
+    are only PUTting back a single field. If you intend to simply overwrite
+    that single field, then you skip sending any ETag.</t>
+   </section>
+   <section title="Partial Updates">
+    <t>Partial updates avoid the need to send full representations of data on
+    updates, especially for People and App Data. The primary use case is when a
+    client has retrieved a full representation and subsequently wishes to send
+    a small update to a server. In the most general case, the client may have a
+    series of small updates (e.g., changing tags on a large number of contacts)
+    scattered across many resources. To accomplish these partial updates we
+    will take advantage of the "fields" parameter.</t>
+    <t>When the "fields" parameter is specified on a url, only those fields
+    will be looked at when updating an object. If a field is in the parameter
+    list but not part of the post, that would be considered a removal of that
+    field. If the field is in the post but not in the parameter list a 400 bad
+    request error will be returned. If a field is in both places then it will
+    be updated normally.</t>
+   </section>
+  </section>
+  <section title="Messaging (Optional)">
+   <t>A social network service may optionally expose a mechanism for retrieving
+   and sending short messages between users. The functionality and policies are
+   parallel to those of the JS API's requestSendMessage.</t>
+   <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/messages</t>
+   <t>URI structure: {guid}/{msgcolluid}/{msgid}</t>
+   <t>guid: as defined for people above. Generally a unique user id, however
+   could also refer to a community, or @me to refer to the current
+   authentication context.</t>
+   <t>msgcolluid : Container-globally-unique message collection identifier can
+   be: 
+   <list style="symbols">
+    <t>A container specific identifier of a collection of messages</t>
+    <t>@inbox to indicate the collection of all messages sent to the user</t>
+    <t>@outbox to indicate the collection of all messages sent by the user and
+    used as a special endpoint for posting outbound messages.</t>
+   </list></t>
+   <t>msgid: Container unique message id.</t>
+   <section title="Discovery">
+    <figure>
+     <preamble>If a container supports messaging, it advertises a "messages"
+     Service in its discovery document:</preamble>
+     <artwork xml:space="preserve">
+&lt;Service&gt;
+ &lt;Type&gt;http://ns.opensocial.org/messages/0.8&lt;/Type&gt;
+ &lt;URI&gt;http://api.example.org/messages/&lt;/URI&gt;
+&lt;/Service&gt;
+</artwork>
+    </figure>
+   </section>
+   <section title="Semantics">
+    <t>Basic REST operations are available for Message Collections: 
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>GET /messages/{guid}</c>
+     <c>Returns list of message collections for user specified in guid.</c>
+     <c>POST /messages/{guid}</c>
+     <c>Posting data here results in a new message collection.</c>
+     <c>PUT /messages/{guid}/{msgcollid}</c>
+     <c>Updates the data for a message collection, for example, renaming.</c>
+    </texttable></t>
+    <t>All standard collection handling parameters work here, including sortBy,
+    filterBy etc.</t>
+    <t>When you have a message collection you can then perform operations on
+    messages.</t>
+    <t>
+    <texttable>
+     <ttcol align="left">URI Fragment</ttcol>
+     <ttcol align="left">Description</ttcol>
+     <c>GET /messages/{guid}/{msgcollid}</c>
+     <c>Gets a list of messages in a specific collection. Specify the message
+     collection ID (msgcollid) or @inbox/@outbox for all messages. You can also
+     use the filterBy, and sortBy parameters to return a smaller, sorted subset
+     of messages.</c>
+     <c>POST /messages/{guid}/@outbox</c>
+     <c>Creates a message and place it in a queue, a client POSTs a message to
+     an 'outbox' collection.</c>
+    </texttable>The outbox is owned by the source user. Placing a message in
+    the outbox requests that the message be delivered to one or more recipients
+    as specified in the message. Containers are free to filter or alter the
+    message according to their own policies (such as security or rate limiting
+    policies).</t>
+    <t>Access to individual messages is also available. You can retrieve an
+    individual message by sending a GET request with a valid msgid value and a
+    valid message collection. A PUT request can alter fields of an individual
+    message (i.e. marking the message as 'read'). A DELETE request will remove
+    the specified message from the given collection. A DELETE from the @all
+    collection should remove the message from all collections in the system.
+    Here are some example requests: 
+    <list style="symbols">
+     <t>GET /messages/{guid}/@all/{msgid}</t>
+     <t>PUT /messages/{guid}/@all/{msgid}</t>
+     <t>DELETE /messages/{guid}/{msgcollid}/{msgid}</t>
+    </list></t>
+    <t>A Message example follows. For brevity, details of the 'sender' field,
+    an OpenSocial Person, are omitted. 
+    <figure>
+     <preamble>application/json representation</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "http://example.org/inbox/message/{msgid}",
+  "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+ "sender" : "{ "id" : ... }",
+ "title" : "You have a new messge from Joe",
+ "titleId" : "541141091700",
+ "body" : "Short message from Joe to some friend\/s",
+ "bodyId" : "5491155811231",  
+ "type" : "privateMessage",
+ "status" : "unread",
+ "data" : "..."
+}
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation</preamble>
+     <artwork xml:space="preserve">
+&lt;message xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+    &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
+    &lt;recipient&gt;example.org:AD38B3886625AAF&lt;/recipient&gt;
+        &lt;recipient&gt;example.org:997638BAA6F25AD&lt;/recipient&gt;
+        &lt;sender&gt;
+           &lt;person&gt;...&lt;/person&gt;
+        &lt;/sender&gt;
+        &lt;title&gt;You have a new messge from Joe&lt;/title&gt;
+        &lt;titleId&gt;541141091700&lt;/titleId&gt;
+        &lt;updated&gt;2008-09-29T23:35:37.266Z&lt;/updated&gt;
+        &lt;body&gt;Short message from Joe to some friend\/s&lt;/body&gt;
+        &lt;bodyId&gt;5491155811231&lt;/bodyId&gt;
+        &lt;type&gt;privateMessage&lt;/type&gt;
+        &lt;status&gt;unread&lt;/status&gt;
+        &lt;data&gt;...&lt;/data&gt;
+&lt;/message&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;osapi:recipient&gt;example.org:AD38B3886625AAF&lt;/osapi:recipient&gt;
+    &lt;osapi:recipient&gt;example.org:997638BAA6F25AD&lt;/osapi:recipient&gt;
+    &lt;sender&gt;&lt;person&gt;...&lt;/person&gt;&lt;/sender&gt;
+    &lt;title&gt;You have a new message from Joe&lt;/title&gt;
+    &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
+    &lt;link rel="alternate" href="http://app.example.org/inbox/message/{msgid}"/&gt;
+    &lt;content&gt;Short message from Joe to some friend/s&lt;/content&gt;
+    &lt;status&gt;UNREAD&lt;/status&gt;
+    &lt;data&gt;...&lt;/data&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure></t>
+    <t>The recipient may also include a type identifier. The osapi:recipient
+    supports two formats: 
+    <list style="numbers">
+     <t>For people: [container]:[identifier]</t>
+     <t>Specifying a group or a person:
+     [container]:[group|person]:[identifier]</t>
+    </list></t>
+    <t>
+    <figure>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"
+        xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+ &lt;osapi:recipient&gt;example.org:group:AD38B3886625AAF&lt;/osapi:recipient&gt;
+ &lt;osapi:recipient&gt;example.org:person:997638BAA6F25AD&lt;/osapi:recipient&gt;
+ &lt;osapi:recipient&gt;example.org:6221226&lt;/osapi:recipient&gt;
+ &lt;title&gt;You have an invitation from Joe&lt;/title&gt;
+ &lt;id&gt;{msgid}&lt;/id&gt;
+ &lt;link rel="alternate" href="http://app.example.org/invites/{msgid}"/&gt;
+ &lt;content&gt;Click &lt;a href="http://app.example.org/invites/{msgid}"&gt;here&lt;/a&gt; to review your invitation.&lt;/content&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>The {msgid} is server generated and is globally unique. The client
+    should use a standard AtomPub POST to /messages/{guid}/@outbox. The
+    response is 201 Created on success.</t>
+    <t>If not supported, the response code should be 403 Not Implemented.</t>
+    <t>Typically a container would choose to only allow a POST to an outbox
+    where the {guid} equals the requester id, but this is a container security
+    policy decision.</t>
+    <t>Containers may choose to allow messaging only between friends or user
+    other heuristics to prevent spam.</t>
+    <t>The 'sender' field in the message representations is only needed when
+    receiving a message with a GET request. It is not required when POSTING a
+    new message as this information is represented by the {guid}. Using a
+    Person for the sender field allows a gadget to present meaningful
+    information about the message sender without requiring a separate request
+    for this information.</t>
+    <t>The 'data' field is used for information specific to the gadget that is
+    sending or displaying the message. It may be omitted in most messages. An
+    example is a message from a user asking to join a group. In the received
+    message to the group's owner(s), the 'data' field could contain the JSON or
+    XML representation of an OpenSocial Group.</t>
+   </section>
+  </section>
+  <section title="Field Names"
+           anchor="fieldNames">
+   <t>Each field is defined as either a Singular Field, in which case there can
+   be at most one instance of that field per contact, or as a Plural Field,
+   which case any number of instances of that field may be present per contact.
+   Unless otherwise specified, all fields are optional and of type
+   xs:string.</t>
+   <section title="Person"
+            anchor="personFields">
+    <t>Each person returned MUST include the id and displayName fields with
+    non-empty values, but all other fields are optional, and it is recognized
+    that not all Service Providers will be able to provide data for all the
+    supported fields. The field list is below is broad so that, for Service
+    Providers that do support any of these fields, there is a standard field
+    name available</t>
+    <section title="Singluar Person Fields">
+     <t>
+     <texttable>
+      <ttcol align="left">Field Name</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>anniversary</c>
+      <c>The wedding anniversary of this person. The value MUST be a valid
+      xs:date (e.g. 1975-02-14). The year value MAY be set to 0000 when the
+      year is not available.</c>
+      <c>birthday</c>
+      <c>The birthday of this person. The value MUST be a valid xs:date (e.g.
+      1975-02-14). The year value MAY be set to0000 when the age of the Person
+      is private or the year is not available.</c>
+      <c>connected</c>
+      <c>Boolean value indicating whether the user and this Person have
+      established a bi-directionally asserted connection of some kind on the
+      Service Provider's service. The value MUST be either true or false. The
+      value MUST be true if and only if there is at least one value for the
+      relationship field, described below, and is thus intended as a summary
+      value indicating that some type of bi-directional relationship exists,
+      for Consumers that aren't interested in the specific nature of that
+      relationship. For traditional address books, in which a user stores
+      information about other contacts without their explicit acknowledgment,
+      or for services in which users choose to "follow" other users without
+      requiring mutual consent, this value will always be false.</c>
+      <c>displayName</c>
+      <c>The name of this Person, suitable for display to end-users. Each
+      Person returned MUST include a non-emptydisplayName value. The name
+      SHOULD be the full name of the Person being described if known (e.g.
+      Cassandra Doll or Mrs. Cassandra Lynn Doll, Esq.), but MAY be a username
+      or handle, if that is all that is available (e.g. doll). The value
+      provided SHOULD be the primary textual label by which this Person is
+      normally displayed by the Service Provider when presenting it to
+      end-users.</c>
+      <c>gender</c>
+      <c>The gender of this person. Service Providers SHOULD return one of the
+      following Canonical Values, if appropriate:male, female, or undisclosed,
+      and MAY return a different value if it is not covered by one of these
+      Canonical Values.</c>
+      <c>id</c>
+      <c>Unique identifier for the Person. Each Person returned MUST include a
+      non-empty id value. This identifier MUST be unique across this user's
+      entire set of people, but MAY not be unique across multiple users' data.
+      It MUST be a stable ID that does not change when the same contact is
+      returned in subsequent requests. For instance, an e-mail address is not a
+      good id, because the same person may use a different e-mail address in
+      the future. Usually, in internal database ID will be the right choice
+      here, e.g. "12345".</c>
+      <c>name</c>
+      <c>The broken-out components and fully formatted version of the person's
+      real name, as described in 
+      <xref target="personName" /> (name Element).</c>
+      <c>nickname</c>
+      <c>The casual way to address this Person in real life, e.g. "Bob" or
+      "Bobby" instead of "Robert". This field SHOULD NOT be used to represent a
+      user's username (e.g. jsmarr or daveman692); the latter should be
+      represented by the preferredUsername field.</c>
+      <c>note</c>
+      <c>Notes about this person, with an unspecified meaning or usage
+      (normally notes by the user about this person). This field MAY contain
+      newlines.</c>
+      <c>preferredUsername</c>
+      <c>The preferred username of this person on sites that ask for a username
+      (e.g. jsmarr or daveman692). This field may be more useful for describing
+      the owner (i.e. the value when /@me/@self is requested) than the user's
+      person, e.g. Consumers MAY wish to use this value to pre-populate a
+      username for this user when signing up for a new service.</c>
+      <c>published</c>
+      <c>The date this Person was first added to the user's address book or
+      friends list (i.e. the creation date of this entry). The value MUST be a
+      valid 
+      <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
+      <c>updated</c>
+      <c>The most recent date the details of this Person were updated (i.e. the
+      modified date of this entry). The value MUST be a valid 
+      <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z). If this Person
+      has never been modified since its initial creation, the value MUST be the
+      same as the value of published. Note the updatedSince Query Parameter can
+      be used to select only people whose updated value is equal to or more
+      recent than a given xs:dateTime. This enables Consumers to repeatedly
+      access a user's data and only request newly added or updated contacts
+      since the last access time.</c>
+      <c>utcOffset</c>
+      <c>The offset from UTC of this Person's current time zone, as of the time
+      this response was returned. The value MUST conform to the offset portion
+      of 
+      <xref target="xs:dateTime" />, e.g. -08:00. Note that this value MAY
+      change over time due to daylight saving time, and is thus meant to
+      signify only the current value of the user's timezone offset.</c>
+     </texttable>The following additional Singular Fields are defined, based on
+     their specification in the OpenSocial javascript apis: aboutMe,
+     bodyType,currentLocation, drinker, ethnicity, fashion, happiestWhen,
+     humor, livingArrangement, lookingFor, profileSong,profileVideo,
+     relationshipStatus, religion, romance, scaredOf, sexualOrientation,
+     smoker, and status.</t>
+    </section>
+    <section title="Plural Person Fields">
+     <t>Unless specified otherwise, all Plural Fields have the same three
+     standard sub-fields: 
+     <texttable>
+      <ttcol align="left">Field Name</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>value</c>
+      <c>The primary value of this field, e.g. the actual e-mail address, phone
+      number, or URL. When specifying a sortByfield in the Query Parameters for
+      a Plural Field, the default meaning is to sort based on this value
+      sub-field. Each non-empty Plural Field value MUST contain at least the
+      value sub-field, but all other sub-fields are optional.</c>
+      <c>type</c>
+      <c>The type of field for this instance, usually used to label the
+      preferred function of the given contact information. Unless otherwise
+      specified, this string value specifies Canonical Values of work, home,
+      and other.</c>
+      <c>primary</c>
+      <c>A Boolean value indicating whether this instance of the Plural Field
+      is the primary or preferred value of for this field, e.g. the preferred
+      mailing address or primary e-mail address. Service Providers MUST NOT
+      mark more than one instance of the same Plural Field as primary="true",
+      and MAY choose not to mark any fields as primary, if this information is
+      not available. For efficiency, Service Providers SHOULD NOT mark all
+      non-primary fields with primary="false", but should instead omit this
+      sub-field for all non-primary instances.</c>
+     </texttable></t>
+     <t>When returning Plural Fields, Service Providers SHOULD canonicalize the
+     value returned, if appropriate (e.g. for e-mail addresses and URLs).
+     Providers MAY return the same value more than once with different types
+     (e.g. the same e-mail address may used for work and home), but SHOULD NOT
+     return the same (type, value) combination more than once per Plural Field,
+     as this complicates processing by the Consumer. 
+     <texttable>
+      <ttcol align="left">Field Name</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>emails</c>
+      <c>E-mail address for this Person. The value SHOULD be canonicalized by
+      the Service Provider, e.g.joseph@plaxo.com instead of
+      joseph@PLAXO.COM.</c>
+      <c>urls</c>
+      <c>URL of a web page relating to this Person. The value SHOULD be
+      canonicalized by the Service Provider, e.g.http://josephsmarr.com/about/
+      instead of JOSEPHSMARR.COM/about/. In addition to the standard Canonical
+      Values for type, this field also defines the additional Canonical Values
+      blog and profile.</c>
+      <c>phoneNumbers</c>
+      <c>Phone number for this Person. No canonical value is assumed here. In
+      addition to the standard Canonical Values for type, this field also
+      defines the additional Canonical Values mobile, fax, and pager.</c>
+      <c>ims</c>
+      <c>Instant messaging address for this Person. No official
+      canonicalization rules exist for all instant messaging addresses, but
+      Service Providers SHOULD remove all whitespace and convert the address to
+      lowercase, if this is appropriate for the service this IM address is used
+      for. Instead of the standard Canonical Values for type, this field
+      defines the following Canonical Values to represent currently popular IM
+      services: aim, gtalk, icq, xmpp,msn, skype, qq, and yahoo.</c>
+      <c>photos</c>
+      <c>URL of a photo of this person. The value SHOULD be a canonicalized
+      URL, and MUST point to an actual image file (e.g. a GIF, JPEG, or PNG
+      image file) rather than to a web page containing an image. Service
+      Providers MAY return the same image at different sizes, though it is
+      recognized that no standard for describing images of various sizes
+      currently exists. Note that this field SHOULD NOT be used to send down
+      arbitrary photos taken by this user, but specifically profile photos of
+      the contact suitable for display when describing the contact.</c>
+      <c>tags</c>
+      <c>A user-defined category label for this person, e.g. "favorite" or
+      "web20". These values SHOULD be case-insensitive, and there SHOULD NOT be
+      multiple tags provided for a given person that differ only in case. Note
+      that this field consists only of a string value.</c>
+      <c>relationships</c>
+      <c>A bi-directionally asserted relationship type that was established
+      between the user and this person by the Service Provider. The value
+      SHOULD conform to one of the XFN relationship values (e.g. kin, friend,
+      contact, etc.) if appropriate, but MAY be an alternative value if needed.
+      Note this field is a parallel set of category labels to the tags field,
+      but relationships MUST have been bi-directionally confirmed, whereas tags
+      are asserted by the user without acknowledgment by this Person. Note that
+      this field consists only of a string value.</c>
+      <c>addresses</c>
+      <c>A physical mailing address for this Person, as described in 
+      <xref target="addressElement" /> (address Element).</c>
+      <c>organizations</c>
+      <c>A current or past organizational affiliation of this Person, as
+      described in 
+      <xref target="organizationElement" /> (organization Element).</c>
+      <c>accounts</c>
+      <c>An online account held by this Person, as described in 
+      <xref target="accountElement" /> (account Element).</c>
+      <c>appdata</c>
+      <c>A collection of AppData keys and values, as described in 
+      <xref target="appdataIsolatedExample" /> (an isolated AppData
+      example).</c>
+     </texttable>The following additional Plural Fields are defined, based on
+     their specification in OpenSocial: activities, books, cars, children,food,
+     heroes, interests, jobInterests, languages, languagesSpoken, movies,
+     music, pets, politicalViews, quotes, sports,turnOffs, turnOns, and
+     tvShows.</t>
+    </section>
+    <section title="name element"
+             anchor="personName">
+     <t>The components of the person's real name. Providers MAY return just the
+     full name as a single string in the formatted sub-field, or they MAY
+     return just the individual component fields using the other sub-fields, or
+     they MAY return both. If both variants are returned, they SHOULD be
+     describing the same name, with the formatted name indicating how the
+     component fields should be combined. 
+     <texttable>
+      <ttcol align="left">Field Name</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>formatted</c>
+      <c>The full name, including all middle names, titles, and suffixes as
+      appropriate, formatted for display (e.g. Mr. Joseph Robert Smarr, Esq.).
+      This is the Primary Sub-Field for this field, for the purposes of sorting
+      and filtering.</c>
+      <c>familyName</c>
+      <c>he family name of this Person, or "Last Name" in most Western
+      languages (e.g. Smarr given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>givenName</c>
+      <c>The given name of this Person, or "First Name" in most Western
+      languages (e.g. Joseph given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>middleName</c>
+      <c>The middle name(s) of this Person (e.g. Robert given the full name Mr.
+      Joseph Robert Smarr, Esq.).</c>
+      <c>honorificPrefix</c>
+      <c>The honorific prefix(es) of this Person, or "Title" in most Western
+      languages (e.g. Mr. given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>honorificSuffix</c>
+      <c>The honorifix suffix(es) of this Person, or "Suffix" in most Western
+      languages (e.g. Esq. given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+     </texttable></t>
+    </section>
+    <section title="address element"
+             anchor="addressElement">The components of a physical mailing
+             address. Service Providers MAY return just the full address as a
+             single string in the formattedsub-field, or they MAY return just
+             the individual component fields using the other sub-fields, or
+             they MAY return both. If both variants are returned, they SHOULD
+             be describing the same address, with the formatted address
+             indicating how the component fields should be combined. 
+    <t>
+     <texttable>
+      <ttcol align="left">Field Name</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>formatted</c>
+      <c>The full mailing address, formatted for display or use with a mailing
+      label. This field MAY contain newlines. This is the Primary Sub-Field for
+      this field, for the purposes of sorting and filtering.</c>
+      <c>streetAddress</c>
+      <c>The full street address component, which may include house number,
+      street name, PO BOX, and multi-line extended street address information.
+      This field MAY contain newlines.</c>
+      <c>locality</c>
+      <c>The city or locality component.</c>
+      <c>region</c>
+      <c>The state or region component.</c>
+      <c>postalCode</c>
+      <c>The zipcode or postal code component.</c>
+      <c>country</c>
+      <c>The country name component.</c>
+      <c>latitude</c>
+      <c>Expresses the latitude of the location on a map.</c>
+      <c>longitude</c>
+      <c>Expresses the longitude of the location on a map.</c>
+      <c>type</c>
+      <c>The address type or label. Examples include 'work', 'home'.</c>
+     </texttable>
+    </t></section>
+    <section title="organization element"
+             anchor="organizationElement">
+     <t>Describes a current or past organizational affiliation of this contact.
+     Service Providers that support only a single Company Name and Job Title
+     field should represent them with a single organization element with name
+     and title properties, respectively. 
+     <texttable>
+      <ttcol align="left">Field Name</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>name</c>
+      <c>The name of the organization (e.g. company, school, or other
+      organization). This field MUST have a non-empty value for each
+      organization returned. This is the Primary Sub-Field for this field, for
+      the purposes of sorting and filtering.</c>
+      <c>department</c>
+      <c>The department within this organization.</c>
+      <c>title</c>
+      <c>The job title or organizational role within this organization.</c>
+      <c>type</c>
+      <c>The type of organization, with Canonical Values job and school.</c>
+      <c>startDate</c>
+      <c>The date this Person joined this organization. This value SHOULD be a
+      valid 
+      <xref target="xs:dateTime" /> if possible, but MAY be an unformatted
+      string, since it is recognized that this field is often presented as
+      free-text.</c>
+      <c>endDate</c>
+      <c>The date this Person left this organization or the role specified by
+      title within this organization. This value SHOULD be a valid 
+      <xref target="xs:dateTime" /> if possible, but MAY be an unformatted
+      string, since it is recognized that this field is often presented as
+      free-text.</c>
+      <c>location</c>
+      <c>The physical location of this organization. This may be a complete
+      address 
+      <xref target="addressElement" />, or an abbreviated location like "San
+      Francisco".</c>
+      <c>description</c>
+      <c>A textual description of the role this Person played in this
+      organization. This field MAY contain newlines.</c>
+     </texttable></t>
+    </section>
+    <section title="account element"
+             anchor="accountElement">
+     <t>Describes an account held by this Person, which MAY be on the Service
+     Provider's service, or MAY be on a different service. Consumers SHOULD NOT
+     assume that this account has been verified by the Service Provider to
+     actually belong to this Person. For each account, the domain is the
+     top-most authoritative domain for this account, e.g. yahoo.com or
+     reader.google.com, and MUST be non-empty. Each account must also contain a
+     non-empty value for either username or userid, and MAY contain both, in
+     which case the two values MUST be for the same account. These accounts can
+     be used to determine if a user on one service is also known to be the same
+     person on a different service, to facilitate connecting to people the user
+     already knows on different services. If Consumers want to turn these
+     accounts into profile URLs, they can use an open-source library like 
+     <xref target="Social Graph Node Mapper" />. 
+     <texttable>
+      <ttcol align="left">Field Name</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>domain</c>
+      <c>The top-most authoritative domain for this account, e.g.
+      "twitter.com". This is the Primary Sub-Field for this field, for the
+      purposes of sorting and filtering.</c>
+      <c>username</c>
+      <c>An alphanumeric user name, usually chosen by the user, e.g.
+      "jsmarr".</c>
+      <c>userid</c>
+      <c>A user ID number, usually chosen automatically, and usually numeric
+      but sometimes alphanumeric, e.g. "12345" or "1Z425A".</c>
+     </texttable></t>
+    </section>
+   </section>
+   <section title="Activity"
+            anchor="activityFields">
+    <section title="Activity fields">
+     <t>The following fields are defined, based on their specification in the
+     OpenSocial JavaScript apis: appId, body, bodyId, externalId, id,
+     mediaItems, postedTime, priority, streamFaviconUrl, streamSourceUrl,
+     streamTitle, streamUrl, templateParams, title, url, userId.</t>
+    </section>
+   </section>
+   <section title="Message">
+    <section title="Message fields">
+     <t>The following fields are defined, based on their specification in the
+     OpenSocial JavaScript apis: type, title, body, titleId, bodyId, id,
+     recipients, senderId, timeSent, inReplyTo, replies, status, appUrl,
+     collectionIds, updated, urls.</t>
+    </section>
+   </section>
+  </section>
+  <section title="XML format XSD"
+           anchor="XML_format_XSD">
+   <t>
+    <figure>
+     <artwork xml:space="preserve">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;xs:schema xmlns:tns="http://ns.opensocial.org/2008/opensocial"
+  elementFormDefault="qualified"
+  targetNamespace="http://ns.opensocial.org/2008/opensocial"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;xs:simpleType name="EscapeTypeType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="HTML_ESCAPE" /&gt;
+      &lt;xs:enumeration value="NONE" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;!--  this is a proposal for the OpenSocial 0.9 XSD. --&gt;
+  &lt;xs:element name="person" type="tns:Person" /&gt;
+  &lt;xs:element name="group" type="tns:Group" /&gt;
+  &lt;xs:element name="activity" type="tns:Activity" /&gt;
+  &lt;xs:element name="appData" type="tns:Appdata" /&gt;
+  &lt;xs:element name="response" type="tns:Response" /&gt;
+  &lt;xs:element name="list.container" type="xs:anyType" /&gt;
+  &lt;xs:complexType name="Response"&gt;
+    &lt;xs:choice minOccurs="0" maxOccurs="unbounded" &gt;
+      &lt;xs:element minOccurs="0" name="itemsPerPage" type="xs:int" /&gt;
+      &lt;xs:element minOccurs="0" name="startIndex" type="xs:long" /&gt;
+      &lt;xs:element minOccurs="0" name="totalResults" type="xs:long" /&gt;
+      &lt;xs:element minOccurs="0" name="isFiltered" type="xs:boolean" /&gt;
+      &lt;xs:element minOccurs="0" name="isSorted" type="xs:boolean" /&gt;
+      &lt;xs:element minOccurs="0" name="isUpdatedSince" type="xs:boolean" /&gt;
+      &lt;xs:element minOccurs="0" name="group" type="tns:Group" /&gt;
+      &lt;xs:element minOccurs="0" name="activity" type="tns:Activity" /&gt;
+      &lt;xs:element minOccurs="0" name="person" type="tns:Person" /&gt;
+      &lt;xs:element minOccurs="0" name="album" type="tns:Album" /&gt;
+      &lt;xs:element minOccurs="0" name="mediaItem" type="tns:MediaItem" /&gt;
+      &lt;xs:element minOccurs="0" name="message" type="tns:Message" /&gt;
+      &lt;xs:element minOccurs="0"  maxOccurs="unbounded" name="entry" type="tns:Entry" /&gt;
+      &lt;!--  this is to allow responses to create to validate --&gt;
+      &lt;xs:element minOccurs="0" name="map" type="xs:anyType" /&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Entry" &gt;
+    &lt;xs:choice&gt;
+      &lt;xs:element minOccurs="0" name="activity" type="tns:Activity" /&gt;
+      &lt;xs:element minOccurs="0" name="person" type="tns:Person" /&gt;
+      &lt;xs:element minOccurs="0" name="group" type="tns:Group" /&gt;
+      &lt;xs:element minOccurs="0" name="appData" type="tns:Appdata" /&gt;
+      &lt;xs:element minOccurs="0" name="album" type="tns:Album" /&gt;
+      &lt;xs:element minOccurs="0" name="mediaItem" type="tns:MediaItem" /&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Activity"&gt;
+    &lt;xs:choice minOccurs="0" maxOccurs="unbounded"&gt;
+      &lt;xs:element minOccurs="0" name="appId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="body" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="bodyId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="externalId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="mediaItems" type="tns:MediaItem" /&gt;
+      &lt;xs:element minOccurs="0" name="postedTime" type="xs:long" /&gt;
+      &lt;xs:element minOccurs="0" name="priority" type="xs:double" /&gt;
+      &lt;xs:element minOccurs="0" name="streamFaviconUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="streamSourceUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="streamTitle" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="streamUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="templateParams" type="tns:ActivityTemplateParams" /&gt;
+      &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="titleId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="url" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="userId" type="xs:string" /&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="ActivityTemplateParams"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="PersonKey" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="PersonKey.DisplayName" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="PersonKey.Id" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="PersonKey.ProfileUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="person" type="tns:Person" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Person"&gt;
+    &lt;xs:choice minOccurs="1" maxOccurs="unbounded"&gt;
+      &lt;xs:element minOccurs="0" name="aboutMe" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="accounts" type="tns:Account"/&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="activities" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="addresses" type="tns:Address" /&gt;
+      &lt;xs:element minOccurs="0" name="age" type="xs:string"/&gt;
+      &lt;xs:element minOccurs="0" name="anniversary" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="appData" type="tns:Appdata" /&gt;
+      &lt;xs:element minOccurs="0" name="birthday" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="bodyType" type="tns:BodyType" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="books" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="cars" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="children" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="connected" type="tns:Presence" /&gt;
+      &lt;xs:element minOccurs="0" name="currentLocation" type="tns:Address" /&gt;
+      &lt;xs:element minOccurs="0" name="displayName" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="drinker" type="tns:Drinker" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="emails" type="tns:PluralPersonField" /&gt;
+      &lt;xs:element minOccurs="0" name="ethnicity" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="fashion" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="food" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="gender" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="happiestWhen" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="hasApp" type="xs:boolean" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="heroes" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="humor" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="ims" type="tns:PluralPersonField"/&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="interests" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="jobInterests" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="languagesSpoken" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="livingArrangement" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="lookingFor" type="tns:LookingFor" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="movies" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="music" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="name" type="tns:Name" /&gt;
+      &lt;xs:element minOccurs="0" name="networkPresence" type="tns:NetworkPresence" /&gt;
+      &lt;xs:element minOccurs="0" name="nickname" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="organizations" type="tns:Organization" /&gt;
+      &lt;xs:element minOccurs="0" name="pets" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="phoneNumbers" type="tns:PluralPersonField" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="photos" type="tns:PluralPersonField" /&gt;
+      &lt;xs:element minOccurs="0" name="politicalViews" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="preferredUsername" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="profileSong" type="tns:Url" /&gt;
+      &lt;xs:element minOccurs="0" name="profileUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="profileVideo" type="tns:Url" /&gt;
+      &lt;xs:element minOccurs="0" name="published" type="xs:dateTime"/&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="quotes" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="relationships" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="relationshipStatus" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="religion" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="romance" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="scaredOf" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="sexualOrientation" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="smoker" type="tns:Smoker" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="sports" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="status" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="tags" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="thumbnailUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="turnOffs" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="turnOns" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="tvShows" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="updated" type="xs:dateTime"/&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="urls" type="tns:Url" /&gt;
+      &lt;xs:element minOccurs="0" name="utcOffset" type="xs:int" /&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Group"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="AppdataEntry" mixed="true"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="1" name="key" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="1" name="value"  type="xs:anyType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Appdata"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="entry" type="tns:AppdataEntry" /&gt;
+    &lt;/xs:sequence&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="BodyType"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="build" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="eyeColor" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="hairColor" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="height" type="xs:double" /&gt;
+      &lt;xs:element minOccurs="0" name="weight" type="xs:double" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Address"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="country" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="extendedAddress" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="latitude" type="xs:double" /&gt;
+      &lt;xs:element minOccurs="0" name="locality" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="longitude" type="xs:double" /&gt;
+      &lt;xs:element minOccurs="0" name="poBox" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="postalCode" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="primary" type="xs:boolean"/&gt;
+      &lt;xs:element minOccurs="0" name="region" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="streetAddress" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="type" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="formatted" type="xs:string" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Account"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="domain" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="primary" type="xs:boolean"/&gt;
+      &lt;xs:element minOccurs="0" name="userid" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="username" type="xs:string" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Organization"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="address" type="tns:Address" /&gt;
+      &lt;xs:element minOccurs="0" name="department" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="description" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="endDate" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="name" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="startDate" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="type" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="field" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="subField" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="webpage" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="salary" type="xs:string" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Name"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="additionalName" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="familyName" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="givenName" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="honorificPrefix" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="honorificSuffix" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="formatted" type="xs:string" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Url"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="value" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="linkText" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="type" type="xs:string" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Album"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="thumbnailUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="description" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="location" type="tns:Address" /&gt;
+      &lt;xs:element minOccurs="0" name="ownerId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="mediaType" type="tns:MediaItemType" /&gt;
+      &lt;xs:element minOccurs="0" name="mediaMimeType" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="mediaItemCount" type="xs:integer" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  
+  &lt;xs:complexType name="MediaItem"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="created" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="thumbnailUrl" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="description" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="duration" type="xs:integer" /&gt;
+      &lt;xs:element minOccurs="0" name="location" type="tns:Address" /&gt;
+      &lt;xs:element minOccurs="0" name="language" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="albumId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="fileSize" type="xs:long" /&gt;
+      &lt;xs:element minOccurs="0" name="startTime" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="rating" type="xs:integer" /&gt;
+      &lt;xs:element minOccurs="0" name="numVotes" type="xs:integer" /&gt;
+      &lt;xs:element minOccurs="0" name="numComments" type="xs:integer" /&gt;
+      &lt;xs:element minOccurs="0" name="numViews" type="xs:integer" /&gt;
+      &lt;xs:element minOccurs="0" name="tags" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="taggedPeople" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="mimeType" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="type" type="tns:MediaItemType" /&gt;
+      &lt;xs:element minOccurs="0" name="url" type="xs:string" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="MediaItemType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="AUDIO" /&gt;
+      &lt;xs:enumeration value="IMAGE" /&gt;
+      &lt;xs:enumeration value="VIDEO" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="Drinker"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:DrinkerType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="DrinkerType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="HEAVILY" /&gt;
+      &lt;xs:enumeration value="NO" /&gt;
+      &lt;xs:enumeration value="OCCASIONALLY" /&gt;
+      &lt;xs:enumeration value="QUIT" /&gt;
+      &lt;xs:enumeration value="QUITTING" /&gt;
+      &lt;xs:enumeration value="REGULARLY" /&gt;
+      &lt;xs:enumeration value="SOCIALLY" /&gt;
+      &lt;xs:enumeration value="YES" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="Presence"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:PresenceType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="PresenceType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="AWAY" /&gt;
+      &lt;xs:enumeration value="CHAT" /&gt;
+      &lt;xs:enumeration value="DND" /&gt;
+      &lt;xs:enumeration value="OFFLINE" /&gt;
+      &lt;xs:enumeration value="ONLINE" /&gt;
+      &lt;xs:enumeration value="XA" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="Smoker"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:SmokerType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="SmokerType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="HEAVILY" /&gt;
+      &lt;xs:enumeration value="NO" /&gt;
+      &lt;xs:enumeration value="OCCASIONALLY" /&gt;
+      &lt;xs:enumeration value="QUIT" /&gt;
+      &lt;xs:enumeration value="QUITTING" /&gt;
+      &lt;xs:enumeration value="REGULARLY" /&gt;
+      &lt;xs:enumeration value="SOCIALLY" /&gt;
+      &lt;xs:enumeration value="YES" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="CreateActivityPriority"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:CreateActivityPriorityType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="CreateActivityPriorityType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="HIGH" /&gt;
+      &lt;xs:enumeration value="LOW" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="EscapeType"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:EscapeTypeType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="Message"&gt;
+    &lt;xs:choice&gt;
+      &lt;xs:element minOccurs="0" name="body" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="bodyId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="titleId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="recipients" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="senderId" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="timeSent" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" name="inReplyTo" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="replies" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="status" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="appUrl" type="tns:Url" /&gt;
+      &lt;xs:element minOccurs="0" name="collectionIds" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="updated" type="xs:dateTime" /&gt;
+      &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="urls" type="tns:Url" /&gt;
+    &lt;/xs:choice&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="MessageType"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:MessageTypeType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="MessageTypeType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="EMAIL" /&gt;
+      &lt;xs:enumeration value="NOTIFICATION" /&gt;
+      &lt;xs:enumeration value="PRIVATE_MESSAGE" /&gt;
+      &lt;xs:enumeration value="PUBLIC_MESSAGE" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="Environment"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:EnvironmentType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="EnvironmentType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="ACTIVITY" /&gt;
+      &lt;xs:enumeration value="ADDRESS" /&gt;
+      &lt;xs:enumeration value="BODY_TYPE" /&gt;
+      &lt;xs:enumeration value="EMAIL" /&gt;
+      &lt;xs:enumeration value="FILTER_TYPE" /&gt;
+      &lt;xs:enumeration value="MEDIAITEM" /&gt;
+      &lt;xs:enumeration value="MESSAGE" /&gt;
+      &lt;xs:enumeration value="MESSAGE_TYPE" /&gt;
+      &lt;xs:enumeration value="NAME" /&gt;
+      &lt;xs:enumeration value="ORGANIZATION" /&gt;
+      &lt;xs:enumeration value="PERSON" /&gt;
+      &lt;xs:enumeration value="PHONE" /&gt;
+      &lt;xs:enumeration value="SORTORDER" /&gt;
+      &lt;xs:enumeration value="URL" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="LookingFor"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:LookingForType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="LookingForType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="ACTIVITY_PARTNERS" /&gt;
+      &lt;xs:enumeration value="DATING" /&gt;
+      &lt;xs:enumeration value="FRIENDS" /&gt;
+      &lt;xs:enumeration value="NETWORKING" /&gt;
+      &lt;xs:enumeration value="RANDOM" /&gt;
+      &lt;xs:enumeration value="RELATIONSHIP" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="NetworkPresence"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="displayValue" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="value" type="tns:NetworkPresenceType" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:simpleType name="NetworkPresenceType"&gt;
+    &lt;xs:restriction base="xs:string"&gt;
+      &lt;xs:enumeration value="AWAY" /&gt;
+      &lt;xs:enumeration value="CHAT" /&gt;
+      &lt;xs:enumeration value="DND" /&gt;
+      &lt;xs:enumeration value="OFFLINE" /&gt;
+      &lt;xs:enumeration value="ONLINE" /&gt;
+      &lt;xs:enumeration value="XA" /&gt;
+    &lt;/xs:restriction&gt;
+  &lt;/xs:simpleType&gt;
+  &lt;xs:complexType name="PluralPersonField"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element minOccurs="0" name="value" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="type" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="primary" type="xs:boolean"/&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:schema&gt;
+</artwork>
+    </figure>
+   </t>
+  </section>
+  <section title="HTTP Status Codes">
+   <texttable>
+    <ttcol align="left">Status Code</ttcol>
+    <ttcol align="left">Description</ttcol>
+    <c>400 BAD REQUEST</c>
+    <c align="left">OpenSocial application servers MUST return 400 BAD REQUEST
+    under any one or more of the following conditions: 
+    <list style="symbols">
+     <t>Invalid request URI</t>
+     <t>Invalid HTTP Header</t>
+     <t>Receiving an unsupported, nonstandard parameter</t>
+     <t>Receiving an invalid HTTP Message Body</t>
+    </list></c>
+    <c>401 UNAUTHORIZED</c>
+    <c align="left">OpenSocial container servers MUST return 401 UNAUTHORIZED
+    when receiving a request for a protected resource and the request is either
+    
+    <list style="symbols">
+     <t>Missing OAuth authorization credentials as described in 
+     <xref target="OAuth Consumer Request 1.0 Draft 1" />.</t>
+     <t>OAuth authorization credentials are present, but the user identity is
+     not authorized to access the protected resource. If the request already
+     included authorization credentials, the 401 response indicates that the
+     request has been refused for those credentials. A 401 response MUST
+     include a WWW-Authenticate header field indicating the request MAY present
+     an OAuth token for the container server's realm. Example:
+     WWW-Authenticate: OAuth realm="http://sp.example.com/"</t>
+    </list></c>
+    <c>403 FORBIDDEN</c>
+    <c align="left">The server understood the request but is refusing to
+    fulfill it. Authorization will not help. The current authorization context
+    does not allow the request.</c>
+    <c>404 NOT FOUND</c>
+    <c align="left">The server has not found a resource (such as a feed or
+    entry) that matches the request URI.</c>
+    <c>405 METHOD NOT ALLOWED</c>
+    <c align="left">The method specified in the Request-Line is not allowed for
+    the resource identified by the Request-URI. The response MUST include an
+    Allow header containing a list of valid methods for the requested
+    resource.</c>
+    <c>409 CONFLICT</c>
+    <c>The request could not be completed due to a conflict with the current
+    state of the resource. This code is only allowed in situations where it is
+    expected that the user might be able to resolve the conflict and resubmit
+    the request. The response body SHOULD include enough information for the
+    user to recognize the source of the conflict. Ideally, the response entity
+    would include enough information for the user or user agent to fix the
+    problem; however, that might not be possible and is not required. Conflicts
+    are most likely to occur in response to a PUT request. For example, this
+    code can be used for a limit exceeded error as well as conflicting updates.
+    See the error message for more information.</c>
+    <c>500 INTERNAL SERVER ERROR</c>
+    <c align="left">Internal error. This is the default code that is used for
+    all unrecognized errors.</c>
+    <c>501 NOT IMPLEMENTED</c>
+    <c align="left">The request was valid but has not been implemented by the
+    provider. A container SHOULD return 501 NOT IMPLEMENTED when receiving a
+    request for an OPTIONAL/MAY feature that the container does not
+    implement.</c>
+   </texttable>
+  </section>
+  <section title="Compatibility with Portable Contacts">
+   <t>This version of the OpenSocial RESTful protocol specification is
+   currently wire-compatible with the Portable Contacts version 1.0 overlapping
+   portion of OpenSocial. Specifically, any compliant OpenSocial 0.9 People
+   Provider is also a compliante Portable Contacts 1.0 Provider, because they
+   are specified to use the same Authorization methods (OAuth), Additional Path
+   Information, Query Parameters, and Contact Schema. The OpenSocial and
+   Portable Contacts communities chose to wire-align our respective specs in
+   order to maximize widespread adoption of a single API for accessing people
+   data. It is our intention to maintain this compatibility going forward, so
+   long as it is feasible, and so long as the changes required are compatible
+   with the Goals and Approach of this spec. Although Portable Contacts is an
+   independent spec, with a more limited scope than OpenSocial, any proposed
+   changes to either this OpenSocial RESTful Protocol spec or the Portable
+   Contacts spec should be considered in the context of both communities, and
+   we should strive not to break compatibility unless it is truly necessary,
+   e.g. if the goals of the two communities diverge significantly in the
+   future.</t>
+  </section>
+ </middle>
+ <back>
+  <references>
+   <reference anchor='RFC2119'>
+    <front>
+     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+     <author initials='S.'
+             surname='Bradner'
+             fullname='Scott Bradner'>
+      <organization abbrev='HarvardU'>Harvard University</organization>
+     </author>
+     <date month='March'
+           year='1997' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2119' />
+   </reference>
+   <reference anchor='RFC2606'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='D.'
+             surname='Eastlake'
+             fullname='Donald E. Eastlake 3rd'>
+      <organization abbrev='IBM'>IBM</organization>
+     </author>
+     <author initials='A.'
+             surname='Panitz'
+             fullname='Aliza R. Panitz'></author>
+     <date month='June'
+           year='1999' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2606' />
+   </reference>
+   <reference anchor='RFC3339'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='G.'
+             surname='Klyne'
+             fullname='Graham Klyne'>
+      <organization>Clearswift Corporation</organization>
+     </author>
+     <author initials='C.'
+             surname='Newman'
+             fullname='Chris Newman'>
+      <organization>Sun Microsystems</organization>
+     </author>
+     <date month='July'
+           year='2002' />
+    </front>
+    <seriesInfo name='RFC'
+                value='3339' />
+   </reference>
+   <reference anchor='RFC4287'>
+    <front>
+     <title>The Atom Syndication Format</title>
+     <author initials='M.'
+             surname='Nottingham'
+             fullname='Mark Nottingham'></author>
+     <author initials='R.'
+             surname='Sayre'
+             fullname='Robert Sayre'></author>
+     <date month='December'
+           year='2005' />
+    </front>
+    <seriesInfo name='RFC'
+                value='4287' />
+   </reference>
+   <reference anchor='RFC4627'>
+    <front>
+     <title>The application/json Media Type for JavaScript Object Notation
+     (JSON)</title>
+     <author initials='D.'
+             surname='Crockford'
+             fullname='Douglas Crockford'>
+      <organization>JSON.org</organization>
+     </author>
+     <date month='July'
+           year='2006' />
+    </front>
+    <seriesInfo name='RFC'
+                value='4627' />
+   </reference>
+   <reference anchor='RFC5023'>
+    <front>
+     <title>The Atom Publishing Protocol</title>
+     <author initials='J.'
+             surname='Gregorio'
+             fullname='Joe Gregorio'>
+      <organization abbrev='GOOG'>Google</organization>
+     </author>
+     <author initials='B.'
+             surname='de hOra'
+             fullname='Bill de hOra'>
+      <organization>NewBay Software</organization>
+     </author>
+     <date month='October'
+           year='2007' />
+    </front>
+    <seriesInfo name='RFC'
+                value='5023' />
+   </reference>
+   <reference anchor='XML1_0'
+              target='http://www.w3.org/TR/xml/'>
+    <front>
+     <title>Extensible Markup Language (XML) 1.0 (Fifth Edition)</title>
+     <author initials='T.'
+             surname='Bray'
+             fullname='Tim Bray'>
+      <organization>Textuality</organization>
+      <organization>Netscape</organization>
+     </author>
+     <author initials='J.'
+             surname='Paoli'
+             fullname='Jean Paoli'>
+      <organization abbrev='MSFT'>Microsoft</organization>
+     </author>
+     <author initials='C. M.'
+             surname='Sperberg-McQueen'
+             fullname='C. M. Sperberg-McQueen'>
+      <organization abbrev='W3C'>W3C</organization>
+     </author>
+     <author initials='E.'
+             surname='Maler'
+             fullname='Eve Maler'>
+      <organization abbrev='Sun'>Sun Microsystems, Inc.</organization>
+     </author>
+     <author initials='F.'
+             surname='Yergeau'></author>
+     <date month='November'
+           year='2008' />
+    </front>
+   </reference>
+   <reference anchor="xs:dateTime"
+              target="http://www.w3.org/TR/xmlschema-2/#dateTime">
+    <front>
+     <title>XML Schema Part 2: Datatypes Second Edition</title>
+     <author initials='P.V.'
+             surname='Biron'
+             fullname='Paul V. Biron'>
+      <organization>Kaiser Permanente, for Health Level Seven</organization>
+     </author>
+     <author initials='A.'
+             surname='Malhotra'
+             fullname='Ashok Malhotra'>
+      <organization>Microsoft</organization>
+     </author>
+     <date month='October'
+           year='2004' />
+    </front>
+   </reference>
+   <reference anchor='OpenSearch'
+              target='http://www.opensearch.org/Specifications/OpenSearch/1.1/Draft_3'>
+              
+    <front>
+     <title>OpenSearch 1.1, Draft 3</title>
+     <author initials='D.'
+             surname='Clinton'
+             fullname='DeWitt Clinton'>
+      <organization>OpenSearch.org</organization>
+     </author>
+     <date month='November'
+           year='2008' />
+    </front>
+   </reference>
+   <reference anchor='Social Graph Node Mapper'
+              target='http://code.google.com/p/google-sgnodemapper/'>
+    <front>
+     <title>Social Graph Node Mapper</title>
+    </front>
+   </reference>
+   <reference anchor="OAuth Consumer Request 1.0 Draft 1"
+              target="http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/1/spec.html">
+    <front>
+     <title>OAuth Consumer Request 1.0 Draft 1</title>
+     <author initials='E.'
+             surname='Hammer-Lahav'
+             fullname='Eran Hammer-Lahav'></author>
+    </front>
+   </reference>
+   <reference anchor='OAuth Core 1.0'
+              target='http://oauth.net/core/1.0/'>
+    <front>
+     <title>OAuth Core 1.0</title>
+     <author initials='M.'
+             surname='Atwood'
+             fullname='Mark Atwood'></author>
+     <author initials='R. M.'
+             surname='Conlan'
+             fullname='Richard M. Conlan'>
+      <organization>Google</organization>
+     </author>
+     <author initials='B.'
+             surname='Cook'
+             fullname='Blaine Cook'>
+      <organization>Twitter</organization>
+     </author>
+     <author initials='L.'
+             surname='Culver'
+             fullname='Leah Culver'>
+      <organization>Pownce</organization>
+     </author>
+     <author initials='K.'
+             surname='Elliott-McCrea'
+             fullname='Kellan Elliott-McCrea'>
+      <organization>Flickr</organization>
+     </author>
+     <author initials='L.'
+             surname='Halff'
+             fullname='Larry Halff'>
+      <organization>ma.gnolia</organization>
+     </author>
+     <author initials='E.'
+             surname='Hammer-Lahav'
+             fullname='Eran Hammer-Lahav'></author>
+     <author initials='B.'
+             surname='Laurie'
+             fullname='Ben Laurie'>
+      <organization>Google</organization>
+     </author>
+     <author initials='C.'
+             surname='Messina'
+             fullname='Chris Messina'></author>
+     <author initials='J.'
+             surname='Panzer'
+             fullname='John Panzer'></author>
+     <author initials='S.'
+             surname='Quigley'
+             fullname='Sam Quigley'>
+      <organization>Twitter</organization>
+     </author>
+     <author initials='D.'
+             surname='Recordon'
+             fullname='David Recordon'>
+      <organization>six apart</organization>
+     </author>
+     <author initials='E.'
+             surname='Sandler'
+             fullname='Eran Sandler'>
+      <organization>Yedda</organization>
+     </author>
+     <author initials='J.'
+             surname='Sergent'
+             fullname='Jonathan Sergent'>
+      <organization>ma.gnolia</organization>
+     </author>
+     <author initials='B.'
+             surname='Slesinsky'
+             fullname='Brian Slesinsky'></author>
+     <author initials='A.'
+             surname='Smith'
+             fullname='Andy Smith'>
+      <organization>Jaiku</organization>
+     </author>
+     <date month='December'
+           year='2007' />
+    </front>
+   </reference>
+  </references>
+ </back>
+</rfc>
