@@ -633,7 +633,7 @@ gadgets.util.hasFeature(featureName)
         </section>
       </section>
     </section>
-    <section title="Proxied Content">
+    <section title="Proxied Content" anchor="ProxiedContent">
       <t>
         When rendering an OpenSocial Gadget, the container MUST determine if the content for the
         active view is to be proxied. This is done by checking for the presence of a /Content/@href attribute.
