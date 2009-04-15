@@ -1869,7 +1869,7 @@ http://container.com/apps/{name}/{owner}{-prefix|/|path}{-opt|?os_|params}{-join
     owner : 'Betty',
     path : ['dino','car'],
     params : { a : 'Barney', b : 'Fred'}          
-}%>
+}
 </artwork>
       </figure>
       <t>With those parameters, the two example URL template strings resolve to

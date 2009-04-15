@@ -3845,7 +3845,7 @@ function handleRequestMe(data) {
      it can simply use:</t>
      <figure>
       <artwork xml:space="preserve">
-html = "This person smokes: " + person.getField('smoker').getValue();%>
+html = "This person smokes: " + person.getField('smoker').getValue();
 </artwork>
      </figure>
      <t>This value field will be correctly set up by the container. This is a
@@ -3855,7 +3855,7 @@ html = "This person smokes: " + person.getField('smoker').getValue();%>
      use:</t>
      <figure>
       <artwork xml:space="preserve">
-if (person.getField('smoker').getKey() != "NO") { //gadget logic here }%>
+if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
 </artwork>
      </figure>
      <t>Note: The key may be null if the person's smoker field cannot be

@@ -179,7 +179,7 @@
       {...second item...}
       ...
    ]
-}%>
+}
 </artwork>
     </figure>
     <figure>
@@ -190,7 +190,7 @@
   "itemsPerPage" : 10,
   "totalResults" : 100,
   "entry" : {...only item...}
-}%>
+}
 </artwork>
     </figure>
     <figure>
@@ -203,7 +203,7 @@
    &lt;entry&gt;...first item...&lt;/entry&gt;
    &lt;entry&gt;...second item...&lt;/entry&gt; 
       ...
-&lt;/response&gt;%>
+&lt;/response&gt;
 </artwork>
     </figure>
     <figure>
@@ -214,7 +214,7 @@
    &lt;itemsPerPage&gt; 10 &lt;/itemsPerPage&gt;
    &lt;totalResults&gt; 100 &lt;/totalResults&gt;
    &lt;entry&gt;...first item...&lt;/entry&gt;
-&lt;/response&gt;%>
+&lt;/response&gt;
 </artwork>
     </figure></t>
     <t>The atom format uses the JSON to Atom mapping rules described above and
@@ -231,7 +231,7 @@
   &lt;entry&gt;...first item...&lt;/entry&gt;
   &lt;entry&gt;...second item...&lt;/entry&gt;
   ...
-&lt;/feed&gt;%>
+&lt;/feed&gt;
 </artwork>
     </figure></t>
    </section>
@@ -365,7 +365,7 @@
  "bodyId" : "383777272",
  "url" : "http://api.example.org/activity/feeds/.../af3778",
  "userId" : "example.org:34KJDCSKJN2HHF0DW20394"
-}      %>
+}      
 </artwork>
     </figure>
     <figure>
