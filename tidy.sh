@@ -17,9 +17,11 @@ do
   echo
   echo "Working on $filename.$ext"
 
-  # Add ASP tags so tidy won't wrap the <artwork> fields.
-  awk '{gsub(/<artwork>/, "<artwork><%"); gsub(/<\/artwork>/, "%></artwork>"); print}' $filepath > $output/$filename.temp
-
+  # Add tags so tidy won't wrap the <artwork> fields.
+  cp $filepath $output/$filename.temp
+  sed -i '' 's/<artwork\([^>]*\)>/<artwork\1><?php SPEC/g' $output/$filename.temp
+  sed -i '' 's/<\/artwork>/SPEC \?><\/artwork>/g' $output/$filename.temp
+  
   # Run tidy
   tidy --input-xml yes \
        --wrap 80 \
@@ -30,16 +32,16 @@ do
        --indent-spaces 1 \
        --indent-attributes yes \
        --tab-size 1 \
-       --wrap-asp no \
+       --wrap-php no \
        --char-encoding utf8 \
        --literal-attributes yes \
        --quiet yes \
        $output/$filename.temp > $output/$filename.temp.tidy
   echo "Tidy exited with status $?"
 
-  # Remove the added ASP tags.
-  awk '{gsub(/^[ ]*<%/, ""); gsub(/^[ ]*%>/, "")}/./' $output/$filename.temp.tidy > $output/$filename.$ext
-
+  # Remove the added tags.
+  awk '{gsub(/<\?php SPEC/, ""); gsub(/SPEC \?>/, "")}/./' $output/$filename.temp.tidy > $output/$filename.$ext
+  
   # Add a space after <xref ... /> or <eref ... /> unless it is followed by ., or )
   sed -i '' 's/\(<[ex]ref[^>]*\/>\)\([^.),]\)/\1 \2/g' $output/$filename.$ext
 
@@ -49,7 +51,7 @@ do
   echo "Rewrote <eref> and <xref> tags"
   
   # Clean up
-  rm $output/$filename.temp $output/$filename.temp.tidy
+  #rm $output/$filename.temp $output/$filename.temp.tidy
 done
 
 cp $1/rfc2629.xslt $output
