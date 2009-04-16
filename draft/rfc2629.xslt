@@ -1224,10 +1224,10 @@
          
       <xsl:choose>
         <xsl:when test="string-length($target) &gt; 0">
-          <xsl:text>&#8220;</xsl:text><a href="{$target}"><xsl:value-of select="front/title" /></a><xsl:text>&#8221;</xsl:text>
+          "<a href="{$target}"><xsl:value-of select="front/title" /></a>"
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>&#8220;</xsl:text><xsl:value-of select="front/title" /><xsl:text>&#8221;</xsl:text>
+          "<xsl:value-of select="front/title" />"
         </xsl:otherwise>
       </xsl:choose>
             

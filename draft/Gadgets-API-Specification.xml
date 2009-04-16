@@ -76,22 +76,22 @@
    <t>Content. Provides the actual HTML, CSS, and JavaScript to be rendered by
    the gadget. Two delivery mechanisms are supported: 
    <list style="hanging">
-    <t hangText="Test">Type HTML gadgets are the most prevalent, and are imbued
-    with the most rich feature set. Code is provided directly in the gadget XML
-    content section for rendering and control flow. This code simply assumes
-    that functionality is available that has been requested from whatever
-    gadget features were declared. In the case of optional-declared features, a
-    simple feature-existence API can and should be consulted to ensure the
-    capability is enabled. The code is processed by a gadget server and
-    rendered in an IFRAME.</t>
-    <t>Type URL gadgets only specify a base URL. A standard set of parameters
-    are added to this URL by the gadget server, which renders the gadget in an
-    IFRAME. The application to which the URL points must include a referenced
-    JavaScript library using a &lt;script&gt; tag as it renders, to enable
-    gadget APIs to be made available. Type URL gadgets can't take advantage of
-    all features, notably features that manipulate HTML and JavaScript code
-    directly. However, this gadget type has proven highly useful for turning
-    existing web sites or applications into gadgets.</t>
+    <t hangText="Type HTML">Type HTML gadgets are the most prevalent, and are 
+    imbued with the most rich feature set. Code is provided directly in the 
+    gadget XML content section for rendering and control flow. This code simply 
+    assumes that functionality is available that has been requested from 
+    whatever gadget features were declared. In the case of optional-declared 
+    features, a simple feature-existence API can and should be consulted to 
+    ensure the capability is enabled. The code is processed by a gadget server 
+    and rendered in an IFRAME.</t>
+    <t hangText="Type URL">Type URL gadgets only specify a base URL. A standard 
+    set of parameters are added to this URL by the gadget server, which renders 
+    the gadget in an IFRAME. The application to which the URL points must 
+    include a referenced JavaScript library using a &lt;script&gt; tag as it 
+    renders, to enable gadget APIs to be made available. Type URL gadgets can't 
+    take advantage of all features, notably features that manipulate HTML and 
+    JavaScript code directly. However, this gadget type has proven highly useful
+    for turning existing web sites or applications into gadgets.</t>
    </list>Multiple Content sections may be specified in gadget XML. Each is
    labeled with one or more optional view identifiers, which allow the gadget
    to behave or appear differently depending on the context in which it's
