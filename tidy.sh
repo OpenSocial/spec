@@ -51,7 +51,7 @@ do
   echo "Rewrote <eref> and <xref> tags"
   
   # Clean up
-  #rm $output/$filename.temp $output/$filename.temp.tidy
+  rm $output/$filename.temp $output/$filename.temp.tidy
 done
 
 cp $1/rfc2629.xslt $output
