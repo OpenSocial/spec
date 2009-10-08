@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-gadget-api-specification-draft"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title>OpenSocial Gadget API Specification (draft)</title>
+  <author fullname='OpenSocial and Gadgets Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="September"
+        year="2009" />
+  <abstract>
+   <t>This document describes the APIs available to gadgets rendered in an OpenSocial container.</t>
+  </abstract>
+ </front>
+ <middle>
+  <section title="Introduction">
+   <section title="Requirements">
+    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+    document are to be interpreted as described in 
+    <xref target="RFC2119">RFC2119</xref>.</t>
+    <t>An implementation is not compliant if it fails to satisfy one or more of
+    the MUST or REQUIRED level requirements for the protocols it
+    implements.</t>
+   </section>
+   <section title="Terminology">
+    <t>This specification uses a number of terms to refer to the roles played
+    by participants in, and objects of, an OpenSocial implementation.</t>
+    <list style="hanging">
+     <t hangText="container">An implementor of the 
+     <xref target="Gadget-Specification">Gadget specification</xref> </t>
+    </list>
+   </section>
+  </section>
+  <section title="Notational Conventions and Generic Grammar">
+   <section title="Conventions">
+    <t>Domain name examples use 
+    <xref target="RFC2606">RFC2606</xref>.</t>
+   </section>
+   <section title="Augmented BNF">
+    <t>The grammatical rules in this document are to be interpreted as
+    described in <xref target="RFC2234">RFC4234</xref> (Augmented Backus-Naur 
+    Form).</t>   
+    <t>The following constructs are introduced in this document to augment 
+    RFC4234:</t>
+    <list style="hanging">
+     <t hangText="{rule1 rule2}">
+      <t>Elements enclosed in braces (squiggly brackets) are treated as a
+      single, UNORDERED element. Its contents may occur in any order. Hence: 
+      <artwork type="abnf" xml:space="preserve">{elem foo} bar</artwork>
+      would match (elem foo bar) and (foo elem bar).</t>
+      <t>NOTE: Specifying alternatives is quite different from specifying set
+      grouping. Alternatives indicate the matching of exactly one (sub-)rule
+      out of the total grouping. The set mechanism indicates the matching of a
+      string which contains all of the elements within the group; however the
+      elements may occur in any order.</t>
+     </t>
+     <t hangText="#rule">A construct "#" is defined, similar to "*", for
+     defining lists of elements. The full form is "&lt;n&gt;#&lt;m&gt;element"
+     indicating at least &lt;n&gt; and at most &lt;m&gt; elements, each
+     separated by one or more commas (",") and OPTIONAL linear white space
+     (LWS). This makes the usual form of lists very easy; a rule such as 
+     <artwork type="inline" xml:space="preserve">( *LWS element *( *LWS "," *LWS element ))</artwork>
+     can be shown as 
+     <artwork type="inline" xml:space="preserve">1#element</artwork>
+     Wherever this construct is used, null elements are allowed, but do
+     not contribute to the count of elements present. That is, "(element), ,
+     (element) " is permitted, but counts as only two elements. Therefore, 
+     where at least one element is required, at least one non-null element MUST 
+     be present.  Default values are 0 and infinity so that "#element" allows 
+     any number, including zero; "1#element" requires at least one; and 
+     "1#2element" allows one or two.</t>
+     <t hangText="&amp;rule">A construct "&amp;" is defined, similar to "#",
+     which uses an ampersand (&amp;) instead of commas, and MUST NOT include
+     linear white space between elements.</t>
+     <t hangText="implied *LWS">The grammar described by this specification is
+     word-based. Except where noted otherwise, linear white space (LWS) can be
+     included between any two adjacent words (token or quoted-string), and
+     between adjacent words and separators, without changing the interpretation
+     of a field. At least one delimiter (LWS and/or separators) MUST exist
+     between any two tokens, since they would otherwise be interpreted as a
+     single token.</t>
+    </list>
+   </section>
+   <section title="Basic Rules">
+    <t>The following rules are used throughout this specification to describe
+    basic parsing constructs. The US-ASCII coded character set is defined by 
+    <xref target="RFC20" /> </t>
+    <artwork type="abnf"
+         xml:space="preserve">
+<![CDATA[
+OCTET          = <any 8-bit sequence of data>
+CHAR           = <any US-ASCII character (octets 0 - 127)>
+UPALPHA        = <any US-ASCII uppercase letter "A".."Z">
+LOALPHA        = <any US-ASCII lowercase letter "a".."z">
+ALPHA          = UPALPHA / LOALPHA
+DIGIT          = <any US-ASCII digit "0".."9">
+CTL            = <any US-ASCII control character (octets 0 - 31) and DEL (127)>
+CR             = <US-ASCII CR, carriage return (13)>
+LF             = <US-ASCII LF, linefeed (10)>
+SP             = <US-ASCII SP, space (32)>
+HT             = <US-ASCII HT, horizontal-tab (9)>
+<">            = <US-ASCII double-quote mark (34)>
+CRLF           = CR LF
+LWS            = [CRLF] 1*( SP / HT )
+TEXT           = <any OCTET except CTLs, but including LWS>
+COMMA          = <US-ASCII comma (44)>
+      ]]>
+</artwork>
+   </section>
+  </section>
+  <section title="Protocols">
+   <t>OpenSocial defines the following protocols for gadgets to access data from the container.</t>
+   <section title="Data Pipelining" anchor="Data-Pipelining">
+    <section title="Request">
+     <t>A Data Pipelining request uses the following format:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+TODO
+</artwork>
+     <t>For example, here is a Data Pipelining request to retrieve information about a
+     user:</t>
+     <artwork type="example"
+         xml:space="preserve">
+TODO
+</artwork>
+    </section>
+    <section title="Response">
+     <t>Responses from Data Pipelining requests use the following format:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+TODO
+</artwork>
+    </section>
+   </section>
+   <section title="OSAPI" anchor="OSAPI">
+    <t>OSAPI (pronounced "oh-sap-ee") is a JavaScript API that mirrors the RPC protocol.</t>
+    <section title="OSAPI Request"
+             anchor="OSAPI-Request">
+     <t>An OSAPI request uses the following format:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+TODO
+</artwork>
+     <t>For example, here is an OSAPI request to retrieve information about a
+     user:</t>
+     <artwork type="example"
+         xml:space="preserve">
+TODO
+</artwork>
+    </section>
+    <section title="OSAPI Response"
+             anchor="OSAPI-Response">
+     <t>An OSAPI response uses the following format:</t>
+     <artwork type="example"
+         xml:space="preserve">
+TODO
+</artwork>
+    </section>
+   </section>
+  </section>
+  <section title="Services"
+           anchor="services">
+   <section title="People"
+            anchor="People-Service">
+    <section title="Retrieve a Person"
+             anchor="People-Service-RetrievePerson">
+     <t>Requests and responses for retrieving a person use the following values:</t>
+     <artwork type="abnf" xml:space="preserve">TODO</artwork>
+    </section>
+    <section title="Retrieve a list of People"
+             anchor="People-Service-RetrievePeople">
+     <t>Requests and responses for retrieving a list of people use the following values:</t>
+     <artwork type="abnf" xml:space="preserve">TODO</artwork>
+    </section>
+    <section title="Retrieve a list of supported Person fields" anchor="People-Service-GetSupportedFields">
+    </section>
+    <section title="Retrieve a list of deleted friends" anchor="People-Service-GetDeletedFriends">
+    </section>
+    <section title="Create a Person"
+             anchor="People-Service-CreatePerson"></section>
+    <section title="Update a Person"
+             anchor="People-Service-UpdatePerson"></section>
+    <section title="Delete a Person"
+             anchor="People-Service-DeletePerson"></section>
+    <section title="Create a list of Friends"
+             anchor="People-Service-CreateFriends"></section>
+    <section title="Update a list of Friends"
+             anchor="People-Service-UpdateFriends"></section>
+    <section title="Delete a list of Friends"
+             anchor="People-Service-DeleteFriends"></section>
+   </section>
+   <section title="Groups"
+            anchor="Groups-Service">
+    <section title="Create a list of Groups"
+             anchor="Groups-Service-CreateGroups"></section>
+    <section title="Retrieve a list of Groups"
+             anchor="Groups-Service-RetrieveGroups"></section>
+    <section title="Update a list of Groups"
+             anchor="Groups-Service-UpdateGroups"></section>
+    <section title="Delete a list of Groups"
+             anchor="Groups-Service-DeleteGroups"></section>
+   </section>
+   <section title="Activities"
+            anchor="Activities-Service"></section>
+   <section title="AppData"
+            anchor="AppData-Service"></section>
+   <section title="Albums"
+            anchor="Albums-Service"></section>
+   <section title="MediaItems"
+            anchor="MediaItems-Service"></section>
+   <section title="Invalidation"
+            anchor="Invalidation-Service"></section>
+  </section>
+ </middle>
+ <back>
+  <references>
+   <reference anchor="RFC2234">
+     <seriesInfo name='RFC' value='2234' />
+   </reference>
+   <reference anchor="RFC20">
+     <seriesInfo name='RFC' value='20' />
+   </reference>
+   <reference anchor="RFC3986">
+     <seriesInfo name='RFC' value='3986' />
+   </reference>   
+   <reference anchor="RFC4627">
+     <seriesInfo name='RFC' value='4627' />
+   </reference>   
+   <reference anchor="Gadget-Specification">
+   </reference>   
+
+
+   <reference anchor='RFC2119'>
+    <front>
+     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+     <author initials='S.'
+             surname='Bradner'
+             fullname='Scott Bradner'>
+      <organization abbrev='HarvardU'>Harvard University</organization>
+     </author>
+     <date month='March'
+           year='1997' />
+    </front>
+    <seriesInfo name='RFC' value='2119' />
+   </reference>
+   <reference anchor='RFC2606'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='D.'
+             surname='Eastlake'
+             fullname='Donald E. Eastlake 3rd'>
+      <organization abbrev='IBM'>IBM</organization>
+     </author>
+     <author initials='A.'
+             surname='Panitz'
+             fullname='Aliza R. Panitz'></author>
+     <date month='June'
+           year='1999' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2606' />
+   </reference>
+   <reference anchor='RFC2616'>
+    <front>
+     <title>Hypertext Transfer Protocol -- HTTP/1.1</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='2616' />
+   </reference>
+   <reference anchor='JSPEL'
+              target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
+    <front>
+     <title>Java Server Pages Expression Language</title>
+     <author initials='K.'
+             surname='Chung'
+             fullname='Kin-Man Chung'></author>
+     <author initials='P.'
+             surname='DeLisle'
+             fullname='Pierre Delisle'></author>
+     <author initials='M.'
+             surname='Roth'
+             fullname='Mark Roth'></author>
+     <date month='May'
+           year='2006' />
+    </front>
+   </reference>
+   <reference anchor="XSdateTime"
+              target="http://www.w3.org/TR/xmlschema-2/#dateTime">
+    <front>
+     <title>XML Schema Part 2: Datatypes Second Edition</title>
+     <author initials='P.V.'
+             surname='Biron'
+             fullname='Paul V. Biron'>
+      <organization>Kaiser Permanente, for Health Level Seven</organization>
+     </author>
+     <author initials='A.'
+             surname='Malhotra'
+             fullname='Ashok Malhotra'>
+      <organization>Microsoft</organization>
+     </author>
+     <date month='October'
+           year='2004' />
+    </front>
+   </reference>
+  </references>
+ </back>
+</rfc>
