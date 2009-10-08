@@ -523,25 +523,40 @@ OpenSocial-Auth-Token = string
     <t>Semantics for the Auth token are defined in 
     <xref>foo</xref> </t>
    </section>
-   <section title="Standard Query Parameters"
-            anchor="standard-query-parameters">
-    <x:anchor-alias value="OpenSocial-Request-Parameter-Key" />
-    <x:anchor-alias value="OpenSocial-Request-Parameter-Value" />
-    <artwork type="abnf"
-         xml:space="preserve">
-<x:highlight>OpenSocial-Request-Parameter-Key</x:highlight>   = string
-<x:highlight>OpenSocial-Request-Parameter-Value</x:highlight> = string
-</artwork>
-    <t>Most requests will accept the following OpenSocial-Request-Parameter-Key
-    parameters:</t>
-    <list style="hanging">
-     <t hangText="count">The page size for a paged collection. If no parameter
-     is specified the container can choose how many items in the collection
-     should be returned. However, the container SHOULD support a large default
-     count value so that all items can be returned by default.</t>
-     <t hangText="filterBy">For a collection, return entries filtered by the
+   <section title="Standard Request Parameters"
+            anchor="standard-request-parameters">
+ 
+    <section title="Fields" anchor="Request-Parameter-Fields-Value">
+      <artwork type="abnf">
+<x:highlight>Request-Parameter-Fields-Value</x:highlight> = "@all" / #<x:u>Field-Name</x:u>
+<x:highlight>Field-Name</x:highlight>                     = string</artwork>
+      <t>An array of field names to include in the data representation of the
+      response. If no fields are specified in the request, it is up to the 
+      container to decide which fields to return as long as the container 
+      returns any required fields as documented in the 
+      <xref target="data">Data</xref>
+      section.</t>
+      
+      <t>'@all' is accepted to indicate returning all available fields.</t>
+    </section>    
+
+    <section title="Count" anchor="Request-Parameter-Count-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-Count-Value</x:highlight> = number</artwork>
+      <t>The page size for a paged collection. If no parameter
+       is specified the container can choose how many items in the collection
+       should be returned. However, the container SHOULD support a large default
+       count value so that all items can be returned by default.</t>
+    </section>
+    
+    <section title="Filter By" anchor="Request-Parameter-FilterBy-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-FilterBy-Value</x:highlight> = string</artwork>
+      <t>For a collection, return entries filtered by the
      given field name.</t>
-     <t hangText="filterOp">The operation to use when filtering a collection by
+    </section>
+
+    <section title="Filter Operation" anchor="Request-Parameter-FilterOp-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-FilterOp-Value</x:highlight> = "contains" / "equals" / "startsWith" / "present"</artwork>
+      <t>The operation to use when filtering a collection by
      a field specified in 'filterBy', defaults to "contains". Valid values: 
      <list style="hanging">
       <t hangText="contains">Return elements where filterValue appears
@@ -554,33 +569,51 @@ OpenSocial-Auth-Token = string
       <t hangText="present">Return elements where the element's filterBy field
       value is not empty or null.</t>
      </list></t>
-     <t hangText="filterValue">The value to use when filtering a collection.
-     For example: 
-     <artwork type="example"
+    </section>
+
+    <section title="Filter Value" anchor="Request-Parameter-FilterValue-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-FilterValue-Value</x:highlight> = string</artwork>
+      <t>The value to use when filtering a collection. For example: </t>
+      <artwork type="example"
          xml:space="preserve">
 { ... "filterBy" : "name", "filterOp" : "startsWith", "filterValue" : "John" ... }
-</artwork>returns all items whose name field starts with John. Johnny and John
-Doe would both be included.)</t>
-     <t hangText="sortOrder">Can either be 'ascending' or 'descending',
+</artwork>
+      <t>returns all items whose name field starts with John. Johnny and John
+      Doe would both be included.)</t>
+    </section>
+
+    <section title="Sort Order" anchor="Request-Parameter-SortOrder-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-SortOrder-Value</x:highlight> = "ascending" / "descending"</artwork>
+      <t>Can either be 'ascending' or 'descending',
      defaults to ascending. Used to sort objects in a collection.</t>
-     <t hangText="fields">An array of field names to include in the
-     representation or in the members of a collection. If no fields are
-     specified in the request it is up to the container to decide which fields
-     to return, however, the response MUST always include a minimum set of
-     fields. For people this is [id, name, thumbnailUrl]. For activities this
-     is [id, title]. In place of an array '@all' is accepted to indicate
-     returning all available fields.</t>
-     <t hangText="networkDistance">Modifies group-relative requests (@friends,
-     etc.) to include the transitive closure of all friends up to the specified
-     distance away. MAY NOT be honored by the container.</t>
-     <t hangText="startIndex">Index into a paged collection.</t>
-     <t hangText="updatedSince">When specified the container should only return
+    </section>
+
+    <section title="Network Distance" anchor="Request-Parameter-NetworkDistance-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-NetworkDistance-Value</x:highlight> = number</artwork>
+      <t>Modifies group-relative requests (@friends,  
+      etc.) to include the transitive closure of all friends up to the specified
+      distance away. MAY NOT be honored by the container.</t>
+    </section>
+
+    <section title="Start Index" anchor="Request-Parameter-StartIndex-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-StartIndex-Value</x:highlight> = number</artwork>
+      <t>Index into a paged collection.</t>
+    </section>
+
+    <section title="Updated Since" anchor="Request-Parameter-UpdatedSince-Value">
+     <artwork type="abnf"><x:highlight>Request-Parameter-UpdatedSince-Value</x:highlight> = <xref target="XSdateTime" /></artwork>
+     <t>When specified the container should only return
      items whose updated date &amp; time is equal to or more recent then the
      specified value. The value MUST be a valid 
      <xref target="XSdateTime" /> (e.g. 2008-01-23T04:56:22Z).</t>
-     <t hangText="format">Specifies the desired return encoding of the request.
+    </section>
+
+    <section title="Format" anchor="Request-Parameter-Format-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-StartIndex-Value</x:highlight> = "json" / "xml" / "atom"</artwork>
+      <t>Specifies the desired return encoding of the request.
      Must be one of "json", "xml", or "atom".</t>
-    </list>
+    </section>
+
    </section>
    <section title="Standard Content Types"
             anchor="standard-content-types">
@@ -600,15 +633,15 @@ Doe would both be included.)</t>
 <x:ref>REST-URI-Fragment</x:ref>      = ( "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/@self" ) |
                          ( "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/" <x:ref>OpenSocial-Group-ID</x:ref> "/" <x:ref>OpenSocial-User-ID</x:ref> )
 <x:ref>REST-Query-Parameters</x:ref>  = {
-                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("fields", <x:ref>Query-Parameter-Fields-Value</x:ref>) ]
-                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("format", <x:ref>Query-Parameter-Format-Value</x:ref>) ]
+                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("fields", <x:ref>Request-Parameter-Fields-Value</x:ref>) ]
+                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("format", <x:ref>Request-Parameter-Format-Value</x:ref>) ]
                          }
 <x:ref>REST-Request-Payload</x:ref>   = null
 <x:ref>RPC-Method</x:ref>             = "people.get"
 <x:ref>RPC-Request-Parameters</x:ref> = { 
                             <x:ref>ENCODE-RPC-PARAMETER</x:ref>("userId", <x:ref>OpenSocial-User-ID</x:ref>) 
                             <x:ref>ENCODE-RPC-PARAMETER</x:ref>("groupId", "@self")
-                          [ <x:ref>ENCODE-RPC-PARAMETER</x:ref>("fields", <x:ref>Query-Parameter-Fields-Value</x:ref>) ] 
+                          [ <x:ref>ENCODE-RPC-PARAMETER</x:ref>("fields", <x:ref>Request-Parameter-Fields-Value</x:ref>) ] 
                          }
 <x:ref>OpenSocial-Object</x:ref>      = <x:ref>OpenSocial-Person</x:ref></artwork>
      <t>Here's an example of a REST request to retrieve a person, and the
@@ -874,7 +907,13 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
    </section>
    <section title="OpenSocial-Person"
             anchor="OpenSocial-Person">
-     <t>Each person returned MUST include the id and displayName fields with non-empty values, but all other fields are optional, and it is recognized that not all Service Providers will be able to provide data for all the supported fields. The field list below is broad so that there is a standard field name available among Service Providers that do support any of these fields.</t>
+     <t>Each person returned MUST include the "id", "name", and "thumbnailUrl" 
+     fields with 
+     non-empty values, but all other fields are optional, and it is recognized 
+     that not all Service Providers will be able to provide data for all the 
+     supported fields. The field list below is broad so that there is a standard 
+     field name available among Service Providers that do support any of these 
+     fields.</t>
      <artwork type="abnf">
 <x:highlight>OpenSocial-Person</x:highlight>          = "{"
                                "id :" OpenSocial-User-ID ","
