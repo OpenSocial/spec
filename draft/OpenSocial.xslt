@@ -46,6 +46,9 @@
   <xsl:template name="insertCopyright" myns:namespaceless-elements="xml2rfc">
   </xsl:template>
   
+  <xsl:template name="insertPreamble" myns:namespaceless-elements="xml2rfc">
+  </xsl:template>
+  
   <xsl:template match="x:u">
     <u>
       <xsl:call-template name="copy-anchor"/>
