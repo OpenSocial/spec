@@ -14,8 +14,10 @@
 
                 exclude-result-prefixes="date ed exslt msxsl myns rdf saxon saxon-old x xhtml"
                 >
-
+  
   <xsl:import href="rfc2629.xslt"/>
+
+  <xsl:param name="xml2rfc-private">OpenSocial</xsl:param>
   
   <xsl:template match="x:ref">
     <xsl:variable name="val" select="."/>
@@ -41,12 +43,6 @@
         <xsl:value-of select="."/>
       </xsl:otherwise>
     </xsl:choose>
-  </xsl:template>
-  
-  <xsl:template name="insertCopyright" myns:namespaceless-elements="xml2rfc">
-  </xsl:template>
-  
-  <xsl:template name="insertPreamble" myns:namespaceless-elements="xml2rfc">
   </xsl:template>
   
   <xsl:template match="x:u">
