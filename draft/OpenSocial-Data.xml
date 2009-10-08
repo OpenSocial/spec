@@ -298,7 +298,7 @@ Content-Type: application/json
 RPC-Method = string
 </artwork>
        <t>Available methods can be determined by calling the 
-       <xref target="system.listMethods"/> method.</t>
+       <x:ref target="System-Servie-ListMethods">system.listMethods</x:ref> method.</t>
       </section>
       <section title="RPC Request Parameters"
                anchor="RPC-Request-Parameters">
@@ -307,7 +307,7 @@ RPC-Method = string
        JSON object as described in <xref target="RFC4627"/></t>
        <t>Appropriate values for RPC request parameters can be determined by
        calling the 
-       <xref target="system.methodSignatures"/> method.</t>
+       <x:ref target="System-Service-MethodSignatures">system.methodSignatures</x:ref> method.</t>
        <t>Here is an example of an RPC request payload with procedure-specific
        parameters (userId, groupId) and standard OpenSocial parameters:</t>
        <artwork type="example"
@@ -597,7 +597,8 @@ Doe would both be included.)</t>
      <artwork type="abnf"
          xml:space="preserve">
 <x:ref>REST-HTTP-Method</x:ref>       = "GET"
-<x:ref>REST-URI-Fragment</x:ref>      = "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/@self"
+<x:ref>REST-URI-Fragment</x:ref>      = ( "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/@self" ) |
+                         ( "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/" <x:ref>OpenSocial-Group-ID</x:ref> "/" <x:ref>OpenSocial-User-ID</x:ref> )
 <x:ref>REST-Query-Parameters</x:ref>  = {
                           [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("fields", <x:ref>Query-Parameter-Fields-Value</x:ref>) ]
                           [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("format", <x:ref>Query-Parameter-Format-Value</x:ref>) ]
@@ -615,7 +616,7 @@ Doe would both be included.)</t>
      <t>HTTP Request</t>
      <artwork type="example"
          xml:space="preserve">
-GET /rest/people/@me/@self?fields=name,gender&amp;format=xml HTTP/1.1
+GET /rest/people/34KJDCSKJN2HHF0DW20394/@self?fields=name,gender&amp;format=xml HTTP/1.1
 HOST api.example.org
 Authorization: hh5s93j4hdidpola</artwork>
      <t>HTTP Response</t>
@@ -625,7 +626,7 @@ HTTP/1.1 200 OK
 Content-Type: text/xml
 &lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
   &lt;person&gt;
-    &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+    &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
     &lt;name&gt;
       &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
     &lt;/name&gt;
@@ -644,9 +645,9 @@ Authorization: hh5s93j4hdidpola
 Content-Type: application/json
 {
   "method" : "people.get",
-  "id" : "myself"
+  "id" : "somePerson"
   "params" : {
-    "userId" : "@me",
+    "userId" : "34KJDCSKJN2HHF0DW20394",
     "groupId" : "@self",
     "fields" : [ "name", "gender" ]
   }
@@ -657,9 +658,9 @@ Content-Type: application/json
 HTTP/1.x 207 Multi-Status
 Content-Type: application/json
 {
-   "id" : "myself"
+   "id" : "somePerson"
    "result" : {
-     "id" : "example.org:34KJDCSKJN2HHF0DW20394",
+     "id" : "34KJDCSKJN2HHF0DW20394",
      "name" : { "unstructured" : "Jane Doe"},
      "gender" : "female"
    }
@@ -672,19 +673,34 @@ Content-Type: application/json
      <artwork type="abnf"
          xml:space="preserve">
 <x:ref>REST-HTTP-Method</x:ref>       = "GET"
-<x:ref>REST-URI-Fragment</x:ref>      = "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/" <x:ref>OpenSocial-Group-ID</x:ref> [ "/" <x:ref>OpenSocial-User-ID</x:ref> ]
-<x:ref>REST-Query-Parameters</x:ref>  = TODO: Add optional parameters
+<x:ref>REST-URI-Fragment</x:ref>      = "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/" <x:ref>OpenSocial-Group-ID</x:ref>
+<x:ref>REST-Query-Parameters</x:ref>  = {
+                          [( "fields=" <x:ref>Query-Parameter-Fields</x:ref> )]
+                          [( "format=" <x:ref>Query-Parameter-Format</x:ref> )]
+                         }
 <x:ref>REST-Request-Payload</x:ref>   = null
 <x:ref>RPC-Method</x:ref>             = "people.get"
-<x:ref>RPC-Request-Parameters</x:ref> = ( "userId : " ( <x:ref>OpenSocial-User-ID</x:ref> / <x:ref>OpenSocial-User-ID-List</x:ref> )
-                         ( "groupId : " <x:ref>OpenSocial-Group-ID</x:ref> )
-                         [ TODO: Add optional parameters ]
+<x:ref>RPC-Request-Parameters</x:ref> = { 
+                          <x:ref>RPC-Request-Parameter</x:ref>("userId", <x:ref>OpenSocial-User-ID</x:ref>) 
+                          <x:ref>RPC-Request-Parameter</x:ref>("groupId", <x:ref>OpenSocial-Group-ID</x:ref>)
+                          [ <x:ref>RPC-Request-Parameter</x:ref>("fields", <x:ref>Query-Parameter-Fields</x:ref>) ] 
+                         }
 <x:ref>OpenSocial-Object</x:ref>      = <x:ref>OpenSocial-Collection</x:ref>&lt;<x:ref>OpenSocial-Person</x:ref>&gt;</artwork>
-    <t>Here's an example of a REST request to retrieve a list of the current user's friends, and the associated response. Note that 'format=xml' is used to specify that the response should contain XML.
+    <t>Note that the OpenSocial-Group-ID can't be '@self' in these requests or only a single OpenSocial-Person will be returned.</t>  
+    <t>The RPC protocol also supports retrieving a list of users by specifying a comma-separated list of user IDs in the request.  In this case, the request uses the following values:</t>
+    <artwork type="example">
+<x:ref>RPC-Method</x:ref>             = "people.get"
+<x:ref>RPC-Request-Parameters</x:ref> = { 
+                          <x:ref>RPC-Request-Parameter</x:ref>("userId", <x:ref>OpenSocial-User-ID-List</x:ref>) 
+                          <x:ref>RPC-Request-Parameter</x:ref>("groupId", "@self")
+                          [ <x:ref>RPC-Request-Parameter</x:ref>("fields", <x:ref>Query-Parameter-Fields</x:ref>) ] 
+                         }
+<x:ref>OpenSocial-Object</x:ref>      = <x:ref>OpenSocial-Collection</x:ref>&lt;<x:ref>OpenSocial-Person</x:ref>&gt;</artwork>    
+    <t>Here's an example of a REST request to retrieve the list of a user's friends, and the associated response. Note that 'format=xml' is used to specify that the response should contain XML.
      <t>HTTP Request</t>
      <artwork type="example"
          xml:space="preserve">
-GET /rest/people/@me/@friends?fields=name,gender&amp;format=xml HTTP/1.1
+GET /rest/people/92WEGDFEWSS2GS0DW274EQ/@friends?fields=name,gender&amp;format=xml HTTP/1.1
 HOST api.example.org
 Authorization: hh5s93j4hdidpola</artwork>
      <t>HTTP Response</t>
@@ -698,7 +714,7 @@ Content-Type: text/xml
   &lt;totalResults&gt; 100 &lt;/totalResults&gt;
   &lt;entry&gt;
     &lt;person&gt;
-      &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+      &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
       &lt;name&gt;
         &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
       &lt;/name&gt;
@@ -707,17 +723,16 @@ Content-Type: text/xml
   &lt;/entry&gt;
   &lt;entry&gt;
     &lt;person&gt;
-      &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+      &lt;id&gt;VMK92BFH3DNWRYX39673DF&lt;/id&gt;
       &lt;name&gt;
-        &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
+        &lt;unstructured&gt;John Smith&lt;/unstructured&gt;
       &lt;/name&gt;
-      &lt;gender&gt;female&lt;/gender&gt;
+      &lt;gender&gt;male&lt;/gender&gt;
     &lt;/person&gt;
   &lt;/entry&gt; 
 &lt;/response&gt;</artwork>
      </t>
-     <t>Here's an example of a RPC request to retrieve a person, and the
-     associated response.
+     <t>Here's an example of a RPC request to retrieve the list of a user's friends, and the associated response.
      <t>HTTP Request</t>
      <artwork type="example"
          xml:space="preserve">
@@ -727,10 +742,10 @@ Authorization: hh5s93j4hdidpola
 Content-Type: application/json
 {
   "method" : "people.get",
-  "id" : "myself"
+  "id" : "someFriends"
   "params" : {
-    "userId" : "@me",
-    "groupId" : "@self",
+    "userId" : "92WEGDFEWSS2GS0DW274EQ",
+    "groupId" : "@friends",
     "fields" : "name, gender"
   }
 }</artwork>
@@ -740,11 +755,23 @@ Content-Type: application/json
 HTTP/1.x 207 Multi-Status
 Content-Type: application/json
 {
-   "id" : "myself"
+   "id" : "someFriends"
    "result" : {
-     "id" : "example.org:34KJDCSKJN2HHF0DW20394",
-     "name" : { "unstructured" : "Jane Doe"},
-     "gender" : "female"
+     "startIndex" : 1
+     "itemsPerPage" : 2
+     "totalResults" : 100
+     "entry" : [
+       {
+         "id" : "34KJDCSKJN2HHF0DW20394",
+         "name" : { "unstructured" : "Jane Doe"},
+         "gender" : "female"
+       },
+       {
+         "id" : "VMK92BFH3DNWRYX39673DF",
+         "name" : { "unstructured" : "John Smith"},
+         "gender" : "female"
+       }
+     ]
    }
 }</artwork>
      </t>
@@ -787,6 +814,11 @@ Content-Type: application/json
             anchor="MediaItems-Service"></section>
    <section title="Invalidation"
             anchor="Invalidation-Service"></section>
+   <section title="System"
+            anchor="System-Service">
+    <section title="System-Service-ListMethods" anchor=""></section>
+    <section title="System-Service-MethodSignatures" anchor=""></section>
+   </section>
   </section>
   <section title="Data"
            anchor="data">
@@ -1088,6 +1120,8 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
    </reference>   
    <reference anchor="RFC4627">
      <seriesInfo name='RFC' value='4627' />
+   </reference>   
+   <reference anchor="Gadget-Specification">
    </reference>   
 
 
