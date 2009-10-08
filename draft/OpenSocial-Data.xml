@@ -94,7 +94,7 @@
    <section title="Basic Rules">
     <t>The following rules are used throughout this specification to describe
     basic parsing constructs. The US-ASCII coded character set is defined by 
-    <xref target="ANSI X3.4-1986">ANSI X3.4-1986</xref> </t>
+    <xref target="RFC20" /> </t>
     <artwork type="abnf"
          xml:space="preserve">
 <![CDATA[
@@ -113,6 +113,7 @@ HT             = <US-ASCII HT, horizontal-tab (9)>
 CRLF           = CR LF
 LWS            = [CRLF] 1*( SP / HT )
 TEXT           = <any OCTET except CTLs, but including LWS>
+COMMA          = <US-ASCII comma (44)>
       ]]>
 </artwork>
    </section>
@@ -181,21 +182,38 @@ Content-Type: application/json
     </section>
     <section title="Query Parameters" anchor="REST-Query-Parameter">
      <x:anchor-alias value="REST-Query-Parameters" />
+     <x:anchor-alias value="ENCODE-REST-PARAMETER" />
      <t>Additional parameters for a REST request will be passed via the
      querystring portion of the request URI.</t>
-     <artwork type="abnf"
-         xml:space="preserve">
-<x:highlight>REST-Query-Parameters</x:highlight>  = &amp;{REST-Required-Query-Parameters *REST-Optional-Query-Parameter}
-<x:highlight>REST-Query-Parameter</x:highlight>  = OpenSocial-Query-Key "=" OpenSocial-Query-Value 
-</artwork>
-     <t>The OpenSocial-Query-Key may be any one of the 
-     <xref target="standard-query-parameters">standard query
-     parameters</xref> or any additional parameters defined by the current
-     service, with a valid OpenSocial-Query-Value as defined in the description
-     of the key. Both the key and value in a REST-Query-Parameter must be
-     urlencoded as required by the HTTP protocol.</t>
+
+     
+     <t>This specification defines a function ENCODE-REST-PARAMETER, which
+     is an alias for encoding a key/value pair.  The PCT-ENCODE function 
+     is described in section 2.1 of <xref target="RFC3986"/>.</t>
+       <artwork type="abnf"
+         xml:space="preserve">ENCODE-REST-PARAMETER(k,v) = PCT-ENCODE(k) "=" PCT-ENCODE(FLATTEN(v))</artwork>
+         
+     <t>The FLATTEN function is also defined in this spec, and behaves in
+     the following manner:</t>
+     
+     <list style="numbers">
+      <t>If the argument supplied is an array of strings or numbers, the 
+      string representation of each array element is returned, with each element
+      separated by a COMMA.</t>
+      <t>If the argument supplied is a string or a number, the string 
+      representation of the argument is returned.</t>
+     </list>
+     
+     <t>The behavior of FLATTEN for input not explicitly covered here is 
+     undefined.  This includes associtative arrays, or nested arrays.</t>
+     
+     <t>Here is an example of a REST request URL with query parameters.  Note that the fields parameter demonstrates a flattened array:</t>
+     
+     <artwork type="abnf">http://www.example.com/opensocial/rest/people/@me/@self?fields=name,gender&amp;format=json</artwork>
     </section>
    </section>
+   
+   
    <section title="RPC">
     <t>The OpenSocial RPC protocol is defined on top of the HTTP protocol.</t>
     <section title="RPC Request"
@@ -280,23 +298,16 @@ Content-Type: application/json
 RPC-Method = string
 </artwork>
        <t>Available methods can be determined by calling the 
-       <xref>system.listMethods</xref> method.</t>
+       <xref target="system.listMethods"/> method.</t>
       </section>
       <section title="RPC Request Parameters"
                anchor="RPC-Request-Parameters">
+       <x:anchor-alias value="ENCODE-RPC-PARAMETER" />
        <t>Parameters can be passed to RPC methods in the request payload as a
-       JSON object.</t>
-       <artwork type="abnf"
-         xml:space="preserve">
-<x:highlight>RPC-Request-Parameters</x:highlight>      = "{" #RPC-Request-Parameter "}"
-RPC-Request-Parameter       = ( &lt;"&gt; RPC-Request-Parameter-Key &lt;"&gt; ":" &lt;"&gt; RPC-Request-Parameter-Value &lt;"&gt; ) / 
-                              ( &lt;"&gt; <x:ref>OpenSocial-Request-Parameter-Key</x:ref> &lt;"&gt; ":" &lt;"&gt; <x:ref>OpenSocial-Request-Parameter-Value</x:ref> &lt;"&gt; )
-RPC-Request-Parameter-Key   = string
-RPC-Request-Parameter-Value = string
-</artwork>
-       <t>Appropriate values for RPC-Request-Parameter can be determined by
+       JSON object as described in <xref target="RFC4627"/></t>
+       <t>Appropriate values for RPC request parameters can be determined by
        calling the 
-       <xref>system.methodSignatures</xref> method.</t>
+       <xref target="system.methodSignatures"/> method.</t>
        <t>Here is an example of an RPC request payload with procedure-specific
        parameters (userId, groupId) and standard OpenSocial parameters:</t>
        <artwork type="example"
@@ -310,8 +321,13 @@ RPC-Request-Parameter-Value = string
     "fields" : "name, gender",
     "format" : "json"
   }
-}
-</artwork>
+}</artwork>
+       <t>This specification defines a function ENCODE-RPC-PARAMETER which is
+       an alias for the JSON encoding process.  This function takes a key and
+       value as arguments, where the key must be a string, and the value must
+       have a valid JSON encoding.</t>
+       <artwork type="abnf"
+         xml:space="preserve">ENCODE-RPC-PARAMETER(k,v) = "{" &lt;"&gt; k &lt;"&gt; ":" JSON-ENCODE(v) "}")</artwork>
       </section>
      </section>
     </section>
@@ -448,7 +464,7 @@ OpenSocial-Object = <x:ref>JSON-Object</x:ref> / <x:ref>XML-Object</x:ref>
    <section title="JSON Object"
             anchor="JSON-Object">
     <t>The syntax for JSON Objects are defined in the 
-    <xref>JSON Specification</xref>.</t>
+    <xref target="RFC4627"/>.</t>
    </section>
    <section title="XML Object"
             anchor="XML-Object">
@@ -561,7 +577,7 @@ Doe would both be included.)</t>
      <t hangText="updatedSince">When specified the container should only return
      items whose updated date &amp; time is equal to or more recent then the
      specified value. The value MUST be a valid 
-     <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z).</t>
+     <xref target="XSdateTime" /> (e.g. 2008-01-23T04:56:22Z).</t>
      <t hangText="format">Specifies the desired return encoding of the request.
      Must be one of "json", "xml", or "atom".</t>
     </list>
@@ -583,15 +599,15 @@ Doe would both be included.)</t>
 <x:ref>REST-HTTP-Method</x:ref>       = "GET"
 <x:ref>REST-URI-Fragment</x:ref>      = "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/@self"
 <x:ref>REST-Query-Parameters</x:ref>  = {
-                          [( "fields=" <x:ref>Query-Parameter-Fields</x:ref> )]
-                          [( "format=" <x:ref>Query-Parameter-Format</x:ref> )]
+                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("fields", <x:ref>Query-Parameter-Fields-Value</x:ref>) ]
+                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("format", <x:ref>Query-Parameter-Format-Value</x:ref>) ]
                          }
 <x:ref>REST-Request-Payload</x:ref>   = null
 <x:ref>RPC-Method</x:ref>             = "people.get"
 <x:ref>RPC-Request-Parameters</x:ref> = { 
-                          <x:ref>RPC-Request-Parameter</x:ref>("userId", <x:ref>OpenSocial-User-ID</x:ref>) 
-                          <x:ref>RPC-Request-Parameter</x:ref>("groupId", "@self")
-                          [ <x:ref>RPC-Request-Parameter</x:ref>("fields", <x:ref>Query-Parameter-Fields</x:ref>) ] 
+                            <x:ref>ENCODE-RPC-PARAMETER</x:ref>("userId", <x:ref>OpenSocial-User-ID</x:ref>) 
+                            <x:ref>ENCODE-RPC-PARAMETER</x:ref>("groupId", "@self")
+                          [ <x:ref>ENCODE-RPC-PARAMETER</x:ref>("fields", <x:ref>Query-Parameter-Fields-Value</x:ref>) ] 
                          }
 <x:ref>OpenSocial-Object</x:ref>      = <x:ref>OpenSocial-Person</x:ref></artwork>
      <t>Here's an example of a REST request to retrieve a person, and the
@@ -632,7 +648,7 @@ Content-Type: application/json
   "params" : {
     "userId" : "@me",
     "groupId" : "@self",
-    "fields" : "name, gender"
+    "fields" : [ "name", "gender" ]
   }
 }</artwork>
      <t>HTTP Response</t>
@@ -955,7 +971,7 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
       <c>The date this Person was first added to the user's address book or
       friends list (i.e. the creation date of this entry). The value MUST be a
       valid 
-      <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
+      <xref target="XSdateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
       <c>relationships</c>
       <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
       <c>A bi-directionally asserted relationship type that was established
@@ -976,7 +992,7 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
       <c><x:ref>OpenSocial-Date</x:ref></c>
       <c>The most recent date the details of this Person were updated (i.e. the
       modified date of this entry). The value MUST be a valid 
-      <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z). If this Person
+      <xref target="XSdateTime" /> (e.g. 2008-01-23T04:56:22Z). If this Person
       has never been modified since its initial creation, the value MUST be the
       same as the value of published. Note the updatedSince Query Parameter can
       be used to select only people whose updated value is equal to or more
@@ -995,7 +1011,7 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
       <c>The offset from UTC of this Person's current time zone, as of the time
       this response was returned. The value MUST conform to the offset portion
       of 
-      <xref target="xs:dateTime" />, e.g. -08:00. Note that this value MAY
+      <xref target="XSdateTime" />, e.g. -08:00. Note that this value MAY
       change over time due to daylight saving time, and is thus meant to
       signify only the current value of the user's timezone offset.</c>
      </texttable>
@@ -1061,6 +1077,20 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
  </middle>
  <back>
   <references>
+   <reference anchor="RFC2234">
+     <seriesInfo name='RFC' value='2234' />
+   </reference>
+   <reference anchor="RFC20">
+     <seriesInfo name='RFC' value='20' />
+   </reference>
+   <reference anchor="RFC3986">
+     <seriesInfo name='RFC' value='3986' />
+   </reference>   
+   <reference anchor="RFC4627">
+     <seriesInfo name='RFC' value='4627' />
+   </reference>   
+
+
    <reference anchor='RFC2119'>
     <front>
      <title>Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -1072,8 +1102,7 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
      <date month='March'
            year='1997' />
     </front>
-    <seriesInfo name='RFC'
-                value='2119' />
+    <seriesInfo name='RFC' value='2119' />
    </reference>
    <reference anchor='RFC2606'>
     <front>
@@ -1116,7 +1145,7 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
            year='2006' />
     </front>
    </reference>
-   <reference anchor="xs:dateTime"
+   <reference anchor="XSdateTime"
               target="http://www.w3.org/TR/xmlschema-2/#dateTime">
     <front>
      <title>XML Schema Part 2: Datatypes Second Edition</title>
