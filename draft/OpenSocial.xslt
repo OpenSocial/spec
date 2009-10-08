@@ -15,7 +15,7 @@
                 exclude-result-prefixes="date ed exslt msxsl myns rdf saxon saxon-old x xhtml"
                 >
 
-  <xsl:import href="rfc2629.xml"/>
+  <xsl:import href="rfc2629.xslt"/>
   
   <xsl:template match="x:ref">
     <xsl:variable name="val" select="."/>
