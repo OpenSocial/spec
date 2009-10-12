@@ -177,156 +177,161 @@ Developers MUST provide a value for the node appropriate to the @mode value. If 
 
 </section>
 <section title="/UserPref">
-<![CDATA[
+<t>A User Preference specification. Containers MUST handle all default and required values as specified in [[User Preferences]], and they SHOULD handle all other values if they are appropriate for the type of container.</t>
+<list style="hanging">
+  <t hangText="@name">The name of the preference. Containers MUST provide the current value of the preference under this key in the javascript API [[gadgets.Prefs.getPref]] and all variants. This is also the key used when performing UP substitutions (see [[Localization]]).</t>
+  <t hangText="@datatype">The data type for this preference. Valid values are "string", "hidden", "bool", "list", and "number". The default value is "string". Containers SHOULD interpret datatype as specified in [[User Preferences]] when rendering any user interface components for Users.</t>
+  <t hangText="@display_name">The name of the preference for use when rendering an editing interface for prefs. Developers SHOULD use this value to provide a localized name for the preference as described in [[Localization]]. Containers SHOULD use this value to render any editing interfaces for Users.</t>
+  <t hangText="@default_value">A default value for this preference. Containers MUST provide this value for any calls to [[gadgets.Prefs.getPref]] and all variants whenever the key matches @name.</t>
+  <t hangText="@required">Whether or not a valid value needs to be set for this preference in order for the gadget to function correctly. Valid values are "true" and "false" (default). If the value is "true", Containers SHOULD display an error message or a prompt if there is no valid value stored.</t>
+  </list>
+    
+<t>text()
+This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
+</section>
 
-A User Preference specification. Containers MUST handle all default and required values as specified in [[User Preferences]], and they SHOULD handle all other values if they are appropriate for the type of container.
-@name The name of the preference. Containers MUST provide the current value of the preference under this key in the javascript API [[gadgets.Prefs.getPref]] and all variants. This is also the key used when performing UP substitutions (see [[Localization]]).
-@datatype
-The data type for this preference. Valid values are "string", "hidden", "bool", "list", and "number". The default value is "string". Containers SHOULD interpret datatype as specified in [[User Preferences]] when rendering any user interface components for Users. @display_name The name of the preference for use when rendering an editing interface for prefs. Developers SHOULD use this value to provide a localized name for the preference as described in [[Localization]]. Containers SHOULD use this value to render any editing interfaces for Users. @default_value A default value for this preference. Containers MUST provide this value for any calls to [[gadgets.Prefs.getPref]] and all variants whenever the key matches @name. @required
-Whether or not a valid value needs to be set for this preference in order for the gadget to function correctly. Valid values are "true" and "false" (default). If the value is "true", Containers SHOULD display an error message or a prompt if there is no valid value stored.
-text()
-This tag has child elements. Containers SHOULD NOT interpret child text nodes. /UserPref/EnumValue
-
-A single value that serves as a constraint on User Preferences when /UserPref/@datatype is "enum". Containers SHOULD use EnumValue elements to present Users with a menu when rendering a preferences interface. For details on handling enum preferences, see [[User Preferences]].
-@value
-The value for this enumeration element.
-@display_value
-A textual representation of @value. Defaults to the value of @value. Containers SHOULD display this value in place of @value when rendering a user interface for editing preferences. text()
-Not used at this time.
-]]>
+<section title="/UserPref/EnumValue">
+<t>A single value that serves as a constraint on User Preferences when /UserPref/@datatype is "enum". Containers SHOULD use EnumValue elements to present Users with a menu when rendering a preferences interface. For details on handling enum preferences, see [[User Preferences]].</t>
+<list style="hanging">
+  <t hangText="@value">The value for this enumeration element.</t>
+  <t hangText="@display_value">A textual representation of @value. Defaults to the value of @value. Containers SHOULD display this value in place of @value when rendering a user interface for editing preferences.</t>
+  <t hangText="text()">Not used at this time.</t>
+</list>
 </section>
 
 <section title="/Content">
 
-<![CDATA[
-
-Contains the run time portion of the gadget. For detailed explanation, see [[Content]].
-@type
-The type of content included in the body of this element. Valid values are "html" and "url". Containers MUST interpret the body of this element according to the specific processing rules for each type, as specified in [[Content]].
-@href
-A url pointing to an external file containing the body of this element. If @type is "url", this value is REQUIRED. If @type is "url", this value represents an external document that SHOULD be presented directly to Users without filtering, typically by rendering an html IFRAME element with @href as the "src" attribute. If @type is "html", the external file is to be retrieved from the target url and interpreted as though the contents were the body of this element. @preferred_height
-The suggested default height, in pixels, to use when rendering this gadget. Containers SHOULD use this value as the default height for a gadget in any environment that allows gadgets to have variable heights.
-@preferred_width
-the suggested default width, in pixels, to use when rendering this gadget. Containers SHOULD use this value as the default width for a gadget in any environment that allows gadgets to have variable widths.
-@view
-The view(s) to include this content for. See [[Views]] for detailed processing instructions.
-text()
-Contains data in an appropriate format to satisfy the requirements for @type specified in [[Content]]. When @type is "html", if no @href is specified, this value MUST be a block of html.
-
-]]>
+<t>Contains the run time portion of the gadget. For detailed explanation, see [[Content]].</t>
+<list style="hanging">
+  <t hangText="@type">The type of content included in the body of this element. Valid values are "html" and "url". Containers MUST interpret the body of this element according to the specific processing rules for each type, as specified in [[Content]].</t>
+  <t hangText="@href">A url pointing to an external file containing the body of this element. If @type is "url", this value is REQUIRED. If @type is "url", this value represents an external document that SHOULD be presented directly to Users without filtering, typically by rendering an html IFRAME element with @href as the "src" attribute. If @type is "html", the external file is to be retrieved from the target url and interpreted as though the contents were the body of this element.</t>
+  <t hangText="@preferred_height">The suggested default height, in pixels, to use when rendering this gadget. Containers SHOULD use this value as the default height for a gadget in any environment that allows gadgets to have variable heights.</t>
+  <t hangText="@preferred_width">The suggested default width, in pixels, to use when rendering this gadget. Containers SHOULD use this value as the default width for a gadget in any environment that allows gadgets to have variable widths.</t>
+  <t hangText="@view">The view(s) to include this content for. See [[Views]] for detailed processing instructions.</t>
+  <t hangText="text()">Contains data in an appropriate format to satisfy the requirements for @type specified in [[Content]]. When @type is "html", if no @href is specified, this value MUST be a block of html.</t>
+</list>
 </section>
   </section>
   </section>
 
 <section title="Variable Substitution">
-<![CDATA[
-
-Variables may be substituted into a gadget by replacing special variable tokens with an appropriate value defined elsewhere in the spec. Tokens take the form __<TYPE>_<key>__. For all substitutions, the full token is to be replaced by a value for the following values of <TYPE>:
-MSG
+<t>
+Variables may be substituted into a gadget by replacing special variable tokens with an appropriate value defined elsewhere in the spec. Tokens take the form __&lt;TYPE&gt;_&lt;key&gt;__. For all substitutions, the full token is to be replaced by a value for the following values of &lt;TYPE&gt;:
+</t>
+<list style="hanging">
+<t hangText="MSG">
 See [[Localization]] BIDI
 See [[Localization]] MODULE
-Currently only one <key> is supported; "ID". Containers SHOULD provide a unique value for ID for each instance of a gadget displayed simultaneously. UP
-See [[User Preferences]] Whenever there is no value for a token declared in the gadget, Containers SHOULD still replace the token with an empty string. Containers MUST NOT replace tokens with an unknown TYPE with an empty string. Instead, the token should be left in the gadget in it's original form.
+Currently only one &lt;key&gt; is supported; "ID". Containers SHOULD provide a unique value for ID for each instance of a gadget displayed simultaneously.</t>
+<t hangText="UP">
+See [[User Preferences]] Whenever there is no value for a token declared in the gadget, Containers SHOULD still replace the token with an empty string. Containers MUST NOT replace tokens with an unknown TYPE with an empty string. Instead, the token should be left in the gadget in it's original form.</t>
+</list>
 
-Containers MUST  perform substitution on all elements and attributes defined in [[Elements and Attributes]], with the exceptions of /ModulePrefs/Locale (and children), or any element with an explicit enumeration defined in the [[Schema]]. Containers MUST NOT perform substitution on the raw text of the XML. Containers SHOULD perform substitution on any custom elements or fields that they support.
+<t>Containers MUST  perform substitution on all elements and attributes defined in [[Elements and Attributes]], with the exceptions of /ModulePrefs/Locale (and children), or any element with an explicit enumeration defined in the [[Schema]]. Containers MUST NOT perform substitution on the raw text of the XML. Containers SHOULD perform substitution on any custom elements or fields that they support.</t>
 
-Containers MUST perform MSG substitutions in the order listed above. Containers MUST substitute BIDI, MODULE, and UP tokens after substituting MSG values, but they MUST NOT recursively substitute any other tokens.
-Localization
-Localization of a gadget is achieved primarily through[[Variable Substitution]], using the MSG token.
+<t>Containers MUST perform MSG substitutions in the order listed above. Containers MUST substitute BIDI, MODULE, and UP tokens after substituting MSG values, but they MUST NOT recursively substitute any other tokens.</t>
+</section>
+<section title="Localization">
+<t>Localization of a gadget is achieved primarily through[[Variable Substitution]], using the MSG token.</t>
 
-To determine appropriate keys and values for substitution, Containers MUST select an appropriate /ModulePrefs/Locale based on the following rules:
+<t>To determine appropriate keys and values for substitution, Containers MUST select an appropriate /ModulePrefs/Locale based on the following rules:</t>
+<list>
+   <t>An exact match for the language and country of the User viewing the gadget.</t>
+   <t>An exact match for language, country = "all".</t>
+   <t>Language = "all", country = "all'.</t>
+</list>
 
-   1. An exact match for the language and country of the User viewing the gadget.
-   2. An exact match for language, country = "all".
-   3. Language = "all", country = "all'.
+<t>Containers MAY provide their own translations or use a third-party translation service if there is no appropriate Locale defined in the gadget.</t>
 
+<t>After selecting a Locale, Containers MUST replace all MSG tokens by using /ModulePrefs/Locale/msg/@name for keys and /ModulePrefs/Locale/msg/text() for values.</t>
 
-Containers MAY provide their own translations or use a third-party translation service if there is no appropriate Locale defined in the gadget.
+<t>Containers MUST perform BIDI token substitution with the following values if /ModulePrefs/Locale/@language_direction is "rtl":</t>
 
-After selecting a Locale, Containers MUST replace all MSG tokens by using /ModulePrefs/Locale/msg/@name for keys and /ModulePrefs/Locale/msg/text() for values.
-
-Containers MUST perform BIDI token substitution with the following values if /ModulePrefs/Locale/@language_direction is "rtl":
-
+<t>
 START_EDGE: "right"
 END_EDGE: "left"
 DIR: "rtl"
 REVERSE_DIR: "ltr"
-
-Otherwise:
-
+</t>
+<t>Otherwise:</t>
+<t>
 START_EDGE: "left"
 END_EDGE: "right"
 DIR: "ltr"
 REVERSE_DIR: "rtl"
-Preloading
-Containers SHOULD pre-fetch all HTTP resources specified by /ModulePrefs/Preload elements. When honoring the preloading mechanism, Containers MUST convert the results of the prefetching operation into a temporary object that is stored and accessed at runtime via [[gadgets.io.makeRequest]]. Containers MUST only consider a makeRequest to map to a Preload when the following match:
+</t>
+</section>
 
-/ModulePrefs/Preload/@href matches the "url" parameter of [[gadgets.io.makeRequest]].
 
-/ModulePrefs/Preload/@authz matches one of the valid parameters for [[gadgets.io.AuthorizationType]], converted to lower case.
+<section title="Preloading">
+<t>Containers SHOULD pre-fetch all HTTP resources specified by /ModulePrefs/Preload elements. When honoring the preloading mechanism, Containers MUST convert the results of the prefetching operation into a temporary object that is stored and accessed at runtime via [[gadgets.io.makeRequest]]. Containers MUST only consider a makeRequest to map to a Preload when the following match:</t>
 
-/ModulePrefs/Preload/@sign_owner matches the value passed for [[gadgets.io.RequestParameters.SIGN_OWNER]]
+<t>/ModulePrefs/Preload/@href matches the "url" parameter of [[gadgets.io.makeRequest]].</t>
 
-/ModulePrefs/Preload/@sign_viewer matches the value passed for [[gadgets.io.RequestParameters.SIGN_VIEWER]]
+<t>/ModulePrefs/Preload/@authz matches one of the valid parameters for [[gadgets.io.AuthorizationType]], converted to lower case.</t>
 
-/ModulePrefs/Preload/@views matches the current view (the views attribute is a comma-separated  list of matching views).
-]]>
+<t>/ModulePrefs/Preload/@sign_owner matches the value passed for [[gadgets.io.RequestParameters.SIGN_OWNER]]</t>
+
+<t>/ModulePrefs/Preload/@sign_viewer matches the value passed for [[gadgets.io.RequestParameters.SIGN_VIEWER]]</t>
+
+<t>/ModulePrefs/Preload/@views matches the current view (the views attribute is a comma-separated  list of matching views).</t>
 </section>
 <section title="Views">
 
-<![CDATA[
-A View represents a presentation mode for a gadget. Containers SHOULD select a view that matches the current display context as closely as possible. For example, if a Gadget has a View named "profile", Containers SHOULD use this View when rendering the gadget on a page that displays information about a User.
+<t>A View represents a presentation mode for a gadget. Containers SHOULD select a view that matches the current display context as closely as possible. For example, if a Gadget has a View named "profile", Containers SHOULD use this View when rendering the gadget on a page that displays information about a User.</t>
 
-In order to assemble a View, Containers MUST concatenate all elements with the same value for /Content/@view together (in source order). If /Content/@view is a comma-separated list, each item in the list is to be interpreted as a unique value for @view, and grouped accordingly.
+<t>In order to assemble a View, Containers MUST concatenate all elements with the same value for /Content/@view together (in source order). If /Content/@view is a comma-separated list, each item in the list is to be interpreted as a unique value for @view, and grouped accordingly.</t>
 
-Containers MUST NOT concatenate together any Views where /Content/@type is "url".
+<t>Containers MUST NOT concatenate together any Views where /Content/@type is "url".</t>
 
-When /Content/@type is "html" and /Content/@href is provided, Containers MUST make an HTTP GET request to the url specified by @href, and interpret the response body as though it were /Content/text().
+<t>When /Content/@type is "html" and /Content/@href is provided, Containers MUST make an HTTP GET request to the url specified by @href, and interpret the response body as though it were /Content/text().</t>
 
-When /Content/@type is "url", Containers MUST display a direct view of the value for /Content/@href (for a web context, this SHOULD be an HTML iframe). The Container MUST append 3 query string parameters to the url:
+<t>When /Content/@type is "url", Containers MUST display a direct view of the value for /Content/@href (for a web context, this SHOULD be an HTML iframe). The Container MUST append 3 query string parameters to the url:</t>
+<list style="hanging">
+  <t hangText="lang">The language of the User viewing the gadget (valid values are the same as for /ModulePrefs/Locale/@lang).</t>
+  <t hangText="country">The country of the User viewing the gadget. (valid values are the same as for /ModulePrefs/Locale/@country).</t>
+  <t hangText="libs">A relative url that points to any javascript files necessary to satisfy the [[Features]] referenced by the Gadget.</t>
+</list>
+<t>Containers MAY apply transformations to the final view before rendering it to a User.</t>
 
-   1. "lang" -- The language of the User viewing the gadget (valid values are the same as for /ModulePrefs/Locale/@lang).
-   2. "country" -- The country of the User viewing the gadget. (valid values are the same as for /ModulePrefs/Locale/@country).
-   3. "libs" -- A relative url that points to any javascript files necessary to satisfy the [[Features]] referenced by the Gadget.
-
-
-Containers MAY apply transformations to the final view before rendering it to a User.
-
-Containers MUST perform [[Variable Substitution]] on the final assembled content section when @type is "html".
-User Preferences
-Containers MUST interpret [[/UserPref]] elements by making each preference available to the Gadget through the [[gadgets.Prefs]] library. Containers MUST treat /UserPref/@name as the keys for indexing into stored preference values when invoking [[gadgets.Prefs.getPref]] or any of its variants.
-
-Containers MUST perform [[Variable Substitution]] for user preferences by treating /UserPref/@name as the key in the token and the stored value for the preference as the replacement value.
-
-Containers MUST provide /UserPref/@default_value as the value for the preference when the User or Gadget has not set a value explicitly.
-
-Containers SHOULD provide a user interface so that all visible User Preferences (any type other than "hidden") may be modified by the User of the Gadget.
-
-[[TODO:Standardize language used in the developer's guide and incorporate it here; http://code.google.com/apis/gadgets/docs/fundamentals.html#Datatypes]]
-
-]]>
+<t>Containers MUST perform [[Variable Substitution]] on the final assembled content section when @type is "html".</t>
 </section>
 
-<section title="Feature">
-<![CDATA[
-A Feature is a set of processing instructions and javascript libraries that provides some specific functionality for a Gadget. They are declared in the gadget spec using [[/ModulePrefs/Require]] and [[/ModulePrefs/Optional]].
+<section title="User Preferences">
+<t>Containers MUST interpret [[/UserPref]] elements by making each preference available to the Gadget through the [[gadgets.Prefs]] library. Containers MUST treat /UserPref/@name as the keys for indexing into stored preference values when invoking [[gadgets.Prefs.getPref]] or any of its variants.</t>
 
-Containers MUST honor the feature-specific rules for any Feature that they claim to support. Any Feature not specified in this document SHOULD provide an external specification for processing so that implementations will be correct.
+<t>Containers MUST perform [[Variable Substitution]] for user preferences by treating /UserPref/@name as the key in the token and the stored value for the preference as the replacement value.</t>
 
-Containers MUST display an error message for any "required" feature requested by the Gadget that is not supported.
+<t>Containers MUST provide /UserPref/@default_value as the value for the preference when the User or Gadget has not set a value explicitly.</t>
 
-Containers MUST only return true for [[gadgets.util.hasFeature]] if they actually support the given feature name. Containers MAY only return true for this function if the feature was also requested in the Gadget spec.
-Core
-In addition to explicitly requested features, there is one implicit feature (referred to as "core") that is always present in every Gadget. This "core" feature MUST make the following javascript libraries available to Gadgets at runtime without any additional requirements:
+<t>Containers SHOULD provide a user interface so that all visible User Preferences (any type other than "hidden") may be modified by the User of the Gadget.</t>
 
-[[gadgets.io]]
+<t>[[TODO:Standardize language used in the developer's guide and incorporate it here; http://code.google.com/apis/gadgets/docs/fundamentals.html#Datatypes]]</t>
+
+</section>
+
+<section title="Features">
+<t>A Feature is a set of processing instructions and javascript libraries that provides some specific functionality for a Gadget. They are declared in the gadget spec using [[/ModulePrefs/Require]] and [[/ModulePrefs/Optional]].</t>
+
+<t>Containers MUST honor the feature-specific rules for any Feature that they claim to support. Any Feature not specified in this document SHOULD provide an external specification for processing so that implementations will be correct.</t>
+
+<t>Containers MUST display an error message for any "required" feature requested by the Gadget that is not supported.</t>
+
+<t>Containers MUST only return true for [[gadgets.util.hasFeature]] if they actually support the given feature name. Containers MAY only return true for this function if the feature was also requested in the Gadget spec.</t>
+
+<section title="Core Features">
+<t>In addition to explicitly requested features, there is one implicit feature (referred to as "core") that is always present in every Gadget. This "core" feature MUST make the following javascript libraries available to Gadgets at runtime without any additional requirements:</t>
+
+<t>[[gadgets.io]]
 [[gadgets.util]]
 [[gadgets.Prefs]]
-[[gadgets.json]]
-Javascript only
-Containers claiming support for the following Features MUST provide the Gadget with the javascript library from the table below. See the javascript documentation for each feature for any additional requirements. Containers MAY NOT support all of these features, but they are encouraged to support as many as possible.
+[[gadgets.json]]</t>
+</section>
 
-Feature name
+<section title="Optional Features">
+<t>Containers claiming support for the following Features MUST provide the Gadget with the javascript library from the table below. See the javascript documentation for each feature for any additional requirements. Containers MAY NOT support all of these features, but they are encouraged to support as many as possible.</t>
+
+<t>Feature name
 	Javascript library
 opensocial-0.8
 	[[opensocial]]
@@ -347,55 +352,51 @@ minimessage
 	[[gadgets.MiniMessage]]
 tabs
 	[[gadgets.Tabs]]
-]]>
+</t>
+</section>
 
 </section>
 
 
-<![CDATA[
-Links
-Gadgets MAY specify any number of [[/ModulePrefs/Link]] elements, which the Container SHOULD process according to rules specific to the value of /ModulePrefs/Link/@rel. Containers MAY support additional links, but they should pick an appropriate namespace for the rel attribute so as to not conflict with the standard. Containers MUST NOT support non-standard rel attributes with any of the following prefixes: "opensocial", "gadgets", or "events".
+<section title="Links">
+<t>Gadgets MAY specify any number of [[/ModulePrefs/Link]] elements, which the Container SHOULD process according to rules specific to the value of /ModulePrefs/Link/@rel. Containers MAY support additional links, but they should pick an appropriate namespace for the rel attribute so as to not conflict with the standard. Containers MUST NOT support non-standard rel attributes with any of the following prefixes: "opensocial", "gadgets", or "events".</t>
+</section>
 
-
-Icons
-When the value for /ModulePrefs/Link/@rel is "icon", Containers SHOULD treat the link as a reference to an image that represents an application icon for the Gadget. This is preferred over using /ModulePrefs/Icon, which is deprecated.
-
-]]>
+<section title="Icons">
+<t>When the value for /ModulePrefs/Link/@rel is "icon", Containers SHOULD treat the link as a reference to an image that represents an application icon for the Gadget. This is preferred over using /ModulePrefs/Icon, which is deprecated.</t>
+</section>
 <section title="Lifecycle Events">
-  <![CDATA[
-Whenever an "event" (such as installing or removing an application) occurs on a Container, and the Gadget has specified a value for a matching event name (either as the catch-all "events", or a specific event, named "event.<eventtype", the Container MUST make an HTTP request to the specified url.
+<t>Whenever an "event" (such as installing or removing an application) occurs on a Container, and the Gadget has specified a value for a matching event name (either as the catch-all "events", or a specific event, named "event.eventtype", the Container MUST make an HTTP request to the specified url.</t>
 
-The request sent to the specified endpoint MUST be signed according to the rules in [[Signed Fetch]]. Additionally, one extra parameter named "eventtype" MUST be passed. This value MUST be the same as the event name part of the rel attribute. This should pull in any additional text from what's in the top level doc on opensocial.org right now. It's not clear where gadgets begins and opensocial ends... -Kevin Brown 6/17/08 4:38 PM 
-]]>
+<t>The request sent to the specified endpoint MUST be signed according to the rules in [[Signed Fetch]]. Additionally, one extra parameter named "eventtype" MUST be passed. This value MUST be the same as the event name part of the rel attribute.</t>
 </section>
 <section title="Signed Fetch">
-  <![CDATA[
-Containers MUST support signing of HTTP requests for [[gadgets.io.makeRequest]], [[Lifecycle Events]], and [[Preloading]].
+  
+<t>Containers MUST support signing of HTTP requests for [[gadgets.io.makeRequest]], [[Lifecycle Events]], and [[Preloading]].</t>
 
-SIGNING RULES MUST BE EXPLAINED.
-
-beaton> what about this text?  http://code.google.com/apis/opensocial/docs/0.8/reference/gadgets/#gadgets.io.makeRequest
-OAuth
-Containers MUST support OAuth requests for [[gadgets.io.makeRequest]]. When proxying a Gadget's request, Containers SHOULD use an OAuth token specific to the gadget making the request, and specific to either the Viewer or the Owner of the container page. Furthermore, when proxying a gadget's request, Containers MAY use an OAuth Consumer key and secret specific to the gadget making the request, or they MAY alternatively use the container's OAuth consumer key and secret. 
-
-Consumer Secrets. It is beyond the scope of this document to specify how a Container obtains consumer keys and secrets for Gadgets that it may proxy requests for. As explained above, a Container MAY instead use its own consumer key and secret when making OAuth requests. A Container could even use the RSA_SHA1 signature method, effectively using the same consumer key and secret for all gadgets, and for all OAuth service providers it is proxying requests to.
-
-OAuth Tokens. When proxying a [[gadgets.io.makeRequest]] of AuthorizationType OAUTH, the container SHOULD do the following:
-
-    * If the container finds an appropriate OAuth access token and secret for the request, the Container signs the outgoing request according to the OAuth specification.
-    * If the container finds no appropriate OAuth access token, but an appropriate OAuth request token for the request, the container accesses the access token endpoint of the target service provider, and attempts to exchange the request token for an access token. If successful, the container then immediately uses the access token to sign the request made by the gadget.
-    * If the container finds neither an appropriate OAuth access token or request token, it accesses the request token endpoint of the target service provider to obtain a request token. It then returns an error message to the Gadget that contains, among other things, the user authorization URL at the target service provider. The Gadget is expected to redirect the User Agent to that authorization URL and re-attempt the [[gadgets.io.makeRequest]] once the user has approved the OAuth access. 
-
-
-
-]]>
+<t>TODO: explain signing rules</t>
 </section>
+
+<section title="OAuth">
+<t>Containers MUST support OAuth requests for [[gadgets.io.makeRequest]]. When proxying a Gadget's request, Containers SHOULD use an OAuth token specific to the gadget making the request, and specific to either the Viewer or the Owner of the container page. Furthermore, when proxying a gadget's request, Containers MAY use an OAuth Consumer key and secret specific to the gadget making the request, or they MAY alternatively use the container's OAuth consumer key and secret.</t>
+
+<section title="Consumer Secrets">
+<t>It is beyond the scope of this document to specify how a Container obtains consumer keys and secrets for Gadgets that it may proxy requests for. As explained above, a Container MAY instead use its own consumer key and secret when making OAuth requests. A Container could even use the RSA_SHA1 signature method, effectively using the same consumer key and secret for all gadgets, and for all OAuth service providers it is proxying requests to.</t>
+</section>
+<section title="OAuth Tokens">
+<t>When proxying a [[gadgets.io.makeRequest]] of AuthorizationType OAUTH, the container SHOULD do the following:</t>
+<list>
+  <t>If the container finds an appropriate OAuth access token and secret for the request, the Container signs the outgoing request according to the OAuth specification.</t>
+  <t>If the container finds no appropriate OAuth access token, but an appropriate OAuth request token for the request, the container accesses the access token endpoint of the target service provider, and attempts to exchange the request token for an access token. If successful, the container then immediately uses the access token to sign the request made by the gadget.</t>
+  <t>If the container finds neither an appropriate OAuth access token or request token, it accesses the request token endpoint of the target service provider to obtain a request token. It then returns an error message to the Gadget that contains, among other things, the user authorization URL at the target service provider. The Gadget is expected to redirect the User Agent to that authorization URL and re-attempt the [[gadgets.io.makeRequest]] once the user has approved the OAuth access.</t>
+</list>
+</section>
+</section>
+
 <section title="HTTP Caching">
 <t>Any HTTP documents retrieved by the Container on behalf of the Developer or User MAY be cached. If the Container caches a document, it MUST implement the caching policy as defined by RFC2616. Additionally, containers that cache documents SHOULD provide a mechanism to bypass the caching policy entirely to facilitate development, such as a "nocache" query string parameter passed to the page that the gadget is rendered on.</t>
 </section>
 
-
-  
  </middle>
  <back>
   <references>
