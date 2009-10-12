@@ -228,7 +228,7 @@ data['Viewer']['Name']
      i.e.: for automatic rendering, ${Top} == Data Context; for programmatic
      rendering via template.renderInto(div, data) -&gt; ${Top} == data.</t>
     </section>
-    <section title="Content">
+    <section title="Context">
      <t>${Context} is a holding area for additional variables generated while
      processing templates. ${Context} will include the following set of
      properties: 
