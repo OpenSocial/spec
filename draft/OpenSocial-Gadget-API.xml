@@ -124,14 +124,32 @@ COMMA          = <US-ASCII comma (44)>
      <t>A Data Pipelining request uses the following format:</t>
      <artwork type="abnf"
          xml:space="preserve">
-TODO
+Data-Pipelining-Request = *Data-Pipelining-Tag
+Data-Pipelining-Tag = "&lt;" Data-Pipelining-Namespace ":" <x:ref>Data-Pipelining-Tag-Name</x:ref> " "
+                             "key=" string " "
+                             *<x:ref>Data-Pipelining-Parameters</x:ref>
+                      "&gt;"
+Data-Pipelining-Namespace = string
 </artwork>
      <t>For example, here is a Data Pipelining request to retrieve information about a
      user:</t>
      <artwork type="example"
          xml:space="preserve">
-TODO
+&lt;os:DataRequest key="vwr" method="people.get" userId="@viewer" fields="name,birthday"/&gt;
 </artwork>
+     <section title="Data Pipelining Tags" anchor="Data-Pipelining-Tag-Name">
+      <t>Data Pipelining supports the following tag names:</t>
+      <artwork type="abnf">
+        Data-Pipelining-Tag-Name = DataRequest / HttpRequest / PeopleRequest / ViewerRequest / OwnerRequest / ActivitiesRequest
+      </artwork>
+     </section>
+     <section title="Data Pipelining Parameters" anchor="Data-Pipelining-Parameter">
+      <t>The parameters of a Data Pipelining request are defined by each tag.</t>
+      <t>This specification defines a function ENCODE-DP-PARAMETER which is an alias for the JSON encoding process. This function takes a key and value as arguments, where the key must be a string, and the value must have a valid JSON encoding.</t>
+      <artwork type="abnf">
+ENCODE-DP-PARAMETER(k,v) = k "=" &lt;"&gt; JSON-ENCODE(v) &lt;"&gt;
+      </artwork>
+     </section>
     </section>
     <section title="Response">
      <t>Responses from Data Pipelining requests use the following format:</t>

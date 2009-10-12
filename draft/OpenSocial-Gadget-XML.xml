@@ -63,7 +63,6 @@
     </section>
     <section title="Module" anchor="Module">
      <t>The root node of a gadget XML specification is the Module element.</t>
-    </section>
     <section title="/ModulePrefs" anchor="ModulePrefs">
      <t>Serves as a container element for all Metadata, Features, and processing rules. For nested element descriptions, see their individual sections of this document.</t>
      <t>The ModulePrefs element supports the following attributes:</t>
@@ -86,9 +85,6 @@ The preferred default height of the gadget, in pixels. Containers SHOULD use thi
       <t hangText="@width"> The preferred default width of he gadget, in pixels. Containers SHOULD use this value to set an appropriate width for the gadget when it is first rendered. text()</t>
      </list>
      <t>This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
-    </section>
-
-
     <section title="/ModulePrefs/Require and /ModulePrefs/Optional">
      <t>Declares Feature dependencies of the gadget. Features are defined in more detail at [[Features]]. For /ModulePrefs/Require, Containers MUST display an error message if they do not support the feature. For /ModulePrefs/Optional, Containers MUST still render the gadget. Developers SHOULD use [[gadgets.util.hasFeature]] for capability-based testing when using /ModulePrefs/Optional.</t>
      <t>The Require and Optional elements support the following attributes:</t>
@@ -96,8 +92,6 @@ The preferred default height of the gadget, in pixels. Containers SHOULD use thi
        <t hangText="@feature">The name of the Feature. Containers MUST interpret this value as described in [[Features]]. When the Container supports the feature, [[gadgets.util.hasFeature(feature)]] MUST return true; otherwise it MUST return false.</t>
       </list>
      <t>This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
-    </section>
-
     <section title="/ModulePrefs/Require/Param and /ModulePrefs/Optional/Param">
      <t>Provides configuration parameters for a Feature. Containers MUST populate these values in [[gadgets.util.getFeatureParameters]], with @name representing the key, and text() representing the value. More details at [[Features]].</t>
      <t>The Param element supports the following attributes:</t>
@@ -106,61 +100,84 @@ The preferred default height of the gadget, in pixels. Containers SHOULD use thi
       <t hangText="@value">The value for the parameter. Containers MUST use this as the value returned when a matching key is found in [[gadgets.util.getFeatureParameters]].</t>
      </list>
     </section>
+    </section>
+    <section title="/ModulePrefs/Preload">
+     <t>An HTTP request to pre-fetch. Containers MUST provide the results of HTTP fetches requested with this element in response to [[gadgets.io.makeRequest]] calls with matching inputs. For more details, see [[Preloading]].</t>
+     <list style="hanging">
+      <t hangText="@href">The url of the request to prefetch.</t>
+      <t hangText="@authz">The authentication type to use for making this request. Valid values are the same as for [[gadgets.io.AuthorizationType]], though the names are converted to lower case to appear more natural in XML.</t>
+      <t hangText="@sign_owner">Indicates that the Owner should be passed to endpoints when using an authentication type that requires it. Containers MUST pass the owner id when this value is "true" (default).</t>
+      <t hangText="@sign_viewer">Indicates that the Viewer should be passed to endpoints when using an authentication type that requires it. Containers MUST pass the viewer id when this value is "true" (default).</t>
+      <t hangText="@views">A comma-separated list of Views to pre-fetch this request for. Containers SHOULD only perform Preloading when an appropriate view is being rendered.</t>
+      </list>
+    </section>
+    <section title="/ModulePrefs/Icon">
+     <t>A link or embedded image that serves as an icon for the gadget.</t>
+     <t>The Icon element supports the following attributes:</t>
+     <list style="hanging">
+      <t hangText="@mode">The encoding used for the icon when embedding an image in text(). Currently, only base64 is supported. Containers SHOULD treat text() as a [[base64]] encoded image when this attribute is provided. Otherwise, text() should be interpreted as an image url.</t>
+      <t hangText="@type">The [[mime type]] of the embedded icon text. Containers SHOULD interpret the encoded text() using this mime type. text()
+Developers MUST provide a value for the node appropriate to the @mode value. If @mode is "base64", text() MUST be a base64-encoded image in the format specified by @type. If @mode is missing, text() MUST be a valid url pointing to an image file.</t>
+     </list>
+    </section>
+    <section title="/ModulePrefs/Locale">
+     <t>Provides localization information. Containers MUST honor localization rules as specified in [[Localization]]. Each Locale tag represents localization information for a single locale.</t>
+     <list style="hanging">
+       <t hangText="@lang">The language for this locale. Containers MUST interpret this as an ISO-639-1 language code, or the special (default) value "all", which Containers MUST interpret as applying to all languages, unless a more specific match is found.</t>
+       <t hangText="@country">The language for this locale. Containers MUST interpret this as an ISO-3166-1 country code, or the special (default) value "all", which Containers MUST interpret as applying to all countries unless a more specific match is found.</t>
+       <t hangText="@messages">A url pointing to an XML document that contains nested /ModulePrefs/Locale/msg elements. Containers MUST honor [[Retrieval]] and [[Parsing]] rules for these files. Containers MUST treat all child elements of the root XML element in the document as though they are child nodes of /ModulePrefs/Locale</t>
+       <t hangText="@language_direction">Specifies the direction to render the gadget in. Valid values are "rtl" (right to left) and "ltr" (left to right). Containers SHOULD use this value for determining the appropriate rendering direction for gadget content in this locale. This value controls language direction variables in [[Localization]]</t>
+       </list>
+       <t>This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
+       <section title="/ModulePrefs/Locale/msg">
+        <t>A single localized value, keyed by @name, with the value coming from text().</t>
+        <list style="hanging">
+         <t hangText="@name">The name of the localized message. The Container MUST use this as the key for the javascript API [[gadgets.Prefs.getMsg]] and for MSG substitutions (see [[Localization]]).</t>
+         <t hangText="text()">The value of the message. Containers MUST substitute this value for @name according to [[Localization]] rules, and provide this value for any key matching @name in [[gadgets.Prefs.getMsg]].</t>
+        </list>
+      </section>
+     </section> 
+     <section title="/ModulePrefs/Link">
+      <t>Provides links to external documents or files to be used in different contexts. For details, see  [[Lifecycle Events]] and [[Links]]. CURRENT XSD ONLY HAS 3 EVENTS LISTED. THIS SHOULD BE FIXED.</t>
+      <list style="hanging">
+       <t hangText="@rel">The relationship between this link and the document. Valid values are specified in [[Lifecycle Events]] and [[Links]. Containers MAY support additional values, but they MUST be namespaced to avoid collisions.</t>
+       <t hangText="@href">The url of the link.</t>
+      </list>
+     </section>
+     <section title="/ModulePrefs/OAuth">
+      <t>Supplies the Container with OAuth service configuration for the gadget. For details, see [[OAuth]].</t>
+      <section title="/ModulePrefs/OAuth/Service">
+       <t>A single OAuth service configuration.</t>
+       <list style="hanging">
+        <t hangText="@name">The name of the service, used for referencing OAuth services at runtime.  This parameter is optional, and if unspecified defaults to an empty string.  Gadget developers specify which OAuth service they wish to use by passing the service name as a parameter to makeRequest.  [[point to makeRequest parameter here]].</t>
+      </list>
+<section title="/ModulePrefs/OAuth/Service/Request">
+<t>Represents the OAuth request token URL. See [[external link to oauth site]] and [[OAuth]] for details.</t>
+<list style="hanging">
+  <t hangText="@url">The url for the endpoint.</t>
+  <t hangText="@method">The HTTP verb to use for making the request. Containers MUST use this HTTP method when sending the request to the service url.  This parameter is optional.  If unspecified, it defaults to POST.</t>
+  <t hangText="@param_location">One of 3 possible locations in the request to the service where the OAuth parameters may be passed. Developers MAY use this value to specify the location of OAuth-related parameters. The possible values are "uri-query", "auth-header", and "post-body", corresponding to the options described in [[Section 5.2 of OAuth 1.0][http://oauth.net/core/1.0/#consumer_req_param]]. The default value is "auth-header".</t>
+</list>
+</section>
+<section title="/ModulePrefs/OAuth/Service/Access">
 
+<t>Represents the OAuth access token URLs. See [[external link to oauth site]] and [[OAuth]] for details.</t>
+<list style="hanging">
+  <t hangText="@url">The url for the endpoint.</t>
+  <t hangText="@method">The HTTP verb to use for making the request. Containers MUST use this HTTP method when sending the request to the service url.  This parameter is optional.  If unspecified, it defaults to POST.</t>
+  <t hangText="@param_location">One of 3 possible locations in the request to the service where the OAuth parameters may be passed. Developers MAY use this value to specify the location of OAuth-related parameters. The possible values are "uri-query", "auth-header", and "post-body", corresponding to the options described in [[Section 5.2 of OAuth 1.0][http://oauth.net/core/1.0/#consumer_req_param]]. The default value is "auth-header".</t>
+</list>
+
+</section>
+<section title="/ModulePrefs/OAuth/Service/Authorization">
+<t>The OAuth authorization URL. [[Section section 6.2 of oauth: http://oauth.net/core/1.0/#auth_step2]]</t>
+</section>
+    </section>
+</section>
+
+</section>
+<section title="/UserPref">
 <![CDATA[
-
-/ModulePrefs/Preload
-
-An HTTP request to pre-fetch. Containers MUST provide the results of HTTP fetches requested with this element in response to [[gadgets.io.makeRequest]] calls with matching inputs. For more details, see [[Preloading]].
-@href
-The url of the request to prefetch. @authz The authentication type to use for making this request. Valid values are the same as for [[gadgets.io.AuthorizationType]], though the names are converted to lower case to appear more natural in XML.
-@sign_owner Indicates that the Owner should be passed to endpoints when using an authentication type that requires it. Containers MUST pass the owner id when this value is "true" (default).
-@sign_viewer Indicates that the Viewer should be passed to endpoints when using an authentication type that requires it. Containers MUST pass the viewer id when this value is "true" (default). @views A comma-separated list of Views to pre-fetch this request for. Containers SHOULD only perform Preloading when an appropriate view is being rendered. text()
-Not used at this time.
-/ModulePrefs/Icon
-
-A link or embedded image that serves as an icon for the gadget. Attributes are as follows:
-@mode
-The encoding used for the icon when embedding an image in text(). Currently, only base64 is supported. Containers SHOULD treat text() as a [[base64]] encoded image when this attribute is provided. Otherwise, text() should be interpreted as an image url. @type The [[mime type]] of the embedded icon text. Containers SHOULD interpret the encoded text() using this mime type. text()
-Developers MUST provide a value for the node appropriate to the @mode value. If @mode is "base64", text() MUST be a base64-encoded image in the format specified by @type. If @mode is missing, text() MUST be a valid url pointing to an image file.
-/ModulePrefs/Locale
-
-Provides localization information. Containers MUST honor localization rules as specified in [[Localization]]. Each Locale tag represents localization information for a single locale.
-@lang
-The language for this locale. Containers MUST interpret this as an ISO-639-1 language code, or the special (default) value "all", which Containers MUST interpret as applying to all languages, unless a more specific match is found.
-@country The language for this locale. Containers MUST interpret this as an ISO-3166-1 country code, or the special (default) value "all", which Containers MUST interpret as applying to all countries unless a more specific match is found. @messages A url pointing to an XML document that contains nested /ModulePrefs/Locale/msg elements. Containers MUST honor [[Retrieval]] and [[Parsing]] rules for these files. Containers MUST treat all child elements of the root XML element in the document as though they are child nodes of /ModulePrefs/Locale @language_direction Specifies the direction to render the gadget in. Valid values are "rtl" (right to left) and "ltr" (left to right). Containers SHOULD use this value for determining the appropriate rendering direction for gadget content in this locale. This value controls language direction variables in [[Localization]] text()
-This tag has child elements. Containers SHOULD NOT interpret child text nodes. /ModulePrefs/Locale/msg
-
-A single localized value, keyed by @name, with the value coming from text().
-@name
-The name of the localized message. The Container MUST use this as the key for the javascript API [[gadgets.Prefs.getMsg]] and for MSG substitutions (see [[Localization]]). text()
-The value of the message. Containers MUST substitute this value for @name according to [[Localization]] rules, and provide this value for any key matching @name in [[gadgets.Prefs.getMsg]].
-/ModulePrefs/Link
-
-Provides links to external documents or files to be used in different contexts. For details, see  [[Lifecycle Events]] and [[Links]]. CURRENT XSD ONLY HAS 3 EVENTS LISTED. THIS SHOULD BE FIXED.
-
-@rel The relationship between this link and the document. Valid values are specified in [[Lifecycle Events]] and [[Links]. Containers MAY support additional values, but they MUST be namespaced to avoid collisions. @href The url of the link. text()
-Not used at this time.
-/ModulePrefs/OAuth
-
-Supplies the Container with OAuth service configuration for the gadget. For details, see [[OAuth]].
-
-/ModulePrefs/OAuth/Service
-
-A single OAuth service configuration. @name The name of the service, used for referencing OAuth services at runtime.  This parameter is optional, and if unspecified defaults to "".  Gadget developers specify which OAuth service they wish to use by passing the service name as a parameter to makeRequest.  [[point to makeRequest parameter here]].
-text()
-Not used at this time. /ModulePrefs/OAuth/Service/Request /ModulePrefs/OAuth/Service/Access
-
-Represents the OAuth request token and access token URLs. See [[external link to oauth site]] and [[OAuth]] for details.
-
-@url The url for the endpoint.
-@method The HTTP verb to use for making the request. Containers MUST use this HTTP method when sending the request to the service url.  This parameter is optional.  If unspecified, it defaults to POST.
-@param_location One of 3 possible locations in the request to the service where the OAuth parameters may be passed. Developers MAY use this value to specify the location of OAuth-related parameters. The possible values are "uri-query", "auth-header", and "post-body", corresponding to the options described in [[Section 5.2 of OAuth 1.0][http://oauth.net/core/1.0/#consumer_req_param]]. The default value is "auth-header". text()
-Not used at this time. /ModulePrefs/OAuth/Service/Authorization
-
-The OAuth authorization URL. [[Section section 6.2 of oauth: http://oauth.net/core/1.0/#auth_step2]]
-
-/UserPref
 
 A User Preference specification. Containers MUST handle all default and required values as specified in [[User Preferences]], and they SHOULD handle all other values if they are appropriate for the type of container.
 @name The name of the preference. Containers MUST provide the current value of the preference under this key in the javascript API [[gadgets.Prefs.getPref]] and all variants. This is also the key used when performing UP substitutions (see [[Localization]]).
@@ -175,7 +192,13 @@ A single value that serves as a constraint on User Preferences when /UserPref/@d
 The value for this enumeration element.
 @display_value
 A textual representation of @value. Defaults to the value of @value. Containers SHOULD display this value in place of @value when rendering a user interface for editing preferences. text()
-Not used at this time. /Content
+Not used at this time.
+]]>
+</section>
+
+<section title="/Content">
+
+<![CDATA[
 
 Contains the run time portion of the gadget. For detailed explanation, see [[Content]].
 @type
@@ -189,7 +212,15 @@ the suggested default width, in pixels, to use when rendering this gadget. Conta
 The view(s) to include this content for. See [[Views]] for detailed processing instructions.
 text()
 Contains data in an appropriate format to satisfy the requirements for @type specified in [[Content]]. When @type is "html", if no @href is specified, this value MUST be a block of html.
-Variable Substitution
+
+]]>
+</section>
+  </section>
+  </section>
+
+<section title="Variable Substitution">
+<![CDATA[
+
 Variables may be substituted into a gadget by replacing special variable tokens with an appropriate value defined elsewhere in the spec. Tokens take the form __<TYPE>_<key>__. For all substitutions, the full token is to be replaced by a value for the following values of <TYPE>:
 MSG
 See [[Localization]] BIDI
@@ -239,7 +270,11 @@ Containers SHOULD pre-fetch all HTTP resources specified by /ModulePrefs/Preload
 /ModulePrefs/Preload/@sign_viewer matches the value passed for [[gadgets.io.RequestParameters.SIGN_VIEWER]]
 
 /ModulePrefs/Preload/@views matches the current view (the views attribute is a comma-separated  list of matching views).
-Views
+]]>
+</section>
+<section title="Views">
+
+<![CDATA[
 A View represents a presentation mode for a gadget. Containers SHOULD select a view that matches the current display context as closely as possible. For example, if a Gadget has a View named "profile", Containers SHOULD use this View when rendering the gadget on a page that displays information about a User.
 
 In order to assemble a View, Containers MUST concatenate all elements with the same value for /Content/@view together (in source order). If /Content/@view is a comma-separated list, each item in the list is to be interpreted as a unique value for @view, and grouped accordingly.
@@ -268,7 +303,12 @@ Containers MUST provide /UserPref/@default_value as the value for the preference
 Containers SHOULD provide a user interface so that all visible User Preferences (any type other than "hidden") may be modified by the User of the Gadget.
 
 [[TODO:Standardize language used in the developer's guide and incorporate it here; http://code.google.com/apis/gadgets/docs/fundamentals.html#Datatypes]]
-Features
+
+]]>
+</section>
+
+<section title="Feature">
+<![CDATA[
 A Feature is a set of processing instructions and javascript libraries that provides some specific functionality for a Gadget. They are declared in the gadget spec using [[/ModulePrefs/Require]] and [[/ModulePrefs/Optional]].
 
 Containers MUST honor the feature-specific rules for any Feature that they claim to support. Any Feature not specified in this document SHOULD provide an external specification for processing so that implementations will be correct.
@@ -307,16 +347,29 @@ minimessage
 	[[gadgets.MiniMessage]]
 tabs
 	[[gadgets.Tabs]]
+]]>
 
+</section>
+
+
+<![CDATA[
 Links
 Gadgets MAY specify any number of [[/ModulePrefs/Link]] elements, which the Container SHOULD process according to rules specific to the value of /ModulePrefs/Link/@rel. Containers MAY support additional links, but they should pick an appropriate namespace for the rel attribute so as to not conflict with the standard. Containers MUST NOT support non-standard rel attributes with any of the following prefixes: "opensocial", "gadgets", or "events".
+
+
 Icons
 When the value for /ModulePrefs/Link/@rel is "icon", Containers SHOULD treat the link as a reference to an image that represents an application icon for the Gadget. This is preferred over using /ModulePrefs/Icon, which is deprecated.
-Lifecycle Events
+
+]]>
+<section title="Lifecycle Events">
+  <![CDATA[
 Whenever an "event" (such as installing or removing an application) occurs on a Container, and the Gadget has specified a value for a matching event name (either as the catch-all "events", or a specific event, named "event.<eventtype", the Container MUST make an HTTP request to the specified url.
 
 The request sent to the specified endpoint MUST be signed according to the rules in [[Signed Fetch]]. Additionally, one extra parameter named "eventtype" MUST be passed. This value MUST be the same as the event name part of the rel attribute. This should pull in any additional text from what's in the top level doc on opensocial.org right now. It's not clear where gadgets begins and opensocial ends... -Kevin Brown 6/17/08 4:38 PM 
-Signed Fetch
+]]>
+</section>
+<section title="Signed Fetch">
+  <![CDATA[
 Containers MUST support signing of HTTP requests for [[gadgets.io.makeRequest]], [[Lifecycle Events]], and [[Preloading]].
 
 SIGNING RULES MUST BE EXPLAINED.
@@ -335,17 +388,12 @@ OAuth Tokens. When proxying a [[gadgets.io.makeRequest]] of AuthorizationType OA
 
 
 
-DO WE NEED MORE HERE?
-
-beaton: not wild about this text, it's confusing. It's both less descriptive and less normative than we need. We clearly need to document what an OAuth proxy MUST and SHOULD do, but I'm not sure it belongs next to a description of the gadget spec.
-The alternative is placing it in the javascript specification, but that makes it awkward to describe OAuth for Preload or anything other than makeRequest. -Kevin Brown 6/13/08 12:20 AM 
-HTTP Caching
-
-Any HTTP documents retrieved by the Container on behalf of the Developer or User MAY be cached. If the Container caches a document, it MUST implement the caching policy as defined by RFC2616. Additionally, containers that cache documents SHOULD provide a mechanism to bypass the caching policy entirely to facilitate development, such as a "nocache" query string parameter passed to the page that the gadget is rendered on. 
-
-
 ]]>
-  </section>
+</section>
+<section title="HTTP Caching">
+<t>Any HTTP documents retrieved by the Container on behalf of the Developer or User MAY be cached. If the Container caches a document, it MUST implement the caching policy as defined by RFC2616. Additionally, containers that cache documents SHOULD provide a mechanism to bypass the caching policy entirely to facilitate development, such as a "nocache" query string parameter passed to the page that the gadget is rendered on.</t>
+</section>
+
 
   
  </middle>
