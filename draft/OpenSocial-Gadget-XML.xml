@@ -51,13 +51,13 @@
     </section>
     <section title="Parsing" anchor="Parsing">
      <t>XML documents MUST be well-formed, and Containers MUST display an error to Users if they are asked to process a malformed document. Containers SHOULD provide meaningful error messages to Developers when the specification is malformed.</t>
-     <t>Containers MUST NOT reject XML documents that are not valid (as mandated by the <xref target="Gadget-Canonical-Schema">canonical</xref> and <xref target="Gadget-Extended-Schema">extended</xref> schema definitions), as long as a valid document can be derived from the markup that exists. This means that Containers MUST ignore any attributes or tags that they can not interpret. This requirement is included to facilitate extensions to the schema for Container-specific uses. Containers MAY reject XML documents that do not provide all tags and attribute values required by the Container, but if they do so they MUST provide feedback to the Developer explaining the requirement.</t>
+     <t>Containers MUST NOT reject XML documents that are not valid (as mandated by the <xref target="canonicalGadgetXSD">canonical</xref> and <xref target="gadgetsExtendedXSD">extended</xref> schema definitions), as long as a valid document can be derived from the markup that exists. This means that Containers MUST ignore any attributes or tags that they can not interpret. This requirement is included to facilitate extensions to the schema for Container-specific uses. Containers MAY reject XML documents that do not provide all tags and attribute values required by the Container, but if they do so they MUST provide feedback to the Developer explaining the requirement.</t>
      <t>Containers MAY support non-standard tags and attributes, but they MUST be enclosed in a separate XML namespace. This namespace SHOULD reflect the name of the organization responsible for the Container to avoid conflicts with other Containers. Containers are encouraged to try to find a way to work within the base schema whenever possible. Whenever an equivalent syntax is introduced into the standard, the Container MUST deprecate the proprietary extension and encourage their users to migrate to the standardized solution.</t>
      <t>Containers MUST perform variable substitution according to the rules defined in <xref target="VariableSubstitution">Variable Substitution</xref>.</t>
      <t>Containers MUST interpret any relative URLs found in XML attributes or values as relative to the gadget spec's URL. Containers MAY refuse to use or display the content referenced by these URLs at their discretion.</t>
     </section>
-    <section title="Elements and Attributes">
-     <t>The following XML elements and attributes MUST be supported by the Container as mandated by the <xref target="Gadget-Canonical-Schema">canonical</xref> and <xref target="Gadget-Extended-Schema">extended</xref> schema definitions). Additional elements and attributes MAY be supported, but these elements are beyond the scope of this document.</t>
+    <section title="Elements and Attributes" anchor="ElementsAndAttributes">
+     <t>The following XML elements and attributes MUST be supported by the Container as mandated by the <xref target="canonicalGadgetXSD">canonical</xref> and <xref target="gadgetsExtendedXSD">extended</xref> schema definitions). Additional elements and attributes MAY be supported, but these elements are beyond the scope of this document.</t>
     </section>
     <section title="Module" anchor="Module">
      <t>The root node of a gadget XML specification is the Module element. It does not support any attributes and containers SHOULD NOT interpret child text nodes.</t>
@@ -83,7 +83,7 @@
         A link to an image of the gadget as it appears at run time. Containers SHOULD display this image on Directory pages to provide a preview of the gadget to Users.
         </t>
       <t hangText="@thumbnail">
-        A link to an image representing the gadget. This SHOULD be smaller than @screenshot and larger than any <xref target="Icon">/ModulePrefs/Icon</xref> elements.
+        A link to an image representing the gadget. This SHOULD be smaller than @screenshot and larger than any <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref> elements.
         </t>
       <t hangText="@height">
         The preferred default height of the gadget, in pixels. Containers SHOULD use this value to set an appropriate height for the gadget when it is first rendered.
@@ -91,27 +91,27 @@
       <t hangText="@width">
         The preferred default width of he gadget, in pixels. Containers SHOULD use this value to set an appropriate width for the gadget when it is first rendered.
         </t>
-      <t hanText="text()">This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
+      <t hangText="text()">This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
     </list>
     <section title="/ModulePrefs/Require and /ModulePrefs/Optional" anchor="RequireAndOptional">
-     <t>Declares Feature dependencies of the gadget. Features are defined in more detail at <xref target="Features">Features</xref>. For /ModulePrefs/Require, Containers MUST display an error message if they do not support the feature. For /ModulePrefs/Optional, Containers MUST still render the gadget. Developers SHOULD use <xref target="hasFeature">gadgets.util.hasFeature</xref> for capability-based testing when using /ModulePrefs/Optional.</t>
+     <t>Declares Feature dependencies of the gadget. Features are defined in more detail at <xref target="Features">Features</xref>. For /ModulePrefs/Require, Containers MUST display an error message if they do not support the feature. For /ModulePrefs/Optional, Containers MUST still render the gadget. Developers SHOULD use <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref> for capability-based testing when using /ModulePrefs/Optional.</t>
       <list style="hanging">
-       <t hangText="@feature">The name of the Feature. Containers MUST interpret this value as described in <xref target="Features">Features</xref>. When the Container supports the feature, <xref target="hasFeature">gadgets.util.hasFeature(feature)</xref> MUST return true; otherwise it MUST return false.</t>
+       <t hangText="@feature">The name of the Feature. Containers MUST interpret this value as described in <xref target="Features">Features</xref>. When the Container supports the feature, <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature(feature)</xref> MUST return true; otherwise it MUST return false.</t>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
       </list>
     <section title="/ModulePrefs/Require/Param and /ModulePrefs/Optional/Param">
-     <t>Provides configuration parameters for a Feature. Containers MUST populate these values in <xref target="getFeatureParameters">gadgets.util.getFeatureParameters</xref>, with @name representing the key, and the child text node representing the value. More details at <xref target="Features">Features</xref>.</t>
+     <t>Provides configuration parameters for a Feature. Containers MUST populate these values in <xref target="gadgets.util.getFeatureParameters">gadgets.util.getFeatureParameters</xref>, with @name representing the key, and the child text node representing the value. More details at <xref target="Features">Features</xref>.</t>
      <list style="hanging">
-      <t hangText="@name">The name of the parameter. Containers MUST use this as the key for inputs to <xref target="getFeatureParameters">gadgets.util.getFeatureParameters</xref>.</t>
-      <t hangText="text()">The value for the parameter. Containers MUST use this as the value returned when a matching key is found in <xref target="getFeatureParameters">gadgets.util.getFeatureParameters</xref>.</t>
+      <t hangText="@name">The name of the parameter. Containers MUST use this as the key for inputs to <xref target="gadgets.util.getFeatureParameters">gadgets.util.getFeatureParameters</xref>.</t>
+      <t hangText="text()">The value for the parameter. Containers MUST use this as the value returned when a matching key is found in <xref target="gadgets.util.getFeatureParameters">gadgets.util.getFeatureParameters</xref>.</t>
      </list>
     </section>
     </section>
     <section title="/ModulePrefs/Preload">
-     <t>An HTTP request to pre-fetch. Containers MUST provide the results of HTTP fetches requested with this element in response to <xref target="makeRequest">gadgets.io.makeRequest</xref> calls with matching inputs. For more details, see <xref target="Preloading">Preloading</xref>.</t>
+     <t>An HTTP request to pre-fetch. Containers MUST provide the results of HTTP fetches requested with this element in response to <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref> calls with matching inputs. For more details, see <xref target="Preloading">Preloading</xref>.</t>
      <list style="hanging">
       <t hangText="@href">The URL of the request to prefetch.</t>
-      <t hangText="@authz">The authentication type to use for making this request. Valid values are the same as for <xref target="AuthorizationType">gadgets.io.AuthorizationType</xref>, though the names are converted to lower case to appear more natural in XML.</t>
+      <t hangText="@authz">The authentication type to use for making this request. Valid values are the same as for <xref target="gadgets.io.AuthorizationType">gadgets.io.AuthorizationType</xref>, though the names are converted to lower case to appear more natural in XML.</t>
       <t hangText="@sign_owner">Indicates that the Owner should be passed to endpoints when using an authentication type that requires it. Containers MUST pass the owner id when this value is "true" (default).</t>
       <t hangText="@sign_viewer">Indicates that the Viewer should be passed to endpoints when using an authentication type that requires it. Containers MUST pass the viewer id when this value is "true" (default).</t>
       <t hangText="@views">A comma-separated list of Views to pre-fetch this request for. Containers SHOULD only perform <xref target="Preloading">Preloading</xref> when an appropriate view is being rendered.</t>
@@ -119,6 +119,7 @@
       </list>
     </section>
     <section title="/ModulePrefs/Icon" anchor="Icon">
+     <t>Deprecated.  Use <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref> instead.</t>
      <t>A link or embedded image that serves as an icon for the gadget.</t>
      <list style="hanging">
       <t hangText="@mode">The encoding used for the icon when embedding an image in the Icon element's child text node. Currently, only 'base64' is the only supported value. Containers SHOULD treat child text nodes as a base64 encoded image when this attribute is provided. Otherwise, child text nodes should be interpreted as an image URL.</t>
@@ -138,8 +139,8 @@
        <section title="/ModulePrefs/Locale/msg" anchor="msg">
         <t>A single localized value, keyed by @name, with the value coming from text().</t>
         <list style="hanging">
-         <t hangText="@name">The name of the localized message. The Container MUST use this as the key for the JavaScript API method <xref target="getMsg">gadgets.Prefs.getMsg</xref> and for MSG substitutions (see <xref target="Localization">Localization</xref>).</t>
-         <t hangText="text()">The value of the message. Containers MUST substitute this value for @name according to <xref target="Localization">Localization</xref> rules, and provide this value for any key matching @name in <xref target="getMsg">gadgets.Prefs.getMsg</xref>.</t>
+         <t hangText="@name">The name of the localized message. The Container MUST use this as the key for the JavaScript API method <xref target="gadgets.Prefs.getMsg">gadgets.Prefs.getMsg</xref> and for MSG substitutions (see <xref target="Localization">Localization</xref>).</t>
+         <t hangText="text()">The value of the message. Containers MUST substitute this value for @name according to <xref target="Localization">Localization</xref> rules, and provide this value for any key matching @name in <xref target="gadgets.Prefs.getMsg">gadgets.Prefs.getMsg</xref>.</t>
         </list>
       </section>
      </section> 
@@ -157,7 +158,7 @@
       <section title="/ModulePrefs/OAuth/Service">
        <t>A single OAuth service configuration.</t>
        <list style="hanging">
-        <t hangText="@name">The name of the service, used for referencing OAuth services at runtime.  This parameter is optional, and if unspecified defaults to an empty string.  Gadget developers specify which OAuth service they wish to use by passing the service name as a parameter to <xref target="makeRequest">gadgets.io.makeRequest</xref>.</t>
+        <t hangText="@name">The name of the service, used for referencing OAuth services at runtime.  This parameter is optional, and if unspecified defaults to an empty string.  Gadget developers specify which OAuth service they wish to use by passing the service name as a parameter to <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.</t>
         <t hangText="text()">Not used at this time.</t>
       </list>
 <section title="/ModulePrefs/OAuth/Service/Request">
@@ -190,10 +191,10 @@
 <section title="/UserPref" anchor="UserPref">
 <t>A User Preference specification. Containers MUST handle all default and required values as specified in <xref target="UserPrefs">User Preferences</xref>, and they SHOULD handle all other values if they are appropriate for the type of container.</t>
 <list style="hanging">
-  <t hangText="@name">The name of the preference. Containers MUST provide the current value of the preference under this key in the JavaScript API <xref target="getPref">gadgets.Prefs.getPref</xref> and all variants. This is also the key used when performing UP substitutions (see <xref target="Localization">Localization</xref>).</t>
+  <t hangText="@name">The name of the preference. Containers MUST provide the current value of the preference under this key in the JavaScript API <xref target="gadgets.Prefs.getPref">gadgets.Prefs.getPref</xref> and all variants. This is also the key used when performing UP substitutions (see <xref target="Localization">Localization</xref>).</t>
   <t hangText="@datatype">The data type for this preference. Valid values are "string", "hidden", "bool", "list", and "number". The default value is "string". Containers SHOULD interpret datatype as specified in <xref target="UserPrefs">User Preferences</xref> when rendering any user interface components for Users.</t>
   <t hangText="@display_name">The name of the preference for use when rendering an editing interface for prefs. Developers SHOULD use this value to provide a localized name for the preference as described in <xref target="Localization">Localization</xref>. Containers SHOULD use this value to render any editing interfaces for Users.</t>
-  <t hangText="@default_value">A default value for this preference. Containers MUST provide this value for any calls to <xref target="getPref">gadgets.Prefs.getPref</xref> and all variants whenever the key matches @name.</t>
+  <t hangText="@default_value">A default value for this preference. Containers MUST provide this value for any calls to <xref target="gadgets.Prefs.getPref">gadgets.Prefs.getPref</xref> and all variants whenever the key matches @name.</t>
   <t hangText="@required">Whether or not a valid value needs to be set for this preference in order for the gadget to function correctly. Valid values are "true" and "false" (default). If the value is "true", Containers SHOULD display an error message or a prompt if there is no valid value stored.</t>
   <t hangText="text()">This tag has child elements. Containers SHOULD NOT interpret child text nodes.</t>
   </list>
@@ -243,7 +244,7 @@ See <xref target="UserPrefs">User Preferences</xref>. Whenever there is no value
 <t>Localization of a gadget is achieved primarily through <xref target="VariableSubstitution">Variable Substitution</xref>, using the MSG token.</t>
 
 <t>To determine appropriate keys and values for substitution, Containers MUST select an appropriate /ModulePrefs/Locale based on the following rules:</t>
-<list>
+<list style="numbers">
    <t>An exact match for the language and country of the User viewing the gadget.</t>
    <t>An exact match for language, country = "all".</t>
    <t>Language = "all", country = "all'.</t>
@@ -272,19 +273,20 @@ REVERSE_DIR: "rtl"
 
 
 <section title="Preloading" anchor="Preloading">
-<t>Containers SHOULD pre-fetch all HTTP resources specified by /ModulePrefs/Preload elements. When honoring the preloading mechanism, Containers MUST convert the results of the prefetching operation into a temporary object that is stored and accessed at runtime via <xref target="makeRequest">gadgets.io.makeRequest</xref>. Containers MUST only consider a makeRequest call to map to a Preload when the following match:</t>
+<t>Containers SHOULD pre-fetch all HTTP resources specified by /ModulePrefs/Preload elements. When honoring the preloading mechanism, Containers MUST convert the results of the prefetching operation into a temporary object that is stored and accessed at runtime via <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>. Containers MUST only consider a makeRequest call to map to a Preload when all of the following conditions are met:
 
-<t>/ModulePrefs/Preload/@href matches the "url" parameter of <xref target="makeRequest">gadgets.io.makeRequest</xref>.</t>
+<t>/ModulePrefs/Preload/@href matches the "url" parameter of <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.</t>
 
-<t>/ModulePrefs/Preload/@authz matches one of the valid parameters for <xref target="AuthorizationType">gadgets.io.AuthorizationType</xref>, converted to lower case.</t>
+<t>/ModulePrefs/Preload/@authz matches one of the valid parameters for <xref target="gadgets.io.AuthorizationType">gadgets.io.AuthorizationType</xref>, converted to lower case.</t>
 
-<t>/ModulePrefs/Preload/@sign_owner matches the value passed for [[gadgets.io.RequestParameters.SIGN_OWNER]]</t>
+<t>/ModulePrefs/Preload/@sign_owner matches the value passed for <xref target="gadgets.io.RequestParameters.SIGN_OWNER">gadgets.io.RequestParameters.SIGN_OWNER</xref></t>
 
-<t>/ModulePrefs/Preload/@sign_viewer matches the value passed for [[gadgets.io.RequestParameters.SIGN_VIEWER]]</t>
+<t>/ModulePrefs/Preload/@sign_viewer matches the value passed for <xref target="gadgets.io.RequestParameters.SIGN_VIEWER">gadgets.io.RequestParameters.SIGN_VIEWER</xref></t>
 
 <t>/ModulePrefs/Preload/@views matches the current view (the views attribute is a comma-separated  list of matching views).</t>
+</t>
 </section>
-<section title="Views">
+<section title="Views" anchor="Views">
 
 <t>A View represents a presentation mode for a gadget. Containers SHOULD select a view that matches the current display context as closely as possible. For example, if a Gadget has a View named "profile", Containers SHOULD use this View when rendering the gadget on a page that displays information about a User.</t>
 
@@ -294,109 +296,183 @@ REVERSE_DIR: "rtl"
 
 <t>When /Content/@type is "html" and /Content/@href is provided, Containers MUST make an HTTP GET request to the URL specified by @href, and interpret the response body as though it were /Content/text().</t>
 
-<t>When /Content/@type is "url", Containers MUST display a direct view of the value for /Content/@href (for a web context, this SHOULD be an HTML iframe). The Container MUST append 3 query string parameters to the URL:</t>
-<list style="hanging">
+<t>When /Content/@type is "url", Containers MUST display a direct view of the value for /Content/@href (for a web context, this SHOULD be an HTML iframe). The Container MUST append 3 query string parameters to the URL:
+<list>
+  <list style="hanging">
   <t hangText="lang">The language of the User viewing the gadget (valid values are the same as for /ModulePrefs/Locale/@lang).</t>
   <t hangText="country">The country of the User viewing the gadget. (valid values are the same as for /ModulePrefs/Locale/@country).</t>
   <t hangText="libs">A relative URL that points to any JavaScript files necessary to satisfy the <xref target="Features">Features</xref> referenced by the Gadget.</t>
 </list>
+</list>
+</t>
 <t>Containers MAY apply transformations to the final view before rendering it to a User.</t>
-
 <t>Containers MUST perform <xref target="VariableSubstitution">Variable Substitution</xref> on the final assembled content section when @type is "html".</t>
 </section>
 
 <section title="User Preferences" anchor="UserPrefs">
-<t>Containers MUST interpret <xref target="UserPref">/UserPref</xref> elements by making each preference available to the Gadget through the [[gadgets.Prefs]] library. Containers MUST treat <xref target="UserPref">/UserPref/@name</xref> as the keys for indexing into stored preference values when invoking [[gadgets.Prefs.getPref]] or any of its variants.</t>
+<t>Containers MUST interpret <xref target="UserPref">/UserPref</xref> elements by making each preference available to the Gadget through the <xref target="gadgets.Prefs">gadgets.Prefs</xref> library. Containers MUST treat <xref target="UserPref">/UserPref/@name</xref> as the keys for indexing into stored preference values when invoking <xref target="gadgets.Prefs.getPref">gadgets.Prefs.getPref</xref> or any of its variants.</t>
 
 <t>Containers MUST perform <xref target="VariableSubstitution">Variable Substitution</xref> for user preferences by treating /UserPref/@name as the key in the token and the stored value for the preference as the replacement value.</t>
 
 <t>Containers MUST provide /UserPref/@default_value as the value for the preference when the User or Gadget has not set a value explicitly.</t>
 
+<t>Containers SHOULD support the following datatypes:
+  <list>
+    <list style="hanging">
+      <t hangText="string">A string accessed by gadgets.Prefs.getString. Default data type.</t>
+      <t hangText="bool">Evaluates to true or false when accessed by gadgets.Prefs.getBool()</t>
+      <t hangText="enum">a list of values specified by /UserPref/EnumValue elements.  Current value is accessed by gadgets.Prefs.getString()</t>
+      <t hangText="hidden">a non-visible string that is not user editable but can be accessed by gadgets.Prefs.getString()</t>
+      <t hangText="list">a pipe-delimited (|) string of values, returned as a JavaScript array when accessed by gadgets.Prefs.getArray().</t>
+    </list>
+  </list>
+</t>
 <t>Containers SHOULD provide a user interface so that all visible User Preferences (any type other than "hidden") may be modified by the User of the Gadget.</t>
-
-<t>[[TODO:Standardize language used in the developer's guide and incorporate it here; http://code.google.com/apis/gadgets/docs/fundamentals.html#Datatypes]]</t>
 
 </section>
 
 <section title="Features" anchor="Features">
-<t>A Feature is a set of processing instructions and JavaScript libraries that provides some specific functionality for a Gadget. They are declared in the gadget spec using [[/ModulePrefs/Require]] and [[/ModulePrefs/Optional]].</t>
+<t>A Feature is a set of processing instructions and JavaScript libraries that provides some specific functionality for a Gadget. They are declared in the gadget spec using <xref target="RequireAndOptional">/ModulePrefs/Require and /ModulePrefs/Optional</xref>.</t>
 
 <t>Containers MUST honor the feature-specific rules for any Feature that they claim to support. Any Feature not specified in this document SHOULD provide an external specification for processing so that implementations will be correct.</t>
 
 <t>Containers MUST display an error message for any "required" feature requested by the Gadget that is not supported.</t>
 
-<t>Containers MUST only return true for [[gadgets.util.hasFeature]] if they actually support the given feature name. Containers MAY only return true for this function if the feature was also requested in the Gadget spec.</t>
+<t>Containers MUST only return true for <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref> if they actually support the given feature name. Containers MAY only return true for this function if the feature was also requested in the Gadget spec.</t>
 
 <section title="Core Features">
 <t>In addition to explicitly requested features, there is one implicit feature (referred to as "core") that is always present in every Gadget. This "core" feature MUST make the following JavaScript libraries available to Gadgets at runtime without any additional requirements:</t>
-
-<t>[[gadgets.io]]
-[[gadgets.util]]
-[[gadgets.Prefs]]
-[[gadgets.json]]</t>
+<list style="symbols">
+<t><xref target="gadgets.io">gadgets.io</xref></t>
+<t><xref target="gadgets.util">gadgets.util</xref></t>
+<t><xref target="gadgets.Prefs">gadgets.Prefs</xref></t>
+<t><xref target="gadgets.json">gadgets.json</xref></t>
+</list>
 </section>
 
 <section title="Optional Features">
-<t>Containers claiming support for the following Features MUST provide the Gadget with the JavaScript library from the table below. See the JavaScript documentation for each feature for any additional requirements. Containers MAY NOT support all of these features, but they are encouraged to support as many as possible.</t>
+<t>Containers claiming support for the following Features MUST provide the Gadget with the JavaScript library from the table below. See the JavaScript documentation for each feature for any additional requirements. Containers SHOULD support as many of these features as possible.</t>
 
-<t>Feature name
-	JavaScript library
-opensocial-0.8
-	[[opensocial]]
-rpc
-	[[gadgets.rpc]]
-pubsub
-	[[gadgets.pubsub]]
-views
-	[[gadgets.views]]
-flash
-	[[gadgets.flash]]
-skins
-	[[gadgets.skins]]
-dynamic-height 	[[gadgets.window.adjustHeight]] and [[gadgets.window.getViewportDimensions]]
-settitle
-	[[gadgets.window.setTitle]]
-minimessage
-	[[gadgets.MiniMessage]]
-tabs
-	[[gadgets.Tabs]]
-</t>
+<texttable align="left">
+  <ttcol>Feature name</ttcol>
+	<ttcol>JavaScript library</ttcol>
+  <c>opensocial-X.Y</c>
+  <c><xref target="opensocial">opensocial</xref> (where X.Y indicates the desired version of OpenSocial)</c>
+  <c>rpc</c>
+	<c><xref target="gadgets.rpc">gadgets.rpc</xref></c>
+  <c>pubsub</c>
+	<c><xref target="gadgtes.pubsub">gadgets.pubsub</xref></c>
+  <c>views</c>
+	<c><xref target="gadets.views">gadgets.views</xref></c>
+  <c>flash</c>
+	<c><xref target="gadgets.flash">gadgets.flash</xref></c>
+  <c>skins</c>
+	<c><xref target="gadgets.skins">gadgets.skins</xref></c>
+  <c>dynamic-height</c>
+  <c><xref target="gadgets.window.adjustHeight">gadgets.window.adjustHeight</xref> and <xref target="gadgets.window.getViewPortDimensions">gadgets.window.getViewportDimensions</xref></c>
+  <c>settitle</c>
+	<c><xref target="gadgets.window.setTitle">gadgets.window.setTitle</xref></c>
+  <c>minimessage</c>
+	<c><xref target="gadgets.MiniMessage">gadgets.MiniMessage</xref></c>
+  <c>tabs</c>
+	<c><xref target="gadgets.Tabs">gadgets.Tabs</xref></c>
+</texttable>
 </section>
 
 </section>
 
 
 <section title="Links" anchor="Links">
-<t>Gadgets MAY specify any number of [[/ModulePrefs/Link]] elements, which the Container SHOULD process according to rules specific to the value of /ModulePrefs/Link/@rel. Containers MAY support additional links, but they should pick an appropriate namespace for the rel attribute so as to not conflict with the standard. Containers MUST NOT support non-standard rel attributes with any of the following prefixes: "opensocial", "gadgets", or "events".</t>
-</section>
+<t>Gadgets MAY specify any number of <xref target="Link">/ModulePrefs/Link</xref> elements, which the Container SHOULD process according to rules specific to the value of /ModulePrefs/Link/@rel. Containers MAY support additional links, but they should pick an appropriate namespace for the rel attribute so as to not conflict with the standard. Containers MUST NOT support non-standard rel attributes with any of the following prefixes: "opensocial", "gadgets", or "events".</t>
 
 <section title="Icons" anchor="Icons">
-<t>When the value for /ModulePrefs/Link/@rel is "icon", Containers SHOULD treat the link as a reference to an image that represents an application icon for the Gadget. This is preferred over using /ModulePrefs/Icon, which is deprecated.</t>
+<t>When the value for <xref target="Link">/ModulePrefs/Link/@rel</xref> is "icon", Containers SHOULD treat the link as a reference to an image that represents an application icon for the Gadget. This is preferred over using <xref target="Icon">/ModulePrefs/Icon</xref>, which is deprecated.</t>
 </section>
 <section title="Life Cycle Events" anchor="LifeCycleEvents">
 <t>Whenever an "event" (such as installing or removing an application) occurs on a Container, and the Gadget has specified a value for a matching event name (either as the catch-all "events", or a specific event, named "event.eventtype", the Container MUST make an HTTP request to the specified URL.</t>
 
-<t>The request sent to the specified endpoint MUST be signed according to the rules in [[Signed Fetch]]. Additionally, one extra parameter named "eventtype" MUST be passed. This value MUST be the same as the event name part of the rel attribute.</t>
+<t>The request sent to the specified endpoint MUST be signed according to the rules in <xref target="SignedFetch">Signed Fetch</xref>. Additionally, one extra parameter named "eventtype" MUST be passed. This value MUST be the same as the event name part of the 'rel' attribute.</t>
+</section>
 </section>
 
 <section title="Signed Fetch" anchor="SignedFetch">
-<t>Containers MUST support signing of HTTP requests for <xref target="makeRequest">gadgets.io.makeRequest</xref>, <xref target="LifeCycleEvents">Life Cycle Events</xref>, and <xref target="Preloading">Preloading</xref>.</t>
-
-<t>TODO: explain signing rules</t>
+<t>Containers MUST support signing of HTTP requests for <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>, <xref target="LifeCycleEvents">Life Cycle Events</xref>, and <xref target="Preloading">Preloading</xref>. The container does this by
+      doing the following: 
+      <list style="numbers">
+       <t>Removing any request parameters with names that begin with oauth,
+       xoauth, or opensocial (case insensitive).</t>
+       <t>Adding the following parameters to the request query string:</t>
+       <list style="hanging">
+        <t hangText="opensocial_viewer_id">Optional. The ID of the current
+        viewer, which matches the getId() value on the viewer person
+        object.</t>
+        <t hangText="opensocial_owner_id">Required. The ID of the current
+        owner, which matches the getId() value on the owner person object.</t>
+        <t hangText="opensocial_app_url">Required. The URL of the application
+        making the request. Containers may alias multiple application URLs to a
+        single canonical application URL in the case where an application
+        changes URLs.</t>
+        <t hangText="opensocial_instance_id">Optional. An opaque identifier
+        used to distinguish between multiple instances of the same application
+        in a single container. If a container does not allow multiple instances
+        of the same application to coexist, this parameter may be omitted. The
+        combination of opensocial_app_url and opensocial_instance_id uniquely
+        identify an instance of an application in a container.</t>
+        <t hangText="opensocial_app_id">Optional. An opaque identifier for the
+        application, unique to a particular container. Containers that wish to
+        maintain backwards compatibility with the opensocial-0.7 specification
+        may include this parameter.</t>
+        <t hangText="xoauth_public_key">Optional. An opaque identifier for the
+        public key used to sign the request. This parameter may be omitted by
+        containers that do not use public keys to sign requests, or if the
+        container arranges other means of key distribution with the target of
+        the request.</t>
+       </list>
+       <t>Signing the resulting request according to section 9 of the 
+       <eref target="http://oauth.net/core/1.0/#signing_process">OAuth
+       specification</eref>.</t>
+      </list>
+      </t>
+       <t>If a container uses public keys to sign requests, the container may
+       choose to use either self-signed certificates or certificates signed by
+       a well-known certificate authority. If a container does not distribute
+       its OAuth signing key over HTTPS, it should use a certificate signed by
+       a well-known certificate authority.</t>
+       <t>The commonName attribute of the certificate should match the hostname
+       of the container server, and should also match the value of the
+       oauth_consumer_key parameter specified in the request.</t>
+       <t>The container should make its public key available for download at a
+       well-known location. The location
+       https://[container-hostname]/opensocial/certificates/xoauth_public_keyvalue
+       is recommended.</t>
+       <t>Recipients of signed requests must verify that the signature on the
+       request is correct, and that the timestamp on the request is within a
+       reasonable time window. A time window of 5 minutes before and after the
+       current time is recommended.</t>
+       <t>Recipients of signed requests may use the oauth_consumer_key and
+       xoauth_public_key parameters to automatically detect when a container
+       deploys new certificates. If the container deploys certificates at a
+       well-known location, the recipient may automatically download the new
+       certificate. Recipients that automatically download new certificates
+       should cache the resulting certificates.</t>
+       <t>If a container's certificate is not downloaded from
+       https://[container-hostname], the recipient should verify that the
+       certificate is signed by a well-known certificate authority before
+       trusting the certificate.</t>
 </section>
 
 <section title="OAuth" anchor="OAuth">
-<t>Containers MUST support OAuth requests for <xref target="makeRequest">gadgets.io.makeRequest</xref>. When proxying a Gadget's request, Containers SHOULD use an OAuth token specific to the gadget making the request, and specific to either the Viewer or the Owner of the container page. Furthermore, when proxying a gadget's request, Containers MAY use an OAuth Consumer key and secret specific to the gadget making the request, or they MAY alternatively use the container's OAuth consumer key and secret.  For more details, see the <xref target="OAuth-Core">OAuth spec</xref>.</t>
+<t>Containers MUST support OAuth requests for <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>. When proxying a Gadget's request, Containers SHOULD use an OAuth token specific to the gadget making the request, and specific to either the Viewer or the Owner of the container page. Furthermore, when proxying a gadget's request, Containers MAY use an OAuth Consumer key and secret specific to the gadget making the request, or they MAY alternatively use the container's OAuth consumer key and secret.  For more details, see the <xref target="OAuth-Core">OAuth spec</xref>.</t>
 
 <section title="Consumer Secrets">
 <t>It is beyond the scope of this document to specify how a Container obtains consumer keys and secrets for Gadgets that it may proxy requests for. As explained above, a Container MAY instead use its own consumer key and secret when making OAuth requests. A Container could even use the RSA_SHA1 signature method, effectively using the same consumer key and secret for all gadgets, and for all OAuth service providers it is proxying requests to.</t>
 </section>
 <section title="OAuth Tokens">
-<t>When proxying a <xref target="makeRequest">gadgets.io.makeRequest</xref> of <xref target="AuthorizationType">gadgets.io.AuthorizationType</xref> 'OAUTH', the container SHOULD do the following:</t>
-<list>
+<t>When proxying a <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref> of <xref target="gadgets.io.AuthorizationType">gadgets.io.AuthorizationType</xref> 'OAUTH', the container SHOULD do the following:</t>
+<list style="numbers">
   <t>If the container finds an appropriate OAuth access token and secret for the request, the Container signs the outgoing request according to the OAuth specification.</t>
   <t>If the container finds no appropriate OAuth access token, but an appropriate OAuth request token for the request, the container accesses the access token endpoint of the target service provider, and attempts to exchange the request token for an access token. If successful, the container then immediately uses the access token to sign the request made by the gadget.</t>
-  <t>If the container finds neither an appropriate OAuth access token or request token, it accesses the request token endpoint of the target service provider to obtain a request token. It then returns an error message to the Gadget that contains, among other things, the user authorization URL at the target service provider. The Gadget is expected to redirect the User Agent to that authorization URL and re-attempt the <xref target="makeRequest">gadgets.io.makeRequest</xref> once the user has approved the OAuth access.</t>
+  <t>If the container finds neither an appropriate OAuth access token or request token, it accesses the request token endpoint of the target service provider to obtain a request token. It then returns an error message to the Gadget that contains, among other things, the user authorization URL at the target service provider. The Gadget is expected to redirect the User Agent to that authorization URL and re-attempt the <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref> once the user has approved the OAuth access.</t>
 </list>
 </section>
 </section>
@@ -443,94 +519,6 @@ tabs
      </author>
      <date month='November'
            year='1999' />
-    </front>
-   </reference>
-   <reference anchor="Gadget-Canonical-Schema"
-              target="./Gadgets-API-Specification.xml#canonicalGadgetXSD">
-    <front>
-     <title>OpenSocial Gadgets API Specification, Appendix B: Canonical Gadget XSD</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='November'
-           year='2009' />
-    </front>
-   </reference>
-   <reference anchor="Gadget-Extended-Schema"
-              target="./Gadgets-API-Specification.xml#gadgetsExtendedXSD">
-    <front>
-     <title>OpenSocial Gadgets API Specification, Appendix A: Extended Gadget XSD</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='November'
-           year='2009' />
-    </front>
-   </reference>
-   <reference anchor='hasFeature'
-              target='./Gadgets-API-Specification.xml#gadgets.util.hasFeature'>
-    <front>
-     <title>OpenSocial Gadgets API Specification - gadgets.util.hasFeature</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='Nov'
-           year='2009' />
-    </front>
-   </reference>
-   <reference anchor='getFeatureParameters'
-              target='./Gadgets-API-Specification.xml#gadgets.util.getFeatureParameters'>
-    <front>
-     <title>OpenSocial Gadgets API Specification - gadgets.util.getFeatureParameters</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='Nov'
-           year='2009' />
-    </front>
-   </reference>
-   <reference anchor='makeRequest'
-              target='./Gadgets-API-Specification.xml#gadgets.io.makeRequest'>
-    <front>
-     <title>OpenSocial Gadgets API Specification - gadgets.io.makeRequest</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='Nov'
-           year='2009' />
-    </front>
-   </reference>
-   <reference anchor='AuthorizationType'
-              target='./Gadgets-API-Specification.xml#gadgets.io.AuthorizationType'>
-    <front>
-     <title>OpenSocial Gadgets API Specification - gadgets.io.AuthorizationType</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='Nov'
-           year='2009' />
-    </front>
-   </reference>
-   <reference anchor='getMsg'
-              target='./Gadgets-API-Specification.xml#gadgets.Prefs.getMsg'>
-    <front>
-     <title>OpenSocial Gadgets API Specification - gadgets.Prefs.getMsg</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='Nov'
-           year='2009' />
-    </front>
-   </reference>
-   <reference anchor='Gadget-Specification'
-              target="./Gadgets-API-Specification.xml">
-    <front>
-     <title>OpenSocial Gadgets API Specification</title>
-     <author fullname='OpenSocial Community'>
-      <organization abbrev='OpenSocial'>OpenSocial Community &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;</organization>
-     </author>
-     <date month='Nov'
-           year='2009' />
     </front>
    </reference>
   </references>
