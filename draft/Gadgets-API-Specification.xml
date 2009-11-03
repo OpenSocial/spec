@@ -504,54 +504,6 @@ gadgets.util.hasFeature(featureName)
      </t>
     </section>
    </section>
-   <section title="Application Versioning">
-    <t>The presence of version strings is needed to facilitate staged or
-    rolling updates of an application. In this way a developer can seamlessly
-    upgrade their application from a development to a production version by
-    moving the "current" label.</t>
-    <section title="Processing">
-     <t>When processing a developer-submitted url according to the OpenSocial
-     Gadget Specification, the container MUST determine if the content is an
-     OpenSocial Application Manifest. Containers MUST make the determination of
-     conformance according to 
-     <xref target="xsdpart1">XML Schema Part 1</xref> section 4.3.2. Otherwise,
-     containers SHOULD interpret the file as an OpenSocial Gadget
-     Specification. Containers MAY support other document types as well. Refer
-     to 
-     <xref target="appVersionSchema">this schema</xref> for valid manifest
-     XML.</t>
-     <t>Containers MUST process the manifest using the same loose conformance
-     requirements defined in the OpenSocial Gadget Specification.</t>
-     <t>In the event of a failure to parse the input document, containers
-     SHOULD provide a useful error message indicating the problem with the
-     document.</t>
-    </section>
-    <section title="Selecting a Gadget Specification for Processing">
-     <t>After retrieving a valid manifest, containers MUST select an
-     appropriate version of the gadget by matching either an appropriate label
-     or version string.</t>
-     <t>When no version or label is specified on input, containers MUST process
-     the gadget spec identified by the "current" label. Containers MAY support
-     implicit labels when configured globally, such as in a development
-     environment.</t>
-     <t>Among remaining specs, a container MUST first process as a group those
-     with a matching "container" string, and finally those with no "container"
-     specified. Within each group, each spec will be processed in the order it
-     appears in a manifest, and a container MUST choose the first spec whose
-     Required features it fully supports. A container MAY define any matching
-     rule for "container", but SHOULD define a single name for its container
-     (e.g., "myspace", "yahoo").</t>
-     <t>Manifests MUST NOT include duplicate labels or version strings.
-     Containers SHOULD report the presence of duplicate labels or versions as
-     an error.</t>
-     <t>Containers MUST interpret a gadget element that contains no other
-     labels as implicitly containing the "current" label.</t>
-     <t>Containers SHOULD provide a user interface for developers to select an
-     appropriate label to render for their application.</t>
-     <t>Containers SHOULD accept any label or version string, but MAY
-     optionally restrict allowed characters for security purposes.</t>
-    </section>
-   </section>
   </section>
   <section title="Proxied Content"
            anchor="ProxiedContent">
@@ -823,11 +775,11 @@ params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
 gadgets.io.makeRequest(url, callback, params);
 </artwork>
       </figure></t>
-      <section title="Signed authorization">If
-      opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
+      <section title="Signed authorization">
+        <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
       gadgets.io.AuthorizationType.SIGNED, the container needs to vouch for the
       user's identity to the destination server. The container does this by
-      doing the following: 
+      doing the following:</t> 
       <list style="numbers">
        <t>Removing any request parameters with names that begin with oauth,
        xoauth, or opensocial (case insensitive).</t>
@@ -3736,47 +3688,6 @@ assertEquals(0.30, value);
                 &lt;xs:attribute name="desc" type="xs:string" use="optional"/&gt;
               &lt;/xs:extension&gt;
             &lt;/xs:simpleContent&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-      &lt;/xs:sequence&gt;
-    &lt;/xs:complexType&gt;
-  &lt;/xs:element&gt;
-&lt;/xs:schema&gt;
-</artwork>
-    </figure>
-   </t>
-  </section>
-  <section title="Application Version Schema"
-           anchor="appVersionSchema">
-   <t>
-    <figure>
-     <artwork xml:space="preserve">
-&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;xs:element name="app"&gt;
-    &lt;xs:complexType&gt;
-      &lt;xs:sequence&gt;
-        &lt;xs:element name="gadget" minOccurs="1"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:choice&gt;
-              &lt;xs:element name="label" minOccurs="0" maxOccurs="unbounded"&gt;
-                &lt;xs:simpleType&gt;
-                  &lt;xs:union&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"/&gt;
-                    &lt;/xs:simpleType&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"&gt;
-                        &lt;xs:enumeration value="current"/&gt;
-                        &lt;xs:enumeration value="development"/&gt;
-                      &lt;/xs:restriction&gt;
-                    &lt;/xs:simpleType&gt;
-                  &lt;/xs:union&gt;
-                &lt;/xs:simpleType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="spec" type="xs:anyURI" minOccurs="1"/&gt;
-            &lt;/xs:choice&gt;
-            &lt;xs:attribute name="version" type="xs:string" use="required"/&gt;
-            &lt;xs:attribute name="container" type="xs:string" use="optional"/&gt;
           &lt;/xs:complexType&gt;
         &lt;/xs:element&gt;
       &lt;/xs:sequence&gt;
