@@ -105,10 +105,12 @@
    listed at the end of this document.</t>
   </section>
   <section title="Compliance: Gadget Server">
-   <t>To be gadgets-compliant, a server must be able to satisfy a Gadget
-   Rendering Request and a JavaScript Request in the manner described. The
-   server should be able to satisfy the Gadget Metadata Request in the manner
-   described.</t>
+   <t>To be gadgets-compliant, a server must be able to satisfy a
+   Gadget Rendering Request and JavaScript Request. Containers may
+   provide support for Content Rewriting. There are typically a number
+   of other interfaces that a server provides, such as metadata
+   requests, but these are a private contract between the Gadget
+   Server and the Container.</t>
    <section title="Gadget Rendering Request">
     <t>The core gadget API, this translates gadget XML into content that can be
     rendered in a browser, typically in an IFRAME.</t>
@@ -121,7 +123,7 @@
        <t>Locale of the end user.</t>
        <t>(optional) IgnoreCache processing option.</t>
        <t>(optional) Module ID, an integer identifier for the gadget in a given
-       container context. If not provided, this defaults top 0.</t>
+       container context. If not provided, this defaults to 0.</t>
       </list>
      </t>
     </section>
@@ -316,80 +318,7 @@ gadgets.util.hasFeature(featureName)
      </t>
     </section>
    </section>
-   <section title="Gadget Metdata Request">
-    <t>This API tells a gadget container how to render a gadget on a page, and
-    gives it the container-side JavaScript it needs to support the gadget's
-    features.</t>
-    <section title="Context (container-side JavaScript)">
-     <t>t is often the case that the gadget container's support is required to
-     satisfy gadget API requests due to the browser security model. For
-     example, the dynamic-height feature allows a gadget to request that it be
-     resized to fit its contents, particularly when it is in an IFRAME. Most
-     often, the gadget is rendered on a different domain than its container, so
-     it cannot modify the height itself. Rather, it makes an inter-domain
-     procedure call to its container requesting that it be resized. This
-     communication occurs through the core gadgets.rpc.* APIs, which use
-     browser-specific techniques to pass messages between frames on different
-     domains located in the same browser context. The container needs to be
-     able to receive this request and respond accordingly - this is the
-     function of the container-side JavaScript.</t>
-    </section>
-    <section title="Sanitized Gadget Content Note">
-     <t>Rather than a Gadget Rendering Request URL, the Gadget Metadata Request
-     API may return a version of the gadget output sanitized for security. The 
-     <xref target="Caja">Caja project</xref> provides this sanitization by
-     rewriting HTML, CSS, and JavaScript through static analysis techniques to
-     preclude unsafe DOM or cookie access to the gadget content, while
-     maintaining expressiveness nearly equivalent to content running simply
-     inside an IFRAME. This functionality is still experimental, however, so is
-     not included in the core spec at this time.</t>
-    </section>
-    <section title="Inputs">
-     <t>
-      <list style="symbols">
-       <t>Same as for the Gadget Rendering Request.</t>
-      </list>
-     </t>
-    </section>
-    <section title="Outputs">
-     <t>
-      <list style="symbols">
-       <t>URL to a Gadget Rendering Request for the requested gadget.</t>
-       <t>Reference(s) to container JavaScript needed to satisfy needed gadget
-       API requests.</t>
-      </list>
-     </t>
-    </section>
-    <section title="Process">
-     <t>
-      <list style="numbers">
-       <t>Load and parse gadget XML as described in Gadget Rendering Request
-       steps #1 and #2.</t>
-       <t>Process gadget features, specified as &lt;Require&gt; or
-       &lt;Optional&gt; in the gadget XML. 
-       <list style="numbers">
-        <t>Emit an error message if a required feature is not supported.</t>
-        <t>Otherwise, for each requested, supported feature with container-side
-        JavaScript, enqueue this JavaScript to return to the client.</t>
-       </list></t>
-       <t>Construct URL to the corresponding Gadget Rendering Request,
-       generated as follows: 
-       <list style="numbers">
-        <t>Initialize URL using a static prefix.</t>
-        <t>Add parameter url=&lt;url&gt;, where &lt;url&gt; is URL of the
-        requested gadget spec.</t>
-        <t>Add user prefs parameters as described in 
-        <xref target="process">6.b.a</xref>.</t>
-        <t>Add locale parameters as described in 
-        <xref target="process">6.b.b</xref>.</t>
-       </list></t>
-       <t>Return the enqueued container-side JavaScript and Gadget Rendering
-       Request URL.</t>
-      </list>
-     </t>
-    </section>
-   </section>
-   <section title="JavaScriptRequest">
+   <section title="JavaScript Request">
     <t>In order to satisfy type URL gadgets' JavaScript library loading
     requests, a server MUST provide an HTTP service for retrieving core and
     feature-linked JavaScript.</t>
