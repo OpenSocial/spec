@@ -352,7 +352,7 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
      </texttable>
      <t>The following additional fields are defined, based on
      their specification in the OpenSocial Javascript API, and are represented with strings: aboutMe,
-     bodyType,currentLocation, drinker, ethnicity, fashion, happiestWhen,
+     bodyType,location, drinker, ethnicity, fashion, happiestWhen,
      humor, livingArrangement, lookingFor, profileSong,profileVideo,
      relationshipStatus, religion, romance, scaredOf, sexualOrientation,
      smoker, and status.</t>

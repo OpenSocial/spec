@@ -5645,14 +5645,14 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
        string. Container support for this field is OPTIONAL. This field may be
        used interchangeably with the string 'children'.</t>
       </section>
-      <section title="CURRENT_LOCATION"
-               anchor="opensocial.Person.Field.CURRENT_LOCATION">
+      <section title="LOCATION"
+               anchor="opensocial.Person.Field.LOCATION">
        <t>&lt;static&gt; Member of:
-       opensocial.Person.Field.CURRENT_LOCATION</t>
-       <t>Description: Person's current location, specified as an 
+       opensocial.Person.Field.LOCATION</t>
+       <t>Description: Person's location, specified as an 
        <xref target="opensocial.Address">Address</xref>. Container support for
        this field is OPTIONAL. This field may be used interchangeably with the
-       string 'currentLocation'.</t>
+       string 'location'.</t>
       </section>
       <section title="DATE_OF_BIRTH"
                anchor="opensocial.Person.Field.DATE_OF_BIRTH">

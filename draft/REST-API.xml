@@ -1674,10 +1674,13 @@ Content-Type application/json
       signify only the current value of the user's timezone offset.</c>
      </texttable>The following additional Singular Fields are defined, based on
      their specification in the OpenSocial javascript apis: aboutMe,
-     bodyType,currentLocation, drinker, ethnicity, fashion, happiestWhen,
+     bodyType,location, drinker, ethnicity, fashion, happiestWhen,
      humor, livingArrangement, lookingFor, profileSong,profileVideo,
      relationshipStatus, religion, romance, scaredOf, sexualOrientation,
-     smoker, and status.</t>
+     smoker, and status.  The field currentLocation is deprecated in 1.0
+	 in favor of the standard location field, but is included for 
+	 backwards compatibility.  currentLocation will be fully removed in 
+	 a future version of the spec.</t>
     </section>
     <section title="Plural Person Fields">
      <t>Unless specified otherwise, all Plural Fields have the same three
@@ -1903,7 +1906,7 @@ Content-Type application/json
      actually belong to this Person. For each account, the domain is the
      top-most authoritative domain for this account, e.g. yahoo.com or
      reader.google.com, and MUST be non-empty. Each account must also contain a
-     non-empty value for either username or userid, and MAY contain both, in
+     non-empty value for either username or userId, and MAY contain both, in
      which case the two values MUST be for the same account. These accounts can
      be used to determine if a user on one service is also known to be the same
      person on a different service, to facilitate connecting to people the user
@@ -1920,7 +1923,7 @@ Content-Type application/json
       <c>username</c>
       <c>An alphanumeric user name, usually chosen by the user, e.g.
       "jsmarr".</c>
-      <c>userid</c>
+      <c>userId</c>
       <c>A user ID number, usually chosen automatically, and usually numeric
       but sometimes alphanumeric, e.g. "12345" or "1Z425A".</c>
      </texttable></t>
@@ -2041,6 +2044,7 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" maxOccurs="unbounded" name="cars" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="children" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="connected" type="tns:Presence" /&gt;
+      &lt;xs:element minOccurs="0" name="location" type="tns:Address" /&gt;
       &lt;xs:element minOccurs="0" name="currentLocation" type="tns:Address" /&gt;
       &lt;xs:element minOccurs="0" name="displayName" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="drinker" type="tns:Drinker" /&gt;
@@ -2141,7 +2145,7 @@ Content-Type application/json
     &lt;xs:all&gt;
       &lt;xs:element minOccurs="0" name="domain" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="primary" type="xs:boolean"/&gt;
-      &lt;xs:element minOccurs="0" name="userid" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="userId" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="username" type="xs:string" /&gt;
     &lt;/xs:all&gt;
   &lt;/xs:complexType&gt;
