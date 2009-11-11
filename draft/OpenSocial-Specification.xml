@@ -60,11 +60,11 @@
    This implies a number of things: 
    <list style="numbers">
     <t>The container must implement all methods in 
-    <xref target="JavaScript API Reference" />. 
+    <xref target="JavaScriptAPIReference" />. 
     <t>The OpenSocial JavaScript APIs include the methods in the 
     <xref target="LightweightJSAPI">Lightweight JavaScript APIs</xref> as well
     as methods from 
-    <xref target="JavaScript API Reference" />. Methods may return the error
+    <xref target="JavaScriptAPIReference" />. Methods may return the error
     code opensocial.ResponseItem.NOT_IMPLEMENTED for a specific method if the
     container does not support a specific request.</t></t>
     <t>The container must only use the specified extensibility mechanisms for
@@ -84,31 +84,31 @@
     objects can be returned from person.getField or other similar
     requests.</t></t>
     <t>The container must satisfy the 
-    <xref target="Gadgets API Specification" />. 
+    <xref target="Gadgets-API-Specification" />. 
     <t>In short, this requires handling three types of requests: the Gadget
     Rendering Request, the Gadget Metadata Request, and the JavaScript
     Request.</t>
     <t>For the JavaScript APIs, you must implement the 
-    <xref target="Gadgets API Specification">gadgets core JavaScript
+    <xref target="Gadgets-API-Specification">gadgets core JavaScript
     API</xref>, as per the documentation.</t></t>
     <t>The container must support the 
-    <xref target="RESTful Protocol Specification" />. 
+    <xref target="RESTful-Protocol-Specification" />. 
     <t>Containers must provide JSON, XML, and AtomPub representations of data.
     OpenSocial uses HTTP GET to retrieve, PUT to update in place, POST to
     create new, and DELETE to remove. POST operates on collections and creates
     new activities, persons, or app data within those collections.</t></t>
     <t>The container may support the 
-    <xref target="RPC Protocol Specification" />. 
+    <xref target="RPC-Protocol-Specification" />. 
     <t>Containers may optionally provide an RPC alternative to the RESTful
     protocol. This specification supports the same data and operations as the
     RESTful protocol, but in a form more suited to JSON.</t></t>
     <t>The container MUST support the OpenSocial Markup Language. 
     <t>The OpenSocial Markup language consists of 
-    <xref target="OpenSocial Templating" /> and 
-    <xref target="OpenSocial Markup Language Tags" />.</t></t>
+    <xref target="OpenSocial-Templating" /> and 
+    <xref target="OpenSocial-Markup-Language-Tags" />.</t></t>
     <t>The container MUST support Data Pipelining 
     <t>
-    <xref target="OpenSocial Data Pipelining" /> is a declarative syntax for
+    <xref target="OpenSocial-Data-Pipelining" /> is a declarative syntax for
     defining the data you want the container to provide to you for
     processing.</t></t>
     <t>Containers that support the creation of and updating AppData SHOULD
@@ -154,7 +154,7 @@
     </section>
    </section>
   <section title="API Reference"
-           anchor="JavaScript API Reference">
+           anchor="JavaScriptAPIReference">
    <section title="Using the API Reference">
     <t>The JavaScript API reference is a complete listing of the methods and
     fields that OpenSocial requires, but some conventions are not immediately
@@ -180,8 +180,7 @@
      named MY_PERSON_FIELD could have a name of
      Orkut.PersonField.MY_PERSON_FIELD and a value of "Orkut.myPersonField".
      See the 
-     <xref target="compliance">Compliance</xref> and 
-     <xref target="capabilities">Capabilities discovery</xref> sections for more
+     <xref target="compliance">Compliance</xref> section for more
      information.</t>
     </section>
     <section title="Parameter Maps">
@@ -233,7 +232,7 @@
        <artwork xml:space="preserve">
 osapi.people.getViewer().execute(function(result) {
   if (!result.error) {
-    alert('Your name is ' + result.name + '!');
+    alert('Your name is ' + result.displayName + '!');
   }
 });
 </artwork>
@@ -242,9 +241,9 @@ osapi.people.getViewer().execute(function(result) {
        <preamble>A Person request with a JSON request parameter object
        specifying which fields to retrieve:</preamble>
        <artwork xml:space="preserve">
-osapi.people.getViewer({fields: ['name', 'birthday']}).execute(function(result) {
+osapi.people.getViewer({fields: ['displayName', 'birthday']}).execute(function(result) {
   if (!result.error) {
-    alert('Your name is ' + result.name + '!');
+    alert('Your name is ' + result.displayName + '!');
     alert('Your birthday is ' + result.birthday + '!');
   }
 });
@@ -258,8 +257,8 @@ var batch = osapi.newBatch().
     add('activities', osapi.activities.get({ userId : '@viewer', groupId : '@self'})).
 batch.execute(function(result) {
   if (!result.error) {
-    alert('Hi, ' + result.viewer.name + '!');
-    alert('You have ' + result.activities.length + ' activities.');
+    alert('Hi, ' + result.viewer.displayName + '!');
+    alert('You have ' + result.activities.totalResults + ' activities.');
   }
 });
 </artwork>
@@ -285,7 +284,7 @@ batch.execute(function(result) {
 if (osapi.people &amp;&amp; osapi.people.getViewer) {
   osapi.people.getViewer().execute(function(result) {
     if (!result.error) {
-      alert('Your name is ' + result.name + '!');
+      alert('Your name is ' + result.displayName + '!');
     }
   });
 }
@@ -493,7 +492,7 @@ if (osapi.people &amp;&amp; osapi.people.getViewer) {
          <artwork xml:space="preserve">
 osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
   if (!result.error) {
-    alert('You have ' + ownerFriends.length + ' friends');
+    alert('You have ' + ownerFriends.totalResults + ' friends');
   }
 });
 </artwork>
@@ -513,7 +512,7 @@ var params = {
 };
 osapi.people.get(params).execute(function(ownerFriends) {
   if (!result.error) {
-    alert('You have ' + ownerFriends.length + ' friends');
+    alert('You have ' + ownerFriends.totalResults + ' friends');
   }
 });
 </artwork>
@@ -908,11 +907,9 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>url</c>
-          <c>String</c>
-          <c>The URL where the content is located</c>
           <c>params</c>
           <c>{ 
+          <vspace blankLines='0' />String href = "", 
           <vspace blankLines='0' />Map.&lt;String, Array.&lt;String&gt;&gt;
           headers, 
           <vspace blankLines='0' />String format = "json", 
@@ -952,11 +949,9 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>url</c>
-          <c>String</c>
-          <c>The URL where the content is located</c>
           <c>params</c>
           <c>{ 
+          <vspace blankLines='0' />String href = "", 
           <vspace blankLines='0' />Map.&lt;String, Array.&lt;String&gt;&gt;
           headers, 
           <vspace blankLines='0' />String format = "json", 
@@ -996,11 +991,9 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>url</c>
-          <c>String</c>
-          <c>The URL where the content is located</c>
           <c>params</c>
           <c>{ 
+          <vspace blankLines='0' />String href = "", 
           <vspace blankLines='0' />Map.&lt;String, Array.&lt;String&gt;&gt;
           headers, 
           <vspace blankLines='0' />String body, 
@@ -1041,11 +1034,9 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>url</c>
-          <c>String</c>
-          <c>The URL where the content is located</c>
           <c>params</c>
           <c>{ 
+          <vspace blankLines='0' />String href = "", 
           <vspace blankLines='0' />Map.&lt;String, Array.&lt;String&gt;&gt;
           headers, 
           <vspace blankLines='0' />String body, 
@@ -1086,11 +1077,9 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>url</c>
-          <c>String</c>
-          <c>The URL where the content is located</c>
           <c>params</c>
           <c>{ 
+          <vspace blankLines='0' />String href = "", 
           <vspace blankLines='0' />Map.&lt;String, Array.&lt;String&gt;&gt;
           headers, 
           <vspace blankLines='0' />String format = "json", 
@@ -1138,7 +1127,7 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
          <preamble>The data can be retrieved and accessed as
          follows:</preamble>
          <artwork xml:space="preserve">
-osapi.http.get('http://www.somephotosite.com/latest').execute(function(result) {
+osapi.http.get({href:'http://www.somephotosite.com/latest'}).execute(function(result) {
   if (!result.error) {
     alert('There are ' + result.content.photos.length + ' new photos');
   }
@@ -1150,12 +1139,13 @@ osapi.http.get('http://www.somephotosite.com/latest').execute(function(result) {
          parameters:</preamble>
          <artwork xml:space="preserve">
 var params = {
+    'href': 'http://www.somephotosite.com/prefs?uid=1234',
     'format': 'json',
     'headers': {'Content-Type': ['application/json;charset=utf-8'], "Accept-Language": ["en-us"]},
     'body': {'numResults': 100, theme: 'beach'},
     'authz': 'SIGNED',
 };
-osapi.http.post('http://www.somephotosite.com/prefs?uid=1234', params).execute(function(result) {
+osapi.http.post(params).execute(function(result) {
   if (!result.error) {
     alert('Request to update user preferences was successful');
   }
@@ -1194,7 +1184,7 @@ osapi.http.post('http://www.somephotosite.com/prefs?uid=1234', params).execute(f
          <artwork xml:space="preserve">
           osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
             if (!result.error) {
-              alert('You have ' + ownerFriends.length + ' friends');
+              alert('You have ' + ownerFriends.totalResults + ' friends');
             }
           });
 </artwork>
@@ -1284,8 +1274,8 @@ osapi.http.post('http://www.somephotosite.com/prefs?uid=1234', params).execute(f
              add('activities', osapi.activities.get({ userId : '@viewer', groupId : '@self'})).
           batch.execute(function(result) {
             if (!result.error) {
-              alert('Hi, ' + result.viewer.name + '!');
-              alert('You have ' + result.activities.length + ' activities.');
+              alert('Hi, ' + result.viewer.displayName + '!');
+              alert('You have ' + result.activities.totalResults + ' activities.');
             }
           });
 </artwork>
@@ -1308,7 +1298,7 @@ osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(owner
   if (ownerFriends.error) {
     alert('Error occurred: ' + error.message);
   } else {
-    alert('You have ' + ownerFriends.length + ' friends');
+    alert('You have ' + ownerFriends.totalResults + ' friends');
   }
 });
 </artwork>
@@ -1323,7 +1313,7 @@ osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(owner
   if (ownerFriends.error) {
     alert('Error occurred: ' + error.message);
   } else {
-    alert('You have ' + ownerFriends.length + ' friends');
+    alert('You have ' + ownerFriends.totalResults + ' friends');
   }
 });
 </artwork>
@@ -1346,8 +1336,8 @@ var batch = osapi.newBatch().
 batch.execute(function(result) {
   if (result.error) {
     alert("This batch had an error: " + error.message);
-  } else {alert('Hi, ' + result.viewer.name + '!');
-    alert('You have ' + result.activities.length + ' activities.');
+  } else {alert('Hi, ' + result.viewer.displayName + '!');
+    alert('You have ' + result.activities.totalResults + ' activities.');
   }
 });
 </artwork>
@@ -2056,7 +2046,7 @@ batch.execute(function(result) {
                anchor="opensocial.Activity.Field.POSTED_TIME">
        <t>&lt;static&gt; Member of: opensocial.Activity.Field.POSTED_TIME</t>
        <t>Description: 
-       <t>A string specifying the time at which this activity took place in
+       <t>A string specifying the datetime at which this activity took place in
        milliseconds since the epoch. This value can not be set.</t>
        <t>This field may be used interchangeably with the string
        'postedTime'.</t></t>
@@ -4307,7 +4297,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
       <section title="CREATED"
                anchor="opensocial.MediaItem.Field.CREATED">
        <t>&lt;static&gt; Member of: opensocial.MediaItem.Field.CREATED</t>
-       <t>Description: string, creation time associated with the media item -
+       <t>Description: string, creation datetime associated with the media item -
        assigned by container in UTC This field may be used interchangeably with
        the string 'created'.</t>
       </section>
@@ -4346,7 +4336,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
       <section title="LAST_UPDATED"
                anchor="opensocial.MediaItem.Field.LAST_UPDATED">
        <t>&lt;static&gt; Member of: opensocial.MediaItem.Field.LAST_UPDATED</t>
-       <t>Description: string, update time associated with the media item -
+       <t>Description: string, update datetime associated with the media item -
        assigned by container in UTC This field may be used interchangeably with
        the string 'lastUpdated'.</t>
       </section>
@@ -4366,7 +4356,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
       <section title="NUM_COMMENTS"
                anchor="opensocial.MediaItem.Field.NUM_COMMENTS">
        <t>&lt;static&gt; Member of: opensocial.MediaItem.Field.NUM_COMMENTS</t>
-       <t>Description: integer, number of comments on the photo. This field may
+       <t>Description: integer, number of comments on the media item. This field may
        be used interchangeably with the string 'numComments'.</t>
       </section>
       <section title="NUM_VIEWS"
@@ -4391,7 +4381,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
       <section title="START_TIME"
                anchor="opensocial.MediaItem.Field.START_TIME">
        <t>&lt;static&gt; Member of: opensocial.MediaItem.Field.START_TIME</t>
-       <t>Description: string, for streaming/live content, time when the
+       <t>Description: string, for streaming/live content, datetime when the
        content is available. This field may be used interchangeably with the
        string 'startTime'.</t>
       </section>
@@ -4619,7 +4609,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
       <section title="TIME_SENT"
                anchor="opensocial.Message.Field.TIME_SENT">
        <t>&lt;static&gt; Member of: opensocial.Message.Field.TIME_SENT</t>
-       <t>Description: UTC time message was sent. This field may be used
+       <t>Description: UTC datetime the message was sent. This field may be used
        interchangeably with the string 'timeSent'.</t>
       </section>
       <section title="TITLE"
@@ -4632,14 +4622,14 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
       <section title="TITLE_ID"
                anchor="opensocial.Message.Field.TITLE_ID">
        <t>&lt;static&gt; Member of: opensocial.Message.Field.TITLE_ID</t>
-       <t>Description: The title of the message as a message template.
+       <t>Description: The title id of the message as a message template.
        Specifies the message ID to use in the gadget xml. This field may be
        used interchangeably with the string 'titleId'.</t>
       </section>
       <section title="TYPE"
                anchor="opensocial.Message.Field.TYPE">
        <t>&lt;static&gt; Member of: opensocial.Message.Field.TYPE</t>
-       <t>Description: The title of the message, specified as an
+       <t>Description: The type of the message, specified as an
        opensocial.Message.Type. This field may be used interchangeably with the
        string 'type'.</t>
       </section>
@@ -5464,7 +5454,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
                anchor="opensocial.Person.Field.JOB_INTERESTS">
        <t>&lt;static&gt; Member of: opensocial.Person.Field.JOB_INTERESTS</t>
        <t>Description: Person's favorite jobs, or job interests and skills,
-       specified as a string. Container support for this field is OPTIONAL.
+       specified as an array of strings. Container support for this field is OPTIONAL.
        This field may be used interchangeably with the string
        'jobInterests'.</t>
       </section>
@@ -6041,10 +6031,10 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
     <seriesInfo name='RFC'
                 value='2606' />
    </reference>
-   <reference anchor="OpenSocial Data Pipelining"
+   <reference anchor="OpenSocial-Data-Pipelining"
               target="./OpenSocial-Data-Pipelining.xml">
     <front>
-     <title>OpenSocial Data Pipelining 0.9</title>
+     <title>OpenSocial Data Pipelining</title>
      <author initials='o.'
              surname='social'
              fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
@@ -6053,10 +6043,10 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
            year='2000' />
     </front>
    </reference>
-   <reference anchor="OpenSocial Markup Language Tags"
+   <reference anchor="OpenSocial-Markup-Language-Tags"
               target="./OpenSocial-Markup-Language-Tags.xml">
     <front>
-     <title>OpenSocial Markup Language Tags 0.9</title>
+     <title>OpenSocial Markup Language Tags</title>
      <author initials='o.'
              surname='social'
              fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
@@ -6065,10 +6055,10 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
            year='2000' />
     </front>
    </reference>
-   <reference anchor="OpenSocial Templating"
+   <reference anchor="OpenSocial-Templating"
               target="./OpenSocial-Templating.xml">
     <front>
-     <title>OpenSocial Templating 0.9</title>
+     <title>OpenSocial Templating</title>
      <author initials='o.'
              surname='social'
              fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
@@ -6077,7 +6067,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
            year='2000' />
     </front>
    </reference>
-   <reference anchor="RESTful Protocol Specification"
+   <reference anchor="RESTful-Protocol-Specification"
               target="./REST-API.xml">
     <front>
      <title>RESTful Protocol Specification 0.9</title>
@@ -6089,7 +6079,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
            year='2000' />
     </front>
    </reference>
-   <reference anchor="RPC Protocol Specification"
+   <reference anchor="RPC-Protocol-Specification"
               target="./RPC-Protocol.xml">
     <front>
      <title>RPC Protocol Specification 0.9</title>
@@ -6101,10 +6091,10 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
            year='2000' />
     </front>
    </reference>
-   <reference anchor="Gadgets API Specification"
+   <reference anchor="Gadgets-API-Specification"
               target="./Gadgets-API-Specification.xml">
     <front>
-     <title>Gadgets API Specification 0.9</title>
+     <title>Gadgets API Specification</title>
      <author initials='o.'
              surname='social'
              fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
@@ -6113,7 +6103,7 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
            year='2000' />
     </front>
    </reference>
-   <reference anchor='OAuth Core 1.0'
+   <reference anchor='OAuth-Core-1.0'
               target='http://oauth.net/core/1.0/'>
     <front>
      <title>OAuth Core 1.0</title>

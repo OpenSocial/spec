@@ -35,8 +35,8 @@
    <xref target="RFC2606">RFC2606</xref>.</t>
   </section>
   <section title="Overview">
-   <t>This proposal defines an RPC alternative to the 
-   <xref target="RESTful Protocol Specification" />. The intent is to support
+   <t>This specification defines an RPC alternative to the 
+   <xref target="RESTful-Protocol-Specification" />. The intent is to support
    the same data and operations as the RESTful API in a form that is more
    natural for the JSON data format. Any batch of RPCs should be
    programatically convertible to a sequence or batch of RESTful calls and
@@ -49,7 +49,7 @@
     <t>HTTP status codes are used to represent common error cases where
     applicable.</t>
     <t>
-    <xref target="OAuth Core 1.0" /> is supported for authentication and
+    <xref target="OAuth-Core-1.0" /> is supported for authentication and
     authorization in addition to other authorization schemes a container may
     choose to support. A single OAuth token can be used for a batch of
     operations or each operation can specify its own OAuth token.</t>
@@ -66,7 +66,7 @@
     <t>Automated discovery happens in two steps. XRDS can be used to discover
     the RPC endpoint. The service can then be introspected by executing an RPC
     for "system.listMethods" to discover the list of available services and
-    operations using conventions defined by XML-RPC Introspection Within a
+    operations using conventions defined by <xref target="XML-RPC-Introspection">XML-RPC Introspection</xref>. Within a
     running gadget the address of the RPC endpoint should be available as a
     Javascript variable (name and mechanism TBD). In general it is expected
     that a large percentage of consumers will bypass automated discovery and
@@ -148,7 +148,7 @@ Content-Type: application/json
      failure of the "friends" request is indicated by the existence of an
      "error" object which contains a "code" field which uses the numerical
      value of the HTTP status code UNAUTHORIZED. See 
-     <xref target="JSON-RPC Error">JSON-RPC.Error</xref>.</t>
+     <xref target="JSON-RPC-Error">JSON-RPC.Error</xref>.</t>
      <t>The batch response elements are returned in an array in the same order
      as the corresponding batch request elements. The "id" of the corresponding
      request in the batch request is carried over to the response.</t>
@@ -564,7 +564,6 @@ Content-Type application/json
     "itemsPerPage" : &lt;total number of elements in the returned sublist&gt;,
     "isFiltered" : &lt;boolean indicating if the result honors filter params in the request&gt;,
     "isUpdatedSince" : &lt;boolean indicating if the result honors the updatedSince param in the request&gt;,
-    "itemsPerPage" : &lt;total number of elements in the returned sublist&gt;,
     "list" : [ ... the sublist ...]
   }
 }
@@ -698,7 +697,7 @@ Content-Type application/json
       <c>When specified the container should only return items whose updated
       date &amp; time is equal to or more recent then the specified value. The
       value MUST be a valid 
-      <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
+      <xref target="xs-dateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
      </texttable>
     </t>
    </section>
@@ -741,9 +740,7 @@ Content-Type application/json
   "params": {
     "userId":["@me"],
     "groupId":"@self",
-    "params": {
-      "fields": "appdata"
-    }
+    "fields": "appdata"
   }
 }
 </artwork></t>
@@ -755,9 +752,7 @@ Content-Type application/json
   "params": {
     "userId":["@me"],
     "groupId":"@self",
-    "params": {
-      "fields": ["appdata.key1", "appdata.key2"]
-    }
+    "fields": ["appdata.key1", "appdata.key2"]
   }
 }
 </artwork></t>
@@ -1164,7 +1159,7 @@ Content-Type application/json
     <seriesInfo name='RFC'
                 value='2606' />
    </reference>
-   <reference anchor="XML-RPC Introspection"
+   <reference anchor="XML-RPC-Introspection"
               target="http://xmlrpc-c.sourceforge.net/introspection.html">
     <front>
      <title>XML-RPC Introspection</title>
@@ -1174,7 +1169,7 @@ Content-Type application/json
            year='2000' />
     </front>
    </reference>
-   <reference anchor="RESTful Protocol Specification"
+   <reference anchor="RESTful-Protocol-Specification"
               target="./REST-API.xml">
     <front>
      <title>RESTful Protocol Specification 0.9</title>
@@ -1197,7 +1192,7 @@ Content-Type application/json
            year='2008' />
     </front>
    </reference>
-   <reference anchor="JSON-RPC Error"
+   <reference anchor="JSON-RPC-Error"
               target="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal?pli=1#error-object">
     <front>
      <title>JSON-RPC Error Object</title>
@@ -1214,7 +1209,7 @@ Content-Type application/json
      <title>Rison - Compact Data in URIs</title>
     </front>
    </reference>
-   <reference anchor="xs:dateTime"
+   <reference anchor="xs-dateTime"
               target="http://www.w3.org/TR/xmlschema-2/#dateTime">
     <front>
      <title>XML Schema Part 2: Datatypes Second Edition</title>
@@ -1232,7 +1227,7 @@ Content-Type application/json
            year='2004' />
     </front>
    </reference>
-   <reference anchor='OAuth Core 1.0'
+   <reference anchor='OAuth-Core-1.0'
               target='http://oauth.net/core/1.0/'>
     <front>
      <title>OAuth Core 1.0</title>

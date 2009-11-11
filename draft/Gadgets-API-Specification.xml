@@ -1704,11 +1704,6 @@ var lang = prefs.getLang();
     <!-- ============================== class summary ========================== -->
     <t>Base interface for all view objects.</t>
     <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.views.View.ctor">
-     <t>gadgets.views.View()</t>
-     <t>NOTE: CONSTRUCTOR SHOULD NOT BE DOCUMENTED</t>
-    </section>
     <section title="Method Details">
      <section title="bind"
               anchor="gadgets.views.View.bind">
@@ -1968,7 +1963,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
               anchor="gadgets.MiniMessage.createDismissibleMessage">
       <t>Type: {HTMLElement} createDismissibleMessage(message,
       opt_callback)</t>
-      <t>Description: Creates a dismissible message with an [[]x] icon that
+      <t>Description: Creates a dismissible message with an [x] icon that
       allows users to dismiss the message. When the message is dismissed, it is
       removed from the DOM and the optional callback function, if defined, is
       called.</t>
@@ -2037,7 +2032,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
        <c>opt_callback</c>
        <c>Function</c>
        <c>Optional callback function to be called when the message is
-       dismissed. The callback function will not be called until after the
+       dismissed. To continue the dismissal of the message, this function should return true. The callback function will not be called until after the
        existing callstack has completed execution.</c>
       </texttable></t>
       <t>Returns:
@@ -2342,11 +2337,6 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     <t>See also: 
     <xref target="gadgets.TabSet">TabSet</xref> </t></t>
     <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.Tab.ctor">
-     <t>gadgets.Tab()</t>
-     <t>NOTE: CONSTRUCTOR SHOULD NOT BE DOCUMENTED</t>
-    </section>
     <section title="Method Details">
      <section title="getCallback"
               anchor="gadgets.Tab.getCallback">
