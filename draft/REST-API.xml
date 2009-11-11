@@ -558,7 +558,7 @@
 {
   "id" : "44332211",
   "thumbnailUrl" : "http://pages.example.org/albums/4433221-tn.png",
-  "caption" : "Example Album",
+  "title" : "Example Album",
   "description" : "This is an example album, and this text is an example description",
   "location" : { "latitude": 0, "longitude": 0 },
   "ownerId" : "example.org:55443322"
@@ -571,7 +571,7 @@
 &lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
   &lt;id&gt;44332211&lt;/id&gt;
   &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
-  &lt;caption&gt;Example Album&lt;/caption&gt;
+  &lt;title&gt;Example Album&lt;/title&gt;
   &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
   &lt;location&gt;
      &lt;latitude&gt;0&lt;/latitude&gt;
@@ -589,7 +589,7 @@
    &lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
      &lt;id&gt;44332211&lt;/id&gt;
      &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
-     &lt;caption&gt;Example Album&lt;/caption&gt;
+     &lt;title&gt;Example Album&lt;/title&gt;
      &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
      &lt;location&gt;
        &lt;latitude&gt;0&lt;/latitude&gt;
@@ -605,6 +605,29 @@
 &lt;/entry&gt;    
 </artwork>
      </figure></t>
+	 
+	 <t>
+	 For backwards compatibility with the 0.9 REST data format, the "caption" 
+	 field should be included in the response for an Album and have the same 
+	 value as the "title" field.  Caption is deprecated for 1.0 and will be fully 
+	 removed from the data format in a future version of the spec.
+	 </t>
+     <figure>
+      <preamble>application/json representation with caption for backwards-compatibility:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "44332211",
+  "thumbnailUrl" : "http://pages.example.org/albums/4433221-tn.png",
+  "title" : "Example Album",
+  "caption" : "Example Album",
+  "description" : "This is an example album, and this text is an example description",
+  "location" : { "latitude": 0, "longitude": 0 },
+  "ownerId" : "example.org:55443322"
+}       
+</artwork>
+     </figure>
+	 
+	 
     </section>
     <section title="MediaItem">
      <t>A minimal media item example: 
@@ -655,6 +678,7 @@
 &lt;/entry&gt;        
 </artwork>
      </figure></t>
+	 
     </section>
    </section>
    <section title="Content Upload">
@@ -670,7 +694,7 @@
      later time. The requests look like: 
      <list>
       <t>Step 1: Upload Photo</t>
-      <t>Step 2: Update Photo attributes (caption, description, etc.)</t>
+      <t>Step 2: Update Photo attributes (title, description, etc.)</t>
      </list>The two step request process is illustrated below.</t>
      <t>Step 1: Upload the image in the album. 
      <figure>
@@ -704,7 +728,10 @@ GIF89a....&lt;binary data&gt;
 &lt;/feed&gt;
 </artwork>
      </figure></t>
-     <t>Step 2: PUT MediaItem details to MediaItem (id:223344) 
+     <t>Step 2: PUT MediaItem details to MediaItem (id:223344) </t>
+	 <t>Note: response includes "caption" in addition to "title".  
+	 Caption is being deprecated in the 1.0 data format and will be removed
+	 entirely in a future version of the spec.
      <figure>
       <preamble>Request</preamble>
       <artwork xml:space="preserve">
@@ -714,7 +741,7 @@ GIF89a....&lt;binary data&gt;
         &lt;id&gt;223344&lt;/id&gt;
         &lt;media_type&gt;IMAGE&lt;/media_type&gt;
         &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
-        &lt;caption&gt;Lena&lt;/caption&gt;
+        &lt;title&gt;Lena&lt;/title&gt;
     &lt;/mediaitem&gt;
   &lt;/content&gt;
   &lt;title /&gt;
@@ -739,7 +766,7 @@ GIF89a....&lt;binary data&gt;
         &lt;id&gt;223344&lt;/id&gt;
         &lt;media_type&gt;IMAGE&lt;/media_type&gt;
         &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
-        &lt;caption&gt;Lena&lt;/caption&gt;
+        &lt;title&gt;Lena&lt;/title&gt;
       &lt;/mediaitem&gt;
     &lt;/content&gt;
     &lt;title /&gt;
@@ -782,7 +809,7 @@ GIF89a....&lt;binary data&gt;
      <figure>
       <preamble>Request</preamble>
       <artwork xml:space="preserve">
-POST /album/112233/mediaitem/?caption=Lena&amp;media_type=IMAGE HTTP/1.1
+POST /album/112233/mediaitem/?title=Lena&amp;media_type=IMAGE HTTP/1.1
 &lt;usual headers&gt;
 Accept-Type: application/json
 Content-Type: image/gif
@@ -799,7 +826,7 @@ GIF89a....&lt;binary data&gt;
   "totalResults" : 1,
   "entry" : {
     "id" : "223344",
-    "caption" : "Lena",
+    "title" : "Lena",
     "media_type" : "IMAGE",
   }
 }        
@@ -871,7 +898,7 @@ X-HTTP-Method-Override: PUT
    app ID (the application, or whatever is acting as the user's agent). It may
    include other container-specific information.</t>
    <t>Containers MUST be an 
-   <xref target="OAuth Core 1.0" /> Service Provider (a web application that
+   <xref target="OAuth-Core-1.0" /> Service Provider (a web application that
    allows access via OAuth). Containers MAY also support other ways to
    establish a request context. Containers MUST also support the Consumer
    Request OAuth extension, in which the end user has not directly authorized
@@ -1324,9 +1351,9 @@ Content-Type application/json
   </section>
   <section title="Security Considerations">
    <t>Containers SHOULD carefully consider security. Containers MUST support 
-   <xref target="OAuth Core 1.0" /> but SHOULD use appropriate policies to
+   <xref target="OAuth-Core-1.0" /> but SHOULD use appropriate policies to
    determine allowed operations on a per-Consumer and per-user basis. Per 
-   <xref target="OAuth Core 1.0" />, Containers SHOULD document how a Consumer
+   <xref target="OAuth-Core-1.0" />, Containers SHOULD document how a Consumer
    can direct a user to a Container web page to obtain an oauth_token for
    future use. Note that this is a vector for phishing if the user is required
    to enter their credentials.</t>
@@ -1654,11 +1681,11 @@ Content-Type application/json
       <c>The date this Person was first added to the user's address book or
       friends list (i.e. the creation date of this entry). The value MUST be a
       valid 
-      <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
+      <xref target="xs-dateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
       <c>updated</c>
       <c>The most recent date the details of this Person were updated (i.e. the
       modified date of this entry). The value MUST be a valid 
-      <xref target="xs:dateTime" /> (e.g. 2008-01-23T04:56:22Z). If this Person
+      <xref target="xs-dateTime" /> (e.g. 2008-01-23T04:56:22Z). If this Person
       has never been modified since its initial creation, the value MUST be the
       same as the value of published. Note the updatedSince Query Parameter can
       be used to select only people whose updated value is equal to or more
@@ -1669,7 +1696,7 @@ Content-Type application/json
       <c>The offset from UTC of this Person's current time zone, as of the time
       this response was returned. The value MUST conform to the offset portion
       of 
-      <xref target="xs:dateTime" />, e.g. -08:00. Note that this value MAY
+      <xref target="xs-dateTime" />, e.g. -08:00. Note that this value MAY
       change over time due to daylight saving time, and is thus meant to
       signify only the current value of the user's timezone offset.</c>
      </texttable>The following additional Singular Fields are defined, based on
@@ -1879,13 +1906,13 @@ Content-Type application/json
       <c>startDate</c>
       <c>The date this Person joined this organization. This value SHOULD be a
       valid 
-      <xref target="xs:dateTime" /> if possible, but MAY be an unformatted
+      <xref target="xs-dateTime" /> if possible, but MAY be an unformatted
       string, since it is recognized that this field is often presented as
       free-text.</c>
       <c>endDate</c>
       <c>The date this Person left this organization or the role specified by
       title within this organization. This value SHOULD be a valid 
-      <xref target="xs:dateTime" /> if possible, but MAY be an unformatted
+      <xref target="xs-dateTime" /> if possible, but MAY be an unformatted
       string, since it is recognized that this field is often presented as
       free-text.</c>
       <c>location</c>
@@ -1912,7 +1939,7 @@ Content-Type application/json
      person on a different service, to facilitate connecting to people the user
      already knows on different services. If Consumers want to turn these
      accounts into profile URLs, they can use an open-source library like 
-     <xref target="Social Graph Node Mapper" />. 
+     <xref target="Social-Graph-Node-Mapper" />. 
      <texttable>
       <ttcol align="left">Field Name</ttcol>
       <ttcol align="left">Description</ttcol>
@@ -2187,6 +2214,7 @@ Content-Type application/json
       &lt;xs:element minOccurs="0" name="id" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="thumbnailUrl" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="title" type="xs:string" /&gt;
+      &lt;xs:element minOccurs="0" name="caption" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="description" type="xs:string" /&gt;
       &lt;xs:element minOccurs="0" name="location" type="tns:Address" /&gt;
       &lt;xs:element minOccurs="0" name="ownerId" type="xs:string" /&gt;
@@ -2417,7 +2445,7 @@ Content-Type application/json
     
     <list style="symbols">
      <t>Missing OAuth authorization credentials as described in 
-     <xref target="OAuth Consumer Request 1.0 Draft 1" />.</t>
+     <xref target="OAuth-Consumer-Request-1.0-Draft-1" />.</t>
      <t>OAuth authorization credentials are present, but the user identity is
      not authorized to access the protected resource. If the request already
      included authorization credentials, the 401 response indicates that the
@@ -2611,7 +2639,7 @@ Content-Type application/json
            year='2008' />
     </front>
    </reference>
-   <reference anchor="xs:dateTime"
+   <reference anchor="xs-dateTime"
               target="http://www.w3.org/TR/xmlschema-2/#dateTime">
     <front>
      <title>XML Schema Part 2: Datatypes Second Edition</title>
@@ -2643,13 +2671,13 @@ Content-Type application/json
            year='2008' />
     </front>
    </reference>
-   <reference anchor='Social Graph Node Mapper'
+   <reference anchor='Social-Graph-Node-Mapper'
               target='http://code.google.com/p/google-sgnodemapper/'>
     <front>
      <title>Social Graph Node Mapper</title>
     </front>
    </reference>
-   <reference anchor="OAuth Consumer Request 1.0 Draft 1"
+   <reference anchor="OAuth-Consumer-Request-1.0-Draft-1"
               target="http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/1/spec.html">
     <front>
      <title>OAuth Consumer Request 1.0 Draft 1</title>
@@ -2658,7 +2686,7 @@ Content-Type application/json
              fullname='Eran Hammer-Lahav'></author>
     </front>
    </reference>
-   <reference anchor='OAuth Core 1.0'
+   <reference anchor='OAuth-Core-1.0'
               target='http://oauth.net/core/1.0/'>
     <front>
      <title>OAuth Core 1.0</title>
