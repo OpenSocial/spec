@@ -694,8 +694,7 @@ gadgets.util.hasFeature(featureName)
      <section title="makeRequest"
               anchor="gadgets.io.makeRequest">
       <t>&lt;static&gt; gadgets.io.makeRequest(url, callback, opt_params)</t>
-      <t>Description: Fetches content from the provided URL and feeds that
-      content into the callback function. 
+      <t>Description: Fetches content (e.g. HTML, JSON, XML, and ATOM data) from the provided URL and feeds that content into the callback function. 
       <figure>
        <preamble>Example:</preamble>
        <artwork xml:space="preserve">
@@ -704,14 +703,37 @@ params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
 gadgets.io.makeRequest(url, callback, params);
 </artwork>
       </figure></t>
-      <section title="Signed authorization">
-        <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
-      gadgets.io.AuthorizationType.SIGNED, the container needs to vouch for the
-      user's identity to the destination server. The container does this by
-      doing the following:</t> 
+       <section title="Signed authorization">
+      <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
+       gadgets.io.AuthorizationType.SIGNED, 
+      container mediates communications from the gadget to the
+      application server in a way that can not be spoofed. This trusted content fetching
+      has two main steps: [1] the gadget contacts the container, and [2] the
+      container sends a signed requests to the application server. 
       <list style="numbers">
-       <t>Removing any request parameters with names that begin with oauth,
-       xoauth, or opensocial (case insensitive).</t>
+       <t>When the gadget contacts the container, the container needs to be able
+       to validate any parameters it knows about: the viewer id, the owner id
+       (if known), and the application id. Validating these parameters is an
+       implementation detail that may vary between containers. For example,
+       orkut uses an encrypted token passed in the document fragment of the
+       gadget URL.</t>
+       <t>When the container contacts the app server, the app server needs to be
+       able to validate that the parameters really came from the container (and
+       were not forged by some other entity). OpenSocial uses <xref target="OAuth-Core">OAuth's parameter
+       signing algorithm</xref>. Note that most of the functionality in the OAuth spec,
+       including token exchange, is not required; OpenSocial only plans to use
+       the parameter signing piece of the spec (including timestamp and nonce).
+       OpenSocial permits the HMAC-SHA1 method (except that the key is a shared
+       secret between container and app, not a concatenation of tokens as
+       specified in section 9.2 of the OAuth spec) and the RSA-SHA1 method.
+       HMAC-SHA1 executes faster and is easier to implement, but it requires more
+       coordination than RSA-SHA1.</t>
+      </list>
+      </t>
+      <t>The container signs requests by doing the following: </t>
+        <list style="numbers">
+         <t>Removing any request parameters with names that begin with oauth,
+         xoauth, or opensocial (case insensitive).</t>
        <t>Adding the following parameters to the request query string:</t>
        <list style="hanging">
         <t hangText="opensocial_viewer_id">Optional. The ID of the current
@@ -740,36 +762,37 @@ gadgets.io.makeRequest(url, callback, params);
         the request.</t>
        </list>
        <t>Signing the resulting request according to section 9 of the 
-       <eref target="http://oauth.net/core/1.0/#signing_process">OAuth
-       specification</eref>.</t>
-      </list></section>
-      <section title="management for gadgets.io.AuthorizationType.SIGNED">
-       <t>If a container uses public keys to sign requests, the container may
-       choose to use either self-signed certificates or certificates signed by
+       <xref target="OAuth-Core">
+       OAuth specification</xref>.</t>
+      </list>
+      <section title="Key management">
+       <t>If a container uses public keys to sign requests, the container MAY
+       use either self-signed certificates or certificates signed by
        a well-known certificate authority. If a container does not distribute
-       its OAuth signing key over HTTPS, it should use a certificate signed by
+       its OAuth signing key over HTTPS, it SHOULD use a certificate signed by
        a well-known certificate authority.</t>
-       <t>The commonName attribute of the certificate should match the hostname
+       <t>The commonName attribute of the certificate SHOULD match the hostname
        of the container server, and should also match the value of the
        oauth_consumer_key parameter specified in the request.</t>
-       <t>The container should make its public key available for download at a
+       <t>The container SHOULD make its public key available for download at a
        well-known location. The location
        https://[container-hostname]/opensocial/certificates/xoauth_public_keyvalue
        is recommended.</t>
-       <t>Recipients of signed requests must verify that the signature on the
+       <t>Recipients of signed requests MUST verify that the signature on the
        request is correct, and that the timestamp on the request is within a
        reasonable time window. A time window of 5 minutes before and after the
        current time is recommended.</t>
        <t>Recipients of signed requests may use the oauth_consumer_key and
        xoauth_public_key parameters to automatically detect when a container
        deploys new certificates. If the container deploys certificates at a
-       well-known location, the recipient may automatically download the new
+       well-known location, the recipient MAY automatically download the new
        certificate. Recipients that automatically download new certificates
-       should cache the resulting certificates.</t>
+       SHOULD cache the resulting certificates.</t>
        <t>If a container's certificate is not downloaded from
-       https://[container-hostname], the recipient should verify that the
+       https://[container-hostname], the recipient SHOULD verify that the
        certificate is signed by a well-known certificate authority before
        trusting the certificate.</t>
+      </section>
       </section>
       <section title="OAuth authorization">
        <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
@@ -777,7 +800,6 @@ gadgets.io.makeRequest(url, callback, params);
        gain access to the resource specified in the request. This may require
        that the gadget obtain the user's content by directing the user to the
        service provider to gain access.</t>
-      </section>
       <section title="Additional parameters">
        <t>The following additional parameters may be specified in opt_params: 
        <list style="hanging">
@@ -805,12 +827,12 @@ gadgets.io.makeRequest(url, callback, params);
        behalf of the gadget. If the gadget has not registered a consumer key
        for use with this service provider, the container may choose to use a
        default RSA signing key corresponding to a well-known certificate to
-       sign requests. If the container uses a default consumer key, it will
+       sign requests. If the container uses a default consumer key, it MUST
        include an additional OAuth parameter xoauth_app_url that identifies the
        gadget making the request.</t>
       </section>
       <section title="The callback parameter">
-       <t>The makeRequest() callback parameter is passed a javascript object
+       <t>The makeRequest() callback parameter is passed a JavaScript object
        with several OAuth-specific fields in addition to the normal values
        returned by makeRequest(): 
        <list style="hanging">
@@ -830,6 +852,14 @@ gadgets.io.makeRequest(url, callback, params);
         be used to provide debugging information for gadget developers.</t>
        </list></t>
       </section>
+     </section>
+    <section title="Caching">
+     <t>Gadgets calls to makeRequest, the calls MAY be cached, reducing the load that application servers have to be able to handle. The gadgets.io.RequestParameters.REFRESH_INTERVAL parameter is used to specify the number of seconds that should elapse before the makeRequest call requests content from your servers again. For example,
+     specifying 10 will mean that the container would only query the supplied
+     URL once every 10 seconds, no matter how many people are using the
+     application. Specifying 0 will query the server each time the function is
+     called, effectively bypassing the cached version.</t>
+    </section>
       <section title="Parameters">
        <t>
         <texttable>
@@ -3742,6 +3772,17 @@ assertEquals(0.30, value);
      </author>
      <date month='October'
            year='2004' />
+    </front>
+   </reference>
+   <reference anchor='OAuth-Core'
+              target='http://oauth.net/core/1.0a'>
+    <front>
+     <title>OAuth Core 1.0 Revision A</title>
+     <author fullname='OAuth Core Workgroup'>
+      <organization abbrev='OAuth'>OAuth Core Workgroup</organization>
+     </author>
+     <date month='November'
+           year='1999' />
     </front>
    </reference>
   </references>

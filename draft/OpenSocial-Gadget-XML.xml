@@ -307,14 +307,12 @@
       contexts. For details, see 
       <xref target="LifeCycleEvents">Life Cycle Events</xref>and 
       <xref target="Links">Links</xref>.</t>
-      <t>CURRENT XSD ONLY HAS 3 EVENTS LISTED. THIS SHOULD BE FIXED.</t>
       <list style="hanging">
        <t hangText="@rel">The relationship between this link and the document.
-       Valid values are specified in 
-       <xref target="LifeCycleEvents">Life Cycle Events</xref>and 
-       <xref target="Links">Links</xref>. Containers MAY support additional
+       Valid values are specified in <xref target="Links">Links</xref>. Containers MAY support additional
        values, but they MUST be namespaced to avoid collisions.</t>
        <t hangText="@href">The URL of the link.</t>
+       <t hangText="@method">The HTTP method to use when requesting the URL. Default is GET.</t>
        <t hangText="text()">Not used at this time.</t>
       </list>
      </section>
@@ -590,8 +588,26 @@ REVERSE_DIR: "rtl"
    <t>Containers MAY apply transformations to the final view before rendering
    it to a User.</t>
    <t>Containers MUST perform 
-   <xref target="VariableSubstitution">Variable Substitution</xref>on the final
+   <xref target="VariableSubstitution">Variable Substitution</xref> on the final
    assembled content section when @type is "html".</t>
+     <t>Containers may define their own views, but the specification defines
+     the following standard views in the gadgets.views.View Type object: 
+     <list style="symbols">
+      <t>Profile - A gadget on the profile view is rendered alongside other
+      applications in the user's profile, so it will be smaller and can't
+      support passing URL parameters from the container to the gadget.</t>
+      <t>Canvas - A gadget in the canvas view is rendered by itself, so it will
+      have lots of real estate and URL parameters passed to the container page
+      can be forwarded to the gadget.</t>
+      <t>Home - A gadget in the home view is rendered on a private "homepage"
+      where the OWNER is always the same person as the VIEWER. There may be
+      multiple gadgets present in this view.</t>
+      <t>Preview - A gadget in the preview view does not have access to either
+      the OWNER or VIEWER objects. This view is intended to provide "test
+      drive" functionality so that gadgets can demonstrate functionality for
+      potential users</t>
+     </list>
+    </t>
   </section>
   <section title="User Preferences"
            anchor="UserPrefs">
@@ -722,7 +738,7 @@ REVERSE_DIR: "rtl"
   <section title="Links"
            anchor="Links">
    <t>Gadgets MAY specify any number of 
-   <xref target="Link">/ModulePrefs/Link</xref>elements, which the Container
+   <xref target="Link">/ModulePrefs/Link</xref> elements, which the Container
    SHOULD process according to rules specific to the value of
    /ModulePrefs/Link/@rel. Containers MAY support additional links, but they
    should pick an appropriate namespace for the rel attribute so as to not
@@ -732,14 +748,17 @@ REVERSE_DIR: "rtl"
    <section title="Icons"
             anchor="Icons">
     <t>When the value for 
-    <xref target="Link">/ModulePrefs/Link/@rel</xref>is "icon", Containers
+    <xref target="Link">/ModulePrefs/Link/@rel</xref> is "icon", Containers
     SHOULD treat the link as a reference to an image that represents an
     application icon for the Gadget. This is preferred over using 
     <xref target="Icon">/ModulePrefs/Icon</xref>, which is deprecated.</t>
    </section>
    <section title="Life Cycle Events"
             anchor="LifeCycleEvents">
-    <t>Whenever an "event" (such as installing or removing an application)
+    <t>Certain types of events may occur during the lifecycle of a gadget that
+     are desirable yet difficult for developers to track. Such events include
+     installs, uninstalls, rate limiting, directory listing changes, and
+     blacklist/whitelist notifications. Whenever an "event" 
     occurs on a Container, and the Gadget has specified a value for a matching
     event name (either as the catch-all "events", or a specific event, named
     "event.eventtype", the Container MUST make an HTTP request to the specified
@@ -749,8 +768,58 @@ REVERSE_DIR: "rtl"
     <xref target="SignedFetch">Signed Fetch</xref>. Additionally, one extra
     parameter named "eventtype" MUST be passed. This value MUST be the same as
     the event name part of the 'rel' attribute.</t>
-   </section>
+     <t>If the rel attribute is "event",
+     then all events are sent to that endpoint. If the rel attribute matches
+     "event.TYPE", then events of TYPE are sent to that endpoint. An
+     optional method attribute can be set to POST or GET to specify how the
+     request should be sent. The default is GET. 
+     <figure>
+      <preamble>Here are some examples:</preamble>
+      <artwork xml:space="preserve">
+&lt;Link rel="event" href="http://www.example.com/pingme" method="POST/&gt;
+&lt;Link rel="event.addapp" href="http://www.example.com/add" /&gt;
+&lt;Link rel="event.removeapp" href="http://www.example.com/remove" /&gt;
+</artwork>
+     </figure></t>
+     <t>The following event types are defined. Container custom events SHOULD
+     be designated with a domain name prefix to avoid namespace collisions. 
+     <texttable align="left">
+      <ttcol align="left">Event</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>addapp</c>
+      <c>Sent when a user adds an app.  Supports the following parameters:
+         <list style="symbols">
+          <t>id - identifies user(s) who have installed the app. May be repeated.</t>
+          <t>from - designates how the user added this app. Values are "invite",
+      "gallery", "external". Optional.</t>
+       </list>
+      </c>
+      <c>removeapp</c>
+      <c>Sent when a user removes an app. Supports the following parameters:
+       <list style="symbols">
+        <t>id - identifies user(s) who have removed the app. May be repeated.</t>
+       </list>
+      </c>
+      <c>app</c>
+      <c>Sent when the container changes the status of the app. Supports the following parameters:
+       <list style="symbols">
+        <t>action - designates the action performed on the app. Values
+      are "enabled", "disabled", and "approved".</t>
+        <t>reason - identifies the reason for the action. Values are "policy", "quota", "maintenance".
+      Optional.</t>
+       </list>
+      </c>
+      <c>invite</c>
+      <c>Sent when a user invites other users to add the app. Supports the following parameters:
+       <list style="symbols">
+        <t>id - indicates users who have been invited.</t>
+        <t>from_id - indicates the user who sent the invitation.</t>
+       </list>
+      </c>
+     </texttable></t>
+    </section>
   </section>
+
   <section title="Signed Fetch"
            anchor="SignedFetch">
    <t>Containers MUST support signing of HTTP requests for 
