@@ -5,19 +5,20 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-server-api-specification-draft"
+     docName="opensocial-core-api-server-specification-draft"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title>OpenSocial Server API Specification (draft)</title>
-  <author fullname='OpenSocial and Gadgets Specification Group'>
+  <title abbrev="Core-API-Server">OpenSocial Core API Server Specification (draft)</title>
+  <author surname="OpenSocial and Gadgets Specification Group"
+          fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="September"
+  <date month="December"
         year="2009" />
   <abstract>
-   <t>This document describes a method for making social network information
+   <t>This document describes a method for making information
    and services programatically available on the internet.</t>
   </abstract>
  </front>
@@ -36,20 +37,18 @@
     <t>This specification uses a number of terms to refer to the roles played
     by participants in, and objects of, an OpenSocial implementation.</t>
     <list style="hanging">
-     <t hangText="container">An implementor of the 
-     <xref target="Gadget-Specification">Gadget specification</xref> </t>
+     <t hangText="term">Definition.</t>
     </list>
    </section>
   </section>
   <section title="Notational Conventions and Generic Grammar">
    <section title="Conventions">
     <t>Domain name examples use 
-    <xref target="RFC2606">RFC2606</xref>.</t>
+    <xref target="RFC2606"/>.</t>
    </section>
    <section title="Augmented BNF">
     <t>The grammatical rules in this document are to be interpreted as
-    described in <xref target="RFC2234">RFC4234</xref> (Augmented Backus-Naur 
-    Form).</t>   
+    described in <xref target="RFC2234"/>.</t>   
     <t>The following constructs are introduced in this document to augment 
     RFC4234:</t>
     <list style="hanging">
@@ -469,9 +468,8 @@ OpenSocial-Object = <x:ref>JSON-Object</x:ref> / <x:ref>XML-Object</x:ref>
    <section title="XML Object"
             anchor="XML-Object">
    <t>XML Objects are equivalent to JSON objects. The XML format of a JSON
-   object can be determined using the 
-   <xref target="JSON-to-XML">rules for mapping JSON to
-   XML</xref>.</t>.</section>
+   object can be determined using the rules for mapping JSON to
+   XML found in the <xref target="Core-Data">Core Data Specification</xref>.</t>.</section>
    <section title="OpenSocial Request ID"
             anchor="OpenSocial-Request-ID">
     <t>The OpenSocial Request ID is a string. In cases where multiple requests
@@ -520,8 +518,7 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
          xml:space="preserve">
 OpenSocial-Auth-Token = string
 </artwork>
-    <t>Semantics for the Auth token are defined in 
-    <xref>foo</xref> </t>
+    <t>TODO</t>
    </section>
    <section title="Standard Request Parameters"
             anchor="standard-request-parameters">
@@ -534,8 +531,7 @@ OpenSocial-Auth-Token = string
       response. If no fields are specified in the request, it is up to the 
       container to decide which fields to return as long as the container 
       returns any required fields as documented in the 
-      <xref target="data">Data</xref>
-      section.</t>
+      <xref target="Core-Data">Core Data Sepecification</xref>.</t>
       
       <t>'@all' is accepted to indicate returning all available fields.</t>
     </section>    
@@ -581,20 +577,11 @@ OpenSocial-Auth-Token = string
       <t>returns all items whose name field starts with John. Johnny and John
       Doe would both be included.)</t>
     </section>
-
     <section title="Sort Order" anchor="Request-Parameter-SortOrder-Value">
       <artwork type="abnf"><x:highlight>Request-Parameter-SortOrder-Value</x:highlight> = "ascending" / "descending"</artwork>
       <t>Can either be 'ascending' or 'descending',
      defaults to ascending. Used to sort objects in a collection.</t>
     </section>
-
-    <section title="Network Distance" anchor="Request-Parameter-NetworkDistance-Value">
-      <artwork type="abnf"><x:highlight>Request-Parameter-NetworkDistance-Value</x:highlight> = number</artwork>
-      <t>Modifies group-relative requests (@friends,  
-      etc.) to include the transitive closure of all friends up to the specified
-      distance away. MAY NOT be honored by the container.</t>
-    </section>
-
     <section title="Start Index" anchor="Request-Parameter-StartIndex-Value">
       <artwork type="abnf"><x:highlight>Request-Parameter-StartIndex-Value</x:highlight> = number</artwork>
       <t>Index into a paged collection.</t>
@@ -622,229 +609,6 @@ OpenSocial-Auth-Token = string
   </section>
   <section title="Services"
            anchor="services">
-   <section title="People"
-            anchor="People-Service">
-    <section title="Retrieve a Person"
-             anchor="People-Service-RetrievePerson">
-     <t>Requests and responses for retrieving a person use the following values:</t>
-     <artwork type="abnf"
-         xml:space="preserve">
-<x:ref>REST-HTTP-Method</x:ref>       = "GET"
-<x:ref>REST-URI-Fragment</x:ref>      = ( "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/@self" ) |
-                         ( "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/" <x:ref>OpenSocial-Group-ID</x:ref> "/" <x:ref>OpenSocial-User-ID</x:ref> )
-<x:ref>REST-Query-Parameters</x:ref>  = {
-                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("fields", <x:ref>Request-Parameter-Fields-Value</x:ref>) ]
-                          [ <x:ref>ENCODE-REST-PARAMETER</x:ref>("format", <x:ref>Request-Parameter-Format-Value</x:ref>) ]
-                         }
-<x:ref>REST-Request-Payload</x:ref>   = null
-<x:ref>RPC-Method</x:ref>             = "people.get"
-<x:ref>RPC-Request-Parameters</x:ref> = { 
-                            <x:ref>ENCODE-RPC-PARAMETER</x:ref>("userId", <x:ref>OpenSocial-User-ID</x:ref>) 
-                            <x:ref>ENCODE-RPC-PARAMETER</x:ref>("groupId", "@self")
-                          [ <x:ref>ENCODE-RPC-PARAMETER</x:ref>("fields", <x:ref>Request-Parameter-Fields-Value</x:ref>) ] 
-                         }
-<x:ref>OpenSocial-Object</x:ref>      = <x:ref>OpenSocial-Person</x:ref></artwork>
-     <t>Here's an example of a REST request to retrieve a person, and the
-     associated response. Note that 'format=xml' is used to specify that the response should contain XML.
-     <t>HTTP Request</t>
-     <artwork type="example"
-         xml:space="preserve">
-GET /rest/people/34KJDCSKJN2HHF0DW20394/@self?fields=name,gender&amp;format=xml HTTP/1.1
-HOST api.example.org
-Authorization: hh5s93j4hdidpola</artwork>
-     <t>HTTP Response</t>
-     <artwork type="example"
-         xml:space="preserve">
-HTTP/1.1 200 OK
-Content-Type: text/xml
-&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-  &lt;person&gt;
-    &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
-    &lt;name&gt;
-      &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
-    &lt;/name&gt;
-    &lt;gender&gt;female&lt;/gender&gt;
-  &lt;/person&gt;
-&lt;/response&gt;</artwork>
-     </t>
-     <t>Here's an example of a RPC request to retrieve a person, and the
-     associated response.
-     <t>HTTP Request</t>
-     <artwork type="example"
-         xml:space="preserve">
-POST /rpc HTTP/1.1
-Host: api.example.org
-Authorization: hh5s93j4hdidpola
-Content-Type: application/json
-{
-  "method" : "people.get",
-  "id" : "somePerson"
-  "params" : {
-    "userId" : "34KJDCSKJN2HHF0DW20394",
-    "groupId" : "@self",
-    "fields" : [ "name", "gender" ]
-  }
-}</artwork>
-     <t>HTTP Response</t>
-     <artwork type="example"
-         xml:space="preserve">
-HTTP/1.x 207 Multi-Status
-Content-Type: application/json
-{
-   "id" : "somePerson"
-   "result" : {
-     "id" : "34KJDCSKJN2HHF0DW20394",
-     "name" : { "unstructured" : "Jane Doe"},
-     "gender" : "female"
-   }
-}</artwork>
-     </t>
-    </section>
-    <section title="Retrieve a list of People"
-             anchor="People-Service-RetrievePeople">
-     <t>Requests and responses for retrieving a list of people use the following values:</t>
-     <artwork type="abnf"
-         xml:space="preserve">
-<x:ref>REST-HTTP-Method</x:ref>       = "GET"
-<x:ref>REST-URI-Fragment</x:ref>      = "/people/" <x:ref>OpenSocial-User-ID</x:ref> "/" <x:ref>OpenSocial-Group-ID</x:ref>
-<x:ref>REST-Query-Parameters</x:ref>  = {
-                          [( "fields=" <x:ref>Query-Parameter-Fields</x:ref> )]
-                          [( "format=" <x:ref>Query-Parameter-Format</x:ref> )]
-                         }
-<x:ref>REST-Request-Payload</x:ref>   = null
-<x:ref>RPC-Method</x:ref>             = "people.get"
-<x:ref>RPC-Request-Parameters</x:ref> = { 
-                          <x:ref>RPC-Request-Parameter</x:ref>("userId", <x:ref>OpenSocial-User-ID</x:ref>) 
-                          <x:ref>RPC-Request-Parameter</x:ref>("groupId", <x:ref>OpenSocial-Group-ID</x:ref>)
-                          [ <x:ref>RPC-Request-Parameter</x:ref>("fields", <x:ref>Query-Parameter-Fields</x:ref>) ] 
-                         }
-<x:ref>OpenSocial-Object</x:ref>      = <x:ref>OpenSocial-Collection</x:ref>&lt;<x:ref>OpenSocial-Person</x:ref>&gt;</artwork>
-    <t>Note that the OpenSocial-Group-ID can't be '@self' in these requests or only a single OpenSocial-Person will be returned.</t>  
-    <t>The RPC protocol also supports retrieving a list of users by specifying a comma-separated list of user IDs in the request.  In this case, the request uses the following values:</t>
-    <artwork type="example">
-<x:ref>RPC-Method</x:ref>             = "people.get"
-<x:ref>RPC-Request-Parameters</x:ref> = { 
-                          <x:ref>RPC-Request-Parameter</x:ref>("userId", <x:ref>OpenSocial-User-ID-List</x:ref>) 
-                          <x:ref>RPC-Request-Parameter</x:ref>("groupId", "@self")
-                          [ <x:ref>RPC-Request-Parameter</x:ref>("fields", <x:ref>Query-Parameter-Fields</x:ref>) ] 
-                         }
-<x:ref>OpenSocial-Object</x:ref>      = <x:ref>OpenSocial-Collection</x:ref>&lt;<x:ref>OpenSocial-Person</x:ref>&gt;</artwork>    
-    <t>Here's an example of a REST request to retrieve the list of a user's friends, and the associated response. Note that 'format=xml' is used to specify that the response should contain XML.
-     <t>HTTP Request</t>
-     <artwork type="example"
-         xml:space="preserve">
-GET /rest/people/92WEGDFEWSS2GS0DW274EQ/@friends?fields=name,gender&amp;format=xml HTTP/1.1
-HOST api.example.org
-Authorization: hh5s93j4hdidpola</artwork>
-     <t>HTTP Response</t>
-     <artwork type="example"
-         xml:space="preserve">
-HTTP/1.1 200 OK
-Content-Type: text/xml
-&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
-  &lt;itemsPerPage&gt; 2 &lt;/itemsPerPage&gt;
-  &lt;totalResults&gt; 100 &lt;/totalResults&gt;
-  &lt;entry&gt;
-    &lt;person&gt;
-      &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
-      &lt;name&gt;
-        &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
-      &lt;/name&gt;
-      &lt;gender&gt;female&lt;/gender&gt;
-    &lt;/person&gt;
-  &lt;/entry&gt;
-  &lt;entry&gt;
-    &lt;person&gt;
-      &lt;id&gt;VMK92BFH3DNWRYX39673DF&lt;/id&gt;
-      &lt;name&gt;
-        &lt;unstructured&gt;John Smith&lt;/unstructured&gt;
-      &lt;/name&gt;
-      &lt;gender&gt;male&lt;/gender&gt;
-    &lt;/person&gt;
-  &lt;/entry&gt; 
-&lt;/response&gt;</artwork>
-     </t>
-     <t>Here's an example of a RPC request to retrieve the list of a user's friends, and the associated response.
-     <t>HTTP Request</t>
-     <artwork type="example"
-         xml:space="preserve">
-POST /rpc HTTP/1.1
-Host: api.example.org
-Authorization: hh5s93j4hdidpola
-Content-Type: application/json
-{
-  "method" : "people.get",
-  "id" : "someFriends"
-  "params" : {
-    "userId" : "92WEGDFEWSS2GS0DW274EQ",
-    "groupId" : "@friends",
-    "fields" : "name, gender"
-  }
-}</artwork>
-     <t>HTTP Response</t>
-     <artwork type="example"
-         xml:space="preserve">
-HTTP/1.x 207 Multi-Status
-Content-Type: application/json
-{
-   "id" : "someFriends"
-   "result" : {
-     "startIndex" : 1
-     "itemsPerPage" : 2
-     "totalResults" : 100
-     "entry" : [
-       {
-         "id" : "34KJDCSKJN2HHF0DW20394",
-         "name" : { "unstructured" : "Jane Doe"},
-         "gender" : "female"
-       },
-       {
-         "id" : "VMK92BFH3DNWRYX39673DF",
-         "name" : { "unstructured" : "John Smith"},
-         "gender" : "female"
-       }
-     ]
-   }
-}</artwork>
-     </t>
-    </section>
-    <section title="Retrieve a list of supported Person fields" anchor="People-Service-GetSupportedFields">
-    </section>
-    <section title="Retrieve a list of deleted friends" anchor="People-Service-GetDeletedFriends">
-    </section>
-    <section title="Create a Person"
-             anchor="People-Service-CreatePerson"></section>
-    <section title="Update a Person"
-             anchor="People-Service-UpdatePerson"></section>
-    <section title="Delete a Person"
-             anchor="People-Service-DeletePerson"></section>
-    <section title="Create a list of Friends"
-             anchor="People-Service-CreateFriends"></section>
-    <section title="Update a list of Friends"
-             anchor="People-Service-UpdateFriends"></section>
-    <section title="Delete a list of Friends"
-             anchor="People-Service-DeleteFriends"></section>
-   </section>
-   <section title="Groups"
-            anchor="Groups-Service">
-    <section title="Create a list of Groups"
-             anchor="Groups-Service-CreateGroups"></section>
-    <section title="Retrieve a list of Groups"
-             anchor="Groups-Service-RetrieveGroups"></section>
-    <section title="Update a list of Groups"
-             anchor="Groups-Service-UpdateGroups"></section>
-    <section title="Delete a list of Groups"
-             anchor="Groups-Service-DeleteGroups"></section>
-   </section>
-   <section title="Activities"
-            anchor="Activities-Service"></section>
-   <section title="AppData"
-            anchor="AppData-Service"></section>
-   <section title="Albums"
-            anchor="Albums-Service"></section>
-   <section title="MediaItems"
-            anchor="MediaItems-Service"></section>
    <section title="Invalidation"
             anchor="Invalidation-Service"></section>
    <section title="System"
@@ -856,22 +620,6 @@ Content-Type: application/json
  </middle>
  <back>
   <references>
-   <reference anchor="RFC2234">
-     <seriesInfo name='RFC' value='2234' />
-   </reference>
-   <reference anchor="RFC20">
-     <seriesInfo name='RFC' value='20' />
-   </reference>
-   <reference anchor="RFC3986">
-     <seriesInfo name='RFC' value='3986' />
-   </reference>   
-   <reference anchor="RFC4627">
-     <seriesInfo name='RFC' value='4627' />
-   </reference>   
-   <reference anchor="Gadget-Specification">
-   </reference>   
-
-
    <reference anchor='RFC2119'>
     <front>
      <title>Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -909,22 +657,34 @@ Content-Type: application/json
     <seriesInfo name='RFC'
                 value='2616' />
    </reference>
-   <reference anchor='JSPEL'
-              target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
+   <reference anchor='RFC4627'>
     <front>
-     <title>Java Server Pages Expression Language</title>
-     <author initials='K.'
-             surname='Chung'
-             fullname='Kin-Man Chung'></author>
-     <author initials='P.'
-             surname='DeLisle'
-             fullname='Pierre Delisle'></author>
-     <author initials='M.'
-             surname='Roth'
-             fullname='Mark Roth'></author>
-     <date month='May'
-           year='2006' />
+     <title>The application/json Media Type for JavaScript Object Notation (JSON)
+</title>
     </front>
+    <seriesInfo name='RFC'
+                value='4627' />
+   </reference>
+   <reference anchor='RFC2234'>
+    <front>
+     <title>Augmented BNF for Syntax Specifications: ABNF</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='2234' />
+   </reference>
+   <reference anchor='RFC3986'>
+    <front>
+     <title>Uniform Resource Identifier (URI): Generic Syntax</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='3986' />
+   </reference>
+   <reference anchor='RFC20'>
+    <front>
+     <title>ASCII format for Network Interchange</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='20' />
    </reference>
    <reference anchor="XSdateTime"
               target="http://www.w3.org/TR/xmlschema-2/#dateTime">
@@ -942,6 +702,16 @@ Content-Type: application/json
      </author>
      <date month='October'
            year='2004' />
+    </front>
+   </reference>
+   <reference anchor="Core-Data"
+              target="./Core-Data.xml">
+    <front>
+     <title>OpenSocial Core Data Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
     </front>
    </reference>
   </references>
