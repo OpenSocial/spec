@@ -17,7 +17,18 @@
   <date month="September"
         year="2009" />
   <abstract>
-   <t>This document defines all the data objects used in the OpenSocial APIs.</t>
+   <t>This document defines all the data objects used in the
+   OpenSocial APIs. Objects defined here make use of the <xref
+   target="CoreData">Core Data</xref> objects. The structure of the
+   data is used by many different APIs: 
+   <list style="symbols">
+     <t>JavaScript within the gadget is done using osapi APIs,
+     defined in the <xref target="SocialGadget">Social Gadget
+     Specification</xref></t>
+     <t>REST and RPC access is done using APIs defined in the
+     <xref target="SocialServer">Social API Server Spec</xref></t>
+   </list>
+   </t> 
   </abstract>
  </front>
  <middle>
@@ -46,10 +57,10 @@
    </section>
    <section title="Augmented BNF">
     <t>The grammatical rules in this document are to be interpreted as
-    described in <xref target="RFC2234">RFC4234</xref> (Augmented Backus-Naur 
+    described in <xref target="RFC2234">RFC2234</xref> (Augmented Backus-Naur 
     Form).</t>   
     <t>The following constructs are introduced in this document to augment 
-    RFC4234:</t>
+    RFC2234:</t>
     <list style="hanging">
      <t hangText="{rule1 rule2}">
       <t>Elements enclosed in braces (squiggly brackets) are treated as a
@@ -116,78 +127,283 @@ COMMA          = <US-ASCII comma (44)>
 </artwork>
    </section>
   </section>
-  <section title="Data"
-           anchor="data">
-   <section title="OpenSocial-Account" anchor="OpenSocial-Account">
-     <t>TODO</t>
-   </section>
-   <section title="OpenSocial-Address" anchor="OpenSocial-Address">
-     <t>TODO</t>
-   </section>
-   <section title="OpenSocial-AppData" anchor="OpenSocial-AppData">
-     <t>TODO</t>
-   </section>
-   <section title="OpenSocial-Boolean" anchor="OpenSocial-Boolean">
-     <t>TODO</t>
-   </section>
-   <section title="OpenSocial Group ID"
-            anchor="OpenSocial-Group-ID">
-    <t>The group ID must only contain alphanumeric (A-Za-z0-9) characters,
-    underscore(_), dot(.) or dash(-), and must uniquely identify the group in a
-    container.</t>
-    <artwork type="abnf"
-         xml:space="preserve">
-OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends" / "@all"
+  <section title="Primary Social Data"
+           anchor="primary-social-data">
+    <t>Primary Social Data objects represent objects that are directly
+    addressable through top level API calls, such as osapi, RPC, REST
+    and Pipelining tags.</t>
+   <section title="Activity" anchor="Activity">
+     <t>Representation of an activity.</t>
+     <t>Activities are rendered with a title and an optional activity body.</t>
+     <t>You may set the title and body directly as strings when calling
+     opensocial.newActivity. However, it is usually beneficial to create
+     activities using Message Templates for the title and body.</t>
+     <t>Users have many activities in their activity streams, and
+     containers may not show every activity that is visible to a user. To help
+     display large numbers of activities, containers summarize a list of
+     activities from a given source to a single entry.</t>
+     <t>You can provide Activity Summaries to customize the text shown when
+     multiple activities are summarized. If no customization is provided, a
+     container may ignore your activities altogether or provide default text
+     such as "Bob changed his status message + 20 other events like this."</t>
+     <list style="symbols">
+      <t>Activity Summaries always summarize around a specific key in a
+      key/value pair. This is so that the summary can say something concrete
+      (this is clearer in the example below).</t>
+      <t>Other variables have synthetic "Count" variables created with the
+      total number of items summarized.</t>
+      <t>Message ID of the summary is the message ID of the main template + ":"
+      + the data key</t>
+     </list>
+     <t>Example summaries: 
+     <figure>
+      <artwork xml:space="preserve">
+&lt;messagebundle&gt;
+    &lt;msg name="LISTEN_TO_THIS_SONG:Artist"&gt;
+        ${Subject.Count} of your friends have suggested listening to songs
+        by ${Artist}!
+    &lt;/msg&gt;
+    &lt;msg name="LISTEN_TO_THIS_SONG:Song"&gt;
+        ${Subject.Count} of your friends have suggested listening to ${Song}
+    !&lt;/msg&gt;
+    &lt;msg name="LISTEN_TO_THIS_SONG:Subject"&gt;
+        ${Subject.DisplayName} has recommended ${Song.Count} songs to you.
+    &lt;/msg&gt;
+&lt;/messagebundle&gt;
 </artwork>
+     </figure></t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>appId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>Specifying the application that this activity is associated with.</c>
+      <c>body</c>
+      <c>string</c>
+      <c>Specifying an optional expanded version of an
+      activity. Bodies may only have the following HTML tags: &lt;b&gt; &lt;i&gt;,
+      &lt;a&gt;, &lt;span&gt;. The container may ignore this formatting when
+      rendering the activity.</c>
+      <c>bodyId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>Specifying the body template message ID in the gadget spec.</c>
+      <c>externalId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>An optional ID generated by the posting application.</c>
+      <c>id</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>An ID that is permanently associated with this activity.</c>
+      <c>mediaItems</c>
+      <c>Array&lt;<x:ref>MediaItem</x:ref>&gt;</c>
+      <c>Any photos, videos, or images that should be associated with
+      the activity. Higher priority ones are higher in the list.</c>
+      <c>postedTime</c>
+      <c>string</c>
+      <c>Specifying the time at which this activity took place in
+      milliseconds since the epoch.</c>
+      <c>priority</c>
+      <c>number</c>
+      <c>A number between 0 and 1 representing the relative priority
+      of this activity in relation to other activities from the same
+      source.</c>
+      <c>streamFaviconUrl</c>
+      <c>string</c>
+      <c>Specifying the URL for the stream's favicon.</c>
+      <c>streamSourceUrl</c>
+      <c>string</c>
+      <c>Specifying the stream's source URL.</c>
+      <c>streamTitle</c>
+      <c>string</c>
+      <c>Specifing the title of the stream.</c>
+      <c>streamUrl</c>
+      <c>string</c>
+      <c>Specifying the stream's URL.</c>
+      <c>templateParams</c>
+      <c></c>
+      <c>A map of custom key/value pairs associated with this
+      activity. These are used for evaluation in templates. The
+      data has type Map&lt;String, Object&gt;. The object may be either a
+      String or an opensocial.Person. When passing in a person with
+      key PersonKey, can use the following replacement variables in
+      the template:
+       <list style="symbols">
+        <t>PersonKey.DisplayName - Display name for the person</t>
+        <t>PersonKey.ProfileUrl. URL of the person's profile</t>
+        <t>PersonKey.Id - The ID of the person</t>
+        <t>PersonKey - Container may replace with DisplayName, but may also
+        optionally link to the user.</t>
+       </list>
+      </c> 
+      <c>title</c>
+      <c>string</c>
+      <c>Specifying the primary text of an activity. Titles may only
+      have the following HTML tags: &lt;b&gt; &lt;i&gt;, &lt;a&gt;,
+      &lt;span&gt;. The container may ignore this formatting when
+      rendering the activity.</c>
+      <c>url</c>
+      <c>string</c>
+      <c>Specifying the URL that represents this activity.</c>
+      <c>userId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>ID of the user who this activity is for.</c>
+     </texttable>
    </section>
-   <section title="OpenSocial-Name"
-            anchor="OpenSocial-Name">
-    <t>TODO</t>
+   <section title="AppData" anchor="AppData">
+     <t>OpenSocial defines a data store that applications can use to
+     read and write user-specific data. This data store can be read by
+     anyone who can see the gadget, but only the VIEWER's data is
+     writable.</t>
+     <t>The keys that developers specify to index this data must only
+     contain alphanumeric (A-Za-z0-9) characters, underscore(_),
+     dot(.) or dash(-).</t>
+     <t>Since application data is often created based on user inputs,
+     OpenSocial containers perform automatic HTML escaping of all
+     application data. However, developers have the option of turning
+     off this escaping by setting the escapeType parameter on
+     newFetchPersonAppData and getField calls.</t>
+     <t>Because of the potential for abuse, containers MAY implement
+     quotas or rate limits to preserve their disk space.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>key</c>
+      <c>string</c>
+      <c>A unique value with respect to the context it is being stored
+      within (typically a person).</c>
+      <c>value</c>
+      <c>string</c>
+      <c>An arbitary string.</c>
+     </texttable>
    </section>
-   <section title="OpenSocial-Organization" anchor="OpenSocial-Organization">
-     <t>TODO</t>
+   <section title="Message"
+            anchor="Message">
+     <t>Valid definitions for Message-Field are listed in the table below.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>appUrl</c>
+      <c></c>
+      <c>Identifies the application that generated this message.</c>
+      <c>body</c>
+      <c></c>
+      <c>The main text of the message. HTML attributes are allowed and
+      are sanitized by the container.</c>
+      <c>bodyId</c>
+      <c></c>
+      <c>The main text of the message as a message template. Specifies
+      the message ID to use in the gadget xml.</c>
+      <c>collectionIds</c>
+      <c></c>
+      <c>Identifies the messages collection IDs this message is
+      contained in.</c>
+      <c>id</c>
+      <c></c>
+      <c>Unique ID for this message.</c>
+      <c>inReplyTo</c>
+      <c></c>
+      <c>Message ID, use for threaded comments/messages. Reference the
+      sematics of the Atom Threading model defined in rfc4685. URLs
+      should be mapped to Atom &lt;link rel="type" .../&gt;</c>
+      <c>recipients</c>
+      <c></c>
+      <c>Array of person IDs.</c>
+      <c>replies</c>
+      <c></c>
+      <c>Array of message ids. Reference the sematics of the Atom
+      Threading model defined in rfc4685. URLs should be mapped to
+      Atom &lt;link rel="type" .../&gt;</c>
+      <c>senderId</c>
+      <c></c>
+      <c>Id of person who sent the message.</c>
+      <c>status</c>
+      <c></c>
+      <c>Status of the message. (NEW, READ, DELETED).</c>
+      <c>timeSent</c>
+      <c></c>
+      <c>UTC time message was sent.</c>
+      <c>title</c>
+      <c></c>
+      <c>The title of the message. HTML attributes are allowed and are
+      sanitized by the container.</c>
+      <c>titleId</c>
+      <c></c>
+      <c>The title of the message as a message template. Specifies the
+      message ID to use in the gadget xml.</c>
+      <c>type</c>
+      <c></c>
+      <c>The title of the message.</c>
+      <c>updated</c>
+      <c></c>
+      <c>Last update for this message.</c>
+      <c>urls</c>
+      <c></c>
+      <c>List of related URLs for this message. Supported URL types
+      include 'alternate', alternate for for this mailbox (text/html
+      being the most common).</c>
+     </texttable>
    </section>
-   <section title="OpenSocial-Person"
-            anchor="OpenSocial-Person">
-     <t>Each person returned MUST include the "id", "name", and "thumbnailUrl" 
-     fields with 
-     non-empty values, but all other fields are optional, and it is recognized 
-     that not all Service Providers will be able to provide data for all the 
-     supported fields. The field list below is broad so that there is a standard 
-     field name available among Service Providers that do support any of these 
+   <section title="Person"
+            anchor="Person">
+     <t>Each person returned MUST include the "id", "name", and
+     "thumbnailUrl" fields with non-empty values, but all other fields
+     are optional, and it is recognized that not all Service Providers
+     are able to provide data for all the supported fields. The field
+     list below is broad so that there is a standard field name
+     available among Service Providers that do support any of these
      fields.</t>
+     <t>There are two special Person objects that can be requested
+     directly: the VIEWER and the OWNER. To understand the
+     distinction, imagine you're checking out a coworker's profile on
+     Orkut. In this case, you are the VIEWER and your coworker is the
+     OWNER. It's also common to view your own profile, in which case
+     you are both the VIEWER and the OWNER, and some applications may
+     choose to handle this case differently. OpenSocial also provides
+     for the case of anonymous viewing, where the gadget will not be
+     able to access the VIEWER's information.</t>
      <artwork type="abnf">
-<x:highlight>OpenSocial-Person</x:highlight>          = "{"
-                               "id :" OpenSocial-User-ID ","
-                               "displayName :" string ","
-                               [ #OpenSocial-Person-Field ]
-                             "}"</artwork>
-     <t>Valid definitions for OpenSocial-Person-Field are listed in the table below.</t>
+       <x:highlight>Person</x:highlight>   = "{"
+                      "id :" User-ID ","
+                      "displayName :" string ","
+                      [ #Person-Field ]
+                  "}"</artwork>
+     <t>Valid definitions for Person-Field are listed in the table below.</t>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
       <c>accounts</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;<x:ref>OpenSocial-Account</x:ref>&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Account</x:ref>&gt;</c>
       <c>An online account held by this Person.</c>
       <c>addresses</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;<x:ref>OpenSocial-Address</x:ref>&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Address</x:ref>&gt;</c>
       <c>A physical mailing address for this Person.</c>
       <c>anniversary</c>
-      <c><x:ref>OpenSocial-Date</x:ref></c>
-      <c>The wedding anniversary of this person. The value MUST be a valid
-      xs:date (e.g. 1975-02-14). The year value MAY be set to 0000 when the
-      year is not available.</c>
-      <c>appdata</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;<x:ref>OpenSocial-AppData</x:ref>&gt;</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
+      <c>The wedding anniversary of this person. The value MUST be a
+      valid <eref
+      target="./Core-Data.xml#Date">Date</eref>. The
+      year value MAY be set to 0000 when the year is not
+      available.</c>
+      <c>age</c>
+      <c>number</c>
+      <c>The age of this person. Sometimes sites might want to show
+      age without revealing the specific birthday.</c>
+      <c>appData</c>
+      <c><eref
+      target="./Core-Data.xml#Plural-Field">Plural-Field</eref>
+      &lt;<x:ref>AppData</x:ref>&gt;</c>
       <c>A collection of AppData keys and values.</c>
       <c>birthday</c>
-      <c><x:ref>OpenSocial-Date</x:ref></c>
-      <c>The birthday of this person. The value MUST be a valid xs:date (e.g.
-      1975-02-14). The year value MAY be set to 0000 when the age of the Person
-      is private or the year is not available.</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
+      <c>The birthday of this person. The value MUST be a valid <eref
+      target="./Core-Data.xml#Date">Date</eref>. The
+      year value MAY be set to 0000 when the age of the Person is
+      private or the year is not available.</c>
       <c>connected</c>
-      <c><x:ref>OpenSocial-Boolean</x:ref></c>
+      <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
       <c>Boolean value indicating whether the user and this Person have
       established a bi-directionally asserted connection of some kind on the
       Service Provider's service. The value MUST be either true or false. The
@@ -210,10 +426,13 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
       normally displayed by the Service Provider when presenting it to
       end-users.</c>
       <c>emails</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>E-mail address for this Person. The value SHOULD be canonicalized by
       the Service Provider, e.g.joseph@plaxo.com instead of
       joseph@PLAXO.COM.</c>
+      <c>hasApp</c>
+      <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
+      <c>Indicating whether the user has application installed.</c>
       <c>gender</c>
       <c>string</c>
       <c>The gender of this person. Service Providers SHOULD return one of the
@@ -221,17 +440,11 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
       and MAY return a different value if it is not covered by one of these
       Canonical Values.</c>
       <c>id</c>
-      <c><x:ref>OpenSocial-User-ID</x:ref></c>
-      <c><x:highlight>Required.</x:highlight> Unique identifier for the Person. Each Person returned MUST include a
-      non-empty id value. This identifier MUST be unique across this user's
-      entire set of people, but MAY not be unique across multiple users' data.
-      It MUST be a stable ID that does not change when the same contact is
-      returned in subsequent requests. For instance, an e-mail address is not a
-      good id, because the same person may use a different e-mail address in
-      the future. Usually, in internal database ID will be the right choice
-      here, e.g. "12345".</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c><x:highlight>Required.</x:highlight> Unique identifier for
+      the Person.</c>
       <c>ims</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Instant messaging address for this Person. No official
       canonicalization rules exist for all instant messaging addresses, but
       Service Providers SHOULD remove all whitespace and convert the address to
@@ -240,7 +453,7 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
       defines the following Canonical Values to represent currently popular IM
       services: aim, gtalk, icq, xmpp,msn, skype, qq, and yahoo.</c>
       <c>name</c>
-      <c><x:ref>OpenSocial-Name</x:ref></c>
+      <c><x:ref>Name</x:ref></c>
       <c>The broken-out components and fully formatted version of the person's
       real name.</c>
       <c>nickname</c>
@@ -255,15 +468,15 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
       (normally notes by the user about this person). This field MAY contain
       newlines.</c>
       <c>organizations</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;<x:ref>OpenSocial-Organization</x:ref>&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Organization</x:ref>&gt;</c>
       <c>A current or past organizational affiliation of this Person.</c>
       <c>phoneNumbers</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Phone number for this Person. No canonical value is assumed here. In
       addition to the standard Canonical Values for type, this field also
       defines the additional Canonical Values mobile, fax, and pager.</c>
       <c>photos</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>URL of a photo of this person. The value SHOULD be a canonicalized
       URL, and MUST point to an actual image file (e.g. a GIF, JPEG, or PNG
       image file) rather than to a web page containing an image. Service
@@ -280,13 +493,12 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
       person, e.g. Consumers MAY wish to use this value to pre-populate a
       username for this user when signing up for a new service.</c>
       <c>published</c>
-      <c><x:ref>OpenSocial-Date</x:ref></c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>The date this Person was first added to the user's address book or
       friends list (i.e. the creation date of this entry). The value MUST be a
-      valid 
-      <xref target="XSdateTime" /> (e.g. 2008-01-23T04:56:22Z).</c>
+      valid <eref target="./Core-Data.xml#Date">Date</eref>.</c>
       <c>relationships</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>A bi-directionally asserted relationship type that was established
       between the user and this person by the Service Provider. The value
       SHOULD conform to one of the XFN relationship values (e.g. kin, friend,
@@ -296,44 +508,484 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
       are asserted by the user without acknowledgment by this Person. Note that
       this field consists only of a string value.</c>
       <c>tags</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>A user-defined category label for this person, e.g. "favorite" or
       "web20". These values SHOULD be case-insensitive, and there SHOULD NOT be
       multiple tags provided for a given person that differ only in case. Note
       that this field consists only of a string value.</c>
       <c>updated</c>
-      <c><x:ref>OpenSocial-Date</x:ref></c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>The most recent date the details of this Person were updated (i.e. the
       modified date of this entry). The value MUST be a valid 
-      <xref target="XSdateTime" /> (e.g. 2008-01-23T04:56:22Z). If this Person
+      <eref target="./Core-Data.xml#Date">Date</eref>. If this Person
       has never been modified since its initial creation, the value MUST be the
       same as the value of published. Note the updatedSince Query Parameter can
       be used to select only people whose updated value is equal to or more
-      recent than a given xs:dateTime. This enables Consumers to repeatedly
+      recent than a given <eref
+      target="./Core-Data.xml#Date">Date</eref>. This enables
+      Consumers to repeatedly
       access a user's data and only request newly added or updated contacts
       since the last access time.</c>
       <c>urls</c>
-      <c><x:ref>OpenSocial-Plural-Field</x:ref> &lt;string&gt;</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>URL of a web page relating to this Person. The value SHOULD be
       canonicalized by the Service Provider, e.g.http://josephsmarr.com/about/
       instead of JOSEPHSMARR.COM/about/. In addition to the standard Canonical
       Values for type, this field also defines the additional Canonical Values
       blog and profile.</c>
       <c>utcOffset</c>
-      <c><x:ref>OpenSocial-Date-UTC-Offset</x:ref></c>
+      <c><eref target="./Core-Data.xml#Date-UTC-Offset">Date-UTC-Offset</eref></c>
       <c>The offset from UTC of this Person's current time zone, as of the time
-      this response was returned. The value MUST conform to the offset portion
-      of 
-      <xref target="XSdateTime" />, e.g. -08:00. Note that this value MAY
+      this response was returned. The value MUST conform to the <eref
+      target="./Core-Data.xml#Date-UTC-Offset">Date-UTC-Offset</eref>. Note that this value MAY
       change over time due to daylight saving time, and is thus meant to
       signify only the current value of the user's timezone offset.</c>
+      <c>aboutMe</c>
+      <c>string</c>
+      <c>A general statement about the person.</c>
+      <c>bodyType</c>
+      <c>string</c>
+      <c>Person's body characteristics.</c>
+      <c>location</c>
+      <c>string</c>
+      <c></c>
+      <c>drinker</c>
+      <c>string</c>
+      <c>Person's drinking status.</c>
+      <c>ethnicity</c>
+      <c>string</c>
+      <c>Person's ethnicity.</c>
+      <c>fashion</c>
+      <c>string</c>
+      <c>Person's thoughts on fashion.</c>
+      <c>happiestWhen</c>
+      <c>string</c>
+      <c>Describes when the person is happiest.</c>
+      <c>humor</c>
+      <c>string</c>
+      <c>Person's thoughts on humor.</c>
+      <c>livingArrangement</c>
+      <c>string</c>
+      <c>Description of the person's living arrangemen.</c>
+      <c>lookingFor</c>
+      <c>string</c>
+      <c>Person's statement about who or what they are looking for, or
+      what they are interested in meeting people for.</c>
+      <c>profileSong</c>
+      <c>string</c>
+      <c>URL of a person's profile song.</c>
+      <c>profileVideo</c>
+      <c>string</c>
+      <c>URL of a person's profile video.</c>
+      <c>profileUrl</c>
+      <c>string</c>
+      <c>Person's profile URL, specified as a string. This URL must be
+      fully qualified. Relative URLs will not work in gadgets.</c>
+      <c>relationshipStatus</c>
+      <c>string</c>
+      <c>Person's relationship status.</c>
+      <c>religion</c>
+      <c>string</c>
+      <c>Person's relgion or religious views.</c>
+      <c>romance</c>
+      <c>string</c>
+      <c>Person's comments about romance.</c>
+      <c>scaredOf</c>
+      <c>string</c>
+      <c>What the person is scared of.</c>
+      <c>sexualOrientation</c>
+      <c>string</c>
+      <c>Person's sexual orientation.</c>
+      <c>smoker</c>
+      <c>string</c>
+      <c>Person's smoking status.</c>
+      <c>status</c>
+      <c>string</c>
+      <c>Person's status, headline or shoutout.</c>
+      <c>thumbnailUrl</c>c>
+      <c>string</c>
+      <c>Person's photo thumbnail URL, specified as a string. This URL
+      must be fully qualified. Relative URLs will not work in
+      gadgets.</c>
+      <c>activities</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite activities.</c>
+      <c>books</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite books.</c>
+      <c>cars</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite cars.</c>
+      <c>children</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Description of the person's children.</c>
+      <c>food</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite food.</c>
+      <c>heroes</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite heroes.</c>
+      <c>interests</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's interests, hobbies or passions.</c>
+      <c>jobInterests</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite jobs, or job interests and skills.</c>
+      <c>languagesSpoken</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>List of the languages that the person speaks as ISO 639-1 codes.</c>
+      <c>movies</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite movies.</c>
+      <c>music</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite music.</c>
+      <c>networkPresence</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's current network status. Specified as one of: AWAY,
+      CHAT, DND, OFFLINE, ONLINE OR XA.</c>
+      <c>pets</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Description of the person's pets</c>
+      <c>politicalViews</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's political views.</c>
+      <c>quotes</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite quotes</c>
+      <c>sports</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite sports</c>
+      <c>turnOffs</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's turn offs.</c>
+      <c>turnOns</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's turn ons.</c>
+      <c>tvShows</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite TV shows.</c>
      </texttable>
-     <t>The following additional fields are defined, based on
-     their specification in the OpenSocial Javascript API, and are represented with strings: aboutMe,
-     bodyType,location, drinker, ethnicity, fashion, happiestWhen,
-     humor, livingArrangement, lookingFor, profileSong,profileVideo,
-     relationshipStatus, religion, romance, scaredOf, sexualOrientation,
-     smoker, and status.</t>
+   </section>
+  </section>
+  <section title="Additional Social Data">
+    <t>Additional Social Data objects are data objects that are
+    contained within other Social Data object. These do not stand
+    alone, and are not directly accessable by API calls such as osapi,
+    REST, RPC and Pipelining.</t>
+   <section title="Account" anchor="Account">
+     <t>Describes an account held by this Person, which MAY be on the Service
+     Provider's service, or MAY be on a different service. Consumers SHOULD NOT
+     assume that this account has been verified by the Service Provider to
+     actually belong to this Person. For each account, the domain is the
+     top-most authoritative domain for this account, e.g. yahoo.com or
+     reader.google.com, and MUST be non-empty. Each account must also contain a
+     non-empty value for either username or userId, and MAY contain both, in
+     which case the two values MUST be for the same account. These accounts can
+     be used to determine if a user on one service is also known to be the same
+     person on a different service, to facilitate connecting to people the user
+     already knows on different services. If Consumers want to turn these
+     accounts into profile URLs, they can use an open-source library like 
+     <xref target="Social-Graph-Node-Mapper" />. 
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>domain</c>
+      <c>string</c>
+      <c>The top-most authoritative domain for this account, e.g.
+      "twitter.com". This is the Primary Sub-Field for this field, for the
+      purposes of sorting and filtering.</c>
+      <c>username</c>
+      <c>string</c>
+      <c>An alphanumeric user name, usually chosen by the user, e.g.
+      "jsmarr".</c>
+      <c>userId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>A user ID associated with this account.</c>
+     </texttable></t>
+   </section>
+   <section title="Address" anchor="Address">
+     <t>The components of a physical mailing address. Service
+     Providers MAY return just the full address as a single string in
+     the formattedsub-field, or they MAY return just the individual
+     component fields using the other sub-fields, or they MAY return
+     both. If both variants are returned, they SHOULD be describing
+     the same address, with the formatted address indicating how the
+     component fields should be combined.</t>
+     <t><texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>formatted</c>
+      <c>string</c>
+      <c>The full mailing address, formatted for display or use with a mailing
+      label. This field MAY contain newlines. This is the Primary Sub-Field for
+      this field, for the purposes of sorting and filtering.</c>
+      <c>streetAddress</c>
+      <c>string</c>
+      <c>The full street address component, which may include house number,
+      street name, PO BOX, and multi-line extended street address information.
+      This field MAY contain newlines.</c>
+      <c>locality</c>
+      <c>string</c>
+      <c>The city or locality component.</c>
+      <c>region</c>
+      <c>string</c>
+      <c>The state or region component.</c>
+      <c>postalCode</c>
+      <c>string</c>
+      <c>The zipcode or postal code component.</c>
+      <c>country</c>
+      <c>string</c>
+      <c>The country name component.</c>
+      <c>latitude</c>
+      <c>string</c>
+      <c>Expresses the latitude of the location on a map.</c>
+      <c>longitude</c>
+      <c>string</c>
+      <c>Expresses the longitude of the location on a map.</c>
+      <c>type</c>
+      <c>string</c>
+      <c>The address type or label. Examples include 'work', 'home'.</c>
+     </texttable></t>
+   </section>
+   <section title="Album"
+            anchor="Album">
+     <t>Represents an album.
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>description</c>
+      <c>string</c>
+      <c>Description of the album</c>
+      <c>id</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>Unique identifier for the album.</c>
+      <c>location</c>
+      <c><x:ref>Address</x:ref></c>
+      <c>Location corresponding to the album.</c>
+      <c>mediaItemCount</c>
+      <c>integer</c>
+      <c>Number of items in the album.</c>
+      <c>mediaMimeType</c>
+      <c>Array &lt;string&gt;</c>
+      <c>Array of strings identifying the mime-types of media items in
+      the Album.</c>
+      <c>mediaType</c>
+      <c>Array &lt;string&gt;</c>
+      <c>Array of MediaItem types, types are one of: audio, image, video.</c>
+      <c>owernId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>ID of the owner of the album.</c>
+      <c>thumbnailUrl</c>
+      <c>string</c>
+      <c>URL to a thumbnail cover of the album.</c>
+      <c>title</c>
+      <c>string</c>
+      <c>the title of the album.</c>
+     </texttable>
+     </t>
+   </section>
+   <section title="Group ID"
+            anchor="Group-ID">
+    <t>The group ID must only contain alphanumeric (A-Za-z0-9) characters,
+    underscore(_), dot(.) or dash(-), and must uniquely identify the group in a
+    container.</t>
+    <artwork type="abnf"
+         xml:space="preserve">
+Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" / "@friends" / "@all"
+</artwork>
+   </section>
+   <section title="MediaItem"
+            anchor="MediaItem">
+     <t>Represents images, movies, and audio.
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+       <c>album_id</c>
+       <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+       <c>Album to which the media item belongs.</c>
+       <c>created</c>
+       <c>string</c>
+       <c>Creation datetime associated with the media item -
+       assigned by container in UTC.</c>
+       <c>description</c>
+       <c>string</c>
+       <c>Description of the media item.</c>
+       <c>duration</c>
+       <c>integer</c>
+       <c>For audio/video clips - playtime length in
+       seconds. set to -1/not defined if unknown.</c>
+       <c>file_size</c>
+       <c>long</c>
+       <c>Number of bytes (set to -1/undefined if unknown).</c>
+       <c>id</c>
+       <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+       <c>Id Associated with the media item.</c>
+       <c>language</c>
+       <c>string</c>
+       <c>Language associated with the media item in ISO
+       639-3 format.</c>
+       <c>last_updated</c>
+       <c>string</c>
+       <c>Update datetime associated with the media item -
+       assigned by container in UTC.</c>
+       <c>location</c>
+       <c>Address</c>
+       <c>Location corresponding to the media item.</c>
+       <c>mime_type</c>
+       <c>string</c>
+       <c>The MIME type of media, specified as a string.</c>
+       <c>num_comments</c>
+       <c>integer</c>
+       <c>Number of comments on the media item.</c>
+       <c>num_views</c>
+       <c>integer</c>
+       <c>Number of views for the media item.</c>
+       <c>num_votes</c>
+       <c>integer</c>
+       <c>Number of votes received for voting.</c>
+       <c>rating</c>
+       <c>integer</c>
+       <c>Average rating of the media item on a scale of 0-10.</c>
+       <c>start_time</c>
+       <c>string</c>
+       <c>For streaming/live content, datetime when the
+       content is available.</c>
+       <c>tagged_people</c>
+       <c>Array&lt;string&gt;</c>
+       <c>Array of string (IDs) of people tagged
+       in the media item.</c>
+       <c>tags</c>
+       <c>Array&lt;string&gt;</c>
+       <c>Tags associated with this media item.</c>
+       <c>thumbnail_url</c>
+       <c>string</c>
+       <c>URL to a thumbnail image of the media item.</c>
+       <c>title</c>
+       <c>string</c>
+       <c>Describing the media item.</c>
+       <c>type</c>
+       <c>string</c>
+       <c>The type of media, specified as a <x:ref>MediaItem</x:ref>.Type object.</c>
+       <c>url</c>
+       <c>string</c>
+       <c>Specifying the URL where the media can be found.</c>
+     </texttable>
+     </t>
+   </section>
+   <section title="Name"
+            anchor="Name">
+     <t>The components of the person's real name. Providers MAY return just the
+     full name as a single string in the formatted sub-field, or they MAY
+     return just the individual component fields using the other sub-fields, or
+     they MAY return both. If both variants are returned, they SHOULD be
+     describing the same name, with the formatted name indicating how the
+     component fields should be combined. 
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>formatted</c>
+      <c>string</c>
+      <c>The full name, including all middle names, titles, and suffixes as
+      appropriate, formatted for display (e.g. Mr. Joseph Robert Smarr, Esq.).
+      This is the Primary Sub-Field for this field, for the purposes of sorting
+      and filtering.</c>
+      <c>familyName</c>
+      <c>string</c>
+      <c>he family name of this Person, or "Last Name" in most Western
+      languages (e.g. Smarr given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>givenName</c>
+      <c>string</c>
+      <c>The given name of this Person, or "First Name" in most Western
+      languages (e.g. Joseph given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>middleName</c>
+      <c>string</c>
+      <c>The middle name(s) of this Person (e.g. Robert given the full name Mr.
+      Joseph Robert Smarr, Esq.).</c>
+      <c>honorificPrefix</c>
+      <c>string</c>
+      <c>The honorific prefix(es) of this Person, or "Title" in most Western
+      languages (e.g. Mr. given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>honorificSuffix</c>
+      <c>string</c>
+      <c>The honorifix suffix(es) of this Person, or "Suffix" in most Western
+      languages (e.g. Esq. given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+     </texttable></t>
+   </section>
+   <section title="Organization" anchor="Organization">
+<t>Describes a current or past organizational affiliation of this contact.
+     Service Providers that support only a single Company Name and Job Title
+     field should represent them with a single organization element with name
+     and title properties, respectively. 
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>name</c>
+      <c>string</c>
+      <c>The name of the organization (e.g. company, school, or other
+      organization). This field MUST have a non-empty value for each
+      organization returned. This is the Primary Sub-Field for this field, for
+      the purposes of sorting and filtering.</c>
+      <c>department</c>
+      <c>string</c>
+      <c>The department within this organization.</c>
+      <c>salary</c>
+      <c>string</c>
+      <c>The salary the person receieves from the organization</c>
+      <c>title</c>
+      <c>string</c>
+      <c>The job title or organizational role within this
+      organization.</c>
+      <c>field</c>
+      <c>string</c>
+      <c>The field the Organization is in.</c>
+      <c>subfield</c>
+      <c>string</c>
+      <c>The subfield the Organization is in.</c>
+      <c>type</c>
+      <c>string</c>
+      <c>The type of organization, with Canonical Values job and school.</c>
+      <c>startDate</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref> or string</c> 
+      <c>The date this Person joined this organization. This value SHOULD be a
+      valid <eref target="./Core-Data.xml#Date">Date</eref>
+      if possible, but MAY be an unformatted
+      string, since it is recognized that this field is often presented as
+      free-text.</c>
+      <c>endDate</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref> or string</c>
+      <c>The date this Person left this organization or the role specified by
+      title within this organization. This value SHOULD be a valid 
+      <eref target="./Core-Data.xml#Date">Date</eref> if possible, but MAY be an unformatted
+      string, since it is recognized that this field is often presented as
+      free-text.</c>
+      <c>address</c>
+      <c><x:ref>Address</x:ref></c>
+      <c>The physical address of this organization.</c>
+      <c>location</c>
+      <c>string</c>
+      <c>The physical location of this organization. This is an
+      abbreviated location like "San Francisco". The container could
+      choose to implement either "address" or "location" field, or
+      both.</c>
+      <c>description</c>
+      <c>string</c>
+      <c>A textual description of the role this Person played in this
+      organization. This field MAY contain newlines.</c>
+      <c>webpage</c>
+      <c>string</c>
+      <c>A webpage related to the organization.</c>
+     </texttable></t>
    </section>
   </section>
  </middle>
@@ -383,22 +1035,40 @@ OpenSocial-Group-ID = *( DIGIT / ALPHA / "_" / "-" / ".") / "@self" / "@friends"
     <seriesInfo name='RFC'
                 value='20' />
    </reference>
-   <reference anchor="XSdateTime"
-              target="http://www.w3.org/TR/xmlschema-2/#dateTime">
+   <reference anchor='Social-Graph-Node-Mapper'
+              target='http://code.google.com/p/google-sgnodemapper/'>
     <front>
-     <title>XML Schema Part 2: Datatypes Second Edition</title>
-     <author initials='P.V.'
-             surname='Biron'
-             fullname='Paul V. Biron'>
-      <organization>Kaiser Permanente, for Health Level Seven</organization>
-     </author>
-     <author initials='A.'
-             surname='Malhotra'
-             fullname='Ashok Malhotra'>
-      <organization>Microsoft</organization>
-     </author>
-     <date month='October'
-           year='2004' />
+     <title>Social Graph Node Mapper</title>
+    </front>
+   </reference>
+   <reference anchor='CoreData'
+              target="./Core-Data.xml">
+    <front>
+     <title>OpenSocial Core Data Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group
+                       &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
+     <date month='December'
+           year='2009' />
+    </front>
+   </reference>
+   <reference anchor='SocialGadget'
+              target="./Social-Gadget.xml">
+    <front>
+     <title>OpenSocial Social Gadget Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group
+                       &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
+     <date month='December'
+           year='2009' />
+    </front>
+   </reference>
+   <reference anchor='SocialServer'
+              target="./Social-API-Server.xml">
+    <front>
+     <title>OpenSocial Social API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group
+                       &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
+     <date month='December'
+           year='2009' />
     </front>
    </reference>
   </references>

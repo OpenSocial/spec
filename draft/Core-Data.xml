@@ -46,10 +46,10 @@
    </section>
    <section title="Augmented BNF">
     <t>The grammatical rules in this document are to be interpreted as
-    described in <xref target="RFC2234">RFC4234</xref> (Augmented Backus-Naur 
+    described in <xref target="RFC2234">RFC2234</xref> (Augmented Backus-Naur 
     Form).</t>   
     <t>The following constructs are introduced in this document to augment 
-    RFC4234:</t>
+    RFC2234:</t>
     <list style="hanging">
      <t hangText="{rule1 rule2}">
       <t>Elements enclosed in braces (squiggly brackets) are treated as a
@@ -118,11 +118,14 @@ COMMA          = <US-ASCII comma (44)>
   </section>
   <section title="Data"
            anchor="data">
-   <section title="OpenSocial-Boolean" anchor="OpenSocial-Boolean">
-     <t>TODO</t>
+   <section title="Boolean" anchor="Boolean">
+    <artwork type="abnf"
+         xml:space="preserve">
+Boolean = "true" / "false"
+</artwork>
    </section>
-   <section title="OpenSocial-Collection"
-            anchor="OpenSocial-Collection">
+   <section title="Collection"
+            anchor="Collection">
     <t>Many service operations return a list of OpenSocial resources. Lists are
     always returned in the "list" field of the result. Lists can either be the
     full set of resources or a pageable subset. If the operation supports
@@ -132,33 +135,126 @@ COMMA          = <US-ASCII comma (44)>
     standard with the additional requirement that all indexes are 0 based.</t>
     <artwork type="abnf"
          xml:space="preserve">
-OpenSocial-Collection = "{"
+Collection = "{"
                         "result : {"
                           [ "totalResults : " number "," ]
                           [ "startIndex : " number "," ]
-                          [ "itemsPerPage : " number ", ]
-                          [ "isFiltered : " ( "true" / "false" ) "," ]
-                          [ "isUpdatedSince : " ( "true" / "false" ) "," ]
                           [ "itemsPerPage : " number "," ]
-                          "list :" OpenSocial-Objects 
+                          [ "filtered : " ( "true" / "false" ) "," ]
+                          [ "updatedSince : " ( "true" / "false" ) "," ]
+                          [ "sorted : " ( "true" / "false" ) "," ]
+                          [ "itemsPerPage : " number "," ]
+                          "entry :" Objects 
                         "}"
                       "}"
-OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
+Objects = "[" #<x:ref>Object</x:ref> "]"
+</artwork>
+     <texttable>
+      <ttcol align="left" width="10%">Field Name</ttcol>
+      <ttcol align="left" width="15%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>startIndex</c>
+      <c>number</c>
+      <c>The index of the first result returned in this response,
+      relative to the starting index of all results that would be returned if
+      no startIndex had been requested. In general, this will be equal to the
+      value requested by the startIndex, or 0 if no specific startIndex was
+      requested.</c>
+      <c>itemsPerPage</c>
+      <c>number</c>
+      <c>The number of results returned per page in this
+      response. In general, this will be equal to the count Query Parameter,
+      but MAY be less if the Service Provider is unwilling to return as many
+      results per page as requested, or if there are less than the requested
+      number of results left to return when starting at the current startIndex.
+      This field MUST be present if and only if a value for count is specified
+      in the request.</c>
+      <c>totalResults</c>
+      <c>number</c>
+      <c>The total number of contacts that would be returned if
+      there were no startIndex or count specified. This value tells the
+      Consumer how many total results to expect, regardless of the current
+      pagination being used, but taking into account the current filtering
+      options in the request.</c>
+      <c>entry</c>
+      <c>Array &lt;Objects&gt;</c>
+      <c>An array of objects, one for each item matching the request. 
+      For consistency of parsing, if the
+      request could possibly return multiple items (as is normally the case),
+      this value MUST always be an array of results, even if there
+      happens to be
+      0 or 1 matching results. (i.e. "entry": [ { /* first item */ },
+      { /* seond item */ } ]).</c>
+      <c>filtered</c>
+      <c><x:ref>Boolean</x:ref></c>
+      <c>indicating if the result honors filter params in the
+      request. The default value is 'true' if the field does not
+      exist.</c>
+      <c>sorted</c>
+      <c><x:ref>Boolean</x:ref></c>
+      <c>Indicating if the items are sorted. The default value is
+      'true' if the field does not exist.</c>
+      <c>updatedSince</c>
+      <c><x:ref>Boolean</x:ref></c>
+      <c>Indicating if the result honors the updatedSince  param in
+      the request. The default value is 'true' if the field does not
+      exist.</c>
+     </texttable>
+   </section>
+   <section title="Date" anchor="Date">
+     <t>See: <xref target="XSdateTime">XML Schema dateTime format</xref></t>
+     <t>Example: 2008-01-23T04:56:22Z</t>
+   </section>
+   <section title="Date-UTC-Offset" anchor="Date-UTC-Offset">
+     <t>See: <xref target="XSdateTime">XML Schema dateTime format, offset portion</xref></t>
+     <t>Example: -08:00</t>
+   </section>
+   <section title="Domain-Name" anchor="Domain-Name">
+     <t>The Domain-Name is an optional data type that containers may
+     use to uniquely identify themselves. It is recommended that they
+     use a registered domain name where possible.</t>
+    <artwork type="abnf"
+         xml:space="preserve">
+Domain-Name = *( ALPHA / DIGIT / "_" / "." / "-" )
 </artwork>
    </section>
-   <section title="OpenSocial-Date" anchor="OpenSocial-Date">
-     <t>TODO</t>
+   <section title="Global-Id" anchor="Global-Id">
+     <t>The Global-Id is an optional data type designed to allow
+     scoping of ids across domains. Global-Ids are identified by
+     containing a semi-colon (:) as part of the id itself. If a
+     containers supports the Global-Id, all API calls MUST support the
+     Global-Id for queries, the returned data may optionally use
+     Global-Ids. It is the responsibility of the consumer to verify
+     the type of returned Id is appropriate for their usage, and to
+     convert any Local-Ids to Global-Ids as needed.</t>
+    <artwork type="abnf"
+         xml:space="preserve">
+Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
+</artwork>
    </section>
-   <section title="OpenSocial-Date-UTC-Offset" anchor="OpenSocial-Date-UTC-Offset">
-     <t>TODO</t>
+   <section title="Local-Id" anchor="Local-Id">
+    <artwork type="abnf"
+         xml:space="preserve">
+Local-Id = *( ALPHA / DIGIT / "_" / "." / "-" )
+</artwork>
    </section>
-   <section title="OpenSocial-Plural-Field" anchor="OpenSocial-Plural-Field">
+   <section title="Object-Id" anchor="Object-Id">
+     <t>Object-Id is to be an opaque string value that the API will
+     use for resultant data and for queries. Containers MUST support
+     for any query, and valid id that the API returns. Containers MAY
+     support the Global-Id format.</t>
+    <artwork type="abnf"
+         xml:space="preserve">
+Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
+</artwork>
+   </section>
+   <section title="Plural-Field" anchor="Plural-Field">
      <texttable>
       <ttcol align="left" width="10%">Field Name</ttcol>
       <ttcol align="left" width="15%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
       <c>value</c>
-      <c><x:ref>OpenSocial-Object</x:ref></c>
+      <c><x:ref>Object</x:ref></c>
       <c>The primary value of this field, e.g. the actual e-mail address, phone
       number, or URL. When specifying a sortBy field in the Query Parameters for
       a Plural Field, the default meaning is to sort based on this value
@@ -171,7 +267,7 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
       specified, this string value specifies Canonical Values of work, home,
       and other.</c>
       <c>primary</c>
-      <c><x:ref>OpenSocial-Boolean</x:ref></c>
+      <c><x:ref>Boolean</x:ref></c>
       <c>A Boolean value indicating whether this instance of the Plural Field
       is the primary or preferred value of for this field, e.g. the preferred
       mailing address or primary e-mail address. Service Providers MUST NOT
@@ -250,6 +346,24 @@ OpenSocial-Objects = "[" #<x:ref>OpenSocial-Object</x:ref> "]"
     </front>
     <seriesInfo name='RFC'
                 value='20' />
+   </reference>
+   <reference anchor="XSdateTime"
+              target="http://www.w3.org/TR/xmlschema-2/#dateTime">
+    <front>
+     <title>XML Schema Part 2: Datatypes Second Edition</title>
+     <author initials='P.V.'
+             surname='Biron'
+             fullname='Paul V. Biron'>
+      <organization>Kaiser Permanente, for Health Level Seven</organization>
+     </author>
+     <author initials='A.'
+             surname='Malhotra'
+             fullname='Ashok Malhotra'>
+      <organization>Microsoft</organization>
+     </author>
+     <date month='October'
+           year='2004' />
+    </front>
    </reference>
    <reference anchor="Core-Gadget"
               target="./Core-Gadget.xml">
