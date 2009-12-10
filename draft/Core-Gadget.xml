@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
-<?rfc-ext allow-markup-in-artwork="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
@@ -9,17 +8,13 @@
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
   <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification (draft)</title>
-  <author surname="OpenSocial and Gadgets Specification Group"
-          fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+  <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
   <date month="December"
         year="2009" />
-  <abstract>
-   <t>This document describes a method for embedding third party content on a webpage.</t>
-  </abstract>
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -50,37 +45,26 @@
    functionality on behalf of the gadget. A gadget may be a simple widget, a
    reusable component, or a full-blown application, possibly utilizing or
    communicating with other gadgets.</t>
-   <t>A gadget and its XML are synonymous. The gadget XML contains all
-   information needed to identify and render a web application.</t>
-   <t>Metadata. Several pieces of metadata are specified by the gadget
-   developer in the gadget XML, such as author information, gadget title, and
-   description. This data gives hints to the gadget container on how to
-   identify it, in addition to providing data to gadget directories, which are
-   databases that help users find gadgets useful for their needs</t>
-   <t>Gadget Features. A list of all gadget features that are either required
-   for the gadget to operate, or may optionally be utilized if available.
-   Gadget features are the primary extensibility mechanism employed by gadgets.
-   They often direct a gadget server to make new JavaScript APIs available to
-   rendering code, but may also manipulate the gadget's contents, for example
-   to add extended syntax. Examples of gadget features include OpenSocial
-   (provides gadgets with a rich set of social APIs), dynamic-height (enables
-   gadgets to resize themselves to an appropriate height), and tabs (a UI
-   library facilitating tabular navigation).</t>
-   <t>User Preferences. These are key/value pairs that form the basis of gadget
-   configuration and persistence. They are most often manipulable by users of
-   the gadget, and are persisted on behalf of a user so that the gadget has
-   access to them across multiple rendering requests. The gadget container is
-   typically responsible for providing their persistence for this data and an
-   interface to edit it.</t>
-   <t>Message Bundles. Message bundles allow developers to internationalize
-   their gadgets simply by adding name/message mappings corresponding to
-   whatever languages the developer chooses to support. These messages may be
-   accessed programmatically through the core JavaScript APIs provided to all
-   gadgets, or may be statically substituted into code using simple syntax.</t>
-   <t>Content. Provides the actual HTML, CSS, and JavaScript to be rendered by
-   the gadget. Two delivery mechanisms are supported: 
-   <list style="hanging">
-    <t hangText="Type HTML">Type HTML gadgets are the most prevalent, and are 
+   <t>This document describes the gadget XML syntax and how it is processed by
+   a compliant gadget server. In addition, the document describes the core 
+   JavaScript APIs that must be made available to every gadget as it is 
+   rendered. In addition to the core JavaScript APIs, gadget servers SHOULD
+   support the recommended features listed at the end of this document.</t>
+  </section>
+  <section title="Concepts and Terminology">
+    <list style="hanging">
+     <t hangText="Container">The OpenSocial Container. It is typically
+     represented as a web page, but alternative forms that are capable of
+     displaying a gadget, such as a personal computer desktop or a mobile
+     device, are also accepted.</t>
+     <t hangText="Developer">The entity that has authored the gadget.</t>
+     <t hangText="User">This may refer to any OpenSocial Person, though in most
+     contexts it is referring to the Viewer of the gadget at runtime.</t>
+     <t hangText="Content">The primary entity in a gadget that will be
+     displayed to an end user. Currently only two types of Content are
+     supported by OpenSocial: 
+      <list style="hanging">
+       <t hangText="Type HTML">Type HTML gadgets are the most prevalent, and are 
     imbued with the most rich feature set. Code is provided directly in the 
     gadget XML content section for rendering and control flow. This code simply 
     assumes that functionality is available that has been requested from 
@@ -88,7 +72,7 @@
     features, a simple feature-existence API can and should be consulted to 
     ensure the capability is enabled. The code is processed by a gadget server 
     and rendered in an IFRAME.</t>
-    <t hangText="Type URL">Type URL gadgets only specify a base URL. A standard 
+       <t hangText="Type URL">Type URL gadgets only specify a base URL. A standard 
     set of parameters are added to this URL by the gadget server, which renders 
     the gadget in an IFRAME. The application to which the URL points must 
     include a referenced JavaScript library using a &lt;script&gt; tag as it 
@@ -96,92 +80,613 @@
     take advantage of all features, notably features that manipulate HTML and 
     JavaScript code directly. However, this gadget type has proven highly useful
     for turning existing web sites or applications into gadgets.</t>
-   </list>Multiple Content sections may be specified in gadget XML. Each is
+      </list>
+      Multiple Content sections may be specified in gadget XML. Each is
    labeled with one or more optional view identifiers, which allow the gadget
    to behave or appear differently depending on the context in which it's
    rendered. This context is provided by the gadget container.</t>
-   <t>This document describes the gadget XML syntax and how it is processed by
-   a compliant gadget server. In addition, it describes the core JavaScript
-   APIs that must be made available to every gadget as it is rendered. While
-   compliance can be attained by supporting only these core APIs, doing so
-   severely limits a gadget server's usefulness. Gadget servers should support
-   as many features as possible. Widely used, highly recommended features are
-   listed at the end of this document.</t>
+     <t hangText="Metadata">Any piece of information attached to a gadget, such
+     as a title, author name, or description, that provides processing
+     instructions to the Container, or otherwise does not directly impact
+     gadget rendering.</t>
+     <t hangText="Feature">A library or behavior that is provided by the
+     Container and triggered by use of the 
+     <xref target="RequireAndOptional">/ModulePrefs/Require or
+     /ModulePrefs/Optional tags</xref>. Gadget features are the primary extensibility mechanism employed by gadgets.
+   They often direct a gadget server to make new JavaScript APIs available to
+   rendering code, but may also manipulate the gadget's contents, for example
+   to add extended syntax. Examples of gadget features include OpenSocial
+   (provides gadgets with a rich set of social APIs), dynamic-height (enables
+   gadgets to resize themselves to an appropriate height), and tabs (a UI
+   library facilitating tabular navigation).</t>
+     <t hangText="Message Bundles">Message bundles are XML documents containing localization
+     information.  They allow developers to internationalize
+   their gadgets simply by adding name/message mappings corresponding to
+   whatever languages the developer chooses to support. These messages may be
+   accessed programmatically through the core JavaScript APIs provided to all
+   gadgets, or may be statically substituted into code using simple syntax. For more detail, see 
+     <xref target="Localization">Localization</xref>.</t>
+   <t>Message Bundles. .</t>
+     <t hangText="User Preferences">Referred to as "user prefs" or "prefs",
+     these represent configuration values for a User of the gadget. These are key/value pairs that form the basis of gadget
+   configuration and persistence. They are most often manipulable by users of
+   the gadget, and are persisted on behalf of a user so that the gadget has
+   access to them across multiple rendering requests. The gadget container is
+   typically responsible for providing their persistence for this data and an
+   interface to edit it.  For more
+     detail, see 
+     <xref target="UserPref">User Preferences</xref>.</t>
+     <t hangText="Gadget Specification XML">Generally referred to as "gadget
+     spec", or simply a "gadget", this is the XML document that contains all
+     the Metadata, Features, Message Bundles, User Preferences, and Content
+     necessary to display a gadget to an end user. A gadget spec is authored by
+     a Developer and made available through a public web server at a
+     well-defined URL so that Containers may use this URL as a canonical
+     reference for retrieving updates to the gadget.</t>
+     <t hangText="Formal Schema Directory">Any system used to hold a repository
+     of gadgets that may be installed by Users.</t>
+     <t hangText="View">A presentation mode for a gadget.</t>
+    </list>
   </section>
-  <section title="Compliance: Gadget Server">
-   <t>To be gadgets-compliant, a server must be able to satisfy a
-   Gadget Rendering Request and JavaScript Request. Containers may
-   provide support for Content Rewriting. There are typically a number
-   of other interfaces that a server provides, such as metadata
-   requests, but these are a private contract between the Gadget
-   Server and the Container.</t>
-   <section title="Gadget Rendering Request">
-    <t>The core gadget API, this translates gadget XML into content that can be
-    rendered in a browser, typically in an IFRAME.</t>
-    <section title="Inputs">
-     <t>
+  <section title="Compliance">
+   <t>To be a compliant Core Gadget Container, a server MUST be able to satisfy
+   the requests defined in this section.</t>
+   <section title="Retrieve Content Request" anchor="Retrieval">
+    <t>Gadget Containers MUST be able to fetch remote files, such as 
+    gadget specs, message bundles, CSS files, or images.</t>
+     <t>Files SHOULD be retrieved from the source URL that the Developer
+     has provided to the Container. Containers MAY fetch equivalent documents
+     from alternate sources (such as caches or rewriting services) as long as
+     those services are responsible for retrieving the document themselves.</t>
+     <t>Containers SHOULD cache the file after fetching it. If the Container caches
+     a document, it MUST implement the caching policy as defined by RFC2616. 
+     Additionally, containers that cache documents SHOULD provide a mechanism to
+     bypass the caching policy entirely to facilitate development, such as a 
+     "nocache" query string parameter passed to the page that the gadget is 
+     rendered on.  Containers MAY use expired cache entries for files to
+     ensure that temporary network problems do not affect end users.</t> 
+   </section>   
+   <section title="Parse XML Request" anchor="Parsing">
+    <t>XML documents MUST be well-formed, and Containers MUST display an error
+    to Users if they are asked to process a malformed document. Containers
+    SHOULD provide meaningful error messages to Developers when the
+    specification is malformed.</t>
+    <t>The XML MUST conform to the 
+    <xref target="GadgetXmlSchema">Gadget XML Schema</xref> or the <xref target="MessageBundleSchema">Message Bundle Schema</xref>. These XSD schemas 
+    represent all standard elements and attributes and
+    allow for containers to support additional elements and attributes.
+    </t>
+    <t>Containers MAY support non-standard tags and attributes, but they MUST
+    be enclosed in a separate XML namespace. This namespace SHOULD reflect the
+    name of the organization responsible for the Container to avoid conflicts
+    with other Containers. Containers are encouraged to try to find a way to
+    work within the base schema whenever possible. Whenever an equivalent
+    syntax is introduced into the standard, the Container MUST deprecate the
+    proprietary extension and encourage their users to migrate to the
+    standardized solution.</t>
+    <t>Containers MUST ignore any attributes or tags that they can not
+    interpret. This requirement is included to facilitate extensions to the
+    schema for Container-specific uses. Containers MAY reject XML documents
+    that do not provide all tags and attribute values required by the
+    Container, but if they do so they MUST provide feedback to the Developer
+    explaining the requirement.</t>
+    <t>Containers MUST perform variable substitution according to the rules
+    defined in 
+    <xref target="VariableSubstitution">Variable Substitution</xref>.</t>
+    <t>Containers MUST interpret any relative URLs found in XML attributes or
+    values as relative to the gadget spec's URL. Containers MAY refuse to use
+    or display the content referenced by these URLs at their discretion.</t>
+   </section>
+   <section title="Gadget Rendering Request" anchor="Rendering">
+    <t>A Gadget Container's main function is to translate a Gadget XML file into content to deliver to the end user. A Gadget Rendering Request uses the following inputs:
       <list style="symbols">
-       <t>Gadget XML, typically specified as a URL pointing to a file on the
-       web.</t>
-       <t>User prefs.</t>
-       <t>Locale of the end user.</t>
-       <t>(optional) IgnoreCache processing option.</t>
-       <t>(optional) Module ID, an integer identifier for the gadget in a given
-       container context. If not provided, this defaults to 0.</t>
+       <t>Gadget XML, typically specified as a URL pointing to a file on the web.</t>
+       <t>Any User Preferences stored for a User, used in <xref target="VariableSubstitution">Variable Substitution</xref>.</t>
+       <t>The View to render, for identifying the correct &lt;Content&gt; element(s) to display.</t>
+       <t>The Locale of the User, for <xref target="Localization">Localization</xref>.</t>
+       <t>The Module ID of the gadget instance, used in <xref target="VariableSubstitution">Variable Substitution</xref> (Optional).</t>
       </list>
      </t>
-    </section>
-    <section title="Outputs">
-     <t>
-      <list style="symbols">
-       <t>HTML, CSS, and JavaScript.</t>
-      </list>
-     </t>
-    </section>
-    <section title="Process"
-             anchor="process">
-     <t>
+     <t>For type="url" gadgets, these inputs are used to generate a URL of content to display to the user as described in <xref target="Type">/Content/@type</xref>.</t>
+     <t>For type="html" gadgets, these inputs are used to generate HTML, CSS, and JavaScript as follows:
       <list style="numbers">
-       <t>Fetch the gadget XML. 
-       <list style="numbers">
-        <t>This SHOULD consult a cache to minimize load on the gadget XML
-        hosting server. The specific properties of caching are left to the
-        implementation.</t>
-        <t>The server may honor HTTP caching headers to provide developers with
-        a way to balance the load their servers receive against the frequency
-        with which they can reliably deploy updated content.</t>
-        <t>The server SHOULD honor an IgnoreCache processing option. This
-        causes all built-in spec caches to be ignored, fetching the spec
-        directly from its canonical resource. This feature is very useful while
-        developing a gadget. 
+       <t>Fetch the gadget XML using a <xref target="Retrieval">Retrieve Content Request</xref>.</t>
+       <t>Parse the gadget XML using a <xref target="Parsing">Parse XML Request</xref>, following the behavior defined in <xref target="ElementsAndAttributes">Elements and Attributes</xref>.</t>
+       <t>Output gadget content as HTML:</t>
         <list style="numbers">
-         <t>HTTP-based request servers SHOULD support this via a URL parameter
-         named nocache.</t>
-         <t>The server MAY implement denial-of-service protection limiting the
-         number fetches for a spec in a given period of time, as a courtesy to
-         developers.</t>
-        </list></t>
-       </list></t>
-       <t>Parse the gadget XML. 
-       <list style="numbers">
-        <t>The XML MUST conform to the 
-        <xref target="gadgetsExtendedXSD">extended gadget spec XSD</xref>. This
-        XSD represents all valid elements and attributes accepted by the legacy
-        iGoogle gadget server (gmodules.com). However, some of these fields
-        will be phased out. The 
-        <xref target="canonicalGadgetXSD">canonical gadget spec XSD</xref> the
-        subset of attributes that must be parsed and interpreted by the server.
-        In other words, the parser MUST NOT reject gadget specs conforming to
-        the extended spec, yet need not interpret more than the canonical
-        spec.</t>
-        <t>On a &lt;Content&gt; block, the view names are represented as comma
-        delimited strings which allows a particular &lt;Content&gt; block to be
-        used on one or more surfaces. Surfaces with common view names have the
-        inner XML of their &lt;Content&gt; blocks concatenated. Concatenation
-        only occurs with exact matches of a view name on a &lt;Content&gt;
-        block. Example: &lt;Content view="Profile, Home,Home.About"/&gt;
+         <t>Standard HTML header, opening &lt;html&gt; tag and &lt;body&gt;
+         tag. &lt;head&gt; information is optional. Gadgets run in browser
+         quirks mode.</t>
+         <t><xref target="CoreFeatures">Core gadgets JavaScript libraries</xref> and any additional libraries specified in the gadget. The server SHOULD consolidate all librariess into a single request to minimize the number of HTTP requests made by the client browser. This MAY be followed by JavaScripte required to initialize the included libraries.</t>
+         <t>Results from parsing the Gadget XML file and processing the &lt;Content&gt; sections that match the specified View name.</t>
+         <t>A single call to gadgets.util.runOnLoadHandlers().</t>
+         <t>Standard HTML closing tags.</t>
+        </list>
+      </list>
+     </t>
+     <t>Containers must also be able to process <xref target="DataPipelining">Data Pipelining</xref> and <xref target="OpenSocial-Templating">Templating</xref> elements in the gadget XML spec.</t>
+   </section>
+   <section title="JavaScript Request">
+    <t>In order for type="url" gadgets to access JavaScript libraries, the server MUST provide an HTTP service for retrieving core and feature-linked JavaScript. This HTTP service MUST handle requests to URLs provided in the 'libs' parameter described in <xref href="Type">/Content/@type</xref>.  The response to these requests MUST contain JavaScript code corresponding to the API(s) required by the type URL gadget.</t>
+   </section>
+  </section>
+   <section title="Elements and Attributes"
+            anchor="ElementsAndAttributes">
+    <t>The following XML elements and attributes MUST be supported by the
+    Container as mandated by the 
+    <xref target="GadgetXmlSchema">Gadget XML Schema</xref>.
+    Additional elements and attributes MAY be supported, but these elements are
+    beyond the scope of this document.</t>
+   <section title="Module"
+            anchor="Module">
+    <t>The root node of a gadget XML specification is the Module element. It
+    does not support any attributes and containers SHOULD NOT interpret child
+    text nodes.</t>
+    <section title="/ModulePrefs"
+             anchor="ModulePrefs">
+     <t>Serves as a container element for all Metadata, Features, and
+     processing rules. For nested element descriptions, see their individual
+     sections of this document.</t>
+     <list style="hanging">
+      <t hangText="@title">The gadget's title. Containers SHOULD use this value
+      in any situation where a title bar or other identifying name for the
+      gadget is required.</t>
+      <t hangText="@title_url">Containers SHOULD use this value to provide a
+      link target wherever @title is displayed.</t>
+      <t hangText="@description">A verbose description of the gadget.
+      Containers SHOULD use this value to provide a description of the gadget
+      in any Directory.</t>
+      <t hangText="@author">The name of the author of this gadget. Containers
+      SHOULD display this value in any Directory.</t>
+      <t hangText="@author_email">An email address to use as a point of contact
+      for the author of the gadget. Containers MAY display this value on any
+      Directory.</t>
+      <t hangText="@screenshot">Optional. A string that gives the URL of a gadget screenshot. This must be an image on a public web site that is not blocked by robots.txt. PNG is the preferred format, though GIF and JPG are also acceptable. Gadget screenshots should be 280 pixels wide. The height of the screenshot should be the "natural" height of the gadget when it's in use. Containers SHOULD display this image on Directory pages to provide a preview of the gadget to Users.</t>
+      <t hangText="@thumbnail">Optional. A string that gives the URL of a gadget thumbnail. This must be an image on a public web site that is not blocked by robots.txt. PNG is the preferred format, though GIF and JPG are also acceptable. Gadget thumbnails should be 120x60 pixels. This
+      SHOULD be smaller than @screenshot and larger than any 
+      <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref>elements.</t>
+      <t hangText="@height">The preferred default height of the gadget, in
+      pixels. Containers SHOULD use this value to set an appropriate height for
+      the gadget when it is first rendered.</t>
+      <t hangText="@width">The preferred default width of he gadget, in pixels.
+      Containers SHOULD use this value to set an appropriate width for the
+      gadget when it is first rendered.</t>
+      <t hangText="text()">This tag has child elements. Containers SHOULD NOT
+      interpret child text nodes.</t>
+     </list>
+     <section title="/ModulePrefs/Require and /ModulePrefs/Optional"
+              anchor="RequireAndOptional">
+      <t>Declares Feature dependencies of the gadget.</t>
+      <list style="hanging">
+       <t hangText="@feature">The name of the Feature.</t>
+       <t hangText="text()">This tag has child elements. Containers SHOULD NOT
+       interpret child text nodes.</t>
+      </list>
+   <t>A Feature is a set of processing instructions and JavaScript libraries
+   that provides some specific functionality for a Gadget.</t>
+   <t>Containers MUST honor the feature-specific rules for any Feature that
+   they claim to support. Any Feature not specified in this document SHOULD
+   provide an external specification for processing so that implementations
+   will be correct.</t>
+   <t>Containers MUST display an error message for any feature that is
+   requested by the Gadget as "required" but is not supported by the container.</t>
+   <t>Containers MUST only return true for 
+   <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref>if they
+   actually support the given feature name. Containers MAY only return true for
+   this function if the feature was also requested in the Gadget spec.</t>
+   <list style="hanging">
+     <t hangText="Core Features" anchor="CoreFeatures">
+      <t>In addition to explicitly requested features, there is one implicit
+      feature (referred to as "core") that is always present in every Gadget.
+      This "core" feature MUST make the following JavaScript libraries available
+      to Gadgets at runtime without any additional requirements:</t>
+      <list style="symbols">
+       <t>
+        <xref target="gadgets.io">gadgets.io</xref>
+       </t>
+       <t>
+        <xref target="gadgets.util">gadgets.util</xref>
+       </t>
+       <t>
+        <xref target="gadgets.Prefs">gadgets.Prefs</xref>
+       </t>
+       <t>
+        <xref target="gadgets.json">gadgets.json</xref>
+       </t>
+      </list>
+     </t>
+     <t hangText="Optional Features" anchor="OptionalFeatures">
+      <t>Containers claiming support for the following Features MUST provide the
+      Gadget with the JavaScript library from the table below. See the JavaScript
+      documentation for each feature for any additional requirements. Containers
+      SHOULD support as many of these features as possible.</t>
+      <texttable align="left">
+       <ttcol>Feature name</ttcol>
+       <ttcol>JavaScript library</ttcol>
+       <c>rpc</c>
+       <c>
+        <xref target="gadgets.rpc">gadgets.rpc</xref>
+       </c>
+       <c>flash</c>
+       <c>
+        <xref target="gadgets.flash">gadgets.flash</xref>
+       </c>
+       <c>skins</c>
+       <c>
+        <xref target="gadgets.skins">gadgets.skins</xref>
+       </c>
+       <c>dynamic-height</c>
+       <c>
+       <xref target="gadgets.window.adjustHeight">
+       gadgets.window.adjustHeight</xref>and 
+       <xref target="gadgets.window.getViewportDimensions">
+       gadgets.window.getViewportDimensions</xref></c>
+       <c>settitle</c>
+       <c>
+        <xref target="gadgets.window.setTitle">gadgets.window.setTitle</xref>
+       </c>
+       <c>minimessage</c>
+       <c>
+        <xref target="gadgets.MiniMessage">gadgets.MiniMessage</xref>
+       </c>
+       <c>tabs</c>
+       <c>
+        <xref target="gadgets.Tab">gadgets.Tab</xref>
+       </c>
+      </texttable>
+     </t>
+   </list>
+      <section title="/ModulePrefs/Require/Param and /ModulePrefs/Optional/Param">
+       <t>Provides configuration parameters for a Feature. Containers MUST
+       populate these values in 
+       <xref target="gadgets.util.getFeatureParameters">
+       gadgets.util.getFeatureParameters</xref>, with @name representing the
+       key, and the child text node representing the value.</t>
+       <list style="hanging">
+        <t hangText="@name">The name of the parameter. Containers MUST use this
+        as the key for inputs to 
+        <xref target="gadgets.util.getFeatureParameters">
+        gadgets.util.getFeatureParameters</xref>.</t>
+        <t hangText="text()">The value for the parameter. Containers MUST use
+        this as the value returned when a matching key is found in 
+        <xref target="gadgets.util.getFeatureParameters">
+        gadgets.util.getFeatureParameters</xref>.</t>
+       </list>
+      </section>
+     </section>
+     <section title="/ModulePrefs/Preload" anchor="Preload">
+      <t>An HTTP request to pre-fetch. Containers SHOULD pre-fetch all HTTP resources specified by
+   /ModulePrefs/Preload elements.</t>
+      <list style="hanging">
+       <t hangText="@href">The URL of the request to prefetch.</t>
+       <t hangText="@authz">The authentication type to use for making this
+       request. Valid values are the same as for 
+       <xref target="gadgets.io.AuthorizationType">
+       gadgets.io.AuthorizationType</xref>, though the names are converted to
+       lower case to appear more natural in XML.</t>
+       <t hangText="@sign_owner">Indicates that the Owner should be passed to
+       endpoints when using an authentication type that requires it. Containers
+       MUST pass the owner id when this value is "true" (default).</t>
+       <t hangText="@sign_viewer">Indicates that the Viewer should be passed to
+       endpoints when using an authentication type that requires it. Containers
+       MUST pass the viewer id when this value is "true" (default).</t>
+       <t hangText="@views">A comma-separated list of Views to pre-fetch this
+       request for. Containers SHOULD only perform preloading when an appropriate view is
+       being rendered.</t>
+       <t hangText="text()">Not used at this time.</t>
+      </list>
+   <t>When honoring the preloading mechanism,
+   Containers MUST convert the results of the prefetching operation into a
+   temporary object that is stored and accessed at runtime via 
+   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.
+   Containers MUST only consider a makeRequest call to map to a Preload when
+   all of the following conditions are met: 
+   <t>/ModulePrefs/Preload/@href matches the "url" parameter of 
+   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.</t>
+   <t>/ModulePrefs/Preload/@authz matches one of the valid parameters for 
+   <xref target="gadgets.io.AuthorizationType">
+   gadgets.io.AuthorizationType</xref>, converted to lower case.</t>
+   <t>/ModulePrefs/Preload/@sign_owner matches the value passed for 
+   <xref target="gadgets.io.RequestParameters.SIGN_OWNER">
+   gadgets.io.RequestParameters.SIGN_OWNER</xref></t>
+   <t>/ModulePrefs/Preload/@sign_viewer matches the value passed for 
+   <xref target="gadgets.io.RequestParameters.SIGN_VIEWER">
+   gadgets.io.RequestParameters.SIGN_VIEWER</xref></t>
+   <t>/ModulePrefs/Preload/@views matches the current view (the views attribute
+   is a comma-separated list of matching views).</t></t>
+     </section>
+     <section title="/ModulePrefs/Icon"
+              anchor="Icon">
+      <t>Deprecated. Use 
+      <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref>instead.</t>
+      <t>A link or embedded image that serves as an icon for the gadget.</t>
+      <list style="hanging">
+       <t hangText="@mode">The encoding used for the icon when embedding an
+       image in the Icon element's child text node. Currently, only 'base64' is
+       the only supported value. Containers SHOULD treat child text nodes as a
+       base64 encoded image when this attribute is provided. Otherwise, child
+       text nodes should be interpreted as an image URL.</t>
+       <t hangText="@type">The MIME type of the embedded icon text. Containers
+       SHOULD interpret the encoded child text node using this MIME type.</t>
+       <t hangText="text()">Developers MUST provide a value for the child text
+       node appropriate to the @mode value. If @mode is "base64", the child
+       text node MUST be a base64-encoded image in the format specified by
+       @type. If @mode is missing, the child text node MUST be a valid URL
+       pointing to an image file.</t>
+      </list>
+     </section>
+     <section title="/ModulePrefs/Locale" anchor="Locale">
+      <t>Provides localization information. Containers MUST honor localization
+      rules as specified in 
+      <xref target="Localization">Localization</xref>. Each Locale tag
+      represents localization information for a single locale.</t>
+      <list style="hanging">
+       <t hangText="@lang">The language for this locale. Containers MUST
+       interpret this as an ISO-639-1 language code, or the special (default)
+       value "all", which Containers MUST interpret as applying to all
+       languages, unless a more specific match is found.</t>
+       <t hangText="@country">The language for this locale. Containers MUST
+       interpret this as an ISO-3166-1 country code, or the special (default)
+       value "all", which Containers MUST interpret as applying to all
+       countries unless a more specific match is found.</t>
+       <t hangText="@messages">A URL pointing to an XML document that contains
+       nested 
+       <xref target="msg">/ModulePrefs/Locale/msg</xref>elements. Containers
+       MUST honor 
+       <xref target="Retrieval">Retrieval</xref>and 
+       <xref target="Parsing">Parsing</xref>rules for these files. Containers
+       MUST treat all child elements of the root XML element in the document as
+       though they are child nodes of /ModulePrefs/Locale</t>
+       <t hangText="@language_direction">Specifies the direction to render the
+       gadget in. Valid values are "rtl" (right to left) and "ltr" (left to
+       right). Containers SHOULD use this value for determining the appropriate
+       rendering direction for gadget content in this locale. This value
+       controls language direction variables in 
+       <xref target="Localization">Localization</xref>.</t>
+       <t hangText="text()">This tag has child elements. Containers SHOULD NOT
+       interpret child text nodes.</t>
+      </list>
+      <section title="/ModulePrefs/Locale/msg"
+               anchor="msg">
+       <t>A single localized value, keyed by @name, with the value coming from
+       text().</t>
+       <list style="hanging">
+        <t hangText="@name">The name of the localized message. The Container
+        MUST use this as the key for the JavaScript API method 
+        <xref target="gadgets.Prefs.getMsg">gadgets.Prefs.getMsg</xref>and for
+        MSG substitutions (see 
+        <xref target="Localization">Localization</xref>).</t>
+        <t hangText="text()">The value of the message. Containers MUST
+        substitute this value for @name according to 
+        <xref target="Localization">Localization</xref>rules, and provide this
+        value for any key matching @name in 
+        <xref target="gadgets.Prefs.getMsg">gadgets.Prefs.getMsg</xref>.</t>
+       </list>
+      </section>
+     </section>
+     <section title="/ModulePrefs/Link"
+              anchor="Link">
+   <t>Gadgets MAY specify any number of 
+   <xref target="Link">/ModulePrefs/Link</xref>elements, which the Container
+   SHOULD process according to rules specific to the value of
+   /ModulePrefs/Link/@rel. Containers MAY support additional links, but they
+   should pick an appropriate namespace for the rel attribute so as to not
+   conflict with the standard. Containers MUST NOT support non-standard rel
+   attributes with any of the following prefixes: "opensocial", "gadgets", or
+   "events".</t>
+      <list style="hanging">
+       <t hangText="@rel">The relationship between this link and the document.
+       Valid values are specified in 
+       <xref target="LifeCycleEvents">Life Cycle Events</xref> and 
+       <xref target="Icons">Icons</xref>. Containers MAY support additional
+       values, but they MUST be namespaced to avoid collisions.</t>
+       <t hangText="@href">The URL of the link.</t>
+       <t hangText="text()">Not used at this time.</t>
+      </list>
+   <section title="Icons"
+            anchor="Icons">
+    <t>When the value for /ModulePrefs/Link/@rel is "icon", Containers
+    SHOULD treat the link as a reference to an image that represents an
+    application icon for the Gadget. This is preferred over using 
+    <xref target="Icon">/ModulePrefs/Icon</xref>, which is deprecated.</t>
+   </section>
+   <section title="Life Cycle Events"
+            anchor="LifeCycleEvents">
+    <t>Whenever an "event" (such as installing or removing an application)
+    occurs on a Container, and the Gadget has specified a value for a matching
+    event name (either as the catch-all "events", or a specific event, named
+    "event.eventtype", the Container MUST make an HTTP request to the specified
+    URL.</t>
+    <t>The request sent to the specified endpoint MUST be signed according to
+    the rules in 
+    <xref target="SignedFetch">Signed Fetch</xref>. Additionally, one extra
+    parameter named "eventtype" MUST be passed. This value MUST be the same as
+    the event name part of the 'rel' attribute.</t>
+   </section>              
+     </section>
+     <section title="/ModulePrefs/OAuth"
+              anchor="OAuthElement">
+      <t>Supplies the Container with OAuth service configuration for the
+      gadget. For details, see 
+      <xref target="OAuth">OAuth</xref>. This tag has no attributes and has
+      child elements. Containers SHOULD NOT interpret child text nodes.</t>
+      <section title="/ModulePrefs/OAuth/Service">
+       <t>A single OAuth service configuration.</t>
+       <list style="hanging">
+        <t hangText="@name">The name of the service, used for referencing OAuth
+        services at runtime. This parameter is optional, and if unspecified
+        defaults to an empty string. Gadget developers specify which OAuth
+        service they wish to use by passing the service name as a parameter to 
+        <xref target="gadgets.io.makeRequest">
+        gadgets.io.makeRequest</xref>.</t>
+        <t hangText="text()">Not used at this time.</t>
+       </list>
+       <section title="/ModulePrefs/OAuth/Service/Request">
+        <t>Represents the OAuth request token URL. See 
+        <xref target="OAuth">OAuth</xref>for details.</t>
+        <list style="hanging">
+         <t hangText="@url">The URL for the endpoint.</t>
+         <t hangText="@method">The HTTP verb to use for making the request.
+         Containers MUST use this HTTP method when sending the request to the
+         service URL. This parameter is optional. If unspecified, it defaults
+         to POST.</t>
+         <t hangText="@param_location">One of 3 possible locations in the
+         request to the service where the OAuth parameters may be passed.
+         Developers MAY use this value to specify the location of OAuth-related
+         parameters. The possible values are "uri-query", "auth-header", and
+         "post-body", corresponding to the options described in 
+         <xref target="OAuth-Core">Section 5.2 of the OAuth
+         specification</xref>. The default value is "auth-header".</t>
+         <t hangText="text()">Not used at this time.</t>
+        </list>
+       </section>
+       <section title="/ModulePrefs/OAuth/Service/Access">
+        <t>Represents the OAuth access token URLs. See 
+        <xref target="OAuth">OAuth</xref>for details.</t>
+        <list style="hanging">
+         <t hangText="@url">The URL for the endpoint.</t>
+         <t hangText="@method">The HTTP verb to use for making the request.
+         Containers MUST use this HTTP method when sending the request to the
+         service URL. This parameter is optional. If unspecified, it defaults
+         to POST.</t>
+         <t hangText="@param_location">One of 3 possible locations in the
+         request to the service where the OAuth parameters may be passed.
+         Developers MAY use this value to specify the location of OAuth-related
+         parameters. The possible values are "uri-query", "auth-header", and
+         "post-body", corresponding to the options described in 
+         <xref target="OAuth-Core">Section 5.2 of the OAuth
+         specification</xref>. The default value is "auth-header".</t>
+         <t hangText="text()">Not used at this time.</t>
+        </list>
+       </section>
+       <section title="/ModulePrefs/OAuth/Service/Authorization"
+                anchor="Authorization">
+        <t>The OAuth authorization URL. For details, see 
+        <xref target="OAuth-Core">Section 6.2 of OAuth
+        specification</xref>.</t>
+       </section>
+      </section>
+     </section>
+    </section>
+    <section title="/UserPref"
+             anchor="UserPref">
+     <t>A User Preference specification.</t>
+     <list style="hanging">
+      <t hangText="@name">The name of the preference. Containers MUST provide
+      the current value of the preference when this key is passed to the getters found in  
+      <xref target="gadgets.Prefs">gadgets.Prefs</xref>. This is also the key used when performing UP substitutions (see
+      <xref target="Localization">Localization</xref>).</t>
+      <t hangText="@datatype">The data type for this preference. Valid values
+      are "string", "hidden", "bool", "list", and "number". The default value
+      is "string".</t>
+      <t hangText="@display_name">The name of the preference for use when
+      rendering an editing interface for prefs. Developers SHOULD use this
+      value to provide a localized name for the preference as described in 
+      <xref target="Localization">Localization</xref>. Containers SHOULD use
+      this value to render any editing interfaces for Users.</t>
+      <t hangText="@default_value">A default value for this preference.
+      Containers MUST provide this value for any calls to the getters in 
+      <xref target="gadgets.Prefs">gadgets.Prefs</xref> whenever the key matches @name.</t>
+      <t hangText="@required">Whether or not a valid value needs to be set for
+      this preference in order for the gadget to function correctly. Valid
+      values are "true" and "false" (default). If the value is "true",
+      Containers SHOULD display an error message or a prompt if there is no
+      valid value stored.</t>
+      <t hangText="text()">This tag has child elements. Containers SHOULD NOT
+      interpret child text nodes.</t>
+     </list>
+   <t>Containers MUST interpret /UserPref elements by making each preference
+   available to the Gadget through the <xref target="gadgets.Prefs">gadgets.Prefs</xref> library.
+   Containers MUST treat /UserPref/@name as the keys for indexing into
+   stored preference values when invoking the getters of 
+   <xref target="gadgets.Prefs">gadgets.Prefs</xref>.</t>
+   <t>Containers MUST perform 
+   <xref target="VariableSubstitution">Variable Substitution</xref> for user
+   preferences by treating /UserPref/@name as the key in the token and the
+   stored value for the preference as the replacement value.</t>
+   <t>Containers MUST provide /UserPref/@default_value as the value for the
+   preference when the User or Gadget has not set a value explicitly.</t>
+   <t>Containers SHOULD support the following datatypes: 
+   <list>
+    <list style="hanging">
+     <t hangText="string">A string accessed by gadgets.Prefs.getString. Default
+     data type.</t>
+     <t hangText="bool">Evaluates to true or false when accessed by
+     gadgets.Prefs.getBool()</t>
+     <t hangText="enum">a list of values specified by /UserPref/EnumValue
+     elements. Current value is accessed by gadgets.Prefs.getString()</t>
+     <t hangText="hidden">a non-visible string that is not user editable but
+     can be accessed by gadgets.Prefs.getString()</t>
+     <t hangText="list">a pipe-delimited (|) string of values, returned as a
+     JavaScript array when accessed by gadgets.Prefs.getArray().</t>
+    </list>
+   </list></t>
+   <t>Containers SHOULD provide a user interface so that all visible User
+   Preferences (any type other than "hidden") may be modified by the User of
+   the Gadget.</t>
+     <section title="/UserPref/EnumValue">
+      <t>A single value that serves as a constraint on User Preferences when
+      /UserPref/@datatype is "enum". Containers SHOULD use EnumValue elements
+      to present Users with a menu when rendering a preferences interface. For
+      details on handling enum preferences, see 
+      <xref target="UserPref">User Preferences</xref>.</t>
+      <list style="hanging">
+       <t hangText="@value">The value for this enumeration element.</t>
+       <t hangText="@display_value">A textual representation of @value.
+       Defaults to the value of @value. Containers SHOULD display this value in
+       place of @value when rendering a user interface for editing
+       preferences.</t>
+       <t hangText="text()">Not used at this time.</t>
+      </list>
+     </section>
+    </section>
+    <section title="/Content"
+             anchor="ContentElement">
+     <t>Contains the run time portion of the gadget.</t>
+     <list style="hanging">
+      <t hangText="@type" anchor="Type">REQUIRED. The type of content included in the body of this
+      element. Valid values are "html" and "url". Containers MUST interpret the
+      body of this element according to the specific processing rules for each
+      type.
+      <t>When /Content/@type is "html", Containers MUST perform 
+   <xref target="VariableSubstitution">Variable Substitution</xref> on the final
+   assembled content section.</t>
+      <t>When /Content/@type is "url", Containers MUST display a direct view of
+   the value for /Content/@href (for a web context, this SHOULD be an HTML
+   iframe). The Container MUST append the following query string parameters to the URL:
+    <list style="hanging">
+     <t hangText="up_&lt;name&gt;"> A query parameter for each User Preference as a name/value pair.</t>
+     <t hangText="lang">The language of the User viewing the gadget (valid
+     values are the same as for <xref target="Locale">/ModulePrefs/Locale/@lang</xref>).</t>
+     <t hangText="country">The country of the User viewing the gadget. (valid
+     values are the same as for <xref target="Locale">/ModulePrefs/Locale/@country</xref>).</t>
+     <t hangText="libs">A relative URL that points to any JavaScript files
+     necessary to satisfy the features specified in 
+     <xref target="RequireAndOptional">/ModulePrefs/Require and /ModulePrefs/Optional</xref> elements in the Gadget.</t>
+    </list>
+      </t>
+      </t>
+      <t hangText="@href">A URL pointing to an external file containing the
+      body of this element.
+      <t>If @type is "url", this value is REQUIRED. If @type
+      is "url", this value represents an external document that SHOULD be
+      presented directly to Users without filtering, typically by rendering an
+      html IFRAME element with @href as the "src" attribute. </t>
+      <t>If @type is "html", the Container
+   MUST make an HTTP GET request to the URL specified by @href, and interpret
+   the response body as though it were /Content/text().</t>
+      </t>
+      <t hangText="@preferred_height">The suggested default height, in pixels,
+      to use when rendering this gadget. Containers SHOULD use this value as
+      the default height for a gadget in any environment that allows gadgets to
+      have variable heights.</t>
+      <t hangText="@preferred_width">The suggested default width, in pixels, to
+      use when rendering this gadget. Containers SHOULD use this value as the
+      default width for a gadget in any environment that allows gadgets to have
+      variable widths.</t>
+      <t hangText="@view">A comma delimited list of Views in which to include the content in this section. Example: &lt;Content view="Profile, Home, Home.About"/&gt;
         contains Content for three named views: Profile, Home, and Home.About.
-        Concatenation does not happen when the @href is set on a
+      <t>To assemble a View, all Content sections where @view contains the required view name are concatenated.  Concatenation does not happen when the @href is set on a
         &lt;Content&gt; block. In this case, the set of view names on
         &lt;Content&gt; blocks with @href set to a non-null, non-empty string
         MUST be unique within the Gadget XML. If this is not true, the markup
@@ -189,161 +694,14 @@
         into a container's application gallery, checking for the href
         conditions when importing gadget XML. This validity check need not be
         performed at render time.</t>
-       </list></t>
-       <t>Identify the Locale object corresponding to the request, and fetch
-       messages specified by it. 
-       <list style="numbers">
-        <t>The &lt;Locale&gt; element is selected from the gadget XML by
-        matching to the declared language and/or country. If an element matches
-        both, use it. Otherwise select a language-only match over a
-        country-only match. If no such match exists and an element is defined
-        without language or country attributes defined, use it. The following
-        assumptions are made when implementing the gadgets specification: 
-        <list style="numbers">
-         <t>The container MAY choose to utilize the rendered gadget's page
-         fragment for its own purposes. Gadget developers SHOULD NOT modify
-         this value.</t>
-         <t>The behavior of relative URLs in the gadget spec is undefined.
-         Gadget developers SHOULD output fully qualified URLs, or inject a
-         &lt;base&gt; element as described in 3.1.3.</t>
-         <t>Containers MUST support the &lt;base&gt; element as described in
-         the HTML 4.01 specification. Containers SHOULD move &lt;base&gt;
-         elements encountered in a gadget's &lt;Content&gt; section into the
-         rendered gadget's &lt;head&gt; element, as required by the HTML 4.01
-         specification.</t>
-        </list></t>
-        <t>Load the message bundle specified in the matched &lt;Locale&gt;
-        element, if any. 
-        <list style="numbers">
-         <t>If the message attribute is specified, use it: load the bundle from
-         the network using the provided URL.</t>
-         <t>Otherwise use the &lt;messagebundle&gt; element that is a child of
-         &lt;Locale&gt;, if present.</t>
-        </list></t>
-       </list></t>
-       <t>Substitute "hangman variables" into supported gadget spec fields.
-       Hangman variables are of the form __&lt;TYPE&gt;_&lt;ID&gt;__, and are
-       replaced with string values. There are four types of hangman variables,
-       which are defined as follows. 
-       <list style="numbers">
-        <t>Process message bundle into __MSG_foo__ hangman variables. 
-        <list style="numbers">
-         <t>The bundle MUST conform to the 
-         <xref target="messageBundleSchema">message bundle XSD</xref>.</t>
-         <t>For each message named foo with value bar, hangman expansion
-         __MSG_foo__ = bar.</t>
-        </list></t>
-        <t>For each provided User Pref with key foo and value bar, hangman
-        expansion __UP_foo__ = bar.</t>
-        <t>Hangman expansion __MODULE_ID__ = &lt;provided module ID&gt;. 
-        <list style="numbers">
-         <t>HTTP-based request servers SHOULD use the URL parameter named mid
-         for this.</t>
-        </list></t>
-        <t>If a message bundle was found with language_direction = "rtl" ,
-        hangman expansions __BIDI_START_EDGE__ = "right", __BIDI_END_EDGE__ =
-        "left", __BIDI_DIR__ = "rtl", __BIDI_REVERSE_DIR__ = "ltr". Otherwise
-        __BIDI_START_EDGE__ = "left", __BIDI_END_EDGE__ = "right", __BIDI_DIR__
-        = "ltr", __BIDI_REVERSE_DIR__ = "rtl".</t>
-        <t>Perform substitutions of each hangman expansion on all fields which
-        get displayed to users. This currently includes, but is not limited to,
-        the following fields: 
-        <list style="numbers">
-         <t>Module.ModulePrefs attributes, Module.Content@href, Module.Content,
-         UserPref@display_name, UserPref@default_value, and
-         UserPref.EnumValue@display_value.</t>
-        </list></t>
-       </list></t>
-       <t>Process gadget features, specified as &lt;Require&gt; or
-       &lt;Optional&gt; in the gadget XML. 
-       <list style="numbers">
-        <t>If one or more unsupported features are specified in a
-        &lt;Require&gt; block, the server MUST emit a standard error message
-        indicating that it cannot satisfy the rendering request. 
-        <list style="numbers">
-         <t>The message SHOULD list all requested features that could not be
-         used because the container does not support them.</t>
-         <t>The message MAY provide contact information for the gadget server
-         administrator, along with a mechanism to request adding support for
-         the feature.</t>
-        </list></t>
-        <t>The server MUST support the following core JavaScript API, which
-        applies to &lt;Optional&gt; features: 
-        <figure>
-         <artwork xml:space="preserve">
-gadgets.util.hasFeature(featureName)
-</artwork>
-        </figure>As indicated in the JsDoc, this method returns true if the
-        server is able to satisfy featureName, false otherwise. Gadget
-        developers can use this functionality to enhance their gadgets if
-        features are available without disabling their gadget if the features
-        are missing.</t>
-        <t>The server MUST conform to the requirements specified by each
-        requested feature in order to claim support for it. The particulars of
-        this vary per feature, but include injecting JavaScript APIs into
-        rendered output or the type URL-included libraries and manipulating
-        type HTML content to support extended syntax.</t>
-       </list></t>
-       <t>Output gadget content. 
-       <list style="numbers">
-        <t>Determine if the /Content/@href attribute is present. If so, the
-        content for the active view is proxied and follows the rules in the
-        section labeled Proxied Content</t>
-        <t>For type HTML gadgets, the order is as follows: 
-        <list style="numbers">
-         <t>Standard HTML header, opening &lt;html&gt; tag and &lt;body&gt;
-         tag. &lt;head&gt; information is optional. Gadgets run in browser
-         quirks mode.</t>
-         <t>Core gadgets JavaScript libraries, as specified here.</t>
-         <t>Feature library initialization code, if needed.</t>
-         <t>Processed gadget content, the result of steps #4 and possibly
-         #5.</t>
-         <t>A single call to gadgets.util.runOnLoadHandlers();</t>
-         <t>Standard HTML closing tags.</t>
-        </list></t>
-        <t>For type URL gadgets, the provided URL MUST have the following
-        parameters added to it: 
-        <list style="numbers">
-         <t>up_&lt;name&gt;=&lt;value&gt; for each provided user
-         preference.</t>
-         <t>lang=&lt;language&gt; and country=&lt;country&gt;, from the
-         provided request Locale.</t>
-         <t>libs=&lt;jsLib&gt;, where &lt;jsLib&gt; is a comma-separated list
-         of URL path fragments relative to the server's JavaScript request
-         handler path. These fragments are added to the JS path by the type URL
-         target to load gadget API JavaScript into its execution context. 
-         <list style="numbers">
-          <t>The server SHOULD consolidate all libs into a single request to
-          minimize the number of HTTP requests made by the client browser.</t>
-         </list></t>
-        </list></t>
-       </list></t>
-      </list>
-     </t>
+      </t>
+      <t hangText="text()">Contains data in an appropriate format to satisfy
+      the requirements for @type. When @type is "html", if no @href is
+      specified, this value MUST be a block of html. The text within this element SHOULD be wrapped in CDATA to avoid having to escape HTML tags and to prevent them from being interpreted by the XML parser.</t>
+     </list>
     </section>
    </section>
-   <section title="JavaScript Request">
-    <t>In order to satisfy type URL gadgets' JavaScript library loading
-    requests, a server MUST provide an HTTP service for retrieving core and
-    feature-linked JavaScript.</t>
-    <section title="Input">
-     <t>
-      <list style="symbols">
-       <t>Fixed path, computed by a static base URL combined with a path
-       fragment as described in 
-       <xref target="process">6.b.c</xref>.</t>
-      </list>
-     </t>
-    </section>
-    <section title="Output">
-     <t>
-      <list style="symbols">
-       <t>JavaScript code corresponding to the API(s) required by the type URL
-       gadget.</t>
-      </list>
-     </t>
-    </section>
-   </section>
+  </section>
    <section title="Content Rewriting">
     <t>Containers MAY support content rewriting. The feature supports rewriting
     the content of a generated gadget and allow developers to control how the
@@ -437,7 +795,6 @@ gadgets.util.hasFeature(featureName)
      </t>
     </section>
    </section>
-  </section>
   <section title="Proxied Content"
            anchor="ProxiedContent">
    <t>When rendering an OpenSocial Gadget, the container MUST determine if the
@@ -480,7 +837,7 @@ gadgets.util.hasFeature(featureName)
    remote site as an HTTP GET. When the Content section includes Data
    Pipelining elements, the container MUST send the data to the request URI
    using an HTTP POST. The structure of this data will match the 
-   <xref target="JSON-RPC" /> format.</t>
+   <eref target="./Core-API-Server.xml#RPC">JSON-RPC format</eref>.</t>
    <section title="Processing Results">
     <t>If the response to the proxied request returns a successful HTTP status
     code, the container MUST interpret the resulting response body according to
@@ -539,24 +896,198 @@ gadgets.util.hasFeature(featureName)
     </section>
    </section>
   </section>
+  <section title="Variable Substitution"
+           anchor="VariableSubstitution">
+   <t>Variables may be substituted into a gadget by replacing special variable
+   tokens with an appropriate value defined elsewhere in the spec. Tokens take
+   the form __&lt;TYPE&gt;_&lt;key&gt;__. For all substitutions, the full token
+   is to be replaced by a value for the following values of &lt;TYPE&gt;:</t>
+   <list style="hanging">
+    <t hangText="MSG">See 
+    <xref target="Localization">Localization</xref></t>
+    <t hangText="BIDI">See <xref target="Localization">Localization</xref></t>
+    <t hangText="MODULE">Currently, "ID" is the only &lt;key&gt; value supported. Containers SHOULD provide a unique value
+    for ID for each instance of a gadget displayed simultaneously.</t>
+    <t hangText="UP">See 
+    <xref target="UserPref">User Preferences</xref>. Whenever there is no
+    value for a token declared in the gadget, Containers SHOULD still replace
+    the token with an empty string. Containers MUST NOT replace tokens with an
+    unknown TYPE with an empty string. Instead, the token should be left in the
+    gadget in it's original form.</t>
+   </list>
+   <t>Containers MUST perform substitution on all elements and attributes
+   defined in 
+   <xref target="ElementsAndAttributes">Elements and Attributes</xref>, with
+   the exceptions of /ModulePrefs/Locale (and children), or any element with an
+   explicit enumeration. Containers MUST NOT perform substitution on the raw
+   text of the XML. Containers SHOULD perform substitution on any custom
+   elements or fields that they support.</t>
+   <t>Containers MUST perform MSG substitutions in the order listed above.
+   Containers MUST substitute BIDI, MODULE, and UP tokens after substituting
+   MSG values, but they MUST NOT recursively substitute any other tokens.</t>
+  </section>
+  <section title="Localization"
+           anchor="Localization">
+   <t>Localization of a gadget is achieved primarily through 
+   <xref target="VariableSubstitution">Variable Substitution</xref>, using the
+   MSG token.</t>
+   <t>To determine appropriate keys and values for substitution, Containers
+   MUST select an appropriate /ModulePrefs/Locale based on the following
+   rules:</t>
+   <list style="numbers">
+    <t>An exact match for the language and country of the User viewing the
+    gadget.</t>
+    <t>An exact match for language, country = "all".</t>
+    <t>Language = "all", country = "all'.</t>
+   </list>
+   <t>Containers MAY provide their own translations or use a third-party
+   translation service if there is no appropriate Locale defined in the
+   gadget.</t>
+   <t>After selecting a Locale, Containers MUST replace all MSG tokens by using
+   /ModulePrefs/Locale/msg/@name for keys and /ModulePrefs/Locale/msg/text()
+   for values.</t>
+   <t>Containers MUST perform BIDI token substitution with the following values
+   if /ModulePrefs/Locale/@language_direction is "rtl":</t>
+   <artwork type="example"
+         xml:space="preserve">START_EDGE: "right"
+END_EDGE: "left"
+DIR: "rtl"
+REVERSE_DIR: "ltr"
+</artwork>
+   <t>Otherwise:</t>
+   <artwork type="example"
+         xml:space="preserve">START_EDGE: "left"
+END_EDGE: "right"
+DIR: "ltr"
+REVERSE_DIR: "rtl"
+</artwork>
+  </section>
+  <section title="Signed Fetch"
+           anchor="SignedFetch">
+   <t>Containers MUST support signing of HTTP requests for 
+   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>, 
+   <xref target="LifeCycleEvents">Life Cycle Events</xref>, and 
+   <xref target="Preload">Preloading</xref>. The container does this by
+   doing the following: 
+   <list style="numbers">
+    <t>Removing any request parameters with names that begin with oauth,
+    xoauth, or opensocial (case insensitive).</t>
+    <t>Adding the following parameters to the request query string:</t>
+    <list style="hanging">
+     <t hangText="opensocial_viewer_id">Optional. The ID of the current viewer,
+     which matches the getId() value on the viewer person object.</t>
+     <t hangText="opensocial_owner_id">Required. The ID of the current owner,
+     which matches the getId() value on the owner person object.</t>
+     <t hangText="opensocial_app_url">Required. The URL of the application
+     making the request. Containers may alias multiple application URLs to a
+     single canonical application URL in the case where an application changes
+     URLs.</t>
+     <t hangText="opensocial_instance_id">Optional. An opaque identifier used
+     to distinguish between multiple instances of the same application in a
+     single container. If a container does not allow multiple instances of the
+     same application to coexist, this parameter may be omitted. The
+     combination of opensocial_app_url and opensocial_instance_id uniquely
+     identify an instance of an application in a container.</t>
+     <t hangText="opensocial_app_id">Optional. An opaque identifier for the
+     application, unique to a particular container. Containers that wish to
+     maintain backwards compatibility with the opensocial-0.7 specification may
+     include this parameter.</t>
+     <t hangText="xoauth_public_key">Optional. An opaque identifier for the
+     public key used to sign the request. This parameter may be omitted by
+     containers that do not use public keys to sign requests, or if the
+     container arranges other means of key distribution with the target of the
+     request.</t>
+    </list>
+    <t>Signing the resulting request according to section 9 of the 
+    <eref target="http://oauth.net/core/1.0/#signing_process">OAuth
+    specification</eref>.</t>
+   </list></t>
+   <t>If a container uses public keys to sign requests, the container may
+   choose to use either self-signed certificates or certificates signed by a
+   well-known certificate authority. If a container does not distribute its
+   OAuth signing key over HTTPS, it should use a certificate signed by a
+   well-known certificate authority.</t>
+   <t>The commonName attribute of the certificate should match the hostname of
+   the container server, and should also match the value of the
+   oauth_consumer_key parameter specified in the request.</t>
+   <t>The container should make its public key available for download at a
+   well-known location. The location
+   https://[container-hostname]/opensocial/certificates/xoauth_public_keyvalue
+   is recommended.</t>
+   <t>Recipients of signed requests must verify that the signature on the
+   request is correct, and that the timestamp on the request is within a
+   reasonable time window. A time window of 5 minutes before and after the
+   current time is recommended.</t>
+   <t>Recipients of signed requests may use the oauth_consumer_key and
+   xoauth_public_key parameters to automatically detect when a container
+   deploys new certificates. If the container deploys certificates at a
+   well-known location, the recipient may automatically download the new
+   certificate. Recipients that automatically download new certificates should
+   cache the resulting certificates.</t>
+   <t>If a container's certificate is not downloaded from
+   https://[container-hostname], the recipient should verify that the
+   certificate is signed by a well-known certificate authority before trusting
+   the certificate.</t>
+  </section>
+  <section title="OAuth"
+           anchor="OAuth">
+   <t>Containers MUST support OAuth requests for 
+   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>. When
+   proxying a Gadget's request, Containers SHOULD use an OAuth token specific
+   to the gadget making the request, and specific to either the Viewer or the
+   Owner of the container page. Furthermore, when proxying a gadget's request,
+   Containers MAY use an OAuth Consumer key and secret specific to the gadget
+   making the request, or they MAY alternatively use the container's OAuth
+   consumer key and secret. For more details, see the 
+   <xref target="OAuth-Core">OAuth spec</xref>.</t>
+   <section title="Consumer Secrets">
+    <t>It is beyond the scope of this document to specify how a Container
+    obtains consumer keys and secrets for Gadgets that it may proxy requests
+    for. As explained above, a Container MAY instead use its own consumer key
+    and secret when making OAuth requests. A Container could even use the
+    RSA_SHA1 signature method, effectively using the same consumer key and
+    secret for all gadgets, and for all OAuth service providers it is proxying
+    requests to.</t>
+   </section>
+   <section title="OAuth Tokens">
+    <t>When proxying a 
+    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>of 
+    <xref target="gadgets.io.AuthorizationType">
+    gadgets.io.AuthorizationType</xref>'OAUTH', the container SHOULD do the
+    following:</t>
+    <list style="numbers">
+     <t>If the container finds an appropriate OAuth access token and secret for
+     the request, the Container signs the outgoing request according to the
+     OAuth specification.</t>
+     <t>If the container finds no appropriate OAuth access token, but an
+     appropriate OAuth request token for the request, the container accesses
+     the access token endpoint of the target service provider, and attempts to
+     exchange the request token for an access token. If successful, the
+     container then immediately uses the access token to sign the request made
+     by the gadget.</t>
+     <t>If the container finds neither an appropriate OAuth access token or
+     request token, it accesses the request token endpoint of the target
+     service provider to obtain a request token. It then returns an error
+     message to the Gadget that contains, among other things, the user
+     authorization URL at the target service provider. The Gadget is expected
+     to redirect the User Agent to that authorization URL and re-attempt the 
+     <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>once
+     the user has approved the OAuth access.</t>
+    </list>
+   </section>
+  </section>
   <section title="Core JavaScript API">
    <section title="gadgets"
             anchor="gadgets">
     <!-- ============================== class summary ========================== -->
-    <t>Namespace for top-level people functions.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.ctor">
-     <t>gadgets</t>
-     <t></t>
-    </section>
+    <t>Namespace for top-level gadget functions.</t>
     <section title="Method Details">
      <section title="log"
               anchor="gadgets.log">
       <t>&lt;static&gt; gadgets.log(message)</t>
       <t>Description: Log an informational message.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -570,7 +1101,7 @@ gadgets.util.hasFeature(featureName)
       <t>&lt;static&gt; gadgets.warn(message)</t>
       <t>Description: Log a warning message.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -584,7 +1115,7 @@ gadgets.util.hasFeature(featureName)
       <t>&lt;static&gt; gadgets.error(message)</t>
       <t>Description: Log an error message.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -598,7 +1129,7 @@ gadgets.util.hasFeature(featureName)
       <t>&lt;static&gt; gadgets.setLogLevel(logLevel)</t>
       <t>Description: Sets the log level threshold.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -612,38 +1143,27 @@ gadgets.util.hasFeature(featureName)
              anchor="gadgets.log">
      <t>Used by 
      <xref target="gadgets.setLogLevel">gadgets.setLogLevel</xref>.</t>
-     <section title="INFO"
+     <list style="hanging">
+     <t hangText="INFO"
               anchor="gadgets.log.INFO">
-      <t>&lt;static&gt; Member of: gadgets.log</t>
-      <t>Description: Log level for informational logging.</t>
-     </section>
-     <section title="WARN"
+      Log level for informational logging.</t>
+     <t hangText="WARN"
               anchor="gadgets.log.WARN">
-      <t>&lt;static&gt; Member of: gadgets.log</t>
-      <t>Description: Log level for warning logging.</t>
-     </section>
-     <section title="ERROR"
+      Log level for warning logging.</t>
+     <t hangText="ERROR"
               anchor="gadgets.log.ERROR">
-      <t>&lt;static&gt; Member of: gadgets.log</t>
-      <t>Description: Log level for error logging.</t>
-     </section>
-     <section title="NONE"
+      Log level for error logging.</t>
+     <t hangText="NONE"
               anchor="gadgets.log.NONE">
-      <t>&lt;static&gt; Member of: gadgets.log</t>
-      <t>Description: Log level for no logging.</t>
-     </section>
+      Log level for no logging.</t>
+    </list>
     </section>
    </section>
+
    <section title="gadgets.io"
             anchor="gadgets.io">
     <!-- ============================== class summary ========================== -->
     <t>Provides remote content retrieval functions.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.io.ctor">
-     <t>gadgets.io</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="encodeValues"
               anchor="gadgets.io.encodeValues">
@@ -651,7 +1171,7 @@ gadgets.util.hasFeature(featureName)
       <t>Description: Converts an input object into a URL-encoded data string.
       (key=value&amp;...)</t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -660,7 +1180,7 @@ gadgets.util.hasFeature(featureName)
        <c>The post fields you wish to encode</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -674,7 +1194,7 @@ gadgets.util.hasFeature(featureName)
       opt_params)</t>
       <t>Description: Gets the proxy version of the passed-in URL.</t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -688,7 +1208,7 @@ gadgets.util.hasFeature(featureName)
        pass to the request</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -698,7 +1218,8 @@ gadgets.util.hasFeature(featureName)
      <section title="makeRequest"
               anchor="gadgets.io.makeRequest">
       <t>&lt;static&gt; gadgets.io.makeRequest(url, callback, opt_params)</t>
-      <t>Description: Fetches content (e.g. HTML, JSON, XML, and ATOM data) from the provided URL and feeds that content into the callback function. 
+      <t>Description: Fetches content from the provided URL and feeds that
+      content into the callback function. 
       <figure>
        <preamble>Example:</preamble>
        <artwork xml:space="preserve">
@@ -707,37 +1228,14 @@ params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
 gadgets.io.makeRequest(url, callback, params);
 </artwork>
       </figure></t>
-       <section title="Signed authorization">
-      <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
-       gadgets.io.AuthorizationType.SIGNED, 
-      container mediates communications from the gadget to the
-      application server in a way that can not be spoofed. This trusted content fetching
-      has two main steps: [1] the gadget contacts the container, and [2] the
-      container sends a signed requests to the application server. 
+      <section title="Signed authorization">
+        <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
+      gadgets.io.AuthorizationType.SIGNED, the container needs to vouch for the
+      user's identity to the destination server. The container does this by
+      doing the following:</t> 
       <list style="numbers">
-       <t>When the gadget contacts the container, the container needs to be able
-       to validate any parameters it knows about: the viewer id, the owner id
-       (if known), and the application id. Validating these parameters is an
-       implementation detail that may vary between containers. For example,
-       orkut uses an encrypted token passed in the document fragment of the
-       gadget URL.</t>
-       <t>When the container contacts the app server, the app server needs to be
-       able to validate that the parameters really came from the container (and
-       were not forged by some other entity). OpenSocial uses <xref target="OAuth-Core">OAuth's parameter
-       signing algorithm</xref>. Note that most of the functionality in the OAuth spec,
-       including token exchange, is not required; OpenSocial only plans to use
-       the parameter signing piece of the spec (including timestamp and nonce).
-       OpenSocial permits the HMAC-SHA1 method (except that the key is a shared
-       secret between container and app, not a concatenation of tokens as
-       specified in section 9.2 of the OAuth spec) and the RSA-SHA1 method.
-       HMAC-SHA1 executes faster and is easier to implement, but it requires more
-       coordination than RSA-SHA1.</t>
-      </list>
-      </t>
-      <t>The container signs requests by doing the following: </t>
-        <list style="numbers">
-         <t>Removing any request parameters with names that begin with oauth,
-         xoauth, or opensocial (case insensitive).</t>
+       <t>Removing any request parameters with names that begin with oauth,
+       xoauth, or opensocial (case insensitive).</t>
        <t>Adding the following parameters to the request query string:</t>
        <list style="hanging">
         <t hangText="opensocial_viewer_id">Optional. The ID of the current
@@ -766,37 +1264,36 @@ gadgets.io.makeRequest(url, callback, params);
         the request.</t>
        </list>
        <t>Signing the resulting request according to section 9 of the 
-       <xref target="OAuth-Core">
-       OAuth specification</xref>.</t>
-      </list>
+       <eref target="http://oauth.net/core/1.0/#signing_process">OAuth
+       specification</eref>.</t>
+      </list></section>
       <section title="Key management">
-       <t>If a container uses public keys to sign requests, the container MAY
-       use either self-signed certificates or certificates signed by
+       <t>If a container uses public keys to sign requests, the container may
+       choose to use either self-signed certificates or certificates signed by
        a well-known certificate authority. If a container does not distribute
-       its OAuth signing key over HTTPS, it SHOULD use a certificate signed by
+       its OAuth signing key over HTTPS, it should use a certificate signed by
        a well-known certificate authority.</t>
-       <t>The commonName attribute of the certificate SHOULD match the hostname
+       <t>The commonName attribute of the certificate should match the hostname
        of the container server, and should also match the value of the
        oauth_consumer_key parameter specified in the request.</t>
-       <t>The container SHOULD make its public key available for download at a
+       <t>The container should make its public key available for download at a
        well-known location. The location
        https://[container-hostname]/opensocial/certificates/xoauth_public_keyvalue
        is recommended.</t>
-       <t>Recipients of signed requests MUST verify that the signature on the
+       <t>Recipients of signed requests must verify that the signature on the
        request is correct, and that the timestamp on the request is within a
        reasonable time window. A time window of 5 minutes before and after the
        current time is recommended.</t>
        <t>Recipients of signed requests may use the oauth_consumer_key and
        xoauth_public_key parameters to automatically detect when a container
        deploys new certificates. If the container deploys certificates at a
-       well-known location, the recipient MAY automatically download the new
+       well-known location, the recipient may automatically download the new
        certificate. Recipients that automatically download new certificates
-       SHOULD cache the resulting certificates.</t>
+       should cache the resulting certificates.</t>
        <t>If a container's certificate is not downloaded from
-       https://[container-hostname], the recipient SHOULD verify that the
+       https://[container-hostname], the recipient should verify that the
        certificate is signed by a well-known certificate authority before
        trusting the certificate.</t>
-      </section>
       </section>
       <section title="OAuth authorization">
        <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
@@ -804,6 +1301,7 @@ gadgets.io.makeRequest(url, callback, params);
        gain access to the resource specified in the request. This may require
        that the gadget obtain the user's content by directing the user to the
        service provider to gain access.</t>
+      </section>
       <section title="Additional parameters">
        <t>The following additional parameters may be specified in opt_params: 
        <list style="hanging">
@@ -831,12 +1329,12 @@ gadgets.io.makeRequest(url, callback, params);
        behalf of the gadget. If the gadget has not registered a consumer key
        for use with this service provider, the container may choose to use a
        default RSA signing key corresponding to a well-known certificate to
-       sign requests. If the container uses a default consumer key, it MUST
+       sign requests. If the container uses a default consumer key, it will
        include an additional OAuth parameter xoauth_app_url that identifies the
        gadget making the request.</t>
       </section>
       <section title="The callback parameter">
-       <t>The makeRequest() callback parameter is passed a JavaScript object
+       <t>The makeRequest() callback parameter is passed a javascript object
        with several OAuth-specific fields in addition to the normal values
        returned by makeRequest(): 
        <list style="hanging">
@@ -856,17 +1354,9 @@ gadgets.io.makeRequest(url, callback, params);
         be used to provide debugging information for gadget developers.</t>
        </list></t>
       </section>
-     </section>
-    <section title="Caching">
-     <t>Gadgets calls to makeRequest, the calls MAY be cached, reducing the load that application servers have to be able to handle. The gadgets.io.RequestParameters.REFRESH_INTERVAL parameter is used to specify the number of seconds that should elapse before the makeRequest call requests content from your servers again. For example,
-     specifying 10 will mean that the container would only query the supplied
-     URL once every 10 seconds, no matter how many people are using the
-     application. Specifying 0 will query the server each time the function is
-     called, effectively bypassing the cached version.</t>
-    </section>
       <section title="Parameters">
        <t>
-        <texttable>
+        <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
          <ttcol>Description</ttcol>
@@ -896,70 +1386,44 @@ gadgets.io.makeRequest(url, callback, params);
     <!-- ============================== class summary ========================== -->
     <t>Used by 
     <xref target="gadgets.io.RequestParameters">RequestParameters</xref>.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.io.AuthorizationType.ctor">
-     <t>gadgets.io.AuthorizationType</t>
-     <t></t>
-    </section>
-    <section title="Field Details">
-     <section title="NONE"
+    <list style="hanging"> 
+     <t hangText="NONE"
               anchor="gadgets.io.AuthorizationType.NONE">
-      <t>&lt;static&gt; Member of: gadgets.io.AuthorizationType.NONE</t>
-      <t>Description: No authorization. This field may be used interchangeably
+      No authorization. This field may be used interchangeably
       with the string 'NONE'.</t>
-     </section>
-     <section title="OAUTH"
+     <t hangText="OAUTH"
               anchor="gadgets.io.AuthorizationType.OAUTH">
-      <t>&lt;static&gt; Member of: gadgets.io.AuthorizationType.OAUTH</t>
-      <t>Description: The container will use OAuth for authentication. This
+     The container will use OAuth for authentication. This
       field may be used interchangeably with the string 'OAUTH'.</t>
-     </section>
-     <section title="SIGNED"
+     <t hangText="SIGNED"
               anchor="gadgets.io.AuthorizationType.SIGNED">
-      <t>&lt;static&gt; Member of: gadgets.io.AuthorizationType.SIGNED</t>
-      <t>Description: The request will be signed by the container. This field
+     The request will be signed by the container. This field
       may be used interchangeably with the string 'SIGNED'.</t>
-     </section>
-    </section>
+    </list>
    </section>
    <section title="gadgets.io.ContentType"
             anchor="gadgets.io.ContentType">
     <!-- ============================== class summary ========================== -->
     <t>Used by 
     <xref target="gadgets.io.RequestParameters">RequestParameters</xref>.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.io.ContentType.ctor">
-     <t>gadgets.io.ContentType</t>
-     <t></t>
-    </section>
-    <section title="Field Details">
-     <section title="DOM"
+    <list style="hanging">
+     <t hangText="DOM"
               anchor="gadgets.io.ContentType.DOM">
-      <t>&lt;static&gt; Member of: gadgets.io.ContentType.DOM</t>
-      <t>Description: Returns a DOM object; used for fetching XML. This field
+      Returns a DOM object; used for fetching XML. This field
       may be used interchangeably with the string 'DOM'.</t>
-     </section>
-     <section title="FEED"
+     <t hangText="FEED"
               anchor="gadgets.io.ContentType.FEED">
-      <t>&lt;static&gt; Member of: gadgets.io.ContentType.FEED</t>
-      <t>Description: Returns a JSON representation of an RSS or Atom feed.
+      Returns a JSON representation of an RSS or Atom feed.
       This field may be used interchangeably with the string 'FEED'.</t>
-     </section>
-     <section title="JSON"
+     <t hangText="JSON"
               anchor="gadgets.io.ContentType.JSON">
-      <t>&lt;static&gt; Member of: gadgets.io.ContentType.JSON</t>
-      <t>Description: Returns a JSON object. This field may be used
+      Returns a JSON object. This field may be used
       interchangeably with the string 'JSON'.</t>
-     </section>
-     <section title="TEXT"
+     <t hangText="TEXT"
               anchor="gadgets.io.ContentType.TEXT">
-      <t>&lt;static&gt; Member of: gadgets.io.ContentType.TEXT</t>
-      <t>Description: Returns text; used for fetching HTML. This field may be
+      Returns text; used for fetching HTML. This field may be
       used interchangeably with the string 'TEXT'.</t>
-     </section>
-    </section>
+    </list>
    </section>
    <section title="gadgets.io.MethodType"
             anchor="gadgets.io.MethodType">
@@ -967,44 +1431,28 @@ gadgets.io.makeRequest(url, callback, params);
     <t>Defines values for 
     <xref target="gadgets.io.RequestParameters.METHOD">
     RequestParameters.METHOD</xref>.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.io.MethodType.ctor">
-     <t>gadgets.io.MethodType</t>
-     <t></t>
-    </section>
-    <section title="Field Details">
-     <section title="DELETE"
+    <list style="hanging">
+     <t hangText="DELETE"
               anchor="gadgets.io.MethodType.DELETE">
-      <t>&lt;static&gt; Member of: gadgets.io.MethodType.DELETE</t>
-      <t>Description: Container support for this method type is OPTIONAL. This
+      Container support for this method type is OPTIONAL. This
       field may be used interchangeably with the string 'DELETE'.</t>
-     </section>
-     <section title="GET"
+     <t hangText="GET"
               anchor="gadgets.io.MethodType.GET">
-      <t>&lt;static&gt; Member of: gadgets.io.MethodType.GET</t>
-      <t>Description: The default type. This field may be used interchangeably
+      The default type. This field may be used interchangeably
       with the string 'GET'.</t>
-     </section>
-     <section title="HEAD"
+     <t hangText="HEAD"
               anchor="gadgets.io.MethodType.HEAD">
-      <t>&lt;static&gt; Member of: gadgets.io.MethodType.HEAD</t>
-      <t>Description: Container support for this method type is OPTIONAL. This
+      Container support for this method type is OPTIONAL. This
       field may be used interchangeably with the string 'HEAD'.</t>
-     </section>
-     <section title="POST"
+     <t hangText="POST"
               anchor="gadgets.io.MethodType.POST">
-      <t>&lt;static&gt; Member of: gadgets.io.MethodType.POST</t>
-      <t>Description: Container support for this method type is OPTIONAL. This
+      Container support for this method type is OPTIONAL. This
       field may be used interchangeably with the string 'POST'.</t>
-     </section>
-     <section title="PUT"
+     <t hangText="PUT"
               anchor="gadgets.io.MethodType.PUT">
-      <t>&lt;static&gt; Member of: gadgets.io.MethodType.PUT</t>
-      <t>Description: Container support for this method type is OPTIONAL. This
+      Container support for this method type is OPTIONAL. This
       field may be used interchangeably with the string 'PUT'.</t>
-     </section>
-    </section>
+    </list>
    </section>
    <section title="gadgets.io.ProxyUrlRequestParameters"
             anchor="gadgets.io.ProxyUrlRequestParameters">
@@ -1012,18 +1460,10 @@ gadgets.io.makeRequest(url, callback, params);
     <t>Used by 
     <xref target="gadgets.io.getProxyUrl">
     gadgets.io.getProxyUrl()</xref> method.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.io.ProxyUrlRequestParameters.ctor">
-     <t>gadgets.io.ProxyUrlRequestParameters</t>
-     <t></t>
-    </section>
-    <section title="Field Details">
-     <section title="REFRESH_INTERVAL"
+    <list style="hanging">
+     <t hangText="REFRESH_INTERVAL"
               anchor="gadgets.io.ProxyUrlRequestParameters.REFRESH_INTERVAL">
-      <t>&lt;static&gt; Member of:
-      gadgets.io.ProxyUrlRequestParameters.REFRESH_INTERVAL</t>
-      <t>Description: Explicitly sets the lifespan of cached content. The
+      Explicitly sets the lifespan of cached content. The
       Refresh Interval is the number of seconds the container should cache the
       given response. By default, the HTTP caching headers will be respected
       for fetched content. If the refresh interval is set, this value will take
@@ -1032,8 +1472,7 @@ gadgets.io.makeRequest(url, callback, params);
       3600 (one hour). Note that Signed requests and objects with POST_DATA
       present will generally not be cached. This field may be used
       interchangeably with the string 'REFRESH_INTERVAL'.</t>
-     </section>
-    </section>
+    </list>
    </section>
    <section title="gadgets.io.RequestParameters"
             anchor="gadgets.io.RequestParameters">
@@ -1041,76 +1480,51 @@ gadgets.io.makeRequest(url, callback, params);
     <t>Used by the
     <xref target="gadgets.io.makeRequest">
     gadgets.io.makeRequest()</xref> method.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.io.RequestParameters.ctor">
-     <t>gadgets.io.RequestParameters</t>
-     <t></t>
-    </section>
-    <section title="Field Details">
-     <section title="AUTHORIZATION"
+    <list style="hanging">
+     <t hangText="AUTHORIZATION"
               anchor="gadgets.io.RequestParameters.AUTHORIZATION">
-      <t>&lt;static&gt; Member of:
-      gadgets.io.RequestParameters.AUTHORIZATION</t>
-      <t>Description: The type of authentication to use when fetching the
+      The type of authentication to use when fetching the
       content; defaults to AuthorizationType.NONE. Specified as an
       <xref target="gadgets.io.AuthorizationType">AuthorizationType</xref>.
       This field may be used interchangeably with the string
       'AUTHORIZATION'.</t>
-     </section>
-     <section title="CONTENT_TYPE"
+     <t hangText="CONTENT_TYPE"
               anchor="gadgets.io.RequestParameters.CONTENT_TYPE">
-      <t>&lt;static&gt; Member of:
-      gadgets.io.RequestParameters.CONTENT_TYPE</t>
-      <t>Description: The type of content that lives at the URL; defaults to
+      The type of content that lives at the URL; defaults to
       ContentType.TEXT. Specified as a
       <xref target="gadgets.io.ContentType">ContentType</xref>. This field may
       be used interchangeably with the string 'CONTENT_TYPE'.</t>
-     </section>
-     <section title="GET_SUMMARIES"
+     <t hangText="GET_SUMMARIES"
               anchor="gadgets.io.RequestParameters.GET_SUMMARIES">
-      <t>&lt;static&gt; Member of:
-      gadgets.io.RequestParameters.GET_SUMMARIES</t>
-      <t>Description: If the content is a feed, whether to fetch summaries for
+      If the content is a feed, whether to fetch summaries for
       that feed; defaults to false. Specified as a Boolean. This field may be
       used interchangeably with the string 'GET_SUMMARIES'.</t>
-     </section>
-     <section title="HEADERS"
+     <t hangText="HEADERS"
               anchor="gadgets.io.RequestParameters.HEADERS">
-      <t>&lt;static&gt; Member of: gadgets.io.RequestParameters.HEADERS</t>
-      <t>Description: The HTTP headers to send to the URL; defaults to null.
+      The HTTP headers to send to the URL; defaults to null.
       Specified as a Map.&lt;String,String&gt;. This field may be used
       interchangeably with the string 'HEADERS'.</t>
-     </section>
-     <section title="METHOD"
+     <t hangText="METHOD"
               anchor="gadgets.io.RequestParameters.METHOD">
-      <t>&lt;static&gt; Member of: gadgets.io.RequestParameters.METHOD</t>
-      <t>Description: The method to use when fetching content from the URL;
+      The method to use when fetching content from the URL;
       defaults to 
       <xref target="gadgets.io.MethodType.GET">MethodType.GET</xref>. Valid
       values are specified by
       <xref target="gadgets.io.MethodType">MethodType</xref>. This field may be
       used interchangeably with the string 'METHOD'.</t>
-     </section>
-     <section title="NUM_ENTRIES"
+     <t hangText="NUM_ENTRIES"
               anchor="gadgets.io.RequestParameters.NUM_ENTRIES">
-      <t>&lt;static&gt; Member of: gadgets.io.RequestParameters.NUM_ENTRIES</t>
-      <t>Description: If the content is a feed, the number of entries to fetch;
+      If the content is a feed, the number of entries to fetch;
       defaults to 3. Specified as a Number. This field may be used
       interchangeably with the string 'NUM_ENTRIES'.</t>
-     </section>
-     <section title="POST_DATA"
+     <t hangText="POST_DATA"
               anchor="gadgets.io.RequestParameters.POST_DATA">
-      <t>&lt;static&gt; Member of: gadgets.io.RequestParameters.POST_DATA</t>
-      <t>Description: The data to send to the URL using the POST method;
+      The data to send to the URL using the POST method;
       defaults to null. Specified as a String. This field may be used
       interchangeably with the string 'POST_DATA'.</t>
-     </section>
-     <section title="REFRESH_INTERVAL"
+     <t hangText="REFRESH_INTERVAL"
               anchor="gadgets.io.RequestParameters.REFRESH_INTERVAL">
-      <t>&lt;static&gt; Member of:
-      gadgets.io.RequestParameters.REFRESH_INTERVAL</t>
-      <t>Description: Explicitly sets the lifespan of cached content. The
+      Explicitly sets the lifespan of cached content. The
       Refresh Interval is the number of seconds the container should cache the
       given response. By default, the HTTP caching headers will be respected
       for fetched content. If the refresh interval is set, this value will take
@@ -1119,26 +1533,25 @@ gadgets.io.makeRequest(url, callback, params);
       3600 (one hour). Note that Signed requests and objects with POST_DATA
       present will generally not be cached. This field may be used
       interchangeably with the string 'REFRESH_INTERVAL'.</t>
-     </section>
-    </section>
+     <t hangText="SIGN_OWNER"
+              anchor="gadgets.io.RequestParameters.SIGN_OWNER">
+      Indicates that the container should include the owner ID when signing the request. Specified as a Boolean. This field may be used interchangeably with the string 'SIGN_OWNER'.</t>
+     <t hangText="SIGN_VIEWER"
+              anchor="gadgets.io.RequestParameters.SIGN_VIEWER">
+      Indicates that the container should include the viewer ID when signing the request. Specified as a Boolean. This field may be used interchangeably with the string 'SIGN_VIEWER'.</t>
+    </list>
    </section>
    <section title="gadgets.json"
             anchor="gadgets.json">
     <!-- ============================== class summary ========================== -->
     <t>Provides operations for translating objects to and from JSON.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.json.ctor">
-     <t>gadgets.json</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="parse"
               anchor="gadgets.json.parse">
       <t>&lt;static&gt; Type: {Object} gadgets.json.parse(text)</t>
       <t>Description: Parses a JSON string, producing a JavaScript value.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1148,7 +1561,7 @@ gadgets.io.makeRequest(url, callback, params);
        previous stringify call</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Object</c>
@@ -1161,7 +1574,7 @@ gadgets.io.makeRequest(url, callback, params);
       <t>&lt;static&gt; Type: {String} gadgets.json.stringify(v)</t>
       <t>Description: Converts a JavaScript value to a JSON string.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1170,7 +1583,7 @@ gadgets.io.makeRequest(url, callback, params);
        <c>The object to convert</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1198,7 +1611,7 @@ var lang = prefs.getLang();
      <t>gadgets.Prefs(opt_moduleId)</t>
      <t>Creates a new Prefs object.</t>
      <t>Parameters:
-     <texttable>
+     <texttable align="left">
       <ttcol>Name</ttcol>
       <ttcol>Type</ttcol>
       <ttcol>Description</ttcol>
@@ -1215,7 +1628,7 @@ var lang = prefs.getLang();
       <t>Description: Retrieves a preference as an array. UserPref values that
       were not declared as lists are treated as one-element arrays.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1224,7 +1637,7 @@ var lang = prefs.getLang();
        <c>The preference to fetch</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Array.&lt;String&gt;</c>
@@ -1236,7 +1649,7 @@ var lang = prefs.getLang();
       <t>Type: {Boolean} getBool(key)</t>
       <t>Description: Retrieves a preference as a boolean.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1245,7 +1658,7 @@ var lang = prefs.getLang();
        <c>The preference to fetch</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Boolean</c>
@@ -1258,7 +1671,7 @@ var lang = prefs.getLang();
       <t>Description: Gets the current country, returned as ISO 3166-1 alpha-2
       code.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1270,7 +1683,7 @@ var lang = prefs.getLang();
       <t>Type: {Number} getFloat(key)</t>
       <t>Description: Retrieves a preference as a floating-point value.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1279,7 +1692,7 @@ var lang = prefs.getLang();
        <c>The preference to fetch</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Number</c>
@@ -1291,7 +1704,7 @@ var lang = prefs.getLang();
       <t>Type: {Number} getInt(key)</t>
       <t>Description: Retrieves a preference as an integer.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1300,7 +1713,7 @@ var lang = prefs.getLang();
        <c>The preference to fetch</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Number</c>
@@ -1313,7 +1726,7 @@ var lang = prefs.getLang();
       <t>Description: Gets the current language the gadget should use when
       rendering, returned as a ISO 639-1 language code.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1325,7 +1738,7 @@ var lang = prefs.getLang();
       <t>Type: {String | Number} getModuleId()</t>
       <t>Description: Gets the module ID for the current instance.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String | Number</c>
@@ -1337,7 +1750,7 @@ var lang = prefs.getLang();
       <t>Type: {String} getMsg(key)</t>
       <t>Description: Fetches an unformatted message.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1346,7 +1759,7 @@ var lang = prefs.getLang();
        <c>The message to fetch</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1358,7 +1771,7 @@ var lang = prefs.getLang();
       <t>Type: {String} getString(key)</t>
       <t>Description: Retrieves a preference as a string.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1367,7 +1780,7 @@ var lang = prefs.getLang();
        <c>The preference to fetch</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1382,7 +1795,7 @@ var lang = prefs.getLang();
       <t>Note: If the gadget needs to store an Array it should use setArray
       instead of this call.</t></t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1400,7 +1813,7 @@ var lang = prefs.getLang();
       <t>Description: Stores an array preference. To use this call, the gadget
       must require the feature setprefs.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1418,12 +1831,6 @@ var lang = prefs.getLang();
             anchor="gadgets.util">
     <!-- ============================== class summary ========================== -->
     <t>Provides general-purpose utility functions.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.util.ctor">
-     <t>gadgets.util</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="escapeString"
               anchor="gadgets.util.escapeString">
@@ -1443,7 +1850,7 @@ var lang = prefs.getLang();
        <t>paragraph separator (Unicode 8233)</t>
       </list></t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1452,7 +1859,7 @@ var lang = prefs.getLang();
        <c>The string to escape</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1467,7 +1874,7 @@ var lang = prefs.getLang();
       gadget specifies parameters using the &lt;Param&gt; subelement of the
       &lt;Requires&gt; or &lt;Optional&gt; element.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1476,7 +1883,7 @@ var lang = prefs.getLang();
        <c>The feature to get parameters for</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Object</c>
@@ -1488,7 +1895,7 @@ var lang = prefs.getLang();
       <t>&lt;static&gt; Type: {Boolean} gadgets.util.hasFeature(feature)</t>
       <t>Description: Returns whether the specified feature is supported.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1497,7 +1904,7 @@ var lang = prefs.getLang();
        <c>The feature to test for</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Boolean</c>
@@ -1511,7 +1918,7 @@ var lang = prefs.getLang();
       when the gadget loads. Multiple handlers can be registered, and all will
       be invoked in the same order that they were registered.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1528,7 +1935,7 @@ var lang = prefs.getLang();
       assign to innerHTML. The returned value may include HTML tags. If plain
       text is desired, use gadgets.util.escapeString instead.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1537,7 +1944,7 @@ var lang = prefs.getLang();
        <c>arbitrary text string</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1550,7 +1957,7 @@ var lang = prefs.getLang();
       <t>&lt;static&gt; Type: {String} gadgets.util.unescapeString(str)</t>
       <t>Description: Reverses escapeString</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1559,7 +1966,7 @@ var lang = prefs.getLang();
        <c>The string to unescape.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1574,12 +1981,6 @@ var lang = prefs.getLang();
     <t>Provides operations for dealing with views.
     <t>See also: 
     <xref target="gadgets.views.View">gadgets.views.View</xref> </t></t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.views.ctor">
-     <t>gadgets.views</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="bind"
               anchor="gadgets.views.bind">
@@ -1591,7 +1992,7 @@ var lang = prefs.getLang();
       <xref target="gadgets.views.View.getUrlTemplate">
       View.getUrlTemplate()</xref> </t></t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1600,11 +2001,11 @@ var lang = prefs.getLang();
        <c>A url template for a container view</c>
        <c>environment</c>
        <c></c>
-       <c>A set of named variables (for example, [[]OWNER | PATH | PARAMS |
+       <c>A set of named variables (for example, [OWNER | PATH | PARAMS |
        NAME]) of type string.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1618,7 +2019,7 @@ var lang = prefs.getLang();
       gadgets.views.getCurrentView()</t>
       <t>Description: Returns the current view.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>
@@ -1635,7 +2036,7 @@ var lang = prefs.getLang();
       view. Does not include all URL parameters, only the ones passed into
       gadgets.views.requestNavigateTo.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Map.&lt;String|String&gt;</c>
@@ -1652,7 +2053,7 @@ var lang = prefs.getLang();
       indicates a set of views named Canvas.About, Profile.About, Home.About,
       Canvas.Help the returned views will only be Canvas, Profile, Home.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Map&lt;gadgets.views.ViewType | String|gadgets.views.View&gt;</c>
@@ -1676,7 +2077,7 @@ var lang = prefs.getLang();
       whose View is SurfaceB.[Secondary].In no cases must the .[Secondary] item
       ever be declared.</t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1707,7 +2108,6 @@ var lang = prefs.getLang();
             anchor="gadgets.views.View">
     <!-- ============================== class summary ========================== -->
     <t>Base interface for all view objects.</t>
-    <!-- ============================== constructor details ==================== -->
     <section title="Method Details">
      <section title="bind"
               anchor="gadgets.views.View.bind">
@@ -1718,17 +2118,17 @@ var lang = prefs.getLang();
       <xref target="gadgets.views.View.getUrlTemplate">
       getUrlTemplate()</xref> </t></t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>environment</c>
        <c></c>
-       <c>A set of named variables (for example, [[]OWNER | PATH | PARAMS |
+       <c>A set of named variables (for example, [OWNER | PATH | PARAMS |
        NAME]) of type string.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1742,7 +2142,7 @@ var lang = prefs.getLang();
       String} getName()</t>
       <t>Description: Returns the name of this view.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>
@@ -1763,7 +2163,7 @@ var lang = prefs.getLang();
       <t hangText="owner">The ID of the owner of the page</t>
       <t hangText="path">An array of path steps</t>` 
       <t hangText="params">Associative array or
-      array[[]param1,value1,param2,value2,...]</t></list>Example 
+      array[param1,value1,param2,value2,...]</t></list>Example 
       <figure>
        <preamble>Here are two valid URL template strings:</preamble>
        <artwork xml:space="preserve">
@@ -1793,7 +2193,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       <t>See also: 
       <xref target="gadgets.views.View.bind">bind()</xref> </t></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -1808,7 +2208,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       this view. On a canvas page or in maximize mode this is most likely true;
       on a profile page or in dashboard mode, it is most likely false.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>boolean</c>
@@ -1821,59 +2221,467 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
             anchor="gadgets.views.ViewType">
     <!-- ============================== class summary ========================== -->
     <t>Used by 
-    <xref target="gadgets.views.View">View</xref> s.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.views.ViewType.ctor">
-     <t>gadgets.views.ViewType</t>
-     <t></t>
-    </section>
-    <section title="Field Details">
-     <section title="CANVAS"
+    <xref target="gadgets.views.View">View objects</xref>.</t>
+      <list style="hanging">
+     <t hangText="CANVAS"
               anchor="gadgets.views.ViewType.CANVAS">
-      <t>&lt;static&gt; Member of: gadgets.views.ViewType.CANVAS</t>
-      <t>Description: A view where the gadget is displayed in a very large
+      A view where the gadget is displayed in a very large
       mode. It is typically the main content on the page. The viewer is not
       always the same as the owner. This field may be used interchangeably with
       the string 'CANVAS'.</t>
-     </section>
-     <section title="HOME"
+     <t hangText="HOME"
               anchor="gadgets.views.ViewType.HOME">
-      <t>&lt;static&gt; Member of: gadgets.views.ViewType.HOME</t>
-      <t>Description: A view where the gadget is displayed in a small area
+      A view where the gadget is displayed in a small area
       usually on a page with other gadgets. Typically the viewer is the same as
       the owner. This field may be used interchangeably with the string
       'HOME'.</t>
-     </section>
-     <section title="PREVIEW"
+     <t hangText="PREVIEW"
               anchor="gadgets.views.ViewType.PREVIEW">
-      <t>&lt;static&gt; Member of: gadgets.views.ViewType.PREVIEW</t>
-      <t>Description: A demo view of the gadget. In this view the owner and
+      A demo view of the gadget. In this view the owner and
       viewer are not known. This field may be used interchangeably with the
       string 'PREVIEW'.</t>
-     </section>
-     <section title="PROFILE"
+     <t hangText="PROFILE"
               anchor="gadgets.views.ViewType.PROFILE">
-      <t>&lt;static&gt; Member of: gadgets.views.ViewType.PROFILE</t>
-      <t>Description: A view where the gadget is displayed in a small area
+      A view where the gadget is displayed in a small area
       usually on a page with other gadgets. The viewer is not always the same
       as the owner. This field may be used interchangeably with the string
       'PROFILE'.</t>
-     </section>
-    </section>
+    </list>
    </section>
+  </section>
+  <section title="Data Pipelining" anchor="DataPipelining">
+   <t>Data Pipelining is a declarative syntax for defining the data a gadget requires from the container. The
+   &lt;os:DataRequest&gt; element provides access to OpenSocial data, and the
+   &lt;os:HttpRequest&gt; element provides access to content from any HTTP
+   endpoint.</t>
+   <t>The data that is retrieved will be available in three contexts: 
+   <list style="numbers">
+    <t>Proxied content requests. This data will be POSTed to the developer
+    party server with requests for proxied content.</t>
+    <t>OpenSocial Templates. The data will be available as named variables in
+    OpenSocial templates.</t>
+    <t>JavaScript. This data will be available in the JavaScript API.</t>
+   </list>Developers will insert the following &lt;os:*&gt; namespaced tags
+   within a &lt;Content&gt; block to specify what data should be provided to
+   the gadget.</t>
+   <t>RESTful call equivalents: 
+   <list style="numbers">
+    <t>&lt;os:DataRequest&gt; - request to OpenSocial data, including person
+    data, activity data, and any container-specific endpoints</t>
+    <t>&lt;os:HttpRequest&gt;, equivalent to gadgets.io.makeRequest 
+    <list style="symbols">
+     <t>This is a call to an arbitrary URL.</t>
+    </list></t>
+   </list>
+   <figure>
+    <artwork xml:space="preserve">
+  
+&lt;Content type="html"&gt;&lt;![CDATA[
+  &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
+    &lt;os:DataRequest key="vwr" method="people.get" userId="@viewer" fields="name,birthday"/&gt;
+    &lt;os:HttpRequest key="mydata" href="http://example.com/api"/&gt;
+  &lt;/script&gt;
+  ... HTML content here ...
+]]&gt;&lt;/Content&gt;
+</artwork>
+   </figure>Note that we only have equivalents for REST calls that get data -
+   calls that update data cannot be safely used in Data Pipelining.</t>
+   <t>Data Pipelining creates a new feature name for use in the Gadget
+   Specification: opensocial-data. When data pipelining elements are embedded
+   in type=@html, the Module must contain this XML: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;ModulePrefs&gt;
+ &lt;Require feature="opensocial-data"/&gt;
+&lt;/ModulePrefs&gt;
+</artwork>
+   </figure></t>
+   <section title="Common request processing">
+   <t>All XML tags MUST have an @key string attribute. This is used to identify
+   the data in the response back.</t>
+   <t>Calls with corresponding REST APIs have a 1:1 mapping between the XML
+   attributes and the RESTful API parameters. See the OpenSocial RESTful
+   Protocol for an overview of the REST calls.</t>
+  </section>
+   <section title="Tag: &lt;os:DataRequest&gt;"
+           anchor="DataRequest">
+   <t>Request to get OpenSocial data, including person data, activity data, and
+   any container-specific endpoints.</t>
+   <t>Attributes 
+   <list style="symbols">
+    <t>@key {string}</t>
+    <t>@method {string} The name of the REST endpoint and operation called.
+    Implementations MUST support "people.get" and "activities.get", and MUST
+    NOT support ".update", ".create", or ".delete" operations.</t>
+    <t>All other attributes will be passed as string parameters to the
+    endpoint. See the OpenSocial RESTful protocol for information on the
+    parameters available for each endpoint.</t>
+   </list>Returns 
+   <list style="symbols">
+    <t>JSON object (typically, an array) representing the results of invoking
+    the endpoint.</t>
+   </list>
+   <figure>
+    <preamble>Example:</preamble>
+    <artwork xml:space="preserve">
+&lt;os:DataRequest key="PagedFriends" method="people.get" userId="@owner" groupId="@friends" startIndex="40" count="20"/&gt;
+</artwork>
+   </figure></t>
+  </section>
+   <section title="Tag: &lt;os:HttpRequest&gt;"
+           anchor="HttpRequest">
+   <t>Request for arbitrary URL data, equivalent to
+   gadgets.io.makeRequest().</t>
+   <t>This tag has additional attributes to match the functionality of 
+   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>. Containers SHOULD
+  cache the results of these requests.</t>
+   <t>Attributes 
+   <list style="symbols">
+    <t>@key {string}</t>
+    <t>@href {string} The URL to send a request to.</t>
+    <t>@params {string} Additional URL parameters, of format "a=b&amp;c=d".
+    Optional.</t>
+    <t>@method {string} HTTP method to use, one of "get" or "post". Defaults to
+    "get". Optional. 
+    <list style="symbols">
+     <t>If method is "post", then the "@params" parameters are sent as POST
+     content with a content type of "application/x-www-form-urlencoded". If
+     method is "get", then the params are appended to the URL.</t>
+     <t>There is no ability to set arbitrary POST content, this just determines
+     whether the key/value pair parameters are sent as a POST body.</t>
+    </list></t>
+    <t>@format {string} Format data is returned in for processing, values are
+    "json" or "text". Defaults to "json". Optional.</t>
+    <t>@refreshInterval {int} Period of time for which the container can cache
+    the data. If this parameter is set, it overrides the HTTP response header
+    sent back from the makeRequest(). Optional.</t>
+    <t>@authz. String, one of "none", "signed", "oauth", defaults to "none".
+    This tells the gadget what authorization method to use when sending data to
+    the remote server.</t>
+    <t>@sign_viewer {boolean} Sign the request and include the current viewer
+    id. Defaults to true.</t>
+    <t>@sign_owner {boolean} Sign the request and include the current owner id.
+    Defaults to true.</t>
+    <t>@oauth_service_name {string} Identifies the service element in the
+    gadget spec to use for this request. Default is "".</t>
+    <t>@oauth_token_name {string} Identifies the OAuth token used to make a
+    request to the service provider. Default is "".</t>
+    <t>@oauth_request_token {string}. Identify a token that is pre-approved by
+    the provider for access to the resource.</t>
+    <t>@oauth_request_token_secret {string}. Secret associated with the
+    pre-approved request token.</t>
+    <t>@oauth_use_token {string}. Control whether an OAuth token should be used
+    with the request. Allowed values are: "always" | "if_available" |
+    "never"</t>
+   </list>
+   <figure>
+    <preamble>Example:</preamble>
+    <artwork xml:space="preserve">
+&lt;os:HttpRequest key="Pets" href="http://example.com/api" authz="signed"/&gt;
+</artwork>
+   </figure></t>
+   <t>os:HttpRequest produces a standard JSON-RPC object with "id", "error",
+   and "result" properties. The "result" object is not available for 4xx or 5xx
+   responses. When available, the "result" object in turn contains: 
+   <list style="symbols">
+    <t>content {object} If @format is "text", the string content of the
+    response. If @format is "json", the parsed JSON object or array of the
+    response. If a JSON response cannot be parsed, a 406 (Not Acceptable) error
+    code will be produced.</t>
+    <t>headers {object} An optional object with response header names as keys,
+    and the header values as per-key arrays.</t>
+    <t>status {int} The HTTP status code.</t>
+   </list>For errors, the "message" property MUST NOT contain the response
+   body, but SHOULD contain a descriptive message describing the HTTP error.
+   The error MAY contain a data block providing the content and headers. 
+   <figure>
+    <preamble>Examples:</preamble>
+    <artwork xml:space="preserve">
+// @format='text' example
+{result: {
+ content: 'Hi there!',
+ status: 200,
+ headers: {'Content-Type': ['text/plain;charset=utf-8']}
+}}
+// @format='json' example
+{result: {
+ content: {'hi': 'there!'},
+ status: 200,
+ headers: {'Content-Type': ['application/json;charset=utf-8']}
+}}
+// 404 error
+{error: {
+ code: 404,
+ message: 'Resource not found',
+ // Optional data block
+ data: {
+  content : {'&lt;html&gt;&lt;body&gt;File not found... '},
+   headers: {'Content-Type': ['text/html; charset=iso-8859-1']}
+ }
+}}
+// Unparseable JSON
+{error: {
+ message: "JSON could not be parsed",
+ code: 406,
+ data: {
+  content: {'This isn't JSON'}
+ }
+}}
+</artwork>
+   </figure></t>
+  </section>
+  </section>
+ </middle>
+ <back>
+  <section title="Gadget XML Schema"
+           anchor="GadgetXmlSchema">
+   <t>
+    <figure>
+     <artwork xml:space="preserve">
+&lt;?xml version="1.0"?&gt;
+&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;xs:element name="Module"&gt;
+    &lt;xs:complexType&gt;
+      &lt;xs:sequence&gt;
+        &lt;xs:element name="ModulePrefs" minOccurs="0"&gt;
+          &lt;xs:complexType&gt;
+            &lt;xs:choice minOccurs="0" maxOccurs="unbounded"&gt;
+              &lt;xs:element name="Require" type="GadgetFeatureType"/&gt;
+              &lt;xs:element name="Optional" type="GadgetFeatureType"/&gt;
+              &lt;xs:element name="Preload"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:attribute name="href" type="xs:string" use="required"/&gt;
+                  &lt;xs:attribute name="authz" default="none"&gt;
+                    &lt;xs:simpleType&gt;
+                      &lt;xs:restriction base="xs:string"&gt;
+                        &lt;xs:enumeration value="none"/&gt;
+                        &lt;xs:enumeration value="signed"/&gt;
+                        &lt;xs:enumeration value="oauth"/&gt;
+                      &lt;/xs:restriction&gt;
+                    &lt;/xs:simpleType&gt;
+                  &lt;/xs:attribute&gt;
+                  &lt;xs:attribute name="sign_owner" type="xs:boolean" default="true"/&gt;
+                  &lt;xs:attribute name="sign_viewer" type="xs:boolean" default="true"/&gt;
+                  &lt;xs:attribute name="views" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="oauth_service_name" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="oauth_token_name" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="oauth_request_token" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="oauth_request_token_secret" type="xs:string" use="optional"/&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+              &lt;xs:element name="Icon"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:simpleContent&gt;
+                    &lt;xs:extension base="xs:string"&gt;
+                      &lt;xs:attribute name="mode"&gt;
+                        &lt;xs:simpleType&gt;
+                          &lt;xs:restriction base="xs:string"&gt;
+                            &lt;xs:enumeration value="base64"/&gt;
+                          &lt;/xs:restriction&gt;
+                        &lt;/xs:simpleType&gt;
+                      &lt;/xs:attribute&gt;
+                      &lt;xs:attribute name="type" type="xs:string"/&gt;
+                    &lt;/xs:extension&gt;
+                  &lt;/xs:simpleContent&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+              &lt;xs:element name="Locale"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:sequence&gt;
+                    &lt;xs:element name="msg" minOccurs="0" maxOccurs="unbounded"&gt;
+                      &lt;xs:complexType&gt;
+                        &lt;xs:simpleContent&gt;
+                          &lt;xs:extension base="xs:string"&gt;
+                            &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
+                            &lt;xs:attribute name="desc" type="xs:string" use="optional"/&gt;
+                          &lt;/xs:extension&gt;
+                        &lt;/xs:simpleContent&gt;
+                      &lt;/xs:complexType&gt;
+                    &lt;/xs:element&gt;
+                  &lt;/xs:sequence&gt;
+                  &lt;xs:attribute name="lang" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="country" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="messages" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="language_direction"&gt;
+                    &lt;xs:simpleType&gt;
+                      &lt;xs:restriction base="xs:string"&gt;
+                        &lt;xs:enumeration value="ltr"/&gt;
+                        &lt;xs:enumeration value="rtl"/&gt;
+                      &lt;/xs:restriction&gt;
+                    &lt;/xs:simpleType&gt;
+                  &lt;/xs:attribute&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+              &lt;xs:element name="Link"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:attribute name="href" type="xs:string" use="required"/&gt;
+                  &lt;xs:attribute name="rel" type="xs:string" use="required"&gt;
+                    &lt;xs:simpleType&gt;
+                      &lt;xs:restriction base="xs:string"&gt;
+                        &lt;xs:enumeration value="gadgets.help"/&gt;
+                        &lt;xs:enumeration value="gadgets.support"/&gt;
+                        &lt;xs:enumeration value="icon"/&gt;
+                      &lt;/xs:restriction&gt;
+                    &lt;/xs:simpleType&gt;
+                  &lt;/xs:attribute&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+              &lt;xs:element name="OAuth" minOccurs="0" maxOccurs="1"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:sequence&gt;
+                    &lt;xs:element name="Service" maxOccurs="unbounded"&gt;
+                      &lt;xs:complexType&gt;
+                        &lt;xs:all&gt;
+                          &lt;xs:element name="Request" type="OAuthResourceType" minOccurs="0"/&gt;
+                          &lt;xs:element name="Access" type="OAuthResourceType" minOccurs="0"/&gt;
+                          &lt;xs:element name="Authorization" minOccurs="0"&gt;
+                            &lt;xs:complexType&gt;
+                              &lt;xs:attribute name="url" type="xs:string" use="required"/&gt;
+                            &lt;/xs:complexType&gt;
+                          &lt;/xs:element&gt;
+                        &lt;/xs:all&gt;
+                      &lt;/xs:complexType&gt;
+                    &lt;/xs:element&gt;
+                  &lt;/xs:sequence&gt;
+                  &lt;xs:attribute name="name" type="xs:string" use="optional"/&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+            &lt;/xs:choice&gt;
+            &lt;xs:attribute name="title" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="title_url" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="description" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="author" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="author_email" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="screenshot" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="thumbnail" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="directory_title" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="category" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="category2" type="xs:string" use="optional"/&gt;
+          &lt;/xs:complexType&gt;
+        &lt;/xs:element&gt;
+        &lt;xs:element name="UserPref" minOccurs="0" maxOccurs="unbounded"&gt;
+          &lt;xs:complexType&gt;
+            &lt;xs:sequence&gt;
+              &lt;xs:element name="EnumValue" minOccurs="0" maxOccurs="unbounded"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:attribute name="value" type="xs:string" use="required"/&gt;
+                  &lt;xs:attribute name="display_value" type="xs:string" use="optional"/&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+            &lt;/xs:sequence&gt;
+            &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
+            &lt;xs:attribute name="display_name" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="default_value" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="required" type="xs:string" use="optional"/&gt;
+            &lt;xs:attribute name="datatype" default="string"&gt;
+              &lt;xs:simpleType&gt;
+                &lt;xs:restriction base="xs:string"&gt;
+                  &lt;xs:enumeration value="string"/&gt;
+                  &lt;xs:enumeration value="hidden"/&gt;
+                  &lt;xs:enumeration value="bool"/&gt;
+                  &lt;xs:enumeration value="enum"/&gt;
+                  &lt;xs:enumeration value="number"/&gt;
+                &lt;/xs:restriction&gt;
+              &lt;/xs:simpleType&gt;
+            &lt;/xs:attribute&gt;
+          &lt;/xs:complexType&gt;
+        &lt;/xs:element&gt;
+        &lt;xs:element name="Content" minOccurs="1" maxOccurs="unbounded"&gt;
+          &lt;xs:complexType&gt;
+            &lt;xs:simpleContent&gt;
+              &lt;xs:extension base="xs:string"&gt;
+                &lt;xs:attribute name="type" use="optional" default="html"&gt;
+                  &lt;xs:simpleType&gt;
+                    &lt;xs:restriction base="xs:string"&gt;
+                      &lt;xs:enumeration value="html"/&gt;
+                      &lt;xs:enumeration value="url"/&gt;
+                    &lt;/xs:restriction&gt;
+                  &lt;/xs:simpleType&gt;
+                &lt;/xs:attribute&gt;
+                &lt;xs:attribute name="href" type="xs:string" use="optional"/&gt;
+                &lt;xs:attribute name="view" type="xs:string" use="optional"/&gt;
+                &lt;xs:attribute name="preferred_height" type="xs:integer" use="optional"/&gt;
+                &lt;xs:attribute name="preferred_width" type="xs:integer" use="optional"/&gt;
+                &lt;xs:attribute name="scrolling" type="xs:boolean" use="optional"/&gt;
+              &lt;/xs:extension&gt;
+            &lt;/xs:simpleContent&gt;
+          &lt;/xs:complexType&gt;
+        &lt;/xs:element&gt;
+      &lt;/xs:sequence&gt;
+    &lt;/xs:complexType&gt;
+  &lt;/xs:element&gt;
+  &lt;xs:complexType name="GadgetFeatureType"&gt;
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="Param" minOccurs="0" maxOccurs="unbounded"&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:simpleContent&gt;
+            &lt;xs:extension base="xs:string"&gt;
+              &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
+            &lt;/xs:extension&gt;
+          &lt;/xs:simpleContent&gt;
+        &lt;/xs:complexType&gt;
+      &lt;/xs:element&gt;
+    &lt;/xs:sequence&gt;
+    &lt;xs:attribute name="feature" type="xs:string" use="required"/&gt;
+  &lt;/xs:complexType&gt;
+  &lt;xs:complexType name="OAuthResourceType"&gt;
+    &lt;xs:attribute name="url" type="xs:string" use="required"/&gt;
+    &lt;xs:attribute name="method" use="optional" default="GET"&gt;
+      &lt;xs:simpleType&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+          &lt;xs:enumeration value="GET"/&gt;
+          &lt;xs:enumeration value="POST"/&gt;
+        &lt;/xs:restriction&gt;
+      &lt;/xs:simpleType&gt;
+    &lt;/xs:attribute&gt;
+    &lt;xs:attribute name="param_location" use="optional" default="header"&gt;
+      &lt;xs:simpleType&gt;
+        &lt;xs:restriction base="xs:string"&gt;
+          &lt;xs:enumeration value="auth-header"/&gt;
+          &lt;xs:enumeration value="uri-query"/&gt;
+          &lt;xs:enumeration value="post-body"/&gt;
+        &lt;/xs:restriction&gt;
+      &lt;/xs:simpleType&gt;
+    &lt;/xs:attribute&gt;
+  &lt;/xs:complexType&gt;
+&lt;/xs:schema&gt;
+</artwork>
+    </figure>
+   </t>
+  </section>
+  <section title="Message Bundle Schema"
+           anchor="MessageBundleSchema">
+   <t>
+    <figure>
+     <artwork xml:space="preserve">
+&lt;?xml version="1.0"?&gt;
+&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;xs:element name="messagebundle"&gt;
+    &lt;xs:complexType&gt;
+      &lt;xs:sequence&gt;
+        &lt;xs:element name="msg" minOccurs="0" maxOccurs="unbounded"&gt;
+          &lt;xs:complexType&gt;
+            &lt;xs:simpleContent&gt;
+              &lt;xs:extension base="xs:string"&gt;
+                &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
+                &lt;xs:attribute name="desc" type="xs:string" use="optional"/&gt;
+              &lt;/xs:extension&gt;
+            &lt;/xs:simpleContent&gt;
+          &lt;/xs:complexType&gt;
+        &lt;/xs:element&gt;
+      &lt;/xs:sequence&gt;
+    &lt;/xs:complexType&gt;
+  &lt;/xs:element&gt;
+&lt;/xs:schema&gt;
+</artwork>
+    </figure>
+   </t>
   </section>
   <section title="Highly Recommended Features">
    <section title="gadgets.flash"
             anchor="gadgets.flash">
     <!-- ============================== class summary ========================== -->
     <t>Embeds Flash content in gadgets.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.flash.ctor">
-     <t>gadgets.flash</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="embedCachedFlash"
               anchor="gadgets.flash.embedCachedFlash">
@@ -1881,7 +2689,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       <t>Description: Injects a cached Flash file into the DOM tree. Accepts
       the same parameters as gadgets.flash.embedFlash does.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Boolean</c>
@@ -1894,7 +2702,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       swfContainer, swfVersion, opt_params)</t>
       <t>Description: Injects a Flash file into the DOM tree.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1913,7 +2721,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
        attributes will be passed through to the Flash movie on creation</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Boolean</c>
@@ -1925,7 +2733,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       <t>&lt;static&gt; Type: {Number} gadgets.flash.getMajorVersion()</t>
       <t>Description: Detects Flash Player and its major version.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Number</c>
@@ -1950,7 +2758,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
      <t>gadgets.MiniMessage(opt_moduleId, opt_container)</t>
      <t>Creates a MiniMessage.</t>
      <t>Parameters:
-     <texttable>
+     <texttable align="left">
       <ttcol>Name</ttcol>
       <ttcol>Type</ttcol>
       <ttcol>Description</ttcol>
@@ -1972,7 +2780,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       removed from the DOM and the optional callback function, if defined, is
       called.</t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -1986,7 +2794,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
        existing callstack has completed execution.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>HTMLElement</c>
@@ -1999,7 +2807,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       <t>Description: Creates a static message that can only be dismissed
       programmatically (by calling dismissMessage()).</t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2008,7 +2816,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
        <c>The message as an HTML string or DOM element</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>HTMLElement</c>
@@ -2023,7 +2831,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       of seconds. When the timer expires, the message is dismissed and the
       optional callback function is executed.</t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2036,11 +2844,11 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
        <c>opt_callback</c>
        <c>Function</c>
        <c>Optional callback function to be called when the message is
-       dismissed. To continue the dismissal of the message, this function should return true. The callback function will not be called until after the
+       dismissed. The callback function will not be called until after the
        existing callstack has completed execution.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>HTMLElement</c>
@@ -2052,7 +2860,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       <t>dismissMessage(message)</t>
       <t>Description: Dismisses the specified message.</t>
       <t>Parameters:
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2116,7 +2924,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
      closeCallback)</t>
      <t>Description: used to create a new OAuth popup window manager.</t>
      <t>Parameters:
-     <texttable>
+     <texttable align="left">
       <ttcol>Name</ttcol>
       <ttcol>Type</ttcol>
       <ttcol>Description</ttcol>
@@ -2140,7 +2948,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.oauth.Popup.createOpenerOnClick">
       <t>Type: {Function} createOpenerOnClick()</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Function</c>
@@ -2151,7 +2959,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.oauth.Popup.createApprovedOnClick">
       <t>Type: {Function} createApprovedOnClick()</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Function</c>
@@ -2168,12 +2976,6 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     <t>Provides operations for making remote procedure calls for
     gadget-to-container, container-to-gadget, and gadget-to-gadget
     communication.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.rpc.ctor">
-     <t>gadgets.rpc</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="call"
               anchor="gadgets.rpc.call">
@@ -2181,7 +2983,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       var_args)</t>
       <t>Description: Calls an RPC service.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2207,7 +3009,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>&lt;static&gt; gadgets.rpc.register(serviceName, handler)</t>
       <t>Description: Registers an RPC service.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2225,7 +3027,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Registers a default service handler to process all
       unknown remote procedure calls, which fail silently by default.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2239,7 +3041,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>&lt;static&gt; gadgets.rpc.unregister(serviceName)</t>
       <t>Description: Unregisters an RPC service.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2261,12 +3063,6 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     <!-- ============================== class summary ========================== -->
     <t>Provides operations for getting display information about the currently
     shown skin.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.skins.ctor">
-     <t>gadgets.skins</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="getProperty"
               anchor="gadgets.skins.getProperty">
@@ -2274,7 +3070,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       gadgets.skins.getProperty(propertyKey)</t>
       <t>Description: Fetches the display property mapped to the given key.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2284,7 +3080,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
        <xref target="gadgets.skins.Property">gadgets.skins.Property</xref> </c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -2300,38 +3096,25 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     UI. These are the supported keys for the 
     <xref target="gadgets.skins.getProperty">
     gadgets.skins.getProperty()</xref> method.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.skins.Property.ctor">
-     <t>gadgets.skins.Property</t>
-     <t></t>
-    </section>
-    <section title="Field Details">
-     <section title="ANCHOR_COLOR"
+    <list style="hanging">
+     <t hangText="ANCHOR_COLOR"
               anchor="gadgets.skins.Property.ANCHOR_COLOR">
-      <t>&lt;static&gt; Member of: gadgets.skins.Property.ANCHOR_COLOR</t>
-      <t>Description: The color that anchor tags should use. This field may be
-      used interchangeably with the string 'ANCHOR_COLOR'.</t>
-     </section>
-     <section title="BG_COLOR"
+      The color that anchor tags should use. This field may be
+      used interchangeably with the string 'ANCHOR_COLOR'.
+     </t>
+     <t hangText="BG_COLOR"
               anchor="gadgets.skins.Property.BG_COLOR">
-      <t>&lt;static&gt; Member of: gadgets.skins.Property.BG_COLOR</t>
-      <t>Description: The color of the background of the gadget. This field may
+      The color of the background of the gadget. This field may
       be used interchangeably with the string 'BG_COLOR'.</t>
-     </section>
-     <section title="BG_IMAGE"
+     <t hangText="BG_IMAGE"
               anchor="gadgets.skins.Property.BG_IMAGE">
-      <t>&lt;static&gt; Member of: gadgets.skins.Property.BG_IMAGE</t>
-      <t>Description: An image to use in the background of the gadget. This
+      An image to use in the background of the gadget. This
       field may be used interchangeably with the string 'BG_IMAGE'.</t>
-     </section>
-     <section title="FONT_COLOR"
+     <t hangText="FONT_COLOR"
               anchor="gadgets.skins.Property.FONT_COLOR">
-      <t>&lt;static&gt; Member of: gadgets.skins.Property.FONT_COLOR</t>
-      <t>Description: The color in which the main font should be rendered. This
+      The color in which the main font should be rendered. This
       field may be used interchangeably with the string 'FONT_COLOR'.</t>
-     </section>
-    </section>
+    </list>
    </section>
    <section title="gadgets.Tab"
             anchor="gadgets.Tab">
@@ -2340,7 +3123,6 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     To get Tab objects, use the TabSet getSelectedTab() or getTabs() methods. 
     <t>See also: 
     <xref target="gadgets.TabSet">TabSet</xref> </t></t>
-    <!-- ============================== constructor details ==================== -->
     <section title="Method Details">
      <section title="getCallback"
               anchor="gadgets.Tab.getCallback">
@@ -2348,7 +3130,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Returns the callback function that is executed when the
       tab is selected.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Function</c>
@@ -2361,7 +3143,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Returns the HTML element where the tab content is
       rendered.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>HTMLElement</c>
@@ -2373,7 +3155,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Type: {Number} getIndex()</t>
       <t>Description: Returns the tab's index.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Number</c>
@@ -2386,7 +3168,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Returns the label of the tab as a string (may contain
       HTML).</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -2399,7 +3181,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Returns the HTML element that contains the tab's
       label.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>HTMLElement</c>
@@ -2418,7 +3200,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
      <t>gadgets.TabSet(opt_moduleId, opt_defaultTab, opt_container)</t>
      <t>Creates a new TabSet object</t>
      <t>Parameters:
-     <texttable>
+     <texttable align="left">
       <ttcol>Name</ttcol>
       <ttcol>Type</ttcol>
       <ttcol>Description</ttcol>
@@ -2454,7 +3236,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
        the new tab is appended to the end.</t>
       </list></t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2466,7 +3248,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
        <c>Optional parameter object</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>String</c>
@@ -2479,7 +3261,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Sets the alignment of tabs. Tabs are center-aligned by
       default.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2497,7 +3279,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>displayTabs(display)</t>
       <t>Description: Shows or hides tabs and all associated content.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2511,7 +3293,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Type: {HTMLElement} getHeaderContainer()</t>
       <t>Description: Returns the tab headers container element.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>HTMLElement</c>
@@ -2524,7 +3306,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <xref target="gadgets.Tab">gadgets.Tab</xref> } getSelectedTab()</t>
       <t>Description: Returns the currently selected tab object.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>
@@ -2538,7 +3320,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Type: {Array.&lt;gadgets.Tab&gt;} getTabs()</t>
       <t>Description: Returns an array of all existing tab objects.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Array.&lt;gadgets.Tab&gt;</c>
@@ -2551,7 +3333,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Removes a tab at tabIndex and all of its associated
       content.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2567,7 +3349,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       function if it exists. If the tab is already selected, the callback is
       not fired.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2583,7 +3365,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       The selected tab does not change, and no callback functions are
       called.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2602,19 +3384,13 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     <!-- ============================== class summary ========================== -->
     <t>Provides operations for getting information about and modifying the
     window the gadget is placed in.</t>
-    <!-- ============================== constructor details ==================== -->
-    <section title="Constructor"
-             anchor="gadgets.window.ctor">
-     <t>gadgets.window</t>
-     <t></t>
-    </section>
     <section title="Method Details">
      <section title="adjustHeight"
               anchor="gadgets.window.adjustHeight">
       <t>&lt;static&gt; gadgets.window.adjustHeight(opt_height)</t>
       <t>Description: Adjusts the gadget height.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2632,7 +3408,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <eref target="http://www.quirksmode.org/dom/w3c_cssom">
       http://www.quirksmode.org/dom/w3c_cssom</eref> for more information.</t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>Object</c>
@@ -2644,7 +3420,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>&lt;static&gt; gadgets.window.setTitle(title)</t>
       <t>Description: Sets the gadget title.</t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2747,7 +3523,7 @@ gadgets.i18n.parseNumber("#,###", "$20,000", 0, "USD"); // will return 20000
       Localized patterns use the corresponding characters taken from
       corresponding locale symbol collection. Two exceptions are the currency
       sign and quote, which are not localized. 
-      <texttable>
+      <texttable align="left">
        <ttcol>Symbol</ttcol>
        <ttcol>Location</ttcol>
        <ttcol>Localized?</ttcol>
@@ -2861,88 +3637,56 @@ inclusive
       </section>
      </section>
     </section>
-    <section title="Field Details">
-     <section title="CURRENCY_PATTERN"
+     <list style="hanging">
+     <t hangText="CURRENCY_PATTERN"
               anchor="gadgets.i18n.CURRENCY_PATTERN">
-      <t>&lt;static&gt; Member of: gadgets.i18n.CURRENCY_PATTERN</t>
-      <t>Description: Pattern for currency.</t>
-     </section>
-     <section title="DECIMAL_PATTERN"
+      Pattern for currency.</t>
+     <t hangText="DECIMAL_PATTERN"
               anchor="gadgets.i18n.DECIMAL_PATTERN">
-      <t>&lt;static&gt; Member of: gadgets.i18n.DECIMAL_PATTERN</t>
-      <t>Description: Pattern for decimal numbers.</t>
-     </section>
-     <section title="FULL_DATE_FORMAT"
+      Pattern for decimal numbers.</t>
+     <t hangText="FULL_DATE_FORMAT"
               anchor="gadgets.i18n.FULL_DATE_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.FULL_DATE_FORMAT</t>
-      <t>Description: Format for full representations of dates.</t>
-     </section>
-     <section title="FULL_DATETIME_FORMAT"
+      Format for full representations of dates.</t>
+     <t hangText="FULL_DATETIME_FORMAT"
               anchor="gadgets.i18n.FULL_DATETIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.FULL_DATETIME_FORMAT</t>
-      <t>Description: Format for short representations of datetimes.</t>
-     </section>
-     <section title="FULL_TIME_FORMAT"
+      Format for short representations of datetimes.</t>
+     <t hangText="FULL_TIME_FORMAT"
               anchor="gadgets.i18n.FULL_TIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.FULL_TIME_FORMAT</t>
-      <t>Description: Format for full representations of times.</t>
-     </section>
-     <section title="LONG_DATE_FORMAT"
+      Format for full representations of times.</t>
+     <t hangText="LONG_DATE_FORMAT"
               anchor="gadgets.i18n.LONG_DATE_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.LONG_DATE_FORMAT</t>
-      <t>Description: Format for long representations of dates.</t>
-     </section>
-     <section title="LONG_DATETIME_FORMAT"
+      Format for long representations of dates.</t>
+     <t hangText="LONG_DATETIME_FORMAT"
               anchor="gadgets.i18n.LONG_DATETIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.LONG_DATETIME_FORMAT</t>
-      <t>Description: Format for short representations of datetimes.</t>
-     </section>
-     <section title="LONG_TIME_FORMAT"
+      Format for short representations of datetimes.</t>
+     <t hangText="LONG_TIME_FORMAT"
               anchor="gadgets.i18n.LONG_TIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.LONG_TIME_FORMAT</t>
-      <t>Description: Format for long representations of times.</t>
-     </section>
-     <section title="MEDIUM_DATE_FORMAT"
+      Format for long representations of times.</t>
+     <t hangText="MEDIUM_DATE_FORMAT"
               anchor="gadgets.i18n.MEDIUM_DATE_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.MEDIUM_DATE_FORMAT</t>
-      <t>Description: Format for medium representations of dates.</t>
-     </section>
-     <section title="MEDIUM_DATETIME_FORMAT"
+      Format for medium representations of dates.</t>
+     <t hangText="MEDIUM_DATETIME_FORMAT"
               anchor="gadgets.i18n.MEDIUM_DATETIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.MEDIUM_DATETIME_FORMAT</t>
-      <t>Description: Format for medium representations of datetimes.</t>
-     </section>
-     <section title="MEDIUM_TIME_FORMAT"
+      Format for medium representations of datetimes.</t>
+     <t hangText="MEDIUM_TIME_FORMAT"
               anchor="gadgets.i18n.MEDIUM_TIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.MEDIUM_TIME_FORMAT</t>
-      <t>Description: Format for medium representations of times.</t>
-     </section>
-     <section title="PERCENT_PATTERN"
+      Format for medium representations of times.</t>
+     <t hangText="PERCENT_PATTERN"
               anchor="gadgets.i18n.PERCENT_PATTERN">
-      <t>&lt;static&gt; Member of: gadgets.i18n.PERCENT_PATTERN</t>
-      <t>Description: Pattern for percentages.</t>
-     </section>
-     <section title="SCIENTIFIC_PATTERN"
+      Pattern for percentages.</t>
+     <t hangText="SCIENTIFIC_PATTERN"
               anchor="gadgets.i18n.SCIENTIFIC_PATTERN">
-      <t>&lt;static&gt; Member of: gadgets.i18n.SCIENTIFIC_PATTERN</t>
-      <t>Description: Pattern for scientific numbers.</t>
-     </section>
-     <section title="SHORT_DATE_FORMAT"
+      Pattern for scientific numbers.</t>
+     <t hangText="SHORT_DATE_FORMAT"
               anchor="gadgets.i18n.SHORT_DATE_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.SHORT_DATE_FORMAT</t>
-      <t>Description: Format for short representations of dates.</t>
-     </section>
-     <section title="SHORT_DATETIME_FORMAT"
+      Format for short representations of dates.</t>
+     <t hangText="SHORT_DATETIME_FORMAT"
               anchor="gadgets.i18n.SHORT_DATETIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.SHORT_DATETIME_FORMAT</t>
-      <t>Description: Format for short representations of datetimes.</t>
-     </section>
-     <section title="SHORT_TIME_FORMAT"
+      Format for short representations of datetimes.</t>
+     <t hangText="SHORT_TIME_FORMAT"
               anchor="gadgets.i18n.SHORT_TIME_FORMAT">
-      <t>&lt;static&gt; Member of: gadgets.i18n.SHORT_TIME_FORMAT</t>
-      <t>Description: Format for short representations of times.</t>
-     </section>
-    </section>
+      Format for short representations of times.</t>
+    </list>
     <section title="Method Details">
      <section title="formatDateTime"
               anchor="gadgets.i18n.formatDateTime">
@@ -2964,7 +3708,7 @@ assertEquals("13:10:10", gadgets.i18n.formatDateTime("HH:mm:ss", date));
 </artwork>
       </figure></t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -2977,7 +3721,7 @@ assertEquals("13:10:10", gadgets.i18n.formatDateTime("HH:mm:ss", date));
        <c>Date object being formatted.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>string</c>
@@ -3002,7 +3746,7 @@ assertEquals("$1,234.58", str);
 </artwork>
       </figure></t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -3020,7 +3764,7 @@ assertEquals("$1,234.58", str);
        code for current locale will be used.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>string</c>
@@ -3056,7 +3800,7 @@ assertTrue(date.getDate() == 02);
       <figure>
        <preamble>Example</preamble>
        <artwork xml:space="preserve">
-var date_array = []
+var date_array = [];
 var pos = 0;
 var text = "88/01, 99/03, 98/05, 97/02";
 while(1) {
@@ -3083,7 +3827,7 @@ assertEquals(date.getDate(), 24);
 </artwork>
       </figure></t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -3102,7 +3846,7 @@ assertEquals(date.getDate(), 24);
        <c>The date object that will hold parsed value.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>number</c>
@@ -3126,7 +3870,7 @@ assertEquals(0.30, value);
 </artwork>
       </figure></t>
       <t>Parameters: 
-      <texttable>
+      <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
@@ -3149,7 +3893,7 @@ assertEquals(0.30, value);
        code for current locale will be used.</c>
       </texttable></t>
       <t>Returns:
-      <texttable>
+      <texttable align="left">
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>number</c>
@@ -3158,498 +3902,6 @@ assertEquals(0.30, value);
      </section>
     </section>
    </section>
-  </section>
- </middle>
- <back>
-  <section title="Gadgets Extended XSD"
-           anchor="gadgetsExtendedXSD">
-   <t>
-    <figure>
-     <artwork xml:space="preserve">
-&lt;?xml version="1.0"?&gt;
-&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;xs:element name="Module"&gt;
-    &lt;xs:complexType&gt;
-      &lt;xs:sequence&gt;
-        &lt;xs:element name="ModulePrefs" minOccurs="0"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:choice minOccurs="0" maxOccurs="unbounded"&gt;
-              &lt;xs:element name="Require" type="GadgetFeatureType"/&gt;
-              &lt;xs:element name="Optional" type="GadgetFeatureType"/&gt;
-              &lt;xs:element name="Preload"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:attribute name="href" type="xs:string" use="required"/&gt;
-                  &lt;xs:attribute name="authz" default="none"&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"&gt;
-                        &lt;xs:enumeration value="none"/&gt;
-                        &lt;xs:enumeration value="signed"/&gt;
-                        &lt;xs:enumeration value="oauth"/&gt;
-                      &lt;/xs:restriction&gt;
-                    &lt;/xs:simpleType&gt;
-                  &lt;/xs:attribute&gt;
-                  &lt;xs:attribute name="sign_owner" type="xs:boolean" default="true"/&gt;
-                  &lt;xs:attribute name="sign_viewer" type="xs:boolean" default="true"/&gt;
-                  &lt;xs:attribute name="views" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_service_name" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_token_name" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_request_token" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_request_token_secret" type="xs:string" use="optional"/&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="Icon"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:simpleContent&gt;
-                    &lt;xs:extension base="xs:string"&gt;
-                      &lt;xs:attribute name="mode"&gt;
-                        &lt;xs:simpleType&gt;
-                          &lt;xs:restriction base="xs:string"&gt;
-                            &lt;xs:enumeration value="base64"/&gt;
-                          &lt;/xs:restriction&gt;
-                        &lt;/xs:simpleType&gt;
-                      &lt;/xs:attribute&gt;
-                      &lt;xs:attribute name="type" type="xs:string"/&gt;
-                    &lt;/xs:extension&gt;
-                  &lt;/xs:simpleContent&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="Locale"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:sequence&gt;
-                    &lt;xs:element name="msg" minOccurs="0" maxOccurs="unbounded"&gt;
-                      &lt;xs:complexType&gt;
-                        &lt;xs:simpleContent&gt;
-                          &lt;xs:extension base="xs:string"&gt;
-                            &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
-                            &lt;xs:attribute name="desc" type="xs:string" use="optional"/&gt;
-                          &lt;/xs:extension&gt;
-                        &lt;/xs:simpleContent&gt;
-                      &lt;/xs:complexType&gt;
-                    &lt;/xs:element&gt;
-                  &lt;/xs:sequence&gt;
-                  &lt;xs:attribute name="lang" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="country" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="messages" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="language_direction"&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"&gt;
-                        &lt;xs:enumeration value="ltr"/&gt;
-                        &lt;xs:enumeration value="rtl"/&gt;
-                      &lt;/xs:restriction&gt;
-                    &lt;/xs:simpleType&gt;
-                  &lt;/xs:attribute&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="Link"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:attribute name="href" type="xs:string" use="required"/&gt;
-                  &lt;xs:attribute name="rel" type="xs:string" use="required"&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"&gt;
-                        &lt;xs:enumeration value="gadgets.help"/&gt;
-                        &lt;xs:enumeration value="gadgets.support"/&gt;
-                        &lt;xs:enumeration value="icon"/&gt;
-                      &lt;/xs:restriction&gt;
-                    &lt;/xs:simpleType&gt;
-                  &lt;/xs:attribute&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="OAuth" minOccurs="0" maxOccurs="1"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:sequence&gt;
-                    &lt;xs:element name="Service" maxOccurs="unbounded"&gt;
-                      &lt;xs:complexType&gt;
-                        &lt;xs:sequence&gt;
-                          &lt;xs:element name="Request" type="OAuthResourceType" minOccurs="0"/&gt;
-                          &lt;xs:element name="Access" type="OAuthResourceType" minOccurs="0"/&gt;
-                          &lt;xs:element name="Authorization" minOccurs="0"&gt;
-                            &lt;xs:complexType&gt;
-                              &lt;xs:attribute name="url" type="xs:string" use="required"/&gt;
-                            &lt;/xs:complexType&gt;
-                          &lt;/xs:element&gt;
-                        &lt;/xs:sequence&gt;
-                      &lt;/xs:complexType&gt;
-                    &lt;/xs:element&gt;
-                  &lt;/xs:sequence&gt;
-                  &lt;xs:attribute name="name" type="xs:string" use="optional"/&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-            &lt;/xs:choice&gt;
-            &lt;xs:attribute name="title" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="title_url" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="description" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_email" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="screenshot" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="thumbnail" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="directory_title" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_affiliation" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_location" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_photo" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_aboutme" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_quote" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_link" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="show_stats" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="show_in_directory" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="string" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="width" type="xs:int" use="optional"/&gt;
-            &lt;xs:attribute name="height" type="xs:int" use="optional"/&gt;
-            &lt;xs:attribute name="category" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="category2" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="singleton" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="render_inline" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="scaling" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="scrolling" type="xs:boolean" use="optional"/&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-        &lt;xs:element name="UserPref" minOccurs="0" maxOccurs="unbounded"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:sequence&gt;
-              &lt;xs:element name="EnumValue" minOccurs="0" maxOccurs="unbounded"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:attribute name="value" type="xs:string" use="required"/&gt;
-                  &lt;xs:attribute name="display_value" type="xs:string" use="optional"/&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-            &lt;/xs:sequence&gt;
-            &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
-            &lt;xs:attribute name="display_name" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="default_value" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="required" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="datatype" default="string"&gt;
-              &lt;xs:simpleType&gt;
-                &lt;xs:restriction base="xs:string"&gt;
-                  &lt;xs:enumeration value="string"/&gt;
-                  &lt;xs:enumeration value="hidden"/&gt;
-                  &lt;xs:enumeration value="bool"/&gt;
-                  &lt;xs:enumeration value="enum"/&gt;
-                  &lt;xs:enumeration value="list"/&gt;
-                  &lt;xs:enumeration value="number"/&gt;
-                  &lt;xs:enumeration value="location"/&gt;
-                &lt;/xs:restriction&gt;
-              &lt;/xs:simpleType&gt;
-            &lt;/xs:attribute&gt;
-            &lt;xs:attribute name="urlparam" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="autocomplete_url" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="num_minval" type="xs:double" use="optional"/&gt;
-            &lt;xs:attribute name="num_maxval" type="xs:double" use="optional"/&gt;
-            &lt;xs:attribute name="str_maxlen" type="xs:int" use="optional"/&gt;
-            &lt;xs:attribute name="restrict_to_completions" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="prefix_match" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="publish" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="listen" type="xs:boolean" use="optional"/&gt;
-            &lt;xs:attribute name="on_change" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="group" type="xs:string" use="optional"/&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-        &lt;xs:element name="Content" minOccurs="1" maxOccurs="unbounded"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:simpleContent&gt;
-              &lt;xs:extension base="xs:string"&gt;
-                &lt;xs:attribute name="type" use="optional" default="html"&gt;
-                  &lt;xs:simpleType&gt;
-                    &lt;xs:restriction base="xs:string"&gt;
-                      &lt;xs:enumeration value="html"/&gt;
-                      &lt;xs:enumeration value="url"/&gt;
-                      &lt;xs:enumeration value="html-inline"/&gt;
-                    &lt;/xs:restriction&gt;
-                  &lt;/xs:simpleType&gt;
-                &lt;/xs:attribute&gt;
-                &lt;xs:attribute name="href" type="xs:string" use="optional"/&gt;
-                &lt;xs:attribute name="view" type="xs:string" use="optional"/&gt;
-                &lt;xs:attribute name="preferred_height" type="xs:integer" use="optional"/&gt;
-                &lt;xs:attribute name="preferred_width" type="xs:integer" use="optional"/&gt;
-              &lt;/xs:extension&gt;
-            &lt;/xs:simpleContent&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-      &lt;/xs:sequence&gt;
-    &lt;/xs:complexType&gt;
-  &lt;/xs:element&gt;
-  &lt;xs:complexType name="GadgetFeatureType"&gt;
-    &lt;xs:sequence&gt;
-      &lt;xs:element name="Param" minOccurs="0" maxOccurs="unbounded"&gt;
-        &lt;xs:complexType&gt;
-          &lt;xs:simpleContent&gt;
-            &lt;xs:extension base="xs:string"&gt;
-              &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
-            &lt;/xs:extension&gt;
-          &lt;/xs:simpleContent&gt;
-        &lt;/xs:complexType&gt;
-      &lt;/xs:element&gt;
-    &lt;/xs:sequence&gt;
-    &lt;xs:attribute name="feature" type="xs:string" use="required"/&gt;
-  &lt;/xs:complexType&gt;
-  &lt;xs:complexType name="OAuthResourceType"&gt;
-    &lt;xs:attribute name="url" type="xs:string" use="required"/&gt;
-    &lt;xs:attribute name="method" use="optional" default="GET"&gt;
-      &lt;xs:simpleType&gt;
-        &lt;xs:restriction base="xs:string"&gt;
-          &lt;xs:enumeration value="GET"/&gt;
-          &lt;xs:enumeration value="POST"/&gt;
-        &lt;/xs:restriction&gt;
-      &lt;/xs:simpleType&gt;
-    &lt;/xs:attribute&gt;
-    &lt;xs:attribute name="param_location" use="optional" default="header"&gt;
-      &lt;xs:simpleType&gt;
-        &lt;xs:restriction base="xs:string"&gt;
-          &lt;xs:enumeration value="header"/&gt;
-          &lt;xs:enumeration value="url"/&gt;
-          &lt;xs:enumeration value="body"/&gt;
-        &lt;/xs:restriction&gt;
-      &lt;/xs:simpleType&gt;
-    &lt;/xs:attribute&gt;
-  &lt;/xs:complexType&gt;
-&lt;/xs:schema&gt;
-</artwork>
-    </figure>
-   </t>
-  </section>
-  <section title="Canonical Gadget XSD"
-           anchor="canonicalGadgetXSD">
-   <t>
-    <figure>
-     <artwork xml:space="preserve">
-&lt;?xml version="1.0"?&gt;
-&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;xs:element name="Module"&gt;
-    &lt;xs:complexType&gt;
-      &lt;xs:sequence&gt;
-        &lt;xs:element name="ModulePrefs" minOccurs="0"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:choice minOccurs="0" maxOccurs="unbounded"&gt;
-              &lt;xs:element name="Require" type="GadgetFeatureType"/&gt;
-              &lt;xs:element name="Optional" type="GadgetFeatureType"/&gt;
-              &lt;xs:element name="Preload"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:attribute name="href" type="xs:string" use="required"/&gt;
-                  &lt;xs:attribute name="authz" default="none"&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"&gt;
-                        &lt;xs:enumeration value="none"/&gt;
-                        &lt;xs:enumeration value="signed"/&gt;
-                        &lt;xs:enumeration value="oauth"/&gt;
-                      &lt;/xs:restriction&gt;
-                    &lt;/xs:simpleType&gt;
-                  &lt;/xs:attribute&gt;
-                  &lt;xs:attribute name="sign_owner" type="xs:boolean" default="true"/&gt;
-                  &lt;xs:attribute name="sign_viewer" type="xs:boolean" default="true"/&gt;
-                  &lt;xs:attribute name="views" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_service_name" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_token_name" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_request_token" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_request_token_secret" type="xs:string" use="optional"/&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="Icon"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:simpleContent&gt;
-                    &lt;xs:extension base="xs:string"&gt;
-                      &lt;xs:attribute name="mode"&gt;
-                        &lt;xs:simpleType&gt;
-                          &lt;xs:restriction base="xs:string"&gt;
-                            &lt;xs:enumeration value="base64"/&gt;
-                          &lt;/xs:restriction&gt;
-                        &lt;/xs:simpleType&gt;
-                      &lt;/xs:attribute&gt;
-                      &lt;xs:attribute name="type" type="xs:string"/&gt;
-                    &lt;/xs:extension&gt;
-                  &lt;/xs:simpleContent&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="Locale"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:sequence&gt;
-                    &lt;xs:element name="msg" minOccurs="0" maxOccurs="unbounded"&gt;
-                      &lt;xs:complexType&gt;
-                        &lt;xs:simpleContent&gt;
-                          &lt;xs:extension base="xs:string"&gt;
-                            &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
-                            &lt;xs:attribute name="desc" type="xs:string" use="optional"/&gt;
-                          &lt;/xs:extension&gt;
-                        &lt;/xs:simpleContent&gt;
-                      &lt;/xs:complexType&gt;
-                    &lt;/xs:element&gt;
-                  &lt;/xs:sequence&gt;
-                  &lt;xs:attribute name="lang" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="country" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="messages" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="language_direction"&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"&gt;
-                        &lt;xs:enumeration value="ltr"/&gt;
-                        &lt;xs:enumeration value="rtl"/&gt;
-                      &lt;/xs:restriction&gt;
-                    &lt;/xs:simpleType&gt;
-                  &lt;/xs:attribute&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="Link"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:attribute name="href" type="xs:string" use="required"/&gt;
-                  &lt;xs:attribute name="rel" type="xs:string" use="required"&gt;
-                    &lt;xs:simpleType&gt;
-                      &lt;xs:restriction base="xs:string"&gt;
-                        &lt;xs:enumeration value="gadgets.help"/&gt;
-                        &lt;xs:enumeration value="gadgets.support"/&gt;
-                        &lt;xs:enumeration value="icon"/&gt;
-                      &lt;/xs:restriction&gt;
-                    &lt;/xs:simpleType&gt;
-                  &lt;/xs:attribute&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-              &lt;xs:element name="OAuth" minOccurs="0" maxOccurs="1"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:sequence&gt;
-                    &lt;xs:element name="Service" maxOccurs="unbounded"&gt;
-                      &lt;xs:complexType&gt;
-                        &lt;xs:sequence&gt;
-                          &lt;xs:element name="Request" type="OAuthResourceType" minOccurs="0"/&gt;
-                          &lt;xs:element name="Access" type="OAuthResourceType" minOccurs="0"/&gt;
-                          &lt;xs:element name="Authorization" minOccurs="0"&gt;
-                            &lt;xs:complexType&gt;
-                              &lt;xs:attribute name="url" type="xs:string" use="required"/&gt;
-                            &lt;/xs:complexType&gt;
-                          &lt;/xs:element&gt;
-                        &lt;/xs:sequence&gt;
-                      &lt;/xs:complexType&gt;
-                    &lt;/xs:element&gt;
-                  &lt;/xs:sequence&gt;
-                  &lt;xs:element name="Rating"&gt;
-                    &lt;xs:complexType&gt;
-                      &lt;xs:attribute name="scheme" type="xs:anyURI" use="optional" default=""/&gt;
-                    &lt;/xs:complexType&gt;
-                  &lt;/xs:element&gt;
-                  &lt;xs:attribute name="name" type="xs:string" use="optional"/&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-            &lt;/xs:choice&gt;
-            &lt;xs:attribute name="title" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="title_url" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="description" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="author_email" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="screenshot" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="thumbnail" type="xs:string" use="optional"/&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-        &lt;xs:element name="UserPref" minOccurs="0" maxOccurs="unbounded"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:sequence&gt;
-              &lt;xs:element name="EnumValue" minOccurs="0" maxOccurs="unbounded"&gt;
-                &lt;xs:complexType&gt;
-                  &lt;xs:attribute name="value" type="xs:string" use="required"/&gt;
-                  &lt;xs:attribute name="display_value" type="xs:string" use="optional"/&gt;
-                &lt;/xs:complexType&gt;
-              &lt;/xs:element&gt;
-            &lt;/xs:sequence&gt;
-            &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
-            &lt;xs:attribute name="display_name" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="default_value" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="required" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="datatype" default="string"&gt;
-              &lt;xs:simpleType&gt;
-                &lt;xs:restriction base="xs:string"&gt;
-                  &lt;xs:enumeration value="string"/&gt;
-                  &lt;xs:enumeration value="hidden"/&gt;
-                  &lt;xs:enumeration value="bool"/&gt;
-                  &lt;xs:enumeration value="enum"/&gt;
-                  &lt;xs:enumeration value="list"/&gt;
-                  &lt;xs:enumeration value="number"/&gt;
-                &lt;/xs:restriction&gt;
-              &lt;/xs:simpleType&gt;
-            &lt;/xs:attribute&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-        &lt;xs:element name="Content" minOccurs="1" maxOccurs="unbounded"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:simpleContent&gt;
-              &lt;xs:extension base="xs:string"&gt;
-                &lt;xs:attribute name="type" use="optional" default="html"&gt;
-                  &lt;xs:simpleType&gt;
-                    &lt;xs:restriction base="xs:string"&gt;
-                      &lt;xs:enumeration value="html"/&gt;
-                      &lt;xs:enumeration value="url"/&gt;
-                    &lt;/xs:restriction&gt;
-                  &lt;/xs:simpleType&gt;
-                &lt;/xs:attribute&gt;
-                &lt;xs:attribute name="href" type="xs:string" use="optional"/&gt;
-                &lt;xs:attribute name="view" type="xs:string" use="optional"/&gt;
-                &lt;xs:attribute name="preferred_height" type="xs:integer" use="optional"/&gt;
-                &lt;xs:attribute name="preferred_width" type="xs:integer" use="optional"/&gt;
-              &lt;/xs:extension&gt;
-            &lt;/xs:simpleContent&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-      &lt;/xs:sequence&gt;
-    &lt;/xs:complexType&gt;
-  &lt;/xs:element&gt;
-  &lt;xs:complexType name="GadgetFeatureType"&gt;
-    &lt;xs:sequence&gt;
-      &lt;xs:element name="Param" minOccurs="0" maxOccurs="unbounded"&gt;
-        &lt;xs:complexType&gt;
-          &lt;xs:simpleContent&gt;
-            &lt;xs:extension base="xs:string"&gt;
-              &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
-            &lt;/xs:extension&gt;
-          &lt;/xs:simpleContent&gt;
-        &lt;/xs:complexType&gt;
-      &lt;/xs:element&gt;
-    &lt;/xs:sequence&gt;
-    &lt;xs:attribute name="feature" type="xs:string" use="required"/&gt;
-  &lt;/xs:complexType&gt;
-  &lt;xs:complexType name="OAuthResourceType"&gt;
-    &lt;xs:attribute name="url" type="xs:string" use="required"/&gt;
-    &lt;xs:attribute name="method" use="optional" default="GET"&gt;
-      &lt;xs:simpleType&gt;
-        &lt;xs:restriction base="xs:string"&gt;
-          &lt;xs:enumeration value="GET"/&gt;
-          &lt;xs:enumeration value="POST"/&gt;
-        &lt;/xs:restriction&gt;
-      &lt;/xs:simpleType&gt;
-    &lt;/xs:attribute&gt;
-    &lt;xs:attribute name="param_location" use="optional" default="auth-header"&gt;
-      &lt;xs:simpleType&gt;
-        &lt;xs:restriction base="xs:string"&gt;
-          &lt;xs:enumeration value="auth-header"/&gt;
-          &lt;xs:enumeration value="uri-query"/&gt;
-          &lt;xs:enumeration value="post-body"/&gt;
-        &lt;/xs:restriction&gt;
-      &lt;/xs:simpleType&gt;
-    &lt;/xs:attribute&gt;
-  &lt;/xs:complexType&gt;
-&lt;/xs:schema&gt;
-</artwork>
-    </figure>
-   </t>
-  </section>
-  <section title="Message Bundle Schema"
-           anchor="messageBundleSchema">
-   <t>
-    <figure>
-     <artwork xml:space="preserve">
-&lt;?xml version="1.0"?&gt;
-&lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
-  &lt;xs:element name="messagebundle"&gt;
-    &lt;xs:complexType&gt;
-      &lt;xs:sequence&gt;
-        &lt;xs:element name="msg" minOccurs="0" maxOccurs="unbounded"&gt;
-          &lt;xs:complexType&gt;
-            &lt;xs:simpleContent&gt;
-              &lt;xs:extension base="xs:string"&gt;
-                &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
-                &lt;xs:attribute name="desc" type="xs:string" use="optional"/&gt;
-              &lt;/xs:extension&gt;
-            &lt;/xs:simpleContent&gt;
-          &lt;/xs:complexType&gt;
-        &lt;/xs:element&gt;
-      &lt;/xs:sequence&gt;
-    &lt;/xs:complexType&gt;
-  &lt;/xs:element&gt;
-&lt;/xs:schema&gt;
-</artwork>
-    </figure>
-   </t>
   </section>
   <references>
    <reference anchor='RFC2119'>
@@ -3728,16 +3980,14 @@ assertEquals(0.30, value);
            year='2009' />
     </front>
    </reference>
-   <reference anchor="JSON-RPC"
-              target="./RPC-Protocol.xml">
+   <reference anchor="OpenSocial-Templating"
+              target="./OpenSocial-Templating.xml">
     <front>
-     <title>OpenSocial JSON RPC Protocol Specification 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     <title>OpenSocial Templating Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2007' />
+     <date month='December'
+           year='2009' />
     </front>
    </reference>
    <reference anchor="xsdpart1"
@@ -3769,14 +4019,81 @@ assertEquals(0.30, value);
     </front>
    </reference>
    <reference anchor='OAuth-Core'
-              target='http://oauth.net/core/1.0a'>
+              target='http://oauth.net/core/1.0/'>
     <front>
-     <title>OAuth Core 1.0 Revision A</title>
-     <author fullname='OAuth Core Workgroup'>
-      <organization abbrev='OAuth'>OAuth Core Workgroup</organization>
+     <title>OAuth Core 1.0</title>
+     <author initials='M.'
+             surname='Atwood'
+             fullname='Mark Atwood'></author>
+     <author initials='R. M.'
+             surname='Conlan'
+             fullname='Richard M. Conlan'>
+      <organization>Google</organization>
      </author>
-     <date month='November'
-           year='1999' />
+     <author initials='B.'
+             surname='Cook'
+             fullname='Blaine Cook'>
+      <organization>Twitter</organization>
+     </author>
+     <author initials='L.'
+             surname='Culver'
+             fullname='Leah Culver'>
+      <organization>Pownce</organization>
+     </author>
+     <author initials='K.'
+             surname='Elliott-McCrea'
+             fullname='Kellan Elliott-McCrea'>
+      <organization>Flickr</organization>
+     </author>
+     <author initials='L.'
+             surname='Halff'
+             fullname='Larry Halff'>
+      <organization>ma.gnolia</organization>
+     </author>
+     <author initials='E.'
+             surname='Hammer-Lahav'
+             fullname='Eran Hammer-Lahav'></author>
+     <author initials='B.'
+             surname='Laurie'
+             fullname='Ben Laurie'>
+      <organization>Google</organization>
+     </author>
+     <author initials='C.'
+             surname='Messina'
+             fullname='Chris Messina'></author>
+     <author initials='J.'
+             surname='Panzer'
+             fullname='John Panzer'></author>
+     <author initials='S.'
+             surname='Quigley'
+             fullname='Sam Quigley'>
+      <organization>Twitter</organization>
+     </author>
+     <author initials='D.'
+             surname='Recordon'
+             fullname='David Recordon'>
+      <organization>six apart</organization>
+     </author>
+     <author initials='E.'
+             surname='Sandler'
+             fullname='Eran Sandler'>
+      <organization>Yedda</organization>
+     </author>
+     <author initials='J.'
+             surname='Sergent'
+             fullname='Jonathan Sergent'>
+      <organization>ma.gnolia</organization>
+     </author>
+     <author initials='B.'
+             surname='Slesinsky'
+             fullname='Brian Slesinsky'></author>
+     <author initials='A.'
+             surname='Smith'
+             fullname='Andy Smith'>
+      <organization>Jaiku</organization>
+     </author>
+     <date month='December'
+           year='2007' />
     </front>
    </reference>
   </references>
