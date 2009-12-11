@@ -13,7 +13,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="April"
+  <date month="December"
         year="2009" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
@@ -72,7 +72,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
      </list>
    <t>In all cases, a site MUST fulfill the requirements in <xref target="Extensions">Extensions</xref>.</t>
   </section>
-  <section title="Extensions">
+  <section title="Extensions" anchor="Extensions">
     <t><x:highlight>[TODO: Add extensions section]</x:highlight></t>
   </section>
  </middle>
