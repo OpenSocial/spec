@@ -55,65 +55,26 @@
   </section>
   <section title="Compliance"
            anchor="compliance">
-   <t>So what does it mean to be an OpenSocial container? In a practical sense,
-   it means that a site can run any application built on the OpenSocial APIs.
-   This implies a number of things: 
-   <list style="numbers">
-    <t>The container must implement all methods in 
-    <xref target="JavaScriptAPIReference" />. 
-    <t>The OpenSocial JavaScript APIs include the methods in the 
-    <xref target="LightweightJSAPI">Lightweight JavaScript APIs</xref> as well
-    as methods from 
-    <xref target="JavaScriptAPIReference" />. Methods may return the error
-    code opensocial.ResponseItem.NOT_IMPLEMENTED for a specific method if the
-    container does not support a specific request.</t></t>
-    <t>The container must only use the specified extensibility mechanisms for
-    any container-specific extensions. 
-    <t>Extra person, activity or other object fields should be defined in an
-    enum under the container's namespace, and the environment should allow
-    applications to discover these fields. For example, if the field
-    orkut.PersonField.SPECIAL_FIELD is defined as "orkut.specialPersonField",
-    then opensocial.getEnvironment().supportsField("person",
-    "orkut.specialPersonField") and
-    opensocial.getEnvironment().supportsField(opensocial.Environment.ObjectType.PERSON,
-    orkut.PersonField.SPECIAL_FIELD) should both return the same value.</t>
-    <t>Any extra data request types should be available with a namespaced call
-    like myspace.newFetchAlbumRequest. The gadget would then use
-    batchRequest.add(myspace.newFetchAlbumRequest(...)).</t>
-    <t>Any extra objects may be added to the container's own namespace. These
-    objects can be returned from person.getField or other similar
-    requests.</t></t>
-    <t>The container must satisfy the 
-    <xref target="Gadgets-API-Specification" />. 
-    <t>In short, this requires handling three types of requests: the Gadget
-    Rendering Request, the Gadget Metadata Request, and the JavaScript
-    Request.</t>
-    <t>For the JavaScript APIs, you must implement the 
-    <xref target="Gadgets-API-Specification">gadgets core JavaScript
-    API</xref>, as per the documentation.</t></t>
-    <t>The container must support the 
-    <xref target="RESTful-Protocol-Specification" />. 
-    <t>Containers must provide JSON, XML, and AtomPub representations of data.
-    OpenSocial uses HTTP GET to retrieve, PUT to update in place, POST to
-    create new, and DELETE to remove. POST operates on collections and creates
-    new activities, persons, or app data within those collections.</t></t>
-    <t>The container may support the 
-    <xref target="RPC-Protocol-Specification" />. 
-    <t>Containers may optionally provide an RPC alternative to the RESTful
-    protocol. This specification supports the same data and operations as the
-    RESTful protocol, but in a form more suited to JSON.</t></t>
-    <t>The container MUST support the OpenSocial Markup Language. 
-    <t>The OpenSocial Markup language consists of 
-    <xref target="OpenSocial-Templating" /> and 
-    <xref target="OpenSocial-Markup-Language-Tags" />.</t></t>
-    <t>The container MUST support Data Pipelining 
+    <t>OpenSocial defines the following levels of compliance, each of
+which defines an encapsulated set of capabilities. OpenSocial has been structured
+this way to support a wide array of adoption use cases that are all considered compliant with the
+specification. For example, it is possible to only offer social
+APIs via REST and be considered a compliant OpenSocial Social API
+Server. Likewise, some implementors may choose to leverage only the
+gadget aspect of specification. In this case, they can be considered
+to be a compliant OpenSocial Core Gadget Server.</t>
     <t>
-    <xref target="OpenSocial-Data-Pipelining" /> is a declarative syntax for
-    defining the data you want the container to provide to you for
-    processing.</t></t>
-    <t>Containers that support the creation of and updating AppData SHOULD
-    provide at least 10KB of space per user per application for storage.</t>
-   </list></t>
+    <t>
+     <list style="hanging">
+      <t hangText="Core API Server">To be considered a Core API Server, a site MUST fulfill all the requirements defined in the <xref target="Core-API-Server">Core API Server Specification</xref>.</t>
+      <t hangText="Core Gadget Container">To be considered a Gadget Container, a site MUST fulfill all the requirements defined in the <xref target="Core-Gadget">Core Gadget Specification</xref>.</t>
+      <t hangText="Social API Server">To be considered a Social API Server, a site MUST be a Core API Server and MUST fulfill all the requirements defined in the <xref target="Social-API-Server">Social API Server Specification</xref>.</t>
+      <t hangText="Social Gadget Container">To be considered a Social Gadget Container, a site MUST be a Core Gadget Container and MUST fulfill all the requirements defined in the <xref target="Social-Gadget">Social Gadget Specification</xref>.</t>
+      <t hangText="OpenSocial Container">To be considered an OpenSocial Container, a site MUST fulfill all the requirements for an Social API Server and a Social Gadget Container.</t>
+     </list>
+    </t>
+   </t>
+   <t>In all cases, a site MUST fulfill the requirements in <xref target="Extensions">Extensions</xref>.</t>
   </section>
   <section title="Background">
    <section title="Key Concepts">
@@ -6179,6 +6140,36 @@ if (person.getField('smoker').getKey() != "NO") { //gadget logic here }
      </author>
      <date month='December'
            year='2007' />
+    </front>
+   </reference>
+   <reference anchor="Core-API-Server"
+              target="./Core-API-Server.xml">
+    <front>
+     <title>OpenSocial Core API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
+    </front>
+   </reference>
+   <reference anchor="Social-Gadget"
+              target="./Social-Gadget.xml">
+    <front>
+     <title>OpenSocial Social Gadget Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
+    </front>
+   </reference>
+   <reference anchor="Social-API-Server"
+              target="./Social-API-Server.xml">
+    <front>
+     <title>OpenSocial Social API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
     </front>
    </reference>
   </references>
