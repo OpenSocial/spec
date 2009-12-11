@@ -232,6 +232,71 @@ Domain-Name = *( ALPHA / DIGIT / "_" / "." / "-" )
 Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
 </artwork>
    </section>
+   <section title="HTTP-Request-Params" anchor="HTTP-Request-Params">
+     <t>Requests to arbitrary URLs use the following parameters:</t>
+     <texttable align="left">
+      <ttcol>Name</ttcol>
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>authz</c>
+      <c>String</c>
+      <c>Indicates the authorization method to use when sending data to the remote server.  Must be one of "none", "signed", or "oauth". Defaults to "none".</c>
+      <c>format</c>
+      <c>String</c>
+      <c>Format data is returned in for processing, values are "json" or "text". Defaults to "json". Optional</c>
+      <c>headers</c>
+      <c>Map&lt;String, <eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;&gt;</c>
+      <c>Additional HTTP headers to include in the request. Optional.</c>
+      <c>href</c>
+      <c>String</c>
+      <c>The URL to send the request to. Required.</c>
+      <c>oauth_service_name</c>
+      <c>String</c>
+      <c>Identifies the service element in the gadget spec to use for this request.  Defaults to an empty string.</c>
+      <c>oauth_request_token</c>
+      <c>String</c>
+      <c>A token that is pre-approved by the provider for access to the resource. Optional.</c>
+      <c>oauth_request_token_secret</c>
+      <c>String</c>
+      <c>Secret associated with the pre-approved request token. Optional.</c>
+      <c>oauth_token_name</c>
+      <c>String</c>
+      <c>Identifies the OAuth token used to make a request to the service provider. Defaults to an empty string.</c>
+      <c>oauth_use_token</c>
+      <c>String</c>
+      <c>Controls whether an OAuth token should be used with the request. Allowed values are "always", "if_available", and "never". Optional.</c>
+      <c>refreshInterval</c>
+      <c>number</c>
+      <c>Number of seconds for which the container can cache the data. If this parameter is set, it overrides the HTTP response header sent back from the HTTP request. Optional.</c>
+      <c>sign_owner</c>
+      <c><eref target="Core-Data.xml#Boolean">Boolean</eref></c>
+      <c>Indicates if the current viewer's ID should be included in the request signature. Defaults to "true".</c>
+      <c>sign_viewer</c>
+      <c><eref target="Core-Data.xml#Boolean">Boolean</eref></c>
+      <c>Indicates if the current viewer's ID should be included in the request signature. Defaults to "true".</c>
+     </texttable>
+   </section>
+   <section title="HTTP-Response-Payload">
+     <t>When a container makes an HTTP request on behalf of a gadget (e.g. osapi.http.get(), or &lt;os:HttpRequest&gt;) the response will contain the following properties:</t>
+     <texttable align="left">
+      <ttcol>Name</ttcol>
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>content</c>
+      <c>String / Object</c>
+      <c>If @format is "text", the string content of the
+response. If @format is "json", the parsed JSON object or array of the
+response. If a JSON response cannot be parsed, a 406 (Not Acceptable) error
+code will be produced.</c>
+      <c>headers</c>
+      <c>Map&lt;String, <eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;&gt;</c>
+      <c>An map with response header names as keys,
+and the header values as per-key arrays.</c>
+      <c>status</c>
+      <c>number</c>
+      <c>The HTTP status code.</c>
+     </texttable>
+   </section>
    <section title="Local-Id" anchor="Local-Id">
     <artwork type="abnf"
          xml:space="preserve">

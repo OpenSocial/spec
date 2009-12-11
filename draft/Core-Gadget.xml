@@ -2285,34 +2285,446 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       'PROFILE'.</t>
     </list>
    </section>
+    <section title="osapi"
+            anchor="osapi">
+     <t>The osapi API is more natural to
+     JavaScript developers and more succinct for creating OpenSocial gadgets
+     than the existing JS APIs. It relies on the existing JSON-RPC protocol
+     handlers, and is marked by the use of simple JSON objects as input and
+     output. Note: this specification follows the JSON-RPC spec 1:1, but could
+     also be implemented over REST.</t>
+      <list style="symbols">
+       <t>Introduces standard method signature for data requests - JSON in,
+       JSON out</t>
+       <t>Input and output parameters match JSON-RPC calls 1:1 and share
+       documentation</t>
+       <t>Data requests look like functions on "service" objects, e.g.,
+       osapi.people.get(), instead of
+       opensocial.DataRequest.newXXXRequest()</t>
+       <t>Data requests can be called individually or as part of a batch</t>
+       <t>Batch calls are designed for call chaining. The newBatch() call
+       returns the batch, as does add, so that you can succinctly add more
+       requests to the batch and execute it.</t>
+       <t>Located in the osapi namespace</t>
+      </list>
+     <t>A container MUST emit the osapi JavaScript libraries and data files
+     required by the libraries if an application includes &lt;Require
+     feature="osapi"/&gt; in the ModulePrefs section of the gadget XML file.
+     The container SHOULD emit the osapi JavaScript libraries and data files
+     required by the libraries if an application optionally requests the
+     feature by including &lt;Optional feature="osapi"/&gt; in the ModulePrefs
+     of the gadget XML file.</t>
+     <section title="Service Objects">
+        <t>Services objects available are dependent upon the container. The server SHOULD generate service objects for all available services. For example, Social API Servers supporting services such as <eref target="Social-API-Server.xml#People-Service">People</eref>, and <eref target="Social-API-Server.xml#Activities-Service">Activities</eref> would create JavaScript objects for osapi.people and osapi.activites.</t>
+        <t>Each service object SHOULD make JavaScript functions available for all methods that the service supports. These functions SHOULD take a single parameter which is a JavaScript representation of the service method's parameters.  These functions MUST return a <x:ref>osapi.Request</x:ref> object that may be sent immediately by the <x:ref>osapi.Request.execute</x:ref>, or may be added to a <x:ref>osapi.BatchRequest</x:ref>.</t>        
+        <t>Developers wanting to write gadgets safely can test for the existence of a service and method as follows:</t>
+      <artwork type="example" xml:space="preserve">if (osapi.people &amp;&amp; osapi.people.getViewer) {
+  osapi.people.getViewer().execute(function(result) {
+    if (!result.error) {
+      alert('Your name is ' + result.displayName + '!');
+    }
+  });
+}
+</artwork>
+     </section>
+     <section title="Service Requests">
+      <section title="osapi.Request"
+               anchor="osapi.Request">
+       <t>All methods of osapi service objects (e.g. osapi.people.get())
+       return a JavaScript object representing the request. These objects MUST
+       support the following method(s):</t>
+        <section title="execute"
+                 anchor="osapi.Request.execute">
+         <list style="hanging">
+          <t hangText="Signature">osapi.Response.execute(callback)</t>
+          <t hangText="Description">Sends a request to execute a request to a service method.  Generally invoked as &lt;service-name&gt;.&lt;method-name&gt;(params).execute(callback) to send a request to the given method (&lt;method-name&gt;) on the specified service (&lt;service-name&gt;). Takes a callback for response processing.</t>
+          <t hangText="Parameters"> 
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>callback</c>
+            <c>Function</c>
+            <c>A callback function to handle the response. The callback function will be invoked with a parameter which contains the response payload specified by the service method that is invoked.</c>
+           </texttable></t>
+          <t hangText="Returns">None</t>
+         </list>
+        </section>
+       <section title="Examples">
+        <figure>
+         <preamble>A simple example to request the owner's friends and display the total number of friends.  Note that the 'totalResults' property contains the total number of friends, even only a portion of the collection is actually returned (e.g. for paging purposes):</preamble>
+         <artwork xml:space="preserve">var params = {"userId": "@owner", "groupId": "@friends"};
+osapi.people.get(params).execute(callback);
+
+function callback(ownerFriends) {
+  if (!ownerFriends.error) {
+    alert('You have ' + ownerFriends.totalResults + ' friends');
+  }
+});
+</artwork>
+        </figure>
+       </section>
+      </section>
+      <section title="Batch Request Objects"
+               anchor="osapi.BatchRequest">
+       <t>Multiple service requests can be combined into a single batch request using
+       the following methods:</t>
+        <section title="newBatch"
+                 anchor="osapi.newBatch">
+         <list style="hanging">
+         <t hangText="Signature"><x:ref>osapi.BatchRequest</x:ref> osapi.newBatch()</t>
+         <t hangText="Description">Creates a new batch request.</t>
+         <t hangText="Parameters">None</t> 
+         <t hangText="Returns">
+          <texttable align="left">
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c><x:ref>osapi.BatchRequest</x:ref></c>
+           <c>A new batch request.</c>
+          </texttable>
+         </t>
+         </list>
+        </section>
+        <section title="add"
+                 anchor="osapi.BatchRequest.add">
+         <list style="hanging">
+          <t hangText="Signature"><x:ref>osapi.BatchRequest</x:ref> osapi.add(key, request)</t>
+          <t hangText="Description">Adds a service request to the batch associated with
+         the specified key. A single batch request can contain both JSON-RPC
+         calls (e.g. osapi.people.get()) and HTTP calls to third parties (e.g.
+         osapi.http.get()).</t>
+          <t hangText="Parameters">
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>key</c>
+            <c>String</c>
+            <c>A key to access the result of the given request from the parameter
+          sent to the callback function.</c>
+            <c>request</c>
+            <c><x:ref>osapi.Request</x:ref></c>
+            <c>A request to add to the batch.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns">
+           <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c><x:ref>osapi.BatchRequest</x:ref></c>
+            <c>A batch request containing the given request (and any previously added requests).</c>
+           </texttable>
+          </t>
+         </list>
+        </section>
+        <section title="execute"
+                 anchor="osapi.BatchRequest.execute">
+         <list style="hanging">
+          <t hangText="Signature">void osapi.BatchRequest.execute(callback)</t>
+          <t hangText="Description">Executes all of the requests in the batch. Takes a
+         callback for response processing, which is passed a JSON object
+         mapping each request key to a JSON response object.</t>
+          <t hangText="Parameters"> 
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>callback</c>
+            <c>Function</c>
+            <c>A callback function to handle the response. The callback function will be invoked with a parameter which contains a map. The key is the "key"
+specified in the <x:ref>osapi.BatchRequest.add</x:ref> method. The value is the response payload for the service method that is invoked.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns">None</t>
+         </list>
+        </section>
+       <section title="Examples">
+        <figure>
+         <preamble>An example illustrating two requests batched
+         together:</preamble>
+         <artwork xml:space="preserve">
+          var batch = osapi.newBatch().
+             add("viewer", osapi.people.getViewer()).
+             add('activities', osapi.activities.get({ userId : '@viewer', groupId : '@self'})).
+          batch.execute(function(result) {
+            if (!result.error) {
+              alert('Hi, ' + result.viewer.displayName + '!');
+              alert('You have ' + result.activities.totalResults + ' activities.');
+            }
+          });
+</artwork>
+        </figure>
+       </section>
+      </section>
+     </section>
+     <section title="Error Handling">
+      <t>The error handling works exactly as it does for the JSON-RPC
+      interface, since this api is based on that protocol. The JSON object
+      returned reflects any errors that occurred in the request. This breaks
+      down into 3 types of errors:</t>
+      <list style="symbols">
+       <t>Network error, these return a top level error. For example, in the
+       callback, the object passed will have an error object. 
+       <figure>
+        <preamble>Example:</preamble>
+        <artwork xml:space="preserve">
+osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
+  if (ownerFriends.error) {
+    alert('Error occurred: ' + error.message);
+  } else {
+    alert('You have ' + ownerFriends.totalResults + ' friends');
+  }
+});
+</artwork>
+       </figure></t>
+       <t>Application Error for Single Request 
+       <t>In this case, a top-level error object is set. Note, this is just
+       like the previous error case.</t>
+       <figure>
+        <preamble>Example:</preamble>
+        <artwork xml:space="preserve">
+osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(ownerFriends) {
+  if (ownerFriends.error) {
+    alert('Error occurred: ' + error.message);
+  } else {
+    alert('You have ' + ownerFriends.totalResults + ' friends');
+  }
+});
+</artwork>
+       </figure></t>
+       <t>Application Error for a Batched Request. 
+       <t>In this case, a top-level error is set, but results are still
+       returned for all individual requests that succeeded, if any. The
+       individual request that failed has an error set.</t>
+       <t>Note that 'error' is reserved and may not be used</t>
+       <list style="symbols">
+        <t>as a key to batch.add()</t>
+        <t>as a property of a JSON RPC batch response item. 
+        <figure>
+         <preamble>Example: Bailing out if there is any error in the
+         batch:</preamble>
+         <artwork xml:space="preserve">
+var batch = osapi.newBatch().
+    add("viewer", osapi.people.getViewer()).
+    add('activities', osapi.activities.get({ userId : '@viewer', groupId : '@self'})).
+batch.execute(function(result) {
+  if (result.error) {
+    alert("This batch had an error: " + error.message);
+  } else {alert('Hi, ' + result.viewer.displayName + '!');
+    alert('You have ' + result.activities.totalResults + ' activities.');
+  }
+});
+</artwork>
+        </figure>
+        <figure>
+         <preamble>Example: Processing any sub requests in the batch that
+         succeeded:</preamble>
+         <artwork xml:space="preserve">
+var batch = osapi.newBatch().
+   add('v', osapi.people.getViewer()).
+   add('vf', osapi.people.getViewerFriends());
+batch.execute(function(result) {
+ for (var name in result) {
+   if (result.hasOwnProperty(name)) {
+     if (result[name].error) {
+       gadgets.log("Found an error: ", result[name].error.message);
+     } else {
+       gadgets.log("Got some data: ", result[name]);
+     }
+   }
+ }
+});
+</artwork>
+        </figure></t>
+       </list></t>
+      </list>
+     </section>
+    </section>
+         <section title="osapi.http"
+               anchor="osapi.http">
+       <t>Service object for making HTTP requests to third party servers. This
+       is not a JSON-RPC endpoint, but a third party web service. The object created by methods (e.g. get(), post()) is an <x:ref>osapi.Request</x:ref> object, suitable for immediate
+execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
+<x:ref>osapi.BatchRequest</x:ref>.</t>
+        <section title="head"
+                 anchor="osapi.http.head">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.head(params)</t>
+          <t hangText="Description">Creates a HEAD request to an arbitrary URL.</t>
+          <t hangText="Parameters"> 
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>params</c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c>A JavaScript representation of HTTP-Request-Parameters.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns"> 
+           <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c><x:ref>osapi.Request</x:ref></c>
+            <c>A request to retrieve information from an arbitrary URL.</c>
+           </texttable>
+          </t>
+         </list>
+        </section>
+        <section title="get"
+                 anchor="osapi.http.get">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.get(params)</t>
+          <t hangText="Description">Creates a GET request to an arbitrary URL.</t>
+          <t hangText="Parameters"> 
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>params</c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c>A JavaScript representation of HTTP-Request-Parameters.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns"> 
+           <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c><x:ref>osapi.Request</x:ref></c>
+            <c>A request to retrieve information from an arbitrary URL.</c>
+           </texttable>
+          </t>
+         </list>
+        </section>
+        <section title="post"
+                 anchor="osapi.http.post">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.post(params)</t>
+          <t hangText="Description">Creates a POST request to an arbitrary URL.</t>
+          <t hangText="Parameters"> 
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>params</c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c>A JavaScript representation of HTTP-Request-Parameters.  osapi.http.post supports an additional property, 'body', whose value is used as the post body of the HTTP request.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns"> 
+           <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c><x:ref>osapi.Request</x:ref></c>
+            <c>A request to POST information to an arbitrary URL.</c>
+           </texttable>
+          </t>
+         </list>
+        </section>
+        <section title="put"
+                 anchor="osapi.http.put">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.put(params)</t>
+          <t hangText="Description">Creates a PUT request to an arbitrary URL.</t>
+          <t hangText="Parameters"> 
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>params</c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c>A JavaScript representation of HTTP-Request-Parameters.   osapi.http.put supports an additional property, 'body', whose value is used as the post body of the HTTP request.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns"> 
+           <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c><x:ref>osapi.Request</x:ref></c>
+            <c>A request to PUT information to an arbitrary URL.</c>
+           </texttable>
+          </t>
+         </list>
+        </section>
+        <section title="delete"
+                 anchor="osapi.http.delete">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.delete(params)</t>
+          <t hangText="Description">Creates a DELETE request to an arbitrary URL.</t>
+          <t hangText="Parameters"> 
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>params</c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c>A JavaScript representation of HTTP-Request-Parameters.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns"> 
+           <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c><x:ref>osapi.Request</x:ref></c>
+            <c>A request to delete information at an arbitrary URL.</c>
+           </texttable>
+          </t>
+         </list>
+        </section>
+       <section title="Examples">
+        <figure>
+         <preamble>Suppose a request to http://www.somephotosite.com/latest
+         returns the following JSON:</preamble>
+         <artwork xml:space="preserve">
+{
+  photos : [ "http://www.somephotosite.com/photos/1.jpg",
+             "http://www.somephotosite.com/photos/2.jpg",
+             "http://www.somephotosite.com/photos/3.jpg",
+           ],
+  lastUpdate : "Mon, 13 Apr 2009 23:17:04 GMT"
+}
+</artwork>
+        </figure>
+        <figure>
+         <preamble>The data can be retrieved and accessed as
+         follows:</preamble>
+         <artwork xml:space="preserve">
+osapi.http.get({href:'http://www.somephotosite.com/latest'}).execute(function(result) {
+  if (!result.error) {
+    alert('There are ' + result.content.photos.length + ' new photos');
+  }
+});
+</artwork>
+        </figure>
+        <figure>
+         <preamble>An example illustrating some available request
+         parameters:</preamble>
+         <artwork xml:space="preserve">
+var params = {
+    'href': 'http://www.somephotosite.com/prefs?uid=1234',
+    'format': 'json',
+    'headers': {'Content-Type': ['application/json;charset=utf-8'], "Accept-Language": ["en-us"]},
+    'body': {'numResults': 100, theme: 'beach'},
+    'authz': 'SIGNED',
+};
+osapi.http.post(params).execute(function(result) {
+  if (!result.error) {
+    alert('Request to update user preferences was successful');
+  }
+});
+</artwork>
+        </figure>
+       </section>
+      </section>
   </section>
   <section title="Data Pipelining" anchor="DataPipelining">
-   <t>Data Pipelining is a declarative syntax for defining the data a gadget requires from the container. The
-   &lt;os:DataRequest&gt; element provides access to OpenSocial data, and the
-   &lt;os:HttpRequest&gt; element provides access to content from any HTTP
-   endpoint.</t>
-   <t>The data that is retrieved will be available in three contexts: 
-   <list style="numbers">
-    <t>Proxied content requests. This data will be POSTed to the developer
-    party server with requests for proxied content.</t>
-    <t>OpenSocial Templates. The data will be available as named variables in
-    OpenSocial templates.</t>
-    <t>JavaScript. This data will be available in the JavaScript API.</t>
-   </list>Developers will insert the following &lt;os:*&gt; namespaced tags
-   within a &lt;Content&gt; block to specify what data should be provided to
-   the gadget.</t>
-   <t>RESTful call equivalents: 
-   <list style="numbers">
-    <t>&lt;os:DataRequest&gt; - request to OpenSocial data, including person
-    data, activity data, and any container-specific endpoints</t>
-    <t>&lt;os:HttpRequest&gt;, equivalent to gadgets.io.makeRequest 
-    <list style="symbols">
-     <t>This is a call to an arbitrary URL.</t>
-    </list></t>
-   </list>
+   <t>Data Pipelining is a declarative syntax for defining the data a gadget requires from the container. The &lt;os:DataRequest&gt; element provides access to OpenSocial data, and the &lt;os:HttpRequest&gt; element provides access to content from any HTTP endpoint.</t>
+   <t>All Data Pipelining tags MUST have a 'key' attribute which contains a string that is used to identify the data in the response.</t>
+   <t>Tags that invoke API Server methods support a 1:1 mapping between the XML
+   attributes and the service method parameters.  See <xref target="Core-API-Server"/> and <xref target="Social-API-Server"/> for information on the parameters available for each service method. Note that Data Pipelining MUST only be used for API Server calls that get data. Service methods that update data MUST NOT be implemented as Data Pipelining tags.</t>
+   <t>Here's an example of Data Pipelining tags in a gadget XML file.</t>
    <figure>
     <artwork xml:space="preserve">
-  
 &lt;Content type="html"&gt;&lt;![CDATA[
   &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
     &lt;os:DataRequest key="vwr" method="people.get" userId="@viewer" fields="name,birthday"/&gt;
@@ -2321,8 +2733,15 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
   ... HTML content here ...
 ]]&gt;&lt;/Content&gt;
 </artwork>
-   </figure>Note that we only have equivalents for REST calls that get data -
-   calls that update data cannot be safely used in Data Pipelining.</t>
+   </figure>
+   <t>The data that is retrieved will be available in three contexts:</t>
+   <list style="numbers">
+    <t>Proxied content requests. This data will be POSTed to the developer
+    party server with requests for proxied content.</t>
+    <t>OpenSocial Templates. The data will be available as named variables in
+    OpenSocial templates.</t>
+    <t>JavaScript. This data will be available in the JavaScript API.</t>
+   </list>
    <t>Data Pipelining creates a new feature name for use in the Gadget
    Specification: opensocial-data. When data pipelining elements are embedded
    in type=@html, the Module must contain this XML: 
@@ -2333,106 +2752,68 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
 &lt;/ModulePrefs&gt;
 </artwork>
    </figure></t>
-   <section title="Common request processing">
-   <t>All XML tags MUST have an @key string attribute. This is used to identify
-   the data in the response back.</t>
-   <t>Calls with corresponding REST APIs have a 1:1 mapping between the XML
-   attributes and the RESTful API parameters. See the OpenSocial RESTful
-   Protocol for an overview of the REST calls.</t>
-  </section>
    <section title="Tag: &lt;os:DataRequest&gt;"
            anchor="DataRequest">
-   <t>Request to get OpenSocial data, including person data, activity data, and
-   any container-specific endpoints.</t>
-   <t>Attributes 
-   <list style="symbols">
-    <t>@key {string}</t>
-    <t>@method {string} The name of the REST endpoint and operation called.
-    Implementations MUST support "people.get" and "activities.get", and MUST
-    NOT support ".update", ".create", or ".delete" operations.</t>
-    <t>All other attributes will be passed as string parameters to the
-    endpoint. See the OpenSocial RESTful protocol for information on the
-    parameters available for each endpoint.</t>
-   </list>Returns 
-   <list style="symbols">
-    <t>JSON object (typically, an array) representing the results of invoking
-    the endpoint.</t>
-   </list>
+    <list style="hanging"> 
+     <t hangText="Description">Request to get OpenSocial data, including person data, activity data, and any container-specific endpoints.</t>
+     <t hangText="Attributes">The following attributes are REQUIRED.  Any additional attributes will be passed as parameters to the service method.
+       <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol align="left">Description</ttcol>
+          <c>key</c>
+          <c>String</c>
+          <c>A key for accessing the response.</c>
+          <c>method</c>
+          <c>String</c>
+          <c>The name of the service and method to call.</c>
+       </texttable>
+     </t>
+     <t hangText="Returns">A JSON object representing the <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref> specified by the service method.</t>
+    </list>
    <figure>
-    <preamble>Example:</preamble>
+    <preamble>Example of tag syntax:</preamble>
     <artwork xml:space="preserve">
 &lt;os:DataRequest key="PagedFriends" method="people.get" userId="@owner" groupId="@friends" startIndex="40" count="20"/&gt;
 </artwork>
-   </figure></t>
+   </figure>
   </section>
    <section title="Tag: &lt;os:HttpRequest&gt;"
            anchor="HttpRequest">
-   <t>Request for arbitrary URL data, equivalent to
-   gadgets.io.makeRequest().</t>
-   <t>This tag has additional attributes to match the functionality of 
-   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>. Containers SHOULD
-  cache the results of these requests.</t>
-   <t>Attributes 
-   <list style="symbols">
-    <t>@key {string}</t>
-    <t>@href {string} The URL to send a request to.</t>
-    <t>@params {string} Additional URL parameters, of format "a=b&amp;c=d".
-    Optional.</t>
-    <t>@method {string} HTTP method to use, one of "get" or "post". Defaults to
-    "get". Optional. 
-    <list style="symbols">
-     <t>If method is "post", then the "@params" parameters are sent as POST
-     content with a content type of "application/x-www-form-urlencoded". If
-     method is "get", then the params are appended to the URL.</t>
-     <t>There is no ability to set arbitrary POST content, this just determines
-     whether the key/value pair parameters are sent as a POST body.</t>
-    </list></t>
-    <t>@format {string} Format data is returned in for processing, values are
-    "json" or "text". Defaults to "json". Optional.</t>
-    <t>@refreshInterval {int} Period of time for which the container can cache
-    the data. If this parameter is set, it overrides the HTTP response header
-    sent back from the makeRequest(). Optional.</t>
-    <t>@authz. String, one of "none", "signed", "oauth", defaults to "none".
-    This tells the gadget what authorization method to use when sending data to
-    the remote server.</t>
-    <t>@sign_viewer {boolean} Sign the request and include the current viewer
-    id. Defaults to true.</t>
-    <t>@sign_owner {boolean} Sign the request and include the current owner id.
-    Defaults to true.</t>
-    <t>@oauth_service_name {string} Identifies the service element in the
-    gadget spec to use for this request. Default is "".</t>
-    <t>@oauth_token_name {string} Identifies the OAuth token used to make a
-    request to the service provider. Default is "".</t>
-    <t>@oauth_request_token {string}. Identify a token that is pre-approved by
-    the provider for access to the resource.</t>
-    <t>@oauth_request_token_secret {string}. Secret associated with the
-    pre-approved request token.</t>
-    <t>@oauth_use_token {string}. Control whether an OAuth token should be used
-    with the request. Allowed values are: "always" | "if_available" |
-    "never"</t>
+    <list style="hanging">
+     <t hangText="Description">Request for arbitrary URL data, equivalent to <x:ref>osapi.http</x:ref>.  Containers SHOULD cache the results of these requests.</t>
+     <t hangText="Attributes">MUST support all of the fields in <eref target="Core-Data.xml#HTTP-Request-Params">HTTP-Request-Params</eref> as attributes.  In addition, following fields are REQUIRED:
+       <texttable>
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol align="left">Description</ttcol>
+          <c>key</c>
+          <c>String</c>
+          <c>A key for accessing the response.</c>
+          <c>method</c>
+          <c>String</c>
+          <c>HTTP method to use, one of "get" or "post". Defaults to "get".
+           <list style="symbols">
+            <t>If method is "post", then &lt;os:HttpRequest&gt; supports an addition parameter, "body" which contains key/value pairs to send as POST
+     content with a content type of "application/x-www-form-urlencoded".</t>
+           </list>
+          </c>
+       </texttable>
+     </t>
+     <t hangText="Returns">A <eref target="Core-API-Server.xml#RPC-Response-Payload">RPC-Response-Payload</eref> object with "id", "error",
+   and "result" properties. The "result" object is not available for 4xx or 5xx
+   responses. When available, the "result" object in turn contains a <eref target="Core-Data.xml#HTTP-Response-Paylaod">HTTP-Response-Payload</eref>.</t> 
    </list>
    <figure>
-    <preamble>Example:</preamble>
-    <artwork xml:space="preserve">
-&lt;os:HttpRequest key="Pets" href="http://example.com/api" authz="signed"/&gt;
+    <preamble>Example of tag syntax:</preamble>
+    <artwork xml:space="preserve">&lt;os:HttpRequest key="Pets" href="http://example.com/api" authz="signed"/&gt;
 </artwork>
-   </figure></t>
-   <t>os:HttpRequest produces a standard JSON-RPC object with "id", "error",
-   and "result" properties. The "result" object is not available for 4xx or 5xx
-   responses. When available, the "result" object in turn contains: 
-   <list style="symbols">
-    <t>content {object} If @format is "text", the string content of the
-    response. If @format is "json", the parsed JSON object or array of the
-    response. If a JSON response cannot be parsed, a 406 (Not Acceptable) error
-    code will be produced.</t>
-    <t>headers {object} An optional object with response header names as keys,
-    and the header values as per-key arrays.</t>
-    <t>status {int} The HTTP status code.</t>
-   </list>For errors, the "message" property MUST NOT contain the response
+   </figure>
+   <t>For errors, the "message" property MUST NOT contain the response
    body, but SHOULD contain a descriptive message describing the HTTP error.
    The error MAY contain a data block providing the content and headers. 
    <figure>
-    <preamble>Examples:</preamble>
+    <preamble>Example responses:</preamble>
     <artwork xml:space="preserve">
 // @format='text' example
 {result: {
@@ -4131,6 +4512,26 @@ assertEquals(0.30, value);
      </author>
      <date month='December'
            year='2007' />
+    </front>
+   </reference>
+   <reference anchor="Core-API-Server"
+              target="./Core-API-Server.xml">
+    <front>
+     <title>OpenSocial Core API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
+    </front>
+   </reference>
+   <reference anchor="Social-API-Server"
+              target="./Social-API-Server.xml">
+    <front>
+     <title>OpenSocial Social API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
     </front>
    </reference>
   </references>
