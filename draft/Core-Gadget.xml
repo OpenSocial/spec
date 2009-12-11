@@ -1076,7 +1076,44 @@ REVERSE_DIR: "rtl"
     </list>
    </section>
   </section>
-  <section title="Core JavaScript API">
+  <section title="JavaScript API Reference" anchor="JavaScript-API-Reference">
+    <t>OpenSocial's JavaScript API uses the following patterns:</t>
+    <list style="hanging">
+    <t hangText="Virtual Typing">
+     <t>JavaScript is not strongly typed, but in order to make the developer
+     experience consistent, the APIs are defined as if JavaScript supported
+     strongly typed data. Cases where a parameter or return value are defined
+     as a certain type in the documentation indicate that this is the only type
+     that can be provided or accepted for OpenSocial compatibility. Any
+     exceptions to this rule will be directly documented in the reference.</t>
+     <t>As an example, the getErrorCode method is defined in the JavaScript API
+     reference as returning a value of the type opensocial.ResponseItem.Error,
+     although in practice this value will be a normal JavaScript string.
+     However, developers can be assured that in a compliant container, the
+     string returned is one of the opensocial.ResponseItem.Error fields.</t>
+     <t>Enumerations figure heavily into the OpenSocial API. Developers are
+     permitted to reference an enum or use the enum's value directly. To avoid
+     collisions related to extensibility, containers must ensure that the names
+     and values for an enum match the ones defined in the spec and that custom
+     values are namespaced appropriately. For example, an Orkut custom field
+     named MY_PERSON_FIELD could have a name of
+     Orkut.PersonField.MY_PERSON_FIELD and a value of "Orkut.myPersonField".</t>
+    </t>
+    <t hangText="Parameter Maps">
+     <t>Many of the OpenSocial methods have a large number of optional
+     parameters. JavaScript's lack of strong typing makes overloading difficult
+     at best, and having functions with a large amount of parameters can be
+     difficult to manage (especially for developers not using a nice IDE).
+     OpenSocial uses the "object bag" approach to optional parameters: many
+     methods take an additional opt_params parameter that takes the form of a
+     map of parameter names to their corresponding values.</t>
+     <t>For each method which uses an opt_params map the spec defines all of
+     the valid fields that will be read out of the map by the container. These
+     fields have defined types as discussed in the Virtual typing section. If a
+     developer adds an invalid value for a field in the map the container
+     SHOULD return the BAD_REQUEST error code.</t>
+    </t>
+   </list>
    <section title="gadgets"
             anchor="gadgets">
     <!-- ============================== class summary ========================== -->

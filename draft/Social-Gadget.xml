@@ -42,6 +42,7 @@
   </section>
   <section title="JavaScript API Reference"
            anchor="JavaScriptAPIReference">
+      <t>For an overview of the patterns used in the following reference, see the introduction to the <eref target="Core-Gadget.xml#JavaScript-API-Reference">JavaScript API Reference</eref> in <xref target="Core-Gadget" /></t>
       <section title="osapi.people"
                anchor="osapi.people">
        <t>Service object with functions that map to the 
