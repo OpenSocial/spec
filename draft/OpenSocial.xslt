@@ -52,4 +52,16 @@
     </u>
   </xsl:template>
 
+  <xsl:template match="x:draft">
+    <div style="border: 2px solid #d00">
+      <div style="background: #d00; color: #fff; padding: 2px;">
+        <strong style="margin-right: 4px;">DRAFT SECTION</strong>
+        <xsl:if test="@href">
+          <a target="_blank" style="color: #000; text-decoration: underline; margin-right: 4px;" href="{@href}">Link</a> 
+        </xsl:if>
+        <xsl:value-of select="@note"/>
+      </div>
+      <xsl:apply-templates mode="t-content" select="node()[1]" />
+    </div>
+  </xsl:template>
 </xsl:transform>
