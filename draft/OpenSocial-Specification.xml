@@ -7,7 +7,7 @@
      docName="opensocial-specification-draft"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="OpenSocial Specificaton">OpenSocial Specification (draft)</title>
+  <title abbrev="OpenSocial Specification">OpenSocial Specification (draft)</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -72,9 +72,252 @@ to be a compliant OpenSocial Core Gadget Server.</t>
      </list>
    <t>In all cases, a site MUST fulfill the requirements in <xref target="Extensions">Extensions</xref>.</t>
   </section>
-  <section title="Extensions" anchor="Extensions">
-    <t><x:highlight>[TODO: Add extensions section]</x:highlight></t>
-  </section>
+  
+  
+
+<section title="Extensions" anchor="extensions">
+
+<t>
+	The objective of the OpenSocial extension model is to allow the
+	specification to mature by adding depth and richness to a set of
+	existing features while at the same time fostering organic growth of
+	new capability. That is, it should be possible to enhance existing
+	features as well as add new ones. A robust extension model enables the
+	OpenSocial community to manage the overall complexity of the
+	specification in a clearly documented consistent manner. This model has
+	the following benefits to the OpenSoicial community:</t>
+
+	Keeps the core specification focused on defining the base programming
+	model and social constructs.
+	Lowers the barriers of entry thereby promoting adoption and increasing
+	compatibility between implementations.
+	Fosters the evolution of niche-features while avoiding anarchy.
+	<t>This section defines the kinds of enhancements that we envision
+		being made to OpenSocial, as well as the rules they must follow in
+		order to be accepted into the specification. </t>
+	<t>
+	An extension is defined in a document, called an OpenSocial
+	Enhancement (OE), with language and formatting that is consistent in
+	terminology and semantics with the specification. As the extension
+	develops, it MUST conform to the guidelines and life cycle defined in
+	the OpenSocial Development Process. For example, extensions are
+	required to provide a publically available prototype that demonstrates
+	that it can be implemented as well as a corresponding set of test
+	cases. Extensions MUST be defined in a manner that is consistent with
+	the programming model defined in the versions of the specification to
+	which they apply. Containers that offer OpenSocial extensions MUST
+	adhere to the requirements specified in this specification as well as any
+	requirements specified in the extension document. 
+		
+		
+		
+		</t>
+	<t>Generally speaking, we anticipate OpenSocial to be extended
+		following three patterns. Not coincidentally, these extension patterns
+		follow the typical use cases of OpenSocial that are reflected in the
+		structure of the specification. </t>
+	<list style="symbols">
+		<t>Adding a new gadget feature</t>
+		<t>Extending the social data models</t>
+		<t>Extending the protocol</t>
+</list>
+
+<section title="Adding a new Gadget Feature">
+	<t>The OpenSocial programming model consists of a collection of
+		Javascript APIs declared as features. There are two kinds of features,
+		core and optional. For example, the core API gadgets.viewes.View
+		defines how gadgets work with and request different amounts of real
+		estate in the browser. An example optional feature is gadgets.skins..
+		Because of the existing separation between core and optional features,
+		OpenSocial is already layered to handle gadget extensions. In order to avoid undue burden on
+		implementation of domain specific or container specific behavior,
+		extensions MUST NOT be required. </t>
+	<t>As OpenSocial becomes deployed more widely, the number of extensions
+		will increase. It will be important that new features avoid clashing
+		with those currently defined in the specification. New features that
+		are proposed for inclusion of OpenSocial MUST NOT use any existing
+		namespaces that are already part of the specification. It is the
+		responsibility of the developer proposing the new feature to avoid
+		namespace collisions. </t>
+	<t>Features that are progressing through the OpenSocial enhancement
+		lifecycle MUST include the lifecycle designator for the stage they are
+		in as the suffix, delineated by a “.” of their name. For example,
+		suppose that pub-sub is being proposed as a new feature. The community
+		has been working on it and a proposal is available publically. The
+		feature name should be: “pub-sub.incubating” </t>
+
+<figure>
+      <preamble> An example module definition would be:</preamble>
+      <artwork xml:space="preserve">
+
+&lt;Module&gt;
+ &lt;ModulePrefs title="Social Activities World"
+              icon="http://localhost:8080/gadgets/files/samplecontainer/examples/icon.png"&gt;
+   &lt;Require feature="opensocial"&gt;&lt;/Require&gt;
+   &lt;Require feature="pub-sub.incubating"&gt;&lt;/Require&gt;
+ &lt;/ModulePrefs&gt; 
+….
+</artwork>
+</figure>
+<t>This intent is to clearly indicate gadget developers that the OpenSocial community has not officially adopted the feature. Upon acceptance of the proposal as part of the specification, the feature name MUST drop the life cycle designator.</t>
+</section> <!-- Adding a new Gadget Feature -->
+
+	<section title="Extending the social data models">
+		<t>OpenSocial defines a set of data models that are used to represent
+			the social constructs in your system, e.g. people. An set of fields
+			has been defined for each one of these constructs. The initial
+			motivation for these fields was driven primarily from the standpoint
+			of Social Networking. </t>
+		<t>Fortunately, as OpenSocial begins to be used in more specialized
+			domains, the programming model is flexible enough to accommodate
+			these new fields. However, care must be taken as extensions are
+			introduced in order to avoid issues such as collisions in the
+			attribute names of the returned JSON Objects. Therefore, extensions
+			SHOULD use a prefix that uniquely identifies the extended fields. This prefix SHOULD be an underbar '_'. If
+			a feature is also added as part of the exetension, the data model
+			prefix SHOULD match a namespace declared in the Javascript. </t>
+		<t>It is possible to simply append new fields into the existing
+			models and some providers currently follow this approach. However, it is RECOMMENDED that extensions to the OpenSocial
+			data models be encapsulated in their own node. This will provide a
+			level of isolation and layering within the models and provide a
+			consistent extension pattern. </t>
+			
+		<section title="A Note on XML Schema Validation">
+		<t>
+			In OpenSocial 1.0, the canonical XSDs do not contain extension points,
+			e.g.xs:any. Therefore, XML instance documents of extensions that have
+			added attributes ore elements to the data model or gadget metadata
+			will not validate.
+			Therefore, extensions MUST NOT require schema validation. Containers that are
+			not supporting extensions MAY validate the gadget metadata and the
+			data models.
+		</t>
+	</section>
+			
+	
+		<section title="Extensions Example" anchor="extensionsExample">
+		
+		<t>  	Below is an example of how the Person model has been
+				extended by two fictional organizations, Acme and DevWorld. Acme has been
+				using OpenSocial for some time, and has extended the modely by
+				appending a field, "Employee Number" directly into the data model. This approach shoudl
+				be used for
+				backwards compatibility with existing extensions. As new extensions are
+				proposed, they should follow the pattern illustrated by DevWorld,
+				which creates a containing element, "devWorldData", for their additions to the model.</t>
+
+	<figure>
+		<preamble>
+			Assuming the extensions have been made available via
+			features to the container, here is the example REST call that would
+			retreive the data.
+			</preamble>
+		<artwork xml:space="preserve"><![CDATA[
+http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fields=id&fields=name&fields=acme_EmployeeNumber&fields=devworld_nickname&fields=devworld_platform
+		]]></artwork>
+		<postamble>Notice in the request the use of the name and underbar
+	prefix, e.g. "devworld_", to help avoid collisions. In this example,
+	DevWorld allows their users to assign nicknames. Without a prefix, this
+	would clash with OpenSocial's Person nickname. 
+		</postamble>
+		</figure>		
+				
+	<figure>
+	<preamble>
+		The result of this request will produce an XML document with the
+		following structure.
+			</preamble>
+	<artwork xml:space="preserve"><![CDATA[			
+<?xml version="1.0" encoding="UTF-8"?>
+<response xmlns="http://ns.opensocial.org/2008/opensocial"><person xmlns="http://ns.opensocial.org/2008/opensocial">
+  <acme__EmployeeNumber>1122998877</acme__EmployeeNumber>
+  <devWorldData>
+    <entry>
+      <key>devworld_nickname</key>
+      <value>The Wiz...</value>
+    </entry>
+    <entry>
+      <key>devworld_platform</key>
+      <value>Mac</value>
+    </entry>
+  </devWorldData>
+  <id>john.doe</id>
+  <name>
+    <familyName>Doe</familyName>
+    <formatted>John Doe</formatted>
+    <givenName>John</givenName>
+  </name>
+</person>
+</response>
+]]>
+</artwork>
+</figure>
+				
+		<figure>
+			<preamble>
+			Omitting the "type=XML" query parameter from the request will return a JSON document.  
+			</preamble>
+			<artwork><![CDATA[
+[{"id":"viewer","data":{"acme_EmployeeNumber":"1122998877","devWorldData":{"devworld_nickname":"The Wiz..."},"id":"john.doe","name":{"formatted":"John Doe","familyName":"Doe","givenName":"John"},"displayName":"Johnny"}}]
+			]]>
+			</artwork>
+			</figure>
+		
+		
+				
+		</section> <!-- Extensions Example -->
+	
+	
+	</section> <!-- Extending the social data models -->
+
+<section title="Extending the protocol">
+	<t>
+	In some cases, it will be necessary to add APIs to support
+	additional
+	use cases outside the initial intent of the specification.
+	For example,
+	an alternate security model or
+	payment API may
+	be
+	introduced.
+	In these
+	scenarios developers MAY extend OpenSocial by
+	introducing new
+	APIs.
+	These kinds of additions to OpenSocial are called "protocol
+	extensions"
+	becuase they introduce new APIs. It is important that these
+	APIs be
+	consistent with the existing programming model. Protocol
+	extensions MUST
+	maintain the semantics of the OpenSocial and MUST NOT
+	modify any API
+	defined by the specification. Protocol exetensions
+	MUST
+	provide
+	endpoints in the required protocols as defined by the
+	specification,
+	e.g. XML, JSON, ATOM.
+
+	Protocol extensions SHOULD provide
+	extensions for each level of compliance as defined by the OpenSocial
+	specificaiton, e.g. REST APIs for the OpenSocial server as
+	well as constructs to support OSML and templating. 	
+
+		
+	</t>
+
+
+</section> <!-- Extending the protocol -->
+
+</section> <!-- Extensions Root -->
+
+
+
+  
+  
+  
+  
  </middle>
  <back>
   <references>
