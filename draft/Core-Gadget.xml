@@ -325,6 +325,10 @@
        <c>
         <xref target="gadgets.window.setTitle">gadgets.window.setTitle</xref>
        </c>
+       <c>setprefs</c>
+       <c>
+        <xref target="gadgets.Prefs.set">gadgets.Prefs.set</xref>
+       </c>
        <c>minimessage</c>
        <c>
         <xref target="gadgets.MiniMessage">gadgets.MiniMessage</xref>
@@ -919,8 +923,7 @@
    defined in 
    <xref target="ElementsAndAttributes">Elements and Attributes</xref>, with
    the exceptions of /ModulePrefs/Locale (and children), or any element with an
-   explicit enumeration. Containers MUST NOT perform substitution on the raw
-   text of the XML. Containers SHOULD perform substitution on any custom
+   explicit enumeration. Containers SHOULD perform substitution on any custom
    elements or fields that they support.</t>
    <t>Containers MUST perform MSG substitutions in the order listed above.
    Containers MUST substitute BIDI, MODULE, and UP tokens after substituting
