@@ -536,21 +536,100 @@ When processing values, the processor attempts to resolve the value of the os:Va
 &lt;/script&gt;
 </artwork>
     </figure></t>
+	<section title="Parameters to Custom Tags" >
     <t>Parameters can be passed into templates as XML attributes or elements.
     These parameters are accessed using the special variable ${My}: 
     <figure>
      <artwork xml:space="preserve">
 &lt;script type="text/os-template" xmlns:myapp="http://example.com/myapp" tag="myapp:HelloWorld"&gt;
-  &lt;div style="color: ${My.MessageStyle.color}"&gt;Your message is: ${My.message}&lt;/div&gt;
+  &lt;div style="color: ${My.messageColor}"&gt;Your message is: ${My.message}&lt;/div&gt;
 &lt;/script&gt;
  
 &lt;script type="text/os-template"&gt;
   &lt;myapp:HelloWorld message="Hello World"&gt;
-    &lt;MessageStyle color="blue"/&gt;
+    &lt;messageColor&gt;blue&lt;/messageColor&gt;
   &lt;/myapp:HelloWorld&gt;
 &lt;/script&gt;
 </artwork>
     </figure></t>
+	<t>
+	Custom tag template parameters are resolved prior to invoking the template, much as
+	a function call resolves parameters prior to passing them to the function.
+	Parameters are resolved using the rules below to determine behavior.
+	All examples assume the myapp:HelloWorld custom tag has already been defined.
+	</t>
+   <list style="numbers">
+    <t>Custom tag instance parameter keys are case-sensitive, regardless of if they
+	are registered as attributes or elements.
+	</t>
+    <t>When the same parameter name appears as both an element and an
+	attribute, the attribute-defined parameter will take final precedence.
+    <figure>
+	<preamble>Below code results in: ${My.message} = "Hello World"</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld message="Hello World"&gt;
+    &lt;message&gt;This message is overridden&lt;/message&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+  	
+	</t>
+
+    <t>Element parameters that contain attributes will result in an object that has the 
+	attribute values placed as property values of the root object.
+    <figure>
+	<preamble>Below code results in: ${My.messageStyle.color} = "blue"</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;messageStyle color="blue" /&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+	</t>
+    <t>If parameters contain repeated elements with the same name, the
+	custom tag instance will treat them as a node list and construct an array
+	with the element contents as the values of each node.
+    <figure>
+	<preamble>Below code results in an array of strings: ${My.stuff} = ["Hello", "Goodbye", "Good luck"]</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;stuff&gt;Hello&lt;/stuff&gt;
+    &lt;stuff&gt;Goodbye&lt;/stuff&gt;
+    &lt;stuff&gt;Good luck&lt;/stuff&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+	
+	</t>
+	<t>A namespaced parameter where the namespace matches the namespace of the 
+	defined tag will have the parameter value placed in the ${My} variable under the local name. 
+    <figure>
+	<preamble>Below code results in: ${My.messageColor} = "blue"</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;myapp:messageColor&gt;blue&lt;/myapp:messageColor&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+	
+	</t>
+	<t>A namespaced parameter where the namespace does not match the namespace of the defined tag will be discarded and not registered with the ${My} variable.
+    <figure>
+	<preamble>Below code results in: ${My.messageColor} = "blue" and ${My.message} = undefined</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;myapp:messageColor&gt;blue&lt;/myapp:messageColor&gt;
+    &lt;otherapp:message&gt;This value doesn't apply&lt;/otherapp:messageColor&gt;	
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+	
+	</t>
+	
+   </list>
+
+
+	</section>
    </section>
    <section title="Data Attribute">
     <t>The scope of data to evaluate (${Cur}) can be explicitly set with the
