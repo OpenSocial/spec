@@ -251,8 +251,12 @@ ${friends[0].displayName)
 ${friends.TotalResults)
 </artwork>
     </figure>
+	<x:draft
+note="Additional meta data beyond the three common paging values are flagged to exist 
+in the Response key, but not fully discussed">
 	The above statement would evaluate to "100".  A container MAY allow the reserved key
 	"Response" to also access any other response data keys existing at the root of the object.  
+	</x:draft>
 	</t>
 	<t>
 	Data pipeline attributes from the originating request tag may be accessed via the EL
