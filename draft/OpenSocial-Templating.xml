@@ -314,6 +314,126 @@ data['Viewer']['Name']
      </figure></t>
     </section>
    </section>
+     <section title="Declaring Variables Inline - os:Var">
+    <t>Variables may be declared in both inline and custom tag templates
+	with the os:Var tag.  This tag may also be used data pipelining to declare 
+	global literal variables.</t>
+    <section title="os:Var syntax">
+	<t>
+The &lt;os:Var&gt; tag allows for the declaration of both temporary and global variables.
+It may be used in inline custom tag templates (temporary) or inline templates or 
+data-pipeline sections (global).  The element supports three attributes: 
+</t>
+
+<list style="symbols">
+<t> @key: Required. defines the string name of the variable.  Expressions may not be used.</t>
+<t> @value: Optional. Defines the value of the variable.   Expressions may be used.</t>
+</list>
+
+<t>
+When the @value attribute is not specified, the contents of the &lt;os:Var&gt; tag is used as the value.
+</t>
+<t>
+When processing values, the processor attempts to resolve the value of the os:Var tag in the following manner:
+</t>
+<list style="numbers">
+<t>For a single EL value, return the resulting object</t>
+<t>Attempt to parse it as a JSON value</t>
+<t>Processed to replace EL statements (${} markup)</t>
+<t>If all other processing does not fully resolve the value, return as a string</t>
+</list>
+
+    <figure>
+     <preamble>Example of a simple variable</preamble>
+     <artwork xml:space="preserve">&lt;os:Var key="mytemp" value="1"/&gt;
+</artwork>
+    </figure>
+
+
+	</section>
+
+    <section title="Scope">
+     <t>In data pipelining blocks and in inline template blocks, 
+	 &lt;os:Var&gt; defines a new top-level variable in the global 
+	 scope. When declared in a data-pipelining section this  
+	 variable will be accessible both in data pipelining expressions 
+	 and to proxied rendering and/or opensocial templates. 
+	 The value will be stored in the Data Context and accessible as any 
+	 other top-level variable defined with data pipelining tags.  Any variables
+	 declared in a data pipelineing section may not re-declare an existing
+	 key.
+	</t>
+	<t>
+	 When os:Var is used in inline templates it will be placed in the global
+	 scope analogous to ${Top}, but will not be available until after processing
+	 the os:Var tag in the render pass and will not be available to data-pipeline
+	 tags for use in dynamic parameters.	
+	</t>
+    <figure>
+     <preamble>Example of global variable with os:Var</preamble>
+     <artwork xml:space="preserve">
+&lt;script  type="text/os-template"&gt;
+  &lt;os:Var key="myvar" value="1"/&gt;
+
+  This value of myvar is ${myvar}
+	 
+&lt;/script&gt;	 
+	 </artwork>
+    </figure>
+
+	<t>
+	Within custom tag templates, &lt;os:Var&gt; defines a new 
+	variable that will be added to ${My}. As such, the variable 
+	will be available anywhere within the custom tag template 
+	instance.  When an os:Var tag appears in the 
+	template definition, it will be created and attached to the 
+	${My} variable after the instance parameters are attached 
+	to ${My}.  In the template definition it will therefore 
+	have access to other custom tag instance parameters and be 
+	able to reference them through the ${My} variable.
+	</t>
+
+    <figure>
+     <preamble>Example of local variable in custom tag instance</preamble>
+     <artwork xml:space="preserve">
+&lt;script tag="my:Foo" type="text/os-template"&gt;
+  &lt;h1&gt;You said ${My.words}&lt;/h1&gt;
+&lt;/script&gt;
+
+&lt;script tag="my:Bar" type="text/os-template"&gt;
+  Inline content here.  And then a tag
+  
+  &lt;my:Foo &gt;
+  &lt;words &gt;Good, bad, and ugly&lt;/words&gt;
+  &lt;/my:Bar &gt;
+&lt;/script&gt;
+</artwork>
+    </figure>
+
+
+    </section>
+
+<section title="Value assignments with os:Var">
+     <t>The value created with os:Var may contain literals, JSON data, or EL statements. 
+	 An array may be declared using JSON or JavaScript array syntax.
+	</t>
+	
+	<t>The below example creates a one-dimensional array with values [1,2,3,5,7]
+	and assigns it to the key "primes" in the data context
+	</t>
+
+	  <figure>
+     <preamble>Example: simple array</preamble>
+     <artwork xml:space="preserve">
+&lt;os:Var key="primes" value="[1,2,3,5,7]" /&gt;
+	 </artwork>
+    </figure>
+	
+	
+	</section>
+	
+	</section>
+
   </section>
   <section title="Calling Templates">
    <t>Templates can be rendered automatically, or via a Javascript API
