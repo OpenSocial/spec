@@ -242,20 +242,17 @@ ${friends[0].displayName)
     </figure></t>
     <t>
 	Response meta-information that exists above the "entry" key in the raw response
-	may be accessed via the reserved key "Response".  For example, to access the
+	may be accessed from the EL key root through the reserved keys "TotalResults", "StartIndex", and "Count".  
+	For example, to access the
 	value of "totalResults" from the above example, the following EL statement
 	would be used:
     <figure>
      <artwork xml:space="preserve">
-${friends.Response.totalResults)
+${friends.TotalResults)
 </artwork>
     </figure>
 	The above statement would evaluate to "100".  A container MAY allow the reserved key
-	"Response" to also access the "entry" key (and hence all the data), but MUST expose
-	all other data keys existing at the root of the object.  
-	Data items added to the data context that are not the result of a data pipeline 
-	request are not required to expose the "Response" key.  An example of this would be
-	data items added via the Javascript API or with the os:Var tag.
+	"Response" to also access any other response data keys existing at the root of the object.  
 	</t>
 	<t>
 	Data pipeline attributes from the originating request tag may be accessed via the EL
@@ -269,6 +266,11 @@ ${friends.Response.totalResults)
 You requested ${friends.Request.count} records.
 </artwork>
     </figure></t>
+	<t>
+	Data items added to the data context that are not the result of a data pipeline 
+	request are not required to expose the "Request" key.  An example of this would be
+	data items added via the Javascript API or with the os:Var tag.
+	</t>
 	<t>
 	A container may attach the request attributes from original data pipeline request tag to the response 
 	data object in the data context or may manage the originating request data in an alternate manner.
