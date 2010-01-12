@@ -95,7 +95,7 @@
   </section>
   <section title="Common request processing">
    <t>All XML tags MUST have an @key string attribute. This is used to identify
-   the data in the response back.</t>
+   the data in the response back.  The value of the @key attribute is case-sensitive.</t>
    <t>Calls with corresponding REST APIs have a 1:1 mapping between the XML
    attributes and the RESTful API parameters. See the OpenSocial RESTful
    Protocol for an overview of the REST calls.</t>

@@ -118,7 +118,7 @@
   </section>
   <section title="Expressions">
    <t>Expressions can be embedded into the template XML using the syntax
-   ${Expr}. 
+   ${Expr}. Variable names, properties, and function names are all case-sensitive.
    <figure>
     <preamble>Example template content with an expression</preamble>
     <artwork xml:space="preserve">
@@ -221,7 +221,8 @@ data['Viewer']['Name']
    One set is a set of global objects with reserved names. The other set
    includes everything else or all other declared JavaScript variables.</t>
    <section title="Special Variables">
-    <t>Template processing reserves a small set of variables.</t>
+    <t>Template processing reserves a small set of variables.  Like all variables, 
+	special variables are case-sensitive.</t>
     <section title="Top">
      <t>${Top} refers to the data context passed into the template rendering -
      i.e.: for automatic rendering, ${Top} == Data Context; for programmatic
