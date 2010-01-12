@@ -116,6 +116,67 @@
    consistent meaning and behavior for the attributes in a future release of
    OpenSocial.</t>
   </section>
+  <section title="Security Policy">
+  <t>
+  The Security Policy feature is used by an application to request permissions under 
+  which to run.  Specific permissions are requested with &lt;Param&gt; elements.
+  The Security Policy feature is specified with the feature name "security-policy".
+  A container MAY support the Security Policy feature.
+   <figure>
+    <artwork xml:space="preserve">
+&lt;ModulePrefs &gt;
+  &lt;Optional feature="security-profile" &gt;
+    &lt;Param name="el_escaping"&gt;html&lt;/Param&gt;
+  &lt;/Optional &gt;
+&lt;/ModulePrefs &gt;
+</artwork>
+   </figure>  
+  </t>
+  <section title="Permissions">
+  <t>
+  Permissions are specified by using &lt;Param&gt; elements to identify
+  the permission name and requested value for the permission.
+  A container may override any application-requested permission with its own security policy.
+  </t>
+  <t>
+  The "el_escaping" permission requests escaping behavior for Expression Language (EL)
+  statements within templates.  Valid values are:
+    <list style="symbols">
+  <t>html - Automatically HTML encode all EL statements.  A container MUST HTML escape all elements and attributes.  A container SHOULD prevent any JavaScript code from executing in an EL statement.</t>
+  <t>none - Disables automatic escaping. EL expression results will be
+emitted raw, any markup will be rendered.</t>
+  </list>
+  </t>
+  <t>
+  If an application requests a security policy that is not supported, the container MUST log an error to the gadgets.log.  A container MAY render that gadget using a supported security policy, or display an appropriate error message.  
+  </t>
+  
+  <t>
+Escaping rules specified with the "el_escaping" parameter are applied to all views.  An application 
+may request a different escaping policy for a specific view by specifying the view name as 
+a suffix with a preceeding colon to the el_escaping name.  For example, to specify html escaping on the 'profile' view and no escaping for all other views, the following is used:
+   <figure>
+    <artwork xml:space="preserve">
+&lt;ModulePrefs &gt;
+  &lt;Optional feature="security-policy"&gt;
+    &lt;Param name="el_escaping:profile" &gt;html&lt;/Param&gt;
+    &lt;Param name="el_escaping" &gt;none&lt;/Param&gt;
+  &lt;/Optional &gt;
+&lt;/ModulePrefs &gt;
+</artwork>
+   </figure>  
+  </t>
+  <t>
+Containers SHOULD apply HTML escaping by default to all views that are not otherwise constrained or protected by a security mechanism (ex: jail domained IFrame, trusted partner, pre-filtered content).
+  </t>
+
+  <t>
+  In addition to the above permission, a container may extend the Security Policy 
+  feature to add any container-specific security permission or experiment.
+  </t>
+  </section>
+
+  </section>
   <section title="Expressions">
    <t>Expressions can be embedded into the template XML using the syntax
    ${Expr}. Variable names, properties, and function names are all case-sensitive.
@@ -151,9 +212,10 @@
 &lt;os:Name person="${Viewer}"/&gt;
 </artwork>
    </figure></t>
-   <t>Strings are escaped before inserting into the HTML document. By default
-   strings are HTML escaped, however based on context they may be URL encoded
-   or escaped as JavaScript strings or CSS content.</t>
+   <t>Unless an overriding Security Policy is applied, strings are escaped 
+   before inserting into the HTML document. By default
+   strings are HTML escaped, which is the equivalent of setting the "el_escaping" 
+   permission to "html" with a Security Policy.</t>
    <section title="Expressions and special HTML attributes">
     <t>HTML specified some element attributes whose mere presence affects
     browser behavior. For example, the @selected attribute of the
@@ -209,6 +271,39 @@ data['Viewer']['Name']
     the string "Red". This is mostly applicable to results of ${My} evaluation
     (see below).</t>
    </section>
+   <section title="Built-in functions">
+    <t>The EL will provide a number of built-in functions.  The initial 
+	set of functions provides string escaping control.  Containers MAY experiment 
+	by adding functions of their own to the EL.
+	</t>
+<list style="hanging">
+	<t hangText="os:htmlEncode">
+Encode HTML markup entities.  At minimum escape greater-than and less-than symbols and quotation marks to their encoded equivalents.</t>
+	<t hangText="os:htmlDecode">
+Unescape an HTML-encoded string.
+	</t>
+	<t hangText="os:urlEncode">
+URL-encode the contained string.  The behavior should mirror the JavaScript function encodeURIComponent.
+	</t>
+	<t hangText="os:urlDecode">
+URL-decode the contained string.  The behavior should mirror the JavaScript function decodeURIComponent.
+	</t>
+	<t hangText="os:filterUrl">
+Apply rules to make the URL safe for inclusion in markup.  Recommendations are to disallow javascript and apply anti-phishing mechanisms.
+	</t>
+	<t hangText="os:jsStringEscape">
+Escape string for inclusion within JavaScript block.
+    <figure>
+     <artwork xml:space="preserve">
+var x = "${os:jsStringEscape(someVar)}";
+var y = '${os:jsStringEscape(someVar, true)}';
+</artwork>
+    </figure>	
+	</t>
+	</list>
+	
+   </section>
+   </section>
    <section title="EL access to meta-information of DataPipeline variables">
     <t>
 	Much of the data available to the EL through the Data Context is generated
@@ -251,12 +346,8 @@ ${friends[0].displayName)
 ${friends.TotalResults)
 </artwork>
     </figure>
-	<x:draft
-note="Additional meta data beyond the three common paging values are flagged to exist 
-in the Response key, but not fully discussed">
 	The above statement would evaluate to "100".  A container MAY allow the reserved key
 	"Response" to also access any other response data keys existing at the root of the object.  
-	</x:draft>
 	</t>
 	<t>
 	Data pipeline attributes from the originating request tag may be accessed via the EL
@@ -281,7 +372,6 @@ You requested ${friends.Request.count} records.
 	</t>
 	
    </section>
-  </section>
   <section title="Variables">
    <t>Data is used with all calls to render templates. When rendering templates
    through Javascript, - i.e.:
