@@ -418,6 +418,23 @@ dataset would contain content resembling:
 </artwork>
     </figure>
    </t>
+   <t>
+   Dynamic parameters may access request attributes of other data tags through the special "Request" key
+   and response meta information of other data requests through the "Response" key.
+    <figure>
+     <preamble>Example</preamble>
+     <artwork xml:space="preserve">
+&lt;os:PeopleRequest key="Page1" userId="@owner" groupId="@friends" 
+  startIndex="${ViewParams.first}" count="20"/&gt;
+
+&lt;os:PeopleRequest key="Page2" userId="${Page1.Request.userId}" groupId="@friends" 
+  startIndex="${Page1.Request.startIndex + Page1.Request.count}" 
+  count="${Page1.Request.count}"/&gt;
+
+</artwork>
+    </figure>
+   </t>
+   
   </section>
  </middle>
  <back>

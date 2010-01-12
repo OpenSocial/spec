@@ -209,6 +209,72 @@ data['Viewer']['Name']
     the string "Red". This is mostly applicable to results of ${My} evaluation
     (see below).</t>
    </section>
+   <section title="EL access to meta-information of DataPipeline variables">
+    <t>
+	Much of the data available to the EL through the Data Context is generated
+	by Data Pipeline tags.  The underlying REST endpoints that generate this data
+	includes meta-information in addition to the actual data.  Below is an example 
+	of the JSON response for a list of people.
+	
+    <figure>
+     <artwork xml:space="preserve">
+{
+   "startIndex" : 1,
+   "itemsPerPage" : 3,
+   "totalResults" : 100,
+   "entry" : [
+      {"id": "6221", "displayName": "Tom" },
+      {"id": "1222", "displayName": "Dick"},
+      {"id": "925", "displayName": "Harry"}
+   ]
+}
+</artwork>
+    </figure>
+	</t>
+	<t>
+	Any EL statements that access this information begin evaluation from the "entry" key.
+	Assuming the above data was placed under a key "friends", the following EL statement
+	would evaluate to "Dick":
+    <figure>
+     <artwork xml:space="preserve">
+${friends[0].displayName)
+</artwork>
+    </figure></t>
+    <t>
+	Response meta-information that exists above the "entry" key in the raw response
+	may be accessed via the reserved key "Response".  For example, to access the
+	value of "totalResults" from the above example, the following EL statement
+	would be used:
+    <figure>
+     <artwork xml:space="preserve">
+${friends.Response.totalResults)
+</artwork>
+    </figure>
+	The above statement would evaluate to "100".  A container MAY allow the reserved key
+	"Response" to also access the "entry" key (and hence all the data), but MUST expose
+	all other data keys existing at the root of the object.  
+	Data items added to the data context that are not the result of a data pipeline 
+	request are not required to expose the "Response" key.  An example of this would be
+	data items added via the Javascript API or with the os:Var tag.
+	</t>
+	<t>
+	Data pipeline attributes from the originating request tag may be accessed via the EL
+	through the reserved key "Request".  This key exposes the attributes of the original request
+	through the EL.  The below example shows an originating &lt;os:PeopleRequest&gt; and the
+	EL statement to get the count of records requested.
+    <figure>
+     <artwork xml:space="preserve">
+&lt;os:PeopleRequest key="friends" userId="@viewer" groupId="@friends" startIndex="1" count="10"/&gt;
+...
+You requested ${friends.Request.count} records.
+</artwork>
+    </figure></t>
+	<t>
+	A container may attach the request attributes from original data pipeline request tag to the response 
+	data object in the data context or may manage the originating request data in an alternate manner.
+	</t>
+	
+   </section>
   </section>
   <section title="Variables">
    <t>Data is used with all calls to render templates. When rendering templates
