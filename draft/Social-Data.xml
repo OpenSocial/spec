@@ -474,6 +474,20 @@ COMMA          = <US-ASCII comma (44)>
      </figure></t>
     </section>
    </section>
+   <section title="Group"
+            anchor="Group">
+     <t>Representation of a group, which may be a private, invitation-only, public or a personal group used to organize friends.</t>
+     <t>Each group returned MUST include the "id" and "title" fields. A "description" field is optional.</t>
+     <t>Valid definitions for Group-Field are listed in the table below.</t>
+     <texttable align="left">
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>id</c><c><x:ref>Group-ID</x:ref></c><c>Unique ID for this group <x:highlight>Required</x:highlight>.</c>
+      <c>title</c><c>String</c><c>Title of group <x:highlight>Required.</x:highlight></c>
+      <c>description</c>String<c></c><c>Description of group <x:highlight>Optional</x:highlight>.</c>
+     </texttable>
+   </section>
    <section title="Message"
             anchor="Message">
      <t>Valid definitions for Message-Field are listed in the table below.</t>
@@ -1015,7 +1029,7 @@ COMMA          = <US-ASCII comma (44)>
     MAY choose to add these or other fields to make their feeds more useful for
     generic aggregators or tools.</t>
    </section>
-  </section>
+   </section>
   <section title="Additional Social Data">
     <t>Additional Social Data objects are data objects that are
     contained within other Social Data object. These do not stand

@@ -519,11 +519,160 @@ Content-Type: application/json
 </artwork>
     </section>
    </section>
+
+<!-- *********************************************************************************** -->
    <section title="Groups"
             anchor="Groups-Service">
-    <t><x:highlight>[ TODO: This section will be filled out based on the information the <eref target="http://wiki.opensocial.org/index.php?title=Complete_existing_basic_groups_support">Complete existing groups support</eref> proposal]</x:highlight></t>
-             
+
+    <t>Containers MAY support the Groups Service. Individual operations are required or optional as indicated in the sections that follow. Containers that do support groups MUST use the following values to define the Groups Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/groups"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "groups"
+    </artwork>
+
+<!-- ****************** -->
+
+    <section title="Get Groups"
+             anchor="Groups-Service-GetGroups">
+        <t>Containers MUST support retrieving information about one or multiple groups in a single request. Requests and responses for retrieving groups use the following values:</t> 
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> [ "/" <eref target="Core-Data.xml#Group-Id">Group-Id</eref> ]
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetGroups-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetGroups-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Group">Group</eref> / <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Group">Group</eref>&gt;</artwork>
+     <section title="Get Groups Request Parameters" anchor="GetGroup-Request-Parameters">
+        <t>A request to create a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the group request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Core-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>Optional. Group Id of the single group to be returned by the request.</c>
+         </texttable>
+     </section>
+ 
    </section>
+
+<!-- ****************** -->
+
+    <section title="Create a Group"
+             anchor="Groups-Service-CreateGroup">
+        <t>Containers MAY support the creation of groups.</t> 
+    <t>Requests and responses for creating a group use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Group">Group</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateGroup-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Group">Group</eref> 
+</artwork>
+     <section title="Create Group Request Parameters" anchor="CreateGroup-Request-Parameters">
+        <t>A request to create a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the group creation request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>group</c>
+          <c><eref target="Social-Data.xml#Group">Group</eref></c>
+          <c>Group object specifying group to be created.</c>
+         </texttable>
+     </section>
+     <t>The Group "id" parameter should not be included in the request and MAY be ignored by the container</t>
+
+    </section>
+
+<!-- ****************** -->
+
+    <section title="Update a Group"
+             anchor="Groups-Service-UpdateGroup">
+        <t>The update operation will update a group. Containers MAY support this request.</t> 
+<artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Core-Data.xml#Group-Id">Group-Id</eref> 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Group">Group</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateGroup-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Group">Group</eref>
+</artwork>
+     <section title="Update Group Request Parameters" anchor="UpdateGroup-Request-Parameters">
+        <t>A request to update a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the update request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>group</c>
+          <c><eref target="Social-Data.xml#Group">Group</eref></c>
+          <c>A Group object containing the updated fields.</c>
+         </texttable>
+    </section>
+
+    </section> 
+
+</section>
+
+<!-- ****************** -->
+
+    <section title="Delete a Group"
+             anchor="Groups-Service-RetrieveGroup">
+     <t>Containers MAY support requests to remove a Group. Requests and responses to remove a Group use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Core-Data.xml#Group-Id">Group-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = "{"
+                             &lt;"&gt; "groupId" &lt;"&gt; ":" &lt;"&gt; <eref target="Core-Data.xml#Group-Id">Group-Id</eref> &lt;"&gt;
+                         "}"
+                         
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+     <section title="Delete Group Request Parameters" anchor="DeleteGroup-Request-Parameters">
+        <t>A request to create a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the group deletion request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>Group ID specifying group to be deleted.</c>
+         </texttable>
+     </section>
+
+    </section>
+
+<!-- *********************************************************************************** -->
+
    <section title="Activities"
             anchor="Activities-Service">
     <t>Containers MUST support the Activities Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Activities Service:</t>

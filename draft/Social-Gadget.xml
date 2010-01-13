@@ -318,54 +318,104 @@ osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
         </figure>
        </section>
       </section>
-      <section title="osapi.messages"
-               anchor="osapi.messages">
+<!-- ************************** -->
+      <section title="osapi.groups"
+               anchor="osapi.groups">
        <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#Messages-Service">Messages service</eref>.</t>
+       <eref target="./Social-API-Server.xml#Groups-Service">Groups service</eref>.</t>
        <section title="Method Details">
-        <section title="send"
-                 anchor="osapi.messages.send">
+
+        <section title="create"
+                 anchor="osapi.groups.create">
          <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.messages.send(params)</t>
-          <t hangText="Description">Builds a request to send a message via the Messages service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Messages-Service-Send">Messages service's send method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to send a message via the Messages service. Executing this request MUST send a message, but does not return any information.</t>
+          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.create(params)</t>
+          <t hangText="Description">Builds a request to create a group via the Groups service.</t>
+          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Create">Groups service's create method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'group' property.</t>
+          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to create a group via the Groups service. Executing this request MUST create a group and return the newly created group.</t>
          </list>
         </section>
-       </section>
-       <section title="Examples">
-        <figure>
-         <preamble>An example illustrating how to send a message using
-         osapi.messages.send():</preamble>
-         <artwork xml:space="preserve">
+
+        <section title="get"
+                 anchor="osapi.groups.get">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.get(params)</t>
+          <t hangText="Description">Builds a request to get a group or groups via the Groups service.</t>
+          <t hangText="Parameters">This method takes one parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Get">Groups service's get method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.</t>
+          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to get a group or groups via the Groups service. Executing this request MUST return a <eref target="./Social-Data.xml#Group">Group</eref> or a <eref target="./Core-Data.xml#Collection">Collection</eref> of Groups.</t>
+ </list>
+</section>
+
+<section title="update"
+         anchor="osapi.groups.update">
+ <list style="hanging">
+  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.update(params)</t>
+  <t hangText="Description">Builds a request to update a group via the Groups service.</t>
+  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Update">Groups service's update method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'group' property.</t>
+  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to update a group via the Groups service. Executing this request MUST update a group, but does not return any information.</t>
+ </list>
+</section>
+
+<section title="delete"
+         anchor="osapi.groups.delete">
+ <list style="hanging">
+  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.delete(params)</t>
+  <t hangText="Description">Builds a request to delete a group via the Groups service.</t>
+  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Delete">Groups service's delete method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.</t>
+  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to delete a group via the Groups service. Executing this request MUST delete a group, but does not return any information.</t>
+ </list>
+</section>
+
+</section>
+</section>
+<!-- ************************** -->
+<section title="osapi.messages"
+       anchor="osapi.messages">
+<t>Service object with functions that map to the 
+<eref target="./Social-API-Server.xml#Messages-Service">Messages service</eref>.</t>
+<section title="Method Details">
+<section title="send"
+         anchor="osapi.messages.send">
+ <list style="hanging">
+  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.messages.send(params)</t>
+  <t hangText="Description">Builds a request to send a message via the Messages service.</t>
+  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Messages-Service-Send">Messages service's send method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.</t>
+  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to send a message via the Messages service. Executing this request MUST send a message, but does not return any information.</t>
+ </list>
+</section>
+</section>
+<section title="Examples">
+<figure>
+ <preamble>An example illustrating how to send a message using
+ osapi.messages.send():</preamble>
+ <artwork xml:space="preserve">
 var params = {
-    message: {
-        "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
-        "title" : "You have a message from Joe",
-        "body" : "Some content",
-        "type" : "EMAIL"
-    },
+message: {
+"recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+"title" : "You have a message from Joe",
+"body" : "Some content",
+"type" : "EMAIL"
+},
 };
 osapi.messages.send(params).execute(messageSentCallback);
 </artwork>
-        </figure>
-       </section>
-      </section>
-      <section title="osapi.albums" anchor="osapi.albums">
-       <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#Albums-Service">Albums service</eref>.</t>
-        <section title="Method Details">
-        <section title="get"
-                 anchor="osapi.albums.get">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.albums.get(params)</t>
-          <t hangText="Description">Builds a request to retrieve information from the
-          Albums service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Albums-Service-Get">Albums service's get method</eref>, except that the 'appId' parameter can not be changed from "@appId".</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Albums service. Executing this request MUST return a <eref target="./Social-Data.xml#Album">Album</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Album">Album</eref> objects.</t>
-         </list>
-        </section>
-        <section title="create"
+</figure>
+</section>
+</section>
+<section title="osapi.albums" anchor="osapi.albums">
+<t>Service object with functions that map to the 
+<eref target="./Social-API-Server.xml#Albums-Service">Albums service</eref>.</t>
+<section title="Method Details">
+<section title="get"
+         anchor="osapi.albums.get">
+ <list style="hanging">
+  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.albums.get(params)</t>
+  <t hangText="Description">Builds a request to retrieve information from the
+  Albums service.</t>
+  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Albums-Service-Get">Albums service's get method</eref>, except that the 'appId' parameter can not be changed from "@appId".</t>
+  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Albums service. Executing this request MUST return a <eref target="./Social-Data.xml#Album">Album</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Album">Album</eref> objects.</t>
+ </list>
+</section>
+<section title="create"
                  anchor="osapi.albums.create">
          <list style="hanging">
           <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.albums.get(params)</t>
