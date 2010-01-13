@@ -303,6 +303,23 @@ var y = '${os:jsStringEscape(someVar, true)}';
 	</list>
 	
    </section>
+   <x:draft note="Section flagging reserved EL properties has come from EL Meta-data discussion and has not been previously discussed">
+<section title="Reserved EL properties">   
+	<t>
+	A number of root-level property names have been reserved for container-controlled values.  
+	A container MAY override values from an external source (ex: JSON data loaded with os:HttpRequest)
+	if it uses any of the reserved keys at the root level of the data object.
+	</t>
+	<list stype="symbols">
+	<t>startIndex</t>
+	<t>totalResults</t>
+	<t>count</t>
+	<t>itemsPerPage</t>
+	<t>sorted</t>
+	<t>filtered</t>
+	</list>
+   </section>
+   </x:draft>
    </section>
    <section title="EL access to meta-information of DataPipeline variables">
     <t>
@@ -336,19 +353,21 @@ ${friends[0].displayName)
 </artwork>
     </figure></t>
     <t>
+	<x:draft note="specific handling of response meta-data is still being fine-tuned for casing and hoisting">
 	Response meta-information that exists above the "entry" key in the raw response
-	may be accessed from the EL key root through the reserved keys "TotalResults", "StartIndex", and "Count".  
+	may be accessed from the EL key root through the reserved keys "totalResults", "startIndex", etc.  
 	For example, to access the
 	value of "totalResults" from the above example, the following EL statement
 	would be used:
     <figure>
      <artwork xml:space="preserve">
-${friends.TotalResults)
+${friends.totalResults)
 </artwork>
     </figure>
-	The above statement would evaluate to "100".  A container MAY allow the reserved key
-	"Response" to also access any other response data keys existing at the root of the object.  
+	The above statement would evaluate to "100".
+	</x:draft>
 	</t>
+	
 	<t>
 	Data pipeline attributes from the originating request tag may be accessed via the EL
 	through the reserved key "Request".  This key exposes the attributes of the original request
