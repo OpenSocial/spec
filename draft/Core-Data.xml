@@ -350,7 +350,59 @@ Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
      as this complicates processing by the Consumer.</t>
    </section>
   </section>
-  <section title="Rules for mapping JSON to XML"
+  <section title="Data Representations" anchor="Data-Representations">
+   <t>Each resource has three representations, as JSON, XML, and Atom. All data
+   must be representable in each format. The XML and JSON formats have a one to
+   one mapping while the Atom format is defined separately for each type of
+   object and collection. Throughout this document, examples are only given
+   in JSON and Atom. The XML representation can be mapped directly from the
+   JSON and MUST conform to the XSD provided for each data type.</t>
+   <t>Each resource is represented as a hierarchical tree of elements. Ordering
+   of elements within a parent element may or may not be significant, depending
+   on the context. Mapping consists of converting between the internal
+   hierarchy and the JSON/XML or Atom protocol format.</t>
+   <t>The general rules for mapping between the Atom and JSON formats are as
+   follows. Each data type may add additional aliasing rules. 
+   <list style="symbols">
+    <t>The default location for all data in the Atom format is in
+    atom:entry/atom:content/datatype, where datatype is a root node naming the
+    type of data delivered: &lt;person&gt;, &lt;group&gt;, &lt;activity&gt;, or
+    &lt;appdata&gt;.</t>
+    <t>The field names are specified at the end of this document in
+    camelCase.</t>
+    <t>Strings are represented as strings in both formats.</t>
+    <t>Dates and timestamps are represented as strings using 
+    <xref target="RFC3339">RFC3339 Timestamps</xref> format date-time elements.
+    These are also known as "XSD Dates". In cases where only a day-of-the-year
+    is desired, e.g., a birthday, the year SHOULD be specified as 0000.</t>
+    <t>Enums are represented as objects with "displayvalue" (localizable,
+    customizable string) and "key" (key) fields.</t>
+    <t>Arrays are represented as arrays in the JSON representation and as
+    repeated fields in the XML representation.</t>
+    <t>Sub-objects are represented as sub-elements in both formats.</t>
+    <t>Fields are placed directly in the root object in the JSON format. In the
+    Atom format, they are by default placed under atom:content/datatype (e.g.,
+    atom:content/person for person data). Some fields are 'hoisted' and aliased
+    to standard Atom fields directly underneath atom:entry. There are three
+    standard aliases that apply to all data types: 
+    <list style="symbols">
+     <t>atom:entry/atom:id aliases the "id" field. The JSON format id is the
+     OpenSocial globally unique ID, which consists of the container domain
+     (e.g., example.org) followed by a colon and the container's id for that
+     person. The container specific id can only contain letters (A-Za-z),
+     numbers (0-9), dots (.), hyphens (-) and underscores (_). For example,
+     example.org:78gh37261ddfdf. In the Atom format, it is translated into the
+     required URI data type by prepending "urn:guid:" to the OpenSocial ID
+     string. These rules are intended to make mapping IDs between the RESTful
+     API and the JS API straightforward while preserving global uniqueness.</t>
+     <t>atom:entry/atom:updated aliases the JSON field indicating the most
+     recent update time if available (POSTED_TIME for Activity), or the
+     generation time if no better information is available.</t>
+     <t>atom:entry/atom:published aliases the JSON field indicating creation
+     time (POSTED_TIME for Activity).</t>
+    </list></t>
+   </list></t>
+   <section title="Rules for mapping JSON to XML"
            anchor="JSON-to-XML">
    <t>Singular fields are encoded as string key/value pairs in JSON and tags
    with text content in XML, e.g. "field": "value" and
@@ -364,6 +416,7 @@ Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
    "value2" } and
    &lt;field&gt;&lt;subfield1&gt;value1&lt;/subfield1&gt;&lt;subfield2&gt;value2&lt;/subfield2&gt;&lt;/field&gt;
    respectively.</t>
+   </section>
   </section>
  </middle>
  <back>

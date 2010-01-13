@@ -133,9 +133,9 @@ COMMA          = <US-ASCII comma (44)>
     addressable through top level API calls, such as osapi, RPC, REST
     and Pipelining tags.</t>
    <section title="Activity" anchor="Activity">
-     <t>Representation of an activity.</t>
-     <t>Activities are rendered with a title and an optional activity body.</t>
-     <t>You may set the title and body directly as strings when calling
+    <t>An OpenSocial Activity represents a short summary or notification of a
+    timestamped event, often with pointers for more information.</t>
+    <t>Activities are rendered with a title and an optional activity body.  The the title and body may be set directly as strings when calling
      opensocial.newActivity. However, it is usually beneficial to create
      activities using Message Templates for the title and body.</t>
      <t>Users have many activities in their activity streams, and
@@ -248,6 +248,75 @@ COMMA          = <US-ASCII comma (44)>
       <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
       <c>ID of the user who this activity is for.</c>
      </texttable>
+    <t>A minimal Activity example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "http://example.org/activities/example.org:87ead8dead6beef/self/af3778",
+ "title" : "&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;",
+ "updated" : "2008-02-20T23:35:37.266Z",
+ "body" : "Some details for some activity",
+ "bodyId" : "383777272",
+ "url" : "http://api.example.org/activity/feeds/.../af3778",
+ "userId" : "example.org:34KJDCSKJN2HHF0DW20394"
+}      
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;activity xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+  &lt;title&gt;&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;&lt;/title&gt;
+  &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;
+  &lt;body&gt;Some details for some activity&lt;/body&gt;
+  &lt;bodyId&gt;383777272&lt;/bodyId&gt;
+  &lt;url&gt;http://api.example.org/activity/feeds/.../af3778&lt;/url&gt;
+  &lt;userId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/userId&gt;
+&lt;/activity&gt;
+</artwork>
+    </figure>
+    <t>Activities have extensive Atom hoisting rules to ensure maximum compatibility with standard feed processing code: </t>
+    <list style="symbols">
+     <t>atom:entry/atom:title aliases "title"</t>
+     <t>atom:entry/atom:summary aliases "body"</t>
+     <t>atom:entry/atom:link@rel="self" aliases "url"</t>
+     <t>atom:entry/atom:icon aliases "faviconUrl"</t>
+     <t>atom:entry/atom:source/atom:title aliases "streamTitle"</t>
+     <t>atom:entry/atom:source/atom:link@rel="self" aliases "streamUrl"</t>
+     <t>atom:entry/atom:generator/atom:uri aliases "appId"</t>
+     <t>atom:entry/atom:author/atom:uri aliases "userId"</t>
+    </list>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+ &lt;title&gt;some activity&lt;/title&gt;&lt;!-- activity.title or activity.titleId --&gt;
+ &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;&lt;!-- postedTime, or datetime.utcnow() --&gt;
+ &lt;author&gt;
+   &lt;uri&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/uri&gt;
+   &lt;name&gt;John Smith&lt;/name&gt; 
+ &lt;/author&gt;
+ &lt;link rel="self" type="application/atom+xml" href="http://api.example.org/activity/feeds/.../af3778" /&gt;
+ &lt;link rel="alternate" type="application/json" href="http://example.org/activities/example.org:87ead8dead6beef/self/af3778" /&gt;&lt;!-- alternate JSON response --&gt;
+ &lt;content type="application/xml"&gt;
+    &lt;activity xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+      &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+      &lt;title type="html"&gt;&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;&lt;/title&gt;
+      &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;
+      &lt;body&gt;Some details for some activity&lt;/body&gt;
+      &lt;bodyId&gt;383777272&lt;/bodyId&gt;
+      &lt;url&gt;http://api.example.org/activity/feeds/.../af3778&lt;/url&gt;
+      &lt;userId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/userId&gt;
+    &lt;/activity&gt;
+ &lt;/content&gt;
+&lt;/entry&gt;       
+</artwork>
+    </figure>Note: The title field is a string that may only have the following
+    html tags: &lt;b&gt;, &lt;i&gt;, &lt;a&gt;, &lt;span&gt;. The container may
+    ignore this formatting when rendering the activity.</t>
    </section>
    <section title="AppData" anchor="AppData">
      <t>OpenSocial defines a data store that applications can use to
@@ -276,6 +345,134 @@ COMMA          = <US-ASCII comma (44)>
       <c>string</c>
       <c>An arbitary string.</c>
      </texttable>
+    <section title="An isolated AppData example."
+             anchor="appdataIsolatedExample">
+     <t>The first example is of a collection of key/value pairs for a
+     particular application/user pair: 
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+ "pokes" : 3,
+ "last_poke" : "2008-02-13T18:30:02Z"
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;entry&gt;
+    &lt;key&gt;pokes&lt;/key&gt;
+    &lt;value&gt;3&lt;/value&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;key&gt;last_poke&lt;/key&gt;
+    &lt;value&gt;2008-02-13T18:30:02Z&lt;/value&gt;
+  &lt;/entry&gt;
+&lt;/appData&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;  
+       &lt;pokes&gt;3&lt;/pokes&gt;
+       &lt;last_poke&gt;2008-02-13T18:30:02Z&lt;/last_poke&gt;
+   &lt;/appData&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;
+   &lt;url&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/url&gt;
+   &lt;name&gt;John Smith&lt;/name&gt;  
+ &lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+&lt;/entry&gt;        
+</artwork>
+     </figure></t>
+    </section>
+    <section title="An AppData Collection Example">
+     <t>In this example, a client has requested a collection of data that spans
+     multiple users. The result is a collection which, by default, is given a
+     special default JSON representation as a mapping from users to their data.
+     
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+ "entry" : {
+   "example.org:34KJDCSKJN2HHF0DW20394" : {"pokes" : 3, "last_poke" : "2008-02-13T18:30:02Z" },
+   "example.org:58UIDCSIOP233FDKK3HD44" : {"pokes" : 2, "last_poke" : "2007-12-16T18:30:02Z" }
+ }
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry&gt;
+ &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;personId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/personId&gt;
+   &lt;entry&gt;
+     &lt;key&gt;pokes&lt;/key&gt;
+     &lt;value&gt;3&lt;/value&gt;
+   &lt;/entry&gt;
+   &lt;entry&gt;
+     &lt;key&gt;last_poke&lt;/key&gt;
+     &lt;value&gt;2008-02-13T18:30:02Z&lt;/value&gt;
+   &lt;/entry&gt;
+ &lt;/appData&gt;        
+ &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;personId&gt;example.org:58UIDCSIOP233FDKK3HD44&lt;/personId&gt;
+   &lt;entry&gt;
+     &lt;key&gt;pokes&lt;/key&gt;
+     &lt;value&gt;2&lt;/value&gt;
+   &lt;/entry&gt;
+   &lt;entry&gt;
+     &lt;key&gt;last_poke&lt;/key&gt;
+     &lt;value&gt;2007-12-16T18:30:02Z&lt;/value&gt;
+   &lt;/entry&gt;
+ &lt;/appData&gt;
+&lt;/entry&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom&gt;
+ &lt;id&gt;...&lt;/id&gt;
+ &lt;title&gt;...&lt;/title&gt;
+ &lt;entry&gt;
+   &lt;content type="text/xml"&gt;
+     &lt;appData&gt;
+       &lt;pokes&gt;3&lt;/pokes&gt;
+       &lt;last_poke&gt;"2008-02-13T18:30:02Z"&lt;/last_poke&gt;
+     &lt;/appData&gt;
+   &lt;/content&gt;
+   &lt;title/&gt;
+   &lt;updated&gt;2008-02-13T18:30:02Z&lt;/updated&gt;
+   &lt;author&gt;&lt;url&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/url&gt;&lt;/author&gt;
+   &lt;id&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+ &lt;/entry&gt;
+ &lt;entry&gt;
+   &lt;content type="text/xml"&gt;
+     &lt;appData&gt;
+       &lt;pokes&gt;2&lt;/pokes&gt;
+       &lt;last_poke&gt;"2007-12-16T18:30:02Z"&lt;/last_poke&gt;
+     &lt;/appData&gt;
+   &lt;/content&gt;
+   &lt;title/&gt;
+   &lt;updated&gt;2007-12-16T18:30:02Z&lt;/updated&gt;
+   &lt;author&gt;&lt;url&gt;uurn:guid:example.org:58UIDCSIOP233FDKK3HD44&lt;/url&gt;&lt;/author&gt;
+   &lt;id&gt;urn:guid:example.org:58UIDCSIOP233FDKK3HD44&lt;/id&gt;  
+ &lt;/entry&gt;
+&lt;/feed&gt;        
+</artwork>
+     </figure></t>
+    </section>
    </section>
    <section title="Message"
             anchor="Message">
@@ -344,6 +541,106 @@ COMMA          = <US-ASCII comma (44)>
       include 'alternate', alternate for for this mailbox (text/html
       being the most common).</c>
      </texttable>
+    <t>A Message example follows. For brevity, details of the 'sender' field,
+    an OpenSocial Person, are omitted. </t>
+    <figure>
+     <preamble>application/json representation</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "http://example.org/inbox/message/{msgid}",
+  "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+ "sender" : "{ "id" : ... }",
+ "title" : "You have a new messge from Joe",
+ "titleId" : "541141091700",
+ "body" : "Short message from Joe to some friend\/s",
+ "bodyId" : "5491155811231",  
+ "type" : "privateMessage",
+ "status" : "unread",
+ "data" : "..."
+}
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation</preamble>
+     <artwork xml:space="preserve">
+&lt;message xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+    &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
+    &lt;recipient&gt;example.org:AD38B3886625AAF&lt;/recipient&gt;
+        &lt;recipient&gt;example.org:997638BAA6F25AD&lt;/recipient&gt;
+        &lt;sender&gt;
+           &lt;person&gt;...&lt;/person&gt;
+        &lt;/sender&gt;
+        &lt;title&gt;You have a new messge from Joe&lt;/title&gt;
+        &lt;titleId&gt;541141091700&lt;/titleId&gt;
+        &lt;updated&gt;2008-09-29T23:35:37.266Z&lt;/updated&gt;
+        &lt;body&gt;Short message from Joe to some friend\/s&lt;/body&gt;
+        &lt;bodyId&gt;5491155811231&lt;/bodyId&gt;
+        &lt;type&gt;privateMessage&lt;/type&gt;
+        &lt;status&gt;unread&lt;/status&gt;
+        &lt;data&gt;...&lt;/data&gt;
+&lt;/message&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;osapi:recipient&gt;example.org:AD38B3886625AAF&lt;/osapi:recipient&gt;
+    &lt;osapi:recipient&gt;example.org:997638BAA6F25AD&lt;/osapi:recipient&gt;
+    &lt;sender&gt;&lt;person&gt;...&lt;/person&gt;&lt;/sender&gt;
+    &lt;title&gt;You have a new message from Joe&lt;/title&gt;
+    &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
+    &lt;link rel="alternate" href="http://app.example.org/inbox/message/{msgid}"/&gt;
+    &lt;content&gt;Short message from Joe to some friend/s&lt;/content&gt;
+    &lt;status&gt;UNREAD&lt;/status&gt;
+    &lt;data&gt;...&lt;/data&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>
+    <t>The recipient may also include a type identifier. The osapi:recipient
+    supports two formats: </t>
+    <list style="numbers">
+     <t>For people: [container]:[identifier]</t>
+     <t>Specifying a group or a person:
+     [container]:[group|person]:[identifier]</t>
+    </list>
+    <figure>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"
+        xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+ &lt;osapi:recipient&gt;example.org:group:AD38B3886625AAF&lt;/osapi:recipient&gt;
+ &lt;osapi:recipient&gt;example.org:person:997638BAA6F25AD&lt;/osapi:recipient&gt;
+ &lt;osapi:recipient&gt;example.org:6221226&lt;/osapi:recipient&gt;
+ &lt;title&gt;You have an invitation from Joe&lt;/title&gt;
+ &lt;id&gt;{msgid}&lt;/id&gt;
+ &lt;link rel="alternate" href="http://app.example.org/invites/{msgid}"/&gt;
+ &lt;content&gt;Click &lt;a href="http://app.example.org/invites/{msgid}"&gt;here&lt;/a&gt; to review your invitation.&lt;/content&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>
+    <t>The 'sender' field in the message representations is only needed when
+    receiving a message with a GET request. It is not required when POSTING a
+    new message as this information is represented by the {guid}. Using a
+    Person for the sender field allows a gadget to present meaningful
+    information about the message sender without requiring a separate request
+    for this information.</t>
+    <t>The 'data' field is used for information specific to the gadget that is
+    sending or displaying the message. It may be omitted in most messages. An
+    example is a message from a user asking to join a group. In the received
+    message to the group's owner(s), the 'data' field could contain the JSON or
+    XML representation of an OpenSocial Group.</t>
+
+    <figure>
+     <preamble>Sample JSON for Message</preamble>
+     <artwork xml:space="preserve">
+{
+   "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+   "title" : "You have an invitation from Joe",
+   "body" : "Some content",
+   "type" : "EMAIL"
+}
+</artwork>
+    </figure>
    </section>
    <section title="Person"
             anchor="Person">
@@ -666,6 +963,57 @@ COMMA          = <US-ASCII comma (44)>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Person's favorite TV shows.</c>
      </texttable>
+    <t>A minimal Person example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "example.org:34KJDCSKJN2HHF0DW20394",
+ "displayName" : "Janey",
+ "name" : {"formatted" : "Jane Doe"},
+ "gender" : "female"
+}       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;person xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+  &lt;displayName&gt;Janey&lt;/displayName&gt;
+  &lt;name&gt;
+    &lt;formatted&gt;Jane Doe&lt;/formatted&gt;
+  &lt;/name&gt;
+  &lt;gender&gt;female&lt;/gender&gt;
+&lt;/person&gt;       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;&lt;!-- person.id --&gt;
+ &lt;title&gt;Janey&lt;/title&gt;&lt;!-- person.displayName --&gt;
+ &lt;updated&gt;2008-03-15T10:00:00Z&lt;/updated&gt;&lt;!-- last profile edit, or datetime.utcnow() --&gt;
+ &lt;author&gt;&lt;name&gt;Janey&lt;/name&gt;&lt;/author&gt;&lt;!-- person.displayName --&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;person xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+     &lt;displayName&gt;Janey&lt;/displayName&gt;
+     &lt;name&gt;
+       &lt;formatted&gt;Jane Doe&lt;/formatted&gt;
+     &lt;/name&gt;
+     &lt;gender&gt;female&lt;/gender&gt;
+   &lt;/person&gt;
+ &lt;/content&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>Note: The atom:summary element is the appropriate place to put a
+    text or HTML representation of the structured data present in the content
+    element, and the atom:title element is the appropriate place to copy a
+    short descriptive name for the entry, such as name.unstructured. Servers
+    MAY choose to add these or other fields to make their feeds more useful for
+    generic aggregators or tools.</t>
    </section>
   </section>
   <section title="Additional Social Data">
@@ -752,7 +1100,7 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="Album"
             anchor="Album">
-     <t>Represents an album.
+     <t>Albums support collections of media items (video, image, sound).</t>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -786,7 +1134,79 @@ COMMA          = <US-ASCII comma (44)>
       <c>string</c>
       <c>the title of the album.</c>
      </texttable>
-     </t>
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "44332211",
+  "thumbnailUrl" : "http://pages.example.org/albums/4433221-tn.png",
+  "title" : "Example Album",
+  "description" : "This is an example album, and this text is an example description",
+  "location" : { "latitude": 0, "longitude": 0 },
+  "ownerId" : "example.org:55443322"
+}       
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;44332211&lt;/id&gt;
+  &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
+  &lt;title&gt;Example Album&lt;/title&gt;
+  &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
+  &lt;location&gt;
+     &lt;latitude&gt;0&lt;/latitude&gt;
+     &lt;longitude&gt;0&lt;/longitude&gt;
+  &lt;/location&gt;
+  &lt;ownerId&gt;example.org:55443322&lt;/ownerId&gt;
+&lt;/album&gt;       
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;44332211&lt;/id&gt;
+     &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
+     &lt;title&gt;Example Album&lt;/title&gt;
+     &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
+     &lt;location&gt;
+       &lt;latitude&gt;0&lt;/latitude&gt;
+       &lt;longitude&gt;0&lt;/longitude&gt;
+     &lt;/location&gt;
+     &lt;ownerId&gt;example.org:55443322&lt;/ownerId&gt;
+   &lt;/album&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;&lt;url&gt;example.org:55443322&lt;/url&gt;&lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:44332211&lt;/id&gt;
+&lt;/entry&gt;    
+</artwork>
+     </figure>
+	 <t>
+	 For backwards compatibility with the 0.9 REST data format, the "caption" 
+	 field should be included in the response for an Album and have the same 
+	 value as the "title" field.  Caption is deprecated for 1.0 and will be fully 
+	 removed from the data format in a future version of the spec.
+	 </t>
+     <figure>
+      <preamble>application/json representation with caption for backwards-compatibility:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "44332211",
+  "thumbnailUrl" : "http://pages.example.org/albums/4433221-tn.png",
+  "title" : "Example Album",
+  "caption" : "Example Album",
+  "description" : "This is an example album, and this text is an example description",
+  "location" : { "latitude": 0, "longitude": 0 },
+  "ownerId" : "example.org:55443322"
+}       
+</artwork>
+     </figure>
    </section>
    <section title="Group ID"
             anchor="Group-ID">
@@ -876,6 +1296,53 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
        <c>Specifying the URL where the media can be found.</c>
      </texttable>
      </t>
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "11223344",
+  "thumbnail_url" : "http://pages.example.org/images/11223344-tn.png",
+  "mime_type" : "image/png",
+  "type" : "image",
+  "url" : "http://pages.example.org/images/11223344.png",
+  "album_id" : "44332211"
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;MediaItem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;11223344&lt;/id&gt;
+  &lt;thumbnail_url&gt;http://pages.example.org/images/11223344-tn.png&lt;/thumbnail_url&gt;
+  &lt;mimeType&gt;image/png&lt;/mimeType&gt;
+  &lt;type&gt;image&lt;/type&gt;
+  &lt;url&gt;http://pages.example.org/images/11223344.png&lt;/url&gt;
+  &lt;albumId&gt;44332211&lt;/albumId&gt;
+&lt;MediaItem&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;mediaItem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;11223344&lt;/id&gt;
+     &lt;thumbnail_url&gt;http://pages.example.org/images/11223344-tn.png&lt;/thumbnail_url&gt;
+     &lt;mimeType&gt;image/png&lt;/mimeType&gt;
+     &lt;type&gt;image&lt;/type&gt;
+     &lt;url&gt;http://pages.example.org/images/11223344.png&lt;/url&gt;
+     &lt;albumId&gt;44332211&lt;/albumId&gt;
+   &lt;mediaItem&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;&lt;url&gt;example.org:55443322&lt;/url&gt;&lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:11223344&lt;/id&gt;
+&lt;/entry&gt;        
+</artwork>
+     </figure>
    </section>
    <section title="Name"
             anchor="Name">
