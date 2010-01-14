@@ -151,6 +151,19 @@
     to Users if they are asked to process a malformed document. Containers
     SHOULD provide meaningful error messages to Developers when the
     specification is malformed.</t>
+<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
+    <t>Containers MUST check for a @specificationVersion attribute in the root
+    Module element of all XML documents they parse, and if the attribute is
+    present in a document MUST parse and process the document in accordance with
+    a version of this specification that matches the attribute's value, as
+    described in <xref target="Versioning">Versioning</xref>. Containers SHOULD
+    support as many historical specification versions as is practical, for
+    backward compatibility with existing Gadgets. If a Container is unable to
+    support a specification version that matches the value of a Gadget's
+    @specificationVersion attribute, the Container MUST display an error
+    message to Users, and SHOULD provide the specification versions that it
+    does support to Developers.</t>
+</x:draft>
     <t>The XML MUST conform to the 
     <xref target="GadgetXmlSchema">Gadget XML Schema</xref> or the <xref target="MessageBundleSchema">Message Bundle Schema</xref>. These XSD schemas 
     represent all standard elements and attributes and
@@ -219,9 +232,17 @@
     beyond the scope of this document.</t>
    <section title="Module"
             anchor="Module">
-    <t>The root node of a gadget XML specification is the Module element. It
-    does not support any attributes and containers SHOULD NOT interpret child
-    text nodes.</t>
+    <t>The root node of a gadget XML specification is the Module element.</t>
+    <list style="hanging">
+<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
+     <t hangText="@specificationVersion">The version of the OpenSocial
+     specification that container MUST use to interpret the gadget, as described
+     in <xref target="Versioning">Versioning</xref>. If absent, the default
+     value is "1.0".</t>
+     <t hangText="text()">This tag has child elements. Containers SHOULD NOT
+     interpret child text nodes.</t>
+</x:draft>
+    </list>
     <section title="/ModulePrefs"
              anchor="ModulePrefs">
      <t>Serves as a container element for all Metadata, Features, and
@@ -259,6 +280,13 @@
       <t>Declares Feature dependencies of the gadget.</t>
       <list style="hanging">
        <t hangText="@feature">The name of the Feature.</t>
+<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
+       <t hangText="@version">The version of the Feature to provide. Containers
+       MUST interpret this value as described in
+       <xref target="Versioning">Versioning</xref> and
+       <xref target="Features">Features</xref>. If absent, the default value is
+       "1.0".</t>
+</x:draft>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT
        interpret child text nodes.</t>
       </list>
@@ -268,12 +296,44 @@
    they claim to support. Any Feature not specified in this document SHOULD
    provide an external specification for processing so that implementations
    will be correct.</t>
+<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
+   <t>Containers MUST provide an implementation of each Feature that matches
+   the version specified by the Gadget in the /ModulePrefs/Required/@version or
+   /ModulePrefs/Optional/@version attribute, applying the matching process
+   described in <xref target="Versioning">Versioning</xref>. Containers MUST NOT
+   substitute versions of Features that do not match the versions requested by
+   the Gadget. Containers SHOULD support as many versions of each Feature as is
+   practical, for backward compatibility with existing Gadgets. Containers MAY
+   use the same implementation to satisfy several different versions of a
+   Feature, if by doing so they fully comply with the Feature's
+   specification.</t>
+   <t>Containers MAY refuse to support Features or specific versions of Features
+   that are known or assumed to be incompatible with the specification version
+   required by the Gadget, or that are known to be incompatible with other
+   Features or versions of Features required by the Gadget. For example, a
+   Container MAY not support the combination of @specificationVersion="1.0"
+   and &lt;Require feature="opensocial" version="2.0"&gt;, or the combination
+   of &lt;Require feature="opensocial" version="1.0"&gt; and
+   &lt;Require feature="opensocial-data" version="1.1"&gt;. In cases where such
+   combinations are requested, the Features are said to be conflicting.
+   Conflicting Features SHOULD be treated by Containers as if they were
+   unsupported. Containers SHOULD provide an error message describing conflicts
+   to Developers when a conflict is detected.  If one or more of the conflicting
+   Features is specifed as Optional by a Gadget, and the set of Required
+   features and specification version do not conflict, Containers SHOULD attempt
+   to render the Gadget by removing the conflicting optional Features, returning
+   false from
+   <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref>
+   for the features that have been removed.  Containers SHOULD include the
+   largest set of Optional Features that does not produce conflicts.</t>
    <t>Containers MUST display an error message for any feature that is
    requested by the Gadget as "required" but is not supported by the container.</t>
    <t>Containers MUST only return true for 
-   <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref>if they
-   actually support the given feature name. Containers MAY only return true for
-   this function if the feature was also requested in the Gadget spec.</t>
+   <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref> if they
+   actually support the given feature name at the version specified in the
+   Gadget XML. Containers MAY only return true for this function if the feature
+   was also requested in the Gadget spec.</t>
+ </x:draft>
    <list style="hanging">
      <t hangText="Core Features" anchor="CoreFeatures">
       <t>In addition to explicitly requested features, there is one implicit
@@ -294,50 +354,64 @@
         <xref target="gadgets.json">gadgets.json</xref>
        </t>
       </list>
-     </t>
+<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
+      <t>Gadgets may specify a particular version of the core Feature by including
+      a /ModulePrefs/Require element with @feature="core" and the @version
+      attribute specifying the required version. If an explicit version of the
+      core Feature is not specified, Containers MUST provide a version matching
+      the /@specificationVersion attribute of the Gadget, if present, or matching
+      "1.0" if /@specificationVersion is absent.</t>
+</x:draft>
+      </t>
      <t hangText="Optional Features" anchor="OptionalFeatures">
       <t>Containers claiming support for the following Features MUST provide the
       Gadget with the JavaScript library from the table below. See the JavaScript
       documentation for each feature for any additional requirements. Containers
-      SHOULD support as many of these features as possible.</t>
-      <texttable align="left">
-       <ttcol>Feature name</ttcol>
-       <ttcol>JavaScript library</ttcol>
-       <c>rpc</c>
-       <c>
-        <xref target="gadgets.rpc">gadgets.rpc</xref>
-       </c>
-       <c>flash</c>
-       <c>
-        <xref target="gadgets.flash">gadgets.flash</xref>
-       </c>
-       <c>skins</c>
-       <c>
-        <xref target="gadgets.skins">gadgets.skins</xref>
-       </c>
-       <c>dynamic-height</c>
-       <c>
-       <xref target="gadgets.window.adjustHeight">
-       gadgets.window.adjustHeight</xref>and 
-       <xref target="gadgets.window.getViewportDimensions">
-       gadgets.window.getViewportDimensions</xref></c>
-       <c>settitle</c>
-       <c>
-        <xref target="gadgets.window.setTitle">gadgets.window.setTitle</xref>
-       </c>
-       <c>setprefs</c>
-       <c>
-        <xref target="gadgets.Prefs.set">gadgets.Prefs.set</xref>
-       </c>
-       <c>minimessage</c>
-       <c>
-        <xref target="gadgets.MiniMessage">gadgets.MiniMessage</xref>
-       </c>
-       <c>tabs</c>
-       <c>
-        <xref target="gadgets.Tab">gadgets.Tab</xref>
-       </c>
+        SHOULD support as many of these features as possible.</t>
+<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
+        <texttable align="left">
+         <ttcol>Feature name</ttcol>
+        <ttcol>Feature version</ttcol>
+         <ttcol>JavaScript library</ttcol>
+         <c>rpc</c>
+        <c>1.0.0</c>
+         <c>
+          <xref target="gadgets.rpc">gadgets.rpc</xref>
+         </c>
+         <c>flash</c>
+        <c>1.0.0</c>
+         <c>
+          <xref target="gadgets.flash">gadgets.flash</xref>
+         </c>
+         <c>skins</c>
+        <c>1.0.0</c>
+         <c>
+          <xref target="gadgets.skins">gadgets.skins</xref>
+         </c>
+         <c>dynamic-height</c>
+        <c>1.0.0</c>
+         <c>
+         <xref target="gadgets.window.adjustHeight">
+         gadgets.window.adjustHeight</xref>and 
+         <xref target="gadgets.window.getViewportDimensions">
+         gadgets.window.getViewportDimensions</xref></c>
+         <c>settitle</c>
+        <c>1.0.0</c>
+         <c>
+          <xref target="gadgets.window.setTitle">gadgets.window.setTitle</xref>
+         </c>
+         <c>minimessage</c>
+        <c>1.0.0</c>
+         <c>
+          <xref target="gadgets.MiniMessage">gadgets.MiniMessage</xref>
+         </c>
+         <c>tabs</c>
+        <c>1.0.0</c>
+         <c>
+          <xref target="gadgets.Tab">gadgets.Tab</xref>
+         </c>
       </texttable>
+</x:draft>
      </t>
    </list>
       <section title="/ModulePrefs/Require/Param and /ModulePrefs/Optional/Param">
@@ -899,6 +973,92 @@
      inside of the body of the Content element at this point in time.</t>
     </section>
    </section>
+  </section>
+  <section title="Versioning"
+           anchor="Versioning">
+<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
+   <t>Both the overall OpenSocial specification and individual Gadget Features
+   are versioned. Gadgets SHOULD specify the version of the specification that
+   Containers should use to interpret them by including the @specificationVersion
+   attribute on the root Module element, and the versions of any Features
+   they use by including the @version attribute on
+   /ModulePrefs/Require and /ModulePrefs/Optional elements.</t>
+   <t>The version of this specification is "1.0.0". The versions of standard
+   Features defined by this specification are detailed in
+   <xref target="Features">Features</xref>. Extensions to the OpenSocial
+   specification MUST define the version of any Features specified by the
+   extension. Containers SHOULD document the version of any custom Features
+   they provide.</t>
+   <t>Versions are specified as a string of up to three non-negative integers,
+   separated by the dot (.) character, for example "1.0.0", "1.2.1", or
+   "1.3.12". The three components of a version each signify a guarantee about
+   the compatibility of that version with other versions of the same
+   specification or Feature.</t>
+   <list style="hanging">
+    <t hangText="Major Versions">are represented by the first number in the
+    sequence, for example "1" in "1.0.0", "1.0.2", "1.3.0", etc. Changes in the
+    major version signify backward-incompatible changes from previous versions
+    of the specification or Feature. For example, when Feature APIs or Gadget
+    XML elements and attributes are removed or renamed, or significant changes
+    to the Gadget rendering process are made that would result in malfunctions
+    for existing Gadgets, the major version MUST be incremented.</t>
+    <t hangText="Minor Versions">are represented by the second number in the
+    sequence, for example "2" in "1.2.0", "1.2.1", "3.2.0", etc. Minor versions
+    are interpreted relative to the preceding major version number. Changes in
+    the minor version signify backward-compatible but forward-incompatible
+    changes from previous versions of the specification or Feature. For example,
+    when new Feature APIs or Gadget XML elements and attributes are added, the
+    minor version MUST be incremented, but the major version SHOULD NOT change,
+    because the new version is backward-compatible with Gadgets that were
+    written to use previous minor versions of the same major version, but
+    containers that do not implement the new minor version will not be
+    forward-compatible with Gadgets written to use the new minor version.</t>
+    <t hangText="Patch Versions">are represented by the third number in the
+    sequence, for example "3" in "1.0.3", "1.1.3", "2.2.3", etc. Patch versions
+    are interpreted relative to the preceding major and minor version numbers.
+    Changes in the patch version signify changes that are both
+    backward-compatible and forward-compatible with previous versions of the
+    specification or Feature. For example, when making minor clarifications,
+    fixing typos and bugs, or making other small changes that neither affect the
+    functionality of existing Gadgets, nor introduce functionality that would be
+    incompatible with containers that only implement older patch versions of the
+    same minor version, the patch version MUST be incremented, but the minor
+    and major versions SHOULD NOT change.</t>
+   </list>
+   <t>The value of the /@specificationVersion, /ModulePrefs/Require/@version,
+   and /ModulePrefs/Optional/@version attributes may fully specify all three of
+   the major version, minor version, and patch version numbers. For example,
+   "1.0.0" or "1.2.3". When all three version components are specified,
+   containers MUST conform to the exact version of the specification or
+   Feature that is requested. Alternately, these attributes may specify the
+   major and minor versions only, without the patch version, or the major
+   version only, without the minor and patch versions. For example, "1.0",
+   "2.3", and "3" are all valid. When these attributes specify partial versions,
+   the container MUST conform to a version of the specification or Feature that
+   matches the version components specified, but MAY use any version of the
+   unspecified components.</t>
+   <t>For example, a Container that is processing a Gadget with
+   /@specificationVersion="2.3" may process it according to specification
+   version 2.3.0, 2.3.1, 2.3.22, etc., but not 2.2.0, 2.4.0, 2.30.0, 3.0.0, etc.
+   A Container that is processing a Gadget with
+   /ModulePrefs/Require/@version="3" MAY provide the specified Feature at
+   version 3.0.0, 3.0.1, 3.1.0, 3.1.11, etc., but not 2.0.0, 4.0.0, 33.0.0,
+   etc.</t>
+   <t>It is RECOMMENDED that Gadget Developers specify the most general version
+   that will satisfy the requirements of a Gadget. Usually, major and minor
+   versions will suffice, and the patch version MAY be omitted from
+   /@specificationVersion, /ModulePrefs/Require/@version, and
+   /ModulePrefs/Optional/@version attributes.</t>
+   <t>If the /@specificationVersion attribute or any
+   /ModulePrefs/Require/@version or /ModulePrefs/Optional/@version attributes
+   are absent, they are assumed to have the value "1.0". As described above,
+   this value will match any version beginning with "1.0", including 1.0.0,
+   1.0.1, 1.0.22, etc., but not 1.1.0, 2.0.0, etc. This default value will
+   not change in future versions of the specification, ensuring that Gadgets
+   that omit these values will not have sudden, unexpected changes in behavior
+   when containers adopt new versions of the OpenSocial specification or
+   Features.</t>
+</x:draft>
   </section>
   <section title="Variable Substitution"
            anchor="VariableSubstitution">
