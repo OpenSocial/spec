@@ -36,7 +36,8 @@
     <t>This specification uses a number of terms to refer to the roles played
     by participants in, and objects of, an OpenSocial implementation.</t>
     <list style="hanging">
-     <t hangText="term">Definition.</t>
+     <t hangText="friend">The term "friend" used throughout this specification can be
+      applied to a variety of relationships between people, whether they be actual friends, business contacts, or related through a management hierarchy. The "friend" term can also be used to describe either symmetric relationships or asymmetric relationships (such as followers, as in Twitter). Also, this term can be used to refer to a human or a system or other entity. For example, a user may "follow" updates from a bug tracking system, bot, or other thing.</t>
     </list>
    </section>
   </section>
