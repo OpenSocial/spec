@@ -358,83 +358,8 @@ dataset would contain content resembling:
    &lt;Content&gt; and &lt;Module&gt; elements do not apply to content inside
    of CDATA sections, so namespaces must be declared within CDATA.)</t>
   </section>
-  <section title="Dynamic parameters">
-   <t>Data and HTTP requests often need to change based on input parameters.
-   Two key use cases: 
-   <list style="symbols">
-    <t>Passing gadgets view parameters to a request, for example the current
-    page in a paginated list.</t>
-    <t>Passing OpenSocial data to a following &lt;os:HttpRequest&gt;,
-    specifically IDs of (viewer, owner, viewer friends, owner friends).</t>
-   </list></t>
-   <t>Data pipelining will support a limited subset of the expression language
-   used in OpenSocial templates (based on 
-   <xref target="JSPEL">JSP EL</xref>): 
-   <list style="symbols">
-    <t>Expressions of format ${A(.B)*} will be supported, where "A" is the key
-    and "B" is any number of properties. Examples: ${UserPrefs.size},
-    ${ViewParams.nav.first}.</t>
-    <t>Multiple expressions may appear within a single attribute, and mixed
-    with non-expression text. The result of all non-expression text and
-    expression evaluations will be concatenated.</t>
-    <t>The key "ViewParams" is reserved and refers to the parameters passed
-    into the gadget rendering, equivalent to 
-    <xref target="GadgetsSpec">gadgets.views.getParams()</xref>.</t>
-    <t>The key "UserPrefs" is reserved and refers to gadget user preferences -
-    ${UserPrefs.PREF} will return the value of gadgets.Prefs.getString('PREF')
-    - see [API].</t>
-   </list>The results of expression evaluation are treated as if the results
-   were inserted as the literal string value of the XML attribute. JSON arrays
-   within ViewParams are output as "a,b", not "[a,b]". The results of
-   expression evaluation for URL-typed attributes - specifically, @href and
-   @param on &lt;os:HttpRequest&gt; - MUST be 
-   <eref target="http://www.ietf.org/rfc/rfc1738.txt">RFC 1738, Section 2.2
-   encoded (URL encoded)</eref> before being inserted into a final string.</t>
-   <t>The following attributes support expressions: 
-   <list style="symbols">
-    <t>Any attribute on os:DataRequest other than @key and @method</t>
-    <t>@userId</t>
-    <t>@groupId</t>
-    <t>@fields</t>
-    <t>@startIndex</t>
-    <t>@count</t>
-    <t>@sortBy</t>
-    <t>@sortOrder</t>
-    <t>@filterBy</t>
-    <t>@filterOp</t>
-    <t>@filterValue</t>
-    <t>@activityIds</t>
-    <t>@href</t>
-    <t>@params</t>
-   </list>An implementation MUST evaluate dynamic properties for these
-   attributes and MUST NOT evaluate dynamic properties for attributes not on
-   this list.</t>
-   <t>
-    <figure>
-     <preamble>Example</preamble>
-     <artwork xml:space="preserve">
-&lt;os:PeopleRequest key="PagedFriends" userId="@owner" groupId="@friends" startIndex="${ViewParams.first}" count="20"/&gt;
-&lt;os:HttpRequest href="http://example.com/api?ids=${PagedFriends.ids}"/&gt;
-</artwork>
-    </figure>
-   </t>
-   <t>
-   Dynamic parameters may access request attributes of other data tags through the special "Request" key
-   and response meta information of other data requests through the reserved keys "TotalResults", "StartIndex", and "Count".
-    <figure>
-     <preamble>Example</preamble>
-     <artwork xml:space="preserve">
-&lt;os:PeopleRequest key="Page1" userId="@owner" groupId="@friends" 
-  startIndex="${ViewParams.first}" count="20"/&gt;
-
-&lt;os:PeopleRequest key="Page2" userId="${Page1.Request.userId}" groupId="@friends" 
-  startIndex="${Page1.Request.startIndex + Page1.Request.count}" 
-  count="${Page1.Request.count}"/&gt;
-
-</artwork>
-    </figure>
-   </t>
-   
+  <section title="Dynamic Parameters">
+    <t>[ Moved to Core-Gadget.xml]</t>
   </section>
  </middle>
  <back>
