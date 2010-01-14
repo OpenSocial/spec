@@ -2722,7 +2722,8 @@ osapi.http.post(params).execute(function(result) {
   </section>
   <section title="Data Pipelining" anchor="DataPipelining">
    <t>Data Pipelining is a declarative syntax for defining the data a gadget requires from the container. The &lt;os:DataRequest&gt; element provides access to OpenSocial data, and the &lt;os:HttpRequest&gt; element provides access to content from any HTTP endpoint.</t>
-   <t>All Data Pipelining tags MUST have a 'key' attribute which contains a string that is used to identify the data in the response.</t>
+   <t>All Data Pipelining tags MUST have a 'key' attribute which contains a string that is used to identify the data in the response.
+   Values of the key attribute are case-sensitive when referenced through the data context object or the Expression Language.</t>
    <t>Tags that invoke API Server methods support a 1:1 mapping between the XML
    attributes and the service method parameters.  See <xref target="Core-API-Server"/> and <xref target="Social-API-Server"/> for information on the parameters available for each service method. Note that Data Pipelining MUST only be used for API Server calls that get data. Service methods that update data MUST NOT be implemented as Data Pipelining tags.</t>
    <t>Here's an example of Data Pipelining tags in a gadget XML file.</t>
