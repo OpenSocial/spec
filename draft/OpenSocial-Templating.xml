@@ -499,18 +499,28 @@ data['Viewer']['Name']
    </section>
      <section title="Declaring Variables Inline - os:Var">
     <t>Variables may be declared in both inline and custom tag templates
-	with the os:Var tag.  This tag may also be used data pipelining to declare 
-	global literal variables.</t>
+	with the os:Var tag.</t>
     <section title="os:Var syntax">
 	<t>
-The &lt;os:Var&gt; tag allows for the declaration of both temporary and global variables.
-It may be used in inline custom tag templates (temporary) or inline templates or 
-data-pipeline sections (global).  The element supports three attributes: 
+The &lt;os:Var&gt; tag allows for the declaration of literal variables.
+It may be used in inline custom tag templates, inline templates, and 
+data-pipeline sections.  
+
+    <figure>
+     <preamble>Example of a simple variable</preamble>
+     <artwork xml:space="preserve">&lt;os:Var key="mytemp" value="1"/&gt;
+</artwork>
+    </figure>
+
+</t>
+
+<t>
+The element supports three attributes: 
 </t>
 
 <list style="symbols">
-<t> @key: Required. defines the string name of the variable.  Expressions may not be used.</t>
-<t> @value: Optional. Defines the value of the variable.   Expressions may be used.</t>
+<t> @key: Required. defines the string name of the variable.  EL statements may not be used.</t>
+<t> @value: Optional. Defines the value of the variable.   EL statements may be used.</t>
 </list>
 
 <t>
@@ -522,39 +532,25 @@ When processing values, the processor attempts to resolve the value of the os:Va
 <x:draft note="processing rules adjusted from original proposal to accomodate EL referenced objects in JSON literal">
 <list style="numbers">
 <t>For a single EL value, return the resulting object</t>
-<t>Attempt to parse it as a JSON value</t>
-<t>Processed to replace EL statements (${} markup)</t>
-<t>If all other processing does not fully resolve the value, return as a string</t>
+<t>Process to replace EL statements (${} markup)</t>
+<t>Attempt to parse it as a JSON value and return the resulting object if successful.  
+A container MAY support EL statements in JSON values.</t>
+<t>If all other processing does not resolve the value, return as a string</t>
 </list>
 </x:draft>
-    <figure>
-     <preamble>Example of a simple variable</preamble>
-     <artwork xml:space="preserve">&lt;os:Var key="mytemp" value="1"/&gt;
-</artwork>
-    </figure>
 
 
 	</section>
 
     <section title="Scope">
-     <t>In data pipelining blocks and in inline template blocks, 
-	 &lt;os:Var&gt; defines a new top-level variable in the global 
-	 scope. When declared in a data-pipelining section this  
-	 variable will be accessible both in data pipelining expressions 
-	 and to proxied rendering and/or opensocial templates. 
-	 The value will be stored in the Data Context and accessible as any 
-	 other top-level variable defined with data pipelining tags.  Any variables
-	 declared in a data pipelineing section may not re-declare an existing
-	 key.
-	</t>
 	<t>
-	 When os:Var is used in inline templates it will be placed in the global
-	 scope analogous to ${Top}, but will not be available until after processing
+	 When os:Var is used in inline templates it will not be available until after processing
 	 the os:Var tag in the render pass and will not be available to data-pipeline
-	 tags for use in dynamic parameters.	
+	 tags for use in dynamic parameters.  Templates may use variables declared with 
+	 os:Var in a data-pipelining section at any time.
 	</t>
     <figure>
-     <preamble>Example of global variable with os:Var</preamble>
+     <preamble>Example of variable with os:Var</preamble>
      <artwork xml:space="preserve">
 &lt;script  type="text/os-template"&gt;
   &lt;os:Var key="myvar" value="1"/&gt;
@@ -567,29 +563,31 @@ When processing values, the processor attempts to resolve the value of the os:Va
 
 	<t>
 	Within custom tag templates, &lt;os:Var&gt; defines a new 
-	variable that will be added to ${My}. As such, the variable 
-	will be available anywhere within the custom tag template 
+	variable that will be available anywhere within the custom tag template 
 	instance.  When an os:Var tag appears in the 
-	template definition, it will be created and attached to the 
-	${My} variable after the instance parameters are attached 
-	to ${My}.  In the template definition it will therefore 
+	template definition, it will be created after the instance 
+	parameters are attached to ${My}.  
+	In the template definition it will therefore 
 	have access to other custom tag instance parameters and be 
 	able to reference them through the ${My} variable.
 	</t>
 
     <figure>
-     <preamble>Example of local variable in custom tag instance</preamble>
+     <preamble>Example of local variable in custom tag definition</preamble>
      <artwork xml:space="preserve">
 &lt;script tag="my:Foo" type="text/os-template"&gt;
+  &lt;os:Var key="moreWords" value="${My.words} are just some words passed in" />
   &lt;h1&gt;You said ${My.words}&lt;/h1&gt;
+  ${moreWords}
 &lt;/script&gt;
 
-&lt;script tag="my:Bar" type="text/os-template"&gt;
+&lt;script type="text/os-template"&gt;
   Inline content here.  And then a tag
   
   &lt;my:Foo &gt;
   &lt;words &gt;Good, bad, and ugly&lt;/words&gt;
-  &lt;/my:Bar &gt;
+  
+  &lt;/my:Foo &gt;
 &lt;/script&gt;
 </artwork>
     </figure>
