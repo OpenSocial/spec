@@ -283,8 +283,7 @@
 <x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
        <t hangText="@version">The version of the Feature to provide. Containers
        MUST interpret this value as described in
-       <xref target="Versioning">Versioning</xref> and
-       <xref target="Features">Features</xref>. If absent, the default value is
+       <xref target="Versioning">Versioning</xref>. If absent, the default value is
        "1.0".</t>
 </x:draft>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT
@@ -319,7 +318,7 @@
    Conflicting Features SHOULD be treated by Containers as if they were
    unsupported. Containers SHOULD provide an error message describing conflicts
    to Developers when a conflict is detected.  If one or more of the conflicting
-   Features is specifed as Optional by a Gadget, and the set of Required
+   Features is specified as Optional by a Gadget, and the set of Required
    features and specification version do not conflict, Containers SHOULD attempt
    to render the Gadget by removing the conflicting optional Features, returning
    false from
@@ -915,7 +914,7 @@
    remote site as an HTTP GET. When the Content section includes Data
    Pipelining elements, the container MUST send the data to the request URI
    using an HTTP POST. The structure of this data will match the 
-   <eref target="./Core-API-Server.xml#RPC">JSON-RPC format</eref>.</t>
+   <eref target="./Core-API-Server.xml#RPC">JSON-RPC format</eref>. For more information on Data Pipelining and Proxied Content, see <xref target="DataPipelining-ProxiedContent"/></t>
    <section title="Processing Results">
     <t>If the response to the proxied request returns a successful HTTP status
     code, the container MUST interpret the resulting response body according to
@@ -985,7 +984,7 @@
    /ModulePrefs/Require and /ModulePrefs/Optional elements.</t>
    <t>The version of this specification is "1.0.0". The versions of standard
    Features defined by this specification are detailed in
-   <xref target="Features">Features</xref>. Extensions to the OpenSocial
+   <xref target="RequireAndOptional">ModulePrefs</xref>. Extensions to the OpenSocial
    specification MUST define the version of any Features specified by the
    extension. Containers SHOULD document the version of any custom Features
    they provide.</t>
@@ -2448,6 +2447,138 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       'PROFILE'.</t>
     </list>
    </section>
+   <section title="opensocial.data">
+    <t>The opensocial.data namespace provides an API to access the pipelined data on
+   the client.  There are methods to get the data returned from the data pipeline, set
+   additional data, and listen to changes in data of a given key.</t>
+    <t>Pipelined data is only available to the client when embedded in
+   @type="html" content or content returned by a proxied content request. Data
+   posted as part of a pipelined data request MUST not be available on the
+   client.</t>
+   <figure>
+    <preamble>Examples</preamble>
+    <artwork xml:space="preserve">
+var viewer = opensocial.data.getContext().getDataSet('Viewer');
+alert('Hello ' + viewer.name);
+os.data.getDataContext().putDataSet('Params', {"Page": 2, "PageSize": 10});
+opensocial.data.getDataContext().registerListener('Friends', function(key) {
+   var el = document.getElementById('friend-details');
+   el.style.display = 'show';
+});
+</artwork>
+   </figure>
+
+      <section title="getContext"
+               anchor="opensocial.data.getContext">
+       <list style="hanging">
+       <t hangText="Signature">&lt;static&gt; <x:ref>DataContext</x:ref> opensocial.data.getContext()</t>
+       <t hangText="Description">Gets the DataContext associated with the
+    gadget.</t>
+       <t hangText="Parameters">None.</t>
+       <t hangText="Returns">
+       <texttable align="left">
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>DataContext</c>
+        <c>The data associated with Data Pipelining requests.</c>
+       </texttable>
+       </t>
+       </list>
+      </section>
+      <section title="DataContext"
+               anchor="DataContext">
+               <t>The DataContect object maintains all the data associated with the current gadget's data pipelining requests.</t>
+        <section title="getDataSet" anchor="opensocial.data.DataContext.getDataSet">
+       <list style="hanging">
+       <t hangText="Signature">Object getDataSet(String key)</t>
+       <t hangText="Description">Retrieves the
+    object data that is currently mapped to the specified key.</t>
+       <t hangText="Parameters">
+       <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>key</c>
+        <c>String</c>
+        <c>The key for the data object to be retrieved</c>
+       </texttable>
+       </t>
+       <t hangText="Returns">
+       <texttable align="left">
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>Object</c>
+        <c>The object stored with the given key.</c>
+       </texttable></t>
+       </list>
+      </section>
+      <section title="putDataSet"
+               anchor="opensocial.data.putDataSet">
+       <list style="hanging">
+       <t hangText="Signature">void putDataSet(String key, String|Object value)</t>
+       <t hangText="Description">Puts additional data into the data context.  This data can later be accessed using the key provided..</t>
+       <t hangText="Parameters">
+       <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>key</c>
+        <c>String</c>
+        <c>The key to use to refer to this data</c>
+        <c>value</c>
+        <c>String | Object</c>
+        <c>The data to store.  If the value is a JSON string, it will be parsed and stored as a JavaScript object.</c>
+       </texttable>
+       </t>
+       <t hangText="Returns">None.</t>
+       </list>
+      </section>
+      <section title="putDataSets"
+               anchor="opensocial.data.putDataSets">
+       <list style="hanging">
+       <t hangText="Signature">void putDataSets(Object dataSets)</t>
+       <t hangText="Description">Puts many
+    data sets into the data context at once, with appropriate listeners firing
+    after all the updates are done.</t>
+       <t hangText="Parameters">
+       <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>dataSets</c>
+        <c>Object</c>
+        <c>an object whose property names are data set keys, and whose
+     properties are actual data sets</c>
+       </texttable>
+       </t>
+       <t hangText="Returns">None.</t>
+       </list>
+      </section>
+      <section title="registerListener"
+               anchor="opensocial.data.registerListener">
+       <list style="hanging">
+       <t hangText="Signature">void registerListener(String | Array&gt;String&lt;> keys, Function callback)</t>
+       <t hangText="Description">Listens for any updates
+    to data keyed by one of "keys". The wildcard key, "*", may be used
+    to listen to all keys.</t>
+       <t hangText="Parameters">
+       <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>keys</c>
+        <c>String | Array&gt;String&lt;></c>
+        <c>The key or list of keys to add the listener to</c>
+        <c>callback</c>
+        <c>Function</c>
+        <c>A function to invoke when the data at the given keys changes.  When the function is invoked, it MUST receive a single parameter, which is a list of the keys that have newly-updated values.</c>
+       </texttable>
+       </t>
+       <t hangText="Returns">None.</t>
+       </list>
+      </section>
+     </section>     
+   </section>
     <section title="osapi"
             anchor="osapi">
      <t>The osapi API is more natural to
@@ -3087,7 +3218,62 @@ osapi.http.post(params).execute(function(result) {
    </section>   
 </x:draft>
   </section>
-
+  <section title="Proxied content" anchor="DataPipelining-ProxiedContent">
+   <t>Data pipelining tags can be top level elements in the &lt;Content&gt;
+   section of a gadget using <xref target="ProxiedContent">Proxied Content</xref>. 
+   <figure>
+    <preamble>Example</preamble>
+    <artwork xml:space="preserve">
+&lt;Content href="http://example.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
+  &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
+&lt;/Content&gt;
+</artwork>
+   </figure>When preparing a request for proxied content, a container MUST
+   process data pipelining elements that are direct children of the proxied
+   content's &lt;Content&gt; element. Data pipelining elements are ALWAYS valid
+   when preparing a request for proxied content, even if the opensocial-data
+   feature is not present.</t>
+   <t>The results of the data pipelining requests will be sent to the href of
+   the &lt;Content&gt; section as POSTed JSON data. The structure will be in 
+   <eref target="./Core-API-Server.xml#RPC">JSON-RPC format</eref>.</t>
+   <t>Elements in a data pipeline with @userId referencing the viewer (via
+   @viewer, @me) will return a 403 (Forbidden) error response if the container
+   is unable to also send the opensocial_viewer URL parameter to the 3rd party
+   server. The same holds true for @owner and opensocial_owner URL
+   parameter.</t>
+  </section>
+  <section title="Handling of errors">
+   <t>With pipelined data prepared for proxied content, errors are simply
+   delivered to the href of the &lt;Content&gt; element as POSTed JSON data
+   with the JSON-RPC error format unmodified.</t>
+   <t>With pipelined data prepared for the Javascript API, or otherwise
+   embedded in @type="html" content, per-item errors are not modified, but
+   errors that fail the entire request are modified by cloning the error into
+   each item. 
+   <figure>
+   <preamble>Example</preamble>
+   <artwork xml:space="preserve">
+  &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
+    &lt;os:ViewerRequest key="vwr"/&gt;
+    &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
+  &lt;/script&gt;
+</artwork>If the above request failed with a server error, the resulting
+dataset would contain content resembling: 
+   <artwork xml:space="preserve">
+ {vwr: {error: {message: 'Server error', code: 500}}, vf: {error: {message: 'Server error', code: 500}}}  
+</artwork></figure></t>
+  </section>
+  <section title="Handling of unrecognized tags">
+   <t>Containers should ignore unrecognized tags or return error code 404 (Not
+   Found). If a tag is ignored, the JSON structure can either include a null
+   value for the request key or just not include the request key.</t>
+  </section>
+  <section title="Namespace">
+   <t>The XML namespace for all of the Data Pipelining tags is
+   http://ns.opensocial.org/2008/markup. (Note that namespace declarations on
+   &lt;Content&gt; and &lt;Module&gt; elements do not apply to content inside
+   of CDATA sections, so namespaces must be declared within CDATA.)</t>
+  </section>
   <section title="Dynamic parameters">
    <t>Data and HTTP requests often need to change based on input parameters.
    Two key use cases:

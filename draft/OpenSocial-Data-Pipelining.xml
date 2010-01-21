@@ -258,105 +258,19 @@
    OpenSocial release if possible.</t>
   </section>
   <section title="Proxied content">
-   <t>Data pipelining tags can be top level elements in the &lt;Content&gt;
-   section of a gadget using 
-   <xref target="GadgetsSpec">Proxied Content</xref>. 
-   <figure>
-    <preamble>Example</preamble>
-    <artwork xml:space="preserve">
-&lt;Content href="http://example.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
-  &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
-&lt;/Content&gt;
-</artwork>
-   </figure>When preparing a request for proxied content, a container MUST
-   process data pipelining elements that are direct children of the proxied
-   content's &lt;Content&gt; element. Data pipelining elements are ALWAYS valid
-   when preparing a request for proxied content, even if the opensocial-data
-   feature is not present.</t>
-   <t>The results of the data pipelining requests will be sent to the href of
-   the &lt;Content&gt; section as POSTed JSON data. The structure will be in 
-   <xref target="RPCProtocol">Batch JSON</xref> format.</t>
-   <t>Elements in a data pipeline with @userId referencing the viewer (via
-   @viewer, @me) will return a 403 (Forbidden) error response if the container
-   is unable to also send the opensocial_viewer URL parameter to the 3rd party
-   server. The same holds true for @owner and opensocial_owner URL
-   parameter.</t>
+    <t>[ Moved to Core-Gadget.xml]</t>
   </section>
   <section title="JavaScript API">
-   <t>There will be new JavaScript APIs created to access the pipelined data on
-   the client, all on the opensocial.data.DataContext object.</t>
-   <t>There will be APIs to get the data returned from the data pipeline, set
-   additional data, and listen to changes in data of a given key: 
-   <list style="symbols">
-    <t>opensocial.data.getContext() - Gets the DataContext associated with the
-    gadget.</t>
-    <t>opensocial.data.DataContext.getDataSet(string key) - Retrieves the
-    object data that is currently mapped to the specified key.</t>
-    <t>opensocial.data.DataContext.putDataSet(string key, json|object value) -
-    Puts additional data into the data context keyed by the key.</t>
-    <t>opensocial.data.DataContext.putDataSets(object dataSets) - Puts many
-    data sets into the data context at once, with appropriate listeners firing
-    after all the updates are done.</t>
-    <list style="symbols">
-     <t>dataSets is an object whose property names are data set keys, and whose
-     properties are actual data sets.</t>
-    </list>
-    <t>opensocial.data.DataContext.registerListener (array&lt;String&gt;|string
-    keys, Function(array&lt;String&gt; keys) callback) - Listen for any updates
-    to data keyed by one of "keys". You can also pass in the wildcard key "*"
-    to listen to all keys. 
-    <list style="symbols">
-     <t>The callback function is invoked with an array of the keys that have
-     changed as a parameter.</t>
-    </list></t>
-   </list>Pipelined data is only available to the client when embedded in
-   @type="html" content or content returned by a proxied content request. Data
-   posted as part of a pipelined data request MUST not be available on the
-   client. 
-   <figure>
-    <preamble>Examples</preamble>
-    <artwork xml:space="preserve">
-var viewer = opensocial.data.getContext().getDataSet('Viewer');
-alert('Hello ' + viewer.name);
-os.data.getDataContext().putDataSet('Params', {"Page": 2, "PageSize": 10});
-opensocial.data.getDataContext().registerListener('Friends', function(key) {
-   var el = document.getElementById('friend-details');
-   el.style.display = 'show';
-});
-</artwork>
-   </figure></t>
+    <t>[ Moved to Core-Gadget.xml]</t>
   </section>
   <section title="Handling of errors">
-   <t>With pipelined data prepared for proxied content, errors are simply
-   delivered to the href of the &lt;Content&gt; element as POSTed JSON data
-   with the JSON-RPC error format unmodified.</t>
-   <t>With pipelined data prepared for the Javascript API, or otherwise
-   embedded in @type="html" content, per-item errors are not modified, but
-   errors that fail the entire request are modified by cloning the error into
-   each item. 
-   <figure>
-   <preamble>Example</preamble>
-   <artwork xml:space="preserve">
-  &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data"&gt;
-    &lt;os:ViewerRequest key="vwr"/&gt;
-    &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
-  &lt;/script&gt;
-</artwork>If the above request failed with a server error, the resulting
-dataset would contain content resembling: 
-   <artwork xml:space="preserve">
- {vwr: {error: {message: 'Server error', code: 500}}, vf: {error: {message: 'Server error', code: 500}}}  
-</artwork></figure></t>
+    <t>[ Moved to Core-Gadget.xml]</t>
   </section>
   <section title="Handling of unrecognized tags">
-   <t>Containers should ignore unrecognized tags or return error code 404 (Not
-   Found). If a tag is ignored, the JSON structure can either include a null
-   value for the request key or just not include the request key.</t>
+    <t>[ Moved to Core-Gadget.xml]</t>
   </section>
   <section title="Namespace">
-   <t>The XML namespace for all of the Data Pipelining tags is
-   http://ns.opensocial.org/2008/markup. (Note that namespace declarations on
-   &lt;Content&gt; and &lt;Module&gt; elements do not apply to content inside
-   of CDATA sections, so namespaces must be declared within CDATA.)</t>
+    <t>[ Moved to Core-Gadget.xml]</t>
   </section>
   <section title="Dynamic Parameters">
     <t>[ Moved to Core-Gadget.xml]</t>
