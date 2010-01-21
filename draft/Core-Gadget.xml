@@ -3012,6 +3012,82 @@ osapi.http.post(params).execute(function(result) {
 </artwork>
    </figure></t>
   </section>
+
+  <section title="Tag: &lt;os:Var&gt;"
+           anchor="osVar">
+  <x:draft note="Moved from OpenSocial Template specification" >
+    <list style="hanging"> 
+     <t hangText="Description">Declare a literal value or result of an EL statement under a different key.</t>
+     <t hangText="Attributes">The following attributes are supported.
+       <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol align="left">Description</ttcol>
+          <c>key</c>
+          <c>String</c>
+          <c>A key for accessing the value.  REQUIRED</c>
+          <c>value</c>
+          <c>String</c>
+          <c>Literal string, EL statement, or JSON object.  OPTIONAL.  If not specified the contents of the tag are used for value.</c>
+       </texttable>
+     </t>
+     <t hangText="Returns">Value as resolve by below processing rules.</t>
+    </list>
+   <figure>
+    <preamble>Example of tag syntax:</preamble>
+    <artwork xml:space="preserve">&lt;os:Var key="myNumber" value="1"/&gt;
+</artwork>
+   </figure>
+   <section title="Processing Rules" anchor="osvarProcessingRules">
+	<t>
+	When processing values, the processor attempts to resolve the value of the os:Var tag in the following manner:
+	</t>
+	<list style="numbers">
+	<t>For a single EL value, return the resulting object</t>
+	<t>Process to replace EL statements (${} markup)</t>
+	<t>Attempt to parse it as a JSON value and return the resulting object if successful.</t>
+	<t>If all other processing does not resolve the value, return as a string</t>
+	</list>
+     <t>The value created with os:Var may contain literals, JSON data, or EL statements. 
+	 An array may be declared using JSON or JavaScript array syntax.
+	</t>
+	
+	<t>The below example creates a one-dimensional array with values [1,2,3,5,7]
+	and assigns it to the key "primes" in the data context
+	  <figure>
+     <preamble>Example: simple array</preamble>
+     <artwork xml:space="preserve">
+&lt;os:Var key="primes" value="[1,2,3,5,7]" /&gt;
+	 </artwork>
+    </figure>
+	</t>
+
+	<t>The below places the result of the EL statement ${1+1} under the key "onePlusOne".
+	  <figure>
+     <preamble>Example: EL statement</preamble>
+     <artwork xml:space="preserve">
+&lt;os:Var key="onePlusOne" value="${1+1}" /&gt;
+	 </artwork>
+    </figure>
+	</t>
+
+	<t>The below creates a JSON object and places it under the key "mockViewer"
+	  <figure>
+     <preamble>Example: JSON object</preamble>
+     <artwork xml:space="preserve">
+&lt;os:Var key="mockViewer" &gt;
+{"displayName": "John Doe",
+ "thumbnailUrl": "http://example.org/person.png"
+}
+&lt;/os:Var&gt;
+	 </artwork>
+    </figure>
+	</t>
+	
+   </section>   
+</x:draft>
+  </section>
+
   <section title="Dynamic parameters">
    <t>Data and HTTP requests often need to change based on input parameters.
    Two key use cases: 

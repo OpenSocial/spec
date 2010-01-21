@@ -497,10 +497,10 @@ data['Viewer']['Name']
      </figure></t>
     </section>
    </section>
-     <section title="Declaring Variables Inline - os:Var">
+     <section title="Declaring Variables Inline - &lt;os:Var&gt;">
     <t>Variables may be declared in both inline and custom tag templates
-	with the os:Var tag.</t>
-    <section title="os:Var syntax">
+	with the <eref target="Core-Gadget.xml#osVar">os:Var tag</eref>.  
+	The value of os:Var is processed as defined under <eref target="Core-Gadget.xml#osvarProcessingRules">os:Var Processing Rules</eref></t>
 	<t>
 The &lt;os:Var&gt; tag allows for the declaration of literal variables.
 It may be used in inline custom tag templates, inline templates, and 
@@ -511,43 +511,11 @@ data-pipeline sections.
      <artwork xml:space="preserve">&lt;os:Var key="mytemp" value="1"/&gt;
 </artwork>
     </figure>
-
 </t>
-
-<t>
-The element supports three attributes: 
-</t>
-
-<list style="symbols">
-<t> @key: Required. defines the string name of the variable.  EL statements may not be used.</t>
-<t> @value: Optional. Defines the value of the variable.   EL statements may be used.</t>
-</list>
-
-<t>
-When the @value attribute is not specified, the contents of the &lt;os:Var&gt; tag is used as the value.
-</t>
-<t>
-When processing values, the processor attempts to resolve the value of the os:Var tag in the following manner:
-</t>
-<x:draft note="processing rules adjusted from original proposal to accomodate EL referenced objects in JSON literal">
-<list style="numbers">
-<t>For a single EL value, return the resulting object</t>
-<t>Process to replace EL statements (${} markup)</t>
-<t>Attempt to parse it as a JSON value and return the resulting object if successful.  
-A container MAY support EL statements in JSON values.</t>
-<t>If all other processing does not resolve the value, return as a string</t>
-</list>
-</x:draft>
-
-
-	</section>
-
     <section title="Scope">
 	<t>
 	 When os:Var is used in inline templates it will not be available until after processing
-	 the os:Var tag in the render pass and will not be available to data-pipeline
-	 tags for use in dynamic parameters.  Templates may use variables declared with 
-	 os:Var in a data-pipelining section at any time.
+	 the os:Var tag in the render pass.
 	</t>
     <figure>
      <preamble>Example of variable with os:Var</preamble>
@@ -594,25 +562,6 @@ A container MAY support EL statements in JSON values.</t>
 
 
     </section>
-
-<section title="Value assignments with os:Var">
-     <t>The value created with os:Var may contain literals, JSON data, or EL statements. 
-	 An array may be declared using JSON or JavaScript array syntax.
-	</t>
-	
-	<t>The below example creates a one-dimensional array with values [1,2,3,5,7]
-	and assigns it to the key "primes" in the data context
-	</t>
-
-	  <figure>
-     <preamble>Example: simple array</preamble>
-     <artwork xml:space="preserve">
-&lt;os:Var key="primes" value="[1,2,3,5,7]" /&gt;
-	 </artwork>
-    </figure>
-	
-	
-	</section>
 	
 	</section>
 
