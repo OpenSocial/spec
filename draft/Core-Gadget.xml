@@ -1533,22 +1533,25 @@ gadgets.io.makeRequest(url, callback, params);
        gadget making the request.</t>
       </section>
       <section title="The callback parameter">
-       <t>The makeRequest() callback parameter is passed a javascript object
-       with several OAuth-specific fields in addition to the normal values
-       returned by makeRequest(): 
+       <t>The function specified as the callback parameter is passed a JavaScript object with the following fields: 
        <list style="hanging">
-        <t hangText='"oauthApprovalUrl"'>If this value is specified, the user
+         <t hangText="data">Parsed data of the response, if applicable. This will contain a different type of data depending on the type of request that was made. See the ContentType parameters for information about what to expect in this field. The raw response text is returned if the response could not be parsed.</t>
+         <t hangText="errors">This will contain an array of any errors that occurred when making this request. For example, if a 500 error occurred in the request: [ "500 error" ]</t>
+         <t hangText="headers">An object containing the response headers. Header names are used as the keys for this object.</t>
+         <t hangText="rc">This is a numeric value representing the HTTP status code of the response.</t>
+         <t hangText="text">This will return the unparsed text of the response.</t>
+        <t hangText="oauthApprovalUrl">If this value is specified, the user
         needs to visit an external page to approve the gadget's request to
         access data. Use of a pop-up window to direct the user to the external
         page is recommended. Once the user has approved access, the gadget can
         repeat the makeRequest call to retrieve the data.</t>
-        <t hangText='"oauthError"'>If this value is specified, it indicates an
+        <t hangText="oauthError">If this value is specified, it indicates an
         OAuth-related error occurred. The value will be one of a set of string
         constants that can be used for programmatically detecting errors. The
         constants are undefined for opensocial-0.8, but implementers should
         attempt to agree on a set of useful constant values for standardization
         in opensocial-0.9.</t>
-        <t hangText='"oauthErrorText"'>If this value is specified, it indicates
+        <t hangText="oauthErrorText">If this value is specified, it indicates
         an OAuth-related error occurred. The value is free-form text that can
         be used to provide debugging information for gadget developers.</t>
        </list></t>
