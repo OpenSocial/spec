@@ -104,7 +104,7 @@
    their gadgets simply by adding name/message mappings corresponding to
    whatever languages the developer chooses to support. These messages may be
    accessed programmatically through the core JavaScript APIs provided to all
-   gadgets, or may be statically substituted into code using simple syntax. For more detail, see 
+   gadgets, or may be statically substituted into code using simple syntax. For more detail, see
      <xref target="Localization">Localization</xref>.</t>
    <t>Message Bundles. .</t>
      <t hangText="User Preferences">Referred to as "user prefs" or "prefs",
@@ -114,7 +114,7 @@
    access to them across multiple rendering requests. The gadget container is
    typically responsible for providing their persistence for this data and an
    interface to edit it.  For more
-     detail, see 
+     detail, see
      <xref target="UserPref">User Preferences</xref>.</t>
      <t hangText="Gadget Specification XML">Generally referred to as "gadget
      spec", or simply a "gadget", this is the XML document that contains all
@@ -132,20 +132,20 @@
    <t>To be a compliant Core Gadget Container, a server MUST be able to satisfy
    the requests defined in this section.</t>
    <section title="Retrieve Content Request" anchor="Retrieval">
-    <t>Gadget Containers MUST be able to fetch remote files, such as 
+    <t>Gadget Containers MUST be able to fetch remote files, such as
     gadget specs, message bundles, CSS files, or images.</t>
      <t>Files SHOULD be retrieved from the source URL that the Developer
      has provided to the Container. Containers MAY fetch equivalent documents
      from alternate sources (such as caches or rewriting services) as long as
      those services are responsible for retrieving the document themselves.</t>
      <t>Containers SHOULD cache the file after fetching it. If the Container caches
-     a document, it MUST implement the caching policy as defined by RFC2616. 
+     a document, it MUST implement the caching policy as defined by RFC2616.
      Additionally, containers that cache documents SHOULD provide a mechanism to
-     bypass the caching policy entirely to facilitate development, such as a 
-     "nocache" query string parameter passed to the page that the gadget is 
+     bypass the caching policy entirely to facilitate development, such as a
+     "nocache" query string parameter passed to the page that the gadget is
      rendered on.  Containers MAY use expired cache entries for files to
-     ensure that temporary network problems do not affect end users.</t> 
-   </section>   
+     ensure that temporary network problems do not affect end users.</t>
+   </section>
    <section title="Parse XML Request" anchor="Parsing">
     <t>XML documents MUST be well-formed, and Containers MUST display an error
     to Users if they are asked to process a malformed document. Containers
@@ -576,16 +576,16 @@
     "event.eventtype", the Container MUST make an HTTP request to the specified
     URL.</t>
     <t>The request sent to the specified endpoint MUST be signed according to
-    the rules in 
+    the rules in
     <xref target="SignedFetch">Signed Fetch</xref>. Additionally, one extra
     parameter named "eventtype" MUST be passed. This value MUST be the same as
     the event name part of the 'rel' attribute.</t>
-   </section>              
+   </section>
      </section>
      <section title="/ModulePrefs/OAuth"
               anchor="OAuthElement">
       <t>Supplies the Container with OAuth service configuration for the
-      gadget. For details, see 
+      gadget. For details, see
       <xref target="OAuth">OAuth</xref>. This tag has no attributes and has
       child elements. Containers SHOULD NOT interpret child text nodes.</t>
       <section title="/ModulePrefs/OAuth/Service">
@@ -651,7 +651,7 @@
      <t>A User Preference specification.</t>
      <list style="hanging">
       <t hangText="@name">The name of the preference. Containers MUST provide
-      the current value of the preference when this key is passed to the getters found in  
+      the current value of the preference when this key is passed to the getters found in
       <xref target="gadgets.Prefs">gadgets.Prefs</xref>. This is also the key used when performing UP substitutions (see
       <xref target="Localization">Localization</xref>).</t>
       <t hangText="@datatype">The data type for this preference. Valid values
@@ -2314,7 +2314,7 @@ var lang = prefs.getLang();
       <t>Type: {String} bind(environment)</t>
       <t>Description: Binds the view's URL template with variables in the
       passed environment to produce a URL string.
-      <t>See also: 
+      <t>See also:
       <xref target="gadgets.views.View.getUrlTemplate">
       getUrlTemplate()</xref> </t></t>
       <t>Parameters:
@@ -2354,16 +2354,16 @@ var lang = prefs.getLang();
      <section title="getUrlTemplate"
               anchor="gadgets.views.View.getUrlTemplate">
       <t>Type: {String} getUrlTemplate()</t>
-      <t>Description: Returns a string URI template conforming to the 
+      <t>Description: Returns a string URI template conforming to the
       <eref target="http://bitworking.org/projects/URI-Templates/spec/draft-gregorio-uritemplate-03">
       IETF spec draft</eref> with variables for substitution.
       <t>Four variables are supported:</t>
       <list style="hanging">
       <t hangText="name">The name or ID of the application</t>
       <t hangText="owner">The ID of the owner of the page</t>
-      <t hangText="path">An array of path steps</t>` 
+      <t hangText="path">An array of path steps</t>`
       <t hangText="params">Associative array or
-      array[param1,value1,param2,value2,...]</t></list>Example 
+      array[param1,value1,param2,value2,...]</t></list>Example
       <figure>
        <preamble>Here are two valid URL template strings:</preamble>
        <artwork xml:space="preserve">
@@ -2378,7 +2378,7 @@ http://container.com/apps/{name}/{owner}{-prefix|/|path}{-opt|?os_|params}{-join
     name : 'Wilma',
     owner : 'Betty',
     path : ['dino','car'],
-    params : { a : 'Barney', b : 'Fred'}          
+    params : { a : 'Barney', b : 'Fred'}
 }
 </artwork>
       </figure>
@@ -2390,7 +2390,7 @@ http://container.com/Wilma/Betty/dino/car?a=Barney&amp;b=Fred
 http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
 </artwork>
       </figure>
-      <t>See also: 
+      <t>See also:
       <xref target="gadgets.views.View.bind">bind()</xref> </t></t>
       <t>Returns:
       <texttable align="left">
@@ -2420,7 +2420,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
    <section title="gadgets.views.ViewType"
             anchor="gadgets.views.ViewType">
     <!-- ============================== class summary ========================== -->
-    <t>Used by 
+    <t>Used by
     <xref target="gadgets.views.View">View objects</xref>.</t>
       <list style="hanging">
      <t hangText="CANVAS"
@@ -2479,7 +2479,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
      of the gadget XML file.</t>
      <section title="Service Objects">
         <t>Services objects available are dependent upon the container. The server SHOULD generate service objects for all available services. For example, Social API Servers supporting services such as <eref target="Social-API-Server.xml#People-Service">People</eref>, and <eref target="Social-API-Server.xml#Activities-Service">Activities</eref> would create JavaScript objects for osapi.people and osapi.activites.</t>
-        <t>Each service object SHOULD make JavaScript functions available for all methods that the service supports. These functions SHOULD take a single parameter which is a JavaScript representation of the service method's parameters.  These functions MUST return a <x:ref>osapi.Request</x:ref> object that may be sent immediately by the <x:ref>osapi.Request.execute</x:ref>, or may be added to a <x:ref>osapi.BatchRequest</x:ref>.</t>        
+        <t>Each service object SHOULD make JavaScript functions available for all methods that the service supports. These functions SHOULD take a single parameter which is a JavaScript representation of the service method's parameters.  These functions MUST return a <x:ref>osapi.Request</x:ref> object that may be sent immediately by the <x:ref>osapi.Request.execute</x:ref>, or may be added to a <x:ref>osapi.BatchRequest</x:ref>.</t>
         <t>Developers wanting to write gadgets safely can test for the existence of a service and method as follows:</t>
       <artwork type="example" xml:space="preserve">if (osapi.people &amp;&amp; osapi.people.getViewer) {
   osapi.people.getViewer().execute(function(result) {
@@ -2501,7 +2501,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
          <list style="hanging">
           <t hangText="Signature">osapi.Response.execute(callback)</t>
           <t hangText="Description">Sends a request to execute a request to a service method.  Generally invoked as &lt;service-name&gt;.&lt;method-name&gt;(params).execute(callback) to send a request to the given method (&lt;method-name&gt;) on the specified service (&lt;service-name&gt;). Takes a callback for response processing.</t>
-          <t hangText="Parameters"> 
+          <t hangText="Parameters">
            <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -2537,7 +2537,7 @@ function callback(ownerFriends) {
          <list style="hanging">
          <t hangText="Signature"><x:ref>osapi.BatchRequest</x:ref> osapi.newBatch()</t>
          <t hangText="Description">Creates a new batch request.</t>
-         <t hangText="Parameters">None</t> 
+         <t hangText="Parameters">None</t>
          <t hangText="Returns">
           <texttable align="left">
            <ttcol>Type</ttcol>
@@ -2587,7 +2587,7 @@ function callback(ownerFriends) {
           <t hangText="Description">Executes all of the requests in the batch. Takes a
          callback for response processing, which is passed a JSON object
          mapping each request key to a JSON response object.</t>
-          <t hangText="Parameters"> 
+          <t hangText="Parameters">
            <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -2627,7 +2627,7 @@ specified in the <x:ref>osapi.BatchRequest.add</x:ref> method. The value is the 
       down into 3 types of errors:</t>
       <list style="symbols">
        <t>Network error, these return a top level error. For example, in the
-       callback, the object passed will have an error object. 
+       callback, the object passed will have an error object.
        <figure>
         <preamble>Example:</preamble>
         <artwork xml:space="preserve">
@@ -2640,7 +2640,7 @@ osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(owner
 });
 </artwork>
        </figure></t>
-       <t>Application Error for Single Request 
+       <t>Application Error for Single Request
        <t>In this case, a top-level error object is set. Note, this is just
        like the previous error case.</t>
        <figure>
@@ -2655,14 +2655,14 @@ osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(owner
 });
 </artwork>
        </figure></t>
-       <t>Application Error for a Batched Request. 
+       <t>Application Error for a Batched Request.
        <t>In this case, a top-level error is set, but results are still
        returned for all individual requests that succeeded, if any. The
        individual request that failed has an error set.</t>
        <t>Note that 'error' is reserved and may not be used</t>
        <list style="symbols">
         <t>as a key to batch.add()</t>
-        <t>as a property of a JSON RPC batch response item. 
+        <t>as a property of a JSON RPC batch response item.
         <figure>
          <preamble>Example: Bailing out if there is any error in the
          batch:</preamble>
@@ -2714,7 +2714,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
          <list style="hanging">
           <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.head(params)</t>
           <t hangText="Description">Creates a HEAD request to an arbitrary URL.</t>
-          <t hangText="Parameters"> 
+          <t hangText="Parameters">
            <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -2724,7 +2724,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <c>A JavaScript representation of HTTP-Request-Parameters.</c>
            </texttable>
           </t>
-          <t hangText="Returns"> 
+          <t hangText="Returns">
            <texttable align="left">
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
@@ -2739,7 +2739,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
          <list style="hanging">
           <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.get(params)</t>
           <t hangText="Description">Creates a GET request to an arbitrary URL.</t>
-          <t hangText="Parameters"> 
+          <t hangText="Parameters">
            <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -2749,7 +2749,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <c>A JavaScript representation of HTTP-Request-Parameters.</c>
            </texttable>
           </t>
-          <t hangText="Returns"> 
+          <t hangText="Returns">
            <texttable align="left">
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
@@ -2764,7 +2764,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
          <list style="hanging">
           <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.post(params)</t>
           <t hangText="Description">Creates a POST request to an arbitrary URL.</t>
-          <t hangText="Parameters"> 
+          <t hangText="Parameters">
            <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -2774,7 +2774,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <c>A JavaScript representation of HTTP-Request-Parameters.  osapi.http.post supports an additional property, 'body', whose value is used as the post body of the HTTP request.</c>
            </texttable>
           </t>
-          <t hangText="Returns"> 
+          <t hangText="Returns">
            <texttable align="left">
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
@@ -2789,7 +2789,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
          <list style="hanging">
           <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.put(params)</t>
           <t hangText="Description">Creates a PUT request to an arbitrary URL.</t>
-          <t hangText="Parameters"> 
+          <t hangText="Parameters">
            <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -2799,7 +2799,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <c>A JavaScript representation of HTTP-Request-Parameters.   osapi.http.put supports an additional property, 'body', whose value is used as the post body of the HTTP request.</c>
            </texttable>
           </t>
-          <t hangText="Returns"> 
+          <t hangText="Returns">
            <texttable align="left">
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
@@ -2814,7 +2814,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
          <list style="hanging">
           <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.delete(params)</t>
           <t hangText="Description">Creates a DELETE request to an arbitrary URL.</t>
-          <t hangText="Parameters"> 
+          <t hangText="Parameters">
            <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -2824,7 +2824,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <c>A JavaScript representation of HTTP-Request-Parameters.</c>
            </texttable>
           </t>
-          <t hangText="Returns"> 
+          <t hangText="Returns">
            <texttable align="left">
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
@@ -2908,7 +2908,7 @@ osapi.http.post(params).execute(function(result) {
    </list>
    <t>Data Pipelining creates a new feature name for use in the Gadget
    Specification: opensocial-data. When data pipelining elements are embedded
-   in type=@html, the Module must contain this XML: 
+   in type=@html, the Module must contain this XML:
    <figure>
     <artwork xml:space="preserve">
 &lt;ModulePrefs&gt;
@@ -2918,7 +2918,7 @@ osapi.http.post(params).execute(function(result) {
    </figure></t>
    <section title="Tag: &lt;os:DataRequest&gt;"
            anchor="DataRequest">
-    <list style="hanging"> 
+    <list style="hanging">
      <t hangText="Description">Request to get OpenSocial data, including person data, activity data, and any container-specific endpoints.</t>
      <t hangText="Attributes">The following attributes are REQUIRED.  Any additional attributes will be passed as parameters to the service method.
        <texttable align="left">
@@ -2975,7 +2975,7 @@ osapi.http.post(params).execute(function(result) {
    </figure>
    <t>For errors, the "message" property MUST NOT contain the response
    body, but SHOULD contain a descriptive message describing the HTTP error.
-   The error MAY contain a data block providing the content and headers. 
+   The error MAY contain a data block providing the content and headers.
    <figure>
     <preamble>Example responses:</preamble>
     <artwork xml:space="preserve">
@@ -3090,7 +3090,7 @@ osapi.http.post(params).execute(function(result) {
 
   <section title="Dynamic parameters">
    <t>Data and HTTP requests often need to change based on input parameters.
-   Two key use cases: 
+   Two key use cases:
    <list style="symbols">
     <t>Passing gadgets view parameters to a request, for example the current
     page in a paginated list.</t>
@@ -3098,8 +3098,8 @@ osapi.http.post(params).execute(function(result) {
     specifically IDs of (viewer, owner, viewer friends, owner friends).</t>
    </list></t>
    <t>Data pipelining will support a limited subset of the expression language
-   used in OpenSocial templates (based on 
-   <xref target="JSPEL">JSP EL</xref>): 
+   used in OpenSocial templates (based on
+   <xref target="JSPEL">JSP EL</xref>):
    <list style="symbols">
     <t>Expressions of format ${A(.B)*} will be supported, where "A" is the key
     and "B" is any number of properties. Examples: ${UserPrefs.size},
@@ -3108,8 +3108,8 @@ osapi.http.post(params).execute(function(result) {
     with non-expression text. The result of all non-expression text and
     expression evaluations will be concatenated.</t>
     <t>The key "ViewParams" is reserved and refers to the parameters passed
-    into the gadget rendering, equivalent to 
-    <xref target="GadgetsSpec">gadgets.views.getParams()</xref>.</t>
+    into the gadget rendering, equivalent to
+    <xref target="gadgets.views.getParams">gadgets.views.getParams()</xref>.</t>
     <t>The key "UserPrefs" is reserved and refers to gadget user preferences -
     ${UserPrefs.PREF} will return the value of gadgets.Prefs.getString('PREF')
     - see [API].</t>
@@ -3117,10 +3117,10 @@ osapi.http.post(params).execute(function(result) {
    were inserted as the literal string value of the XML attribute. JSON arrays
    within ViewParams are output as "a,b", not "[a,b]". The results of
    expression evaluation for URL-typed attributes - specifically, @href and
-   @param on &lt;os:HttpRequest&gt; - MUST be 
+   @param on &lt;os:HttpRequest&gt; - MUST be
    <eref target="http://www.ietf.org/rfc/rfc1738.txt">RFC 1738, Section 2.2
    encoded (URL encoded)</eref> before being inserted into a final string.</t>
-   <t>The following attributes support expressions: 
+   <t>The following attributes support expressions:
    <list style="symbols">
     <t>Any attribute on os:DataRequest other than @key and @method</t>
     <t>@userId</t>
@@ -3154,17 +3154,16 @@ osapi.http.post(params).execute(function(result) {
     <figure>
      <preamble>Example</preamble>
      <artwork xml:space="preserve">
-&lt;os:PeopleRequest key="Page1" userId="@owner" groupId="@friends" 
+&lt;os:PeopleRequest key="Page1" userId="@owner" groupId="@friends"
   startIndex="${ViewParams.first}" count="20"/&gt;
 
-&lt;os:PeopleRequest key="Page2" userId="${Page1.Request.userId}" groupId="@friends" 
-  startIndex="${Page1.Request.startIndex + Page1.Request.count}" 
+&lt;os:PeopleRequest key="Page2" userId="${Page1.Request.userId}" groupId="@friends"
+  startIndex="${Page1.Request.startIndex + Page1.Request.count}"
   count="${Page1.Request.count}"/&gt;
 
 </artwork>
     </figure>
    </t>
-   
   </section>
   </section>
  </middle>
@@ -3437,7 +3436,7 @@ osapi.http.post(params).execute(function(result) {
       <t>&lt;static&gt; Type: {Boolean} gadgets.flash.embedFlash(swfUrl,
       swfContainer, swfVersion, opt_params)</t>
       <t>Description: Injects a Flash file into the DOM tree.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -3611,10 +3610,10 @@ osapi.http.post(params).execute(function(result) {
             anchor="gadgets.oauth.Popup">
     <!-- ============================== class summary ========================== -->
     <t>OAuth popup window manager.</t>
-    <t>Expected usage: 
+    <t>Expected usage:
     <list style="numbers">
      <t>Gadget attempts to fetch OAuth data for the user and discovers that
-     approval is needed. The gadget creates two new UI elements: 
+     approval is needed. The gadget creates two new UI elements:
      <list style="symbols">
       <t>a "personalize this gadget" button or link</t>
       <t>a "personalization done" button or link, which is initially
@@ -3625,7 +3624,7 @@ osapi.http.post(params).execute(function(result) {
      where the popup manager is unable to detect that a window has closed. This
      allows the user to signal approval manually.</t>
      <t>Gadget creates a popup object and associates event handlers with the UI
-     elements: 
+     elements:
      <figure>
       <artwork xml:space="preserve">
 // Called when the user opens the popup window.
@@ -3718,7 +3717,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>&lt;static&gt; gadgets.rpc.call(targetId, serviceName, callback,
       var_args)</t>
       <t>Description: Calls an RPC service.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -3744,7 +3743,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.rpc.register">
       <t>&lt;static&gt; gadgets.rpc.register(serviceName, handler)</t>
       <t>Description: Registers an RPC service.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -3762,7 +3761,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>&lt;static&gt; gadgets.rpc.registerDefault(handler)</t>
       <t>Description: Registers a default service handler to process all
       unknown remote procedure calls, which fail silently by default.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -3776,7 +3775,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.rpc.unregister">
       <t>&lt;static&gt; gadgets.rpc.unregister(serviceName)</t>
       <t>Description: Unregisters an RPC service.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -3805,14 +3804,14 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>&lt;static&gt; Type: {String}
       gadgets.skins.getProperty(propertyKey)</t>
       <t>Description: Fetches the display property mapped to the given key.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>propertyKey</c>
        <c>String</c>
-       <c>The key to get data for; keys are defined in 
+       <c>The key to get data for; keys are defined in
        <xref target="gadgets.skins.Property">gadgets.skins.Property</xref> </c>
       </texttable></t>
       <t>Returns:
@@ -3829,7 +3828,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
             anchor="gadgets.skins.Property">
     <!-- ============================== class summary ========================== -->
     <t>All of the display values that can be fetched and used in the gadgets
-    UI. These are the supported keys for the 
+    UI. These are the supported keys for the
     <xref target="gadgets.skins.getProperty">
     gadgets.skins.getProperty()</xref> method.</t>
     <list style="hanging">
@@ -3856,8 +3855,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
             anchor="gadgets.Tab">
     <!-- ============================== class summary ========================== -->
     <t>Tab class for gadgets. You create tabs using the TabSet addTab() method.
-    To get Tab objects, use the TabSet getSelectedTab() or getTabs() methods. 
-    <t>See also: 
+    To get Tab objects, use the TabSet getSelectedTab() or getTabs() methods.
+    <t>See also:
     <xref target="gadgets.TabSet">TabSet</xref> </t></t>
     <section title="Method Details">
      <section title="getCallback"
@@ -3959,7 +3958,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.TabSet.addTab">
       <t>Type: {String} addTab(tabName, opt_params)</t>
       <t>Description: Adds a new tab based on the name-value pairs specified in
-      opt_params. The following properties are supported in opt_params: 
+      opt_params. The following properties are supported in opt_params:
       <list style="hanging">
        <t hangText="contentContainer">An existing HTML element to be used as
        the tab content container. If omitted, the tabs library creates one.</t>
@@ -3971,7 +3970,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
        <t hangText="index">The index at which to insert the tab. If omitted,
        the new tab is appended to the end.</t>
       </list></t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -3996,7 +3995,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>alignTabs(align, opt_offset)</t>
       <t>Description: Sets the alignment of tabs. Tabs are center-aligned by
       default.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -4014,7 +4013,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.TabSet.displayTabs">
       <t>displayTabs(display)</t>
       <t>Description: Shows or hides tabs and all associated content.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -4068,7 +4067,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>removeTab(tabIndex)</t>
       <t>Description: Removes a tab at tabIndex and all of its associated
       content.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -4084,7 +4083,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Selects the tab at tabIndex and fires the tab's callback
       function if it exists. If the tab is already selected, the callback is
       not fired.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -4100,7 +4099,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       <t>Description: Swaps the positions of tabs at tabIndex1 and tabIndex2.
       The selected tab does not change, and no callback functions are
       called.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -4125,7 +4124,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.window.adjustHeight">
       <t>&lt;static&gt; gadgets.window.adjustHeight(opt_height)</t>
       <t>Description: Adjusts the gadget height.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -4140,7 +4139,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.window.getViewportDimensions">
       <t>&lt;static&gt; Type: {Object}
       gadgets.window.getViewportDimensions()</t>
-      <t>Description: Detects the inner dimensions of a frame. See 
+      <t>Description: Detects the inner dimensions of a frame. See
       <eref target="http://www.quirksmode.org/dom/w3c_cssom">
       http://www.quirksmode.org/dom/w3c_cssom</eref> for more information.</t>
       <t>Returns:
@@ -4155,7 +4154,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
               anchor="gadgets.window.setTitle">
       <t>&lt;static&gt; gadgets.window.setTitle(title)</t>
       <t>Description: Sets the gadget title.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -4187,40 +4186,36 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
      example, let's say gadgets has lanuguage as french and country as france,
      the i18n package will use formatter/parser following french conventions by
      default. That means gadget developers could format/parse French
-     date/time/number/currency using the predefined CURRENCY_PATTERN. 
+     date/time/number/currency using the predefined CURRENCY_PATTERN.
      <figure>
       <preamble>Example</preamble>
       <artwork xml:space="preserve">
-           
 gadgets.i18n.parseNumber(gadgets.i18n.CURRENCY_PATTERN, "20 000 \u20AC"); // will return 20000
 </artwork>
      </figure>They could also parse foreign currency by passing in a
      opt_currencyCode. Note when French writes an amount of foreign currency,
      they will still use the French way of writing numbers the positioning
-     currency code - just the currency code is different. 
+     currency code - just the currency code is different.
      <figure>
       <preamble>Example</preamble>
       <artwork xml:space="preserve">
-           
 gadgets.i18n.parseNumber(gadgets.i18n.CURRENCY_PATTERN, "20 000 $", 0, "USD"); // will return 20000
 </artwork>
      </figure>It gets a little bit complicated if a foreign currency written in
      the foreign way is to be parsed. In that case, predefined patterns won't
      work, and string patterns need to be used. The example below returns 0
      (indicating error in parsing), as the number presented is not in French
-     format. 
+     format.
      <figure>
       <preamble>Example</preamble>
       <artwork xml:space="preserve">
-           
 gadgets.i18n.parseNumber(gadgets.i18n.CURRENCY_PATTERN, "$20,000"); // will return 0, indicating error
 </artwork>
      </figure>To make this work, a string pattern needs to be passed in, like
-     what is done below: 
+     what is done below:
      <figure>
       <preamble>Example</preamble>
       <artwork xml:space="preserve">
-           
 gadgets.i18n.parseNumber("#,###", "$20,000", 0, "USD"); // will return 20000
 </artwork>
      </figure></t>
@@ -4228,10 +4223,10 @@ gadgets.i18n.parseNumber("#,###", "$20,000", 0, "USD"); // will return 20000
     <section title="Pattern Specification">
      <section title="Date/Time Pattern Specification">
       <t>Both Formatting and Parsing following the same pattern specification.
-      The date/time pattern specifications are found in 
+      The date/time pattern specifications are found in
       <eref target="http://www.unicode.org/reports/tr35/#Date_Format_Patterns">
       Unicode Locale Data Markup Language, Date Format Patterns</eref> The
-      following specifiers are not required in this release: 
+      following specifiers are not required in this release:
       <list style="symbols">
        <t>w: Week of year</t>
        <t>W: Week of Month.</t>
@@ -4258,7 +4253,7 @@ gadgets.i18n.parseNumber("#,###", "$20,000", 0, "USD"); // will return 20000
       <t>The characters listed here are used in non-localized patterns.
       Localized patterns use the corresponding characters taken from
       corresponding locale symbol collection. Two exceptions are the currency
-      sign and quote, which are not localized. 
+      sign and quote, which are not localized.
       <texttable align="left">
        <ttcol>Symbol</ttcol>
        <ttcol>Location</ttcol>
@@ -4357,7 +4352,7 @@ subpattern := prefix? number exponent? suffix?
 := '*' padChar
  padChar := '\u0000'..'\uFFFD' -
 quote
- 
+
  Notation:
  X* 0 or more
 instances of X
@@ -4850,6 +4845,23 @@ assertEquals(0.30, value);
      </author>
      <date month='December'
            year='2009' />
+    </front>
+   </reference>
+   <reference anchor='JSPEL'
+              target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
+    <front>
+     <title>Java Server Pages Expression Language</title>
+     <author initials='K.'
+             surname='Chung'
+             fullname='Kin-Man Chung'></author>
+     <author initials='P.'
+             surname='DeLisle'
+             fullname='Pierre Delisle'></author>
+     <author initials='M.'
+             surname='Roth'
+             fullname='Mark Roth'></author>
+     <date month='May'
+           year='2006' />
     </front>
    </reference>
   </references>

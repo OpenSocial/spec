@@ -8,7 +8,7 @@
      docName="opensocial-data-specification-draft"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title>OpenSocial Data Specification (draft)</title>
+  <title>OpenSocial Social Data Specification (draft)</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -685,12 +685,22 @@ COMMA          = <US-ASCII comma (44)>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
+      <c>aboutMe</c>
+      <c>string</c>
+      <c>A general statement about the person.</c>
       <c>accounts</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Account</x:ref>&gt;</c>
       <c>An online account held by this Person.</c>
+      <c>activities</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite activities.</c>
       <c>addresses</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Address</x:ref>&gt;</c>
       <c>A physical mailing address for this Person.</c>
+      <c>age</c>
+      <c>number</c>
+      <c>The age of this person. Sometimes sites might want to show
+      age without revealing the specific birthday.</c>
       <c>anniversary</c>
       <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>The wedding anniversary of this person. The value MUST be a
@@ -698,10 +708,6 @@ COMMA          = <US-ASCII comma (44)>
       target="./Core-Data.xml#Date">Date</eref>. The
       year value MAY be set to 0000 when the year is not
       available.</c>
-      <c>age</c>
-      <c>number</c>
-      <c>The age of this person. Sometimes sites might want to show
-      age without revealing the specific birthday.</c>
       <c>appData</c>
       <c><eref
       target="./Core-Data.xml#Plural-Field">Plural-Field</eref>
@@ -713,6 +719,18 @@ COMMA          = <US-ASCII comma (44)>
       target="./Core-Data.xml#Date">Date</eref>. The
       year value MAY be set to 0000 when the age of the Person is
       private or the year is not available.</c>
+      <c>bodyType</c>
+      <c>string</c>
+      <c>Person's body characteristics.</c>
+      <c>books</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite books.</c>
+      <c>cars</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite cars.</c>
+      <c>children</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Description of the person's children.</c>
       <c>connected</c>
       <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
       <c>Boolean value indicating whether the user and this Person have
@@ -726,6 +744,9 @@ COMMA          = <US-ASCII comma (44)>
       information about other contacts without their explicit acknowledgment,
       or for services in which users choose to "follow" other users without
       requiring mutual consent, this value will always be false.</c>
+      <c>drinker</c>
+      <c>string</c>
+      <c>Person's drinking status.</c>
       <c>displayName</c>
       <c>string</c>
       <c><x:highlight>Required.</x:highlight> The name of this Person, suitable for display to end-users. Each
@@ -741,15 +762,33 @@ COMMA          = <US-ASCII comma (44)>
       <c>E-mail address for this Person. The value SHOULD be canonicalized by
       the Service Provider, e.g.joseph@plaxo.com instead of
       joseph@PLAXO.COM.</c>
-      <c>hasApp</c>
-      <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
-      <c>Indicating whether the user has application installed.</c>
+      <c>ethnicity</c>
+      <c>string</c>
+      <c>Person's ethnicity.</c>
+      <c>fashion</c>
+      <c>string</c>
+      <c>Person's thoughts on fashion.</c>
+      <c>food</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite food.</c>
       <c>gender</c>
       <c>string</c>
       <c>The gender of this person. Service Providers SHOULD return one of the
       following Canonical Values, if appropriate:male, female, or undisclosed,
       and MAY return a different value if it is not covered by one of these
       Canonical Values.</c>
+      <c>happiestWhen</c>
+      <c>string</c>
+      <c>Describes when the person is happiest.</c>
+      <c>hasApp</c>
+      <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
+      <c>Indicating whether the user has application installed.</c>
+      <c>heroes</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite heroes.</c>
+      <c>humor</c>
+      <c>string</c>
+      <c>Person's thoughts on humor.</c>
       <c>id</c>
       <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
       <c><x:highlight>Required.</x:highlight> Unique identifier for
@@ -763,10 +802,39 @@ COMMA          = <US-ASCII comma (44)>
       for. Instead of the standard Canonical Values for type, this field
       defines the following Canonical Values to represent currently popular IM
       services: aim, gtalk, icq, xmpp,msn, skype, qq, and yahoo.</c>
+      <c>interests</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's interests, hobbies or passions.</c>
+      <c>jobInterests</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite jobs, or job interests and skills.</c>
+      <c>languagesSpoken</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>List of the languages that the person speaks as ISO 639-1 codes.</c>
+      <c>livingArrangement</c>
+      <c>string</c>
+      <c>Description of the person's living arrangemen.</c>
+      <c>location</c>
+      <c>string</c>
+      <c></c>
+      <c>lookingFor</c>
+      <c>string</c>
+      <c>Person's statement about who or what they are looking for, or
+      what they are interested in meeting people for.</c>
+      <c>movies</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite movies.</c>
+      <c>music</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite music.</c>
       <c>name</c>
       <c><x:ref>Name</x:ref></c>
       <c>The broken-out components and fully formatted version of the person's
       real name.</c>
+      <c>networkPresence</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's current network status. Specified as one of: AWAY,
+      CHAT, DND, OFFLINE, ONLINE OR XA.</c>
       <c>nickname</c>
       <c>string</c>
       <c>The casual way to address this Person in real life, e.g. "Bob" or
@@ -781,6 +849,9 @@ COMMA          = <US-ASCII comma (44)>
       <c>organizations</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Organization</x:ref>&gt;</c>
       <c>A current or past organizational affiliation of this Person.</c>
+      <c>pets</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Description of the person's pets</c>
       <c>phoneNumbers</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Phone number for this Person. No canonical value is assumed here. In
@@ -796,6 +867,9 @@ COMMA          = <US-ASCII comma (44)>
       currently exists. Note that this field SHOULD NOT be used to send down
       arbitrary photos taken by this user, but specifically profile photos of
       the contact suitable for display when describing the contact.</c>
+      <c>politicalViews</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's political views.</c>
       <c>preferredUsername</c>
       <c>string</c>
       <c>The preferred username of this person on sites that ask for a username
@@ -803,11 +877,24 @@ COMMA          = <US-ASCII comma (44)>
       the owner (i.e. the value when /@me/@self is requested) than the user's
       person, e.g. Consumers MAY wish to use this value to pre-populate a
       username for this user when signing up for a new service.</c>
+      <c>profileSong</c>
+      <c>string</c>
+      <c>URL of a person's profile song.</c>
+      <c>profileVideo</c>
+      <c>string</c>
+      <c>URL of a person's profile video.</c>
+      <c>profileUrl</c>
+      <c>string</c>
+      <c>Person's profile URL, specified as a string. This URL must be
+      fully qualified. Relative URLs will not work in gadgets.</c>
       <c>published</c>
       <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>The date this Person was first added to the user's address book or
       friends list (i.e. the creation date of this entry). The value MUST be a
       valid <eref target="./Core-Data.xml#Date">Date</eref>.</c>
+      <c>quotes</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite quotes</c>
       <c>relationships</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>A bi-directionally asserted relationship type that was established
@@ -818,12 +905,50 @@ COMMA          = <US-ASCII comma (44)>
       but relationships MUST have been bi-directionally confirmed, whereas tags
       are asserted by the user without acknowledgment by this Person. Note that
       this field consists only of a string value.</c>
+      <c>relationshipStatus</c>
+      <c>string</c>
+      <c>Person's relationship status.</c>
+      <c>religion</c>
+      <c>string</c>
+      <c>Person's relgion or religious views.</c>
+      <c>romance</c>
+      <c>string</c>
+      <c>Person's comments about romance.</c>
+      <c>status</c>
+      <c>string</c>
+      <c>Person's status, headline or shoutout.</c>
+      <c>scaredOf</c>
+      <c>string</c>
+      <c>What the person is scared of.</c>
+      <c>sexualOrientation</c>
+      <c>string</c>
+      <c>Person's sexual orientation.</c>
+      <c>smoker</c>
+      <c>string</c>
+      <c>Person's smoking status.</c>
+      <c>sports</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite sports</c>
       <c>tags</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>A user-defined category label for this person, e.g. "favorite" or
       "web20". These values SHOULD be case-insensitive, and there SHOULD NOT be
       multiple tags provided for a given person that differ only in case. Note
       that this field consists only of a string value.</c>
+      <c>thumbnailUrl</c>c>
+      <c>string</c>
+      <c>Person's photo thumbnail URL, specified as a string. This URL
+      must be fully qualified. Relative URLs will not work in
+      gadgets.</c>
+      <c>turnOffs</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's turn offs.</c>
+      <c>turnOns</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's turn ons.</c>
+      <c>tvShows</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite TV shows.</c>
       <c>updated</c>
       <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>The most recent date the details of this Person were updated (i.e. the
@@ -851,131 +976,6 @@ COMMA          = <US-ASCII comma (44)>
       target="./Core-Data.xml#Date-UTC-Offset">Date-UTC-Offset</eref>. Note that this value MAY
       change over time due to daylight saving time, and is thus meant to
       signify only the current value of the user's timezone offset.</c>
-      <c>aboutMe</c>
-      <c>string</c>
-      <c>A general statement about the person.</c>
-      <c>bodyType</c>
-      <c>string</c>
-      <c>Person's body characteristics.</c>
-      <c>location</c>
-      <c>string</c>
-      <c></c>
-      <c>drinker</c>
-      <c>string</c>
-      <c>Person's drinking status.</c>
-      <c>ethnicity</c>
-      <c>string</c>
-      <c>Person's ethnicity.</c>
-      <c>fashion</c>
-      <c>string</c>
-      <c>Person's thoughts on fashion.</c>
-      <c>happiestWhen</c>
-      <c>string</c>
-      <c>Describes when the person is happiest.</c>
-      <c>humor</c>
-      <c>string</c>
-      <c>Person's thoughts on humor.</c>
-      <c>livingArrangement</c>
-      <c>string</c>
-      <c>Description of the person's living arrangemen.</c>
-      <c>lookingFor</c>
-      <c>string</c>
-      <c>Person's statement about who or what they are looking for, or
-      what they are interested in meeting people for.</c>
-      <c>profileSong</c>
-      <c>string</c>
-      <c>URL of a person's profile song.</c>
-      <c>profileVideo</c>
-      <c>string</c>
-      <c>URL of a person's profile video.</c>
-      <c>profileUrl</c>
-      <c>string</c>
-      <c>Person's profile URL, specified as a string. This URL must be
-      fully qualified. Relative URLs will not work in gadgets.</c>
-      <c>relationshipStatus</c>
-      <c>string</c>
-      <c>Person's relationship status.</c>
-      <c>religion</c>
-      <c>string</c>
-      <c>Person's relgion or religious views.</c>
-      <c>romance</c>
-      <c>string</c>
-      <c>Person's comments about romance.</c>
-      <c>scaredOf</c>
-      <c>string</c>
-      <c>What the person is scared of.</c>
-      <c>sexualOrientation</c>
-      <c>string</c>
-      <c>Person's sexual orientation.</c>
-      <c>smoker</c>
-      <c>string</c>
-      <c>Person's smoking status.</c>
-      <c>status</c>
-      <c>string</c>
-      <c>Person's status, headline or shoutout.</c>
-      <c>thumbnailUrl</c>c>
-      <c>string</c>
-      <c>Person's photo thumbnail URL, specified as a string. This URL
-      must be fully qualified. Relative URLs will not work in
-      gadgets.</c>
-      <c>activities</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite activities.</c>
-      <c>books</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite books.</c>
-      <c>cars</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite cars.</c>
-      <c>children</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Description of the person's children.</c>
-      <c>food</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite food.</c>
-      <c>heroes</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite heroes.</c>
-      <c>interests</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's interests, hobbies or passions.</c>
-      <c>jobInterests</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite jobs, or job interests and skills.</c>
-      <c>languagesSpoken</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>List of the languages that the person speaks as ISO 639-1 codes.</c>
-      <c>movies</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite movies.</c>
-      <c>music</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite music.</c>
-      <c>networkPresence</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's current network status. Specified as one of: AWAY,
-      CHAT, DND, OFFLINE, ONLINE OR XA.</c>
-      <c>pets</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Description of the person's pets</c>
-      <c>politicalViews</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's political views.</c>
-      <c>quotes</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite quotes</c>
-      <c>sports</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite sports</c>
-      <c>turnOffs</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's turn offs.</c>
-      <c>turnOns</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's turn ons.</c>
-      <c>tvShows</c>
-      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>Person's favorite TV shows.</c>
      </texttable>
     <t>A minimal Person example: 
     <figure>
@@ -1079,34 +1079,34 @@ COMMA          = <US-ASCII comma (44)>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
+      <c>country</c>
+      <c>string</c>
+      <c>The country name component.</c>
       <c>formatted</c>
       <c>string</c>
       <c>The full mailing address, formatted for display or use with a mailing
       label. This field MAY contain newlines. This is the Primary Sub-Field for
       this field, for the purposes of sorting and filtering.</c>
+      <c>latitude</c>
+      <c>string</c>
+      <c>Expresses the latitude of the location on a map.</c>
+      <c>locality</c>
+      <c>string</c>
+      <c>The city or locality component.</c>
+      <c>longitude</c>
+      <c>string</c>
+      <c>Expresses the longitude of the location on a map.</c>
+      <c>postalCode</c>
+      <c>string</c>
+      <c>The zipcode or postal code component.</c>
+      <c>region</c>
+      <c>string</c>
+      <c>The state or region component.</c>
       <c>streetAddress</c>
       <c>string</c>
       <c>The full street address component, which may include house number,
       street name, PO BOX, and multi-line extended street address information.
       This field MAY contain newlines.</c>
-      <c>locality</c>
-      <c>string</c>
-      <c>The city or locality component.</c>
-      <c>region</c>
-      <c>string</c>
-      <c>The state or region component.</c>
-      <c>postalCode</c>
-      <c>string</c>
-      <c>The zipcode or postal code component.</c>
-      <c>country</c>
-      <c>string</c>
-      <c>The country name component.</c>
-      <c>latitude</c>
-      <c>string</c>
-      <c>Expresses the latitude of the location on a map.</c>
-      <c>longitude</c>
-      <c>string</c>
-      <c>Expresses the longitude of the location on a map.</c>
       <c>type</c>
       <c>string</c>
       <c>The address type or label. Examples include 'work', 'home'.</c>
@@ -1370,26 +1370,22 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
+      <c>familyName</c>
+      <c>string</c>
+      <c>he family name of this Person, or "Last Name" in most Western
+      languages (e.g. Smarr given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
       <c>formatted</c>
       <c>string</c>
       <c>The full name, including all middle names, titles, and suffixes as
       appropriate, formatted for display (e.g. Mr. Joseph Robert Smarr, Esq.).
       This is the Primary Sub-Field for this field, for the purposes of sorting
       and filtering.</c>
-      <c>familyName</c>
-      <c>string</c>
-      <c>he family name of this Person, or "Last Name" in most Western
-      languages (e.g. Smarr given the full name Mr. Joseph Robert Smarr,
-      Esq.).</c>
       <c>givenName</c>
       <c>string</c>
       <c>The given name of this Person, or "First Name" in most Western
       languages (e.g. Joseph given the full name Mr. Joseph Robert Smarr,
       Esq.).</c>
-      <c>middleName</c>
-      <c>string</c>
-      <c>The middle name(s) of this Person (e.g. Robert given the full name Mr.
-      Joseph Robert Smarr, Esq.).</c>
       <c>honorificPrefix</c>
       <c>string</c>
       <c>The honorific prefix(es) of this Person, or "Title" in most Western
@@ -1400,6 +1396,10 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <c>The honorifix suffix(es) of this Person, or "Suffix" in most Western
       languages (e.g. Esq. given the full name Mr. Joseph Robert Smarr,
       Esq.).</c>
+      <c>middleName</c>
+      <c>string</c>
+      <c>The middle name(s) of this Person (e.g. Robert given the full name Mr.
+      Joseph Robert Smarr, Esq.).</c>
      </texttable></t>
    </section>
    <section title="Organization" anchor="Organization">
@@ -1411,38 +1411,16 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
-      <c>name</c>
-      <c>string</c>
-      <c>The name of the organization (e.g. company, school, or other
-      organization). This field MUST have a non-empty value for each
-      organization returned. This is the Primary Sub-Field for this field, for
-      the purposes of sorting and filtering.</c>
+      <c>address</c>
+      <c><x:ref>Address</x:ref></c>
+      <c>The physical address of this organization.</c>
       <c>department</c>
       <c>string</c>
       <c>The department within this organization.</c>
-      <c>salary</c>
+      <c>description</c>
       <c>string</c>
-      <c>The salary the person receieves from the organization</c>
-      <c>title</c>
-      <c>string</c>
-      <c>The job title or organizational role within this
-      organization.</c>
-      <c>field</c>
-      <c>string</c>
-      <c>The field the Organization is in.</c>
-      <c>subfield</c>
-      <c>string</c>
-      <c>The subfield the Organization is in.</c>
-      <c>type</c>
-      <c>string</c>
-      <c>The type of organization, with Canonical Values job and school.</c>
-      <c>startDate</c>
-      <c><eref target="./Core-Data.xml#Date">Date</eref> or string</c> 
-      <c>The date this Person joined this organization. This value SHOULD be a
-      valid <eref target="./Core-Data.xml#Date">Date</eref>
-      if possible, but MAY be an unformatted
-      string, since it is recognized that this field is often presented as
-      free-text.</c>
+      <c>A textual description of the role this Person played in this
+      organization. This field MAY contain newlines.</c>
       <c>endDate</c>
       <c><eref target="./Core-Data.xml#Date">Date</eref> or string</c>
       <c>The date this Person left this organization or the role specified by
@@ -1450,19 +1428,41 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <eref target="./Core-Data.xml#Date">Date</eref> if possible, but MAY be an unformatted
       string, since it is recognized that this field is often presented as
       free-text.</c>
-      <c>address</c>
-      <c><x:ref>Address</x:ref></c>
-      <c>The physical address of this organization.</c>
+      <c>field</c>
+      <c>string</c>
+      <c>The field the Organization is in.</c>
       <c>location</c>
       <c>string</c>
       <c>The physical location of this organization. This is an
       abbreviated location like "San Francisco". The container could
       choose to implement either "address" or "location" field, or
       both.</c>
-      <c>description</c>
+      <c>name</c>
       <c>string</c>
-      <c>A textual description of the role this Person played in this
-      organization. This field MAY contain newlines.</c>
+      <c>The name of the organization (e.g. company, school, or other
+      organization). This field MUST have a non-empty value for each
+      organization returned. This is the Primary Sub-Field for this field, for
+      the purposes of sorting and filtering.</c>
+      <c>salary</c>
+      <c>string</c>
+      <c>The salary the person receieves from the organization</c>
+      <c>startDate</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref> or string</c> 
+      <c>The date this Person joined this organization. This value SHOULD be a
+      valid <eref target="./Core-Data.xml#Date">Date</eref>
+      if possible, but MAY be an unformatted
+      string, since it is recognized that this field is often presented as
+      free-text.</c>
+      <c>subfield</c>
+      <c>string</c>
+      <c>The subfield the Organization is in.</c>
+      <c>title</c>
+      <c>string</c>
+      <c>The job title or organizational role within this
+      organization.</c>
+      <c>type</c>
+      <c>string</c>
+      <c>The type of organization, with Canonical Values job and school.</c>
       <c>webpage</c>
       <c>string</c>
       <c>A webpage related to the organization.</c>
