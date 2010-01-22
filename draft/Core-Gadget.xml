@@ -3100,7 +3100,6 @@ osapi.http.post(params).execute(function(result) {
 	When processing values, the processor attempts to resolve the value of the os:Var tag in the following manner:
 	</t>
 	<list style="numbers">
-	<t>For a single EL value, return the resulting object</t>
 	<t>Process to replace EL statements (${} markup)</t>
 	<t>Attempt to parse it as a JSON value and return the resulting object if successful.</t>
 	<t>If all other processing does not resolve the value, return as a string</t>
