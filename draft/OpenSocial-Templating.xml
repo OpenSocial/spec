@@ -31,13 +31,13 @@
    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in 
-   <xref target="RFC2119">RFC2119</xref>. Domain name examples use 
-   <xref target="RFC2606">RFC2606</xref>.</t>
+   <xref target="RFC2119">RFC2119</xref>.</t>
+   <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
   </section>
   <section title="Overview">
    <t></t>
-   <section title="What is OpenSocial Template?">
-    <t>OpenSocial Template (OST) provides a declarative way for gadget
+   <section title="What is OpenSocial Templating?">
+    <t>OpenSocial Templating (OST) provides a declarative way for gadget
     developers to create templates by copying and pasting HTML, then making
     minor modifications to that HTML. Because OST is part of OpenSocial, it
     also provides a means to bind to the OpenSocial APIs and custom, developer

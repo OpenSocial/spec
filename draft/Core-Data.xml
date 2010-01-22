@@ -21,7 +21,7 @@
   </abstract>
  </front>
  <middle>
-  <section title="Introduction">
+  <section title="Notation and Conventions">
    <section title="Requirements">
     <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
     "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -31,15 +31,6 @@
     the MUST or REQUIRED level requirements for the protocols it
     implements.</t>
    </section>
-   <section title="Terminology">
-    <t>This specification uses a number of terms to refer to the roles played
-    by participants in, and objects of, an OpenSocial implementation.</t>
-    <list style="hanging">
-     <t hangText="term">Definition</t>
-    </list>
-   </section>
-  </section>
-  <section title="Notational Conventions and Generic Grammar">
    <section title="Conventions">
     <t>Domain name examples use 
     <xref target="RFC2606">RFC2606</xref>.</t>
@@ -457,6 +448,13 @@ Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
     </front>
     <seriesInfo name='RFC'
                 value='2234' />
+   </reference>
+   <reference anchor='RFC3339'>
+    <front>
+     <title>Date and Time on the Internet: Timestamps</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='3339' />
    </reference>
    <reference anchor='RFC20'>
     <front>

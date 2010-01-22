@@ -30,8 +30,8 @@
    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
    document are to be interpreted as described in 
-   <xref target="RFC2119">RFC2119</xref>. Domain name examples use 
-   <xref target="RFC2606">RFC2606</xref>.</t>
+   <xref target="RFC2119">RFC2119</xref>.</t>
+   <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
   </section>
   <section title="Overview">
    <t>OpenSocial is a set of APIs for building social applications that run on
@@ -52,6 +52,80 @@
    JavaScript APIs. It is a complement to the JavaScript API Reference, which
    covers the details of specific methods and parameters. This document does
    not describe any particular implementation of the API.</t>
+  </section>
+    <section title="Concepts and Terminology">
+    <list style="hanging">
+     <t hangText="Container">The OpenSocial Container. It is typically
+     represented as a web page, but alternative forms that are capable of
+     displaying a gadget, such as a personal computer desktop or a mobile
+     device, are also accepted.</t>
+     <t hangText="Developer">The entity that has authored the gadget.</t>
+     <t hangText="Friend">The term "friend" is used throughout this specification and can be
+      applied to a variety of relationships between people, whether or not they are actually friends, business contacts, or related through a management hierarchy. The "friend" term can be used to describe either symmetric relationships or asymmetric relationships (such as followers, as in Twitter). Also, this term can be used to refer to a human, a system, or another entity. For example, a user may "follow" updates from a bug tracking system.</t>
+     <t hangText="User">This may refer to any OpenSocial Person, though in most
+     contexts it is referring to the Viewer of the gadget at runtime.</t>
+     <t hangText="Content">The primary entity in a gadget that will be
+     displayed to an end user. Currently only two types of Content are
+     supported by OpenSocial: 
+      <list style="hanging">
+       <t hangText="Type HTML">Type HTML gadgets are the most prevalent, and are 
+    imbued with the most rich feature set. Code is provided directly in the 
+    gadget XML content section for rendering and control flow. This code simply 
+    assumes that functionality is available that has been requested from 
+    whatever gadget features were declared. In the case of optional-declared 
+    features, a simple feature-existence API can and should be consulted to 
+    ensure the capability is enabled. The code is processed by a gadget server 
+    and rendered in an IFRAME.</t>
+       <t hangText="Type URL">Type URL gadgets only specify a base URL. A standard 
+    set of parameters are added to this URL by the gadget server, which renders 
+    the gadget in an IFRAME. The application to which the URL points must 
+    include a referenced JavaScript library using a &lt;script&gt; tag as it 
+    renders, to enable gadget APIs to be made available. Type URL gadgets can't 
+    take advantage of all features, notably features that manipulate HTML and 
+    JavaScript code directly. However, this gadget type has proven highly useful
+    for turning existing web sites or applications into gadgets.</t>
+      </list>
+      Multiple Content sections may be specified in gadget XML. Each is
+   labeled with one or more optional view identifiers, which allow the gadget
+   to behave or appear differently depending on the context in which it's
+   rendered. This context is provided by the gadget container.</t>
+     <t hangText="Metadata">Any piece of information attached to a gadget, such
+     as a title, author name, or description, that provides processing
+     instructions to the Container, or otherwise does not directly impact
+     gadget rendering.</t>
+     <t hangText="Feature">A library or behavior that is provided by the
+     Container and triggered by use of the /ModulePrefs/Require or
+     /ModulePrefs/Optional tags. Gadget features are the primary extensibility mechanism employed by gadgets.
+   They often direct a gadget server to make new JavaScript APIs available to
+   rendering code, but may also manipulate the gadget's contents, for example
+   to add extended syntax. Examples of gadget features include OpenSocial
+   (provides gadgets with a rich set of social APIs), dynamic-height (enables
+   gadgets to resize themselves to an appropriate height), and tabs (a UI
+   library facilitating tabular navigation).</t>
+     <t hangText="Message Bundles">Message bundles are XML documents containing localization
+     information.  They allow developers to internationalize
+   their gadgets simply by adding name/message mappings corresponding to
+   whatever languages the developer chooses to support. These messages may be
+   accessed programmatically through the core JavaScript APIs provided to all
+   gadgets, or may be statically substituted into code using simple syntax.</t>
+     <t hangText="User Preferences">Referred to as "user prefs" or "prefs",
+     these represent configuration values for a User of the gadget. These are key/value pairs that form the basis of gadget
+   configuration and persistence. They are most often manipulable by users of
+   the gadget, and are persisted on behalf of a user so that the gadget has
+   access to them across multiple rendering requests. The gadget container is
+   typically responsible for providing their persistence for this data and an
+   interface to edit it.</t>
+     <t hangText="Gadget Specification XML">Generally referred to as "gadget
+     spec", or simply a "gadget", this is the XML document that contains all
+     the Metadata, Features, Message Bundles, User Preferences, and Content
+     necessary to display a gadget to an end user. A gadget spec is authored by
+     a Developer and made available through a public web server at a
+     well-defined URL so that Containers may use this URL as a canonical
+     reference for retrieving updates to the gadget.</t>
+     <t hangText="Formal Schema Directory">Any system used to hold a repository
+     of gadgets that may be installed by Users.</t>
+     <t hangText="View">A presentation mode for a gadget.</t>
+    </list>
   </section>
   <section title="Compliance"
            anchor="Compliance">

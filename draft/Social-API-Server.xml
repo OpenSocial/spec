@@ -22,7 +22,8 @@
   </abstract>
  </front>
  <middle>
-  <section title="Introduction">
+  <section title="Notation and Conventions">
+    <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
    <section title="Requirements">
     <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
     "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
@@ -31,20 +32,6 @@
     <t>An implementation is not compliant if it fails to satisfy one or more of
     the MUST or REQUIRED level requirements for the protocols it
     implements.</t>
-   </section>
-   <section title="Terminology">
-    <t>This specification uses a number of terms to refer to the roles played
-    by participants in, and objects of, an OpenSocial implementation.</t>
-    <list style="hanging">
-     <t hangText="friend">The term "friend" used throughout this specification can be
-      applied to a variety of relationships between people, whether they be actual friends, business contacts, or related through a management hierarchy. The "friend" term can also be used to describe either symmetric relationships or asymmetric relationships (such as followers, as in Twitter). Also, this term can be used to refer to a human or a system or other entity. For example, a user may "follow" updates from a bug tracking system, bot, or other thing.</t>
-    </list>
-   </section>
-  </section>
-  <section title="Notational Conventions and Generic Grammar">
-   <section title="Conventions">
-    <t>Domain name examples use 
-    <xref target="RFC2606">RFC2606</xref>.</t>
    </section>
    <section title="Augmented BNF">
     <t>The grammatical rules in this document are to be interpreted as
