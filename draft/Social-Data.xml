@@ -464,9 +464,9 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="Group"
             anchor="Group">
-     <t>Representation of a group, which may be a private, invitation-only, public or a personal group used to organize friends.</t>
-     <t>Each group returned MUST include the "id" and "title" fields. A "description" field is optional.</t>
-     <t>Valid definitions for Group-Field are listed in the table below.</t>
+    <t>OpenSocial Groups are owned by people, and are used to tag or categorize
+    people and their relationships. Each group has a display name, an identifier which is unique within the
+    groups owned by that person, and a URI link.  A group may be a private, invitation-only, public or a personal group used to organize friends.</t>
      <texttable align="left">
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -475,6 +475,45 @@ COMMA          = <US-ASCII comma (44)>
       <c>title</c><c>String</c><c>Title of group <x:highlight>Required.</x:highlight></c>
       <c>description</c>String<c></c><c>Description of group <x:highlight>Optional</x:highlight>.</c>
      </texttable>
+
+<t> A Group example: </t>
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "example.org:34KJDCSKJN2HHF0DW20394/friends",
+ "title" : "Peeps",
+}       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;group xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;
+  &lt;title&gt;Peeps&lt;/title&gt;
+&lt;/group&gt;       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;&lt;!-- group.id --&gt;
+ &lt;title&gt;Friends of John Smith&lt;/title&gt;&lt;!-- group.title + person.displayName --&gt;
+ &lt;updated&gt;2008-03-15T10:00:00Z&lt;/updated&gt;&lt;!-- last significant group change, or datetime.utcnow() --&gt;
+ &lt;author&gt;&lt;name&gt;John Smith&lt;/name&gt;&lt;/author&gt;&lt;!-- person.displayName --&gt;
+ &lt;link rel="alternate" type="application/json" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends" /&gt;
+ &lt;link rel="alternate" type="application/atom+xml" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends?format=atom" /&gt;
+ &lt;link rel="alternate" type="application/xml" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends?format=xml" /&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;group xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;
+     &lt;title&gt;Peeps&lt;/title&gt;
+   &lt;/group&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>
    </section>
    <section title="Message"
             anchor="Message">
