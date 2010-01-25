@@ -13,8 +13,8 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="December"
-        year="2009" />
+  <date month="January"
+        year="2010" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -143,7 +143,7 @@
      <t>Containers must also be able to process <xref target="DataPipelining">Data Pipelining</xref> and <xref target="OpenSocial-Templating">Templating</xref> elements in the gadget XML spec.</t>
    </section>
    <section title="JavaScript Request">
-    <t>In order for type="url" gadgets to access JavaScript libraries, the server MUST provide an HTTP service for retrieving core and feature-linked JavaScript. This HTTP service MUST handle requests to URLs provided in the 'libs' parameter described in <xref href="Type">/Content/@type</xref>.  The response to these requests MUST contain JavaScript code corresponding to the API(s) required by the type URL gadget.</t>
+    <t>In order for type="url" gadgets to access JavaScript libraries, the server MUST provide an HTTP service for retrieving core and feature-linked JavaScript. This HTTP service MUST handle requests to URLs provided in the 'libs' parameter described in <xref target="Type">/Content/@type</xref>.  The response to these requests MUST contain JavaScript code corresponding to the API(s) required by the type URL gadget.</t>
    </section>
   </section>
    <section title="Elements and Attributes"
