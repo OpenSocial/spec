@@ -582,8 +582,8 @@ Content-Type: application/json
           <c><eref target="Social-Data.xml#Group">Group</eref></c>
           <c>Group object specifying group to be created.</c>
          </texttable>
-     </section>
      <t>The Group "id" parameter should not be included in the request and MAY be ignored by the container</t>
+     </section>
 
     </section>
 
