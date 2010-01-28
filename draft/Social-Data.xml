@@ -471,9 +471,15 @@ COMMA          = <US-ASCII comma (44)>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
-      <c>id</c><c><x:ref>Group-ID</x:ref></c><c>Unique ID for this group <x:highlight>Required</x:highlight>.</c>
-      <c>title</c><c>String</c><c>Title of group <x:highlight>Required.</x:highlight></c>
-      <c>description</c>String<c></c><c>Description of group <x:highlight>Optional</x:highlight>.</c>
+      <c>id</c>
+      <c><x:ref>Group-ID</x:ref></c>
+      <c>Unique ID for this group <x:highlight>Required</x:highlight>.</c>
+      <c>title</c>
+      <c>String</c>
+      <c>Title of group <x:highlight>Required.</x:highlight></c>
+      <c>description</c>
+      <c>String</c>
+      <c>Description of group <x:highlight>Optional</x:highlight>.</c>
      </texttable>
 
 <t> A Group example: </t>
