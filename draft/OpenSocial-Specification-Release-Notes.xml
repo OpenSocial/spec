@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type='text/xsl' href='./rfc2629.xslt' ?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-specification-release-notes">
+     docName="opensocial-specification-release-notes"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
   <title abbrev="OpenSocial Specification Release Notes">OpenSocial
   Specification Release Notes</title>
-  <author surname="OpenSocial and Gadgets Specification Group"
-          fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+  <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="April"
-        year="2009" />
+  <date month="January"
+        year="2010" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -27,6 +27,47 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
+   <section title="Version 1.0">
+     <t>Published February XX, 2010</t>
+     <t>With so many different types of websites adopting OpenSocial it has become clear that a "one size fits all" approach isn't appropriate for the OpenSocial spec.  Containers have different types of data they want to make available to clients (sometimes it's social data, sometimes it's not), and some want to expose that data via web services, while others wish to use gadgets.  As such, modularity was a key goal in the OpenSocial 1.0 iteration, allowing implementers to pick and choose the elements of OpenSocial that make sense for their use cases.  OpenSocial 1.0 also defines extension points so containers can add functionality not covered in the spec, but do so in a standard way, making it easier to fold such extensions back into the spec or share extensions across containers.</t>
+     <section title="Major Changes">
+       <section title="Revised Compliance Section">
+     <t>To accommodate the varied use cases of OpenSocial containers, the <eref target="./OpenSocial-Specification.xml#Compliance">Compliance</eref> section has been revised to include four compliance models:</t>
+     <list>
+       <t><x:highlight>Core API Server</x:highlight> - For containers that wish to expose data in a standard way though web services.</t>
+       <t><x:highlight>Core Gadget Server</x:highlight> - For containers that simply want to be able to render gadgets.</t>
+       <t><x:highlight>Social API Server</x:highlight> - For containers that wish to expose social data through standard web services that are consistent across containers.</t>
+       <t><x:highlight>Social Gadget Server</x:highlight> - For containers that want to render gadgets and provide them access to standard social data.</t>
+     </list>
+     <t>The spec itself has been reorganized along these lines as well, consolidating all data definitions into the Core-Data.xml and Social-Data.xml files, and creating a separate file for each of the four compliance models.</t>
+      </section>
+       <section title="Defined how to extend the OpenSocial spec">
+         <t>A new <eref target="./OpenSocial-Specification.xml#Extensions">Extensions</eref> section defines how containers can extend OpenSocial in a common way so that extensions can be shared across containers, even if they're not appropriate for the official OpenSocial spec.</t>
+       </section>
+    </section>
+    <section title="Other Changes">
+      <list style="hanging">
+<t hangText="Versioned Core Gadget Features">Features included in a gadget spec should now be versioned.  If no version is specified, the default value is '1.0'.</t>
+<t hangText="Complete existing basic groups support">OpenSocial v0.9 defined a groups REST service, so OpenSocial 1.0 adds definitions for the JavaScript API and RPC endpoint.</t>
+<t hangText="Deprecated opensocial.* JavaScript API">The opensocial.* namespace has been largely deprecated in favor of the osapi.* API.</t>
+<t hangText="Clarify the 'Friend' term">Added text to make it clear the 'friend' may refer to any relationship (e.g. colleague, classmate, etc.).</t>
+<t hangText="os:Var variables in templates and data pipelining">Variables may be declared in both inline and custom tag templates with the os:Var tag. This tag may also be used data pipelining to declare global literal variables.</t>
+<t hangText="Clarify case sensitivity rules for DataPipeline/ EL variables">The spec now decalres that variable keys are case-sensitive both for Data Pipeline tags and for template parameters.</t>
+<t hangText="Define EL access to meta-data about data-pipeline tag response">Added a 'Request' field to the object returned in data pipelining responses so developers can access information about the request that initiated the request.</t>
+<t hangText="Clarify escaping behavior of EL">Introduces a "SecurityProfile" feature that gadgets can include to specify if they want EL functions to HTML exscape strings or not.</t>
+<t hangText="Clarify Custom Tag Template Parameter Behavior">Added language stating that only one value is allowed for a given parameter and define behavior where namespaces are used.</t>
+<t hangText="Remove the Background section">The content in this section was split up and distributed to the appropriate sections in the spec.  For example, the overview of data objects like people, activites, and messages now live in Social-Data.xml</t>
+<t hangText="Revised Core Gadget Specification">Added documentation for the elements in a gadget XML spec and removed the Metadata and JavaScript Request sections.</t>
+<t hangText="REST data 'title' field normalized between Album and MediaItem">MediaItem object now have a 'title' field and the 'caption' field has been deprecated.</t>
+<t hangText="Normalize between birthday and DATE_OF_BIRTH">The spec now uses 'birthday' throughout.</t>
+<t hangText="Errata in v0.9">Several typos and inaccuracies that we're pointed out since v0.9 was published.</t>
+</list>
+    </section>
+     <section title="Incompatible Changes">
+       <t>[Anyone aware of incompatible changes in this iteration?]</t>
+     </section>
+
+   </section>
   <section title="Version 0.9">
    <t>Published April 15, 2009</t>
    <t>The major focus of OpenSocial v0.9 was to make application development,
