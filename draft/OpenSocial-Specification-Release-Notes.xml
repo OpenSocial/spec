@@ -64,9 +64,20 @@
 </list>
     </section>
      <section title="Incompatible Changes">
-       <t>[Anyone aware of incompatible changes in this iteration?]</t>
+       <t>Several field names have been changed</t>
+       <texttable align="left">
+         <ttcol>Old field name</ttcol>
+         <ttcol>New field name</ttcol>
+         <c>Account.userid</c><c>Account.userId</c>
+         <c>Address.extendedAddress</c><c>Removed. Use Address.streetAddress</c>
+         <c>Address.poBox</c><c>Removed. Use Address.streetAddress</c>
+         <c>Album.caption</c><c>Album.title</c>
+         <c>Name.additionalName</c><c>Name.middleName</c>
+         <c>Person.appdata</c><c>Person.appData</c>
+         <c>Person.dateOfBirth</c><c>Person.birthday</c>
+         <c>Person.languages</c><c>Removed. Use Person.languagesSpoken</c>
+       </texttable>
      </section>
-
    </section>
   <section title="Version 0.9">
    <t>Published April 15, 2009</t>
