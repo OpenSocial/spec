@@ -3072,7 +3072,6 @@ osapi.http.post(params).execute(function(result) {
 
   <section title="Tag: &lt;os:Var&gt;"
            anchor="osVar">
-  <x:draft note="Moved from OpenSocial Template specification" >
     <list style="hanging"> 
      <t hangText="Description">Declare a literal value or result of an EL statement under a different key.</t>
      <t hangText="Attributes">The following attributes are supported.
@@ -3141,7 +3140,6 @@ osapi.http.post(params).execute(function(result) {
 	</t>
 	
    </section>   
-</x:draft>
   </section>
   <section title="Proxied content" anchor="DataPipelining-ProxiedContent">
    <t>Data pipelining tags can be top level elements in the &lt;Content&gt;
