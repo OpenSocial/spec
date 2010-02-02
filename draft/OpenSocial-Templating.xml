@@ -304,7 +304,6 @@ var y = '${os:jsStringEscape(someVar, true)}';
 	</list>
 	
    </section>
-   <x:draft note="Section flagging reserved EL properties has come from EL Meta-data discussion and has not been previously discussed">
 <section title="Reserved EL properties">   
 	<t>
 	A number of root-level property names have been reserved for container-controlled values.  
@@ -320,7 +319,6 @@ var y = '${os:jsStringEscape(someVar, true)}';
 	<t>filtered</t>
 	</list>
    </section>
-   </x:draft>
    </section>
    <section title="EL access to meta-information of DataPipeline variables">
     <t>
@@ -354,7 +352,6 @@ ${friends[0].displayName)
 </artwork>
     </figure></t>
     <t>
-	<x:draft note="specific handling of response meta-data is still being fine-tuned for casing and hoisting">
 	Response meta-information that exists above the "entry" key in the raw response
 	may be accessed from the EL key root through the reserved keys "totalResults", "startIndex", etc.  
 	For example, to access the
@@ -366,7 +363,6 @@ ${friends.totalResults)
 </artwork>
     </figure>
 	The above statement would evaluate to "100".
-	</x:draft>
 	</t>
 	
 	<t>
