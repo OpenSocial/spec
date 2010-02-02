@@ -3261,7 +3261,7 @@ dataset would contain content resembling:
    </t>
    <t>
    Dynamic parameters may access request attributes of other data tags through the special "Request" key
-   and response meta information of other data requests through the reserved keys "TotalResults", "StartIndex", and "Count".
+   and response meta information of other data requests through the reserved keys "totalResults", "startIndex", and "count".
     <figure>
      <preamble>Example</preamble>
      <artwork xml:space="preserve">
