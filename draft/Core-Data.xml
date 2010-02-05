@@ -340,6 +340,24 @@ Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
      return the same (type, value) combination more than once per Plural Field,
      as this complicates processing by the Consumer.</t>
    </section>
+   <section title="User-Id" anchor="User-Id">
+     <t>A User-Id uses the same format as an <x:ref>Object-Id</x:ref>, but there are several reserved values for common cases.</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+User-Id = <x:ref>Object-Id</x:ref> / "@owner" / "@viewer" / "@me"
+</artwork>
+     <t>The reserved values are defined in the following table:</t>
+     <texttable align="left">
+       <ttcol>Value</ttcol>
+       <ttcol>Description</ttcol>
+       <c>@owner</c>
+       <c>The user that owns the current page.  For example, if Alice is viewing Bob's profile page, then Bob is the owner.</c>
+       <c>@viewer</c>
+       <c>The user than is logged in an viewing the current page. For example, if Alice is viewing Bob's profile page, then Alice is the viewer.</c>
+       <c>@me</c>
+       <c>The currently authenticated user. For example, when an API request is received the user who's credentials are included in the authorization header of the request can be referenced as '@me'.</c>
+     </texttable>
+   </section>
   </section>
   <section title="Data Representations" anchor="Data-Representations">
    <t>Each resource has three representations, as JSON, XML, and Atom. All data
