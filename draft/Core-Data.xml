@@ -5,17 +5,17 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="core-data-specification-draft"
+     docName="opensocial-core-data-specification-1-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-Data">OpenSocial Core Data Specification (draft)</title>
+  <title abbrev="Core-Data">OpenSocial Core Data Specification 1.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="December"
-        year="2009" />
+  <date month="February"
+        year="2010" />
   <abstract>
    <t>This document defines all the data objects used in the <xref target="Core-Gadget"/> and <xref target="Core-API-Server"/> specifications.</t>
   </abstract>

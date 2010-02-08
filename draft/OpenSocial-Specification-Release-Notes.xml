@@ -64,7 +64,7 @@
 </list>
     </section>
      <section title="Incompatible Changes">
-       <t>Several field names have been changed</t>
+       <t>Several field names have been changed. Containers should continue to support the old values to avoid breaking existing gadgets.  App developers should use the new field names for all new gadgets.</t>
        <texttable align="left">
          <ttcol>Old field name</ttcol>
          <ttcol>New field name</ttcol>
@@ -761,91 +761,5 @@ OpenSocial containers. See the
   </section>
  </middle>
  <back>
-  <references>
-   <reference anchor="OpenSocial Specification"
-              target="./Opensocial-Specification.xml">
-    <front>
-     <title>OpenSocial Specification 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='January'
-           year='2000' />
-    </front>
-   </reference>
-   <reference anchor="OpenSocial Data Pipelining"
-              target="./OpenSocial-Data-Pipelining.xml">
-    <front>
-     <title>OpenSocial Data Pipelining 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='January'
-           year='2000' />
-    </front>
-   </reference>
-   <reference anchor="OpenSocial Markup Language Tags"
-              target="./OpenSocial-Markup-Language-Tags.xml">
-    <front>
-     <title>OpenSocial Markup Language Tags 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='January'
-           year='2000' />
-    </front>
-   </reference>
-   <reference anchor="OpenSocial Templating"
-              target="./OpenSocial-Templating.xml">
-    <front>
-     <title>OpenSocial Templating 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='January'
-           year='2000' />
-    </front>
-   </reference>
-   <reference anchor="RESTful Protocol Specification"
-              target="./REST-API.xml">
-    <front>
-     <title>RESTful Protocol Specification 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='January'
-           year='2000' />
-    </front>
-   </reference>
-   <reference anchor="RPC Protocol Specification"
-              target="./RPC-Protocol.xml">
-    <front>
-     <title>RPC Protocol Specification 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='January'
-           year='2000' />
-    </front>
-   </reference>
-   <reference anchor="Gadgets API Specification"
-              target="./Gadgets-API-Specification.xml">
-    <front>
-     <title>Gadgets API Specification 0.9</title>
-     <author initials='o.'
-             surname='social'
-             fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='January'
-           year='2000' />
-    </front>
-   </reference>
-  </references>
  </back>
 </rfc>

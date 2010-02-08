@@ -4,16 +4,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-core-gadget-specification-draft"
+     docName="opensocial-core-gadget-specification-1-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification (draft)</title>
+  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification 1.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="January"
+  <date month="February"
         year="2010" />
   <area>General</area>
   <keyword>OpenSocial</keyword>

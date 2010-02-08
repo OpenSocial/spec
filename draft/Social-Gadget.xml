@@ -5,17 +5,17 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-gadget-specification-draft"
+     docName="opensocial-social-gadget-specification-1-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Social-Gadget">OpenSocial Social Gadget Specification (draft)</title>
+  <title abbrev="Social-Gadget">OpenSocial Social Gadget Specification 1.0</title>
   <author fullname="OpenSocial and Gadgets Specification Group">
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="December"
-        year="2009" />
+  <date month="February"
+        year="2010" />
   <abstract>
    <t>This document defines additional APIs to add social capabilities to a <xref target="Core-Gadget">Core Gadget container</xref>.</t>
   </abstract>
