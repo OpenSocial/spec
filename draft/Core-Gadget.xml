@@ -74,7 +74,6 @@
     to Users if they are asked to process a malformed document. Containers
     SHOULD provide meaningful error messages to Developers when the
     specification is malformed.</t>
-<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
     <t>Containers MUST check for a @specificationVersion attribute in the root
     Module element of all XML documents they parse, and if the attribute is
     present in a document MUST parse and process the document in accordance with
@@ -86,7 +85,6 @@
     @specificationVersion attribute, the Container MUST display an error
     message to Users, and SHOULD provide the specification versions that it
     does support to Developers.</t>
-</x:draft>
     <t>The XML MUST conform to the 
     <xref target="GadgetXmlSchema">Gadget XML Schema</xref> or the <xref target="MessageBundleSchema">Message Bundle Schema</xref>. These XSD schemas 
     represent all standard elements and attributes and
@@ -157,14 +155,12 @@
             anchor="Module">
     <t>The root node of a gadget XML specification is the Module element.</t>
     <list style="hanging">
-<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
      <t hangText="@specificationVersion">The version of the OpenSocial
      specification that container MUST use to interpret the gadget, as described
      in <xref target="Versioning">Versioning</xref>. If absent, the default
      value is "1.0".</t>
      <t hangText="text()">This tag has child elements. Containers SHOULD NOT
      interpret child text nodes.</t>
-</x:draft>
     </list>
     <section title="/ModulePrefs"
              anchor="ModulePrefs">
@@ -203,12 +199,10 @@
       <t>Declares Feature dependencies of the gadget.</t>
       <list style="hanging">
        <t hangText="@feature">The name of the Feature.</t>
-<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
        <t hangText="@version">The version of the Feature to provide. Containers
        MUST interpret this value as described in
        <xref target="Versioning">Versioning</xref>. If absent, the default value is
        "1.0".</t>
-</x:draft>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT
        interpret child text nodes.</t>
       </list>
@@ -218,7 +212,6 @@
    they claim to support. Any Feature not specified in this document SHOULD
    provide an external specification for processing so that implementations
    will be correct.</t>
-<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
    <t>Containers MUST provide an implementation of each Feature that matches
    the version specified by the Gadget in the /ModulePrefs/Required/@version or
    /ModulePrefs/Optional/@version attribute, applying the matching process
@@ -255,7 +248,6 @@
    actually support the given feature name at the version specified in the
    Gadget XML. Containers MAY only return true for this function if the feature
    was also requested in the Gadget spec.</t>
- </x:draft>
    <list style="hanging">
      <t hangText="Core Features" anchor="CoreFeatures">
       <t>In addition to explicitly requested features, there is one implicit
@@ -276,21 +268,18 @@
         <xref target="gadgets.json">gadgets.json</xref>
        </t>
       </list>
-<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
       <t>Gadgets may specify a particular version of the core Feature by including
       a /ModulePrefs/Require element with @feature="core" and the @version
       attribute specifying the required version. If an explicit version of the
       core Feature is not specified, Containers MUST provide a version matching
       the /@specificationVersion attribute of the Gadget, if present, or matching
       "1.0" if /@specificationVersion is absent.</t>
-</x:draft>
       </t>
      <t hangText="Optional Features" anchor="OptionalFeatures">
       <t>Containers claiming support for the following Features MUST provide the
       Gadget with the JavaScript library from the table below. See the JavaScript
       documentation for each feature for any additional requirements. Containers
         SHOULD support as many of these features as possible.</t>
-<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
         <texttable align="left">
          <ttcol>Feature name</ttcol>
         <ttcol>Feature version</ttcol>
@@ -333,7 +322,6 @@
           <xref target="gadgets.Tab">gadgets.Tab</xref>
          </c>
       </texttable>
-</x:draft>
      </t>
    </list>
       <section title="/ModulePrefs/Require/Param and /ModulePrefs/Optional/Param">
@@ -898,7 +886,6 @@
   </section>
   <section title="Versioning"
            anchor="Versioning">
-<x:draft note="The 'Versioned Features' proposal has not been voted on yet.">
    <t>Both the overall OpenSocial specification and individual Gadget Features
    are versioned. Gadgets SHOULD specify the version of the specification that
    Containers should use to interpret them by including the @specificationVersion
@@ -980,7 +967,6 @@
    that omit these values will not have sudden, unexpected changes in behavior
    when containers adopt new versions of the OpenSocial specification or
    Features.</t>
-</x:draft>
   </section>
   <section title="Variable Substitution"
            anchor="VariableSubstitution">

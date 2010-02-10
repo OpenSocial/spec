@@ -47,14 +47,14 @@
     </section>
     <section title="Other Changes">
       <list style="hanging">
-<t hangText="Versioned Core Gadget Features">Features included in a gadget spec should now be versioned.  If no version is specified, the default value is '1.0'.</t>
+<t hangText="Gadget Feature Versioning">Features included in a gadget spec should now be versioned.  If no version is specified, the default value is '1.0'.</t>
 <t hangText="Complete existing basic groups support">OpenSocial v0.9 defined a groups REST service, so OpenSocial 1.0 adds definitions for the JavaScript API and RPC endpoint.</t>
 <t hangText="Deprecated opensocial.* JavaScript API">The opensocial.* namespace has been largely deprecated in favor of the osapi.* API.</t>
 <t hangText="Clarify the 'Friend' term">Added text to make it clear the 'friend' may refer to any relationship (e.g. colleague, classmate, etc.).</t>
 <t hangText="os:Var variables in templates and data pipelining">Variables may be declared in both inline and custom tag templates with the os:Var tag. This tag may also be used data pipelining to declare global literal variables.</t>
 <t hangText="Clarify case sensitivity rules for DataPipeline/ EL variables">The spec now decalres that variable keys are case-sensitive both for Data Pipeline tags and for template parameters.</t>
 <t hangText="Define EL access to meta-data about data-pipeline tag response">Added a 'Request' field to the object returned in data pipelining responses so developers can access information about the request that initiated the request.</t>
-<t hangText="Clarify escaping behavior of EL">Introduces a "SecurityProfile" feature that gadgets can include to specify if they want EL functions to HTML exscape strings or not.</t>
+<t hangText="Clarify escaping behavior of EL">Introduces a "SecurityProfile" feature that gadgets can include to specify if they want EL functions to HTML escape strings or not.</t>
 <t hangText="Clarify Custom Tag Template Parameter Behavior">Added language stating that only one value is allowed for a given parameter and define behavior where namespaces are used.</t>
 <t hangText="Remove the Background section">The content in this section was split up and distributed to the appropriate sections in the spec.  For example, the overview of data objects like people, activites, and messages now live in Social-Data.xml</t>
 <t hangText="Revised Core Gadget Specification">Added documentation for the elements in a gadget XML spec and removed the Metadata and JavaScript Request sections.</t>
