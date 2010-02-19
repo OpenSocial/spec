@@ -125,7 +125,7 @@
    <figure>
     <artwork xml:space="preserve">
 &lt;ModulePrefs &gt;
-  &lt;Optional feature="security-profile" &gt;
+  &lt;Optional feature="security-policy" &gt;
     &lt;Param name="el_escaping"&gt;html&lt;/Param&gt;
   &lt;/Optional &gt;
 &lt;/ModulePrefs &gt;
