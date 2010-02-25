@@ -109,6 +109,13 @@ COMMA          = <US-ASCII comma (44)>
   </section>
   <section title="Data"
            anchor="data">
+   <section title="Array" anchor="Array">
+     <t>An Array is represented as a comma separated list of values, surrounded by square brackets.</t>
+    <artwork type="abnf"
+         xml:space="preserve">
+Array&lt;Object&gt; = "[" #Object "]"
+</artwork>
+   </section>
    <section title="Boolean" anchor="Boolean">
     <artwork type="abnf"
          xml:space="preserve">
@@ -127,18 +134,17 @@ Boolean = "true" / "false"
     <artwork type="abnf"
          xml:space="preserve">
 Collection = "{"
-                        "result : {"
-                          [ "totalResults : " number "," ]
-                          [ "startIndex : " number "," ]
-                          [ "itemsPerPage : " number "," ]
-                          [ "filtered : " ( "true" / "false" ) "," ]
-                          [ "updatedSince : " ( "true" / "false" ) "," ]
-                          [ "sorted : " ( "true" / "false" ) "," ]
-                          [ "itemsPerPage : " number "," ]
-                          "entry :" Objects 
-                        "}"
-                      "}"
-Objects = "[" #<x:ref>Object</x:ref> "]"
+               "result : {"
+                  [ "totalResults : " number "," ]
+                  [ "startIndex : " number "," ]
+                  [ "itemsPerPage : " number "," ]
+                  [ "filtered : " ( "true" / "false" ) "," ]
+                  [ "updatedSince : " ( "true" / "false" ) "," ]
+                  [ "sorted : " ( "true" / "false" ) "," ]
+                  [ "itemsPerPage : " number "," ]
+                  "entry :" Array&lt;Object&gt; 
+                "}"
+              "}"
 </artwork>
      <texttable>
       <ttcol align="left" width="10%">Field Name</ttcol>
@@ -168,7 +174,7 @@ Objects = "[" #<x:ref>Object</x:ref> "]"
       pagination being used, but taking into account the current filtering
       options in the request.</c>
       <c>entry</c>
-      <c>Array &lt;Objects&gt;</c>
+      <c><x:ref>Array</x:ref>&lt;Object&gt;</c>
       <c>An array of objects, one for each item matching the request. 
       For consistency of parsing, if the
       request could possibly return multiple items (as is normally the case),
