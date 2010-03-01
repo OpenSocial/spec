@@ -424,7 +424,7 @@ User-Id = <x:ref>Object-Id</x:ref> / "@owner" / "@viewer" / "@me"
    &lt;field&gt;value&lt;/field&gt; respectively.</t>
    <t>Plural fields are encoded as arrays in JSON and repeated tags in XML,
    e.g. "fields": [ "value1", "value2" ] and
-   &lt;fields&gt;value1&lt;/field&gt;&lt;fields&gt;value2&lt;/field&gt;
+   &lt;field&gt;value1&lt;/field&gt;&lt;field&gt;value2&lt;/field&gt;
    respectively.</t>
    <t>Nodes with multiple sub-nodes are represented as objects in JSON and tags
    with sub-tags in XML, e.g. "field": { "subfield1": "value1", "subfield2":
