@@ -682,7 +682,7 @@ Content-Type: application/json
 <eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "activities.get"
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetActivities-Request-Parameters</x:ref>)
 
-<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Activity">Activity</eref>
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Activity">Activity</eref> /  <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Activity">Activity</eref>&gt;
 <x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
 </artwork>
      <section title="Get Activities Request Parameters" anchor="GetActivities-Request-Parameters">
