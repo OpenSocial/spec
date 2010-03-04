@@ -621,8 +621,6 @@ Content-Type: application/json
 
     </section> 
 
-</section>
-
 <!-- ****************** -->
 
     <section title="Delete a Group"
@@ -658,6 +656,8 @@ Content-Type: application/json
      </section>
 
     </section>
+
+   </section>
 
 <!-- *********************************************************************************** -->
 
