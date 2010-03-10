@@ -1,0 +1,1835 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-core-api-server-specification-1-0"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title abbrev="Core-API-Server">OpenSocial Core API Server Specification 1.0</title>
+  <author fullname="OpenSocial and Gadgets Specification Group">
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="February"
+        year="2010" />
+  <abstract>
+   <t>This document describes a method for making information
+   and services programatically available on the internet.</t>
+  </abstract>
+ </front>
+ <middle>
+  <section title="Notation and Conventions">
+   <section title="Requirements">
+    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+    document are to be interpreted as described in 
+    <xref target="RFC2119">RFC2119</xref>.</t>
+    <t>An implementation is not compliant if it fails to satisfy one or more of
+    the MUST or REQUIRED level requirements for the protocols it
+    implements.</t>
+   </section>
+   <section title="Conventions">
+    <t>Domain name examples use 
+    <xref target="RFC2606"/>.</t>
+   </section>
+   <section title="Augmented BNF">
+    <t>The grammatical rules in this document are to be interpreted as
+    described in <xref target="RFC2234"/>.  The following constructs are introduced in this document to augment 
+    RFC2234:</t>
+    <list style="hanging">
+     <t hangText="{rule1 rule2}">
+      <t>Elements enclosed in braces (squiggly brackets) are treated as a
+      single, UNORDERED element. Its contents may occur in any order. Hence: 
+      <artwork type="abnf" xml:space="preserve">{elem foo} bar</artwork>
+      would match (elem foo bar) and (foo elem bar).</t>
+      <t>NOTE: Specifying alternatives is quite different from specifying set
+      grouping. Alternatives indicate the matching of exactly one (sub-)rule
+      out of the total grouping. The set mechanism indicates the matching of a
+      string which contains all of the elements within the group; however the
+      elements may occur in any order.</t>
+     </t>
+     <t hangText="#rule">A construct "#" is defined, similar to "*", for
+     defining lists of elements. The full form is "&lt;n&gt;#&lt;m&gt;element"
+     indicating at least &lt;n&gt; and at most &lt;m&gt; elements, each
+     separated by one or more commas (",") and OPTIONAL linear white space
+     (LWS). This makes the usual form of lists very easy; a rule such as 
+     <artwork type="inline" xml:space="preserve">( *LWS element *( *LWS "," *LWS element ))</artwork>
+     can be shown as 
+     <artwork type="inline" xml:space="preserve">1#element</artwork>
+     Wherever this construct is used, null elements are allowed, but do
+     not contribute to the count of elements present. That is, "(element), ,
+     (element) " is permitted, but counts as only two elements. Therefore, 
+     where at least one element is required, at least one non-null element MUST 
+     be present.  Default values are 0 and infinity so that "#element" allows 
+     any number, including zero; "1#element" requires at least one; and 
+     "1#2element" allows one or two.</t>
+     <t hangText="&amp;rule">A construct "&amp;" is defined, similar to "#",
+     which uses an ampersand (&amp;) instead of commas, and MUST NOT include
+     linear white space between elements.</t>
+     <t hangText="implied *LWS">The grammar described by this specification is
+     word-based. Except where noted otherwise, linear white space (LWS) can be
+     included between any two adjacent words (token or quoted-string), and
+     between adjacent words and separators, without changing the interpretation
+     of a field. At least one delimiter (LWS and/or separators) MUST exist
+     between any two tokens, since they would otherwise be interpreted as a
+     single token.</t>
+    </list>
+   </section>
+   <section title="Basic Rules">
+    <t>The following rules are used throughout this specification to describe
+    basic parsing constructs. The US-ASCII coded character set is defined by 
+    <xref target="RFC20" /> </t>
+    <artwork type="abnf"
+         xml:space="preserve">
+<![CDATA[
+OCTET          = <any 8-bit sequence of data>
+CHAR           = <any US-ASCII character (octets 0 - 127)>
+UPALPHA        = <any US-ASCII uppercase letter "A".."Z">
+LOALPHA        = <any US-ASCII lowercase letter "a".."z">
+ALPHA          = UPALPHA / LOALPHA
+DIGIT          = <any US-ASCII digit "0".."9">
+CTL            = <any US-ASCII control character (octets 0 - 31) and DEL (127)>
+CR             = <US-ASCII CR, carriage return (13)>
+LF             = <US-ASCII LF, linefeed (10)>
+SP             = <US-ASCII SP, space (32)>
+HT             = <US-ASCII HT, horizontal-tab (9)>
+<">            = <US-ASCII double-quote mark (34)>
+CRLF           = CR LF
+LWS            = [CRLF] 1*( SP / HT )
+TEXT           = <any OCTET except CTLs, but including LWS>
+COMMA          = <US-ASCII comma (44)>
+      ]]>
+</artwork>
+   </section>
+  </section>
+  <section title="Protocols">
+   <t>OpenSocial defines REST and RPC protocols to allow remote clients access to server side data. The data formats are independent of the protocols used in requests and common data types and formats are described in the <xref target="Core-Data">Core Data Specification</xref>. Common data types for social applications are documented in the <xref target="Social-Data">Social Data Specification</xref>.</t>
+   <section title="REST">
+   <t>The REST protocol defines a language and platform neutral protocol for clients to
+   interact with OpenSocial container servers outside of gadgets on a web page.
+   As a protocol, it is intended to be reasonably easy to implement in any
+   language and on any platform. It should also be usable across a range of
+   clients, from gadgets operating within a web page to servers communicating
+   to synchronize data about a user.</t>
+   <t>API Servers MUST support the REST protocol.</t>
+   <t>The protocol operates primarily in terms of resources and operations on
+   them. It is defined on top of the HTTP protocol, and uses the standard HTTP
+   methods (GET, POST, PUT, DELETE, etc.) to retrieve and change server
+   state.</t>
+   <t>No single data representation is ideal for every client. This protocol
+   defines representations for each resource in three widely supported formats,
+   <xref target="RFC4627">JSON</xref>, XML, and 
+   <xref target="RFC4287">Atom</xref> /
+   <xref target="RFC5023">AtomPub</xref>, using a set of generic mapping rules.
+   The mapping rules allow a server to write to a single interface rather than
+   implementing the protocol three times.</t>
+   <t>OpenSocial container servers are free to define additional
+   representations but MUST support at least the JSON and Atom formats for all
+   resources and XML for the people calls. XML MAY be supported for the rest of
+   the resources.</t>
+   <t>Most operations consist of retrieving (GET), updating (PUT), creating (POST or
+   PUT), or destroying (DELETE) these resources. It also specifies an optional
+   partial update feature which avoids sending large resources over the wire to
+   update just one field.</t>
+    <section title="REST Request" anchor="REST-Request">
+     <t>A REST request uses the following format:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>REST-Request</x:highlight>     = <x:ref>REST-HTTP-Method</x:ref> SP <x:ref>REST-Request-URI</x:ref> SP &lt;any valid HTTP version identifier&gt; CRLF
+                   { 
+                     "HOST: " &lt;any valid HTTP host&gt; CRLF
+                     [ "Authorization: " <x:ref>Auth-Token</x:ref> CRLF ]
+                     [ "Content-Type: " <x:ref>Content-Type</x:ref> CRLF ]
+                     [ *(&lt;a valid HTTP header not defined above&gt; CRLF) ]
+                   }
+                   CRLF
+                   [ <x:ref>REST-Request-Payload</x:ref> ]
+</artwork>
+     <t>For example, here is a REST request to retrieve information about a
+     user:</t>
+     <artwork type="example"
+         xml:space="preserve">
+GET /api/people/@me/@self?fields=name HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+</artwork>
+     <section title="REST-HTTP-Method"
+             anchor="REST-HTTP-Method">
+      <t>Each REST resource defined in this document may specify the exact
+     semantics of each method, but generally, "GET" is associated with
+     retrieving a resource, "POST" is associated with creating a resource,
+     "PUT" is associated with updating a resource, and "DELETE" is associated
+     with deleting a resource.</t>
+      <t>The following HTTP methods may be used for REST requests:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>REST-HTTP-Method</x:highlight> = "GET" / "POST" / "PUT" / "DELETE" 
+</artwork>
+   <t>POST is special; it
+   operates on collections and creates new activities, persons, or app data
+   within those collections, and returns the base URI for the created resource
+   in the Location: header, per AtomPub semantics.</t>
+   <t>Restricted clients, or
+   clients behind restricted clients, which cannot use PUT or DELETE SHOULD
+   translate PUT and DELETE to POST operations with an additional
+   X-HTTP-Method-Override: header: </t>
+   <figure>
+    <artwork xml:space="preserve">
+POST /... HTTP/1.1
+...
+X-HTTP-Method-Override: PUT
+</artwork>
+   </figure>
+   <t>Servers SHOULD respond to POST+X-HTTP-Method-Override as if the
+   content of the header were the actual operation sent.</t>
+   <t>Note that OpenSocial
+   does not support cross-domain JSONP (GET with callback), but servers MAY
+   offer this as an extension. It is RECOMMENDED that such servers implement
+   appropriate security and authorization controls.</t>
+     </section>
+     <section title="REST-Request-URI" anchor="REST-Request-URI">
+      <t>The request URI is composed from the base path, a URI fragment, and optional query parameters.</t> 
+      <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>REST-Request-URI</x:highlight> = <x:ref>REST-Base-Path</x:ref> <x:ref>REST-URI-Fragment</x:ref> ["?" <x:ref>REST-Query-Parameters</x:ref>]
+</artwork>
+      <section title="REST-Base-Path"
+             anchor="REST-Base-Path">
+       <t>An OpenSocial REST server may choose to expose their REST endpoints in
+     a "namespaced" way through use of a path. For example, the REST resource
+     of "http://www.example.com/apis/people" would have a REST base path of
+     "/apis", while "http://www.example.com/apis/opensocial-1.0/people" would
+     correspond with the REST base path of "/apis/opensocial-1.0".</t>
+       <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>REST-Base-Path</x:highlight> = String
+</artwork>
+      </section>
+      <section title="REST-URI-Fragment"
+             anchor="REST-URI-Fragment">
+       <t>The URI fragment defines the exact resource that a request is targeting.  Each service defines the format and possible values for the URI fragment based on the resources the service exposes.</t>
+       <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>REST-URI-Fragment</x:highlight> = String
+</artwork>
+   <t>Each service type defines an associated partial URI format. The base URI
+   for each service is found in the URI element associated with the service in
+   the discovery document. Each service type accepts parameters via the URL
+   path. Definitions are of the form:</t>
+   <figure>
+    <artwork xml:space="preserve">
+{a}/{b}/{c}
+</artwork>
+   </figure>
+   <t>Parameters must be filled in using left to right ordering. If a
+   positional pattern is missing, no parameters to the right of that parameter
+   may be filled in. For example, if the preceding pattern was used and only
+   the value of the a parameter was known and set to @me, the complete URL
+   would be expressed as: </t>
+   <figure>
+    <artwork xml:space="preserve">
+[Discovery URI]/@me
+</artwork>
+   </figure>
+      </section>
+      <section title="REST-Query-Parameters" anchor="REST-Query-Parameters">
+       <x:anchor-alias value="REST-Query-Parameters" />
+       <x:anchor-alias value="ENCODE-REST-PARAMETER" />
+       <t>Additional parameters for a REST request MAY be passed via the
+     querystring portion of the request URI.</t>
+       <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>REST-Query-Parameters</x:highlight> = &amp;ENCODE-REST-PARAMETER(k,v)
+</artwork>
+       <t>This specification defines a function ENCODE-REST-PARAMETER, which
+     is an alias for encoding a key/value pair.  The PCT-ENCODE function 
+     is described in section 2.1 of <xref target="RFC3986"/>.</t>
+       <artwork type="abnf"
+         xml:space="preserve">
+ENCODE-REST-PARAMETER(k,v) = PCT-ENCODE(k) "=" PCT-ENCODE(FLATTEN(v))
+</artwork>  
+       <t>The FLATTEN function is also defined in this spec, and behaves in
+     the following manner:</t>
+       <list style="numbers">
+        <t>If the argument supplied is an array of strings or numbers, the 
+      string representation of each array element is returned, with each element
+      separated by a COMMA.</t>
+        <t>If the argument supplied is a string or a number, the string 
+      representation of the argument is returned.</t>
+       </list>
+       <t>The behavior of FLATTEN for input not explicitly covered here is 
+     undefined.  This includes associative arrays, or nested arrays.</t>
+       <t>Here is an example of a REST request URL with query parameters.  Note that the fields parameter demonstrates a flattened array:</t>
+       <artwork type="abnf">        
+http://www.example.com/opensocial/rest/people/@me/@self?fields=name,gender&amp;format=json
+</artwork>
+      </section>
+     </section>
+     <section title="REST-Request-Payload"
+              anchor="REST-Request-Payload">
+      <t>A REST request MAY carry a payload, such as an object to create on the server.  Each service defines which requests support a payload and the format of the payload.</t>
+     </section>
+    </section>
+    <section title="REST Response" anchor="REST-Response">
+     <t>A REST response uses the following format:</t>
+     <artwork type="example"
+         xml:space="preserve">
+HTTP/1.x <x:ref>HTTP-Status-Code</x:ref> 
+[ "Content-Type: " <x:ref>Content-Type</x:ref> ]
+[ REST-Response-Payload ]
+</artwork>
+     <section title="REST-Response-Payload" anchor="REST-Response-Payload">
+       <t>A REST request MAY contain a payload.  Each service method defines the object that is included as the Return-Object. The payload uses the following format:</t>
+      <artwork type="example"
+         xml:space="preserve">
+REST-Response-Payload = "&lt;response xmlns='http://ns.opensocial.org/2008/opensocial'&gt;"
+                          <x:ref>Return-Object</x:ref>
+                        "&lt;/response&gt;"
+</artwork>
+     </section>
+    </section>
+   </section>
+   
+   <section title="RPC">
+    <t>The RPC protocol supports
+   the same data and operations as the RESTful API in a form that is more
+   natural for the JSON data format. Any batch of RPCs should be
+   programatically convertible to a sequence or batch of RESTful calls and
+   maintain the same semantics, any exception to this will be called out
+   explicitly.</t>
+    <t>API Servers MAY support the RPC protocol.</t>
+    <t>The RPC protocol shares the following with the RESTful protocol:</t>
+    <list style="symbols">
+     <t>The JSON/XML format of the OpenSocial data types such as Person, Activity,
+    Group, AppData are identical.</t>
+     <t>HTTP status codes are used to represent common error cases where
+    applicable.</t>
+     <t><xref target="OAuth-Core-1.0" /> is supported for authentication and
+    authorization in addition to other authorization schemes a container may
+    choose to support. A single OAuth token can be used for a batch of
+    operations or each operation can specify its own OAuth token.</t>
+     <t>Concurrency control is optional.</t>
+    </list>
+    <t>The RPC protocol differs from the RESTful protocol in the following ways:</t>
+    <list style="symbols">
+     <t>Conforms to the <xref target="JSON-RPC" /> specification</t>
+     <t>All structural elements in the protocol are represented using the JSON
+    or XML notation.</t>
+     <t>Batch support is required.</t>
+     <t>HTTP is used primarily as a transport and not to indicate the semantics
+    of the request.</t>
+     <t>Automated discovery happens in two steps. XRDS can be used to discover
+    the RPC endpoint. The service can then be introspected by executing a request to the <xref target="System-Service-ListMethods">system.listMethods</xref> method to discover the list of available services and
+    operations using conventions defined by <xref target="XML-RPC-Introspection">XML-RPC Introspection</xref>. In general it is expected
+    that a large percentage of consumers will bypass automated discovery and
+    rely on simply hardcoding references to the endpoints of various popular
+    containers.</t>
+    </list>
+  <section title="URL Addressing"
+           anchor="urlAddressing">
+   <t>Containers MUST give access to the RPC services using a URL addressing
+   scheme to invoke a single RPC via HTTP GET. This encoding can also be used
+   to support RPC execution via form posts including file-uploads as parameters
+   to RPCs. It is recommended that only services that are idempotent are
+   exported in this manner. Containers MUST use the following canonical
+   transformation between the RPC structure and its URL encoding:</t>
+   <list style="symbols">
+    <t>The RPC method is defined by the 'method' query parameter</t>
+    <t>The RPC id is defined by the 'id' query parameter</t>
+    <t>All other query parameters are assumed to belong to the RPC params
+    element and are encoded from JSON using &lt;field path dot
+    notation&gt;=&lt;scalar value&gt; | &lt;comma separated array of
+    scalars&gt;. When a field represents an array of non-scalars then elements
+    of the array are identified by enclosing the index in parenthesis. Strings
+    which match [0-9]+ MUST be single-quoted, Strings which match [A-Za-z_]+
+    MUST be unquoted, all other strings retain their original quoting.</t>
+   </list>
+   <t>The following provides some examples of mapping JSON objects to URL Parameters:</t>
+    <texttable align="left">
+     <ttcol align="left">JSON Object</ttcol>
+     <ttcol align="left">URL Parameter</ttcol>
+     <c>{ "field" : "value" }</c><c>field=value</c>
+     <c>{ "field" : [1,2,3,4,5]}</c><c>field=1,2,3,4,5</c>
+     <c>{ "field" : "12" }</c><c>field='12'</c>
+     <c>{ "field" :
+[identifier,anotheridentifier]}</c><c>field=identifier,anotheridentifier</c>
+     <c>{ "field" : ["value","another value"]}</c><c>field=value,"another
+value"</c>
+     <c>{ "field" : ['value','another value']}</c><c>field=value,'another
+value'</c>
+     <c>{ "field" : { "nested" : "value" }}</c><c>field.nested=value</c>
+     <c>{ "field" : [{ "nested1" : "value1" }, { "nested2" : "value2"
+}]}</c><c>field(0).nested1=value1&amp;field(1).nested2=value2</c>
+    </texttable>   
+   <t>For example, given the following <x:ref>RPC-Request-Payload</x:ref>:</t>
+   <artwork type="example">
+{ "method" : "people.get", "id" : "myfriends", "params": {"userId" : "@me", "groupId" : "@friends" } } 
+</artwork>
+   <t>The corresponding URL is:</t>
+   <artwork type="example">
+http://api.example.org/rpc?method=people.get&amp;id=myfriends&amp;params.userId=@me&amp;params.groupId=@friends
+</artwork>
+   <t>In situations where containers support the 
+   <xref target="urlAddressing">URL Addressing</xref> scheme to perform an RPC
+   the container MAY return arbitrary content types in the response other than
+   application/json. The system.methodHelp operation relies on this to provide
+   browseable documentation.</t>
+  </section>
+
+    <section title="RPC Request"
+             anchor="RPC-Request">
+     <t>An RPC request uses the following format:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+RPC-Request = "POST /" <x:ref>RPC-Base-URL</x:ref> " HTTP/1.1"
+              "HOST" &lt;any valid HTTP host&gt;
+              "Authorization: " <x:ref>Auth-Token</x:ref> 
+              "Content-Type: " <x:ref>Content-Type</x:ref> 
+              <x:ref>RPC-Request-Payload</x:ref>
+</artwork>
+     <t>For example, here is a RPC request to retrieve information about a
+     user:</t>
+     <artwork type="example"
+         xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "method" : "people.get",
+  "id" : "myself"
+  "params" : {
+    "userId" : "@me",
+    "groupId" : "@self"
+  }
+}
+</artwork>
+     <section title="RPC Base URL"
+              anchor="RPC-Base-URL">
+      <t>The RPC Base URL is defined in the XRDS file.</t>
+     </section>
+     <section title="RPC Request Payload"
+              anchor="RPC-Request-Payload">
+      <t>RPC requests MAY batch multiple procedure calls into a single HTTP
+      request. Therefore, the payload of an RPC request can container a JSON
+      array of procedure calls, or a single procedure call:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>RPC-Request-Payload</x:highlight> = RPC-Batch-Payload / RPC-Single-Payload
+<x:highlight>RPC-Batch-Payload</x:highlight> = "[" #RPC-Single-Payload "]"
+<x:highlight>RPC-Single-Payload</x:highlight> = "{"
+                        &lt;"&gt; "method" &lt;"&gt; ":" &lt;"&gt; <x:ref>RPC-Method</x:ref> &lt;"&gt; ","
+                        &lt;"&gt; "id" &lt;"&gt; ":" &lt;"&gt; <x:ref>Request-ID</x:ref> &lt;"&gt; ","
+                        [ &lt;"&gt; "params" &lt;"&gt; ":" <x:ref>RPC-Request-Parameters</x:ref> ]
+                      "}"
+</artwork>
+      <t>Note that the "json-rpc" property defined in <xref target="JSON-RPC">JSON-RPC</xref> is not passed in the request but requests MUST be interpreted as if "json-rpc" : "2.0" was supplied.</t>
+      <t>If a method call has no parameters, or only default values are required, the "params" field can be omitted completely.</t>
+      <t>Here is an example of a RPC request with a batch of procedure calls in
+      the payload:</t>
+      <artwork type="example"
+         xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+[
+  {
+    "method" : "people.get",
+    "id" : "myself",
+    "params" : {
+      "userId" : "@me",
+      "groupId" : "@self"
+    }
+  },
+  {
+    "method" : "people.get",
+    "id" : "myfriends",
+    "params" : {
+      "userId" : "@me",
+      "groupId" : "@friends"
+    }
+  }
+]
+</artwork>
+      <t>Note that multiple authorization tokens MAY be used in a single batch request. The following example contains an authorization token as an HTTP header in the request, which is overridden by an authorization token provided in the 'auth' property in the second request object of the batch.  In this example, assume that Alice doesn't have access to Bob's profile, so her authorization token is not sufficient to access his information.  The client making the request has an authorization token for Bob's profile, so the client can include this token to retrieve his information as well.  For more information on authentication and authorization, see <xref target="Security">Security</xref>.</t>
+      <artwork type="example" xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;1st Auth token&gt;
+Content-Type: application/json
+[
+  {
+    "method" : "people.get",
+    "id" : "profileOfAlice"
+    "params: {
+      "userId" : "09737549474",
+    }
+  },
+  {
+    "method" : "people.get",
+    "id" : "profileOfBob",
+    "params: {
+      "userId" : "34906734059",
+      "auth" : "&lt;2nd Auth token&gt;"
+    }
+  }
+]
+</artwork>
+     </section>
+     <section title="RPC Method"
+               anchor="RPC-Method">
+    <t>The value of the "method" field in an OpenSocial RPC request uses a
+    format of "&lt;service-name&gt;.&lt;operation&gt;". &lt;service-name&gt; is
+    a string [A-Za-z0-9_]+ that identifies one of the services listed in
+    [Services] and &lt;operation&gt; is a string [A-Za-z0-9_]+ that identifies
+    an operation supported by that service.</t>
+       <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>RPC-Method</x:highlight>   = &lt;"&gt; Service-Name "." Method-Name &lt;"&gt;
+<x:highlight>Service-Name</x:highlight> = String
+<x:highlight>Method-Name</x:highlight>  = String
+</artwork>
+    <t>All OpenSocial services MUST expose a "get" operation. Operations with the names get, create, update and delete should map to the HTTP equivalent operations in the RESTful protocol of
+    GET, PUT, POST &amp; DELETE.</t>
+       <t>Available methods can be determined by calling the 
+       <xref target="System-Service-ListMethods">system.listMethods</xref> method.</t>
+      </section>
+      <section title="RPC Request Parameters"
+               anchor="RPC-Request-Parameters">
+       <x:anchor-alias value="ENCODE-RPC-PARAMETER" />
+       <t>Parameters can be passed to RPC methods in the request payload as a
+       JSON object as described in <xref target="RFC4627"/></t>
+       <t>Appropriate values for RPC request parameters can be determined by
+       calling the 
+       <x:ref target="System-Service-MethodSignatures">system.methodSignatures</x:ref> method.</t>
+       <t>Here is an example of an RPC request payload with procedure-specific
+       parameters (userId, groupId) and standard OpenSocial parameters:</t>
+       <artwork type="example"
+         xml:space="preserve">
+{
+  "method" : "people.get",
+  "id" : "myself"
+  "params" : {
+    "userId" : "@me",
+    "groupId" : "@self",
+    "fields" : "name, gender",
+    "format" : "json"
+  }
+}</artwork>
+       <t>This specification defines a function ENCODE-RPC-PARAMETER which is
+       an alias for the JSON encoding process.  This function takes a key and
+       value as arguments, where the key must be a string, and the value must
+       have a valid JSON encoding.</t>
+       <artwork type="abnf"
+         xml:space="preserve">ENCODE-RPC-PARAMETER(k,v) = "{" &lt;"&gt; k &lt;"&gt; ":" JSON-ENCODE(v) "}")</artwork>
+     </section>
+    </section>
+    <section title="RPC Response"
+             anchor="RPC-Response">
+     <t>An RPC response uses the following format:</t>
+     <artwork type="example"
+         xml:space="preserve">
+HTTP/1.x 207 Multi-Status
+"Content-Type: " <x:ref>Content-Type</x:ref> 
+<x:ref>RPC-Response-Payload</x:ref>
+</artwork>
+     <section title="RPC-Response-Payload"
+              anchor="RPC-Response-Payload">
+      <t>RPC responses MAY contain results from multiple procedure calls, if
+      the corresponding HTTP request contained a 
+      <x:ref>RPC-Batch-Payload</x:ref>.  The batch response elements MUST be returned in the same order
+     as the corresponding batch request elements and the "id" property of the corresponding
+     request in the batch request MUST be carried over to the response. If processing of the entire batch fails, as opposed to a single request within the batch, then the returned value is a single 
+      <x:ref>RPC-Error</x:ref> object with the appropriate error message and
+      code.</t>
+      <t>The response payload for a single procedure call MUST contain an 'id'
+      property to correlate the response with a request. On success, the
+      payload MUST contain a 'result' property. On failure, the payload MUST contain an 'error'
+      property.  Each service method defines the object that is included as the Return-Object.</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>RPC-Response-Payload</x:highlight> = RPC-Batch-Payload / RPC-Single-Payload
+<x:highlight>RPC-Batch-Payload</x:highlight> = <x:ref>RPC-Error</x:ref> / ("[" #RPC-Single-Payload"]")
+<x:highlight>RPC-Single-Payload</x:highlight> = "{"
+                       &lt;"&gt; "id" &lt;"&gt; ":" &lt;"&gt; <x:ref>Request-ID</x:ref> &lt;"&gt; ","
+                       ( (&lt;"&gt; "result" &lt;"&gt; ":" &lt;Return-Object&gt;) / (&lt;"&gt; "error" &lt;"&gt; ":" <x:ref>RPC-Error</x:ref>) )
+                     "}"
+</artwork>
+      <t>The following examples illustrate how success and failure are
+      represented in responses to batch requests. 
+      <t>Batch successful, all procedure calls successful:</t>
+      <artwork type="example"
+         xml:space="preserve">
+[
+  { 
+    "id" : "myself", 
+    "result" : { ... }
+  },
+  { 
+    "id" : "myfriends", 
+    "result" : { ... }
+  }           
+]
+</artwork>
+      <t>Batch successful, some procedure calls successful while some fail:</t>
+      <artwork type="example"
+         xml:space="preserve">
+[
+  { 
+    "id" : "myself", 
+    "result" : { ... }
+  },
+  { 
+    "id" : "myfriends", 
+    "error" : { ... }
+  }
+]
+</artwork>
+      <t>Batch successful, all procedure calls fail:</t>
+      <artwork type="example"
+         xml:space="preserve">
+[
+  { 
+    "id" : "myself", 
+    "error" : { ... }
+  },
+  { 
+    "id" : "myfriends", 
+    "error" : { ... }
+  }
+]
+</artwork>
+      <t>Batch fails:</t>
+      <artwork type="example"
+         xml:space="preserve">
+{
+  "error" : { ... }
+}
+</artwork></t>
+     </section>
+     <section title="RPC Error"
+              anchor="RPC-Error">
+      <t>An error object MUST contain a 'code' property to indicate the actual
+      error that occurred and MAY contain a 'message' property describing the
+      error. Additional information may be returned in the 'data' property, as
+      defined by the procedure.</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+RPC-Error = "{"
+              [ &lt;"&gt; "message" &lt;"&gt; ":" &lt;"&gt; string &lt;"&gt; "," ]
+              [ &lt;"&gt; "data" &lt;"&gt; ":" &lt;any JSON object&gt; "," ]
+              &lt;"&gt; "code" &lt;"&gt; ":" integer ","
+            "}"
+</artwork>
+
+      <t>A common set of error codes are used to represent failure modes that
+   apply generally to operations and so are reserved for use by this
+   specification.</t>
+      <texttable align="left">
+       <ttcol align="left">Code</ttcol>
+       <ttcol align="left">Meaning</ttcol>
+       <c>-32700 (Parse error)</c>
+       <c>Invalid JSON. An error occurred on the server while parsing the JSON
+       text.</c>
+       <c>-32600 (Invalid Request)</c>
+       <c>The received JSON not a valid JSON-RPC or batch of JSON-RPCs.</c>
+       <c>-32601 (Method not found)</c>
+       <c>The requested remote-procedure does not exist / is not available.</c>
+       <c>-32602 (Invalid params)</c>
+       <c>Invalid method parameters.</c>
+       <c>-32603 (Internal server error)</c>
+       <c>Internal server error.</c>
+       <c>-32099..-32000</c>
+       <c>Reserved for implementation-defined server-errors.</c>
+       <c>401 (Unauthorized)</c>
+       <c>Access token does not grant access to the resource,</c>
+       <c>404 (Not Found)</c>
+       <c>The requested resource was not found.</c>
+       <c>409 (Conflict)</c>
+       <c>The requested update conflicts with a prior change.</c>
+       <c>0-1000</c>
+       <c>Reserved for future use by this specification.</c>
+      </texttable>
+      <t>Here is an example of an unsuccessful RPC response payload:</t>
+      <artwork type="example"
+         xml:space="preserve">
+{
+  "id" : "myself"
+  "error" : {
+    "code" : 401
+    "message" : "The authorization token does not provide access to the requested resource."
+  }
+}
+</artwork>
+     </section>
+    </section>
+   </section>
+  </section>
+  <section title="Security" anchor="Security"> 
+   <t>Containers SHOULD carefully consider security. Containers MUST support 
+   <xref target="OAuth-Core-1.0" /> but SHOULD use appropriate policies to
+   determine allowed operations on a per-Consumer and per-user basis. Per 
+   <xref target="OAuth-Core-1.0" />, Containers SHOULD document how a Consumer
+   can direct a user to a Container web page to obtain an oauth_token for
+   future use. Note that this is a vector for phishing if the user is required
+   to enter their credentials.</t>
+   <t>Containers SHOULD support SSL connections for sensitive data as OAuth on
+   its own does not provide encryption or message body integrity checking.
+   Containers should base their security decisions on the type of client in
+   use; a generally available desktop client, for example, cannot effectively
+   protect a Consumer Secret that is installed with each client. The security
+   of communications with a partner service, on the other hand, is dependent on
+   the effectiveness of that service's security procedures. Containers may wish
+   to rate limit requests from unknown clients, or require registration, in
+   order to mitigate risk.</t>
+   <t>Containers SHOULD scope oauth_tokens as narrowly as possible (e.g., allow
+   reading but not writing if a client only performs reads).</t>
+  <section title="Request Authentication and Authorization Context">
+   <t>Each operation has a request context that usually includes
+   authentication and authorization information. Typically, the context
+   information includes the requester id (the user initiating the request) and
+   app ID (the application, or whatever is acting as the user's agent). It may
+   include other container-specific information.</t>
+   <t>Containers MUST be an 
+   <xref target="OAuth-Core-1.0" /> Service Provider (a web application that
+   allows access via OAuth). Containers MAY also support other ways to
+   establish a request context. Containers MUST also support the Consumer
+   Request OAuth extension, in which the end user has not directly authorized
+   the operation. Applications SHOULD ensure that the users have given prior
+   consent, implicitly or explicitly, to the operation or class of operations.
+   However, containers MAY require an additional prior trust relationship be
+   established by the app in order to allow use of Consumer Request OAuth.</t>
+   <t>If a Consumer has a user identifier and wishes to indicate that the
+   operation is being done on behalf of that particular user, it SHOULD provide
+   the OAuth extension parameter xoauth_requestor_id with the OAuth signed
+   parameters. Consumers SHOULD only provide this if the user has given prior
+   consent, implicitly or explicitly, to the operation or class of operations,
+   as it indicates that the operation is being done on behalf of the user.
+   Container SPs MUST either honor the parameter or ignore it as if it were not
+   provided.</t>
+   <t>Thus, a request context usually includes the requesting application (the
+   OAuth Consumer), and MAY include the requesting user, either implicitly via
+   an oauth_token or explicitly via xoauth_requestor_id. It may also include
+   additional information via extensions or other channels (cookies, URI
+   parameters, client SSL certificates, etc.) A container may also accept
+   requests with no authentication or authorization (authnz) information at all
+   for public data. A container may provide a public version (e.g., of a
+   profile) if no authnz information is provided.</t>
+   <t>Note that the data provided for a given RESTful URI MAY vary per
+   requestor or app. Thus, the meaning of the resource at a given URI is "the
+   view of the information available to the current requestor/app combination".
+   In the case where no information is available due to lack of authorization,
+   an HTTP 401 Unauthorized response SHOULD be returned to the client. In the
+   case where at least some view of the information is available, it SHOULD be
+   returned using a 200 status, with a standard OAuth WWW-Authenticate: header
+   indicating that additional information may be available when using a
+   different authnz context.</t>
+   <t>When OAuth is used for authorization on a single RPC the OAuth signature
+   uses the 
+   <xref target="urlAddressing">URL Addressing</xref> representation of the
+   request without the auth param to calculate the signature base string.</t>
+  </section>
+  </section>
+     <section title="Content Upload" anchor="Content-Upload">
+    <section title="Two Step Upload"
+             anchor="twoStepUpload">
+     <t>Content Upload is a generic mechanism to allow for a standard way to
+     upload content. A common place to apply content upload will be against an
+     existing Album or MediaItem endpoint. In most scenarios an uploaded
+     content is associated with creation of an entity. Upload of content
+     routinely causes the creation of the entity. For example, uploading a
+     photo causes the container to create a new media item. The application can
+     then update that MediaItem and set attributes via a second request at some
+     later time. The requests look like: 
+     <list>
+      <t>Step 1: Upload Photo</t>
+      <t>Step 2: Update Photo attributes (title, description, etc.)</t>
+     </list>The two step request process is illustrated below.</t>
+     <t>Step 1: Upload the image in the album. 
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+POST /album/112233?mediaType=IMAGE HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/xml
+Content-Type: image/gif
+Content-Length: length
+GIF89a....&lt;binary data&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:ossearch="http://a9.com/-/spec/opensearch/1.1/"&gt;
+  &lt;author&gt;&lt;uri&gt;urn:guid:example.org:33445577722&lt;/uri&gt;&lt;/author&gt;
+  &lt;link rel="next" href="http://api.example.org/..." /&gt;
+  &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;content type="application/xml"&gt;
+      &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+      &lt;/mediaitem&gt;
+    &lt;/content&gt;
+    &lt;title /&gt;
+    &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+    &lt;author /&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+</artwork>
+     </figure></t>
+     <t>Step 2: PUT MediaItem details to MediaItem (id:223344) </t>
+	 <t>Note: response includes "caption" in addition to "title".  
+	 Caption is being deprecated in the 1.0 data format and will be removed
+	 entirely in a future version of the spec.
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+  &lt;content type="application/xml"&gt;
+    &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
+        &lt;title&gt;Lena&lt;/title&gt;
+    &lt;/mediaitem&gt;
+  &lt;/content&gt;
+  &lt;title /&gt;
+  &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+  &lt;author /&gt;
+&lt;/entry&gt;       
+      
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom" xmlns:ossearch="http://a9.com/-/spec/opensearch/1.1/"&gt;
+  &lt;author&gt;&lt;uri&gt;urn:guid:example.org:33445577722&lt;/uri&gt;&lt;/author&gt;
+  &lt;link rel="next" href="http://api.example.org/..." /&gt;
+  &lt;ossearch:totalResults&gt;100&lt;/ossearch:totalResults&gt;
+  &lt;ossearch:startIndex&gt;1&lt;/ossearch:startIndex&gt;
+  &lt;ossearch:itemsPerPage&gt;10&lt;/ossearch:itemsPerPage&gt;
+  &lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;content type="application/xml"&gt;
+      &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+        &lt;id&gt;223344&lt;/id&gt;
+        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
+        &lt;title&gt;Lena&lt;/title&gt;
+      &lt;/mediaitem&gt;
+    &lt;/content&gt;
+    &lt;title /&gt;
+    &lt;updated&gt;2008-10-24T20:30:40.500Z&lt;/updated&gt;
+    &lt;author /&gt;
+  &lt;/entry&gt;
+&lt;/feed&gt;
+</artwork>
+     </figure>The response indicates that the media item was updated.</t>
+     <t>Step 2: Upload the image in the media item place holder 
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+POST /album/112233/mediaitem/223344 HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/xml
+Content-Type: image/gif
+Content-Length: length
+GIF89a....&lt;binary data&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+  &lt;itemsPerPage&gt; 1 &lt;/itemsPerPage&gt;
+  &lt;totalResults&gt; 1 &lt;/totalResults&gt;
+  &lt;entry&gt; ... &lt;/entry&gt;
+&lt;/response&gt;       
+</artwork>
+     </figure></t>
+    </section>
+    <section title="Shortcut Upload Method">
+     <t>The shortcut upload mechanism is OPTIONAL. This two step process shown
+     above can be merged into one by a single POST request with the content
+     type set to the item being uploaded. The POST URL can optionally pass the
+     attributes. The Accept-type indicates the format of the response expected.
+     
+     <figure>
+      <preamble>Request</preamble>
+      <artwork xml:space="preserve">
+POST /album/112233/mediaitem/?title=Lena&amp;media_type=IMAGE HTTP/1.1
+&lt;usual headers&gt;
+Accept-Type: application/json
+Content-Type: image/gif
+Content-Length: length
+GIF89a....&lt;binary data&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Response</preamble>
+      <artwork xml:space="preserve">
+{
+  "startIndex" : 1,
+  "itemsPerPage" : 1,
+  "totalResults" : 1,
+  "entry" : {
+    "id" : "223344",
+    "title" : "Lena",
+    "media_type" : "IMAGE",
+  }
+}        
+</artwork>
+     </figure></t>
+    </section>
+  <section title="Multi-part Uploads">
+   <t>A container MAY choose to support file uploads from browsers to the RPC
+   endpoint and have the uploaded files be passed as parameters to the RPC.
+   This is achieved by browsers posting a form which contains the files to the
+   endpoint and including a form-parameter called "request" which contains the
+   form-encoded RPC request. The form input element names for the uploaded
+   files will be bound to the corresponding parameter names on execution.</t>
+
+    <t>A multipart form-data request mechanism ("Content-Type:
+    multipart/form-data") enables upload of content. Such a request has the
+    POST body segmented into several sections (fields) with each field
+    identified by a name. The field name "request" is reserved and contains
+    request operation details (same as the contents on the POST body in the
+    vanilla POST operation).</t>
+    <t>The fields with any other name contain content to be uploaded to the
+    OpenSocial container. To allow batching and multiple file uploads in a
+    single call, multiple fields (identified with unique field names) are
+    allowed. The OpenSocial request can refer to the content being uploaded by
+    setting the URL to "@field:&lt;fieldname&gt;". The container may host the
+    uploaded file and replace the URL field with a fully qualified URL for
+    future access.</t>
+    <t>For a successful upload, the response code of the request will be
+    associated with the response code of the action request on the resource.
+    However, in case of a failure due to a file size exceeding limits, an error
+    code of 413 ("Request Entity Too Large") MUST be returned. The requested
+    action associated with the file upload MUST NOT be executed.</t>
+    <t>
+     <figure>
+      <preamble>Example:</preamble>
+      <artwork xml:space="preserve">
+&lt;usual headers&gt;
+Content-type: multipart/form-data; boundary=------------abcdef012345xyZ
+Content-length: &lt;contentLength&gt;
+------------abcdef012345xyZ
+Content-Disposition: form-data; name="request"
+[{
+  "method":"activities.create",
+  "params": {
+    "userId":["@viewer"],
+    "groupId":"@self",
+    "appId":"@app",
+    "activity": {
+      "title": "hello world!",
+      "mediaItems": [ {
+        "mimeType":"image",
+        "url":"@field:image1"
+      } ]
+    }
+  },
+  "id":"key"
+}
+------------abcdef012345xyZ
+Content-Disposition: form-data; name="image1"
+GIF89....&lt;image data&gt;
+------------abcdef012345xyZ
+</artwork>
+     </figure>
+    </t>
+   </section>
+   </section>
+
+  <section title="Common Elements">
+    <section title="Request-ID" anchor="Request-ID">
+     <t>A string identifying a request.</t>
+    </section>
+    <section title="Auth-Token" anchor="Auth-Token">
+     <t>A string used to authenticate a request.</t>
+    </section>
+    <section title="Content-Type" anchor="Content-Type">
+     <t>A string used to identify the type of content in a request or response.</t>
+    </section>
+    <section title="Return-Object" anchor="Return-Object">
+     <t>The actual content included in the response. Each service method defines the object that is included as the Return-Object.</t>
+    </section>
+    <section title="Invalidation-Key-List" anchor="Invalidation-Key-List">
+     <t>A collection of keys that identify resources that should have their cached version refreshed.  Keys can either be URLs or IDs of objects to be refreshed.</t>
+
+    <t>Keys that refer to URLs MUST include a protocol prefix (e.g. 'http://') so
+    they can be distinguished from ids. Each request accepts a repeated group
+    of keys.</t> 
+
+     <artwork type="abnf"
+         xml:space="preserve">
+<x:highlight>Invalidation-Key-List</x:highlight> = "{"
+                           &lt;"&gt; "invalidationKeys" &lt;"&gt; ":" "[" #Invalidation-Key "]"
+                        "}"
+<x:highlight>Invalidation-Key</x:highlight> = &lt;any valid URL&gt; / <eref target="./Core-Data.xml#Object-Id">Object-Id</eref>                    
+</artwork>
+
+    </section>
+    <section title="HTTP-Status-Code">
+   <texttable>
+    <ttcol align="left">Status Code</ttcol>
+    <ttcol align="left">Description</ttcol>
+    <c>400 BAD REQUEST</c>
+    <c align="left">OpenSocial application servers MUST return 400 BAD REQUEST
+    under any one or more of the following conditions: 
+    <list style="symbols">
+     <t>Invalid request URI</t>
+     <t>Invalid HTTP Header</t>
+     <t>Receiving an unsupported, nonstandard parameter</t>
+     <t>Receiving an invalid HTTP Message Body</t>
+    </list></c>
+    <c>401 UNAUTHORIZED</c>
+    <c align="left">OpenSocial container servers MUST return 401 UNAUTHORIZED
+    when receiving a request for a protected resource and the request is either
+    
+    <list style="symbols">
+     <t>Missing OAuth authorization credentials as described in 
+     <xref target="OAuth-Consumer-Request-1.0-Draft-1" />.</t>
+     <t>OAuth authorization credentials are present, but the user identity is
+     not authorized to access the protected resource. If the request already
+     included authorization credentials, the 401 response indicates that the
+     request has been refused for those credentials. A 401 response MUST
+     include a WWW-Authenticate header field indicating the request MAY present
+     an OAuth token for the container server's realm. Example:
+     WWW-Authenticate: OAuth realm="http://sp.example.com/"</t>
+    </list></c>
+    <c>403 FORBIDDEN</c>
+    <c align="left">The server understood the request but is refusing to
+    fulfill it. Authorization will not help. The current authorization context
+    does not allow the request.</c>
+    <c>404 NOT FOUND</c>
+    <c align="left">The server has not found a resource (such as a feed or
+    entry) that matches the request URI.</c>
+    <c>405 METHOD NOT ALLOWED</c>
+    <c align="left">The method specified in the Request-Line is not allowed for
+    the resource identified by the Request-URI. The response MUST include an
+    Allow header containing a list of valid methods for the requested
+    resource.</c>
+    <c>409 CONFLICT</c>
+    <c>The request could not be completed due to a conflict with the current
+    state of the resource. This code is only allowed in situations where it is
+    expected that the user might be able to resolve the conflict and resubmit
+    the request. The response body SHOULD include enough information for the
+    user to recognize the source of the conflict. Ideally, the response entity
+    would include enough information for the user or user agent to fix the
+    problem; however, that might not be possible and is not required. Conflicts
+    are most likely to occur in response to a PUT request. For example, this
+    code can be used for a limit exceeded error as well as conflicting updates.
+    See the error message for more information.</c>
+    <c>500 INTERNAL SERVER ERROR</c>
+    <c align="left">Internal error. This is the default code that is used for
+    all unrecognized errors.</c>
+    <c>501 NOT IMPLEMENTED</c>
+    <c align="left">The request was valid but has not been implemented by the
+    provider. A container SHOULD return 501 NOT IMPLEMENTED when receiving a
+    request for an OPTIONAL/MAY feature that the container does not
+    implement.</c>
+   </texttable>
+      
+    </section>
+  </section>
+  <section title="Request Parameters">
+   <section title="Standard Request Parameters"
+            anchor="Standard-Request-Parameters">
+    <t>All requests MUST support the following parameters:</t>
+    <section title="Updated Since" anchor="Request-Parameter-UpdatedSince-Value">
+     <artwork type="abnf"><x:highlight>Request-Parameter-UpdatedSince-Value</x:highlight> = <xref target="XSdateTime" /></artwork>
+     <t>When specified the container should only return
+     items whose updated date &amp; time is equal to or more recent then the
+     specified value. The value MUST be a valid 
+     <xref target="XSdateTime" /> (e.g. 2008-01-23T04:56:22Z).</t>
+    </section>
+
+    <section title="Format" anchor="Request-Parameter-Format-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-Formet-Value</x:highlight> = "json" / "xml" / "atom"</artwork>
+      <t>Specifies the desired return encoding of the request.
+     Must be one of "json", "xml", or "atom".</t>
+    </section>
+
+   </section>
+   <section title="Collection Request Parameters" anchor="Collection-Request-Parameters">
+    <t>All requests that return a Collection of objects MUST support the following parameters:</t>
+    <section title="Count" anchor="Request-Parameter-Count-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-Count-Value</x:highlight> = number</artwork>
+      <t>The page size for a paged collection. If no parameter
+       is specified the container can choose how many items in the collection
+       should be returned. However, the container SHOULD support a large default
+       count value so that all items can be returned by default.</t>
+    </section>
+    <section title="Filter By" anchor="Request-Parameter-FilterBy-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-FilterBy-Value</x:highlight> = string</artwork>
+      <t>For a collection, return entries filtered by the
+     given field name.</t>
+    </section>
+    <section title="Filter Operation" anchor="Request-Parameter-FilterOp-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-FilterOp-Value</x:highlight> = "contains" / "equals" / "startsWith" / "present"</artwork>
+      <t>The operation to use when filtering a collection by
+     a field specified in 'filterBy', defaults to "contains". Valid values: 
+     <list style="hanging">
+      <t hangText="contains">Return elements where filterValue appears
+      somewhere in the element's filterBy field value.</t>
+      <t hangText="equals">Return elements where filterValue exactly matches
+      the element's filterBy field value.</t>
+      <t hangText="startsWith">Return elements where filterValue exactly
+      matches the first N characters of the element's filterBy field value,
+      where N is the length of the filterValue string.</t>
+      <t hangText="present">Return elements where the element's filterBy field
+      value is not empty or null.</t>
+     </list></t>
+    </section>
+    <section title="Filter Value" anchor="Request-Parameter-FilterValue-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-FilterValue-Value</x:highlight> = string</artwork>
+      <t>The value to use when filtering a collection. For example: </t>
+      <artwork type="example"
+         xml:space="preserve">
+{ ... "filterBy" : "name", "filterOp" : "startsWith", "filterValue" : "John" ... }
+</artwork>
+      <t>returns all items whose name field starts with John. Johnny and John
+      Doe would both be included.)</t>
+    </section>
+    <section title="Sort Order" anchor="Request-Parameter-SortOrder-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-SortOrder-Value</x:highlight> = "ascending" / "descending"</artwork>
+      <t>Can either be 'ascending' or 'descending',
+     defaults to ascending. Used to sort objects in a collection.</t>
+    </section>
+    <section title="Start Index" anchor="Request-Parameter-StartIndex-Value">
+      <artwork type="abnf"><x:highlight>Request-Parameter-StartIndex-Value</x:highlight> = number</artwork>
+      <t>Index into a paged collection.</t>
+    </section>
+    <section title="Examples">
+     <figure>
+      <preamble>Behavior of query parameters to determine if two people are
+     friends (important part is the query string):</preamble>
+      <artwork xml:space="preserve">
+/people/@me/@self?filterBy=@friends&amp;filterOp=contains&amp;filterValue=&lt;someUserId&gt;
+</artwork>
+     </figure>
+     <t>This will return nothing if the other ID is not a friend, the
+    current user if the two are friends. filterValue may take a specific person
+    identifier of @owner or @viewer.</t>
+     <figure>
+      <preamble>To determine the mutual friends between two people (important
+     part is the query string):</preamble>
+      <artwork xml:space="preserve">
+/people/@me/@friends?filterBy=@friends&amp;filterOp=contains&amp;filterValue=&lt;someUserId&gt;
+</artwork>
+     </figure>
+     <t>This will return the set of mutual friends between the current
+    user and someUserId. filterValue may take a specific person identifier of
+    @owner or @viewer.</t>
+     <t>Note: The container is not required to support all values for filtering,
+    sorting and getting the last set of updated items from a collection. If the
+    container does not respect the filer, sort or updatedSince param the
+    response should contain "filtered : false", "sorted : false", or
+    "updatedSince : false".</t>
+    </section>
+   </section>
+  </section>
+  <section title="Discovery" anchor="Discovery">
+   <t>A container declares what collection and features it supports, and
+   provides templates for discovering them, via a simple discovery document. A
+   client starts the discovery process at the container's identifier URI (e.g.,
+   example.org). The full flow is available at http://xrds-simple.net/core/1.0/;
+   in a nutshell: 
+   <list style="numbers">
+    <t>Client GETs {container-url} with Accept: application/xrds+xml</t>
+    <t>Container responds with either an X-XRDS-Location: header pointing to
+    the discovery document, or the document itself.</t>
+    <t>If the client received an X-XRDS-Location: header, follow it to get the
+    discovery document.</t>
+   </list>Once the client has the XRDS document, they have the complete set of
+   services supported by that service. All OpenSocial service types declare the
+   base URI in the XRDS URI element. Each service type declares the root URI
+   for the service. Service specific parameters are passed to each endpoint
+   using a fixed URI format. This format is defined by each service. The
+   discovery document is an XML file in the same format used for OpenID and
+   OAuth discovery, defined at http://xrds-simple.net/core/1.0/: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;XRDS xmlns="xri://$xrds"&gt;
+   &lt;XRD xmlns:simple="http://xrds-simple.net/core/1.0" xmlns="xri://$XRD*($v*2.0)" version="2.0"&gt;
+       &lt;Type&gt;xri://$xrds*simple&lt;/Type&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/people&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/people&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/groups&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/groups&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/activities&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/activities&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org//2008/opensocial/appData&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/appData&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/cache/invalidate&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/cache/invalidate&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+         &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/messages&lt;/Type&gt;
+         &lt;URI&gt;http://api.example.org/messages&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/albums&lt;/Type&gt;
+          &lt;URI&gt;http://api.example.org/albums&lt;/URI&gt;
+       &lt;/Service&gt;
+       &lt;Service&gt;
+          &lt;Type&gt;http://ns.opensocial.org/2008/opensocial/mediaItems&lt;/Type&gt;
+          &lt;URI&gt;http://api.example.org/mediaItems&lt;/URI&gt;
+       &lt;/Service&gt;
+   &lt;/XRD&gt;
+&lt;/XRDS&gt;         
+</artwork>
+   </figure></t>
+   <t>Each Service advertises a service provided by the container. Each
+   container MUST support the service Types documented below and MAY support
+   others by advertising them in the discovery document. Each service comprises
+   a set of resources defined by the given URI Template (or URI, if there is
+   only a single resource). Clients follow the URIs and instantiate the
+   templates to find and operate on specific resources. (URI Template syntax is
+   documented at
+   http://www.ietf.org/internet-drafts/draft-gregorio-uritemplate-03.txt.)</t>
+   <t>The set of substitution variables is fixed for each service Type. The
+   core set of service Types and their substitution variables is documented
+   below. Extensions to OpenSocial SHOULD document their substitution
+   variables; note that a reasonable place to put human readable documentation
+   is at the namespace URI.</t>
+  </section>
+
+  <section title="Services"
+           anchor="services">
+   <section title="Cache"
+            anchor="Cache-Service">
+      <t>The cache service is used to manage the resources cached by the container for a given application.</t>
+    <section title="Invalidate" anchor="Cache-Service-Invalidate">
+
+     <t>An application can execute an invalidation request as a POST to the Cache service. Requests include a list of URLs associated with resources that should have their cache invalidated.  Invalidation keys can include the URL of the gadget spec, associated message bundle files, static resources (e.g. images, CSS), or remote content fetched via <eref target="./Core-Gadget.xml#osapi.http">osapi.http</eref>.</t>
+    <t>Containers MUST support the invalidation endpoint even if they do not
+    perform any caching and MUST provide an entry for it in their XRDS. To
+    invalidate content a developer's backend notifies the container of the
+    content it wishes to invalidate by making a 2-legged OAuth call to the
+    Cache service with one or many keys to be invalidated. The consumer key
+    in the 2-legged OAuth call is used by the container to identify the calling
+    application.</t>
+
+     <t>Containers MAY reject invalidation requests for policy reasons. Containers MAY continue to serve content that has already been invalidated until the container is able to successfully fetch a replacement from it original source.</t>
+     <t>Response codes have the following meanings:</t>
+      <list style="symbols">
+       <t>200 - Success, all invalidations processed successfully.</t>
+       <t>403 - Forbidden because authentication failed.</t>
+       <t>409 - The request was partially processed, the set of invalidation keys that were not honored MUST be included in the response body in the format the request was made.</t>
+     </list>
+     <t>XRDS Type: http://ns.opensocial.org/2008/opensocial/cache/invalidate</t>
+     <t>Requests and responses for the Cache service's Invalidate method use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<x:ref>REST-HTTP-Method</x:ref>        = "POST"
+<x:ref>REST-Request-URI</x:ref>        = "/cache/invalidate"
+<x:ref>REST-Request-Parameters</x:ref> = null 
+<x:ref>REST-Request-Payload</x:ref>    = <x:ref>Invalidation-Key-List</x:ref>
+<x:ref>RPC-Method</x:ref>              = "cache.invalidate"
+<x:ref>RPC-Request-Parameters</x:ref>  = <x:ref>Invalidation-Key-List</x:ref>
+<x:ref>Return-Object</x:ref>           = [ <x:ref>Invalidation-Key-List</x:ref> ]
+     </artwork>
+     <t>Here is an example that invalidates the cache for the gadget spec and message bundle of an application using REST:</t>
+     <artwork type="example" xml:space="preserve">
+POST /api/rest/cache/invalidate HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "invalidationKeys" : [ 
+      "http://www.myapp.com/gadgetspec.xml", 
+      "http://www.myapp.com/messagebundle.xml"
+  ]
+}
+</artwork>
+    <t>Here is an example illustrates how information for users and a static
+    resources can be invalidated using RPC. The example shows how
+    to specify a user with a global ID (i.e. an ID which includes the domain of the
+    container) or a relative ID. The static resource in this example is the
+    gadget spec itself.</t>
+      <artwork type="example" xml:space="preserve">
+POST /api/rpc
+Host: api.example.org
+Content-Type: application/json
+{
+   "method" : "cache.invalidate",
+   "params" : {
+       "invalidationKeys" : [ 
+           "example.org:12345", 
+           "example.org:4567", 
+           "3456778", 
+           "http://www.myapp.com/gadgetpec.xml"
+       ]
+   }
+}
+</artwork>
+    </section>
+   </section>
+   <section title="System"
+            anchor="System-Service">
+    <t>The System service is used to introspect the API server for the set of
+    available services and operations and for metadata about those
+    services.  The System service only supports the RPC protocol.</t>
+    <section title="ListMethods" anchor="System-Service-ListMethods">
+     <t>Containers MUST implement this operation which takes no parameters and
+     returns an array of all methods supported by the endpoint including the
+     system methods.</t>
+     <t>Requests and responses to the System service's List Methods method use the following values:</t>
+     <artwork type="abnf" xml:space="preserve">
+<x:ref>RPC-Method</x:ref>             = "system.listMethods"
+<x:ref>RPC-Request-Parameters</x:ref> = null
+<x:ref>Return-Object</x:ref>          = [ #String ]
+</artwork>
+     <t>Here's an example using RPC:</t>
+      <artwork type="example" xml:space="preserve">
+POST /api/rpc
+Host: api.example.org
+Content-Type: application/json
+{
+   "method" : "system.listMethods",
+   "params" : {}
+}
+</artwork>     
+     <t>A container which only supports read access to people
+     and read and create access for activities would include the following Return-Object in the response:</t>
+      <artwork type="example" xml:space="preserve">
+[
+  "people.get", 
+  "activities.get", 
+  "activities.create",  
+  "system.listMethods",
+  "system.methodSignatures", 
+  "system.methodHelp"
+]</artwork>
+    </section>
+    <section title="MethodSignatures" anchor="System-Service-MethodSignatures">
+     <t>Containers MUST implement this operation that returns a method
+     signature describing the types of the parameters, their default values and
+     the type of the return value for a given operation. Note that this scheme
+     does not match that used for XML-RPC definition of method signatures which
+     only specifies a mapping for positional parameters. Type definitions used
+     here match the scheme used in the OpenSocial Javascript API.</t>
+     <artwork type="abnf" xml:space="preserve">
+<x:ref>RPC-Method</x:ref>             = "system.methodSignatures"
+<x:ref>RPC-Request-Parameters</x:ref> = { &lt;"&gt; "methodName" &lt;"&gt; ":" String "}"
+<x:ref>Return-Object</x:ref>          = Method-Signatures
+<x:highlight>Method-Signatures</x:highlight>      = "{"
+                             &lt;"&gt; "return" &lt;"&gt; ":" ( String-Value / String-List ) ","
+                             #Parameter-Spec
+                         "}"
+<x:highlight>Parameter-Spec</x:highlight>         = Param-Name ":" "{"
+                               &lt;"&gt; "type" &lt;"&gt; ":" ( String-Value / String-List ) ","
+                             [ &lt;"&gt; "default" &lt;"&gt; ":" ( "null" / String-Value / String-List ) "," ]
+                             [ &lt;"&gt; "required" &lt;"&gt; ":" &lt;"&gt; false &lt;"&gt; ]
+                         "}"
+<x:highlight>Param-Name</x:highlight>             = String-Value                         
+<x:highlight>String-Value</x:highlight>           = &lt;"&gt; String &lt;"&gt;
+<x:highlight>String-List</x:highlight>            = "[" #String-Value "]"
+                      
+</artwork>
+     <t>The "return" field indicates the type of the result. If the
+     service can return more than one type then the value is an array of the
+     possible return types. Each named field in the response maps to a
+     parameter of the operation and contains information about the types and
+     values accepted for that parameter. The existence of "default" in the
+     parameter detail indicates the parameter has a default value. The value of
+     a default may be null which means that its not introspectable and usually
+     means that it is some complex derivation. Parameters are assumed to be
+     required unless otherwise indicated by the existence of the "required"
+     field with a value of false.</t>
+    <t>Here is an example of a request for the method signature of <eref target="./Social-API-Server.xml#People-Service-Get">people.get</eref>.</t>
+    <artwork type="example" xml:space="preserve">
+POST /api/rpc
+Host: api.example.org
+Content-Type: application/json
+{
+   "method" : "system.methodSignatures",
+   "params" : { "methodName" : "people.get" }
+}
+</artwork>
+    <t>Here is the response to a request for the method signature of <eref target="./Social-API-Server.xml#People-Service-Get">people.get</eref>.</t>
+      <artwork type="example" xml:space="preserve">
+{
+  "return" : ["opensocial.Person", "Array.&lt;opensocial.Person&gt;"],
+  "auth" : {
+     "default" : null,
+     "type" : "AuthToken"
+   },
+   "userId" : {
+     "default" : "@me",
+     "type" : ["String", "Array.&lt;String&gt;"]
+   },
+   "groupId" : {
+     "default" : "@self",
+     "type" : "String"
+   },
+   "fields" : {
+     "default" : ["id","name","thumbnailUrl","profileUrl"],
+     "type" : "Array.&lt;String&gt;"
+   },
+   "count" : {
+     "type" : "int",
+     "required" : false
+   },
+   "startIndex" : {
+     "type" : "int",
+     "required" : false
+   }
+}
+</artwork>
+    </section>
+    <section title="MethodHelp"
+             anchor="System-Service-MethodHelp">
+     <t>Containers MAY implement this operation that returns a textual
+     description of the operation identified by the methodName parameter. A
+     container can choose to return either plaintext or HTML as the
+     response.</t>
+     <artwork type="abnf" xml:space="preserve">
+<x:ref>RPC-Method</x:ref>             = "system.methodHelp"
+<x:ref>RPC-Request-Parameters</x:ref> = { &lt;"&gt; "methodName" &lt;"&gt; ":" &lt;"&gt; String &lt;"&gt; "}"
+<x:ref>Return-Object</x:ref>          = String
+</artwork>
+     <t>Here's a request to get the help content for the people.get method.</t>
+          <artwork type="example" xml:space="preserve">
+POST /api/rpc
+Host: api.example.org
+Content-Type: application/json
+{
+   "method" : "system.methodSignatures",
+   "params" : { "methodName" : "people.get" }
+}
+</artwork>
+     <t>The response might be something like:</t>
+          <artwork type="example" xml:space="preserve">
+Used to fetch profile information about people.
+</artwork>
+    </section>
+   </section>
+  </section>
+  <section title="Concurrency Control">
+   <t>OpenSocial containers MAY support concurrency control to 
+   prevent multiple clients from overwriting each other's data. The mechanism supported by OpenSocial uses the
+   standard HTTP/AtomPub optimistic concurrency mechanism based on ETags (see
+   section 9.5 of 
+   <xref target="RFC5023" /> for details; the same mechanism applies regardless
+   of the data format used for the body of the PUT).</t>
+   <section title="Discovery">
+    <t>Concurrency control is available on a resource-by-resource basis. When
+    an updateable resource supports concurrency control, the container SHOULD
+    supply an ETag encoding the resource's current state when supplying a
+    representation to clients. If a resource does not support optimistic
+    concurrency, it MUST respond to an update request containing an If-Match:
+    header with a 403 Not Implemented error.</t>
+    <t>A server which chooses not to support optimistic concurrency SHOULD omit
+    ETags on its responses for updateable resources. A client SHOULD assume
+    that optimistic concurrency is not available if no ETag is present.</t>
+   </section>
+   <section title="Semantics">
+    <t>When a client is given an ETag, it MAY supply that ETag in an If-Match:
+    header on subsequent updates. The semantics are that the client can supply
+    the new representation and the previous ETag; the server inspects the
+    current state of the resource and applies the update if the client supplied
+    ETag matches (meaning no intervening updates have happened), otherwise
+    responds with a 409 Conflict error and the new ETag. Clients may then take
+    appropriate actions to resolve the conflict, or fail the operation,
+    depending on their needs. Clients are also free to use PUT to simply
+    overwrite a resource with a new state at any time, ignoring possible
+    overwriting problems.</t>
+    <t>If partial updates are supported (see below), a server MUST accept an
+    ETag given for either a base resource or a projection of that resource upon
+    a subsequent PUT for that resource. That is, it is legal to supply an ETag
+    you received when GETting the full representation of a resource even if you
+    are only PUTting back a single field. If you intend to simply overwrite
+    that single field, then you skip sending any ETag.</t>
+   </section>
+   <section title="Partial Updates">
+    <t>Partial updates avoid the need to send full representations of data on
+    updates, especially for People and App Data. The primary use case is when a
+    client has retrieved a full representation and subsequently wishes to send
+    a small update to a server. In the most general case, the client may have a
+    series of small updates (e.g., changing tags on a large number of contacts)
+    scattered across many resources. To accomplish these partial updates we
+    will take advantage of the "fields" parameter.</t>
+    <t>When the "fields" parameter is specified on a url, only those fields
+    will be looked at when updating an object. If a field is in the parameter
+    list but not part of the post, that would be considered a removal of that
+    field. If the field is in the post but not in the parameter list a 400 bad
+    request error will be returned. If a field is in both places then it will
+    be updated normally.</t>
+   </section>
+   <section title="Example">
+    <t>This example demonstrates the use of etags to detect an incompatible
+    update to the profile of the user identified in the auth token. The request
+    is attempting to update the 'books' field and passes the etag the client
+    received when it retrieved the person object prior to update. The etag is
+    added to the update request shown below but an intervening update from
+    another client has made the change incompatible and so the update is
+    rejected.</t>
+    <t>Notes: 
+    <list style="symbols">
+     <t>The error code 409 is the HTTP Conflict status code.</t>
+     <t>The error object "data" field contains a limited representation of the
+     latest version of the person object including an up-to-date etag value.
+     Containers MAY omit this data from conflict error responses.</t>
+    </list>
+    <figure>
+     <artwork xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+    "method" : "person.update",
+    "id" : "setMyData"
+    "params: {
+      "userId" : "@me",
+      "groupId" : "@self",
+      "person" : {
+        "etag" : "767ffdef7",
+        "books" : ["The Prince", "Hotel New Hampshire"]
+      }
+    }
+}
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "myself",
+   "error" : {
+     "code" : 409
+     "message" : "Conflict detected",
+     "data" : {
+       "etag" : "8543de12",
+       "books" : ["The Right Stuff", "About a boy"]
+     }
+   }
+}
+</artwork>
+    </figure></t>
+   </section>
+  </section>
+ </middle>
+ <back>
+  <references>
+   <reference anchor='RFC20'>
+    <front>
+     <title>ASCII format for Network Interchange</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='20' />
+   </reference>
+   <reference anchor='RFC2119'>
+    <front>
+     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+     <author initials='S.'
+             surname='Bradner'
+             fullname='Scott Bradner'>
+      <organization abbrev='HarvardU'>Harvard University</organization>
+     </author>
+     <date month='March'
+           year='1997' />
+    </front>
+    <seriesInfo name='RFC' value='2119' />
+   </reference>
+   <reference anchor='RFC2234'>
+    <front>
+     <title>Augmented BNF for Syntax Specifications: ABNF</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='2234' />
+   </reference>
+   <reference anchor='RFC2606'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='D.'
+             surname='Eastlake'
+             fullname='Donald E. Eastlake 3rd'>
+      <organization abbrev='IBM'>IBM</organization>
+     </author>
+     <author initials='A.'
+             surname='Panitz'
+             fullname='Aliza R. Panitz'></author>
+     <date month='June'
+           year='1999' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2606' />
+   </reference>
+   <reference anchor='RFC2616'>
+    <front>
+     <title>Hypertext Transfer Protocol -- HTTP/1.1</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='2616' />
+   </reference>
+   <reference anchor='RFC3986'>
+    <front>
+     <title>Uniform Resource Identifier (URI): Generic Syntax</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='3986' />
+   </reference>
+   <reference anchor='RFC4287'>
+    <front>
+     <title>The Atom Syndication Format</title>
+     <author initials='M.'
+             surname='Nottingham'
+             fullname='Mark Nottingham'></author>
+     <author initials='R.'
+             surname='Sayre'
+             fullname='Robert Sayre'></author>
+     <date month='December'
+           year='2005' />
+    </front>
+    <seriesInfo name='RFC'
+                value='4287' />
+   </reference>
+   <reference anchor='RFC4627'>
+    <front>
+     <title>The application/json Media Type for JavaScript Object Notation (JSON)
+</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='4627' />
+   </reference>
+   <reference anchor='RFC5023'>
+    <front>
+     <title>The Atom Publishing Protocol</title>
+     <author initials='J.'
+             surname='Gregorio'
+             fullname='Joe Gregorio'>
+      <organization abbrev='GOOG'>Google</organization>
+     </author>
+     <author initials='B.'
+             surname='de hOra'
+             fullname='Bill de hOra'>
+      <organization>NewBay Software</organization>
+     </author>
+     <date month='October'
+           year='2007' />
+    </front>
+    <seriesInfo name='RFC'
+                value='5023' />
+   </reference>
+   <reference anchor="Rison"
+              target="http://mjtemplate.org/examples/rison.html">
+    <front>
+     <title>Rison - Compact Data in URIs</title>
+    </front>
+   </reference>
+   <reference anchor="XSdateTime"
+              target="http://www.w3.org/TR/xmlschema-2/#dateTime">
+    <front>
+     <title>XML Schema Part 2: Datatypes Second Edition</title>
+     <author initials='P.V.'
+             surname='Biron'
+             fullname='Paul V. Biron'>
+      <organization>Kaiser Permanente, for Health Level Seven</organization>
+     </author>
+     <author initials='A.'
+             surname='Malhotra'
+             fullname='Ashok Malhotra'>
+      <organization>Microsoft</organization>
+     </author>
+     <date month='October'
+           year='2004' />
+    </front>
+   </reference>
+   <reference anchor="JSON-RPC"
+              target="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal?pli=1">
+    <front>
+     <title>JSON-RPC 2.0 Specification proposal</title>
+     <author surname='JSON-RPC Working Group'
+             fullname='JSON-RPC Working Group &lt;json-rpc(at)googlegroups.com&gt;'>
+             </author>
+     <date month='November'
+           year='2008' />
+    </front>
+   </reference>
+   <reference anchor="XML-RPC-Introspection"
+              target="http://xmlrpc-c.sourceforge.net/introspection.html">
+    <front>
+     <title>XML-RPC Introspection</title>
+     <author surname='opensocial-and-gadgets-spec@googlegroups.com'
+             fullname='OpenSocial and Gadgets Specification Group'></author>
+     <date month='January'
+           year='2000' />
+    </front>
+   </reference>
+   <reference anchor='OAuth-Core-1.0'
+              target='http://oauth.net/core/1.0/'>
+    <front>
+     <title>OAuth Core 1.0</title>
+     <author initials='M.'
+             surname='Atwood'
+             fullname='Mark Atwood'></author>
+     <author initials='R. M.'
+             surname='Conlan'
+             fullname='Richard M. Conlan'>
+      <organization>Google</organization>
+     </author>
+     <author initials='B.'
+             surname='Cook'
+             fullname='Blaine Cook'>
+      <organization>Twitter</organization>
+     </author>
+     <author initials='L.'
+             surname='Culver'
+             fullname='Leah Culver'>
+      <organization>Pownce</organization>
+     </author>
+     <author initials='K.'
+             surname='Elliott-McCrea'
+             fullname='Kellan Elliott-McCrea'>
+      <organization>Flickr</organization>
+     </author>
+     <author initials='L.'
+             surname='Halff'
+             fullname='Larry Halff'>
+      <organization>ma.gnolia</organization>
+     </author>
+     <author initials='E.'
+             surname='Hammer-Lahav'
+             fullname='Eran Hammer-Lahav'></author>
+     <author initials='B.'
+             surname='Laurie'
+             fullname='Ben Laurie'>
+      <organization>Google</organization>
+     </author>
+     <author initials='C.'
+             surname='Messina'
+             fullname='Chris Messina'></author>
+     <author initials='J.'
+             surname='Panzer'
+             fullname='John Panzer'></author>
+     <author initials='S.'
+             surname='Quigley'
+             fullname='Sam Quigley'>
+      <organization>Twitter</organization>
+     </author>
+     <author initials='D.'
+             surname='Recordon'
+             fullname='David Recordon'>
+      <organization>six apart</organization>
+     </author>
+     <author initials='E.'
+             surname='Sandler'
+             fullname='Eran Sandler'>
+      <organization>Yedda</organization>
+     </author>
+     <author initials='J.'
+             surname='Sergent'
+             fullname='Jonathan Sergent'>
+      <organization>ma.gnolia</organization>
+     </author>
+     <author initials='B.'
+             surname='Slesinsky'
+             fullname='Brian Slesinsky'></author>
+     <author initials='A.'
+             surname='Smith'
+             fullname='Andy Smith'>
+      <organization>Jaiku</organization>
+     </author>
+     <date month='December'
+           year='2007' />
+    </front>
+   </reference>
+   <reference anchor="OAuth-Consumer-Request-1.0-Draft-1"
+              target="http://oauth.googlecode.com/svn/spec/ext/consumer_request/1.0/drafts/1/spec.html">
+    <front>
+     <title>OAuth Consumer Request 1.0 Draft 1</title>
+     <author initials='E.'
+             surname='Hammer-Lahav'
+             fullname='Eran Hammer-Lahav'></author>
+    </front>
+   </reference>
+   <reference anchor="Core-Data"
+              target="./Core-Data.xml">
+    <front>
+     <title>OpenSocial Core Data Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
+    </front>
+   </reference>
+   <reference anchor="Social-Data"
+              target="./Social-Data.xml">
+    <front>
+     <title>OpenSocial Social Data Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='December'
+           year='2009' />
+    </front>
+   </reference>
+  </references>
+  <section title="XML format XSD"
+           anchor="XML_format_XSD">
+    <figure>
+     <artwork xml:space="preserve">
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;xs:schema xmlns:tns="http://ns.opensocial.org/2008/opensocial"
+  elementFormDefault="qualified"
+  targetNamespace="http://ns.opensocial.org/2008/opensocial"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
+
+  &lt;xs:element name="response"&gt;
+    &lt;xs:complexType&gt;
+      &lt;xs:choice&gt;      
+        &lt;xs:element name="entry" type="xs:anyType" /&gt;
+        &lt;xs:group ref="collection" /&gt;
+        &lt;xs:element name="invalidationKeys" type="tns:InvalidationKeys" /&gt;
+      &lt;/xs:choice&gt;
+    &lt;/xs:complexType&gt;
+  &lt;/xs:element&gt;    
+
+  &lt;xs:group&gt;        
+    &lt;xs:complexType&gt;
+      &lt;xs:sequence&gt;
+        &lt;xs:complexType&gt;
+          &lt;xs:all&gt;
+            &lt;xs:element name="itemsPerPage" type="xs:int" /&gt;
+            &lt;xs:element name="startIndex" type="xs:long" /&gt;
+            &lt;xs:element name="totalResults" type="xs:long" /&gt;
+            &lt;xs:element name="filtered" type="xs:boolean" /&gt;
+            &lt;xs:element name="sorted" type="xs:boolean" /&gt;
+            &lt;xs:element name="updatedSince" type="xs:boolean" /&gt;
+          &lt;/xs:all&gt;
+        &lt;/xs:complexType&gt; 
+        &lt;xs:element name="entry" type="xs:anyType" minOccurs="0" maxOccurs="unbounded" /&gt;
+      &lt;/xs:sequence&gt;
+    &lt;/xs:complexType&gt;
+  &lt;/xs:group&gt;        
+
+  &lt;xs:complexType name="InvalidationKeys"&gt;
+    &lt;xs:all&gt;
+      &lt;xs:element name="invalidationKey" type="xs:string" maxOccurs="unbounded" /&gt;
+    &lt;/xs:all&gt;
+  &lt;/xs:complexType&gt;
+
+&lt;/xs:schema&gt;
+</artwork>
+    </figure>
+  </section>
+ </back>
+</rfc>
+  
