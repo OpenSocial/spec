@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="January"
+  <date month="March"
         year="2010" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
@@ -28,7 +28,7 @@
  </front>
  <middle>
    <section title="Version 1.0">
-     <t>Published February XX, 2010</t>
+     <t>Published March 9, 2010</t>
      <t>With so many different types of websites adopting OpenSocial it has become clear that a "one size fits all" approach isn't appropriate for the OpenSocial spec.  Containers have different types of data they want to make available to clients (sometimes it's social data, sometimes it's not), and some want to expose that data via web services, while others wish to use gadgets.  As such, modularity was a key goal in the OpenSocial 1.0 iteration, allowing implementers to pick and choose the elements of OpenSocial that make sense for their use cases.  OpenSocial 1.0 also defines extension points so containers can add functionality not covered in the spec, but do so in a standard way, making it easier to fold such extensions back into the spec or share extensions across containers.</t>
      <section title="Major Changes">
        <section title="Revised Compliance Section">

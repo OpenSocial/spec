@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="February"
+  <date month="March"
         year="2010" />
   <abstract>
    <t>This document defines all the data objects used in the
@@ -1561,8 +1561,8 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Core Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor='SocialGadget'
@@ -1571,8 +1571,8 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Social Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor='SocialServer'
@@ -1581,8 +1581,8 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Social API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
   </references>

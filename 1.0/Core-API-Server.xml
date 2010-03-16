@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="February"
+  <date month="March"
         year="2010" />
   <abstract>
    <t>This document describes a method for making information
@@ -1767,8 +1767,8 @@ Content-Type: application/json
      <title>OpenSocial Core Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor="Social-Data"
@@ -1777,8 +1777,8 @@ Content-Type: application/json
      <title>OpenSocial Social Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
   </references>

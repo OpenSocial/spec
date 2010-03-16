@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="February"
+  <date month="March"
         year="2010" />
   <abstract>
    <t>This document describes a method for making social network information
@@ -1533,8 +1533,8 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
      <title>OpenSocial Core Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor="Core-API-Server"
@@ -1543,8 +1543,8 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
      <title>OpenSocial Core API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor="Social-Data"
@@ -1553,8 +1553,8 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
      <title>OpenSocial Social Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
   </references>

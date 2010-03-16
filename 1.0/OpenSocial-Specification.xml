@@ -13,7 +13,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="February"
+  <date month="March"
         year="2010" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
@@ -432,8 +432,8 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Core Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor="Core-API-Server"
@@ -442,8 +442,8 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Core API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor="Social-Gadget"
@@ -452,8 +452,8 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Social Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
    <reference anchor="Social-API-Server"
@@ -462,8 +462,8 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Social API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='December'
-           year='2009' />
+     <date month='March'
+           year='2010' />
     </front>
    </reference>
   </references>
