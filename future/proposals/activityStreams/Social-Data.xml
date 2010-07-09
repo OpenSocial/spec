@@ -306,6 +306,82 @@ COMMA          = <US-ASCII comma (44)>
     html tags: &lt;b&gt;, &lt;i&gt;, &lt;a&gt;, &lt;span&gt;. The container may
     ignore this formatting when rendering the activity.</t>
    </section>
+   <section title="ActivityEntry" anchor="ActivityEntry">
+    <t>An ActivityEntry represents an activity.  A collection of ActivityEntries compose an ActivityStream.</t>
+    <t>This is a <eref target="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">proposal</eref> to incorporate ActivityStreams into the OpenSocial spec.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>icon</c>
+      <c>string</c>
+      <c>This URI value identifies an image resource which provides a visual representation of the activity, intended for human consumption. The image SHOULD be square and SHOULD be suitable for presentation at a small size. An ActivityEntry construct MAY have an icon but it MUST NOT have more than one.</c>
+      <c>time</c>
+      <c>string</c>
+      <c>A Date Construct that identifies the time at which the activity occurred. It is important to note that this is not necessarily the same as the time at which the activity was published. An ActivityEntry construct MUST have exactly one Time value.</c>
+      <c>actor</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Identifies the entity that performed the activity. An ActivityEntry MUST have exactly one actor.</c>
+      <c>verb</c>
+      <c>Array&lt;string&gt;</c>
+      <c>An absolute URI value that identifies the action of the activity. An ActivityEntry MUST have one or more verbs.</c>
+      <c>object</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Identifies the primary object of the activity. An ActivityEntry MUST have exactly one object.</c>
+      <c>target</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Represents the object to which the activity was performed. The exact meaning of an activity's target is dependent on the verb of the activity, but will often be the object of the English preposition "to". The activity target MUST NOT be used to identify an indirect object that is not a target of the activity. An ActivityEntry MAY have a target but it MUST NOT have more than one.</c>
+      <c>generator</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Represents the application which created this activity, which may be separate from the service to which the activity is published. For example, a third-party application on a mobile phone may be used to post a photo to a photo sharing service. An ActivityEntry MAY have a generator but it MUST NOT have more than one.</c>
+      <c>serviceProvider</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Represents the service which is publishing the activity. An ActivityEntry MAY have a provider but it MUST NOT have more than one.</c>
+      <c>title</c>
+      <c>string</c>
+      <c>An HTML representation of the natural language title for this activity. Consumers MAY use the value of this field, if set, as a fallback for when none of the provided verbs are recognized. An ActivityEntry MAY have a title but it MUST NOT have more than one.</c>
+      <c>body</c>
+      <c>string</c>
+      <c>An HTML representation of a natural language describing this activity including visual elements such as thumbnails. Consumers MAY use the value of this field, if set, as a fallback for when none of the provided verbs are recognized. An ActivityEntry MAY have a body but it MUST NOT have more than one.</c>
+      <c>standardLink</c>
+      <c>Array&lt;string&gt;</c>
+      <c>An ActivityEntry MAY have one ore more Standard Links. This component is provided to allow the use of the registry of link relations defined by the Web Linking specification to create links between an Activity Construct and other resources. The Context of the Link is the Object Construct. This component MUST NOT be used to publish data that matches a meaning that could be published by another Activity Streams component.</c>
+     </texttable>
+    <t>An example ActivityEntry.</t>
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+	standardLink: ['http://myvideos.com'],
+	time: '2010-04-27T06:02:36+0000',
+	title: 'My Title',
+	body: 'This is the body, where I can elaborate.',
+	actor: {
+		id: 'john.doe',
+		name: 'John Doe'
+	},
+	verb: ['http://activitystrea.ms/schema/1.0/play', 'http://activitystrea.ms/schema/1.0/post'],
+	object: {
+		id: 'entryId123',
+		name: 'raftingvideo.avi',
+		permalink: 'http://myvideos.com/raftingtrip',
+		type: ['http://activitystrea.ms/schema/1.0/video'],
+		media: {
+			target: 'http://myvideos.com/raftingtrip/raftingvideo.avi',
+			type: 'http://activitystrea.ms/schema/1.0/video',
+			width: '400',
+			height: '300',
+			duration: '93'
+		},
+		action: {
+			target: 'http://myvideos.com/raftingvideo',
+			caption: 'Went white water rafting in the great lakes - ga hah!'
+		}
+	}
+}
+</artwork>
+    </figure>
+    </section>
    <section title="AppData" anchor="AppData">
      <t>OpenSocial defines a data store that applications can use to
      read and write user-specific data. This data store can be read by
@@ -1100,6 +1176,128 @@ COMMA          = <US-ASCII comma (44)>
       <c>A user ID associated with this account.</c>
      </texttable></t>
    </section>
+   <section title="ActionLink" anchor="ActionLink">
+    <t>An Action Link Construct represents a hyperlink at which an action can be performed. An Action Link Construct consists of the logical components defined in the following sections.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>target</c>
+      <c>string</c>
+      <c>The URL that is the target of this hyperlink. An Action Link Construct MUST have one Target URL and MUST NOT have more than one.</c>
+      <c>caption</c>
+      <c>string</c>
+      <c>The human-readable caption of the UI element that a user will interact with in order to navigate to the Target URL. An Action Link Construct MUST have one Caption and MUST NOT have more than one.</c>
+      </texttable>
+    <t>An example ActionLink.</t>
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+	target: 'http://myvideos.com/raftingvideo',
+	caption: 'Went white water rafting in the great lakes - ga hah!'
+}
+	</artwork>
+    </figure>
+    </section> 
+    <section title="ActivityObject" anchor="ActivityObject">
+    <t>An object construct is a thing, real or imaginary, which participates in an activity. It may be the entity performing the activity, or the entity on which the activity was performed. An object consists of the logical components defined in the following sections. Certain object types may further refine the meaning of these components, or they may define additional components. If an object type defines an additional component then it SHOULD also define the representation of that component in one or more serialization formats.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>id</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>The id of an object construct is an absolute URI that uniquely identifies the object. An Object construct SHOULD have exactly one ID value. If an object construct does not have an ID value consumers MAY use the Permalink URL as a weaker identifier, but must in this case allow for the fact that Permalink URL is not defined to be unique across all objects and be prepared to handle duplicates.</c>
+      <c>name</c>
+      <c>string</c>
+      <c>This string value provides a human readable display name for the object, if the object has a name. An Object construct MAY have a name, but MUST NOT have more than one.</c>
+      <c>summary</c>
+      <c>string</c>
+      <c>This string value provides a human readable description or summary of the Object. An Object construct MAY have a summary, but MUST NOT have more than one.</c>
+      <c>image</c>
+      <c><eref target="./Social-Data.xml#MediaLink">MediaLink</eref></c>
+      <c>Identifies an image resource which provides a visual representation of the object, intended for human consumption. An Object construct MAY have a representative image, but MUST NOT have more than one.</c>
+      <c>permalink</c>
+      <c>string</c>
+      <c>This URI value identifies a resource which provides an HTML representation of the object. An Object construct MAY have a Permalink URL, but MUST NOT have more than one. The presence of this construct implies a Link whose Context is this Object Construct, whose Link Relation Type is "alternate" and whose Target IRI is the Permalink URL value.</c>
+      <c>type</c>
+      <c>Array&lt;string&gt;</c>
+      <c>This absolute URI identifies the type of object. An Object construct MAY have one or more types.</c>
+      <c>inReplyTo</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>An Object Construct that this object is a response to. An Object Construct MAY have one In Reply To Object, but MUST NOT have more than one. This is not set unless the Object Construct is a response to another Object Construct.</c>
+      <c>attached</c>
+      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
+      <c>An Object Construct that is attached to this object. An Object Construct MAY have one or more attached objects. An attached Object Construct can be used when one object is used as a wrapper or carrier for another object, similar to the concept of attached files in an email message.</c>
+      <c>reply</c>
+      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
+      <c>An Object Construct that has this Object Construct as its In Reply To Object. An Object Construct MAY have one or more Reply Objects.</c>
+      <c>reaction</c>
+      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
+      <c>An ActivityEntry that describes an Activity whose Object is this Object Construct. An Object Construct MAY have one or more Reaction Activities.</c>
+      <c>action</c>
+      <c><eref target="./Social-Data.xml#ActionLink">ActionLink</eref></c>
+      <c>An ActionLink that represents an action that a human could peform on this object. An Object Construct MAY have one or more Action Links.</c>
+      <c>upstreamDuplicateId</c>
+      <c>Array&lt;string&gt;</c>
+      <c>A string containing the ID value of another Object Construct for which this Object Construct is a duplicate created by re-publishing. An Object Construct MAY have one or more Upstream Duplicate IDs.</c>
+      <c>downstreamDuplicateId</c>
+      <c>Array&lt;string&gt;</c>
+      <c>A string containing the ID value of another Object Construct for which was created as a duplicate of this Object Construct. An Object Construct MAY have one or more Downstream Duplicate IDs.</c>
+      <c>standardLink</c>
+      <c>string</c>
+      <c>An Object Construct MAY have one ore more Standard Links. This component is provided to allow the use of the registry of link relations defined by the Web Linking specification to create links between an Object Construct and other resources. The Context of the Link is the Object Construct. This component MUST NOT be used to publish data that matches a meaning that could be published by another Activity Streams component.</c>
+     </texttable>
+    <t>A minimal ActivityObject example</t>
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+	"id": "id": "http://www.myactivitystream.com",
+	"name" : "Burning Tree",
+	"permalink" : "http://www.flickr.com/willy/photo/29382938293",
+	"type": ["http://activitystrea.ms/schema/1.0/photo"],
+	"media" : "http://www.flickr.com/willy/photo/29382938293/large.jpg"
+}
+	</artwork>
+    </figure>
+    </section> 
+   <section title="ActivityStream" anchor="ActivityStream">
+    <t>An activity stream is a collection of activities. Often these activities are related in some way, such as being by the same actor.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>displayName</c>
+      <c>string</c>
+      <c>A human-readable name for this stream. This property MAY be null if the stream has no name.</c>
+      <c>language</c>
+      <c>string</c>
+      <c>The language used to generate the summary and content sections of the activities.</c>
+      <c>entries</c>
+      <c>Array&lt;<eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref>&gt;</c>
+      <c>The activities comprising this stream. This property MUST NOT be null. </c>
+      <c>id</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>A URI that serves as an identifier for this activity stream. This property MUST NOT be null.</c>
+      <c>subject</c>
+      <c>string</c>
+      <c>If this stream is considered to be about a specific object -- usually a Person -- the publisher SHOULD include the object representation for the subject. If included then only the minimal representation is necessary in subsequent references.</c>
+     </texttable>
+    <t>A minimal ActivityStream example</t>
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+	"id": "http://www.myactivitystream.com",
+	"language": "EN",
+	"displayName": "My Activity Stream",
+	"entries": [{"id": "http://www.myactivitystream.com/1"}]
+}
+</artwork>
+    </figure>
+    </section>
    <section title="Address" anchor="Address">
      <t>The components of a physical mailing address. Service
      Providers MAY return just the full address as a single string in
@@ -1391,6 +1589,42 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
 </artwork>
      </figure>
    </section>
+   <section title="MediaLink" anchor="MediaLink">
+    <t>A Media Link Construct represents a hyperlink to a media item. A Media Link Construct consists of the logical components defined in the following sections.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>target</c>
+      <c>string</c>
+      <c>The URL that is the target of this hyperlink. A Media Link Construct MUST have one Target URL and MUST NOT have more than one.</c>
+      <c>type</c>
+      <c>string</c>
+      <c>A hint to the consumer about the media type of the target resource. A Link Construct MAY have one Media Type but MUST NOT have more than one.</c>
+      <c>width</c>
+      <c>string</c>
+      <c>A hint to the consumer about the natural width of the resource that is the target of this hyperlink, in pixels. This MAY be included when the target resource is a visual media item such as an image, video or embeddable HTML page, but a Link Construct MUST NOT have more than one Width.</c>
+      <c>height</c>
+      <c>string</c>
+      <c>A hint to the consumer about the natural height of the resource that is the target of this hyperlink, in pixels. This MAY be included when the target resource is a visual media item such as an image, video or embeddable HTML page, but a Link Construct MUST NOT have more than one Height.</c>
+      <c>duration</c>
+      <c>string</c>
+      <c>A hint to the consumer about the length of the resource that is the target of this hyperlink, in seconds. This MAY be included when the target resource is a time-based media item such as an audio or video, but a Link Construct MUST NOT have more than one Duration.</c>
+     </texttable>
+    <t>An example MediaLink.</t>
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+	target: 'http://myvideos.com/raftingtrip/raftingvideo.avi',
+	type: 'http://activitystrea.ms/schema/1.0/video',
+	width: '400',
+	height: '300',
+	duration: '93'
+}
+	</artwork>
+    </figure>
+    </section> 
    <section title="Name"
             anchor="Name">
      <t>The components of the person's real name. Providers MAY return just the
