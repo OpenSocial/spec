@@ -1,0 +1,1562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-social-api-server-specification-1-1-DRAFT"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title abbrev="Social-API-Server">OpenSocial Social API Server Specification 1.1 DRAFT</title>
+  <author fullname='OpenSocial and Gadgets Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="March"
+        year="2010" />
+  <abstract>
+   <t>This document describes a method for making social network information
+   and services programatically available on the internet.</t>
+  </abstract>
+ </front>
+ <middle>
+  <section title="Notation and Conventions">
+    <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+   <section title="Requirements">
+    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+    document are to be interpreted as described in 
+    <xref target="RFC2119">RFC2119</xref>.</t>
+    <t>An implementation is not compliant if it fails to satisfy one or more of
+    the MUST or REQUIRED level requirements for the protocols it
+    implements.</t>
+   </section>
+   <section title="Augmented BNF">
+    <t>The grammatical rules in this document are to be interpreted as
+    described in <xref target="RFC2234">(Augmented Backus-Naur 
+    Form)</xref>. The following constructs are introduced in this document to augment 
+    RFC2234:</t>
+    <list style="hanging">
+     <t hangText="{rule1 rule2}">
+      <t>Elements enclosed in braces (squiggly brackets) are treated as a
+      single, UNORDERED element. Its contents may occur in any order. Hence: 
+      <artwork type="abnf" xml:space="preserve">{elem foo} bar</artwork>
+      would match (elem foo bar) and (foo elem bar).</t>
+      <t>NOTE: Specifying alternatives is quite different from specifying set
+      grouping. Alternatives indicate the matching of exactly one (sub-)rule
+      out of the total grouping. The set mechanism indicates the matching of a
+      string which contains all of the elements within the group; however the
+      elements may occur in any order.</t>
+     </t>
+     <t hangText="#rule">A construct "#" is defined, similar to "*", for
+     defining lists of elements. The full form is "&lt;n&gt;#&lt;m&gt;element"
+     indicating at least &lt;n&gt; and at most &lt;m&gt; elements, each
+     separated by one or more commas (",") and OPTIONAL linear white space
+     (LWS). This makes the usual form of lists very easy; a rule such as 
+     <artwork type="inline" xml:space="preserve">( *LWS element *( *LWS "," *LWS element ))</artwork>
+     can be shown as 
+     <artwork type="inline" xml:space="preserve">1#element</artwork>
+     Wherever this construct is used, null elements are allowed, but do
+     not contribute to the count of elements present. That is, "(element), ,
+     (element) " is permitted, but counts as only two elements. Therefore, 
+     where at least one element is required, at least one non-null element MUST 
+     be present.  Default values are 0 and infinity so that "#element" allows 
+     any number, including zero; "1#element" requires at least one; and 
+     "1#2element" allows one or two.</t>
+     <t hangText="&amp;rule">A construct "&amp;" is defined, similar to "#",
+     which uses an ampersand (&amp;) instead of commas, and MUST NOT include
+     linear white space between elements.</t>
+     <t hangText="implied *LWS">The grammar described by this specification is
+     word-based. Except where noted otherwise, linear white space (LWS) can be
+     included between any two adjacent words (token or quoted-string), and
+     between adjacent words and separators, without changing the interpretation
+     of a field. At least one delimiter (LWS and/or separators) MUST exist
+     between any two tokens, since they would otherwise be interpreted as a
+     single token.</t>
+    </list>
+   </section>
+   <section title="Basic Rules">
+    <t>The following rules are used throughout this specification to describe
+    basic parsing constructs. The US-ASCII coded character set is defined by 
+    <xref target="RFC20" /> </t>
+    <artwork type="abnf"
+         xml:space="preserve">
+<![CDATA[
+OCTET          = <any 8-bit sequence of data>
+CHAR           = <any US-ASCII character (octets 0 - 127)>
+UPALPHA        = <any US-ASCII uppercase letter "A".."Z">
+LOALPHA        = <any US-ASCII lowercase letter "a".."z">
+ALPHA          = UPALPHA / LOALPHA
+DIGIT          = <any US-ASCII digit "0".."9">
+CTL            = <any US-ASCII control character (octets 0 - 31) and DEL (127)>
+CR             = <US-ASCII CR, carriage return (13)>
+LF             = <US-ASCII LF, linefeed (10)>
+SP             = <US-ASCII SP, space (32)>
+HT             = <US-ASCII HT, horizontal-tab (9)>
+<">            = <US-ASCII double-quote mark (34)>
+CRLF           = CR LF
+LWS            = [CRLF] 1*( SP / HT )
+TEXT           = <any OCTET except CTLs, but including LWS>
+COMMA          = <US-ASCII comma (44)>
+      ]]>
+</artwork>
+   </section>
+  </section>
+  <section title="Services"
+           anchor="services">
+   <t>OpenSocial defines several services for providing access to a container's data.  Individual services are required or optional as indicated in the sections that follow.</t>
+   <section title="People"
+            anchor="People-Service">
+    <t>Containers MUST support the People Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the People Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/people"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "people"
+</artwork>
+    <section title="Get"    anchor="People-Service-Get">
+     <t>The Get method supports several different types of queries, from requests for a person or group of people to information about what profile fields are available.</t>
+     <section title="Get a Person" anchor="People-Service-GetPerson">
+      <t>Containers MUST support retrieving information about a person. Requests and responses for retrieving a person use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetPerson-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetPerson-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Person">Person</eref>
+</artwork>
+      <t>If the User-Id is set to -1, the value for the anonymous user MUST be
+    returned. The value for the name and nickname fields can either be blank or
+    set to an appropriate value such as 'Guest', 'Anonymous', etc.</t>
+      <t>The REST protocol also supports queries for a person based on their relationship to a user.  In these queries, the URI fragment includes an ID for the initial user, an ID for the group that represents the relationship, and an ID for a user to return:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref> = "/people/" Initial-User-Id "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> "/" Related-User-Id
+<x:highlight>Initial-User-Id</x:highlight>   = <eref target="Core-Data.xml#User-Id">User-Id</eref>
+<x:highlight>Related-User-Id</x:highlight>   = <eref target="Core-Data.xml#User-Id">User-Id</eref>
+</artwork>
+      <section title="Get Person Request Parameters" anchor="GetPerson-Request-Parameters">
+        <t>A request for a Person object MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of person to retrieve.  Defaults to "@me", which MUST return the currently logged in user. Note that the userId parameter is not applicable in the REST protocol, as the user is identified in the REST-URI-FRAGMENT.</c>
+          <c>fields</c>
+          <c><eref target="./Core-Data.xml#Array">Array</eref>&lt;String&gt;</c>
+          <c>An array of Person field names.  For standard values, see the <eref target="./Social-Data.xml#Person">Person</eref> object.</c>
+          <c>escapeType</c>
+          <c><eref target="./Social-Data.xml#Escape-Type">Escape-Type</eref></c>
+          <c>Specifies the type of escaping to use on any AppData values included in the response. Defaults to "htmlEscape".</c>
+        </texttable>
+        <t><xref target="AppData-Service">AppData</xref> for the person or collection of people returned may be fetched by including "appdata" in the fields
+     parameter. If only a subset of AppData fields are desired, they may be
+     fetched by specifying "appdata.&lt;fieldname&gt;" for each field that
+     needs to be fetched. For example, specifying "appdata.key1,appdata.key2" will return Appdata stored under the keys "key1" and "key2" for the requester.</t>
+      </section>
+      <section title="Examples">
+       <t>Here's an example of a REST request to retrieve a person and the
+     associated response. Note that 'format=xml' is used to specify that the response should contain XML.
+       <t>HTTP Request</t>
+        <artwork type="example"
+         xml:space="preserve">
+GET /rest/people/34KJDCSKJN2HHF0DW20394/@self?fields=name,gender&amp;format=xml HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+</artwork>
+        <t>HTTP Response</t>
+        <artwork type="example"
+         xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: text/xml
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;person&gt;
+    &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+    &lt;name&gt;
+      &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
+    &lt;/name&gt;
+    &lt;gender&gt;female&lt;/gender&gt;
+  &lt;/person&gt;
+&lt;/response&gt;
+</artwork>
+       </t>
+       <t>Here's the same example to retrieve a person and the
+     associated response using the RPC protocol. 
+        <t>Note that the URL addressable equivalent is:</t>
+        <artwork type="example"> http://api.example.org/rpc?method=people.get&amp;id=somePerson&amp;userId=34KJDCSKJN2HHF0DW20394&amp;groupId=@self.</artwork>
+        <t>HTTP Request</t>
+        <artwork type="example"
+         xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "method" : "people.get",
+  "id" : "somePerson"
+  "params" : {
+    "userId" : "34KJDCSKJN2HHF0DW20394",
+    "fields" : [ "name", "gender" ]
+  }
+}
+</artwork>
+        <t>HTTP Response</t>
+        <artwork type="example"
+         xml:space="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "somePerson"
+   "result" : {
+     "id" : "34KJDCSKJN2HHF0DW20394",
+     "name" : { "unstructured" : "Jane Doe"},
+     "gender" : "female"
+   }
+}
+</artwork>
+       </t>
+      </section>
+    </section>
+     <section title="Get a list of People"
+             anchor="People-Service-GetPeople">
+     <t>Containers MUST support retrieving information about multiple people in a single request. Requests and responses for retrieving a list of people use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetPeople-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetPeople-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Person">Person</eref>&gt;</artwork>
+     <t>Note that the Group-Id can't be '@self' in these requests or only a single Person will be returned.</t>  
+     <section title="Get People Request Parameters" anchor="GetPeople-Request-Parameters">
+        <t>A request for a Collection of Person objects MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
+          <c>User ID of person or people to retrieve.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>The Group ID of the group of users related to User ID.  Defaults to "@self", which MUST return only the Person object(s) specified by the userId parameter.</c>
+          <c>fields</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;</c>
+          <c>An array of Person field names.  For standard values, see the <eref target="./Social-Data.xml#Person">Person</eref> object.</c>
+          <c>networkDistance</c>
+          <c>number</c>
+          <c>Containers MAY support the network distance parameter, which modifies group-relative requests (@friends,  
+      etc.) to include the transitive closure of all friends up to the specified
+      distance away.</c>
+         </texttable>
+     </section>
+     <section title="Examples">
+      <t>Here's an example of a REST request to retrieve the list of a user's friends, and the associated response. Note that 'format=xml' is used to specify that the response should contain XML.
+      <t>HTTP Request</t>
+      <artwork type="example"
+         xml:space="preserve">
+GET /rest/people/92WEGDFEWSS2GS0DW274EQ/@friends?fields=name,gender&amp;format=xml HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+</artwork>
+      <t>HTTP Response</t>
+      <artwork type="example"
+         xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: text/xml
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+  &lt;itemsPerPage&gt; 2 &lt;/itemsPerPage&gt;
+  &lt;totalResults&gt; 100 &lt;/totalResults&gt;
+  &lt;entry&gt;
+    &lt;person&gt;
+      &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+      &lt;name&gt;
+        &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
+      &lt;/name&gt;
+      &lt;gender&gt;female&lt;/gender&gt;
+    &lt;/person&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;person&gt;
+      &lt;id&gt;VMK92BFH3DNWRYX39673DF&lt;/id&gt;
+      &lt;name&gt;
+        &lt;unstructured&gt;John Smith&lt;/unstructured&gt;
+      &lt;/name&gt;
+      &lt;gender&gt;male&lt;/gender&gt;
+    &lt;/person&gt;
+  &lt;/entry&gt; 
+&lt;/response&gt;
+</artwork>
+      </t>
+      <t>Here's an example of a RPC request to retrieve the list of a user's friends, and the associated response.
+       <t>HTTP Request</t>
+       <artwork type="example"
+         xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "method" : "people.get",
+  "id" : "someFriends"
+  "params" : {
+    "userId" : "92WEGDFEWSS2GS0DW274EQ",
+    "groupId" : "@friends",
+    "fields" : "name, gender"
+  }
+}
+</artwork>
+       <t>HTTP Response</t>
+       <artwork type="example"
+         xml:space="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "someFriends"
+   "result" : {
+     "startIndex" : 1
+     "itemsPerPage" : 2
+     "totalResults" : 100
+     "entry" : [
+       {
+         "id" : "34KJDCSKJN2HHF0DW20394",
+         "name" : { "unstructured" : "Jane Doe"},
+         "gender" : "female"
+       },
+       {
+         "id" : "VMK92BFH3DNWRYX39673DF",
+         "name" : { "unstructured" : "John Smith"},
+         "gender" : "female"
+       }
+     ]
+   }
+}
+</artwork>
+      </t>
+     </section>
+    </section>
+     <section title="Retrieve a list of supported Person fields" anchor="People-Service-GetSupportedFields">
+      <t>Containers MAY support REST requests for supported person fields. Requests and responses for retrieving supported person fields use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/@supportedFields"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;  
+</artwork>   
+    </section>
+     <section title="Retrieve a list of deleted friends" anchor="People-Service-GetDeletedFriends">
+      <t>Containers MAY support REST requests for a list of people who are no longer friends with a given user. This request SHOULD be combined with a updatedSince param. Requests and responses for retrieving deleted friends use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@deleted"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetPeople-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Person">Person</eref>&gt; 
+</artwork>   
+    </section>
+    </section>
+    <section title="Create" anchor="People-Service-Create">
+     <section title="Create a relationship"
+             anchor="People-Service-CreateRelationship">
+     <t>Containers MAY support request to create a new relationships between users. This is a generalization of many use cases including invitation, and contact creation. Containers MAY require a dual opt-in process before the friend record appears in the collection, and in this case SHOULD
+    return a 202 Accepted response, indicating that the request is 'in flight'
+    and may or may not be ultimately successful.</t>
+    <t>Requests and responses for creating a relationship use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateRelationship-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+     <section title="Create Relationship Request Parameters" anchor="CreateRelationship-Request-Parameters">
+        <t>A request to create a relationship MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the relationship request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>The Group ID specifying the type of relationship.  Defaults to "@friends".</c>
+          <c>person</c>
+          <c><eref target="Social-Data.xml#Person">Person</eref></c>
+          <c>The target of the relationship.</c>
+         </texttable>
+     </section>
+     <section title="Examples">
+       <t>Here is an example of a request to create a friend relationship using the REST protocol.  In this example, the target user (specified in the post body) needs to accept the invitation before being added to the collection, as indicated by the 202 Accepted response.
+        <t>HTTP Request</t>
+        <artwork type="example"
+         xml:space="preserve">
+POST /rest/people/@self/@friends HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+Content Type: application/xml
+&lt;entry xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id>example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+&lt;/entry&gt;
+</artwork>
+      <t>HTTP Response</t>
+      <artwork type="example"
+         xml:space="preserve">
+HTTP/1.1 202 Accepted
+</artwork>
+       </t>
+       <t>Here is an example of a request to create a friend relationship using the RPC protocol:
+        <artwork type="example" xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+  "method" : "people.create",
+  "id" : "createFriend"
+  "params: {
+    "userId" : "@me",
+    "groupId" : "@friends",
+    "person" : {
+      "id" : "example.org:FF256337"
+    }
+  }
+}</artwork>
+        <t>If successful, the associated response contains no data:</t>
+        <artwork type="example" xml:space="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+  "id" : "createFriend",
+  "result" : {}
+}  
+</artwork>
+        <t>The URL-addressable equivalent of this RPC request is:</t>
+        <artwork type="example"> http://api.example.org/rpc?method=people.create&amp;id=createFriend&amp;userId=@me&amp;groupId=@friends&amp;person.id=example.org:FF256337</artwork>
+      </t>
+     </section>
+    </section>
+    </section>
+    <section title="Update a Person" anchor="People-Service-Update">
+     <t>Containers MAY support updating the properties of a Person object.  If the request is successful, the container MUST return the updated Person object. Requests and responses for updating the fields of a Person use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdatePerson-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Person">Person</eref>
+</artwork>
+     <section title="Update Person Request Parameters" anchor="UpdatePerson-Request-Parameters">
+        <t>A request to update a person MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the update request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>The Group ID specifying the type of relationship.  Defaults to "@self".</c>
+          <c>person</c>
+          <c><eref target="Social-Data.xml#Person">Person</eref></c>
+          <c>A Person object containing the updated fields.</c>
+         </texttable>
+     </section>
+    </section>
+    <section title="Delete a Person" anchor="People-Service-Delete">
+     <t>Containers MAY support requests to remove a Person. The default value for User-Id is "@me". Requests and responses to remove a Person use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = "{"
+                             &lt;"&gt; "userId" &lt;"&gt; ":" &lt;"&gt; <eref target="Core-Data.xml#User-Id">User-Id</eref> &lt;"&gt;
+                         "}"
+                         
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+    </section>
+   </section>
+
+<!-- *********************************************************************************** -->
+   <section title="Groups"
+            anchor="Groups-Service">
+
+    <t>Containers MAY support the Groups Service. Individual operations are required or optional as indicated in the sections that follow. Containers that do support groups MUST use the following values to define the Groups Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/groups"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "groups"
+    </artwork>
+
+<!-- ****************** -->
+
+    <section title="Get Groups"
+             anchor="Groups-Service-GetGroups">
+        <t>Containers MUST support retrieving information about one or multiple groups in a single request. Requests and responses for retrieving groups use the following values:</t> 
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> [ "/" <eref target="Core-Data.xml#Group-Id">Group-Id</eref> ]
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetGroups-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetGroups-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Group">Group</eref> / <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Group">Group</eref>&gt;</artwork>
+     <section title="Get Groups Request Parameters" anchor="GetGroup-Request-Parameters">
+        <t>A request to create a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the group request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Core-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>Optional. Group Id of the single group to be returned by the request.</c>
+         </texttable>
+     </section>
+ 
+   </section>
+
+<!-- ****************** -->
+
+    <section title="Create a Group"
+             anchor="Groups-Service-CreateGroup">
+        <t>Containers MAY support the creation of groups.</t> 
+    <t>Requests and responses for creating a group use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Group">Group</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateGroup-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Group">Group</eref> 
+</artwork>
+     <section title="Create Group Request Parameters" anchor="CreateGroup-Request-Parameters">
+        <t>A request to create a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the group creation request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>group</c>
+          <c><eref target="Social-Data.xml#Group">Group</eref></c>
+          <c>Group object specifying group to be created.</c>
+         </texttable>
+     <t>The Group "id" parameter should not be included in the request and MAY be ignored by the container</t>
+     </section>
+
+    </section>
+
+<!-- ****************** -->
+
+    <section title="Update a Group"
+             anchor="Groups-Service-UpdateGroup">
+        <t>The update operation will update a group. Containers MAY support this request.</t> 
+<artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Core-Data.xml#Group-Id">Group-Id</eref> 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Group">Group</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateGroup-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Group">Group</eref>
+</artwork>
+     <section title="Update Group Request Parameters" anchor="UpdateGroup-Request-Parameters">
+        <t>A request to update a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the update request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>group</c>
+          <c><eref target="Social-Data.xml#Group">Group</eref></c>
+          <c>A Group object containing the updated fields.</c>
+         </texttable>
+    </section>
+
+    </section> 
+
+<!-- ****************** -->
+
+    <section title="Delete a Group"
+             anchor="Groups-Service-RetrieveGroup">
+     <t>Containers MAY support requests to remove a Group. Requests and responses to remove a Group use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/groups/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Core-Data.xml#Group-Id">Group-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "groups.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = "{"
+                             &lt;"&gt; "groupId" &lt;"&gt; ":" &lt;"&gt; <eref target="Core-Data.xml#Group-Id">Group-Id</eref> &lt;"&gt;
+                         "}"
+                         
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+     <section title="Delete Group Request Parameters" anchor="DeleteGroup-Request-Parameters">
+        <t>A request to create a group MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the group deletion request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>Group ID specifying group to be deleted.</c>
+         </texttable>
+     </section>
+
+    </section>
+
+   </section>
+
+<!-- *********************************************************************************** -->
+
+   <section title="Activities"
+            anchor="Activities-Service">
+    <t>Containers MUST support the Activities Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Activities Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/activities"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "activities"
+</artwork>
+    <section title="Get" anchor="Activities-Service-Get">
+     <t>The Get method supports multiple queries, including requests for activities and requests for information about what profile fields are available.</t>
+     <section title="Get Activites" anchor="Activities-Service-GetActivities">
+       <t>Containers MUST support request for Activities.  Requests and responses for retrieving activites use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> [ "/" (Activity-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Activity-Id&gt;) ] ] 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetActivities-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "activities.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetActivities-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Activity">Activity</eref> /  <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Activity">Activity</eref>&gt;
+<x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Get Activities Request Parameters" anchor="GetActivities-Request-Parameters">
+        <t>A request for a Collection of Activity objects MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
+          <c>User ID(s) of the person whose activities are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>The group ID of the group of users whose activities are to be returned.  Defaults to "@self", which MUST return only the Activity objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>appId</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain activities generated by the given appId. If not included, the container MUST return activities created by the currently authenticated app. In the REST protocol, the appId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>activityIds</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
+          <c>Optional. Specifies a list of individual activities to include in the response. In the REST protocol, the activityIds are specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+     </section>
+     <section title="Retrieve a list of supported Activity fields" anchor="Activity-Service-GetSupportedFields">
+      <t>Containers MAY support REST requests for supported Activity fields. Requests and responses for retrieving supported Activity fields use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activites/@supportedFields"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;  
+</artwork>   
+     </section>
+    </section>  
+    <section title="Create an activity" anchor="Activities-Service-Create">
+     <t>Containers MUST support creating an Activity object associated with the currently authenticated app. If successful, the container MUST return the ID of the newly-created Activity. For details on uploading content associated with an activity, see the <eref target="./Core-API-Server.xml#Content-Upload">Content Upload</eref> section of <xref target="Core-API-Server" />.</t>
+       <t>Requests and responses to create an activity use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Activity">Activity</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "activities.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateActivities-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = Activity-Id
+<x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Create Activities Request Parameters" anchor="CreateActivities-Request-Parameters">
+        <t>A request to create an Activity MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person to associate the activity with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>activity</c>
+          <c><eref target="Social-Data.xml#Activity">Activity</eref></c>
+          <c>The activity to associate with the given user.</c>
+        </texttable>
+      </section>
+    </section>  
+    <section title="Update an activity" anchor="Activities-Service-Update">
+      <t>Containers MAY support updating an Activity object associated with the currently authenticated app. For details on uploading content associated with an activity, see the <eref target="./Core-API-Server.xml#Content-Upload">Content Upload</eref> section of <xref target="Core-API-Server" />.</t>
+      <t>Requests and responses to update an activity use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Activity">Activity</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "activities.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateActivities-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Activity">Activity</eref>
+</artwork>
+      <section title="Update Activities Request Parameters" anchor="UpdateActivities-Request-Parameters">
+        <t>A request to update an Activity MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID(s) of the person the activity is associated with. Defaults to "@me", indicating the currently authenticated user.</c>
+          <c>activity</c>
+          <c><eref target="Social-Data.xml#Activity">Activity</eref></c>
+          <c>The activity to update.  Only the 'id' field of the activity is required.</c>
+        </texttable>
+      </section>
+    </section>  
+    <section title="Delete an activity" anchor="Activities-Service-Delete">
+      <t>Containers MAY support deleting an Activity object associated with the currently authenticated app. Requests and responses to update an activity use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Activity">Activity</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "activities.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteActivities-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+      <section title="Delete Activities Request Parameters" anchor="DeleteActivities-Request-Parameters">
+        <t>A request to delete an Activity MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID(s) of the person the activity is associated with. Defaults to "@me", indicating the currently authenticated user.</c>
+          <c>activity</c>
+          <c><eref target="Social-Data.xml#Activity">Activity</eref></c>
+          <c>The activity to delete. Only the 'id' field of the activity is required.</c>
+        </texttable>
+      </section>
+    </section>
+   </section>
+   <section title="AppData"
+            anchor="AppData-Service">
+    <t>Containers MAY support the AppData Service.  If the service is supported, individual operations are required or optional as indicated in the sections that follow.</t>
+    <t>The AppData Service provides a data store that
+     applications can use to read and write user-specific data. This data store
+     can be read by anyone who can see the gadget, but only the currently authenticated user's data is writable.</t>
+    <t>Containers MAY implement quotas or rate limits to preserve their disk space. Containers SHOULD provide at least 10KB of space per user per application for storage.</t>
+    <t>Containers MUST use the following values to define the AppData Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/appdata"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "appdata"
+</artwork>    
+    <section title="Get AppData" anchor="AppData-Service-Get">
+     <t>The AppData Service MUST support requests to retrieve AppData.  Since AppData is often created based on user inputs, containers MUST perform automatic HTML escaping of all AppData when returning it to the client. However, developers MUST have the option of turning off this escaping via the escapeType parameter.</t>
+     <t>Requests and responses to retrieve AppData use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetAppData-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "appdata.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetAppData-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#AppData">AppData</eref>
+</artwork>
+      <section title="Get AppData Request Parameters" anchor="GetAppData-Request-Parameters">
+        <t>A request to retrieve AppData MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
+          <c>User ID(s) of the person whose AppData is to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>The group ID of the group of users whose AppData is to be returned.  Defaults to "@self", which MUST return only the AppData objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>appId</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain AppData generated by the given appId. If not included, the container MUST return AppData created by the currently authenticated app. In the REST protocol, the appId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>fields</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
+          <c>A list of AppData keys specifying the fields to retrieve.</c>
+          <c>escapeType</c>
+          <c><eref target="Social-Data.xml#Escape-Type">Escape-Type</eref></c>
+          <c>Specifies the type of escaping to use on AppData values. Defaults to "htmlEscape".</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Create AppData" anchor="AppData-Service-Create">
+      <t>AppData is created using the <xref target="AppData-Service-Update">update method</xref>.</t>
+    </section>
+    <section title="Update AppData" anchor="AppData-Service-Update">
+     <t>The AppData Service MUST support requests to update AppData for the currently authenticated user. The AppData Service MUST not support request to uppdate AppData for arbitrary users. If an update request is received for an unknown AppData key, the container MUST create an AppData entry for that key. Requests and responses to update AppData use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#AppData">AppData</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "appdata.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateAppData-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+      <section title="Update AppData Request Parameters" anchor="UpdateAppData-Request-Parameters">
+        <t>A request to update AppData MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person to associate the AppData with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>appId</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain AppData generated by the given appId. If not included, the container MUST return AppData created by the currently authenticated app.</c>
+          <c>data</c>
+          <c><eref target="Social-Data.xml#AppData">AppData</eref></c>
+          <c>The AppData to create or update.</c>
+        </texttable>
+      </section>
+      <section title="Examples">
+       <t>Here's an example of updating AppData for a user using the RPC protocol:
+        <t>HTTP Request</t>
+        <artwork type="example" xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+    "method" : "appdata.update",
+    "id" : "setMyData"
+    "params: {
+      "appId" : "app12345",
+      "data" : {
+        "pokes" : 3,
+        "lastPoke" : "2008-02-13T18:30:02Z"
+      }
+   }
+}
+</artwork>
+        <t>HTTP Response</t>
+        <artwork type="example" xml:space="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+  "result" : {}
+}  
+</artwork>
+        <t>The URL-addressable equivalent is:</t>
+        <artwork type="example">
+http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app12345&amp;data.pokes=3&amp;data.lastPoke=2008-02-13T18:30:02Z.
+</artwork>
+       </t>
+      </section>
+    </section>
+    <section title="Delete AppData" anchor="AppData-Service-Delete">
+     <t>The AppData Service MUST support requests to remove AppData for the currently authenticated user. The AppData Service MUST not support request to remove AppData for arbitrary users. If the request is successful, the container MUST return the AppData that was removed. Requests and responses to delete AppData use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "appdata.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteAppData-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#AppData">AppData</eref>
+</artwork>
+      <section title="Delete AppData Request Parameters" anchor="DeleteAppData-Request-Parameters">
+        <t>A request to delete AppData MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person the AppData belongs to. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>appId</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain AppData generated by the given appId. If not included, the container MUST return AppData created by the currently authenticated app.</c>
+          <c>keys</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
+          <c>The keys of the AppData to delete.</c>
+        </texttable>
+      </section>
+    </section>
+   </section>
+   <section title="Albums"
+            anchor="Albums-Service">
+    <t>Containers MAY support the Albums Service. If the service is supported, individual operations are required or optional as indicated in the sections that follow.</t>
+    <t>Containers MUST use the following values to define the Albums Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/albums"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "albums"
+</artwork>    
+    <section title="Get albums" anchor="Albums-Service-Get">
+     <t>The Albums Service MUST support requests to retrieve Albums. Requests and responses to retrieve Albums use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/albums/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" (Album-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Album-Id&gt;) ] 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetAlbums-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "albums.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetAlbums-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Album">Album</eref> / <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Album">Album</eref>&gt;
+<x:highlight>Album-Id</x:highlight>               = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+      <section title="Get Albums Request Parameters" anchor="GetAlbums-Request-Parameters">
+        <t>A request to retrieve Albums MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
+          <c>User ID(s) of the person whose Albums are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>The group ID of the group of users whose Albums are to be returned.  Defaults to "@self", which MUST return only the Albums specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>appId</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain Albums generated by the given appId. If not included, the container MUST return Albums created by the currently authenticated app. In the REST protocol, the appId is not used, indicating the container MUST return Albums created by the currently authenticated app.</c>
+          <c>id</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
+          <c>A list of Album IDs specifying the Albums to retrieve.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Create an album" anchor="Albums-Service-Create">
+     <t>The Albums Service MAY support requests to create an Album for the currently authenticated user and app.  If successful, the container MUST return the ID of the newly-created Album. Requests and responses to create Albums use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/albums/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Album">Album</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "albums.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateAlbum-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = Album-Id
+<x:highlight>Album-Id</x:highlight>               = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Create Album Request Parameters" anchor="CreateAlbum-Request-Parameters">
+        <t>A request to create an Album MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person to associate the Album with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>data</c>
+          <c><eref target="Social-Data.xml#Album">Album</eref></c>
+          <c>The Album to associate with the given user. In the REST protocol, the Album is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Update an album" anchor="Albums-Service-Update">
+     <t>The Albums Service MAY support requests to update an Album owned by the currently authenticated user and app.  Requests and responses to update Albums use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/albums/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" Album-Id
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Album">Album</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "albums.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateAlbum-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:highlight>Album-Id</x:highlight>               = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Update Album Request Parameters" anchor="UpdateAlbum-Request-Parameters">
+        <t>A request to update an Album MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person the Album is associated with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>data</c>
+          <c><eref target="Social-Data.xml#Album">Album</eref></c>
+          <c>The Album to update. In the REST protocol, the Album is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Delete an album" anchor="Albums-Service-Delete">
+     <t>The Albums Service MAY support requests to delete an Album owned by the currently authenticated user and app.  Requests and responses to delete Albums use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/albums" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" Album-Id
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "albums.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteAlbum-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:highlight>Album-Id</x:highlight> = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Delete Album Request Parameters" anchor="DeleteAlbum-Request-Parameters">
+        <t>A request to delete an Album MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person the Album is associated with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>id</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>The ID of the Album to delete. In the REST protocol, the Album ID is included in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>    
+   </section>
+   <section title="MediaItems"
+            anchor="MediaItems-Service">
+
+    <t>Containers MAY support the MediaItems Service. If the service is supported, individual operations are required or optional as indicated in the sections that follow.</t>
+    <t>Containers MUST use the following values to define the MediaItems Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/mediaItems"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "mediaItems"
+</artwork>    
+    <section title="Get media items" anchor="MediaItems-Service-Get">
+     <t>The MediaItems Service MUST support requests to retrieve MediaItems. Requests and responses to retrieve MediaItems use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/mediaItems/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" Album-Id [ "/" MediaItem-Id ] ]
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetMediaItems-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "mediaItems.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetMediaItems-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#MediaItem">MediaItem</eref> / <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#MediaItem">MediaItem</eref>&gt;
+<x:highlight>Album-Id</x:highlight>               = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+<x:highlight>MediaItem-Id</x:highlight>           = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+      <section title="Get MediaItems Request Parameters" anchor="GetMediaItems-Request-Parameters">
+        <t>A request to retrieve MediaItems MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
+          <c>User ID(s) of the person whose MediaItems are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>The group ID of the group of users whose MediaItems are to be returned.  Defaults to "@self", which MUST return only the MediaItems specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>albumId</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>The ID of the album whose MediaItems are to be returned.  If no albumId is provided, then the container SHOULD return media items from all albums.  In the REST protocol, the albumId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>appId</c>
+          <c><eref target="Core-Data.xml#App-Id">App-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain MediaItems generated by the given appId. If not included, the container MUST return MediaItems created by the currently authenticated app. In the REST protocol, the appId is not used, indicating the container MUST return MediaItems created by the currently authenticated app.</c>
+          <c>id</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
+          <c>A list of MediaItem IDs specifying the MediaItems to retrieve.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Create a media item" anchor="MediaItem-Service-Create">
+     <t>The MediaItems Service MAY support requests to create a MediaItem for the currently authenticated user and app.  If successful, the container MUST return the ID of the newly-created MediaItem. Requests and responses to create a MediaItem use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/mediaItem/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" Album-Id
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#MediaItem">MediaItem</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "mediaItem.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateMediaItem-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = MediaItem-Id
+<x:highlight>Album-Id</x:highlight>               = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+<x:highlight>MediaItem-Id</x:highlight>           = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Create MediaItem Request Parameters" anchor="CreateMediaItem-Request-Parameters">
+        <t>A request to create an MediaItem MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person to associate the MediaItem with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>data</c>
+          <c><eref target="Social-Data.xml#MediaItem">MediaItem</eref></c>
+          <c>The MediaItem to associate with the given user. In the REST protocol, the MediaItem is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Update a media item" anchor="MediaItem-Service-Update">
+     <t>The MediaItems Service MAY support requests to update an MediaItem owned by the currently authenticated user and app.  Requests and responses to update a MediaItem use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/mediaItems/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" Album-Id "/" MediaItem-Id
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#MediaItem">MediaItem</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "mediaItems.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateMediaItem-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:highlight>Album-Id</x:highlight>               = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+<x:highlight>MediaItem-Id</x:highlight>           = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Update MediaItem Request Parameters" anchor="UpdateMediaItem-Request-Parameters">
+        <t>A request to update an MediaItem MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person the MediaItem is associated with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>data</c>
+          <c><eref target="Social-Data.xml#MediaItem">MediaItem</eref></c>
+          <c>The MediaItem to update. In the REST protocol, the MediaItem is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Delete a media item" anchor="MediaItems-Service-Delete">
+     <t>The MediaItems Service MAY support requests to delete an MediaItem owned by the currently authenticated user and app.  Requests and responses to delete a MediaItem use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/mediaItems/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" Album-Id "/" MediaItem-Id
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "mediaItems.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteMediaItem-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:highlight>Album-Id</x:highlight>               = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+<x:highlight>MediaItem-Id</x:highlight>           = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Delete MediaItem Request Parameters" anchor="DeleteMediaItem-Request-Parameters">
+        <t>A request to delete an MediaItem MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person the MediaItem is associated with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>id</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>The ID of the MediaItem to delete. In the REST protocol, the MediaItem ID is included in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>
+   </section>
+   <section title="Messages"
+            anchor="Messages-Service">
+        <t>Containers MAY support the Messages Service. Containers MAY choose to allow messaging only between friends or use other heuristics to prevent spam. If the service is supported, individual operations are required or optional as indicated in the sections that follow.</t>
+    <t>Containers MUST use the following values to define the Messages Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>             = "http://ns.opensocial.org/2008/opensocial/messages"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref>          = "messages"
+</artwork>
+
+    <section title="Get messages" anchor="Messages-Service-Get">
+     <t>The Messages Service MAY support requests to retrieve Messages. If a Message-Collection-Id is not provided, the response will contain a Collection of available Message-Collection-Ids for the given user.  If a Message-Id is not provided, the response will contain a Collection of all messages in the specified message collection. Requests and responses to retrieve Messages use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/messages/" <eref target="Core-Data.xml#User-Id">User-Id</eref> [ "/" <eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref> [ "/" Message-Id ] ]
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetMessages-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "messages.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetMessages-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref>&gt; / <eref target="Social-Data.xml#Message">Message</eref> / <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Message">Message</eref>&gt;
+<x:highlight>Message-Id</x:highlight>             = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+      <section title="Get Messages Request Parameters" anchor="GetMessages-Request-Parameters">
+        <t>A request to retrieve Messages MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
+          <c>User ID(s) of the person whose Messages are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>messageCollectionId</c>
+          <c><eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref></c>
+          <c>The ID of the message collection whose Messages are to be returned. If the messageCollectionId is not provided, the response will contain a Collection of available message collection IDs. In the REST protocol, the messageCollectionId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>messageId</c>
+          <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>The ID of the Message to be returned.  If no messageId is provided, then the container SHOULD all messages in the given message collection.  In the REST protocol, the messageId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>appId</c>
+          <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain Messages generated by the given appId. If not included, the container MUST return Messages created by the currently authenticated app. In the REST protocol, the appId is not used, indicating the container MUST return Messages created by the currently authenticated app.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Create">
+     <section title="Send a message" anchor="Messages-Service-Send">
+      <t>The Messages Service MUST support requests to send a Message for the currently authenticated user and app. Placing a message in
+    the outbox requests that the message be delivered to one or more recipients
+    as specified in the message. Containers are free to filter or alter the
+    message according to their own policies (such as security or rate limiting
+    policies).  If successful, the container MUST return the ID of the newly-created Message. Requests and responses to create a Messages use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/messages/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/@outbox"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Message">Message</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "messages.send"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>SendMessage-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = Message-Id
+<x:highlight>Message-Id</x:highlight>             = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Send Message Request Parameters" anchor="SendMessage-Request-Parameters">
+        <t>A request to send a message MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person sending the Message. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>message</c>
+          <c><eref target="Social-Data.xml#Message">Message</eref></c>
+          <c>The Message to send. In the REST protocol, the Message is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+     </section>
+     <section title="Create a message collection" anchor="Messages-Service-Create">
+      <t>The Messages Service MAY support requests to create a message collection for the currently authenticated user and app.  The request MUST contain a name for the message collection.  If successful, the container MUST return the ID of the newly-created message collection. Requests and responses to create a message collection use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>        = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>       = "/messages/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>   = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>    = Message-Collection-Name
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>              = "messages.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref>  = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateMessageCollection-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>           = <eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref>
+<x:highlight>Message-Collection-Name</x:highlight> = String 
+</artwork>
+     <section title="Create Message Collection Request Parameters" anchor="CreateMessageCollection-Request-Parameters">
+        <t>A request to create a message collection MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person to associate the message collection with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>name</c>
+          <c>String</c>
+          <c>The name of the message collection to create. In the REST protocol, the name is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+     </section>
+    </section>
+    <section title="Update" anchor="Messages-Service-Update">
+    <section title="Update a message">
+     <t>The Messages Service MAY support requests to update a Message or message collection for the currently authenticated user and app, such as marking a message as 'read'.  Requests and responses to update a Message use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/messages/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" <eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref> "/" Message-Id
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Message">Message</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "messages.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateMessage-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:highlight>Message-Id</x:highlight>             = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Update Message Request Parameters" anchor="UpdateMessage-Request-Parameters">
+        <t>A request to update a message MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person who owns the Message. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>message</c>
+          <c><eref target="Social-Data.xml#Message">Message</eref></c>
+          <c>The Message to update. In the REST protocol, the Message is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>
+    <section title="Update a message collection">
+     <t>The Messages Service MAY support requests to update a message collection for the currently authenticated user and app, such as renaming the message collection.  Requests and responses to update a message collection use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>        = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>       = "/messages/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" <eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref> 
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>   = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>    = Message-Collection-Name
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>              = "messages.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref>  = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateMessageCollection-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>           = null
+<x:highlight>Message-Collection-Name</x:highlight> = String 
+</artwork>
+     <section title="Update Message Collection Request Parameters" anchor="UpdateMessageCollection-Request-Parameters">
+        <t>A request to update a message collection MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person to associate the message collection with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>messageCollectionId</c>
+          <c><eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref></c>
+          <c>The ID of the message collection to update. In the REST protocol, message collection ID is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>name</c>
+          <c>String</c>
+          <c>The new name of the message collection to update. In the REST protocol, the name is included in the REST-Request-Payload, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+     </section>
+    </section>
+    <section title="Delete a message or message collection" anchor="Messages-Service-Update">
+     <t>The Messages Service MAY support requests to update a Message or message collection for the currently authenticated user and app, such as marking the message as 'read'.  Requests and responses to update a Message use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/messages/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" [ "/" <eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref> [ "/" Message-Id ] ]
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "messages.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteMessage-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:highlight>Message-Id</x:highlight>             = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</artwork>
+     <section title="Delete Message Request Parameters" anchor="DeleteMessage-Request-Parameters">
+        <t>A request to delete a message or message collection MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person to associate the message collection with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>messageCollectionId</c>
+          <c><eref target="Social-Data.xml#Message-Collection-Id">Message-Collection-Id</eref></c>
+          <c>Optional. The ID of the message collection to delete. In the REST protocol, message collection ID is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>messageId</c>
+          <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
+          <c>Optional. The ID of the message to delete. In the REST protocol, message ID is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+        </texttable>
+      </section>
+    </section>
+   </section>
+  </section>
+  <section title="Compatibility with Portable Contacts">
+   <t>The OpenSocial RESTful protocol is
+   wire-compatible with Portable Contacts version 1.0 where applicable. Specifically, any compliant OpenSocial API Server that supports the <xref target="People-Service">People service</xref>
+   is also a compliant Portable Contacts 1.0 Provider, because they
+   are specified to use the same Authorization methods (OAuth), Additional Path
+   Information, Query Parameters, and Contact Schema.</t>
+   <t>The OpenSocial and Portable Contacts communities chose to wire-align these specifications in
+   order to maximize widespread adoption of a single API for accessing people
+   data. It is our intention to maintain this compatibility going forward, so
+   long as it is feasible, and so long as the changes required are compatible
+   with the goals and approach of this spec. Although Portable Contacts is an
+   independent spec with a more limited scope than OpenSocial any proposed
+   changes to either the OpenSocial RESTful Protocol or the Portable
+   Contacts spec should be considered in the context of both communities, and
+   SHOULD NOT break compatibility unless it is truly necessary,
+   e.g. if the goals of the two communities diverge significantly in the
+   future.</t>
+  </section>
+ </middle>
+ <back>
+  <references>
+   <reference anchor='RFC2119'>
+    <front>
+     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+     <author initials='S.'
+             surname='Bradner'
+             fullname='Scott Bradner'>
+      <organization abbrev='HarvardU'>Harvard University</organization>
+     </author>
+     <date month='March'
+           year='1997' />
+    </front>
+    <seriesInfo name='RFC' value='2119' />
+   </reference>
+   <reference anchor='RFC2606'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='D.'
+             surname='Eastlake'
+             fullname='Donald E. Eastlake 3rd'>
+      <organization abbrev='IBM'>IBM</organization>
+     </author>
+     <author initials='A.'
+             surname='Panitz'
+             fullname='Aliza R. Panitz'></author>
+     <date month='June'
+           year='1999' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2606' />
+   </reference>
+   <reference anchor='RFC2234'>
+    <front>
+     <title>Augmented BNF for Syntax Specifications: ABNF</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='2234' />
+   </reference>
+   <reference anchor='RFC20'>
+    <front>
+     <title>ASCII format for Network Interchange</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='20' />
+   </reference>
+   <reference anchor="JSON-RPC-Error"
+              target="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal?pli=1#error-object">
+    <front>
+     <title>JSON-RPC Error Object</title>
+     <author surname='JSON-RPC Working Group'
+             fullname='JSON-RPC Working Group &lt;json-rpc(at)googlegroups.com&gt;'>
+             </author>
+     <date month='November'
+           year='2008' />
+    </front>
+   </reference>
+   <reference anchor="Core-Data"
+              target="./Core-Data.xml">
+    <front>
+     <title>OpenSocial Core Data Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='March'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor="Core-API-Server"
+              target="./Core-API-Server.xml">
+    <front>
+     <title>OpenSocial Core API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='March'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor="Social-Data"
+              target="./Social-Data.xml">
+    <front>
+     <title>OpenSocial Social Data Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='March'
+           year='2010' />
+    </front>
+   </reference>
+  </references>
+ </back>
+</rfc>
