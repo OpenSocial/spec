@@ -2333,6 +2333,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
     <!-- ============================== class summary ========================== -->
     <t>Used by
     <xref target="gadgets.views.View">View objects</xref>.</t>
+     <x:draft note="Mobile support added" href="http://wiki.opensocial.org/index.php?title=Add_support_for_mobile_devices">
       <list style="hanging">
      <t hangText="CANVAS"
               anchor="gadgets.views.ViewType.CANVAS">
@@ -2357,6 +2358,9 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       usually on a page with other gadgets. The viewer is not always the same
       as the owner. This field may be used interchangeably with the string
       'PROFILE'.</t>
+      
+     
+      
       <t hangText="MOBILECANVAS"
       		  anchor="gadgets.views.ViewType.MOBILECANVAS">
       A view intended to be displayed as the main content on a small page on a mobile device
@@ -2364,6 +2368,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       string 'MOBILECANVAS'.
       		  </t>
     </list>
+      </x:draft>
    </section>
    <section title="opensocial.data">
     <t>The opensocial.data namespace provides an API to access the pipelined data on
