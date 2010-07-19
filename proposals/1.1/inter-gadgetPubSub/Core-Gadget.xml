@@ -1187,9 +1187,32 @@ REVERSE_DIR: "rtl"
    </list>
    <section title="gadgets"
             anchor="gadgets">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Namespace for top-level gadget functions.</t>
     <section title="Method Details">
+	<section title="byId" anchor="gadgets.byId">
+ 	<x:draft note="Pub/Sub support: API Section"
+  href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next" >
+		<t>&lt;static&gt; gadgets.byId(opt_moduleId)</t>
+		<t>
+			Parameters:
+			<texttable align="left">
+				<ttcol>Name</ttcol>
+				<ttcol>Type</ttcol>
+				<ttcol>Description</ttcol>
+				<c>opt_moduleId</c>
+				<c>String</c>
+				<c>Returns an instance of a gadget. If the gadget is in an iFrame,
+					in
+					which there is only one gadget, then this is optional. If there are
+					more than one gadget in the window, e.g. in the in-line case, then you
+					MUST pass in
+					an a module id or the call will fail and null will be returned. </c>
+			</texttable>
+		</t>
+</x:draft>
+	</section>
      <section title="log"
               anchor="gadgets.log">
       <t>&lt;static&gt; gadgets.log(message)</t>
@@ -1246,6 +1269,7 @@ REVERSE_DIR: "rtl"
        <c>New log level threshold.</c>
       </texttable></t>
      </section>
+     
     </section>
     <section title="gadgets.log"
              anchor="gadgets.log">
@@ -1270,7 +1294,8 @@ REVERSE_DIR: "rtl"
 
    <section title="gadgets.io"
             anchor="gadgets.io">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides remote content retrieval functions.</t>
     <section title="Method Details">
      <section title="encodeValues"
@@ -1494,7 +1519,8 @@ gadgets.io.makeRequest(url, callback, params);
    </section>
    <section title="gadgets.io.AuthorizationType"
             anchor="gadgets.io.AuthorizationType">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Used by 
     <xref target="gadgets.io.RequestParameters">RequestParameters</xref>.</t>
     <list style="hanging"> 
@@ -1514,7 +1540,8 @@ gadgets.io.makeRequest(url, callback, params);
    </section>
    <section title="gadgets.io.ContentType"
             anchor="gadgets.io.ContentType">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Used by 
     <xref target="gadgets.io.RequestParameters">RequestParameters</xref>.</t>
     <list style="hanging">
@@ -1538,7 +1565,8 @@ gadgets.io.makeRequest(url, callback, params);
    </section>
    <section title="gadgets.io.MethodType"
             anchor="gadgets.io.MethodType">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Defines values for 
     <xref target="gadgets.io.RequestParameters.METHOD">
     RequestParameters.METHOD</xref>.</t>
@@ -1567,7 +1595,8 @@ gadgets.io.makeRequest(url, callback, params);
    </section>
    <section title="gadgets.io.ProxyUrlRequestParameters"
             anchor="gadgets.io.ProxyUrlRequestParameters">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Used by 
     <xref target="gadgets.io.getProxyUrl">
     gadgets.io.getProxyUrl()</xref> method.</t>
@@ -1587,7 +1616,8 @@ gadgets.io.makeRequest(url, callback, params);
    </section>
    <section title="gadgets.io.RequestParameters"
             anchor="gadgets.io.RequestParameters">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Used by the
     <xref target="gadgets.io.makeRequest">
     gadgets.io.makeRequest()</xref> method.</t>
@@ -1654,7 +1684,8 @@ gadgets.io.makeRequest(url, callback, params);
    </section>
    <section title="gadgets.json"
             anchor="gadgets.json">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides operations for translating objects to and from JSON.</t>
     <section title="Method Details">
      <section title="parse"
@@ -1705,7 +1736,8 @@ gadgets.io.makeRequest(url, callback, params);
    </section>
    <section title="gadgets.Prefs"
             anchor="gadgets.Prefs">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides access to user preferences, module dimensions, and messages.
     Clients can access their preferences by constructing an instance of
     gadgets.Prefs and passing in their module ID. Example: 
@@ -1716,7 +1748,8 @@ var name = prefs.getString("name");
 var lang = prefs.getLang();
 </artwork>
     </figure></t>
-    <!-- ============================== constructor details ==================== -->
+    <!-- ============================== constructor details ====================
+-->
     <section title="Constructor"
              anchor="gadgets.Prefs.ctor">
      <t>gadgets.Prefs(opt_moduleId)</t>
@@ -1940,7 +1973,8 @@ var lang = prefs.getLang();
    </section>
    <section title="gadgets.util"
             anchor="gadgets.util">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides general-purpose utility functions.</t>
     <section title="Method Details">
      <section title="escapeString"
@@ -2088,7 +2122,8 @@ var lang = prefs.getLang();
    </section>
    <section title="gadgets.views"
             anchor="gadgets.views">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides operations for dealing with views.
     <t>See also: 
     <xref target="gadgets.views.View">gadgets.views.View</xref> </t></t>
@@ -2217,7 +2252,8 @@ var lang = prefs.getLang();
    </section>
    <section title="gadgets.views.View"
             anchor="gadgets.views.View">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Base interface for all view objects.</t>
     <section title="Method Details">
      <section title="bind"
@@ -2330,7 +2366,8 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
    </section>
    <section title="gadgets.views.ViewType"
             anchor="gadgets.views.ViewType">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Used by
     <xref target="gadgets.views.View">View objects</xref>.</t>
       <list style="hanging">
@@ -3510,7 +3547,8 @@ dataset would contain content resembling:
   <section title="Highly Recommended Features">
    <section title="gadgets.flash"
             anchor="gadgets.flash">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Embeds Flash content in gadgets.</t>
     <section title="Method Details">
      <section title="embedCachedFlash"
@@ -3574,7 +3612,8 @@ dataset would contain content resembling:
    </section>
    <section title="gadgets.MiniMessage"
             anchor="gadgets.MiniMessage">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>MiniMessage class, used to create messages that will appear to the user
     within the gadget. Typical use cases:
     <list style="symbols">
@@ -3582,7 +3621,8 @@ dataset would contain content resembling:
      <t>Promotional messages: new features, new gadget, etc.</t>
      <t>Debug/error messages: bad input, failed connection to server, etc.</t>
     </list></t>
-    <!-- ============================== constructor details ==================== -->
+    <!-- ============================== constructor details ====================
+-->
     <section title="Constructor"
              anchor="gadgets.MiniMessage.ctor">
      <t>gadgets.MiniMessage(opt_moduleId, opt_container)</t>
@@ -3703,7 +3743,8 @@ dataset would contain content resembling:
    </section>
    <section title="gadgets.oauth.Popup"
             anchor="gadgets.oauth.Popup">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>OAuth popup window manager.</t>
     <t>Expected usage:
     <list style="numbers">
@@ -3747,7 +3788,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
      <t>When the window is closed, the popup manager calls the onClose function
      and the gadget attempts to fetch the user's data.</t>
     </list></t>
-    <!-- ============================== constructor details ==================== -->
+    <!-- ============================== constructor details ====================
+-->
     <section title="Constructor"
              anchor="gadgets.oauth.Poup.ctor">
      <t>gadgets.oauth.Popup(destination, windowOptions, openCallback,
@@ -3802,7 +3844,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    </section>
    <section title="gadgets.rpc"
             anchor="gadgets.rpc">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides operations for making remote procedure calls for
     gadget-to-container, container-to-gadget, and gadget-to-gadget
     communication.</t>
@@ -3890,7 +3933,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    </section>
    <section title="gadgets.skins"
             anchor="gadgets.skins">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides operations for getting display information about the currently
     shown skin.</t>
     <section title="Method Details">
@@ -3921,7 +3965,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    </section>
    <section title="gadgets.skins.Property"
             anchor="gadgets.skins.Property">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>All of the display values that can be fetched and used in the gadgets
     UI. These are the supported keys for the
     <xref target="gadgets.skins.getProperty">
@@ -3948,7 +3993,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    </section>
    <section title="gadgets.Tab"
             anchor="gadgets.Tab">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Tab class for gadgets. You create tabs using the TabSet addTab() method.
     To get Tab objects, use the TabSet getSelectedTab() or getTabs() methods.
     <t>See also:
@@ -4022,9 +4068,11 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    </section>
    <section title="gadgets.TabSet"
             anchor="gadgets.TabSet">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>A class gadgets can use to make tabs.</t>
-    <!-- ============================== constructor details ==================== -->
+    <!-- ============================== constructor details ====================
+-->
     <section title="Constructor"
              anchor="gadgets.TabSet.ctor">
      <t>gadgets.TabSet(opt_moduleId, opt_defaultTab, opt_container)</t>
@@ -4211,7 +4259,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    </section>
    <section title="gadgets.window"
             anchor="gadgets.window">
-    <!-- ============================== class summary ========================== -->
+    <!-- ============================== class summary ==========================
+-->
     <t>Provides operations for getting information about and modifying the
     window the gadget is placed in.</t>
     <section title="Method Details">
@@ -4262,68 +4311,134 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     </section>
    </section>
 
-	<section title="gadgets.PubSub" anchor="gadgets.PubSub">
-<x:draft note="Pub/Sub support added" href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
-		<t>The publish/subscribe mechanism in OpenSocial provides the ability
-			for inter-gadget communication via events. The definition of the OpenSocial API
-			is based, in large part, on the OpenAjax Hub 2.0 (OA Hub) specification
-			defined by the OpenAjax Alliance. In general, the semantics of the API offered in OpenSocial will match that of the OA Hub.</t>
+<section title="Inter-Gadget Eventing">
+ <x:draft note="Pub/Sub support: API Section"
+  href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next" >
+  <t>The inter-gadget eventing mechanism in OpenSocial, commonly known as pub/sub, provides the ability
+   for loosely coupled inter-gadget communication via the delivery of messages on topics. The definition of the
+   OpenSocial API
+   is based on the OpenAjax Hub 2.0 (OA Hub) specification
+   defined by the OpenAjax Alliance. The addition of this capability adds API
+   in
+   three areas, an event hub to manage the subscrition and publication of
+   events
+   on the client, the publish and subscribe methods for the gadgets, and
+   wiring meta-data that can be used by advanced containers and
+   tooling.
+   The semantics of the API offered in OpenSocial will match that of the
+   OA Hub.</t>
+	<t>Process:
+	Inter-gadget communication is handled through messages
+	between a client and the
+	hub, which are defined in the OpenAjax
+	specification. Because it should
+	be possible to have multiple instances
+	of the same gadget on a page, it
+	must be possible to manage pub/sub at
+	the same level of scope.
+	Therefore, there is one hub
+	client per gadget
+	instance. When the gadget is loaded, the client is "connected" to the
+	hub when the gadget is loaded. The general pattern for using pub/sub is
+	as
+	follows: </t>
+	<list style="numbers">
+		<t>Get a hanndle to the instance of the gadget that will be publishing
+			and/or subscribing to, events.</t>
+		<t>Instantiate a settings object that will be used to configure the
+			gadget's hub client instance.</t>
+		<t>Register a handler that will instantiate the client and connect it
+			to the hub when the gadget is loaded.</t>
+	</list>
+
+	<t>It's expected that implementations of this feature will hide some of
+		these steps. In support of the most basic use cases, it should be
+		enough to simply leverage the publish, subscribe, unsubscribe API.
+		However, it is importnat to relalize that the full capability of the
+		OpenAjax Hub is availble for use within OpenSocial. To understand the
+		complete set of capability provided by the hub, please refer to
+		OpenAjax Web site for the complete documentation and specification.
+   </t>
+   		
+ 
+  
+
+
+
+	<section title="PubSub" anchor="PubSub">
+		<t>This is the hub client. In order to take advantage of intergadget communication, each instance of a gadget needs a client that that "talks" to the hub.  </t>
+		
+		 <section title="Getting the gadget instance">
+
+		 <t>Describe how to get the gadget instance using byId here. </t>
+		 </section>
 		<section title="Method Details">
-			 <section title="publish"
-              anchor="gadgets.PubSub.publish">
-			<t>&lt;static&gt; gadgets.PubSub.publish</t>
-			<t>Description: ....</t>
-			<t>
-				Parameters:
-				<texttable align="left">
-					<ttcol>Name</ttcol>
-					<ttcol>Type</ttcol>
-					<ttcol>Description</ttcol>
-					<c>topic</c>
-					<c>String</c>
-					<c>Description here...</c>
-					<c>message</c>
-					<c>String</c>
-					<c>Description here...</c>
-				</texttable>
-			</t>
-			</section>
-			 <section title="subscribe"
-              anchor="gadgets.PubSub.subscribe">
-			<t>&lt;static&gt; gadgets.PubSub.subscribe</t>
-			<t>Description: ....</t>
-			<t>
-				Parameters:
-				<texttable align="left">
-					<ttcol>Name</ttcol>
-					<ttcol>Type</ttcol>
-					<ttcol>Description</ttcol>
-					<c>topic</c>
-					<c>String</c>
-					<c>Description here...</c>
-				</texttable>
-			</t>
-			</section>
-			 <section title="unsubscribe"
-              anchor="gadgets.PubSub.unsubscribe">
-			<t>&lt;static&gt; gadgets.PubSub.unsubscribe</t>
-			<t>Description: ....</t>
-			<t>
-				Parameters:
-				<texttable align="left">
-					<ttcol>Name</ttcol>
-					<ttcol>Type</ttcol>
-					<ttcol>Description</ttcol>
-					<c>topic</c>
-					<c>String</c>
-					<c>Description here...</c>
-				</texttable>
-			</t>
+    
+			<section title="PubSub.publish" anchor="PubSub.publish">
+				<t>publish(...)</t>
+				<t>Description: gadgetInstance is what's retruned from the byId call.</t>
+				<t>
+					Parameters:
+					<texttable align="left">
+						<ttcol>Name</ttcol>
+						<ttcol>Type</ttcol>
+						<ttcol>Description</ttcol>
+						<c>topic</c>
+						<c>String</c>
+						<c>Description here...</c>
+						<c>message</c>
+						<c>String</c>
+						<c>Description here...</c>
+					</texttable>
+				</t>
+
+				<section title="subscribe" anchor="PubSub.subscribe">
+					<t>subscribe(...)</t>
+					<t>Description: ....</t>
+					<t>
+						Parameters:
+						<texttable align="left">
+							<ttcol>Name</ttcol>
+							<ttcol>Type</ttcol>
+							<ttcol>Description</ttcol>
+							<c>topic</c>
+							<c>String</c>
+							<c>Description here...</c>
+						</texttable>
+					</t>
+				</section>
+
+				<section title="PubSub.unsubscribe" anchor="PubSub.unsubscribe">
+					<t>unsubscribe(...)</t>
+					<t>Description: ....</t>
+					<t>
+						Parameters:
+						<texttable align="left">
+							<ttcol>Name</ttcol>
+							<ttcol>Type</ttcol>
+							<ttcol>Description</ttcol>
+							<c>topic</c>
+							<c>String</c>
+							<c>Description here...</c>
+						</texttable>
+					</t>
+				</section>	
+					
+				</section>
 			</section>
 		</section>
-</x:draft> 
-	</section>
-  
+
+  <section title="Wireing Metadata">
+   <t>Describe wireing meta-data here</t>
+  </section>
+
+  <section title="Using PubSubSettings">
+   <t>How to use pub sub settings. Describe the pubsubsettings object and it's values.</t>
+  </section>
+
+ </x:draft>
+
+</section> 
    
    
    
@@ -4337,7 +4452,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     feature="opensocial-i18n"/&gt;.</t>
     <section title="gadgets.i18n"
              anchor="gadgets.i18n">
-     <!-- ============================== class summary ========================== -->
+     <!-- ============================== class summary ==========================
+-->
      <t>Class for internationalization features.</t>
     </section>
     <section title="Formatting/Parsing using Predefined Patterns is Done within Default Locale">
@@ -4796,6 +4912,8 @@ assertEquals(0.30, value);
    </section>
    
   </section>
+  
+  
   <references>
    <reference anchor='RFC2119'>
     <front>
@@ -5026,11 +5144,13 @@ assertEquals(0.30, value);
            year='2006' />
     </front>
    </reference>
+    <x:draft note="Pub/Sub support: Reference to OA Hub Specification."
+  href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next" />
    <reference anchor="OAHub2.0" target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Introduction">
    	<front>
    		<title>OpenAjax Hub 2.0</title>
    		<author>TBD</author>
-   		<date />
+   		<date/>
    	</front>
    </reference>
   </references>
