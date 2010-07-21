@@ -4586,7 +4586,54 @@ function publish() {
   </section>
 
   <section title="Using PubSubSettings">
-   <t>How to use pub sub settings. Describe the pubsubsettings object and it's values.</t>
+	<t>
+	The gadget's PubSub object implements the OpenAjax.hub.HubClient
+	interface. It may be necessary for each gadget to configure its
+	instance of the hub client. If the gadget wants to provide params to
+	the hub client
+	constructor, it can do so by setting values on
+	gadget's
+	PubSubSettings object. In the example below, the PubSubSettings object
+	is used to configure the behavior for handling security alert and
+	onConnected callbacks. Please refer to the OpenAjax hub client
+	documenation of the avaialbe parameters.</t>
+	<t> See
+	<eref
+		target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor"
+	>http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor</eref>
+	for more information.
+</t>
+
+   <artwork type="code">
+// Obtain a gadget instance object
+var gadgetInstance = gadgets.byId(__MODULE_ID__);
+
+// Create a pubsub settings object
+gadgetInstance.PubSubSettings = {};
+
+// Set default HubClient constructor params object
+gadgetInstance.PubSubSettings.params = {
+  HubClient: {
+    onSecurityAlert: function( alertSource, alertType ) {
+      alert( "Gadget stopped attempted security breach: " + alertType );
+      window.location.href = "about:blank"; // Forces container to see Frame Phish alert and probably close this gadget 
+    }, 
+    scope: gadgetInstance
+  },
+  IframeHubClient: {}
+};
+
+// Set default onComplete function for HubClient.connect
+gadgetInstance.PubSubSettings.onConnected = function( hub, suc, err ) { };
+   </artwork>
+   
+
+   
+   
+   
+   
+   
+
   </section>
 
  </x:draft>
