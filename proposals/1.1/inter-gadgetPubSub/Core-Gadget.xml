@@ -4389,7 +4389,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 			use of a "topic". A "topic" MUST be a String and MUST conform to the
 			Topic Name Rules defined by the OpenAjax Hub. The following list
 			summarizes
-			the content that is described by the OA Hub speicificaiton.</t>
+			the content that is described by the OA Hub speicificaiton. </t>
 		<list style="symbols">
 			<t>Wildcards usage on topic subscription: Valid wild cards are "*" for single token and "**" for multiple token.</t>
 			<t>Considerations on unicode and special characters: Developers SHOULD NOT not use control, whitespace, quote, or punctuation characters in topic names. </t>
@@ -4462,10 +4462,21 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 		 <section title="Getting the gadget instance">
 
 		 <t>
-		 Describe the instance of the gadget vs. static methods.
-		 Expected usage:  gadgetInstance is what's retruned from the byId call.
-		 Describe how to get the gadget instance using byId here. </t>
-		 </section>
+	There are many use cases in which eventing may be used in the context
+	of a mashup. In some scenarios, there may be multiple instances of the
+	same gadget on a page. In other scenarios, the gadgets may be in-lined within the DOM. To satisfy these use cases, it must be possible to distinguish one instance of a gadget from another. A method in the gadgets namespace has been introduced, <xref target="gadgets.byId">gadgets.byId</xref>
+	that can be used to return a handle to the gadget.</t>
+<artwork type="code">
+
+var g = gadgets.byId(__MODULE_ID__);
+function publish() {
+  var message = Math.random();
+  g.PubSub.publish("random-number", message);
+  document.getElementById("output").innerHTML = message;
+}
+</artwork>
+
+		 		 </section>
 
 		<section title="Method Details">
    		
