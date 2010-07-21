@@ -4359,26 +4359,37 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 		complete set of capability provided by the hub, please refer to
 		OpenAjax Web site for the complete documentation and specification.
    </t>
-	<t>In order to take advantage of intergadget
+	<t>
+	In order to take advantage of intergadget
 	communication, each instance
 	of a gadget needs a client that that is
 	connected to the hub. The full
 	specification for the client is available on the
 	OpenAjax Alliance
-	documentation Web site
-	(http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient).
-	Following the general pattern of pub/sub based systems, a gadget will
-	publish a message on a topic. Other gadgets (or even the publishing
-	gadget) may subscribe to the topic to receive the information that
-	has been published.</t> 
-		
+	documentation Web site. Please refer to
+	<eref target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient"></eref>
+	for more information.
+	Following the general pattern of pub/sub based
+	systems, a gadget will
+	publish a message on a topic. Other gadgets (or
+	even the publishing
+	gadget) may subscribe to the topic to receive the
+	information that
+	has been published. In addition, the OpenAjax Alliance
+	has defined a collection of best practices that should be used as
+	guidelines when developing gadgets that leverage pub/sub. Please see
+	<eref tartget="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices</eref>
+	for more information.
+</t>
+
 	<section title="Topics" anchor="Topics">
-	<t>
-	The publish and subscribe methods, as well as the wiring meta-data
-	make
-	use of a "topic". A "topic" MUST be a String and MUST conform to the
-	Topic Name Rules defined by the OpenAjax Hub. The following list summarizes
-	the content that is described by the OA Hub speicificaiton.</t>
+		<t>
+			The publish and subscribe methods, as well as the wiring meta-data
+			make
+			use of a "topic". A "topic" MUST be a String and MUST conform to the
+			Topic Name Rules defined by the OpenAjax Hub. The following list
+			summarizes
+			the content that is described by the OA Hub speicificaiton.</t>
 		<list style="symbols">
 			<t>Wildcards usage on topic subscription: Valid wild cards are "*" for single token and "**" for multiple token.</t>
 			<t>Considerations on unicode and special characters: Developers SHOULD NOT not use control, whitespace, quote, or punctuation characters in topic names. </t>
@@ -4452,7 +4463,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 
 		 <t>
 		 Describe the instance of the gadget vs. static methods.
-		 Expected usage:
+		 Expected usage:  gadgetInstance is what's retruned from the byId call.
 		 Describe how to get the gadget instance using byId here. </t>
 		 </section>
 
@@ -4460,26 +4471,52 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    		
 			<section title="PubSub.publish" anchor="PubSub.publish">
 				<t>publish(topic, payload)</t>
-				<t>Description: gadgetInstance is what's retruned from the byId call.</t>
+				<t>Description: The publish method conforms to the semantics of the OA Hub. The OAHub embraces the notion that pubsub is anonymous and
+	does not automatically include any information about the
+	identification of the publishing gadget with the message. The following is an excerpt from their documentation. </t>
+	 <artwork type="text/plain">
+	The publish function immediately throws an exception if the topic or data
+	cannot be published or if the Hub is not connected. Otherwise, the
+	operation continues.
+	In most Container implementations, publish operates asynchronously, so
+	that data is delivered to subscribers after the publish function
+	returns. In some implementations, however, publish operates
+	synchronously, delivering its data to the subscribers before returning.
+	Applications that use this function SHOULD be programmed so that they
+	can work with any Container (Iframe, Inline, or other). 
+	When the implementation prevents a data item published by a client from
+	being delivered to a subscriber, the publishing Client Application is
+	NOT notified in any way. When a Client Application publishes, it cannot
+	determine how many subscribers exist and it cannot determine how many
+	of the existing subscribers received the published data item.
+	The data parameter is owned by the caller.  </artwork>
 				<t>
-					Parameters:
+				Parameters:
 					<texttable align="left">
 						<ttcol>Name</ttcol>
 						<ttcol>Type</ttcol>
 						<ttcol>Description</ttcol>
 						<c>topic</c>
 						<c>String</c>
-						<c>No wildcards. </c>
+						<c>A string that conforms to the rules defined above and by the OA Hub to name the channel that the payload will be deliverd on. Wildcards are NOT permitted.</c>
 						<c>payload</c>
 						<c>*</c>
-						<c>Any object. MUST serialize to json. </c>
+						<c>It is permissible to publish any object. The payload MUST serialize to JSON. </c>
 					</texttable>
 				</t>
 
 				<section title="PubSub.subscribe" anchor="PubSub.subscribe">
 					<t>subscribe(topic, callback)</t>
-					<t>Description: ....
-					callback: A callback function to be executed when the tab is selected. The callback function will not be called until after the existing callstack has completed execution.
+	<t>Description: The subscribe method is used to indicate to the hub the
+	topic from which the gadget is interested in receiving information.
+	When information is published on the topic, the hub will invoke the
+	callback method on the gadget. Since a gadget may have multiple
+	subscriptions on the same topic, the subscribe method returns an opaque
+	identifier that is used to uniquely identify the subscription. This
+	identifier is used to unsubscribe to the topic. It is gadget
+	developer's responsibility to manage this identifier.  
+
+		
 					</t>
 					<t>
 						Parameters:
@@ -4489,23 +4526,34 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 							<ttcol>Description</ttcol>
 							<c>topic</c>
 							<c>String</c>
-							<c>Same as publish topic. Returns a subscription identifier. Wildcards are acceptable.</c>
+							<c>A string that conforms to the rules defined above and by the OA Hub to name the channel that the payload will be deliverd on. Wildcards MAY be used.</c>
+						    <c>callback</c>
+							<c>String</c>
+							<c>A callback function to be executed when the tab is selected. The callback function will not be called until after the existing callstack has completed execution.</c>
 						</texttable>
 					</t>
+					<t>Returns:
+      <texttable align="left">
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>String</c>
+       <c>An opaque subscription identifier.</c>
+      </texttable></t>
+					
 				</section>
 
 				<section title="PubSub.unsubscribe" anchor="PubSub.unsubscribe">
 					<t>unsubscribe(subscriptionId)</t>
-					<t>Description: ....</t>
+					<t>Description: This method is used to remove a subuscription for a gadget from the hub. The unsubscribe function immediately throws an exception if there is no subscription with the specified subscription ID. Otherwise, unsubscribe immediately deactivates the subscription.</t>
 					<t>
 						Parameters:
 						<texttable align="left">
 							<ttcol>Name</ttcol>
 							<ttcol>Type</ttcol>
 							<ttcol>Description</ttcol>
-							<c>SubscriptionId</c>
+							<c>subscriptionId</c>
 							<c>String</c>
-							<c>same as the result of the subscription</c>
+							<c>The subscriptionId is the opaque string that is returned from the subscribe(...) method.</c>
 						</texttable>
 					</t>
 				</section>	
