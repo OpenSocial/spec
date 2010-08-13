@@ -4332,21 +4332,14 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 			the gadget is loaded, the client is "connected" to the hub. The
 			general pattern for using pub/sub is as follows:</t>
 		<list style="numbers">
-			<t>Get a handle to the instance of the gadget that will be
-				publishing and/or subscribing to, events.</t>
-			<t>Instantiate a settings object that will be used to configure the
-				gadget's hub client instance.</t>
-			<t>Register a handler that will instantiate the client and connect it
-				to the hub when the gadget is loaded.</t>
+			<t>Get the gadget instance object.</t>
+			<t>(Optional) Override the default settings used to configure the gadget's hub client instance.</t>
+			<t>Call publish or subscribe methods.</t>
 		</list>
-		<t>It's expected that implementations of this feature will hide some
-			of these steps. In support of the most basic use cases, it should be
-			enough to simply leverage the publish, subscribe, unsubscribe API.
-			However, it is important to realize that the full capability of the
-			OpenAjax Hub is available for use within OpenSocial. To understand the
-			complete set of capability provided by the hub, please refer to
-			OpenAjax Web site for the complete documentation and specification.
-		</t>
+		<t>The full capability of the OpenAjax Hub is available for use within
+	OpenSocial. To understand the complete set of capability provided by
+	the hub, please refer to OpenAjax Web site for the complete
+	documentation and specification. </t>
 		<t>
 			In order to take advantage of intergadget communication, each
 			instance of a gadget needs a client that that is connected to the
@@ -4365,6 +4358,23 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 				tartget="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices</eref>
 			for more information.
 		</t>
+		<section
+			title="Container responsibilities for supporting inter-gadget eventing">
+			<t>
+				In order to ensure that the OpenAjax Hub client is properly
+				configured, when the PubSub feature is added, the container MUST
+				provide the following initialization steps for the gadget when this
+				feature is added. The behavior described in this section ensures that
+				simple gadgets do not need to do anything at all to set up their
+				HubClient instances; but it allows gadgets with special needs to
+				override the default parameters and behavior as required.
+				<list style="numbers">
+					<t>Set default values</t>
+					<t>Register an onLoad handler</t>
+					<t>Invoke the onLoad hander on gadget loading</t>
+				</list>
+			</t>
+	</section>
 		<section title="Topics" anchor="Topics">
 			<t> The publish and subscribe methods, as well as the wiring
 				metadata make use of a "topic". A "topic" MUST be a String and MUST
@@ -4420,7 +4430,6 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 var g = gadgets.byId(__MODULE_ID__);
 var message = Math.random();
 g.PubSub.publish("org.example.random-number", message);
-}
 </artwork>
 			</section>
 			<section title="Method Details">
@@ -4461,38 +4470,48 @@ g.PubSub.publish("org.example.random-number", message);
 							to the topic. It is gadget developer's responsibility to manage
 							this identifier.</t>
 						<t>
-							Parameters:
-							<texttable align="left">
-								<ttcol>Name</ttcol>
-								<ttcol>Type</ttcol>
-								<ttcol>Description</ttcol>
-								<c>topic</c>
-								<c>String</c>
-								<c>A string that conforms to the rules defined above and by the
-									OA Hub to name the channel that the payload will be deliverd
-									on. Wildcards MAY be used.</c>
-								<c>callback</c>
-								<c>String</c>
-								<c>A callback function to be executed when the tab is selected.
-									The callback function will not be called until after the
-									existing callstack has completed execution.</c>
-								<c>scope</c>
-								<c> When onData callback or onComplete callback is invoked, the JavaScript "this" keyword refers to this scope object. If no scope is provided, default is window.</c>
-								<c>onCompleteCallback</c>
-								<c> Function invoked to tell the client application whether the subscribe operation succeeded or failed. </c>
-								<c>subscriberData</c>	
-								<c>Client application provides this data, which is handed back to the client application in the subscriberData parameter of the onData callback function.</c>
-							</texttable>
-						</t>
+	Parameters:
+	<texttable align="left">
+		<ttcol>Name</ttcol>
+		<ttcol>Type</ttcol>
+		<ttcol>Description</ttcol>
+		<c>topic</c>
+		<c>String</c>
+		<c>A string that conforms to the rules defined above and by the OA Hub
+			to name the channel that the payload will be deliverd on. Wildcards
+			MAY be used.</c>
+		<c>callback</c>
+		<c>String</c>
+		<c>A callback function to be executed when the tab is selected. The
+			callback function will not be called until after the existing
+			callstack has completed execution.</c>
+		<c>scope</c>
+		<c>object</c>
+		<c> When onData callback or onComplete callback is invoked, the
+			JavaScript "this" keyword refers to this scope object. If no scope is
+			provided, default is window.</c>
+		<c>onCompleteCallback</c>
+		<c>function</c>
+		<c> Function invoked to tell the client application whether the
+			subscribe operation succeeded or failed.</c>
+		<c>subscriberData</c>
+		<c>*</c>
+		<c>Client application provides this data, which is handed back to the
+			client application in the subscriberData parameter of the onData
+			callback function.</c>
+	</texttable>
+</t>
 						<t>
-							Returns:
-							<texttable align="left">
-								<ttcol>Type</ttcol>
-								<ttcol>Description</ttcol>
-								<c>String</c>
-								<c>An opaque subscription identifier. This identifier is an arbitrary ID string that is unique within this Hub instance</c>
-							</texttable>
-						</t>
+	Returns:
+	<texttable align="left">
+		<ttcol>Type</ttcol>
+		<ttcol>Description</ttcol>
+		<c>String</c>
+		<c>An opaque subscription identifier. This identifier is an arbitrary
+			ID string that is unique within this Hub instance</c>
+	</texttable>
+	<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe for more information</t>
+</t>
 					</section>
 					<section title="PubSub.unsubscribe" anchor="PubSub.unsubscribe">
 						<t>unsubscribe(subscriptionId)</t>
@@ -4513,6 +4532,7 @@ g.PubSub.publish("org.example.random-number", message);
 									the subscribe(...) method.</c>
 							</texttable>
 						</t>
+						<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe for more information.</t>
 					</section>
 				</section>
 			</section>
@@ -4524,51 +4544,90 @@ g.PubSub.publish("org.example.random-number", message);
 				runtime container code to infer information about the messages being
 				published as well as the parameters a gadget expects to receive when
 				it subscribes to a topic.</t>
-			<t>a note on types. opensocial namespace for types. needs to be
+			<t>... WIP ...
+			A note on types: opensocial namespace for types. needs to be
 				consistent with the gadgets namespace. gadgets for core data
 				opensocial for social data all datatypes SHOULD be namespaced
 				extesnions namespace SHOULD match then refer to "namespace-less" as
 				openajax common types.</t>
 		</section>
-		<section title="Using PubSubSettings">
-			<t> The gadget's PubSub object implements the OpenAjax.hub.HubClient
-				interface. It may be necessary for each gadget to configure its
-				instance of the hub client. If the gadget wants to provide params to
-				the hub client constructor, it can do so by setting values on
-				gadget's PubSubSettings object. In the example below, the
-				PubSubSettings object is used to configure the behavior for handling
-				security alert and onConnected callbacks. Please refer to the
-				OpenAjax hub client documentation of the availalbe parameters.</t>
-			<t>
-				See
-				<eref
-					target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor">http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor</eref>
-				for more information.
-			</t>
-			<artwork type="code">
-// Obtain a gadget instance object
+	
+
+	<section title="Example">
+	<t>The following example illustrates how a container could provide for the first two steps of the initialization process. Step three is the </t>
+	<list style="numbers">
+		<t>
+			Set default values.
+			<artwork type="code">// Obtain a gadget instance object
 var gadgetInstance = gadgets.byId(__MODULE_ID__);
+
 // Create a pubsub settings object
 gadgetInstance.PubSubSettings = {};
 
 // Set default HubClient constructor params object
 gadgetInstance.PubSubSettings.params = {
-	HubClient: {
-		onSecurityAlert: function( alertSource, alertType ) {
-			alert( "Gadget stopped attempted security breach: " + alertType );
-		window.location.href = "about:blank"; // Forces container to see
-		Frame Phish alert and probably close this gadget
-	},
-	scope: gadgetInstance
-},
-IframeHubClient: {}
+  HubClient: {
+    onSecurityAlert: function( alertSource, alertType ) {
+      alert( "Gadget stopped attempted security breach: " + alertType );
+      window.location.href = "about:blank"; // Forces container to see Frame Phish alert and probably close this gadget 
+    }, 
+    scope: gadgetInstance
+  },
+  IframeHubClient: {}
 };
 
 // Set default onComplete function for HubClient.connect
-gadgetInstance.PubSubSettings.onConnected = function( hub, suc, err
-) { };
+gadgetInstance.PubSubSettings.onConnected = function( hub, suc, err ) { };
+		</artwork>
+		</t>
+		<t>
+			Register an onLoad handler
+			<t>Step 2 registers an onLoad handler to actually create the
+				HubClient and connect it to the ManagedHub. Delaying the HubClient
+				creation and connection allows the gadget to override default values
+				stored in gadgetInstance.PubSubSettings. For example,
+				IframeHubClient supports params properties such as seed, tokenLength
+				and log, which we're not setting by default; and a gadget might need
+				to override onSecurityAlert and/or scope, for which default values
+				are provided. More importantly, the onComplete function for
+				HubClient.connect usually sets up the gadget's subscriptions by
+				calling gadgetInstance.PubSub.subscribe, or if the connection fails
+				asynchronously, the onComplete function handles the error.</t>
+			<artwork type="code">
+// Register an onLoad handler
+gadgets.util.registerOnLoadHandler( function() {
+  try {
+    // Create the HubClient.
+    gadgetInstance.PubSub = new OpenAjax.hub.IframeHubClient(  gadgetInstance.PubSubSettings.params );
+
+    // Connect to the ManagedHub
+    gadgetInstance.PubSub.connect( gadgetInstance.PubSubSettings.onConnect ); 
+
+  } catch(e) {
+    // TODO: error handling should be consistent with other OS gadget initialization error handling
+  }
+} );
+			</artwork>
+		</t>
+	
+	</list>
+</section>
+	<section title="Overriding HubClient Settings">
+		<t>By default, a HubClient is instantiated automatically by the
+			pubsub-2 code. If the gadget wants to provide params to the HubClient
+			constructor, it can do so by setting values on PubSubSettings object
+			of the gadget instance.</t>
+		<artwork type="code">
+...
    </artwork>
-		</section>
+		<t>
+			See
+			<eref
+				target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor">http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor</eref>
+			for more information.
+		</t>
+	</section>
+		 
 	</x:draft>
 </section> 
    
