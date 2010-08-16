@@ -3877,6 +3877,103 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
        <c>Parameters for the RPC request</c>
       </texttable></t>
      </section>
+     
+     
+	<section title="getReceiverOrigin" anchor="gadgets.rpc.getReceiverOrigin">
+		<x:draft note="Pub/Sub support: API Section"
+			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
+			<t>&lt;static&gt; gadgets.rpc.getReceiverOrigin(receiverId)</t>
+			<t>Description: </t>
+			<t>
+				Parameters:
+				<texttable align="left">
+					<ttcol>Name</ttcol>
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>receiverId</c>
+					<c>String</c>
+					<c>ID of the RPC service provider; empty if calling the parent
+						container</c>
+				</texttable>
+			</t>
+			<t>
+				Returns:
+				<texttable align="left">
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>String|null</c>
+					<c>If the underlying transport is parent-verifiable, then returns the origin for the given receiverId, otherwise, returns null.</c>
+				</texttable>
+			</t>
+		</x:draft>
+	</section>
+     
+   	<section title="removeReceiver" anchor="gadgets.rpc.removeReceiver">
+		<x:draft note="Pub/Sub support: API Section"
+			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
+			<t>&lt;static&gt; gadgets.rpc.removeReceiver(receiverId)</t>
+			<t>Description: </t>
+			<t>
+				Parameters:
+				<texttable align="left">
+					<ttcol>Name</ttcol>
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>receiverId</c>
+					<c>String</c>
+					<c>...</c>
+				</texttable>
+			</t>
+			<t>
+				Returns:
+				<texttable align="left">
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>...</c>
+					<c>...</c>
+				</texttable>
+			</t>
+		</x:draft>
+	</section>  
+     
+     <section title="config" anchor="gadgets.rpc.config">
+		<x:draft note="Pub/Sub support: API Section"
+			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
+			<t>&lt;static&gt; gadgets.rpc.removeReceiver(params)</t>
+			<t>Description: Configures the existing RPC instance with the given parameters. Currently supports the following properties on the 'params' object:</t>
+			<t>
+				Parameters:
+				<texttable align="left">
+					<ttcol>Name</ttcol>
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>securityCallback</c>
+					<c>function</c>
+					<c>securityCallback:  Callback function which is invoked when RPC connection encounters a security issue. Function syntax is securityCallback( receiverId, error ). The following are the defined security errors:
+						<list style="symbols">
+							<t>gadgets.rpc.LOAD_TIMEOUT - receiver failed to connect in time</t>
+							<t>gadgets.rpc.FRAME_PHISH - receiver's iframe may have been maliciously redirected to a new location</t>
+							<t>gadgets.rpc.FORGED_MSG - RPC detected a possibly forged message</t>
+						</list>
+					</c>
+				</texttable>
+			</t>
+		
+			<t>
+				Returns:
+				<texttable align="left">
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>...</c>
+					<c>...</c>
+				</texttable>
+			</t>
+		</x:draft>
+	</section>  
+     
+     
+     
+     
      <section title="register"
               anchor="gadgets.rpc.register">
       <t>&lt;static&gt; gadgets.rpc.register(serviceName, handler)</t>
