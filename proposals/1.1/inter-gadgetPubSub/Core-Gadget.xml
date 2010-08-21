@@ -3878,12 +3878,31 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       </texttable></t>
      </section>
      
+       <section title="config" anchor="gadgets.rpc.config">
+		<x:draft note="Pub/Sub support: API Section"
+			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
+			<t>&lt;static&gt; gadgets.rpc.config(params)</t>
+			<t>Description: Configures the existing RPC instance with the given parameters. Paramaters is a <xref target="gadgets.rpc.ConfigParameters">gadgets.rpc.ConfigParameters</xref></t>
+			<t>
+				Parameters:
+				<texttable align="left">
+					<ttcol>Name</ttcol>
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>params</c>
+					<c>gadgets.rpc.ConfigParameters</c>
+					<c>Parameters object passed into the config method.
+					</c>
+				</texttable>
+			</t>
+		</x:draft>
+	</section>  
      
 	<section title="getReceiverOrigin" anchor="gadgets.rpc.getReceiverOrigin">
 		<x:draft note="Pub/Sub support: API Section"
 			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
 			<t>&lt;static&gt; gadgets.rpc.getReceiverOrigin(receiverId)</t>
-			<t>Description: </t>
+			<t>Description: Returns the origin for the given RPC service provider.  If the origin cannot be verified, returns null.</t>
 			<t>
 				Parameters:
 				<texttable align="left">
@@ -3907,71 +3926,6 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 			</t>
 		</x:draft>
 	</section>
-     
-   	<section title="removeReceiver" anchor="gadgets.rpc.removeReceiver">
-		<x:draft note="Pub/Sub support: API Section"
-			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
-			<t>&lt;static&gt; gadgets.rpc.removeReceiver(receiverId)</t>
-			<t>Description: </t>
-			<t>
-				Parameters:
-				<texttable align="left">
-					<ttcol>Name</ttcol>
-					<ttcol>Type</ttcol>
-					<ttcol>Description</ttcol>
-					<c>receiverId</c>
-					<c>String</c>
-					<c>...</c>
-				</texttable>
-			</t>
-			<t>
-				Returns:
-				<texttable align="left">
-					<ttcol>Type</ttcol>
-					<ttcol>Description</ttcol>
-					<c>...</c>
-					<c>...</c>
-				</texttable>
-			</t>
-		</x:draft>
-	</section>  
-     
-     <section title="config" anchor="gadgets.rpc.config">
-		<x:draft note="Pub/Sub support: API Section"
-			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
-			<t>&lt;static&gt; gadgets.rpc.removeReceiver(params)</t>
-			<t>Description: Configures the existing RPC instance with the given parameters. Currently supports the following properties on the 'params' object:</t>
-			<t>
-				Parameters:
-				<texttable align="left">
-					<ttcol>Name</ttcol>
-					<ttcol>Type</ttcol>
-					<ttcol>Description</ttcol>
-					<c>securityCallback</c>
-					<c>function</c>
-					<c>securityCallback:  Callback function which is invoked when RPC connection encounters a security issue. Function syntax is securityCallback( receiverId, error ). The following are the defined security errors:
-						<list style="symbols">
-							<t>gadgets.rpc.LOAD_TIMEOUT - receiver failed to connect in time</t>
-							<t>gadgets.rpc.FRAME_PHISH - receiver's iframe may have been maliciously redirected to a new location</t>
-							<t>gadgets.rpc.FORGED_MSG - RPC detected a possibly forged message</t>
-						</list>
-					</c>
-				</texttable>
-			</t>
-		
-			<t>
-				Returns:
-				<texttable align="left">
-					<ttcol>Type</ttcol>
-					<ttcol>Description</ttcol>
-					<c>...</c>
-					<c>...</c>
-				</texttable>
-			</t>
-		</x:draft>
-	</section>  
-     
-     
      
      
      <section title="register"
@@ -4027,6 +3981,30 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       remote procedure calls will fail silently.</t>
      </section>
     </section>
+     
+     <section title="ConfigParameters" anchor="gadgets.rpc.ConfigParameters">
+		<x:draft note="Pub/Sub support: API Section"
+			href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
+			<t>gadgets.rpc.ConfigParameters</t>
+			<t>Description: Object used to hold the parameters into the config method, supports the following properties: </t>
+			<t>
+				<texttable align="left">
+					<ttcol>Name</ttcol>
+					<ttcol>Type</ttcol>
+					<ttcol>Description</ttcol>
+					<c>securityCallback</c>
+					<c>function</c>
+					<c>securityCallback:  Callback function which is invoked when RPC connection encounters a security issue. Function syntax is securityCallback( receiverId, error ). The following are the defined security errors:
+						<list style="symbols">
+							<t>gadgets.rpc.LOAD_TIMEOUT - receiver failed to connect in time</t>
+							<t>gadgets.rpc.FRAME_PHISH - receiver's iframe may have been maliciously redirected to a new location</t>
+							<t>gadgets.rpc.FORGED_MSG - RPC detected a possibly forged message</t>
+						</list>
+					</c>
+				</texttable>
+			</t>
+		</x:draft>
+	</section>  
    </section>
    <section title="gadgets.skins"
             anchor="gadgets.skins">
@@ -4422,14 +4400,10 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 			used by advanced containers and tooling. The semantics of the API
 			offered in OpenSocial will match that of the OA Hub.</t>
 		<t>Process: Pub/sub is handled through messages between a client and
-			the hub, which are defined in the OpenAjax specification. Because it
-			should be possible to have multiple instances of the same gadget on a
-			page, it must be possible to manage pub/sub at the same level of
-			scope. Therefore, there is one hub client per gadget instance. When
+			the hub, which are defined in the OpenAjax specification. There is one hub client per gadget instance. When
 			the gadget is loaded, the client is "connected" to the hub. The
-			general pattern for using pub/sub is as follows:</t>
+			general pattern for using pub/sub in a gadget is as follows:</t>
 		<list style="numbers">
-			<t>Get the gadget instance object.</t>
 			<t>(Optional) Override the default settings used to configure the gadget's hub client instance.</t>
 			<t>Call publish or subscribe methods.</t>
 		</list>
@@ -4468,7 +4442,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 				<list style="numbers">
 					<t>Set default values</t>
 					<t>Register an onLoad handler</t>
-					<t>Invoke the onLoad hander on gadget loading</t>
+					<t>The onLoad handler constructs the HubClient and calls HubClient.connect.</t>
 				</list>
 			</t>
 	</section>
@@ -4511,26 +4485,10 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 			</section>
 			
 		</section>
-		<section title="PubSub" anchor="PubSub">
-			<section title="Getting the gadget instance">
-				<t>
-					There are many use cases in which eventing may be used in the
-					context of a mashup. In some scenarios, there may be multiple
-					instances of the same gadget on a page. In other scenarios, the
-					gadgets may be in-lined within the DOM. To satisfy these use cases,
-					it must be possible to distinguish one instance of a gadget from
-					another. A method in the gadgets namespace has been introduced,
-					<xref target="gadgets.byId">gadgets.byId</xref>
-					that can be used to return a handle to the gadget.
-				</t>
-				<artwork type="code">
-var g = gadgets.byId(__MODULE_ID__);
-var message = Math.random();
-g.PubSub.publish("org.example.random-number", message);
-</artwork>
-			</section>
+		<section title="gadgets.pubsub2" anchor="gadgets.pubsub2">
+			
 			<section title="Method Details">
-				<section title="PubSub.publish" anchor="PubSub.publish">
+				<section title="publish" anchor="publish">
 					<t>publish(topic, payload)</t>
 					<t>Description: The publish method conforms to the semantics of the
 						OA Hub. The OAHub embraces the notion that pubsub is anonymous and
@@ -4555,7 +4513,7 @@ g.PubSub.publish("org.example.random-number", message);
 						</texttable>
 					</t>
 					<t>See <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish</eref> for more information.</t>
-					<section title="PubSub.subscribe" anchor="PubSub.subscribe">
+					<section title="subscribe" anchor="subscribe">
 						<t>subscribe(topic, callback [,scope [,onCompleteCallback [,subscriberData]]])</t>
 						<t>Description: The subscribe method is used to indicate to the
 							hub the topic from which the gadget is interested in receiving
@@ -4607,48 +4565,37 @@ g.PubSub.publish("org.example.random-number", message);
 		<c>An opaque subscription identifier. This identifier is an arbitrary
 			ID string that is unique within this Hub instance</c>
 	</texttable>
-	<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe for more information</t>
-</t>
-					</section>
-					<section title="PubSub.unsubscribe" anchor="PubSub.unsubscribe">
-						<t>unsubscribe(subscriptionId)</t>
-						<t>Description: This method is used to remove a subuscription for
-							a gadget from the hub. The unsubscribe function immediately
-							throws an exception if there is no subscription with the
-							specified subscription ID. Otherwise, unsubscribe immediately
-							deactivates the subscription.</t>
-						<t>
-							Parameters:
-							<texttable align="left">
-								<ttcol>Name</ttcol>
-								<ttcol>Type</ttcol>
-								<ttcol>Description</ttcol>
-								<c>subscriptionId</c>
-								<c>String</c>
-								<c>The subscriptionId is the opaque string that is returned from
-									the subscribe(...) method.</c>
-							</texttable>
-						</t>
-						<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe for more information.</t>
-					</section>
+		<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe for
+	more information</t>
+	</t>
+	</section>
+	<section title="unsubscribe" anchor="unsubscribe">
+		<t>unsubscribe(subscriptionId)</t>
+		<t>Description: This method is used to remove a subuscription for a
+			gadget from the hub. The unsubscribe function immediately throws an
+			exception if there is no subscription with the specified subscription
+			ID. Otherwise, unsubscribe immediately deactivates the subscription.
+		</t>
+		<t>
+			Parameters:
+			<texttable align="left">
+				<ttcol>Name</ttcol>
+				<ttcol>Type</ttcol>
+				<ttcol>Description</ttcol>
+				<c>subscriptionId</c>
+				<c>String</c>
+				<c>The subscriptionId is the opaque string that is returned from the
+					subscribe(...) method.</c>
+			</texttable>
+		</t>
+		<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe for
+			more information.</t>
+     </section>
 				</section>
 			</section>
+			
+			
 		</section>
-		<section title="Wiring Metadata">
-			<t> The OpenAjax Hub defines additional metadata
-				that describe the events that a gadget publishes or subscribes.
-				Included in this, are data types that can be used by tooling and
-				runtime container code to infer information about the messages being
-				published as well as the parameters a gadget expects to receive when
-				it subscribes to a topic.</t>
-			<t>... WIP ...
-			A note on types: opensocial namespace for types. needs to be
-				consistent with the gadgets namespace. gadgets for core data
-				opensocial for social data all datatypes SHOULD be namespaced
-				extesnions namespace SHOULD match then refer to "namespace-less" as
-				openajax common types.</t>
-		</section>
-	
 
 	<section title="Example">
 	<t>The following example illustrates how a container could provide for the first two steps of the initialization process. Step three is the </t>
@@ -4724,8 +4671,141 @@ gadgets.util.registerOnLoadHandler( function() {
 			for more information.
 		</t>
 	</section>
-		 
-	</x:draft>
+	<section title="Wiring Metadata">
+		<t> The OpenSocial specification defines additional metadata that can
+	be used to describe the events that a gadget publishes or to which it
+	is able to subscribe. This allows the container to automatically "wire" gadgets together, and/or provide a
+	UI that allows the user to wire publisher gadgets to subscriber
+	gadgets. For example, manual wiring is often necessary because there
+	sometimes are multiple widgets publishing to or subscribing to the same
+	topic, such as "date", where one widget might provide a start date and
+	the other widget an end date, and also because sometimes topic names
+	and/or payload types are too generic for automatic mapping.</t>
+	
+	<section title="Attributes for Wiring Metadata" anchor="AttributesForWiringMetadata">
+		<t>
+			<texttable align="left">
+				<ttcol>Attribute</ttcol>
+				<ttcol>Type</ttcol>
+				<ttcol>Usage</ttcol>
+				<ttcol>Description</ttcol>
+				<c>name</c>
+				<c>String</c>
+				<c>Required</c>
+				<c>
+				The dot-delimited topic name, e.g. "org.example.randomNumber". This
+				name follows the rules defined in the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Metadata_1.0_Specification_Widget_Metadata#topic_element_name_attribute">OpenAjax Widget Metadata
+				specification</eref>. Developers of gadgets MAY allow the @name attribute to be ovveridden using user preference variables. See <xref target="usingVariablesForNameAttribute">Using Varuables for @name</xref></c>
+				
+				<c>type</c>
+				<c>String</c>
+				<c>Optional</c>
+				<c>Type name for the event's payload data. When not specificed, any
+				type wil be allowed. See <xref tartget="EventDataTypes">Event Data Types</xref>.</c>
+				
+				<c>title</c>
+				<c>String</c>
+				<c>Optional</c>
+				<c>Title for this type of event that is appropriate for a non-technical reader. When not specified, the value of the "name" attribute will be used.</c>
+				
+				<c>publish</c>
+				<c>boolean</c>
+				<c>Optional</c>
+				<c>Indicates if the gadget publishes events on this topic. The default value is "false".</c>
+				
+				<c>subscribe</c>
+				<c>boolean</c>
+				<c>Optional</c>
+				<c>Indicates if the gadget subscribes to events that are published on this topic. The default value is "false".</c>
+				
+				<c>description</c>
+				<c>String</c>
+				<c>Optional</c>
+				<c>
+				The textual description of the gadget's publish or subscribe
+				endpoint.
+				This can be used as an indication of the gadget's behavior.
+				Consider a gadget that subscribes to a topic "com.example.address".
+				The description migh read, "When this gadget receives an event on the com.example.address
+				topic, it displays mass transit options within 10km of the address received as the event payload."</c>
+				
+				<c>aboutUrl</c>
+				<c>String</c>
+				<c>Optional</c>
+				<c>
+				A URL pointing to a resource that provides more extensive
+				descriptive information than can be provided in the description
+				attribute.</c>
+			</texttable>
+		</t>
+		<section title="Using Variables for @name" anchor="usingVariablesForNameAttribute">
+		<t>
+				In the absence of a specific standard for events within a given
+				domain, it is inevitable that different groups of developers,
+				working in different niches on similar problems, will use different
+				topic naming schemes for what is essentially the same event. While
+				some developers in a domain may eventually consolidate around a
+				standard set of topic names, it's also inevitable that installed
+				bases, legacy implementations, politics, requirement to integrate
+				with third party gadgets from other domains, schedule constraints
+				and other factors will ensure that once a topic space becomes
+				balkanized, it will remain that way for a long time.</t>
+				<t>It is important that the specification offer a mechanism that allows
+				developers to bridge simple mismatches between gadgets. It is
+				important that gadget developers use this mechanism where possible.
+				This will maximize the reusability of gadgets -- a major goal.</t>
+				
+				<section title="Example: Using Variables for @name">
+				<t>The following is an example of how to use variable substituion in the definition of the @name attribute.
+					<artwork type="code">
+<Require feature="pubsub-2">
+  <Param name="topics"><![CDATA[ 
+    <Topic title="Selected Location" name="__UP_location__}" 
+    description="This is a description" type="http://nsgs.gov/geo#Place" subscribe="true"/>
+    <!-- etc. for other topics -->
+  ]]></Param>
+</Require>
+</artwork>
+				
+				</t>
+				</section>
+	
+		</section>
+		
+	</section>
+	
+	
+	<section title="Event Data Types" anchor="EventDataTypes">
+	<t>Included
+	in this, are data types that can be used by tooling and runtime
+	container code to infer information about the messages being published
+	as well as the parameters a gadget expects to receive when it
+	subscribes to a topic.</t>
+	
+	<t>... WIP ... A note on types: opensocial namespace for types. needs
+		to be consistent with the gadgets namespace. gadgets for core data
+		opensocial for social data all datatypes SHOULD be namespaced
+		extesnions namespace SHOULD match then refer to "namespace-less" as
+		openajax common types.</t>
+	</section>
+	
+	
+		
+	<section title="Backward Compatibility" anchor="BackwardCompatibility">
+	<t>Pubsub-2 compatibility format w/cdata here.
+				It is RECOMMENDED that 
+				gadgets use the format described in ....
+				However, for backward
+				compatibility reasons, they MAY use the following.
+
+				Containers that
+				support pubsub-2 MUST support both variants. The CDATA approach will be
+				used by gadgets that want to stress backward compatibility with
+				earlier releases.</t>
+	</section>
+	
+	</section>
+ </x:draft>
 </section> 
    
    
