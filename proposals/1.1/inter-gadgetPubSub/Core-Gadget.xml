@@ -4745,18 +4745,18 @@ gadgets.util.registerOnLoadHandler(function() {
                 
                 <section title="Example: Using Variables for @name">
                 <t>The following is an example of how to use variable substituion in the definition of the @name attribute.
-                    <artwork type="code">
+                   <artwork xml:space="preserve">
 <Require feature="pubsub-2">
   <Param name="topics"><![CDATA[ 
-    <Topic title="Selected Location" name="__UP_location__}" 
-    description="This is a description" type="http://nsgs.gov/geo#Place" subscribe="true"/>
+     <Topic title="Selected Location" name="__UP_location__" 
+           description="The currently selected location" type="http://nsgs.gov/geo#Place"
+           publish="false" subscribe="true" aboutUrl="http://nsgs.gov">
+    </Topic>
     <!-- etc. for other topics -->
   ]]></Param>
 </Require>
-</artwork>
-                
-                </t>
-                </section>
+                </artwork></t>
+             </section>
     
         </section>
         
@@ -4777,11 +4777,27 @@ gadgets.util.registerOnLoadHandler(function() {
         openajax common types.</t>
     </section>
     
-    
+    <section title="Wiring Metadata Format" anchor="WiringMetadataFormat">
+    <t>format of metadata
+ <figure>   
+<artwork xml:space="preserve">
+<![CDATA[
+ <Require feature="pubsub-2">
+  <Param name="topics">
+    <Topic title="string" name="string" description="string" type="string"
+           publish="boolean" subscribe="boolean" aboutUrl="string">
+    </Topic>
+    <!-- etc. for other topics -->
+  </Param>
+</Require>
+]]>
+      </artwork>     
+</figure>    
+    </t>
+</section>
         
-    <section title="Backward Compatibility" anchor="BackwardCompatibility">
-    <t>Pubsub-2 compatibility format w/cdata here.
-                It is RECOMMENDED that 
+    <section title="Alternate Metadata Format" anchor="AlternateMetadataFormat">
+    <t>The Pub/Sub feature supports an alternate format for metadata that uses a string, rather than a structure to represent the topic information. It is RECOMMENDED that 
                 gadgets use the format described in ....
                 However, for backward
                 compatibility reasons, they MAY use the following.
@@ -4789,7 +4805,17 @@ gadgets.util.registerOnLoadHandler(function() {
                 Containers that
                 support pubsub-2 MUST support both variants. The CDATA approach will be
                 used by gadgets that want to stress backward compatibility with
-                earlier releases.</t>
+                earlier releases.
+                <artwork type="xml">
+ <Require feature="pubsub-2">
+  <Param name="topics"><![CDATA[ 
+    <Topic title="string" name="string" description="string" type="string"
+           publish="boolean" subscribe="boolean" aboutUrl="string">
+    </Topic>
+    <!-- etc. for other topics -->
+  ]]></Param>
+</Require>
+            </artwork></t>
     </section>
     
     </section>
