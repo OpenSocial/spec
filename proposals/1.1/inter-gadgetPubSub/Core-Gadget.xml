@@ -4590,62 +4590,63 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 		</t>
 		<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe for
 			more information.</t>
-     </section>
-				</section>
-			</section>
+         </section>
+     
+		</section>
+        <section title="Other Methods" anchor="OtherMethods">
+            <t>The 'gadgets.pubsub2' object is an instance of IframeHubClient and supports some additional methods.  
+            Please see the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.IframeHubClient">OA Hub specification</eref> for more information.</t>
+        </section>   
+		</section>
 			
 			
 		</section>
 
-	<section title="Example">
-	<t>The following example illustrates how a container could provide for the first two steps of the initialization process. Step three is the </t>
+	<section title="Container Example" anchor="ContainerExample">
+	<t>The following example illustrates how a container could provide support for this feature.</t>
 	<list style="numbers">
 		<t>
 			Set default values.
-			<artwork type="code">// Obtain a gadget instance object
-var gadgetInstance = gadgets.byId(__MODULE_ID__);
-
+			<artwork type="code">
 // Create a pubsub settings object
-gadgetInstance.PubSubSettings = {};
+gadgets.pubsub2settings = {};
 
 // Set default HubClient constructor params object
-gadgetInstance.PubSubSettings.params = {
-  HubClient: {
+gadgets.pubsub2settings.params = {
+ HubClient: {
     onSecurityAlert: function( alertSource, alertType ) {
       alert( "Gadget stopped attempted security breach: " + alertType );
       window.location.href = "about:blank"; // Forces container to see Frame Phish alert and probably close this gadget 
     }, 
     scope: gadgetInstance
-  },
-  IframeHubClient: {}
-};
+  } };
 
 // Set default onComplete function for HubClient.connect
-gadgetInstance.PubSubSettings.onConnected = function( hub, suc, err ) { };
-		</artwork>
+gadgets.pubsub2settings.onConnected = function( hub, suc, err ) { };
+		    </artwork>
 		</t>
 		<t>
-			Register an onLoad handler
-			<t>Step 2 registers an onLoad handler to actually create the
-				HubClient and connect it to the ManagedHub. Delaying the HubClient
-				creation and connection allows the gadget to override default values
-				stored in gadgetInstance.PubSubSettings. For example,
-				IframeHubClient supports params properties such as seed, tokenLength
-				and log, which we're not setting by default; and a gadget might need
-				to override onSecurityAlert and/or scope, for which default values
-				are provided. More importantly, the onComplete function for
-				HubClient.connect usually sets up the gadget's subscriptions by
-				calling gadgetInstance.PubSub.subscribe, or if the connection fails
-				asynchronously, the onComplete function handles the error.</t>
+    Register an onLoad handler
+    <t>An onLoad handler to actually create the HubClient and connect it
+        to the ManagedHub. Delaying the HubClient creation and
+        connection allows the gadget to override default values stored
+        in gadgets.pubsub2settings. For example, IframeHubClient
+        supports params properties such as seed, tokenLength and log,
+        which are not set by default; and a gadget might need to
+        override onSecurityAlert and/or scope, for which default values
+        are provided. More importantly, the onComplete function for
+        HubClient.connect usually sets up the gadget's subscriptions by
+        calling gadgets.pubsub2.subscribe, or if the connection fails
+        asynchronously, the onComplete function handles the error.</t>
 			<artwork type="code">
 // Register an onLoad handler
 gadgets.util.registerOnLoadHandler( function() {
   try {
     // Create the HubClient.
-    gadgetInstance.PubSub = new OpenAjax.hub.IframeHubClient(  gadgetInstance.PubSubSettings.params );
+    gadgets.pubsub2 = new OpenAjax.hub.IframeHubClient(  gadgets.pubsub2settings.params );
 
     // Connect to the ManagedHub
-    gadgetInstance.PubSub.connect( gadgetInstance.PubSubSettings.onConnect ); 
+    gadgets.pubsub2.connect( gadgets.pubsub2settings.onConnect ); 
 
   } catch(e) {
     // TODO: error handling should be consistent with other OS gadget initialization error handling
@@ -4656,13 +4657,22 @@ gadgets.util.registerOnLoadHandler( function() {
 	
 	</list>
 </section>
-	<section title="Overriding HubClient Settings">
+	<section title="Gadget Example" anchor="GadgetExample">
 		<t>By default, a HubClient is instantiated automatically by the
-			pubsub-2 code. If the gadget wants to provide params to the HubClient
-			constructor, it can do so by setting values on PubSubSettings object
-			of the gadget instance.</t>
-		<artwork type="code">
-...
+						pubsub-2 code, on gadget load. If the gadget wants to override the default parameters to the HubClient
+						constructor, it can do so by setting values on gadgets.pubsub2settings. For
+						example:</t>
+				<artwork type="code">
+gadgets.pubsub2settings.params.HubClient.onSecurityAlert = function(alertSource, alertType) {
+		// handle security alert here
+};
+gadgets.pubsub2settings.params.HubClient.log = function(msg) {
+		// custom logging code here, for recording logging msgs from HubClient
+};
+gadgets.util.registerOnLoadHandler(function() {
+		gadgets.pubsub2.subscribe("org.foo.bar.topic", callback);
+		gadgets.pubsub2.publish("org.foo.bar.topic2", data);
+});	
    </artwork>
 		<t>
 			See
