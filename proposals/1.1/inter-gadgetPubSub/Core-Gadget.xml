@@ -1191,28 +1191,6 @@ REVERSE_DIR: "rtl"
 -->
     <t>Namespace for top-level gadget functions.</t>
     <section title="Method Details">
-	<section title="byId" anchor="gadgets.byId">
- 	<x:draft note="Pub/Sub support: API Section"
-  href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next" >
-		<t>&lt;static&gt; gadgets.byId(opt_moduleId)</t>
-		<t>
-			Parameters:
-			<texttable align="left">
-				<ttcol>Name</ttcol>
-				<ttcol>Type</ttcol>
-				<ttcol>Description</ttcol>
-				<c>opt_moduleId</c>
-				<c>String</c>
-				<c>Returns an instance of a gadget. If the gadget is in an iFrame,
-					in
-					which there is only one gadget, then this is optional. If there are
-					more than one gadget in the window, e.g. in the in-line case, then you
-					MUST pass in
-					an a module id or the call will fail and null will be returned. </c>
-			</texttable>
-		</t>
-</x:draft>
-	</section>
      <section title="log"
               anchor="gadgets.log">
       <t>&lt;static&gt; gadgets.log(message)</t>
@@ -4387,227 +4365,227 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    </section>
 
 <section title="Inter-Gadget Eventing">
-	<x:draft note="Pub/Sub support: API Section"
-		href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
-		<t>The inter-gadget eventing mechanism in OpenSocial, commonly known
-			as pub/sub, provides the ability for loosely coupled inter-gadget
-			communication via the delivery of messages on topics. The definition
-			of the OpenSocial API is based on the OpenAjax Hub 2.0 (OA Hub)
-			specification defined by the OpenAjax Alliance. The addition of this
-			capability adds API in three areas, an event hub to manage the
-			subscription and publication of events on the client, the publish and
-			subscribe methods for the gadgets, and wiring meta-data that can be
-			used by advanced containers and tooling. The semantics of the API
-			offered in OpenSocial will match that of the OA Hub.</t>
-		<t>Process: Pub/sub is handled through messages between a client and
-			the hub, which are defined in the OpenAjax specification. There is one hub client per gadget instance. When
-			the gadget is loaded, the client is "connected" to the hub. The
-			general pattern for using pub/sub in a gadget is as follows:</t>
-		<list style="numbers">
-			<t>(Optional) Override the default settings used to configure the gadget's hub client instance.</t>
-			<t>Call publish or subscribe methods.</t>
-		</list>
-		<t>The full capability of the OpenAjax Hub is available for use within
-	OpenSocial. To understand the complete set of capability provided by
-	the hub, please refer to OpenAjax Web site for the complete
-	documentation and specification. </t>
-		<t>
-			In order to take advantage of intergadget communication, each
-			instance of a gadget needs a client that that is connected to the
-			hub. The full specification for the client is available on the
-			OpenAjax Alliance documentation Web site. Please refer to
-			<eref
-				target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient"></eref>
-			for more information. Following the general pattern of pub/sub based
-			systems, a gadget will publish a message on a topic. Other gadgets
-			(or even the publishing gadget) may subscribe to the topic to receive
-			the information that has been published. In addition, the OpenAjax
-			Alliance has defined a collection of best practices that should be
-			used as guidelines when developing gadgets that leverage pub/sub.
-			Please see
-			<eref
-				tartget="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices</eref>
-			for more information.
-		</t>
-		<section
-			title="Container responsibilities for supporting inter-gadget eventing">
-			<t>
-				In order to ensure that the OpenAjax Hub client is properly
-				configured, when the PubSub feature is added, the container MUST
-				provide the following initialization steps for the gadget when this
-				feature is added. The behavior described in this section ensures that
-				simple gadgets do not need to do anything at all to set up their
-				HubClient instances; but it allows gadgets with special needs to
-				override the default parameters and behavior as required.
-				<list style="numbers">
-					<t>Set default values</t>
-					<t>Register an onLoad handler</t>
-					<t>The onLoad handler constructs the HubClient and calls HubClient.connect.</t>
-				</list>
-			</t>
-	</section>
-		<section title="Topics" anchor="Topics">
-			<t> The publish and subscribe methods, as well as the wiring
-				metadata make use of a "topic". A "topic" MUST be a String and MUST
-				conform to the Topic Name Rules defined by the OpenAjax Hub. The
-				following list summarizes the content that is described by the OA
-				Hub speicificaiton.</t>
-			<list style="symbols">
-				<t>Wildcards usage on topic subscription: Valid wild cards are "*"
-					for single token and "**" for multiple token.</t>
-				<t>Considerations on unicode and special characters: Developers
-					SHOULD NOT not use control, whitespace, quote, or punctuation
-					characters in topic names.</t>
-				<t>
-					Reverse DNS topic names: To avoid potential topic name conflicts
-					with other components, it is RECOMMENDED that all topic names begin
-					with a registered internet domain expressed in reverse order, such
-					as org.openajax.registerLibrary. Further, there SHOULD be a logical
-					correlation between the reverse DNS namespace of the topic name and
-					the prefix pattern used when defining an extension to the
-					OpenSocial data model. See
-					<xref target="OpenSocial Specification">OpenSocial Specification</xref>
-					for more details on the extension model.
-				</t>
-					<t>
-				See
-				<eref
-					target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names</eref>
-				for more information.
-			</t>
-			</list>
-			<section title="Reserved Topic Namespace" anchor="ReservedTopicNamespace">
-				<t>OpenSocial reserves the reverse DNS namespace
-					org.opensocial, and all derivities, for use within the OpenSocial specification.
-					Developers MUST NOT use org.opensocial or any derivitive
-					namespace when defining their own topics.</t>
-				
-			</section>
-			
-		</section>
-		<section title="gadgets.pubsub2" anchor="gadgets.pubsub2">
-			
-			<section title="Method Details">
-				<section title="publish" anchor="publish">
-					<t>publish(topic, payload)</t>
-					<t>Description: The publish method conforms to the semantics of the
-						OA Hub. The OAHub embraces the notion that pubsub is anonymous and
-						does not automatically include any information about the
-						identification of the publishing gadget with the message. The
-						following is an excerpt from their documentation.</t>
-					<t>
-						Parameters:
-						<texttable align="left">
-							<ttcol>Name</ttcol>
-							<ttcol>Type</ttcol>
-							<ttcol>Description</ttcol>
-							<c>topic</c>
-							<c>String</c>
-							<c>A string that conforms to the rules defined above and by the
-								OA Hub to name the channel that the payload will be deliverd on.
-								Wildcards are NOT permitted.</c>
-							<c>payload</c>
-							<c>*</c>
-							<c>It is permissible to publish any object. The payload MUST
-								be serializable to JSON.</c>
-						</texttable>
-					</t>
-					<t>See <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish</eref> for more information.</t>
-					<section title="subscribe" anchor="subscribe">
-						<t>subscribe(topic, callback [,scope [,onCompleteCallback [,subscriberData]]])</t>
-						<t>Description: The subscribe method is used to indicate to the
-							hub the topic from which the gadget is interested in receiving
-							information. When information is published on the topic, the hub
-							will invoke the callback method on the gadget. Since a gadget may
-							have multiple subscriptions on the same topic, the subscribe
-							method returns an opaque identifier that is used to uniquely
-							identify the subscription. This identifier is used to unsubscribe
-							to the topic. It is gadget developer's responsibility to manage
-							this identifier.</t>
-						<t>
-	Parameters:
-	<texttable align="left">
-		<ttcol>Name</ttcol>
-		<ttcol>Type</ttcol>
-		<ttcol>Description</ttcol>
-		<c>topic</c>
-		<c>String</c>
-		<c>A string that conforms to the rules defined above and by the OA Hub
-			to name the channel that the payload will be deliverd on. Wildcards
-			MAY be used.</c>
-		<c>callback</c>
-		<c>String</c>
-		<c>A callback function to be executed when the tab is selected. The
-			callback function will not be called until after the existing
-			callstack has completed execution.</c>
-		<c>scope</c>
-		<c>object</c>
-		<c> When onData callback or onComplete callback is invoked, the
-			JavaScript "this" keyword refers to this scope object. If no scope is
-			provided, default is window.</c>
-		<c>onCompleteCallback</c>
-		<c>function</c>
-		<c> Function invoked to tell the client application whether the
-			subscribe operation succeeded or failed.</c>
-		<c>subscriberData</c>
-		<c>*</c>
-		<c>Client application provides this data, which is handed back to the
-			client application in the subscriberData parameter of the onData
-			callback function.</c>
-	</texttable>
+    <x:draft note="Pub/Sub support: API Section"
+        href="http://wiki.opensocial.org/index.php?title=Incorporate_Open_Ajax_Hub_as_Pub-Sub_Mechanism_for_OpenSocial_1.next">
+        <t>The inter-gadget eventing mechanism in OpenSocial, commonly known
+            as pub/sub, provides the ability for loosely coupled inter-gadget
+            communication via the delivery of messages on topics. The definition
+            of the OpenSocial API is based on the OpenAjax Hub 2.0 (OA Hub)
+            specification defined by the OpenAjax Alliance. The addition of this
+            capability adds API in three areas, an event hub to manage the
+            subscription and publication of events on the client, the publish and
+            subscribe methods for the gadgets, and wiring meta-data that can be
+            used by advanced containers and tooling. The semantics of the API
+            offered in OpenSocial will match that of the OA Hub.</t>
+        <t>Process: Pub/sub is handled through messages between a client and
+            the hub, which are defined in the OpenAjax specification. There is one hub client per gadget instance. When
+            the gadget is loaded, the client is "connected" to the hub. The
+            general pattern for using pub/sub in a gadget is as follows:</t>
+        <list style="numbers">
+            <t>(Optional) Override the default settings used to configure the gadget's hub client instance.</t>
+            <t>Call publish or subscribe methods.</t>
+        </list>
+        <t>The full capability of the OpenAjax Hub is available for use within
+    OpenSocial. To understand the complete set of capability provided by
+    the hub, please refer to OpenAjax Web site for the complete
+    documentation and specification. </t>
+        <t>
+            In order to take advantage of intergadget communication, each
+            instance of a gadget needs a client that that is connected to the
+            hub. The full specification for the client is available on the
+            OpenAjax Alliance documentation Web site. Please refer to
+            <eref
+                target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient"></eref>
+            for more information. Following the general pattern of pub/sub based
+            systems, a gadget will publish a message on a topic. Other gadgets
+            (or even the publishing gadget) may subscribe to the topic to receive
+            the information that has been published. In addition, the OpenAjax
+            Alliance has defined a collection of best practices that should be
+            used as guidelines when developing gadgets that leverage pub/sub.
+            Please see
+            <eref
+                tartget="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices</eref>
+            for more information.
+        </t>
+        <section
+            title="Container responsibilities for supporting inter-gadget eventing">
+            <t>
+                In order to ensure that the OpenAjax Hub client is properly
+                configured, when the PubSub feature is added, the container MUST
+                provide the following initialization steps for the gadget when this
+                feature is added. The behavior described in this section ensures that
+                simple gadgets do not need to do anything at all to set up their
+                HubClient instances; but it allows gadgets with special needs to
+                override the default parameters and behavior as required.
+                <list style="numbers">
+                    <t>Set default values</t>
+                    <t>Register an onLoad handler</t>
+                    <t>The onLoad handler constructs the HubClient and calls HubClient.connect.</t>
+                </list>
+            </t>
+    </section>
+        <section title="Topics" anchor="Topics">
+            <t> The publish and subscribe methods, as well as the wiring
+                metadata make use of a "topic". A "topic" MUST be a String and MUST
+                conform to the Topic Name Rules defined by the OpenAjax Hub. The
+                following list summarizes the content that is described by the OA
+                Hub speicificaiton.</t>
+            <list style="symbols">
+                <t>Wildcards usage on topic subscription: Valid wild cards are "*"
+                    for single token and "**" for multiple token.</t>
+                <t>Considerations on unicode and special characters: Developers
+                    SHOULD NOT not use control, whitespace, quote, or punctuation
+                    characters in topic names.</t>
+                <t>
+                    Reverse DNS topic names: To avoid potential topic name conflicts
+                    with other components, it is RECOMMENDED that all topic names begin
+                    with a registered internet domain expressed in reverse order, such
+                    as org.openajax.registerLibrary. Further, there SHOULD be a logical
+                    correlation between the reverse DNS namespace of the topic name and
+                    the prefix pattern used when defining an extension to the
+                    OpenSocial data model. See
+                    <xref target="OpenSocial-Specification">OpenSocial Specification</xref>
+                    for more details on the extension model.
+                </t>
+                    <t>
+                See
+                <eref
+                    target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names</eref>
+                for more information.
+            </t>
+            </list>
+            <section title="Reserved Topic Namespace" anchor="ReservedTopicNamespace">
+                <t>OpenSocial reserves the reverse DNS namespace
+                    org.opensocial, and all derivities, for use within the OpenSocial specification.
+                    Developers MUST NOT use org.opensocial or any derivitive
+                    namespace when defining their own topics.</t>
+                
+            </section>
+            
+        </section>
+        <section title="gadgets.pubsub2" anchor="gadgets.pubsub2">
+            
+            <section title="Method Details">
+                <section title="publish" anchor="publish">
+                    <t>publish(topic, payload)</t>
+                    <t>Description: The publish method conforms to the semantics of the
+                        OA Hub. The OAHub embraces the notion that pubsub is anonymous and
+                        does not automatically include any information about the
+                        identification of the publishing gadget with the message. The
+                        following is an excerpt from their documentation.</t>
+                    <t>
+                        Parameters:
+                        <texttable align="left">
+                            <ttcol>Name</ttcol>
+                            <ttcol>Type</ttcol>
+                            <ttcol>Description</ttcol>
+                            <c>topic</c>
+                            <c>String</c>
+                            <c>A string that conforms to the rules defined above and by the
+                                OA Hub to name the channel that the payload will be deliverd on.
+                                Wildcards are NOT permitted.</c>
+                            <c>payload</c>
+                            <c>*</c>
+                            <c>It is permissible to publish any object. The payload MUST
+                                be serializable to JSON.</c>
+                        </texttable>
+                    </t>
+                    <t>See <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish</eref> for more information.</t>
+                    <section title="subscribe" anchor="subscribe">
+                        <t>subscribe(topic, callback [,scope [,onCompleteCallback [,subscriberData]]])</t>
+                        <t>Description: The subscribe method is used to indicate to the
+                            hub the topic from which the gadget is interested in receiving
+                            information. When information is published on the topic, the hub
+                            will invoke the callback method on the gadget. Since a gadget may
+                            have multiple subscriptions on the same topic, the subscribe
+                            method returns an opaque identifier that is used to uniquely
+                            identify the subscription. This identifier is used to unsubscribe
+                            to the topic. It is gadget developer's responsibility to manage
+                            this identifier.</t>
+                        <t>
+    Parameters:
+    <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>topic</c>
+        <c>String</c>
+        <c>A string that conforms to the rules defined above and by the OA Hub
+            to name the channel that the payload will be deliverd on. Wildcards
+            MAY be used.</c>
+        <c>callback</c>
+        <c>String</c>
+        <c>A callback function to be executed when the tab is selected. The
+            callback function will not be called until after the existing
+            callstack has completed execution.</c>
+        <c>scope</c>
+        <c>object</c>
+        <c> When onData callback or onComplete callback is invoked, the
+            JavaScript "this" keyword refers to this scope object. If no scope is
+            provided, default is window.</c>
+        <c>onCompleteCallback</c>
+        <c>function</c>
+        <c> Function invoked to tell the client application whether the
+            subscribe operation succeeded or failed.</c>
+        <c>subscriberData</c>
+        <c>*</c>
+        <c>Client application provides this data, which is handed back to the
+            client application in the subscriberData parameter of the onData
+            callback function.</c>
+    </texttable>
 </t>
-						<t>
-	Returns:
-	<texttable align="left">
-		<ttcol>Type</ttcol>
-		<ttcol>Description</ttcol>
-		<c>String</c>
-		<c>An opaque subscription identifier. This identifier is an arbitrary
-			ID string that is unique within this Hub instance</c>
-	</texttable>
-		<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe for
-	more information</t>
-	</t>
-	</section>
-	<section title="unsubscribe" anchor="unsubscribe">
-		<t>unsubscribe(subscriptionId)</t>
-		<t>Description: This method is used to remove a subuscription for a
-			gadget from the hub. The unsubscribe function immediately throws an
-			exception if there is no subscription with the specified subscription
-			ID. Otherwise, unsubscribe immediately deactivates the subscription.
-		</t>
-		<t>
-			Parameters:
-			<texttable align="left">
-				<ttcol>Name</ttcol>
-				<ttcol>Type</ttcol>
-				<ttcol>Description</ttcol>
-				<c>subscriptionId</c>
-				<c>String</c>
-				<c>The subscriptionId is the opaque string that is returned from the
-					subscribe(...) method.</c>
-			</texttable>
-		</t>
-		<t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe for
-			more information.</t>
+                        <t>
+    Returns:
+    <texttable align="left">
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>String</c>
+        <c>An opaque subscription identifier. This identifier is an arbitrary
+            ID string that is unique within this Hub instance</c>
+    </texttable>
+        <t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe for
+    more information</t>
+    </t>
+    </section>
+    <section title="unsubscribe" anchor="unsubscribe">
+        <t>unsubscribe(subscriptionId)</t>
+        <t>Description: This method is used to remove a subuscription for a
+            gadget from the hub. The unsubscribe function immediately throws an
+            exception if there is no subscription with the specified subscription
+            ID. Otherwise, unsubscribe immediately deactivates the subscription.
+        </t>
+        <t>
+            Parameters:
+            <texttable align="left">
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>subscriptionId</c>
+                <c>String</c>
+                <c>The subscriptionId is the opaque string that is returned from the
+                    subscribe(...) method.</c>
+            </texttable>
+        </t>
+        <t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe for
+            more information.</t>
          </section>
      
-		</section>
+        </section>
         <section title="Other Methods" anchor="OtherMethods">
             <t>The 'gadgets.pubsub2' object is an instance of IframeHubClient and supports some additional methods.  
             Please see the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.IframeHubClient">OA Hub specification</eref> for more information.</t>
         </section>   
-		</section>
-			
-			
-		</section>
+        </section>
+            
+            
+        </section>
 
-	<section title="Container Example" anchor="ContainerExample">
-	<t>The following example illustrates how a container could provide support for this feature.</t>
-	<list style="numbers">
-		<t>
-			Set default values.
-			<artwork type="code">
+    <section title="Container Example" anchor="ContainerExample">
+    <t>The following example illustrates how a container could provide support for this feature.</t>
+    <list style="numbers">
+        <t>
+            Set default values.
+            <artwork type="code">
 // Create a pubsub settings object
 gadgets.pubsub2settings = {};
 
@@ -4623,9 +4601,9 @@ gadgets.pubsub2settings.params = {
 
 // Set default onComplete function for HubClient.connect
 gadgets.pubsub2settings.onConnected = function( hub, suc, err ) { };
-		    </artwork>
-		</t>
-		<t>
+            </artwork>
+        </t>
+        <t>
     Register an onLoad handler
     <t>An onLoad handler to actually create the HubClient and connect it
         to the ManagedHub. Delaying the HubClient creation and
@@ -4638,7 +4616,7 @@ gadgets.pubsub2settings.onConnected = function( hub, suc, err ) { };
         HubClient.connect usually sets up the gadget's subscriptions by
         calling gadgets.pubsub2.subscribe, or if the connection fails
         asynchronously, the onComplete function handles the error.</t>
-			<artwork type="code">
+            <artwork type="code">
 // Register an onLoad handler
 gadgets.util.registerOnLoadHandler( function() {
   try {
@@ -4652,122 +4630,122 @@ gadgets.util.registerOnLoadHandler( function() {
     // TODO: error handling should be consistent with other OS gadget initialization error handling
   }
 } );
-			</artwork>
-		</t>
-	
-	</list>
+            </artwork>
+        </t>
+    
+    </list>
 </section>
-	<section title="Gadget Example" anchor="GadgetExample">
-		<t>By default, a HubClient is instantiated automatically by the
-						pubsub-2 code, on gadget load. If the gadget wants to override the default parameters to the HubClient
-						constructor, it can do so by setting values on gadgets.pubsub2settings. For
-						example:</t>
-				<artwork type="code">
+    <section title="Gadget Example" anchor="GadgetExample">
+        <t>By default, a HubClient is instantiated automatically by the
+                        pubsub-2 code, on gadget load. If the gadget wants to override the default parameters to the HubClient
+                        constructor, it can do so by setting values on gadgets.pubsub2settings. For
+                        example:</t>
+                <artwork type="code">
 gadgets.pubsub2settings.params.HubClient.onSecurityAlert = function(alertSource, alertType) {
-		// handle security alert here
+        // handle security alert here
 };
 gadgets.pubsub2settings.params.HubClient.log = function(msg) {
-		// custom logging code here, for recording logging msgs from HubClient
+        // custom logging code here, for recording logging msgs from HubClient
 };
 gadgets.util.registerOnLoadHandler(function() {
-		gadgets.pubsub2.subscribe("org.foo.bar.topic", callback);
-		gadgets.pubsub2.publish("org.foo.bar.topic2", data);
-});	
+        gadgets.pubsub2.subscribe("org.foo.bar.topic", callback);
+        gadgets.pubsub2.publish("org.foo.bar.topic2", data);
+}); 
    </artwork>
-		<t>
-			See
-			<eref
-				target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor">http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor</eref>
-			for more information.
-		</t>
-	</section>
-	<section title="Wiring Metadata">
-		<t> The OpenSocial specification defines additional metadata that can
-	be used to describe the events that a gadget publishes or to which it
-	is able to subscribe. This allows the container to automatically "wire" gadgets together, and/or provide a
-	UI that allows the user to wire publisher gadgets to subscriber
-	gadgets. For example, manual wiring is often necessary because there
-	sometimes are multiple widgets publishing to or subscribing to the same
-	topic, such as "date", where one widget might provide a start date and
-	the other widget an end date, and also because sometimes topic names
-	and/or payload types are too generic for automatic mapping.</t>
-	
-	<section title="Attributes for Wiring Metadata" anchor="AttributesForWiringMetadata">
-		<t>
-			<texttable align="left">
-				<ttcol>Attribute</ttcol>
-				<ttcol>Type</ttcol>
-				<ttcol>Usage</ttcol>
-				<ttcol>Description</ttcol>
-				<c>name</c>
-				<c>String</c>
-				<c>Required</c>
-				<c>
-				The dot-delimited topic name, e.g. "org.example.randomNumber". This
-				name follows the rules defined in the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Metadata_1.0_Specification_Widget_Metadata#topic_element_name_attribute">OpenAjax Widget Metadata
-				specification</eref>. Developers of gadgets MAY allow the @name attribute to be ovveridden using user preference variables. See <xref target="usingVariablesForNameAttribute">Using Varuables for @name</xref></c>
-				
-				<c>type</c>
-				<c>String</c>
-				<c>Optional</c>
-				<c>Type name for the event's payload data. When not specificed, any
-				type wil be allowed. See <xref tartget="EventDataTypes">Event Data Types</xref>.</c>
-				
-				<c>title</c>
-				<c>String</c>
-				<c>Optional</c>
-				<c>Title for this type of event that is appropriate for a non-technical reader. When not specified, the value of the "name" attribute will be used.</c>
-				
-				<c>publish</c>
-				<c>boolean</c>
-				<c>Optional</c>
-				<c>Indicates if the gadget publishes events on this topic. The default value is "false".</c>
-				
-				<c>subscribe</c>
-				<c>boolean</c>
-				<c>Optional</c>
-				<c>Indicates if the gadget subscribes to events that are published on this topic. The default value is "false".</c>
-				
-				<c>description</c>
-				<c>String</c>
-				<c>Optional</c>
-				<c>
-				The textual description of the gadget's publish or subscribe
-				endpoint.
-				This can be used as an indication of the gadget's behavior.
-				Consider a gadget that subscribes to a topic "com.example.address".
-				The description migh read, "When this gadget receives an event on the com.example.address
-				topic, it displays mass transit options within 10km of the address received as the event payload."</c>
-				
-				<c>aboutUrl</c>
-				<c>String</c>
-				<c>Optional</c>
-				<c>
-				A URL pointing to a resource that provides more extensive
-				descriptive information than can be provided in the description
-				attribute.</c>
-			</texttable>
-		</t>
-		<section title="Using Variables for @name" anchor="usingVariablesForNameAttribute">
-		<t>
-				In the absence of a specific standard for events within a given
-				domain, it is inevitable that different groups of developers,
-				working in different niches on similar problems, will use different
-				topic naming schemes for what is essentially the same event. While
-				some developers in a domain may eventually consolidate around a
-				standard set of topic names, it's also inevitable that installed
-				bases, legacy implementations, politics, requirement to integrate
-				with third party gadgets from other domains, schedule constraints
-				and other factors will ensure that once a topic space becomes
-				balkanized, it will remain that way for a long time.</t>
-				<t>It is important that the specification offer a mechanism that allows
-				developers to bridge simple mismatches between gadgets. It is
-				important that gadget developers use this mechanism where possible.
-				This will maximize the reusability of gadgets -- a major goal.</t>
-				
-				<section title="Example: Using Variables for @name">
-				<t>The following is an example of how to use variable substituion in the definition of the @name attribute.
-					<artwork type="code">
+        <t>
+            See
+            <eref
+                target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor">http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor</eref>
+            for more information.
+        </t>
+    </section>
+    <section title="Wiring Metadata">
+        <t> The OpenSocial specification defines additional metadata that can
+    be used to describe the events that a gadget publishes or to which it
+    is able to subscribe. This allows the container to automatically "wire" gadgets together, and/or provide a
+    UI that allows the user to wire publisher gadgets to subscriber
+    gadgets. For example, manual wiring is often necessary because there
+    sometimes are multiple widgets publishing to or subscribing to the same
+    topic, such as "date", where one widget might provide a start date and
+    the other widget an end date, and also because sometimes topic names
+    and/or payload types are too generic for automatic mapping.</t>
+    
+    <section title="Attributes for Wiring Metadata" anchor="AttributesForWiringMetadata">
+        <t>
+            <texttable align="left">
+                <ttcol>Attribute</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Usage</ttcol>
+                <ttcol>Description</ttcol>
+                <c>name</c>
+                <c>String</c>
+                <c>Required</c>
+                <c>
+                The dot-delimited topic name, e.g. "org.example.randomNumber". This
+                name follows the rules defined in the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Metadata_1.0_Specification_Widget_Metadata#topic_element_name_attribute">OpenAjax Widget Metadata
+                specification</eref>. Developers of gadgets MAY allow the @name attribute to be ovveridden using user preference variables. See <xref target="usingVariablesForNameAttribute">Using Varuables for @name</xref></c>
+                
+                <c>type</c>
+                <c>String</c>
+                <c>Optional</c>
+                <c>Type name for the event's payload data. When not specificed, any
+                type wil be allowed. See <xref target="EventDataTypes">Event Data Types</xref>.</c>
+                
+                <c>title</c>
+                <c>String</c>
+                <c>Optional</c>
+                <c>Title for this type of event that is appropriate for a non-technical reader. When not specified, the value of the "name" attribute will be used.</c>
+                
+                <c>publish</c>
+                <c>boolean</c>
+                <c>Optional</c>
+                <c>Indicates if the gadget publishes events on this topic. The default value is "false".</c>
+                
+                <c>subscribe</c>
+                <c>boolean</c>
+                <c>Optional</c>
+                <c>Indicates if the gadget subscribes to events that are published on this topic. The default value is "false".</c>
+                
+                <c>description</c>
+                <c>String</c>
+                <c>Optional</c>
+                <c>
+                The textual description of the gadget's publish or subscribe
+                endpoint.
+                This can be used as an indication of the gadget's behavior.
+                Consider a gadget that subscribes to a topic "com.example.address".
+                The description migh read, "When this gadget receives an event on the com.example.address
+                topic, it displays mass transit options within 10km of the address received as the event payload."</c>
+                
+                <c>aboutUrl</c>
+                <c>String</c>
+                <c>Optional</c>
+                <c>
+                A URL pointing to a resource that provides more extensive
+                descriptive information than can be provided in the description
+                attribute.</c>
+            </texttable>
+        </t>
+        <section title="Using Variables for @name" anchor="usingVariablesForNameAttribute">
+        <t>
+                In the absence of a specific standard for events within a given
+                domain, it is inevitable that different groups of developers,
+                working in different niches on similar problems, will use different
+                topic naming schemes for what is essentially the same event. While
+                some developers in a domain may eventually consolidate around a
+                standard set of topic names, it's also inevitable that installed
+                bases, legacy implementations, politics, requirement to integrate
+                with third party gadgets from other domains, schedule constraints
+                and other factors will ensure that once a topic space becomes
+                balkanized, it will remain that way for a long time.</t>
+                <t>It is important that the specification offer a mechanism that allows
+                developers to bridge simple mismatches between gadgets. It is
+                important that gadget developers use this mechanism where possible.
+                This will maximize the reusability of gadgets -- a major goal.</t>
+                
+                <section title="Example: Using Variables for @name">
+                <t>The following is an example of how to use variable substituion in the definition of the @name attribute.
+                    <artwork type="code">
 <Require feature="pubsub-2">
   <Param name="topics"><![CDATA[ 
     <Topic title="Selected Location" name="__UP_location__}" 
@@ -4776,45 +4754,45 @@ gadgets.util.registerOnLoadHandler(function() {
   ]]></Param>
 </Require>
 </artwork>
-				
-				</t>
-				</section>
-	
-		</section>
-		
-	</section>
-	
-	
-	<section title="Event Data Types" anchor="EventDataTypes">
-	<t>Included
-	in this, are data types that can be used by tooling and runtime
-	container code to infer information about the messages being published
-	as well as the parameters a gadget expects to receive when it
-	subscribes to a topic.</t>
-	
-	<t>... WIP ... A note on types: opensocial namespace for types. needs
-		to be consistent with the gadgets namespace. gadgets for core data
-		opensocial for social data all datatypes SHOULD be namespaced
-		extesnions namespace SHOULD match then refer to "namespace-less" as
-		openajax common types.</t>
-	</section>
-	
-	
-		
-	<section title="Backward Compatibility" anchor="BackwardCompatibility">
-	<t>Pubsub-2 compatibility format w/cdata here.
-				It is RECOMMENDED that 
-				gadgets use the format described in ....
-				However, for backward
-				compatibility reasons, they MAY use the following.
+                
+                </t>
+                </section>
+    
+        </section>
+        
+    </section>
+    
+    
+    <section title="Event Data Types" anchor="EventDataTypes">
+    <t>Included
+    in this, are data types that can be used by tooling and runtime
+    container code to infer information about the messages being published
+    as well as the parameters a gadget expects to receive when it
+    subscribes to a topic.</t>
+    
+    <t>... WIP ... A note on types: opensocial namespace for types. needs
+        to be consistent with the gadgets namespace. gadgets for core data
+        opensocial for social data all datatypes SHOULD be namespaced
+        extesnions namespace SHOULD match then refer to "namespace-less" as
+        openajax common types.</t>
+    </section>
+    
+    
+        
+    <section title="Backward Compatibility" anchor="BackwardCompatibility">
+    <t>Pubsub-2 compatibility format w/cdata here.
+                It is RECOMMENDED that 
+                gadgets use the format described in ....
+                However, for backward
+                compatibility reasons, they MAY use the following.
 
-				Containers that
-				support pubsub-2 MUST support both variants. The CDATA approach will be
-				used by gadgets that want to stress backward compatibility with
-				earlier releases.</t>
-	</section>
-	
-	</section>
+                Containers that
+                support pubsub-2 MUST support both variants. The CDATA approach will be
+                used by gadgets that want to stress backward compatibility with
+                earlier releases.</t>
+    </section>
+    
+    </section>
  </x:draft>
 </section> 
    
@@ -5376,6 +5354,16 @@ assertEquals(0.30, value);
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
      <date month='March'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor="OpenSocial-Specification"
+              target="./OpenSocial-Specification.xml">
+    <front>
+     <title>OpenSocial Templating Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='November'
            year='2010' />
     </front>
    </reference>
