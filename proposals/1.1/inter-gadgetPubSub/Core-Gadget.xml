@@ -4463,7 +4463,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
             </section>
             
         </section>
-        <section title="gadgets.pubsub2" anchor="gadgets.pubsub2">
+        <section title="gadgets.Hub" anchor="gadgets.Hub">
             
             <section title="Method Details">
                 <section title="publish" anchor="publish">
@@ -4572,7 +4572,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
      
         </section>
         <section title="Other Methods" anchor="OtherMethods">
-            <t>The 'gadgets.pubsub2' object is an instance of IframeHubClient and supports some additional methods.  
+            <t>The 'gadgets.Hub' object is an instance of IframeHubClient and supports some additional methods.  
             Please see the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.IframeHubClient">OA Hub specification</eref> for more information.</t>
         </section>   
         </section>
@@ -4587,10 +4587,10 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
             Set default values.
             <artwork type="code">
 // Create a pubsub settings object
-gadgets.pubsub2settings = {};
+gadgets.HubSettings = {};
 
 // Set default HubClient constructor params object
-gadgets.pubsub2settings.params = {
+gadgets.HubSettings.params = {
  HubClient: {
     onSecurityAlert: function( alertSource, alertType ) {
       alert( "Gadget stopped attempted security breach: " + alertType );
@@ -4600,7 +4600,7 @@ gadgets.pubsub2settings.params = {
   } };
 
 // Set default onComplete function for HubClient.connect
-gadgets.pubsub2settings.onConnected = function( hub, suc, err ) { };
+gadgets.HubSettings.onConnected = function( hub, suc, err ) { };
             </artwork>
         </t>
         <t>
@@ -4608,23 +4608,23 @@ gadgets.pubsub2settings.onConnected = function( hub, suc, err ) { };
     <t>An onLoad handler to actually create the HubClient and connect it
         to the ManagedHub. Delaying the HubClient creation and
         connection allows the gadget to override default values stored
-        in gadgets.pubsub2settings. For example, IframeHubClient
+        in gadgets.HubSettings. For example, IframeHubClient
         supports params properties such as seed, tokenLength and log,
         which are not set by default; and a gadget might need to
         override onSecurityAlert and/or scope, for which default values
         are provided. More importantly, the onComplete function for
         HubClient.connect usually sets up the gadget's subscriptions by
-        calling gadgets.pubsub2.subscribe, or if the connection fails
+        calling gadgets.Hub.subscribe, or if the connection fails
         asynchronously, the onComplete function handles the error.</t>
             <artwork type="code">
 // Register an onLoad handler
 gadgets.util.registerOnLoadHandler( function() {
   try {
     // Create the HubClient.
-    gadgets.pubsub2 = new OpenAjax.hub.IframeHubClient(  gadgets.pubsub2settings.params );
+    gadgets.Hub = new OpenAjax.hub.IframeHubClient(  gadgets.HubSettings.params );
 
     // Connect to the ManagedHub
-    gadgets.pubsub2.connect( gadgets.pubsub2settings.onConnect ); 
+    gadgets.Hub.connect( gadgets.HubSettings.onConnect ); 
 
   } catch(e) {
     // TODO: error handling should be consistent with other OS gadget initialization error handling
@@ -4638,18 +4638,18 @@ gadgets.util.registerOnLoadHandler( function() {
     <section title="Gadget Example" anchor="GadgetExample">
         <t>By default, a HubClient is instantiated automatically by the
                         pubsub-2 code, on gadget load. If the gadget wants to override the default parameters to the HubClient
-                        constructor, it can do so by setting values on gadgets.pubsub2settings. For
+                        constructor, it can do so by setting values on gadgets.HubSettings. For
                         example:</t>
                 <artwork type="code">
-gadgets.pubsub2settings.params.HubClient.onSecurityAlert = function(alertSource, alertType) {
+gadgets.HubSettings.params.HubClient.onSecurityAlert = function(alertSource, alertType) {
         // handle security alert here
 };
-gadgets.pubsub2settings.params.HubClient.log = function(msg) {
+gadgets.HubSettings.params.HubClient.log = function(msg) {
         // custom logging code here, for recording logging msgs from HubClient
 };
 gadgets.util.registerOnLoadHandler(function() {
-        gadgets.pubsub2.subscribe("org.foo.bar.topic", callback);
-        gadgets.pubsub2.publish("org.foo.bar.topic2", data);
+        gadgets.Hub.subscribe("org.foo.bar.topic", callback);
+        gadgets.Hub.publish("org.foo.bar.topic2", data);
 }); 
    </artwork>
         <t>
@@ -4745,17 +4745,18 @@ gadgets.util.registerOnLoadHandler(function() {
                 
                 <section title="Example: Using Variables for @name">
                 <t>The following is an example of how to use variable substituion in the definition of the @name attribute.
+                <figure>
                    <artwork xml:space="preserve">
-<Require feature="pubsub-2">
-  <Param name="topics"><![CDATA[ 
-     <Topic title="Selected Location" name="__UP_location__" 
+&lt;Require feature="pubsub-2"&gt;
+  &lt;Param name="topics"&gt;&lt;![CDATA[ 
+     &lt;Topic title="Selected Location" name="__UP_location__" 
            description="The currently selected location" type="http://nsgs.gov/geo#Place"
-           publish="false" subscribe="true" aboutUrl="http://nsgs.gov">
-    </Topic>
-    <!-- etc. for other topics -->
-  ]]></Param>
-</Require>
-                </artwork></t>
+           publish="false" subscribe="true" aboutUrl="http://nsgs.gov"&gt;
+    &lt;/Topic&gt;
+    &lt;!-- etc. for other topics --&gt;
+  ]]&gt;&lt;/Param&gt;
+&lt;/Require&gt;
+                </artwork></figure></t>
              </section>
     
         </section>
@@ -4764,58 +4765,142 @@ gadgets.util.registerOnLoadHandler(function() {
     
     
     <section title="Event Data Types" anchor="EventDataTypes">
-    <t>Included
-    in this, are data types that can be used by tooling and runtime
-    container code to infer information about the messages being published
+    <t>The OpenAjax Hub has a predefined set of identifiers that are used to indicate the data type. Tooling and runtime
+    container code can use this to infer information about the messages being published
     as well as the parameters a gadget expects to receive when it
     subscribes to a topic.</t>
     
-    <t>... WIP ... A note on types: opensocial namespace for types. needs
-        to be consistent with the gadgets namespace. gadgets for core data
-        opensocial for social data all datatypes SHOULD be namespaced
-        extesnions namespace SHOULD match then refer to "namespace-less" as
-        openajax common types.</t>
+    <t>
+    The data types provided by the OpenAjax Hub are "built in". These
+    are referred to as the OpenAjax common types, and they require no
+    namespace qualifier. When a type other than an OpenAjax common type
+    is used, it MUST contain a namesake qualifier. The namespace MUST
+    conform to the rules defined in xxxxx of the OpenSocial
+    Specification. Further, the namespace org.opensocial.* MUST NOT be
+    used and is reserved for types defined in the specification, e.g.
+    social data types.
+        
+        <texttable align="left">
+            <ttcol>Type Name</ttcol>
+            <ttcol>Comments</ttcol>
+            <c>string</c>
+            <c>ECMAScipt string</c>
+        <c>number</c>
+            <c>ECMAScipt number </c>
+            
+            <c>boolean</c>
+            <c>ECMAScipt boolean </c>
+             
+             
+            <c>array</c>
+            <c>ECMAScipt array, e.g. [ 1, 1, 2, 3, 5, 8 ]. The element type/s are not specified when the generic "array" type is used.</c>
+             
+             
+            <c>object *</c>
+            <c>ECMAScipt object, e.g. { foo: "bar", baz: "boo" }. The specifics of the object are not specified when the generic "object" type is used.</c>
+             
+             
+            <c>null *</c>
+            <c>ECMAScipt null</c>
+             
+             
+             
+            <c>length *</c>
+            <c>Any CSS length value <span style="color:red"> Howard 2009.11.10: CSS version?</span></c>
+             
+             
+            <c>color *</c>
+            <c>Any CSS color value</c>
+             
+             
+            <c>id</c>
+            <c>ID value - probably not useful for OpenSocial Gadgets, but might as well keep the two specs in sync</c>
+             
+             
+            <c>class *</c>
+            <c>zero of more CSS class names, separated by spaces</c>
+             
+             
+            <c>style *</c>
+            <c>a string that could be used as value for a 'style' attribute</c>
+             
+             
+            <c>url</c>
+            <c>A URL <span style="color:red"> Howard 2009.11.09: Do we want "uri" also?</span></c>
+             
+             
+            <c>html</c>
+            <c>A fragment of HTML markup.</c>
+             
+             
+            <c>countrycode *</c>
+            <c>A string that represents an [http://www.iso.org/iso/country_codes/iso_3166_code_lists.htm A3 ISO 3166 country code].</c>
+             
+             
+            <c>languagecode *</c>
+            <c>A string that represents an [http://www.loc.gov/standards/iso639-2/php/code_list.php ISO 639-2 language code].</c>
+             
+             
+            <c>email</c>
+            <c>A string that represents an e-mail address.</c>
+             
+             
+            <c>person</c>
+            <c>A string that holds a person's name.</c>
+             
+             
+            <c>postalcode</c>
+            <c>A string that represents a postal code.</c>
+             
+             
+            <c>phone</c>
+            <c>A string that represents a phone number.</c>
+             
+             
+            <c>date *</c>
+            <c>A string that represents a date. MUST be expressed using the "Date Time String Format" defined in the [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification] using one of the date-only forms. For example: "2009-12-15"</c>
+             
+             
+            <c>time *</c>
+            <c>A string that represents a time of day. MUST be expressed using the "Date Time String Format" defined in the [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification] using one of the time-only forms. For example: "18:45:00Z" or "10:26:24-05:00"</c>
+             
+             
+            <c>timestamp *</c>
+            <c>A string that represents a date and time of day. MUST be expressed using the "Date Time String Format" defined in the [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification]. For example: "2009-12-15:18:45.000Z"</c>
+             
+             
+            <c>duration *</c>
+            <c>A string that represents a duration. MUST have format "PYYYY-DDDThh:mm:ss.fff". For example, "P0400-152T20:45:33.123" means "400 years, 152 days, 20 hours, 45 minutes, 33.123 seconds, while "P0003-000T01:56:22.000" means "3 years, 1 hour, 56 minutes and 22.000 seconds." (Must use this one variant defined in the ISO 8601 standard). </c>
+             
+             
+            <c>*</c>
+            <c>Asterisk, or missing type attribute, means "any datatype"</c>
+                    
+        </texttable>
+        
+        </t>
+        
     </section>
     
     <section title="Wiring Metadata Format" anchor="WiringMetadataFormat">
-    <t>format of metadata
- <figure>   
-<artwork xml:space="preserve">
-<![CDATA[
- <Require feature="pubsub-2">
-  <Param name="topics">
-    <Topic title="string" name="string" description="string" type="string"
-           publish="boolean" subscribe="boolean" aboutUrl="string">
-    </Topic>
-    <!-- etc. for other topics -->
-  </Param>
-</Require>
-]]>
-      </artwork>     
-</figure>    
-    </t>
-</section>
-        
-    <section title="Alternate Metadata Format" anchor="AlternateMetadataFormat">
-    <t>The Pub/Sub feature supports an alternate format for metadata that uses a string, rather than a structure to represent the topic information. It is RECOMMENDED that 
-                gadgets use the format described in ....
-                However, for backward
-                compatibility reasons, they MAY use the following.
 
-                Containers that
-                support pubsub-2 MUST support both variants. The CDATA approach will be
-                used by gadgets that want to stress backward compatibility with
-                earlier releases.
-                <artwork type="xml">
- <Require feature="pubsub-2">
-  <Param name="topics"><![CDATA[ 
-    <Topic title="string" name="string" description="string" type="string"
-           publish="boolean" subscribe="boolean" aboutUrl="string">
-    </Topic>
-    <!-- etc. for other topics -->
-  ]]></Param>
-</Require>
-            </artwork></t>
+    <t>
+        The Pub/Sub feature supports format for metadata
+        that uses a string to represent the
+        topic information. The format of this string is as follows:
+ <figure>
+ <artwork type="xml:space=preserve">
+ 
+ &lt;Require feature="pubsub-2"&gt;
+  &lt;Param name="topics"&gt;&lt;![CDATA[ 
+    &lt;Topic title="string" name="string" description="string" type="string"
+           publish="boolean" subscribe="boolean" aboutUrl="string"&gt;
+    &lt;/Topic&gt;
+    &lt;!-- etc. for other topics --&gt;
+  ]]&lt;/Param&gt;
+&lt;/Require&gt;
+ 
+ </artwork></figure></t>
     </section>
     
     </section>
