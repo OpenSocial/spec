@@ -4774,10 +4774,11 @@ gadgets.util.registerOnLoadHandler(function() {
     The data types provided by the OpenAjax Hub are "built in". These
     are referred to as the OpenAjax common types, and they require no
     namespace qualifier. When a type other than an OpenAjax common type
-    is used, it MUST contain a namesake qualifier. The namespace MUST
-    conform to the rules defined in xxxxx of the OpenSocial
-    Specification. Further, the namespace org.opensocial.* MUST NOT be
-    used and is reserved for types defined in the specification, e.g.
+    is used, it MUST contain a namesake qualifier. The namespace should
+    conform to reverse DNS rules. The namespace
+    org.opensocial.* MUST NOT be
+    used and is reserved for types defined
+    in the specification, e.g.
     social data types.
         
         <texttable align="left">
