@@ -41,6 +41,12 @@
   </section>
   <section title="Overview">
    <t>OpenSocial provides three ways for gadgets to access social data.  First, the JavaScript API contains methods in the osapi.* namespace which map to the services defined in the Social API Server Specification. Second, Data Pipelining is a declarative syntax for specifying the social data a gadget will need, allowing the container to prefetch data for faster gadget rendering. Third, Templating provides several tags to accomplish common tasks, like displaying the UI for selecting friends from a list.</t>
+    <section title="Note on Signed Fetch" anchor="SignedFetchNote">
+      <x:draft>
+       <t>When making requests that use OAuth, the container SHOULD add the opensocial_viewer_id and opensocial_owner_id to the request. These parameters represent the ID of the @viewer and @owner respectively. </t>
+      </x:draft>
+    </section>
+  
   </section>
   <section title="JavaScript API Reference"
            anchor="JavaScriptAPIReference">
