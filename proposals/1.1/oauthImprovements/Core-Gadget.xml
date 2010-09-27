@@ -1073,6 +1073,9 @@ REVERSE_DIR: "rtl"
     <eref target="http://oauth.net/core/1.0/#signing_process">OAuth
     specification</eref>.</t>
    </list></t>
+   <section title="Key management" anchor="KeyManagement">
+ 	<x:draft note="OAuth Cleanup"
+			href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">
    <t>If a container uses public keys to sign requests, the container may
    choose to use either self-signed certificates or certificates signed by a
    well-known certificate authority. If a container does not distribute its
@@ -1099,6 +1102,8 @@ REVERSE_DIR: "rtl"
    https://[container-hostname], the recipient should verify that the
    certificate is signed by a well-known certificate authority before trusting
    the certificate.</t>
+    </x:draft>
+   </section>
   </section>
   <section title="OAuth"
            anchor="OAuth">
@@ -1337,71 +1342,24 @@ gadgets.io.makeRequest(url, callback, params);
 </artwork>
       </figure></t>
       <section title="Signed authorization">
+       <x:draft note="OAuth Cleanup"
+			href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">
         <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
-      gadgets.io.AuthorizationType.SIGNED, the container needs to vouch for the
-      user's identity to the destination server. The container does this by
-      doing the following:</t> 
-      <list style="numbers">
-       <t>Removing any request parameters with names that begin with oauth,
-       xoauth, or opensocial (case insensitive).</t>
-       <t>Adding the following parameters to the request query string:</t>
-       <list style="hanging">
-        <t hangText="opensocial_viewer_id">Optional. The ID of the current
-        viewer, which matches the getId() value on the viewer person
-        object.</t>
-        <t hangText="opensocial_owner_id">Required. The ID of the current
-        owner, which matches the getId() value on the owner person object.</t>
-        <t hangText="opensocial_app_url">Required. The URL of the application
-        making the request. Containers may alias multiple application URLs to a
-        single canonical application URL in the case where an application
-        changes URLs.</t>
-        <t hangText="opensocial_instance_id">Optional. An opaque identifier
-        used to distinguish between multiple instances of the same application
-        in a single container. If a container does not allow multiple instances
-        of the same application to coexist, this parameter may be omitted. The
-        combination of opensocial_app_url and opensocial_instance_id uniquely
-        identify an instance of an application in a container.</t>
-        <t hangText="opensocial_app_id">Optional. An opaque identifier for the
-        application, unique to a particular container. Containers that wish to
-        maintain backwards compatibility with the opensocial-0.7 specification
-        may include this parameter.</t>
-        <t hangText="xoauth_public_key">Optional. An opaque identifier for the
-        public key used to sign the request. This parameter may be omitted by
-        containers that do not use public keys to sign requests, or if the
-        container arranges other means of key distribution with the target of
-        the request.</t>
-       </list>
-       <t>Signing the resulting request according to section 9 of the 
-       <eref target="http://oauth.net/core/1.0/#signing_process">OAuth
-       specification</eref>.</t>
-      </list></section>
+            gadgets.io.AuthorizationType.SIGNED, the container needs to vouch
+            for the
+            user's identity to the destination server. This follows the steps outlined in
+            the
+            <xref target="SignedFetch">Signed Fetch</xref>
+            section of this specification.</t>
+      </x:draft>
+      </section>
       <section title="Key management">
-       <t>If a container uses public keys to sign requests, the container may
-       choose to use either self-signed certificates or certificates signed by
-       a well-known certificate authority. If a container does not distribute
-       its OAuth signing key over HTTPS, it should use a certificate signed by
-       a well-known certificate authority.</t>
-       <t>The commonName attribute of the certificate should match the hostname
-       of the container server, and should also match the value of the
-       oauth_consumer_key parameter specified in the request.</t>
-       <t>The container should make its public key available for download at a
-       well-known location. The location
-       https://[container-hostname]/opensocial/certificates/xoauth_public_keyvalue
-       is recommended.</t>
-       <t>Recipients of signed requests must verify that the signature on the
-       request is correct, and that the timestamp on the request is within a
-       reasonable time window. A time window of 5 minutes before and after the
-       current time is recommended.</t>
-       <t>Recipients of signed requests may use the oauth_consumer_key and
-       xoauth_public_key parameters to automatically detect when a container
-       deploys new certificates. If the container deploys certificates at a
-       well-known location, the recipient may automatically download the new
-       certificate. Recipients that automatically download new certificates
-       should cache the resulting certificates.</t>
-       <t>If a container's certificate is not downloaded from
-       https://[container-hostname], the recipient should verify that the
-       certificate is signed by a well-known certificate authority before
-       trusting the certificate.</t>
+        <x:draft note="OAuth Cleanup"
+            href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">
+       <t>Note: This text was moved to section <xref target="KeyManagement">OAuth Key Management</xref>
+       
+       </t>
+       </x:draft>
       </section>
       <section title="OAuth authorization">
        <t>If opt_params[gadgets.io.RequestParameters.AUTHORIZATION] is set to
@@ -1433,13 +1391,27 @@ gadgets.io.makeRequest(url, callback, params);
         The secret corresponding to a preapproved request token. This parameter
         is optional.</t>
        </list></t>
+      <x:draft note="OAuth Cleanup"
+			href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">
        <t>If OAuth is used, the container should execute the OAuth protocol on
        behalf of the gadget. If the gadget has not registered a consumer key
        for use with this service provider, the container may choose to use a
        default RSA signing key corresponding to a well-known certificate to
        sign requests. If the container uses a default consumer key, it will
-       include an additional OAuth parameter xoauth_app_url that identifies the
+       include an additional OAuth parameter opensocial_app_url that identifies the
        gadget making the request.</t>
+       <section title="Deprecated xoauth_app_url parameter">
+       <t>
+        When using Signe Fetch, the param used to indicate the URL of the
+        application making the request is "opensocial_app_url". This has the
+        same semantic as " xoauth_app_url". In order to
+        be consistent, the same identifier will be used for OAuth. Containers
+        SHOULD use "opensocial_app_url" and treat "xoauth_app_url" as
+        deprecated. However, for backward compatibility, and to avoid
+        breaking a container on a point release,
+        MUST support either parameter. </t>
+       </section>
+       </x:draft>
       </section>
       <section title="The callback parameter">
        <t>The function specified as the callback parameter is passed a JavaScript object with the following fields: 
@@ -1454,12 +1426,14 @@ gadgets.io.makeRequest(url, callback, params);
         access data. Use of a pop-up window to direct the user to the external
         page is recommended. Once the user has approved access, the gadget can
         repeat the makeRequest call to retrieve the data.</t>
-        <t hangText="oauthError">If this value is specified, it indicates an
+        <t hangText="oauthError">
+        <x:draft note="OAuth Cleanup"
+			href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">
+        If this value is specified, it indicates an
         OAuth-related error occurred. The value will be one of a set of string
-        constants that can be used for programmatically detecting errors. The
-        constants are undefined for opensocial-0.8, but implementers should
-        attempt to agree on a set of useful constant values for standardization
-        in opensocial-0.9.</t>
+        constants that can be used for programmatically detecting errors. 
+        </x:draft>
+        </t>
         <t hangText="oauthErrorText">If this value is specified, it indicates
         an OAuth-related error occurred. The value is free-form text that can
         be used to provide debugging information for gadget developers.</t>
