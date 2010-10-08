@@ -4330,7 +4330,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
     </section>
    </section>
 
-<section title="Inter-Gadget Eventing">
+<section title="Inter-Gadget Eventing" anchor="interGadgetEventing">
         <t>The inter-gadget eventing mechanism in OpenSocial, commonly known
             as pub/sub, provides the ability for loosely coupled inter-gadget
             communication via the delivery of messages on topics. The definition

@@ -7,7 +7,7 @@
      docName="opensocial-specification-release-notes"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="OpenSocial Specification Release Notes 1.1 DRAFT">OpenSocial
+  <title abbrev="OpenSocial Specification Release Notes">OpenSocial
   Specification Release Notes</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
@@ -27,8 +27,33 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
-   <section title="Version 1.1-DRAFT">
-     <t>Published TBD</t>
+    <section title="Version 1.1">
+    <t>Published November 18, 2010</t>
+    <t>
+    As OpenSocial continues to be adopted, especially in enterprise
+    environments, there was a desire by the community to include support for advanced mashup scenarios, specifically, those where gadgets could securely message each other in a loosely coupled manner. OpenSocial 1.1 includes support for this capability, informally known as pub-sub.</t>
+     <section title="Major Changes">
+        <section title="Inter-Gadget Communication">
+            <t>
+               Version 1.1 officially
+    support an inter-gadget eventing system based upon the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification">OpenAjax
+        Hub</eref>. "The OpenAjax Hub is a set of standard JavaScript functionality
+    defined by the OpenAjax Alliance that addresses key interoperability
+    and security issues that arise when multiple Ajax libraries and/or
+    components are used within the same web page." By incorporating this technology into OpenSocial, gadgets are now able to declare, as part of the module definition, events to which they are able to publish and subscribe. In addition, this specification has reserved several topic namespaces for use by OpenSocial.
+    Please refer to the <eref target="./Core-Gadget.xml#interGadgetEventing">Inter-Gadget Eventing</eref> in the Core-Gadget specification for more information.
+            </t>
+        </section>
+     </section>
+       <section title="Other Changes">
+      <list style="hanging">
+        <t hangText="Clarification of language around OAuth">Version 1.0 of the specification contained duplicate language and inconsistencies in the language around the use of OAuth. This version attempts to clean up these and present a more consistent usage model.</t>
+      </list>
+    </section>
+    </section>
+ 
+   <section title="Version 1.0">
+     <t>Published March 9, 2010</t>
      <t>With so many different types of websites adopting OpenSocial it has become clear that a "one size fits all" approach isn't appropriate for the OpenSocial spec.  Containers have different types of data they want to make available to clients (sometimes it's social data, sometimes it's not), and some want to expose that data via web services, while others wish to use gadgets.  As such, modularity was a key goal in the OpenSocial 1.0 iteration, allowing implementers to pick and choose the elements of OpenSocial that make sense for their use cases.  OpenSocial 1.0 also defines extension points so containers can add functionality not covered in the spec, but do so in a standard way, making it easier to fold such extensions back into the spec or share extensions across containers.</t>
      <section title="Major Changes">
        <section title="Revised Compliance Section">
