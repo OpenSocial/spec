@@ -892,7 +892,7 @@
    attribute on the root Module element, and the versions of any Features
    they use by including the @version attribute on
    /ModulePrefs/Require and /ModulePrefs/Optional elements.</t>
-   <t>The version of this specification is "1.0.0". The versions of standard
+   <t>The version of this specification is "1.1.0". The versions of standard
    Features defined by this specification are detailed in
    <xref target="RequireAndOptional">ModulePrefs</xref>. Extensions to the OpenSocial
    specification MUST define the version of any Features specified by the
@@ -3438,6 +3438,7 @@ dataset would contain content resembling:
           &lt;/xs:complexType&gt;
         &lt;/xs:element&gt;
       &lt;/xs:sequence&gt;
+      &lt;xs:attribute name="specificationVersion" type="xs:string" use="required" default="1.0.0"/&gt;
     &lt;/xs:complexType&gt;
   &lt;/xs:element&gt;
   &lt;xs:complexType name="GadgetFeatureType"&gt;
