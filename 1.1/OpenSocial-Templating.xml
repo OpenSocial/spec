@@ -4,10 +4,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-templating-specification-1-1-DRAFT"
+     docName="opensocial-templating-specification-1-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="OpenSocial Templating">OpenSocial Templating Specification 1.1 DRAFT</title>
+  <title abbrev="OpenSocial Templating">OpenSocial Templating Specification 1.1</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -67,7 +67,7 @@
     <preamble>Example</preamble>
     <artwork xml:space="preserve">
 &lt;ModulePrefs title="Hello World"&gt;
-  &lt;Require feature="opensocial-0.9"/&gt;
+  &lt;Require feature="opensocial" version="1.1.0"/&gt;
   &lt;!-- Allows templates --&gt;
   &lt;Require feature="opensocial-templates"/&gt;
   &lt;!-- Allows multiple views to be defined and thus rendered client or server --&gt;
