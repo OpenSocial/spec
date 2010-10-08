@@ -791,21 +791,23 @@
    <t>If the attribute is present, the container MUST issue an HTTP request to
    the URI specified by the href attribute following the rules defined in 
    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.</t>
+<x:draft note="OAuth Cleanup"
+            href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">
    <t>Attributes on the Content element map to makeRequest as follows: 
    <list style="symbols">
     <t>authz: gadgets.io.AuthorizationType (values are canonicalized by
     converting to lower case. Default value is 'none')</t>
+    <t>oauth_received_callback: gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</t>
+    <t>oauth_request_token: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</t>
+    <t>oauth_request_token_secret: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</t>
     <t>oauth_service_name: gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</t>
     <t>oauth_token_name: gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</t>
-    <t>oauth_request_token:
-    gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</t>
-    <t>oauth_request_token_secret:
-    gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</t>
-    <t>sign_owner: gadgets.io.RequestParameters.SIGN_OWNER (default 'true')</t>
-    <t>sign_viewer: gadgets.io.RequestParameters.SIGN_VIEWER (default
-    'true')</t>
+    <t>oauth_use_token: gadgets.io.RequestParameters.OAUTH_USE_TOKEN</t>
     <t>refresh_interval: gadgets.io.RequestParameters.REFRESH_INTERVAL</t>
+    <t>sign_owner: gadgets.io.RequestParameters.SIGN_OWNER (default 'true')</t>
+    <t>sign_viewer: gadgets.io.RequestParameters.SIGN_VIEWER (default 'true')</t>
    </list></t>
+</x:draft>   
    <t>Note that these attributes also apply to Preload elements.</t>
    <t>The container MUST also add the following parameters to the URI query
    string: 
@@ -1369,8 +1371,19 @@ gadgets.io.makeRequest(url, callback, params);
        service provider to gain access.</t>
       </section>
       <section title="Additional parameters">
+ <x:draft note="OAuth Cleanup" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">     
        <t>The following additional parameters may be specified in opt_params: 
        <list style="hanging">
+        <t hangText="gadgets.io.RequestParameters.GET_FULL_HEADERS">Returns the full headers from the response.</t>
+        <t hangText="gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK">The URL to return after authorization.</t>
+        <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN">A
+        service provider may be able to automatically provision a gadget with a
+        request token that is preapproved for access to a resource. The gadget
+        can use that token with the OAUTH_REQUEST_TOKEN parameter. This
+        parameter is optional.</t>
+        <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET">
+        The secret corresponding to a preapproved request token. This parameter
+        is optional.</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_SERVICE_NAME">The
         nickname the gadget uses to refer to the OAuth &lt;Service&gt; element
         from its XML spec. If unspecified, defaults to "".</t>
@@ -1382,15 +1395,31 @@ gadgets.io.makeRequest(url, callback, params);
         list and a calendar might use a token name of "contacts" to use the
         contact list token, and a contact list of "calendar" to use the
         calendar token.</t>
-        <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN">A
-        service provider may be able to automatically provision a gadget with a
-        request token that is preapproved for access to a resource. The gadget
-        can use that token with the OAUTH_REQUEST_TOKEN parameter. This
-        parameter is optional.</t>
-        <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET">
-        The secret corresponding to a preapproved request token. This parameter
-        is optional.</t>
+        <t hangText="gadgets.io.RequestParameters.OAUTH_USE_TOKEN">
+   This parameter can be either "never", "if_available", or "always". Some
+    service provider APIs to do not require an OAuth access token. Such
+    APIs authenticate the calling application via the OAuth consumer
+    key, and then allow the request to proceed. You can set
+    OAUTH_USE_TOKEN to "never" to avoid unnecessarily requesting the
+    user's approval to access such an API.
+    <t>Some OAuth APIs provide limited data if a user has not granted approval,
+    but can offer additional functionality if a user has granted the
+    calling application an access token. If you are using an API that
+    can accept an OAuth access token, but does not require the token,
+    you can set OAUTH_USE_TOKEN to "if_available". If the user has
+    already approved access, the access token will be sent. If the user
+    has not approved access, the request will proceed without an access
+    token.</t>
+    <t>Many OAuth APIs only function if an access token is sent. You must ask for
+    the user's approval before using such an API. Set OAUTH_USE_TOKEN to
+    "always" to require that an access token be available. If no access
+    token is available, the approval URL will be returned to your
+    gadget.</t>
+    <t>If you set AUTHORIZATION to SIGNED, the default value for OAUTH_USE_TOKEN
+    is "never". If you set AUTHORIZATION to OAUTH, the default value for
+    OAUTH_USE_TOKEN is "always".</t></t>
        </list></t>
+ </x:draft>
       <x:draft note="OAuth Cleanup"
 			href="http://code.google.com/p/opensocial-resources/issues/detail?id=1054">
        <t>If OAuth is used, the container should execute the OAuth protocol on
