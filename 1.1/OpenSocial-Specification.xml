@@ -432,7 +432,7 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Core Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='March'
+     <date month='November'
            year='2010' />
     </front>
    </reference>
@@ -442,7 +442,7 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Core API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='March'
+     <date month='November'
            year='2010' />
     </front>
    </reference>
@@ -452,7 +452,7 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Social Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='March'
+     <date month='November'
            year='2010' />
     </front>
    </reference>
@@ -462,7 +462,7 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Social API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='March'
+     <date month='November'
            year='2010' />
     </front>
    </reference>
