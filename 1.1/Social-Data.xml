@@ -5,7 +5,7 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-data-specification-1-1-DRAFT"
+     docName="opensocial-social-data-specification-1-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
   <title>OpenSocial Social Data Specification 1.1</title>
@@ -1561,7 +1561,7 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Core Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='March'
+     <date month='November'
            year='2010' />
     </front>
    </reference>
@@ -1571,7 +1571,7 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Social Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='March'
+     <date month='November'
            year='2010' />
     </front>
    </reference>
@@ -1581,7 +1581,7 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Social API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='March'
+     <date month='November'
            year='2010' />
     </front>
    </reference>
