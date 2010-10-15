@@ -123,7 +123,7 @@ COMMA          = <US-ASCII comma (44)>
    <section title="Activity" anchor="Activity">
     <t>An OpenSocial Activity represents a short summary or notification of a
     timestamped event, often with pointers for more information.</t>
-    <t>Activities are rendered with a title and an optional activity body.  The the title and body may be set directly as strings when calling
+    <t>Activities are rendered with a title and an optional activity body.  The title and body may be set directly as strings when calling
      opensocial.newActivity. However, it is usually beneficial to create
      activities using Message Templates for the title and body.</t>
      <t>Users have many activities in their activity streams, and
