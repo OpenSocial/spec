@@ -4341,7 +4341,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
             hub. The full specification for the client is available on the
             OpenAjax Alliance documentation Web site. Please refer to
             <eref
-                target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient"></eref>
+                target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient">OpenAjax Hub Client section</eref>
             for more information. Following the general pattern of pub/sub based
             systems, a gadget will publish a message on a topic. Other gadgets
             (or even the publishing gadget) may subscribe to the topic to receive
@@ -4350,7 +4350,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
             used as guidelines when developing gadgets that leverage pub/sub.
             Please see
             <eref
-                tartget="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices</eref>
+                tartget="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Best_Practices">OpenAjax Hub 2.0 Specification Best Practices</eref>
             for more information.
         </t>
         <section
@@ -4396,7 +4396,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
                     <t>
                 See
                 <eref
-                    target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names</eref>
+                    target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names">OpenAjax Hub 2.0 Specification Topic Names</eref>
                 for more information.
             </t>
             </list>
@@ -4436,7 +4436,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
                                 be serializable to JSON.</c>
                         </texttable>
                     </t>
-                    <t>See <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish">http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish</eref> for more information.</t>
+                    <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.publish">OpenAjax Hub 2.0 documentation</eref> for more information.</t>
                     <section title="subscribe" anchor="subscribe">
                         <t>subscribe(topic, callback [,scope [,onCompleteCallback [,subscriberData]]])</t>
                         <t>Description: The subscribe method is used to indicate to the
@@ -4489,7 +4489,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
         <c>An opaque subscription identifier. This identifier is an arbitrary
             ID string that is unique within this Hub instance</c>
     </texttable>
-        <t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe for
+        <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe">OpenAjax Hub documentation</eref> for
     more information</t>
     </t>
     </section>
@@ -4512,14 +4512,14 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
                     subscribe(...) method.</c>
             </texttable>
         </t>
-        <t>See http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe for
+        <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe">OpenAjax Hub documentation</eref> for
             more information.</t>
          </section>
      
         </section>
         <section title="Other Methods" anchor="OtherMethods">
             <t>The 'gadgets.Hub' object is an instance of IframeHubClient and supports some additional methods.  
-            Please see the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.IframeHubClient">OA Hub specification</eref> for more information.</t>
+            Please see the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.IframeHubClient">OpenAjax Hub documentation</eref> for more information.</t>
         </section>   
         </section>
             
@@ -4601,7 +4601,7 @@ gadgets.util.registerOnLoadHandler(function() {
         <t>
             See
             <eref
-                target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor">http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor</eref>
+                target="http://openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.HubClient_constructor">OpenAjax Hub 2.0 Specification document</eref>
             for more information.
         </t>
     </section>
