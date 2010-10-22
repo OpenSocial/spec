@@ -1414,7 +1414,7 @@ gadgets.io.makeRequest(url, callback, params);
        gadget making the request.</t>
        <section title="Deprecated xoauth_app_url parameter">
        <t>
-        When using Signe Fetch, the param used to indicate the URL of the
+        When using Signed Fetch, the param used to indicate the URL of the
         application making the request is "opensocial_app_url". This has the
         same semantic as " xoauth_app_url". In order to
         be consistent, the same identifier will be used for OAuth. Containers
