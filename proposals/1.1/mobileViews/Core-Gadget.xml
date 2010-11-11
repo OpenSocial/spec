@@ -633,7 +633,7 @@
      <t>Contains the run time portion of the gadget.</t>
      <list style="hanging">
       <t hangText="@type" anchor="Type">REQUIRED. The type of content included in the body of this
-      element. Valid values are "html" and "url". Containers MUST interpret the
+      element. Valid values are "html", "url" and "wap". Containers MUST interpret the
       body of this element according to the specific processing rules for each
       type.
       <t>When /Content/@type is "html", Containers MUST perform 
@@ -653,6 +653,7 @@
      <xref target="RequireAndOptional">/ModulePrefs/Require and /ModulePrefs/Optional</xref> elements in the Gadget.</t>
     </list>
       </t>
+      <t>When /Content/@type is "wap", Containers MAY render the content for feature-phone devices based on WAP, if the container want to support their devices. OpenSocial WAP Extension specification is adopted for supporting it.</t>
       </t>
       <t hangText="@href">A URL pointing to an external file containing the
       body of this element.
