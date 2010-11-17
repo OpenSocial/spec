@@ -3,20 +3,15 @@
 <?rfc toc="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN" "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-mobile-extension-specification-draft"
+     docName="opensocial-mobile-extension-specification"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <front>
-    <title abbrev="Mobile-Extension">OpenSocial Mobile Extension Specification (draft)</title>
-    <author fullname="Yoichiro Tanaka (mixi, Inc)">
-      <address>
-        <email>yoichiro.tanaka@mixi.co.jp</email>
-      </address>
-    </author>
-    <author fullname="Hidetaka Yamashita (mixi, Inc)">
-      <address>
-        <email>hidetaka.yamashita@mixi.co.jp</email>
-      </address>
-    </author>
+    <title abbrev="Mobile-Extension">OpenSocial Mobile Extension Specification</title>
+    <author fullname='OpenSocial and Gadgets Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
     <date month="November"
           year="2010" />
     <area>Mobile</area>
