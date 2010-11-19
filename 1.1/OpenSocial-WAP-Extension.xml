@@ -3,10 +3,10 @@
 <?rfc toc="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN" "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-mobile-extension-specification"
+     docName="opensocial-wap-extension-specification"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <front>
-    <title abbrev="Mobile-Extension">OpenSocial Mobile Extension Specification</title>
+    <title abbrev="WAP-Extension">OpenSocial WAP Extension Specification</title>
     <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -34,7 +34,7 @@
     </section>
     <section title="Overview">
       <t>In OpenSocial specification version 1.0, JavaScript APIs for developing applications that run on Web browsers are provided. These APIs are available only if JavaScript codes are supported. However, most Web browsers available on cell-phones based on WAP currently do not support JavaScript and an iframe tag. Many people access the Internet from their cell-phones and use social networking services. There are even countries where access to the Internet is seen more from cell-phones than from PCs. In order for social applications to further develop, we CANNOT ignore support to cell-phones based on WAP.</t>
-      <t>OpenSocial Mobile Extension specification is a profile for cell-phones which do not support JavaScript codes. An application developed by this profile uses an OpenSocial RESTful API to retrieve the social graph of a SNS. This document describes an architecture and features commonly provided in OpenSocial Mobile Extension. SNS that want to provide a social application for cell-phones SHOULD support features described in this profile.</t>
+      <t>OpenSocial WAP Extension specification is a profile for cell-phones which do not support JavaScript codes. An application developed by this profile uses an OpenSocial RESTful API to retrieve the social graph of a SNS. This document describes an architecture and features commonly provided in OpenSocial WAP Extension. SNS that want to provide a social application for cell-phones SHOULD support features described in this profile.</t>
     </section>
     <section title="Compliance">
       <t>In order to become a compliant Application Container, a server MUST be able to satisfy the requests defined in this section.</t>
@@ -82,6 +82,7 @@
       <section title="View for cell-phone">
         <t>In this specification, a special view is defined for social applications for the cell-phones. The view type is called "wap". This view is defined using a Content element in the Gadget spec file. Thus, this definition is the same with the definition of Gadgets for PC.</t>
         <t>The "wap" is specified as the attribute value of the Content element type. And, the Start URL is specified as the "href" attribute value. The Content element may not contain a body, since the server specified by the Start URL will generate the contents.</t>
+        <t>The "wap" feature is defined in this specification, because this WAP extension is optional. Application developers MUST declare to use the "wap" feature using a "Require" element. If the "wap" feature is not declared, its gadget can not provide any functions for WAP-phone devices using the "wap" view type.</t>
       </section>
       <section title="Example">
         <t>
@@ -90,6 +91,7 @@
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;Module&gt;
   &lt;ModulePrefs title="App for Cell-phone"&gt;
+    &lt;Require feature="wap" /&gt;
   &lt;/ModulePrefs&gt;
   &lt;Content view="any" type="wap" href="http://start.url/" /&gt;
 &lt;/Module&gt;
@@ -106,6 +108,7 @@
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;Module&gt;
   &lt;ModulePrefs title="App for Cell-phone"&gt;
+    &lt;Require feature="wap" /&gt;
   &lt;/ModulePrefs&gt;
   &lt;Content view="mobile" type="wap" href="http://start.url/" /&gt;
   &lt;Content view="canvas" type="html"&gt;&lt;[CDATA[
@@ -123,6 +126,7 @@
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;Module&gt;
   &lt;ModulePrefs title="App for Cell-phone"&gt;
+    &lt;Require feature="wap" /&gt;
     ...
   &lt;/ModulePrefs&gt;
   &lt;Content view="any" type="wap" href="http://start.url/"&gt;
