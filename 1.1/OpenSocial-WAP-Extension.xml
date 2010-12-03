@@ -33,17 +33,18 @@
       <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
     </section>
     <section title="Overview">
-      <t>In OpenSocial specification version 1.0, JavaScript APIs for developing applications that run on Web browsers are provided. These APIs are available only if JavaScript codes are supported. However, most Web browsers available on cell-phones based on WAP currently do not support JavaScript and an iframe tag. Many people access the Internet from their cell-phones and use social networking services. There are even countries where access to the Internet is seen more from cell-phones than from PCs. In order for social applications to further develop, we CANNOT ignore support to cell-phones based on WAP.</t>
-      <t>OpenSocial WAP Extension specification is a profile for cell-phones which do not support JavaScript codes. An application developed by this profile uses an OpenSocial RESTful API to retrieve the social graph of a SNS. This document describes an architecture and features commonly provided in OpenSocial WAP Extension. SNS that want to provide a social application for cell-phones SHOULD support features described in this profile.</t>
+      <t>OpenSocial Containers have a standard design that provides JavaScript APIs for enabling rich web applications within a Web browser via an IFrame sandbox. This works well for the typical use case, since most modern web browswers have support JavaScript as well as IFrames. However, when running applications on WAP enabled devices, JavaScript &amp; IFrames are not always available. As it stands today, OpenSocial Gadgets cannot run on most WAP devices.</t>
+   		Many people access the Internet via mobile devices. There are even countries where Internet access is more available on mobile devices than PCs.
+      <t>The OpenSocial WAP Extension is defines how to support mobile devices which do not support JavaScript or IFrames. An application Requiring this extension uses OpenSocial RESTful APIs to retrieve OpenSocial Data, such as Social Data from a Social Networking Site (SNS.) This document describes an architecture and common features required to enable an OpenSocial WAP Server via this OpenSocial WAP Extension. An implementation wishing to support WAP devices SHOULD support features described in this document.</t>
     </section>
     <section title="Compliance">
-      <t>In order to become a compliant Application Container, a server MUST be able to satisfy the requests defined in this section.</t>
+      <t>To be considered an OpenSocial WAP Container, a site must fulfill all the requirements for a Social API Server and those specified in this document.</t>
       <section title="Process flow">
-        <t>For a better understanding this process flow is introduced below.</t>
+        <t>The process flow is visualed in a diagram to better understand the interaction.</t>
         <figure>
             <preamble>Process flow:</preamble>
             <artwork xml:space="preserve">
-[cell-phone]   [application container]   [external server]
+[cell-phone]   [OpenSocial Container]   [external server]
       |                   | Retrieve Start URL -&gt; |
       | Accept Request -&gt; |                       |
       |                   |   Forward Request -&gt;  |
@@ -53,36 +54,35 @@
           </figure>
       </section>
       <section title="Retrieve Start URL Request">
-        <t>Application Containers MUST be able to fetch a gadget spec file, and MUST be able to retrieve a Start URL written in the file.</t>
-        <t>Gadget spec file SHOULD be retrieved from the URL provided to the Container by the developer. Application Containers MUST parse the retrieved gadget XML file, and MUST get the Start URL written in the file. This Start URL is the destination of the first request sent when users launch an application.</t>
-	<t>The view for WAP-phone device in this profile has the content type "wap". Application Container finds the Content element which has the "wap" value as the value of the attribute "type". The Start URL is written as the value of the href attribute. Generally, Application Container will download the Gaget spec file when the developer registers the application and Application Container retrieves the Start URL from the Gadget spec file at same time.</t>
+        <t>An OpenSocial Container MUST be able to fetch a gadget spec XML, and MUST be able to retrieve a Start URL written included in the ModulePrefs.</t>
+        <t>A Gadget spec XML SHOULD be retrieved from the URL provided to the Container by the developer. OpenSocial Containers MUST parse the retrieved gadget file, and MUST get the Start URL written in the file. This Start URL is the destination of the first request sent when users launch an application.</t>
+	<t>A view for WAP-enabled devices MUST have content type "wap." This is defined in the Gadget spec XML as a Content element which has an attribute "type" &amp; value "wap." The Start URL is the value of the href attribute in the same Content element.</t>
       </section>
       <section title="Accept Request">
-        <t>Application Containers MUST be able to accept requests from the cell-phone, and MUST be able to verify the content and also add necessary information.</t>
-        <t>Basically, all requests from an application running on a cell-phone SHOULD be processed by the application container. The content of the request accepted by the Container SOULD be verified, and Application Container SHOULD remove unnecessary information from the request. And, information of the user who activated the application and the application's ID MUST be added to the request by the Application Container.</t>
-	<t>For example, there is a case that some IDs or identifiers which can specify the individual and should not send them to the application developer is sent from the cell-phone to the application container. In this case, the application container needs to remove these information from the request. If these information is sent to the application developer, it may be told a information leaking.</t>
-	<t>Application Container MUST add information of the user to the request so that the application has a capability of a social. The application developer can know who do use the application by retrieving the user ID included the request.</t>
-      </section>
+        <t>OpenSocial Containers MUST be able to accept requests from the cell-phone, and MUST be able to verify the content and also add necessary information.</t>
+        <t>All requests from an application running on a mobile device SHOULD be processed by the OpenSocial Container. The content of the request accepted by the Container SHOULD be verified, and the OpenSocial Container SHOULD remove unnecessary information from the request.</t>
+		<t>Requested information about the user MUST conform to section 2.5 of the Social Data specification. The application's unique identifier MUST be added to the request by the OpenSocial Container. There are cases that some information should not be relayed to the application, such a personally-identifable information. In this case, the OpenSocial Container SHOULD remove such information from the request. The OpenSocial Container MAY add additional information about the user to the request so it may leverage their social data.</t>
+	</section>
       <section title="Forward Request">
-        <t>Application Containers MUST be able to forward verified requests to an external server of the developer used for building contents.</t>
-        <t>If a request includes a URL parameter, the application container will forward the request to the server specified in the URL parameter. Also, if the request does not include a URL parameter, the application container will forward the request to the Start URL. At this timing, user information and the application ID added during the previous phase are sent to the server. In order for the developer's server to be able to verify whether the request is valid or not, the application container SHOULD have a signature in the request.</t>
+        <t>OpenSocial Containers MUST be able to forward verified requests to an external server.</t>
+        <t>If a request includes a URL parameter, the OpenSocial Container will forward the request to the server specified in the URL parameter. If the request does not include a URL parameter, the OpenSocial Container will default the request to the Start URL. At this point, user information and the application identifiers added from the previous phase are sent to the server. To validate the request, the OpenSocial Container SHOULD have a signature in the request.</t>
       </section>
       <section title="Receive Response">
-        <t>Application Container MUST be able to receive a response including content built by the developer's external server.</t>
-        <t>The received contents will be validated and transformed by the application container. For example, the application container MAY add a header and footer to the content. In addition, the application container MAY replace the URL written in the contents, such as of an image, and MAY remove invalid codes (JavaScript code and etc). Furthermore, in order to allow usage of functions with a user flow specific codes SHOULD be replaced by the application container during this phase.</t>
-        <t>The response time from the developer's external server may severely delay. Application Container MAY limit the available length of response time. If the response is not received within the valid period of time, the application container will display the error page to the user.</t>
+        <t>An OpenSocial Container MUST be able to receive a response including content generated on a developer's external server.</t>
+        <t>The received contents will be validated and transformed by the OpenSocial Container. For example, the OpenSocial Container MAY add a header and footer to the content. In addition, the OpenSocial Container MAY replace the URL written in the contents, such as an image, and MAY remove invalid codes (JavaScript code and etc). Furthermore, in order to allow usage of functions with a user flow specific codes SHOULD be replaced by the OpenSocial Container during this phase.</t>
+        <t>If an external server has a slow response time, an OpenSocial Container MAY enforce a request timeout. If a response is not received within a reasonable amount of time, the OpenSocial Container will display an error page to the user.</t>
       </section>
       <section title="Response Page">
-        <t>The application container MUST send the fixed page to the user's cellphone.</t>
-        <t>The page which has been fixed during the previous phase is then sent from the application container to the user's cell-phone. The user will take a new action from the displayed page. As a result of this action, a new request is then sent to the application container.</t>
+        <t>The OpenSocial Container MUST send the staic page to the user's mobile device.</t>
+        <t>The page which was rendered during the previous phase is then sent from the OpenSocial Container to the user's mobile device. The user may create an action on the page. As a result of this action, a new request is then sent to the OpenSocial Container.</t>
       </section>
     </section>
-    <section title="Gadget Spec file">
-      <t>This section describes the specification of Gadget Spec file of social applications for cell-phones.</t>
+    <section title="Gadget Spec XML">
+      <t>This section describes the Gadget Spec XML of applications for mobile devices.</t>
       <section title="View for cell-phone">
-        <t>In this specification, a special view is defined for social applications for the cell-phones. The view type is called "wap". This view is defined using a Content element in the Gadget spec file. Thus, this definition is the same with the definition of Gadgets for PC.</t>
+        <t>A view type is defined for applications that render on a mobile device. The view type is called "wap". This view is defined using a Content element in the Gadget spec XML, just like a Gadget view for a typical browser.</t>
         <t>The "wap" is specified as the attribute value of the Content element type. And, the Start URL is specified as the "href" attribute value. The Content element may not contain a body, since the server specified by the Start URL will generate the contents.</t>
-        <t>The "wap" feature is defined in this specification, because this WAP extension is optional. Application developers MUST declare to use the "wap" feature using a "Require" element. If the "wap" feature is not declared, its gadget can not provide any functions for WAP-phone devices using the "wap" view type.</t>
+        <t>Since the WAP extension is optional, application developers MUST declare the "wap" feature using a "Require" element. If the "wap" feature is not declared, its gadget will not render properly on WAP-enabled devices using the "wap" view type.</t>
       </section>
       <section title="Example">
         <t>
@@ -100,10 +100,10 @@
         </t>
       </section>
       <section title="Coexistence">
-        <t>The view for cell-phones can co-exist with other views. At the same time, multiple Content elements holding other view attributes can be written in the Gadget spec file.</t>
+        <t>The view for cell-phones can co-exist with other views. At the same time, multiple Content elements holding other view attributes can be written in the Gadget spec XML.</t>
         <t>
           <figure>
-            <preamble>The following code is the example to have two Content elements:</preamble>
+            <preamble>The following code is an example having two Content elements:</preamble>
             <artwork xml:space="preserve">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;Module&gt;
@@ -120,7 +120,7 @@
         </t>
       </section>
       <section title="Data Pipelining and Proxied Content">
-        <t>This wap extension supports the Data Pipelining and Proxied Context. For instance, the content element which has the "wap" type can have some tags using Data Pipelining to provide the viewer, owner and the friends information for the external server. The sample code is like following:</t>
+        <t>This wap extension supports Data Pipelining and Proxied Context. For instance, the content element which has the "wap" type can Data Pipelining tags to provide the Viewer, Owner and Friend information to an external server. For example:</t>
         <figure>
             <artwork xml:space="preserve">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
@@ -135,33 +135,33 @@
 &lt;/Module&gt;
             </artwork>
         </figure>
-        <t>The results of the data pipelining requests will be sent to the href of the &lt;Content&gt; section as POSTed JSON data. These information will be used by the external server to render the social data.</t>
+        <t>The results of the data pipelining requests will be sent to the URL specified in the href of the &lt;Content&gt; section as POSTed JSON data. This information can be used by an external server to render Social Data.</t>
       </section>
     </section>
     <section title="Request and Response">
-      <t>This section describes the request sent from the application container and the expected response.</t>
+      <t>This section describes the request sent from an OpenSocial Container and the expected response.</t>
       <section title="Request">
-        <t>The content of the request and the conditions to determin which target server to send requests by the application container are described here.</t>
+        <t>The content of the request and the conditions to determine which target server to send requests by the OpenSocial Container are described here.</t>
         <section title="Forwarding target">
-          <t>When the application container receives a request from the cell-phone, the target to forward to will differ depending on the condition. In other words, it is decided based on whether a url parameter is included or not in the request. The condition is described in the following:</t>
+          <t>When the OpenSocial Container receives a request from mobile device, the forwarding target URL will differ depending on certain conditions. The conditions are described in the following:</t>
           <texttable align="left">
             <ttcol>Request URL example</ttcol>
             <ttcol>Include url parameter?</ttcol>
             <ttcol>Forwarding target</ttcol>
             <c>http://application.container/app_id</c>
             <c>No</c>
-            <c>Start URL written on Gadget Spec file.</c>
+            <c>Start URL written on Gadget Spec XML.</c>
             <c>http://application.container/gadgets/ifr?url=http%3A%2F%2Fexternal.server%2gadget.xml&amp;st=abcdefg&amp;...</c>
             <c>No</c>
-            <c>Start URL written on Gadget Spec file specified by the url parameter included in the query parameters.</c>
+            <c>Start URL written on Gadget Spec XML specified by the url parameter included in the query parameters.</c>
             <c>http://application.container/app_id?url=http%3A%2F%2Fexternal.server%2Fpath1%2Fpath2</c>
             <c>Yes</c>
             <c>http://external.server/path1/path2</c>
           </texttable>
         </section>
         <section title="Request patameters">
-          <t>The request sent from the cell-phone will be forwarded to the external server of the developer (Forward Request). The application container will add several parameters to the request, when forwarding the request. The purpose to add these parameters is to add socialness to the application.</t>
-          <t>The parameters generally often added are the following:</t>
+          <t>The request sent from the mobile device will be forwarded to a developer's external server (Forward Request). The OpenSocial Container will add several parameters to the request while forwarding. Typically the parameters will include Social Data.</t>
+          <t>The parameters typically added are the following:</t>
           <texttable align="left">
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
@@ -188,18 +188,18 @@
             <c>The IP address of the access origin.</c>
             <c>Optional</c>
           </texttable>
-          <t>The application developer can generate suitable contents for the device the user is  using by referencing the User-Agent request header.</t>
-          <t>In addition, the application container MAY remove several parameters included in the request received request from the cell-phone. At times the request may include privacy information in addition to ID used within the SNS to identify an individual. Such information SHOULD be removed by the application container to protect the user's privacy.</t>
-          <t>If the Data pipelining is used in the Content element, the social data will be sent with the above parameters as JSON format included the POST body.</t>
+          <t>The application developer can generate the appropriate content for the device by referencing the User-Agent request header.</t>
+          <t>In addition, the OpenSocial Container MAY remove parameters included in the request sent to the mobile device, such as persoanlly-identifiable information. Such information SHOULD be removed by the OpenSocial Container to protect the user's privacy.</t>
+          <t>If Data pipelining is used in the Content element, social data will be sent with the above parameters as JSON in POST body.</t>
         </section>
       </section>
       <section title="Response">
-        <t>The application container expects to receive XHTML content responses. The format must be parseable by the application container. If the application container cannot parse the contents in XHTML format, the application container will return an error to the external server which generated the contents.</t>
+        <t>The OpenSocial Container expects to receive XHTML content responses. The format must be parseable by the OpenSocial Container. If the OpenSocial Container cannot parse the contents in XHTML format, the OpenSocial Container will return an error to the external server which generated the contents.</t>
         <t>The user's profile information retrieved from an OpenSocial RESTful API will be included in the contents of the external server. Also, the contents may change accordingly to the User-Agent parameter included in the request.</t>
-        <t>Parts of the contents will be replaced by the application container. The purpose is to support User Flow functions and to replace the url parameter.</t>
+        <t>Parts of the contents will be replaced by the OpenSocial Container. The purpose is to support User Flow functions and to replace the url parameter.</t>
         <section title="Replacing URLs">
-          <t>To assure that the request from the cell-phone always get through the application container, the application container MUST replace URLs written in the content generated by the external server. The tags for navigating pages (i.e. a tag and form tag) are the target tags of such replacement.</t>
-          <t>Application developers can write the specific URL they wish to retrieve on the external server as the value of the href or action attribute. For example, the URL is replaced simillar to the following.</t>
+          <t>To ensure that the request from the mobile device always honored by the OpenSocial Container, the OpenSocial Container MUST replace URLs written in the content generated by the external server. Suchs URL include links for navigating around pages (i.e. a tag and form tag.)</t>
+          <t>Application developers can write the specific URL they wish to retrieve on the external server as the value of the href or action attribute. For example, the URL is replaced similar to the following.</t>
           <t>Before:</t>
           <figure>
             <artwork xml:space="preserve">
@@ -222,7 +222,7 @@
           </figure>
         </section>
         <section title="User Flow functions">
-          <t>With user flow functions, the specific URL schema written by the application developer will be replaced automatically to the complete URL by the application container. The purpose is to navigate the user to the page prepared by the application container. For example, when using the function to invite friends to an application, the URI schema will be replaced like the following.</t>
+          <t>With user flow functions, the specific URL schema written by the application developer will be replaced automatically to the complete URL by the OpenSocial Container. The purpose is to navigate the user to the page prepared by the OpenSocial Container. For example, when using the function to invite friends to an application, the URI schema will be replaced like the following.</t>
           <t>Before:</t>
           <figure>
             <artwork xml:space="preserve">
@@ -239,13 +239,13 @@
       </section>
     </section>
     <section title="Validation">
-      <t>the application container will send a request to generate the contents to the external server. The external server must validate whether the sender of the request is the actual application container or not.</t>
-      <t>Several methods to check the validness of the request exist. The most popular adopted method is the method of giving a signature to the request. The external server can validate the request by checking the signature added by the application container. HMAC-SHA1, RSA-SHA1 etc, can be applied as methods for generating a signature.</t>
+      <t>The OpenSocial Container will send a request to generate the contents to an external server. The external server must validate whether the sender of the request is the actual OpenSocial Container.</t>
+      <t>Several methods to check the validness of the request exist. The most common method is to validate the request is using a signature. The external server can validate the request by checking the signature added by the OpenSocial Container. HMAC-SHA1, RSA-SHA1 etc, can be applied as methods for generating a signature.</t>
       <t>An example on how to generate a signature with HMAC-SHA1 is introduced in the section, [Generating the signature with OAuth].</t>
     </section>
     <section title="User Flow functions">
-      <t>The application container can provide functions with pages which the application container have already prepared. For example, if users want to invite friends to an application, the application container will navigate users to the page to select who to invite. After users finish selecting their friends, the application container will bring back users to the application's page. SUch function is called 'User Flow functions'.</t>
-      <t>Commonly used User Flow functions have been standardized in this specification. In addition, the application container can define a container-specific User Flow function. The URI schema is defined for each User Flow function to navigate users to an already parepared page. The application container MUST replace the URI schema to the page's URL.</t>
+      <t>The OpenSocial Container can pages which are pre-built by the OpenSocial Container. For example, if users want to invite friends to an application, the OpenSocial Container will navigate users to a page to select who to invite. After users finish selecting their friends, the OpenSocial Container will bring them back to the application's page. Such function is called 'User Flow functions'.</t>
+      <t>Commonly used User Flow functions have been standardized in this specification. In addition, the OpenSocial Container can define a container-specific User Flow function. The URI schema is defined for each User Flow function to navigate users to an already parepared page. The OpenSocial Container MUST replace the URI schema to the page's URL.</t>
       <section title="Format">
         <t>The application developer MUST use the User Flow function under the following format:</t>
         <figure>
@@ -272,13 +272,13 @@
           <c>callback</c>
           <c>The URL of the redirecting target to go back after completing the User Flow function. This URL MUST be URI-escaped.</c>
         </texttable>
-	<t>If the application container wants to return the result of the process to the application, the result value is added as the query parameter to the URL specified by the callback parameter.</t>
+	<t>If the OpenSocial Container wants to return the result of the process to the application, the result value is added as the query parameter to the URL specified by the callback parameter.</t>
       </section>
       <section title="Standard functions">
-	<t>In this section, specifications of commonly supported User Flow functions are described.</t>
+	<t>This section decribes commonly supported User Flow functions.</t>
 	<section title="Invitation">
 	  <t>URI schema: invite:friends</t>
-	  <t>Description: The application container navigates users to the page where they can select friends they want to invite to the application.</t>
+	  <t>Description: The OpenSocial Container navigates users to the page where they can select friends they want to invite to the application.</t>
 	  <t>Parameters:</t>
 	  <texttable align="left">
 	    <ttcol>Name</ttcol>
