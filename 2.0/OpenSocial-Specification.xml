@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-specification-2.0 DRAFT"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title abbrev="OpenSocial Specification">OpenSocial Specification 2.0 DRAFT</title>
+  <author fullname='OpenSocial and Gadgets Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="November"
+        year="2010" />
+  <area>General</area>
+  <keyword>OpenSocial</keyword>
+  <keyword>social networking</keyword>
+  <keyword>REST</keyword>
+  <keyword>XML</keyword>
+  <keyword>Extensible Markup Language</keyword>
+  <keyword>JSON</keyword>
+  <keyword>JavaScript Object Notation</keyword>
+  <keyword>Atom</keyword>
+ </front>
+ <middle>
+  <section title="Notation and Conventions">
+   <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in 
+   <xref target="RFC2119">RFC2119</xref>.</t>
+   <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+  </section>
+  <section title="Overview">
+   <t>OpenSocial is a set of APIs for building social applications that run on
+   the web. OpenSocial's goal is to make more apps available to more users, by
+   providing a common API that can be used in many different contexts.
+   Developers can create applications, using standard JavaScript and HTML, that
+   run on social websites that have implemented the OpenSocial APIs. These
+   websites, known as OpenSocial containers, allow developers to access their
+   social information; in return they receive a large suite of applications for
+   their users.</t>
+   <t>The OpenSocial APIs expose methods for accessing information about
+   people, their friends, and their data, within the context of a container.
+   This means that when running an application on Orkut, you'll be interacting
+   with your Orkut friends, while running the same application on MySpace lets
+   you interact with your MySpace friends. For more information on the types of
+   information exposed by the OpenSocial API, see the Key concepts section.</t>
+   <t>This document describes the concepts and principles behind the OpenSocial
+   JavaScript APIs. It is a complement to the JavaScript API Reference, which
+   covers the details of specific methods and parameters. This document does
+   not describe any particular implementation of the API.</t>
+  </section>
+    <section title="Concepts and Terminology">
+    <list style="hanging">
+     <t hangText="Container">The OpenSocial Container. It is typically
+     represented as a web page, but alternative forms that are capable of
+     displaying a gadget, such as a personal computer desktop or a mobile
+     device, are also accepted.</t>
+     <t hangText="Developer">The entity that has authored the gadget.</t>
+     <t hangText="Friend">The term "friend" is used throughout this specification and can be
+      applied to a variety of relationships between people, whether or not they are actually friends, business contacts, or related through a management hierarchy. The "friend" term can be used to describe either symmetric relationships or asymmetric relationships (such as followers, as in Twitter). Also, this term can be used to refer to a human, a system, or another entity. For example, a user may "follow" updates from a bug tracking system.</t>
+     <t hangText="User">This may refer to any OpenSocial Person, though in most
+     contexts it is referring to the Viewer of the gadget at runtime.</t>
+     <t hangText="Content">The primary entity in a gadget that will be
+     displayed to an end user. Currently only two types of Content are
+     supported by OpenSocial: 
+      <list style="hanging">
+       <t hangText="Type HTML">Type HTML gadgets are the most prevalent, and are 
+    imbued with the most rich feature set. Code is provided directly in the 
+    gadget XML content section for rendering and control flow. This code simply 
+    assumes that functionality is available that has been requested from 
+    whatever gadget features were declared. In the case of optional-declared 
+    features, a simple feature-existence API can and should be consulted to 
+    ensure the capability is enabled. The code is processed by a gadget server 
+    and rendered in an IFRAME.</t>
+       <t hangText="Type URL">Type URL gadgets only specify a base URL. A standard 
+    set of parameters are added to this URL by the gadget server, which renders 
+    the gadget in an IFRAME. The application to which the URL points must 
+    include a referenced JavaScript library using a &lt;script&gt; tag as it 
+    renders, to enable gadget APIs to be made available. Type URL gadgets can't 
+    take advantage of all features, notably features that manipulate HTML and 
+    JavaScript code directly. However, this gadget type has proven highly useful
+    for turning existing web sites or applications into gadgets.</t>
+      </list>
+      Multiple Content sections may be specified in gadget XML. Each is
+   labeled with one or more optional view identifiers, which allow the gadget
+   to behave or appear differently depending on the context in which it's
+   rendered. This context is provided by the gadget container.</t>
+     <t hangText="Metadata">Any piece of information attached to a gadget, such
+     as a title, author name, or description, that provides processing
+     instructions to the Container, or otherwise does not directly impact
+     gadget rendering.</t>
+     <t hangText="Feature">A library or behavior that is provided by the
+     Container and triggered by use of the /ModulePrefs/Require or
+     /ModulePrefs/Optional tags. Gadget features are the primary extensibility mechanism employed by gadgets.
+   They often direct a gadget server to make new JavaScript APIs available to
+   rendering code, but may also manipulate the gadget's contents, for example
+   to add extended syntax. Examples of gadget features include OpenSocial
+   (provides gadgets with a rich set of social APIs), dynamic-height (enables
+   gadgets to resize themselves to an appropriate height), and tabs (a UI
+   library facilitating tabular navigation).</t>
+     <t hangText="Message Bundles">Message bundles are XML documents containing localization
+     information.  They allow developers to internationalize
+   their gadgets simply by adding name/message mappings corresponding to
+   whatever languages the developer chooses to support. These messages may be
+   accessed programmatically through the core JavaScript APIs provided to all
+   gadgets, or may be statically substituted into code using simple syntax.</t>
+     <t hangText="User Preferences">Referred to as "user prefs" or "prefs",
+     these represent configuration values for a User of the gadget. These are key/value pairs that form the basis of gadget
+   configuration and persistence. They are most often manipulable by users of
+   the gadget, and are persisted on behalf of a user so that the gadget has
+   access to them across multiple rendering requests. The gadget container is
+   typically responsible for providing their persistence for this data and an
+   interface to edit it.</t>
+     <t hangText="Gadget Specification XML">Generally referred to as "gadget
+     spec", or simply a "gadget", this is the XML document that contains all
+     the Metadata, Features, Message Bundles, User Preferences, and Content
+     necessary to display a gadget to an end user. A gadget spec is authored by
+     a Developer and made available through a public web server at a
+     well-defined URL so that Containers may use this URL as a canonical
+     reference for retrieving updates to the gadget.</t>
+     <t hangText="Formal Schema Directory">Any system used to hold a repository
+     of gadgets that may be installed by Users.</t>
+     <t hangText="View">A presentation mode for a gadget.</t>
+    </list>
+  </section>
+  <section title="Compliance"
+           anchor="Compliance">
+    <t>OpenSocial defines the following levels of compliance, each of
+which defines an encapsulated set of capabilities. OpenSocial has been structured
+this way to support a wide array of adoption use cases that are all considered compliant with the
+specification. For example, it is possible to only offer social
+APIs via REST and be considered a compliant OpenSocial Social API
+Server. Likewise, some implementors may choose to leverage only the
+gadget aspect of specification. In this case, they can be considered
+to be a compliant OpenSocial Core Gadget Server.</t>
+     <list style="hanging">
+      <t hangText="Core API Server">To be considered a Core API Server, a site MUST fulfill all the requirements defined in the <xref target="Core-API-Server">Core API Server Specification</xref>.</t>
+      <t hangText="Core Gadget Container">To be considered a Gadget Container, a site MUST fulfill all the requirements defined in the <xref target="Core-Gadget">Core Gadget Specification</xref>.</t>
+      <t hangText="Social API Server">To be considered a Social API Server, a site MUST be a Core API Server and MUST fulfill all the requirements defined in the <xref target="Social-API-Server">Social API Server Specification</xref>.</t>
+      <t hangText="Social Gadget Container">To be considered a Social Gadget Container, a site MUST be a Core Gadget Container and MUST fulfill all the requirements defined in the <xref target="Social-Gadget">Social Gadget Specification</xref>.</t>
+      <t hangText="OpenSocial Container">To be considered an OpenSocial Container, a site MUST fulfill all the requirements for an Social API Server and a Social Gadget Container.</t>
+     </list>
+   <t>In all cases, a site MUST fulfill the requirements in <xref target="Extensions">Extensions</xref>.</t>
+  </section>
+  
+  
+
+<section title="Extensions" anchor="Extensions">
+
+<t>
+	The objective of the OpenSocial extension model is to allow the
+	specification to mature by adding depth and richness to a set of
+	existing features while at the same time fostering organic growth of
+	new capability. That is, it should be possible to enhance existing
+	features as well as add new ones. A robust extension model enables the
+	OpenSocial community to manage the overall complexity of the
+	specification in a clearly documented consistent manner. This model has
+	the following benefits to the OpenSoicial community:</t>
+
+	Keeps the core specification focused on defining the base programming
+	model and social constructs.
+	Lowers the barriers of entry thereby promoting adoption and increasing
+	compatibility between implementations.
+	Fosters the evolution of niche-features while avoiding anarchy.
+	<t>This section defines the kinds of enhancements that we envision
+		being made to OpenSocial, as well as the rules they must follow in
+		order to be accepted into the specification. </t>
+	<t>
+	An extension is defined in a document, called an OpenSocial
+	Enhancement (OE), with language and formatting that is consistent in
+	terminology and semantics with the specification. As the extension
+	develops, it MUST conform to the guidelines and life cycle defined in
+	the OpenSocial Development Process. For example, extensions are
+	required to provide a publically available prototype that demonstrates
+	that it can be implemented as well as a corresponding set of test
+	cases. Extensions MUST be defined in a manner that is consistent with
+	the programming model defined in the versions of the specification to
+	which they apply. Containers that offer OpenSocial extensions MUST
+	adhere to the requirements specified in this specification as well as any
+	requirements specified in the extension document. 
+		
+		
+		
+		</t>
+	<t>Generally speaking, we anticipate OpenSocial to be extended
+		following three patterns. Not coincidentally, these extension patterns
+		follow the typical use cases of OpenSocial that are reflected in the
+		structure of the specification. </t>
+	<list style="symbols">
+		<t>Adding a new gadget feature</t>
+		<t>Extending the social data models</t>
+		<t>Extending the protocol</t>
+</list>
+
+<section title="Adding a new Gadget Feature">
+	<t>The OpenSocial programming model consists of a collection of
+		Javascript APIs declared as features. There are two kinds of features,
+		core and optional. For example, the core API gadgets.viewes.View
+		defines how gadgets work with and request different amounts of real
+		estate in the browser. An example optional feature is gadgets.skins..
+		Because of the existing separation between core and optional features,
+		OpenSocial is already layered to handle gadget extensions. In order to avoid undue burden on
+		implementation of domain specific or container specific behavior,
+		extensions MUST NOT be required. </t>
+	<t>As OpenSocial becomes deployed more widely, the number of extensions
+		will increase. It will be important that new features avoid clashing
+		with those currently defined in the specification. New features that
+		are proposed for inclusion of OpenSocial MUST NOT use any existing
+		namespaces that are already part of the specification. It is the
+		responsibility of the developer proposing the new feature to avoid
+		namespace collisions. </t>
+	<t>Features that are progressing through the OpenSocial enhancement
+		lifecycle MUST include the lifecycle designator for the stage they are
+		in as the suffix, delineated by a “.” of their name. For example,
+		suppose that pub-sub is being proposed as a new feature. The community
+		has been working on it and a proposal is available publically. The
+		feature name should be: “pub-sub.incubating” </t>
+
+<figure>
+      <preamble> An example module definition would be:</preamble>
+      <artwork xml:space="preserve">
+
+&lt;Module&gt;
+ &lt;ModulePrefs title="Social Activities World"
+              icon="http://localhost:8080/gadgets/files/samplecontainer/examples/icon.png"&gt;
+   &lt;Require feature="opensocial"&gt;&lt;/Require&gt;
+   &lt;Require feature="pub-sub.incubating"&gt;&lt;/Require&gt;
+ &lt;/ModulePrefs&gt; 
+….
+</artwork>
+</figure>
+<t>This intent is to clearly indicate gadget developers that the OpenSocial community has not officially adopted the feature. Upon acceptance of the proposal as part of the specification, the feature name MUST drop the life cycle designator.</t>
+</section> <!-- Adding a new Gadget Feature -->
+
+	<section title="Extending the social data models">
+		<t>OpenSocial defines a set of data models that are used to represent
+			the social constructs in your system, e.g. people. An set of fields
+			has been defined for each one of these constructs. The initial
+			motivation for these fields was driven primarily from the standpoint
+			of Social Networking. </t>
+		<t>Fortunately, as OpenSocial begins to be used in more specialized
+			domains, the programming model is flexible enough to accommodate
+			these new fields. However, care must be taken as extensions are
+			introduced in order to avoid issues such as collisions in the
+			attribute names of the returned JSON Objects. Therefore, extensions
+			SHOULD use a prefix that uniquely identifies the extended fields. This prefix SHOULD be an underbar '_'. If
+			a feature is also added as part of the exetension, the data model
+			prefix SHOULD match a namespace declared in the Javascript. </t>
+		<t>It is possible to simply append new fields into the existing
+			models and some providers currently follow this approach. However, it is RECOMMENDED that extensions to the OpenSocial
+			data models be encapsulated in their own node. This will provide a
+			level of isolation and layering within the models and provide a
+			consistent extension pattern. </t>
+			
+		<section title="A Note on XML Schema Validation">
+		<t>
+			In OpenSocial 1.0, the canonical XSDs do not contain extension points,
+			e.g.xs:any. Therefore, XML instance documents of extensions that have
+			added attributes ore elements to the data model or gadget metadata
+			will not validate.
+			Therefore, extensions MUST NOT require schema validation. Containers that are
+			not supporting extensions MAY validate the gadget metadata and the
+			data models.
+		</t>
+	</section>
+			
+	
+		<section title="Extensions Example" anchor="extensionsExample">
+		
+		<t>  	Below is an example of how the Person model has been
+				extended by two fictional organizations, Acme and DevWorld. Acme has been
+				using OpenSocial for some time, and has extended the modely by
+				appending a field, "Employee Number" directly into the data model. This approach shoudl
+				be used for
+				backwards compatibility with existing extensions. As new extensions are
+				proposed, they should follow the pattern illustrated by DevWorld,
+				which creates a containing element, "devWorldData", for their additions to the model.</t>
+
+	<figure>
+		<preamble>
+			Assuming the extensions have been made available via
+			features to the container, here is the example REST call that would
+			retreive the data.
+			</preamble>
+		<artwork xml:space="preserve"><![CDATA[
+http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fields=id&fields=name&fields=acme_EmployeeNumber&fields=devworld_nickname&fields=devworld_platform
+		]]></artwork>
+		<postamble>Notice in the request the use of the name and underbar
+	prefix, e.g. "devworld_", to help avoid collisions. In this example,
+	DevWorld allows their users to assign nicknames. Without a prefix, this
+	would clash with OpenSocial's Person nickname. 
+		</postamble>
+		</figure>		
+				
+	<figure>
+	<preamble>
+		The result of this request will produce an XML document with the
+		following structure.
+			</preamble>
+	<artwork xml:space="preserve"><![CDATA[			
+<?xml version="1.0" encoding="UTF-8"?>
+<response xmlns="http://ns.opensocial.org/2008/opensocial"><person xmlns="http://ns.opensocial.org/2008/opensocial">
+  <acme__EmployeeNumber>1122998877</acme__EmployeeNumber>
+  <devWorldData>
+    <entry>
+      <key>devworld_nickname</key>
+      <value>The Wiz...</value>
+    </entry>
+    <entry>
+      <key>devworld_platform</key>
+      <value>Mac</value>
+    </entry>
+  </devWorldData>
+  <id>john.doe</id>
+  <name>
+    <familyName>Doe</familyName>
+    <formatted>John Doe</formatted>
+    <givenName>John</givenName>
+  </name>
+</person>
+</response>
+]]>
+</artwork>
+</figure>
+				
+		<figure>
+			<preamble>
+			Omitting the "type=XML" query parameter from the request will return a JSON document.  
+			</preamble>
+			<artwork><![CDATA[
+[{"id":"viewer","data":{"acme_EmployeeNumber":"1122998877","devWorldData":{"devworld_nickname":"The Wiz..."},"id":"john.doe","name":{"formatted":"John Doe","familyName":"Doe","givenName":"John"},"displayName":"Johnny"}}]
+			]]>
+			</artwork>
+			</figure>
+		
+		
+				
+		</section> <!-- Extensions Example -->
+	
+	
+	</section> <!-- Extending the social data models -->
+
+<section title="Extending the protocol">
+	<t>
+	In some cases, it will be necessary to add APIs to support
+	additional
+	use cases outside the initial intent of the specification.
+	For example,
+	an alternate security model or
+	payment API may
+	be
+	introduced.
+	In these
+	scenarios developers MAY extend OpenSocial by
+	introducing new
+	APIs.
+	These kinds of additions to OpenSocial are called "protocol
+	extensions"
+	becuase they introduce new APIs. It is important that these
+	APIs be
+	consistent with the existing programming model. Protocol
+	extensions MUST
+	maintain the semantics of the OpenSocial and MUST NOT
+	modify any API
+	defined by the specification. Protocol exetensions
+	MUST
+	provide
+	endpoints in the required protocols as defined by the
+	specification,
+	e.g. XML, JSON, ATOM.
+
+	Protocol extensions SHOULD provide
+	extensions for each level of compliance as defined by the OpenSocial
+	specificaiton, e.g. REST APIs for the OpenSocial server as
+	well as constructs to support OSML and templating. 	
+
+		
+	</t>
+
+
+</section> <!-- Extending the protocol -->
+
+</section> <!-- Extensions Root -->
+
+
+
+  
+  
+  
+  
+ </middle>
+ <back>
+  <references>
+   <reference anchor='RFC2119'>
+    <front>
+     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+     <author initials='S.'
+             surname='Bradner'
+             fullname='Scott Bradner'>
+      <organization abbrev='HarvardU'>Harvard University</organization>
+     </author>
+     <date month='March'
+           year='1997' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2119' />
+   </reference>
+   <reference anchor='RFC2606'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='D.'
+             surname='Eastlake'
+             fullname='Donald E. Eastlake 3rd'>
+      <organization abbrev='IBM'>IBM</organization>
+     </author>
+     <author initials='A.'
+             surname='Panitz'
+             fullname='Aliza R. Panitz'></author>
+     <date month='June'
+           year='1999' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2606' />
+   </reference>
+   <reference anchor="Core-Gadget"
+              target="./Core-Gadget.xml">
+    <front>
+     <title>OpenSocial Core Gadget Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='November'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor="Core-API-Server"
+              target="./Core-API-Server.xml">
+    <front>
+     <title>OpenSocial Core API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='November'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor="Social-Gadget"
+              target="./Social-Gadget.xml">
+    <front>
+     <title>OpenSocial Social Gadget Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='November'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor="Social-API-Server"
+              target="./Social-API-Server.xml">
+    <front>
+     <title>OpenSocial Social API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='November'
+           year='2010' />
+    </front>
+   </reference>
+  </references>
+ </back>
+</rfc>
+

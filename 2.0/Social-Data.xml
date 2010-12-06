@@ -1,0 +1,1591 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-social-data-specification-2.0 DRAFT"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title>OpenSocial Social Data Specification 2.0 DRAFT</title>
+  <author fullname='OpenSocial and Gadgets Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="November"
+        year="2010" />
+  <abstract>
+   <t>This document defines all the data objects used in the
+   OpenSocial APIs. Objects defined here make use of the <xref
+   target="CoreData">Core Data</xref> objects. The structure of the
+   data is used by many different APIs: 
+   <list style="symbols">
+     <t>JavaScript within the gadget is done using osapi APIs,
+     defined in the <xref target="SocialGadget">Social Gadget
+     Specification</xref></t>
+     <t>REST and RPC access is done using APIs defined in the
+     <xref target="SocialServer">Social API Server Spec</xref></t>
+   </list>
+   </t> 
+  </abstract>
+ </front>
+ <middle>
+  <section title="Notation and Conventions">
+    <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+   <section title="Requirements">
+    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+    document are to be interpreted as described in 
+    <xref target="RFC2119">RFC2119</xref>.</t>
+    <t>An implementation is not compliant if it fails to satisfy one or more of
+    the MUST or REQUIRED level requirements for the protocols it
+    implements.</t>
+   </section>
+   <section title="Augmented BNF">
+    <t>The grammatical rules in this document are to be interpreted as
+    described in <xref target="RFC2234">RFC2234</xref> (Augmented Backus-Naur 
+    Form).</t>   
+    <t>The following constructs are introduced in this document to augment 
+    RFC2234:</t>
+    <list style="hanging">
+     <t hangText="{rule1 rule2}">
+      <t>Elements enclosed in braces (squiggly brackets) are treated as a
+      single, UNORDERED element. Its contents may occur in any order. Hence: 
+      <artwork type="abnf" xml:space="preserve">{elem foo} bar</artwork>
+      would match (elem foo bar) and (foo elem bar).</t>
+      <t>NOTE: Specifying alternatives is quite different from specifying set
+      grouping. Alternatives indicate the matching of exactly one (sub-)rule
+      out of the total grouping. The set mechanism indicates the matching of a
+      string which contains all of the elements within the group; however the
+      elements may occur in any order.</t>
+     </t>
+     <t hangText="#rule">A construct "#" is defined, similar to "*", for
+     defining lists of elements. The full form is "&lt;n&gt;#&lt;m&gt;element"
+     indicating at least &lt;n&gt; and at most &lt;m&gt; elements, each
+     separated by one or more commas (",") and OPTIONAL linear white space
+     (LWS). This makes the usual form of lists very easy; a rule such as 
+     <artwork type="inline" xml:space="preserve">( *LWS element *( *LWS "," *LWS element ))</artwork>
+     can be shown as 
+     <artwork type="inline" xml:space="preserve">1#element</artwork>
+     Wherever this construct is used, null elements are allowed, but do
+     not contribute to the count of elements present. That is, "(element), ,
+     (element) " is permitted, but counts as only two elements. Therefore, 
+     where at least one element is required, at least one non-null element MUST 
+     be present.  Default values are 0 and infinity so that "#element" allows 
+     any number, including zero; "1#element" requires at least one; and 
+     "1#2element" allows one or two.</t>
+     <t hangText="&amp;rule">A construct "&amp;" is defined, similar to "#",
+     which uses an ampersand (&amp;) instead of commas, and MUST NOT include
+     linear white space between elements.</t>
+     <t hangText="implied *LWS">The grammar described by this specification is
+     word-based. Except where noted otherwise, linear white space (LWS) can be
+     included between any two adjacent words (token or quoted-string), and
+     between adjacent words and separators, without changing the interpretation
+     of a field. At least one delimiter (LWS and/or separators) MUST exist
+     between any two tokens, since they would otherwise be interpreted as a
+     single token.</t>
+    </list>
+   </section>
+   <section title="Basic Rules">
+    <t>The following rules are used throughout this specification to describe
+    basic parsing constructs. The US-ASCII coded character set is defined by 
+    <xref target="RFC20" /> </t>
+    <artwork type="abnf"
+         xml:space="preserve">
+<![CDATA[
+OCTET          = <any 8-bit sequence of data>
+CHAR           = <any US-ASCII character (octets 0 - 127)>
+UPALPHA        = <any US-ASCII uppercase letter "A".."Z">
+LOALPHA        = <any US-ASCII lowercase letter "a".."z">
+ALPHA          = UPALPHA / LOALPHA
+DIGIT          = <any US-ASCII digit "0".."9">
+CTL            = <any US-ASCII control character (octets 0 - 31) and DEL (127)>
+CR             = <US-ASCII CR, carriage return (13)>
+LF             = <US-ASCII LF, linefeed (10)>
+SP             = <US-ASCII SP, space (32)>
+HT             = <US-ASCII HT, horizontal-tab (9)>
+<">            = <US-ASCII double-quote mark (34)>
+CRLF           = CR LF
+LWS            = [CRLF] 1*( SP / HT )
+TEXT           = <any OCTET except CTLs, but including LWS>
+COMMA          = <US-ASCII comma (44)>
+      ]]>
+</artwork>
+   </section>
+  </section>
+  <section title="Primary Social Data"
+           anchor="primary-social-data">
+    <t>Primary Social Data objects represent objects that are directly
+    addressable through top level API calls, such as osapi, RPC, REST
+    and Pipelining tags.</t>
+   <section title="Activity" anchor="Activity">
+    <t>An OpenSocial Activity represents a short summary or notification of a
+    timestamped event, often with pointers for more information.</t>
+    <t>Activities are rendered with a title and an optional activity body.  The title and body may be set directly as strings when calling
+     opensocial.newActivity. However, it is usually beneficial to create
+     activities using Message Templates for the title and body.</t>
+     <t>Users have many activities in their activity streams, and
+     containers may not show every activity that is visible to a user. To help
+     display large numbers of activities, containers summarize a list of
+     activities from a given source to a single entry.</t>
+     <t>You can provide Activity Summaries to customize the text shown when
+     multiple activities are summarized. If no customization is provided, a
+     container may ignore your activities altogether or provide default text
+     such as "Bob changed his status message + 20 other events like this."</t>
+     <list style="symbols">
+      <t>Activity Summaries always summarize around a specific key in a
+      key/value pair. This is so that the summary can say something concrete
+      (this is clearer in the example below).</t>
+      <t>Other variables have synthetic "Count" variables created with the
+      total number of items summarized.</t>
+      <t>Message ID of the summary is the message ID of the main template + ":"
+      + the data key</t>
+     </list>
+     <t>Example summaries: 
+     <figure>
+      <artwork xml:space="preserve">
+&lt;messagebundle&gt;
+    &lt;msg name="LISTEN_TO_THIS_SONG:Artist"&gt;
+        ${Subject.Count} of your friends have suggested listening to songs
+        by ${Artist}!
+    &lt;/msg&gt;
+    &lt;msg name="LISTEN_TO_THIS_SONG:Song"&gt;
+        ${Subject.Count} of your friends have suggested listening to ${Song}
+    !&lt;/msg&gt;
+    &lt;msg name="LISTEN_TO_THIS_SONG:Subject"&gt;
+        ${Subject.DisplayName} has recommended ${Song.Count} songs to you.
+    &lt;/msg&gt;
+&lt;/messagebundle&gt;
+</artwork>
+     </figure></t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>appId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>Specifying the application that this activity is associated with.</c>
+      <c>body</c>
+      <c>string</c>
+      <c>Specifying an optional expanded version of an
+      activity. Bodies may only have the following HTML tags: &lt;b&gt; &lt;i&gt;,
+      &lt;a&gt;, &lt;span&gt;. The container may ignore this formatting when
+      rendering the activity.</c>
+      <c>bodyId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>Specifying the body template message ID in the gadget spec.</c>
+      <c>externalId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>An optional ID generated by the posting application.</c>
+      <c>id</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>An ID that is permanently associated with this activity.</c>
+      <c>mediaItems</c>
+      <c>Array&lt;<x:ref>MediaItem</x:ref>&gt;</c>
+      <c>Any photos, videos, or images that should be associated with
+      the activity. Higher priority ones are higher in the list.</c>
+      <c>postedTime</c>
+      <c>string</c>
+      <c>Specifying the time at which this activity took place in
+      milliseconds since the epoch.</c>
+      <c>priority</c>
+      <c>number</c>
+      <c>A number between 0 and 1 representing the relative priority
+      of this activity in relation to other activities from the same
+      source.</c>
+      <c>streamFaviconUrl</c>
+      <c>string</c>
+      <c>Specifying the URL for the stream's favicon.</c>
+      <c>streamSourceUrl</c>
+      <c>string</c>
+      <c>Specifying the stream's source URL.</c>
+      <c>streamTitle</c>
+      <c>string</c>
+      <c>Specifing the title of the stream.</c>
+      <c>streamUrl</c>
+      <c>string</c>
+      <c>Specifying the stream's URL.</c>
+      <c>templateParams</c>
+      <c></c>
+      <c>A map of custom key/value pairs associated with this
+      activity. These are used for evaluation in templates. The
+      data has type Map&lt;String, Object&gt;. The object may be either a
+      String or an opensocial.Person. When passing in a person with
+      key PersonKey, can use the following replacement variables in
+      the template:
+       <list style="symbols">
+        <t>PersonKey.DisplayName - Display name for the person</t>
+        <t>PersonKey.ProfileUrl. URL of the person's profile</t>
+        <t>PersonKey.Id - The ID of the person</t>
+        <t>PersonKey - Container may replace with DisplayName, but may also
+        optionally link to the user.</t>
+       </list>
+      </c> 
+      <c>title</c>
+      <c>string</c>
+      <c>Specifying the primary text of an activity. Titles may only
+      have the following HTML tags: &lt;b&gt; &lt;i&gt;, &lt;a&gt;,
+      &lt;span&gt;. The container may ignore this formatting when
+      rendering the activity.</c>
+      <c>url</c>
+      <c>string</c>
+      <c>Specifying the URL that represents this activity.</c>
+      <c>userId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>ID of the user who this activity is for.</c>
+     </texttable>
+    <t>A minimal Activity example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "http://example.org/activities/example.org:87ead8dead6beef/self/af3778",
+ "title" : "&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;",
+ "updated" : "2008-02-20T23:35:37.266Z",
+ "body" : "Some details for some activity",
+ "bodyId" : "383777272",
+ "url" : "http://api.example.org/activity/feeds/.../af3778",
+ "userId" : "example.org:34KJDCSKJN2HHF0DW20394"
+}      
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;activity xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+  &lt;title&gt;&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;&lt;/title&gt;
+  &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;
+  &lt;body&gt;Some details for some activity&lt;/body&gt;
+  &lt;bodyId&gt;383777272&lt;/bodyId&gt;
+  &lt;url&gt;http://api.example.org/activity/feeds/.../af3778&lt;/url&gt;
+  &lt;userId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/userId&gt;
+&lt;/activity&gt;
+</artwork>
+    </figure>
+    <t>Activities have extensive Atom hoisting rules to ensure maximum compatibility with standard feed processing code: </t>
+    <list style="symbols">
+     <t>atom:entry/atom:title aliases "title"</t>
+     <t>atom:entry/atom:summary aliases "body"</t>
+     <t>atom:entry/atom:link@rel="self" aliases "url"</t>
+     <t>atom:entry/atom:icon aliases "faviconUrl"</t>
+     <t>atom:entry/atom:source/atom:title aliases "streamTitle"</t>
+     <t>atom:entry/atom:source/atom:link@rel="self" aliases "streamUrl"</t>
+     <t>atom:entry/atom:generator/atom:uri aliases "appId"</t>
+     <t>atom:entry/atom:author/atom:uri aliases "userId"</t>
+    </list>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+ &lt;title&gt;some activity&lt;/title&gt;&lt;!-- activity.title or activity.titleId --&gt;
+ &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;&lt;!-- postedTime, or datetime.utcnow() --&gt;
+ &lt;author&gt;
+   &lt;uri&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/uri&gt;
+   &lt;name&gt;John Smith&lt;/name&gt; 
+ &lt;/author&gt;
+ &lt;link rel="self" type="application/atom+xml" href="http://api.example.org/activity/feeds/.../af3778" /&gt;
+ &lt;link rel="alternate" type="application/json" href="http://example.org/activities/example.org:87ead8dead6beef/self/af3778" /&gt;&lt;!-- alternate JSON response --&gt;
+ &lt;content type="application/xml"&gt;
+    &lt;activity xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+      &lt;id&gt;http://example.org/activities/example.org:87ead8dead6beef/self/af3778&lt;/id&gt;
+      &lt;title type="html"&gt;&lt;a href=\"foo\"&gt;some activity&lt;/a&gt;&lt;/title&gt;
+      &lt;updated&gt;2008-02-20T23:35:37.266Z&lt;/updated&gt;
+      &lt;body&gt;Some details for some activity&lt;/body&gt;
+      &lt;bodyId&gt;383777272&lt;/bodyId&gt;
+      &lt;url&gt;http://api.example.org/activity/feeds/.../af3778&lt;/url&gt;
+      &lt;userId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/userId&gt;
+    &lt;/activity&gt;
+ &lt;/content&gt;
+&lt;/entry&gt;       
+</artwork>
+    </figure>Note: The title field is a string that may only have the following
+    html tags: &lt;b&gt;, &lt;i&gt;, &lt;a&gt;, &lt;span&gt;. The container may
+    ignore this formatting when rendering the activity.</t>
+   </section>
+   <section title="AppData" anchor="AppData">
+     <t>OpenSocial defines a data store that applications can use to
+     read and write user-specific data. This data store can be read by
+     anyone who can see the gadget, but only the VIEWER's data is
+     writable.</t>
+     <t>The keys that developers specify to index this data must only
+     contain alphanumeric (A-Za-z0-9) characters, underscore(_),
+     dot(.) or dash(-).</t>
+     <t>Since application data is often created based on user inputs,
+     OpenSocial containers perform automatic HTML escaping of all
+     application data. However, developers have the option of turning
+     off this escaping by setting the escapeType parameter on
+     newFetchPersonAppData and getField calls.</t>
+     <t>Because of the potential for abuse, containers MAY implement
+     quotas or rate limits to preserve their disk space.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>key</c>
+      <c>string</c>
+      <c>A unique value with respect to the context it is being stored
+      within (typically a person).</c>
+      <c>value</c>
+      <c>string</c>
+      <c>An arbitary string.</c>
+     </texttable>
+    <section title="An isolated AppData example."
+             anchor="appdataIsolatedExample">
+     <t>The first example is of a collection of key/value pairs for a
+     particular application/user pair: 
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+ "pokes" : 3,
+ "last_poke" : "2008-02-13T18:30:02Z"
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;entry&gt;
+    &lt;key&gt;pokes&lt;/key&gt;
+    &lt;value&gt;3&lt;/value&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;key&gt;last_poke&lt;/key&gt;
+    &lt;value&gt;2008-02-13T18:30:02Z&lt;/value&gt;
+  &lt;/entry&gt;
+&lt;/appData&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;  
+       &lt;pokes&gt;3&lt;/pokes&gt;
+       &lt;last_poke&gt;2008-02-13T18:30:02Z&lt;/last_poke&gt;
+   &lt;/appData&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;
+   &lt;url&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/url&gt;
+   &lt;name&gt;John Smith&lt;/name&gt;  
+ &lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+&lt;/entry&gt;        
+</artwork>
+     </figure></t>
+    </section>
+    <section title="An AppData Collection Example">
+     <t>In this example, a client has requested a collection of data that spans
+     multiple users. The result is a collection which, by default, is given a
+     special default JSON representation as a mapping from users to their data.
+     
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+ "entry" : {
+   "example.org:34KJDCSKJN2HHF0DW20394" : {"pokes" : 3, "last_poke" : "2008-02-13T18:30:02Z" },
+   "example.org:58UIDCSIOP233FDKK3HD44" : {"pokes" : 2, "last_poke" : "2007-12-16T18:30:02Z" }
+ }
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry&gt;
+ &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;personId&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/personId&gt;
+   &lt;entry&gt;
+     &lt;key&gt;pokes&lt;/key&gt;
+     &lt;value&gt;3&lt;/value&gt;
+   &lt;/entry&gt;
+   &lt;entry&gt;
+     &lt;key&gt;last_poke&lt;/key&gt;
+     &lt;value&gt;2008-02-13T18:30:02Z&lt;/value&gt;
+   &lt;/entry&gt;
+ &lt;/appData&gt;        
+ &lt;appData xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+   &lt;personId&gt;example.org:58UIDCSIOP233FDKK3HD44&lt;/personId&gt;
+   &lt;entry&gt;
+     &lt;key&gt;pokes&lt;/key&gt;
+     &lt;value&gt;2&lt;/value&gt;
+   &lt;/entry&gt;
+   &lt;entry&gt;
+     &lt;key&gt;last_poke&lt;/key&gt;
+     &lt;value&gt;2007-12-16T18:30:02Z&lt;/value&gt;
+   &lt;/entry&gt;
+ &lt;/appData&gt;
+&lt;/entry&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;feed xmlns="http://www.w3.org/2005/Atom&gt;
+ &lt;id&gt;...&lt;/id&gt;
+ &lt;title&gt;...&lt;/title&gt;
+ &lt;entry&gt;
+   &lt;content type="text/xml"&gt;
+     &lt;appData&gt;
+       &lt;pokes&gt;3&lt;/pokes&gt;
+       &lt;last_poke&gt;"2008-02-13T18:30:02Z"&lt;/last_poke&gt;
+     &lt;/appData&gt;
+   &lt;/content&gt;
+   &lt;title/&gt;
+   &lt;updated&gt;2008-02-13T18:30:02Z&lt;/updated&gt;
+   &lt;author&gt;&lt;url&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/url&gt;&lt;/author&gt;
+   &lt;id&gt;urn:guid:example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+ &lt;/entry&gt;
+ &lt;entry&gt;
+   &lt;content type="text/xml"&gt;
+     &lt;appData&gt;
+       &lt;pokes&gt;2&lt;/pokes&gt;
+       &lt;last_poke&gt;"2007-12-16T18:30:02Z"&lt;/last_poke&gt;
+     &lt;/appData&gt;
+   &lt;/content&gt;
+   &lt;title/&gt;
+   &lt;updated&gt;2007-12-16T18:30:02Z&lt;/updated&gt;
+   &lt;author&gt;&lt;url&gt;uurn:guid:example.org:58UIDCSIOP233FDKK3HD44&lt;/url&gt;&lt;/author&gt;
+   &lt;id&gt;urn:guid:example.org:58UIDCSIOP233FDKK3HD44&lt;/id&gt;  
+ &lt;/entry&gt;
+&lt;/feed&gt;        
+</artwork>
+     </figure></t>
+    </section>
+   </section>
+   <section title="Group"
+            anchor="Group">
+    <t>OpenSocial Groups are owned by people, and are used to tag or categorize
+    people and their relationships. Each group has a display name, an identifier which is unique within the
+    groups owned by that person, and a URI link.  A group may be a private, invitation-only, public or a personal group used to organize friends.</t>
+     <texttable align="left">
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>id</c>
+      <c><x:ref>Group-ID</x:ref></c>
+      <c>Unique ID for this group <x:highlight>Required</x:highlight>.</c>
+      <c>title</c>
+      <c>String</c>
+      <c>Title of group <x:highlight>Required.</x:highlight></c>
+      <c>description</c>
+      <c>String</c>
+      <c>Description of group <x:highlight>Optional</x:highlight>.</c>
+     </texttable>
+
+<t> A Group example: </t>
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "example.org:34KJDCSKJN2HHF0DW20394/friends",
+ "title" : "Peeps",
+}       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;group xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;
+  &lt;title&gt;Peeps&lt;/title&gt;
+&lt;/group&gt;       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;&lt;!-- group.id --&gt;
+ &lt;title&gt;Friends of John Smith&lt;/title&gt;&lt;!-- group.title + person.displayName --&gt;
+ &lt;updated&gt;2008-03-15T10:00:00Z&lt;/updated&gt;&lt;!-- last significant group change, or datetime.utcnow() --&gt;
+ &lt;author&gt;&lt;name&gt;John Smith&lt;/name&gt;&lt;/author&gt;&lt;!-- person.displayName --&gt;
+ &lt;link rel="alternate" type="application/json" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends" /&gt;
+ &lt;link rel="alternate" type="application/atom+xml" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends?format=atom" /&gt;
+ &lt;link rel="alternate" type="application/xml" href="http://example.org/people/example.org:34KJDCSKJN2HHF0DW20394/@friends?format=xml" /&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;group xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394/friends&lt;/id&gt;
+     &lt;title&gt;Peeps&lt;/title&gt;
+   &lt;/group&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>
+   </section>
+   <section title="Message"
+            anchor="Message">
+     <t>Valid definitions for Message-Field are listed in the table below.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>appUrl</c>
+      <c></c>
+      <c>Identifies the application that generated this message.</c>
+      <c>body</c>
+      <c></c>
+      <c>The main text of the message. HTML attributes are allowed and
+      are sanitized by the container.</c>
+      <c>bodyId</c>
+      <c></c>
+      <c>The main text of the message as a message template. Specifies
+      the message ID to use in the gadget xml.</c>
+      <c>collectionIds</c>
+      <c></c>
+      <c>Identifies the messages collection IDs this message is
+      contained in.</c>
+      <c>id</c>
+      <c></c>
+      <c>Unique ID for this message.</c>
+      <c>inReplyTo</c>
+      <c></c>
+      <c>Message ID, use for threaded comments/messages. Reference the
+      sematics of the Atom Threading model defined in rfc4685. URLs
+      should be mapped to Atom &lt;link rel="type" .../&gt;</c>
+      <c>recipients</c>
+      <c></c>
+      <c>Array of person IDs.</c>
+      <c>replies</c>
+      <c></c>
+      <c>Array of message ids. Reference the sematics of the Atom
+      Threading model defined in rfc4685. URLs should be mapped to
+      Atom &lt;link rel="type" .../&gt;</c>
+      <c>senderId</c>
+      <c></c>
+      <c>Id of person who sent the message.</c>
+      <c>status</c>
+      <c></c>
+      <c>Status of the message. (NEW, READ, DELETED).</c>
+      <c>timeSent</c>
+      <c></c>
+      <c>UTC time message was sent.</c>
+      <c>title</c>
+      <c></c>
+      <c>The title of the message. HTML attributes are allowed and are
+      sanitized by the container.</c>
+      <c>titleId</c>
+      <c></c>
+      <c>The title of the message as a message template. Specifies the
+      message ID to use in the gadget xml.</c>
+      <c>type</c>
+      <c></c>
+      <c>The title of the message.</c>
+      <c>updated</c>
+      <c></c>
+      <c>Last update for this message.</c>
+      <c>urls</c>
+      <c></c>
+      <c>List of related URLs for this message. Supported URL types
+      include 'alternate', alternate for for this mailbox (text/html
+      being the most common).</c>
+     </texttable>
+    <t>A Message example follows. For brevity, details of the 'sender' field,
+    an OpenSocial Person, are omitted. </t>
+    <figure>
+     <preamble>application/json representation</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "http://example.org/inbox/message/{msgid}",
+  "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+ "sender" : "{ "id" : ... }",
+ "title" : "You have a new messge from Joe",
+ "titleId" : "541141091700",
+ "body" : "Short message from Joe to some friend\/s",
+ "bodyId" : "5491155811231",  
+ "type" : "privateMessage",
+ "status" : "unread",
+ "data" : "..."
+}
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation</preamble>
+     <artwork xml:space="preserve">
+&lt;message xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+    &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
+    &lt;recipient&gt;example.org:AD38B3886625AAF&lt;/recipient&gt;
+        &lt;recipient&gt;example.org:997638BAA6F25AD&lt;/recipient&gt;
+        &lt;sender&gt;
+           &lt;person&gt;...&lt;/person&gt;
+        &lt;/sender&gt;
+        &lt;title&gt;You have a new messge from Joe&lt;/title&gt;
+        &lt;titleId&gt;541141091700&lt;/titleId&gt;
+        &lt;updated&gt;2008-09-29T23:35:37.266Z&lt;/updated&gt;
+        &lt;body&gt;Short message from Joe to some friend\/s&lt;/body&gt;
+        &lt;bodyId&gt;5491155811231&lt;/bodyId&gt;
+        &lt;type&gt;privateMessage&lt;/type&gt;
+        &lt;status&gt;unread&lt;/status&gt;
+        &lt;data&gt;...&lt;/data&gt;
+&lt;/message&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom" xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+    &lt;osapi:recipient&gt;example.org:AD38B3886625AAF&lt;/osapi:recipient&gt;
+    &lt;osapi:recipient&gt;example.org:997638BAA6F25AD&lt;/osapi:recipient&gt;
+    &lt;sender&gt;&lt;person&gt;...&lt;/person&gt;&lt;/sender&gt;
+    &lt;title&gt;You have a new message from Joe&lt;/title&gt;
+    &lt;id&gt;http://example.org/inbox/message/{msgid}&lt;/id&gt;
+    &lt;link rel="alternate" href="http://app.example.org/inbox/message/{msgid}"/&gt;
+    &lt;content&gt;Short message from Joe to some friend/s&lt;/content&gt;
+    &lt;status&gt;UNREAD&lt;/status&gt;
+    &lt;data&gt;...&lt;/data&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>
+    <t>The recipient may also include a type identifier. The osapi:recipient
+    supports two formats: </t>
+    <list style="numbers">
+     <t>For people: [container]:[identifier]</t>
+     <t>Specifying a group or a person:
+     [container]:[group|person]:[identifier]</t>
+    </list>
+    <figure>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"
+        xmlns:osapi="http://opensocial.org/2008/opensocialapi"&gt;
+ &lt;osapi:recipient&gt;example.org:group:AD38B3886625AAF&lt;/osapi:recipient&gt;
+ &lt;osapi:recipient&gt;example.org:person:997638BAA6F25AD&lt;/osapi:recipient&gt;
+ &lt;osapi:recipient&gt;example.org:6221226&lt;/osapi:recipient&gt;
+ &lt;title&gt;You have an invitation from Joe&lt;/title&gt;
+ &lt;id&gt;{msgid}&lt;/id&gt;
+ &lt;link rel="alternate" href="http://app.example.org/invites/{msgid}"/&gt;
+ &lt;content&gt;Click &lt;a href="http://app.example.org/invites/{msgid}"&gt;here&lt;/a&gt; to review your invitation.&lt;/content&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>
+    <t>The 'sender' field in the message representations is only needed when
+    receiving a message with a GET request. It is not required when POSTING a
+    new message as this information is represented by the {guid}. Using a
+    Person for the sender field allows a gadget to present meaningful
+    information about the message sender without requiring a separate request
+    for this information.</t>
+    <t>The 'data' field is used for information specific to the gadget that is
+    sending or displaying the message. It may be omitted in most messages. An
+    example is a message from a user asking to join a group. In the received
+    message to the group's owner(s), the 'data' field could contain the JSON or
+    XML representation of an OpenSocial Group.</t>
+
+    <figure>
+     <preamble>Sample JSON for Message</preamble>
+     <artwork xml:space="preserve">
+{
+   "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
+   "title" : "You have an invitation from Joe",
+   "body" : "Some content",
+   "type" : "EMAIL"
+}
+</artwork>
+    </figure>
+   </section>
+   <section title="Person"
+            anchor="Person">
+     <t>Each person returned MUST include the "id", "name", and
+     "thumbnailUrl" fields with non-empty values, but all other fields
+     are optional, and it is recognized that not all Service Providers
+     are able to provide data for all the supported fields. The field
+     list below is broad so that there is a standard field name
+     available among Service Providers that do support any of these
+     fields.</t>
+     <t>There are two special Person objects that can be requested
+     directly: the VIEWER and the OWNER. To understand the
+     distinction, imagine you're checking out a coworker's profile on
+     Orkut. In this case, you are the VIEWER and your coworker is the
+     OWNER. It's also common to view your own profile, in which case
+     you are both the VIEWER and the OWNER, and some applications may
+     choose to handle this case differently. OpenSocial also provides
+     for the case of anonymous viewing, where the gadget will not be
+     able to access the VIEWER's information.</t>
+     <artwork type="abnf">
+       <x:highlight>Person</x:highlight>   = "{"
+                      "id :" User-ID ","
+                      "displayName :" string ","
+                      [ #Person-Field ]
+                  "}"</artwork>
+     <t>Valid definitions for Person-Field are listed in the table below.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>aboutMe</c>
+      <c>string</c>
+      <c>A general statement about the person.</c>
+      <c>accounts</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Account</x:ref>&gt;</c>
+      <c>An online account held by this Person.</c>
+      <c>activities</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite activities.</c>
+      <c>addresses</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Address</x:ref>&gt;</c>
+      <c>A physical mailing address for this Person.</c>
+      <c>age</c>
+      <c>number</c>
+      <c>The age of this person. Sometimes sites might want to show
+      age without revealing the specific birthday.</c>
+      <c>anniversary</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
+      <c>The wedding anniversary of this person. The value MUST be a
+      valid <eref
+      target="./Core-Data.xml#Date">Date</eref>. The
+      year value MAY be set to 0000 when the year is not
+      available.</c>
+      <c>appData</c>
+      <c><eref
+      target="./Core-Data.xml#Plural-Field">Plural-Field</eref>
+      &lt;<x:ref>AppData</x:ref>&gt;</c>
+      <c>A collection of AppData keys and values.</c>
+      <c>birthday</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
+      <c>The birthday of this person. The value MUST be a valid <eref
+      target="./Core-Data.xml#Date">Date</eref>. The
+      year value MAY be set to 0000 when the age of the Person is
+      private or the year is not available.</c>
+      <c>bodyType</c>
+      <c>string</c>
+      <c>Person's body characteristics.</c>
+      <c>books</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite books.</c>
+      <c>cars</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite cars.</c>
+      <c>children</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Description of the person's children.</c>
+      <c>connected</c>
+      <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
+      <c>Boolean value indicating whether the user and this Person have
+      established a bi-directionally asserted connection of some kind on the
+      Service Provider's service. The value MUST be either true or false. The
+      value MUST be true if and only if there is at least one value for the
+      relationship field, described below, and is thus intended as a summary
+      value indicating that some type of bi-directional relationship exists,
+      for Consumers that aren't interested in the specific nature of that
+      relationship. For traditional address books, in which a user stores
+      information about other contacts without their explicit acknowledgment,
+      or for services in which users choose to "follow" other users without
+      requiring mutual consent, this value will always be false.</c>
+      <c>drinker</c>
+      <c>string</c>
+      <c>Person's drinking status.</c>
+      <c>displayName</c>
+      <c>string</c>
+      <c><x:highlight>Required.</x:highlight> The name of this Person, suitable for display to end-users. Each
+      Person returned MUST include a non-empty displayName value. The name
+      SHOULD be the full name of the Person being described if known (e.g.
+      Cassandra Doll or Mrs. Cassandra Lynn Doll, Esq.), but MAY be a username
+      or handle, if that is all that is available (e.g. doll). The value
+      provided SHOULD be the primary textual label by which this Person is
+      normally displayed by the Service Provider when presenting it to
+      end-users.</c>
+      <c>emails</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>E-mail address for this Person. The value SHOULD be canonicalized by
+      the Service Provider, e.g.joseph@plaxo.com instead of
+      joseph@PLAXO.COM.</c>
+      <c>ethnicity</c>
+      <c>string</c>
+      <c>Person's ethnicity.</c>
+      <c>fashion</c>
+      <c>string</c>
+      <c>Person's thoughts on fashion.</c>
+      <c>food</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite food.</c>
+      <c>gender</c>
+      <c>string</c>
+      <c>The gender of this person. Service Providers SHOULD return one of the
+      following Canonical Values, if appropriate:male, female, or undisclosed,
+      and MAY return a different value if it is not covered by one of these
+      Canonical Values.</c>
+      <c>happiestWhen</c>
+      <c>string</c>
+      <c>Describes when the person is happiest.</c>
+      <c>hasApp</c>
+      <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
+      <c>Indicating whether the user has application installed.</c>
+      <c>heroes</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite heroes.</c>
+      <c>humor</c>
+      <c>string</c>
+      <c>Person's thoughts on humor.</c>
+      <c>id</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c><x:highlight>Required.</x:highlight> Unique identifier for
+      the Person.</c>
+      <c>ims</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Instant messaging address for this Person. No official
+      canonicalization rules exist for all instant messaging addresses, but
+      Service Providers SHOULD remove all whitespace and convert the address to
+      lowercase, if this is appropriate for the service this IM address is used
+      for. Instead of the standard Canonical Values for type, this field
+      defines the following Canonical Values to represent currently popular IM
+      services: aim, gtalk, icq, xmpp,msn, skype, qq, and yahoo.</c>
+      <c>interests</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's interests, hobbies or passions.</c>
+      <c>jobInterests</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite jobs, or job interests and skills.</c>
+      <c>languagesSpoken</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>List of the languages that the person speaks as ISO 639-1 codes.</c>
+      <c>livingArrangement</c>
+      <c>string</c>
+      <c>Description of the person's living arrangemen.</c>
+      <c>location</c>
+      <c>string</c>
+      <c></c>
+      <c>lookingFor</c>
+      <c>string</c>
+      <c>Person's statement about who or what they are looking for, or
+      what they are interested in meeting people for.</c>
+      <c>movies</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite movies.</c>
+      <c>music</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite music.</c>
+      <c>name</c>
+      <c><x:ref>Name</x:ref></c>
+      <c>The broken-out components and fully formatted version of the person's
+      real name.</c>
+      <c>networkPresence</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's current network status. Specified as one of: AWAY,
+      CHAT, DND, OFFLINE, ONLINE OR XA.</c>
+      <c>nickname</c>
+      <c>string</c>
+      <c>The casual way to address this Person in real life, e.g. "Bob" or
+      "Bobby" instead of "Robert". This field SHOULD NOT be used to represent a
+      user's username (e.g. jsmarr or daveman692); the latter should be
+      represented by the preferredUsername field.</c>
+      <c>note</c>
+      <c>string</c>
+      <c>Notes about this person, with an unspecified meaning or usage
+      (normally notes by the user about this person). This field MAY contain
+      newlines.</c>
+      <c>organizations</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Organization</x:ref>&gt;</c>
+      <c>A current or past organizational affiliation of this Person.</c>
+      <c>pets</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Description of the person's pets</c>
+      <c>phoneNumbers</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Phone number for this Person. No canonical value is assumed here. In
+      addition to the standard Canonical Values for type, this field also
+      defines the additional Canonical Values mobile, fax, and pager.</c>
+      <c>photos</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>URL of a photo of this person. The value SHOULD be a canonicalized
+      URL, and MUST point to an actual image file (e.g. a GIF, JPEG, or PNG
+      image file) rather than to a web page containing an image. Service
+      Providers MAY return the same image at different sizes, though it is
+      recognized that no standard for describing images of various sizes
+      currently exists. Note that this field SHOULD NOT be used to send down
+      arbitrary photos taken by this user, but specifically profile photos of
+      the contact suitable for display when describing the contact.</c>
+      <c>politicalViews</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's political views.</c>
+      <c>preferredUsername</c>
+      <c>string</c>
+      <c>The preferred username of this person on sites that ask for a username
+      (e.g. jsmarr or daveman692). This field may be more useful for describing
+      the owner (i.e. the value when /@me/@self is requested) than the user's
+      person, e.g. Consumers MAY wish to use this value to pre-populate a
+      username for this user when signing up for a new service.</c>
+      <c>profileSong</c>
+      <c>string</c>
+      <c>URL of a person's profile song.</c>
+      <c>profileVideo</c>
+      <c>string</c>
+      <c>URL of a person's profile video.</c>
+      <c>profileUrl</c>
+      <c>string</c>
+      <c>Person's profile URL, specified as a string. This URL must be
+      fully qualified. Relative URLs will not work in gadgets.</c>
+      <c>published</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
+      <c>The date this Person was first added to the user's address book or
+      friends list (i.e. the creation date of this entry). The value MUST be a
+      valid <eref target="./Core-Data.xml#Date">Date</eref>.</c>
+      <c>quotes</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite quotes</c>
+      <c>relationships</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>A bi-directionally asserted relationship type that was established
+      between the user and this person by the Service Provider. The value
+      SHOULD conform to one of the XFN relationship values (e.g. kin, friend,
+      contact, etc.) if appropriate, but MAY be an alternative value if needed.
+      Note this field is a parallel set of category labels to the tags field,
+      but relationships MUST have been bi-directionally confirmed, whereas tags
+      are asserted by the user without acknowledgment by this Person. Note that
+      this field consists only of a string value.</c>
+      <c>relationshipStatus</c>
+      <c>string</c>
+      <c>Person's relationship status.</c>
+      <c>religion</c>
+      <c>string</c>
+      <c>Person's relgion or religious views.</c>
+      <c>romance</c>
+      <c>string</c>
+      <c>Person's comments about romance.</c>
+      <c>status</c>
+      <c>string</c>
+      <c>Person's status, headline or shoutout.</c>
+      <c>scaredOf</c>
+      <c>string</c>
+      <c>What the person is scared of.</c>
+      <c>sexualOrientation</c>
+      <c>string</c>
+      <c>Person's sexual orientation.</c>
+      <c>smoker</c>
+      <c>string</c>
+      <c>Person's smoking status.</c>
+      <c>sports</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite sports</c>
+      <c>tags</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>A user-defined category label for this person, e.g. "favorite" or
+      "web20". These values SHOULD be case-insensitive, and there SHOULD NOT be
+      multiple tags provided for a given person that differ only in case. Note
+      that this field consists only of a string value.</c>
+      <c>thumbnailUrl</c>c>
+      <c>string</c>
+      <c>Person's photo thumbnail URL, specified as a string. This URL
+      must be fully qualified. Relative URLs will not work in
+      gadgets.</c>
+      <c>turnOffs</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's turn offs.</c>
+      <c>turnOns</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's turn ons.</c>
+      <c>tvShows</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Person's favorite TV shows.</c>
+      <c>updated</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
+      <c>The most recent date the details of this Person were updated (i.e. the
+      modified date of this entry). The value MUST be a valid 
+      <eref target="./Core-Data.xml#Date">Date</eref>. If this Person
+      has never been modified since its initial creation, the value MUST be the
+      same as the value of published. Note the updatedSince Query Parameter can
+      be used to select only people whose updated value is equal to or more
+      recent than a given <eref
+      target="./Core-Data.xml#Date">Date</eref>. This enables
+      Consumers to repeatedly
+      access a user's data and only request newly added or updated contacts
+      since the last access time.</c>
+      <c>urls</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>URL of a web page relating to this Person. The value SHOULD be
+      canonicalized by the Service Provider, e.g.http://josephsmarr.com/about/
+      instead of JOSEPHSMARR.COM/about/. In addition to the standard Canonical
+      Values for type, this field also defines the additional Canonical Values
+      blog and profile.</c>
+      <c>utcOffset</c>
+      <c><eref target="./Core-Data.xml#Date-UTC-Offset">Date-UTC-Offset</eref></c>
+      <c>The offset from UTC of this Person's current time zone, as of the time
+      this response was returned. The value MUST conform to the <eref
+      target="./Core-Data.xml#Date-UTC-Offset">Date-UTC-Offset</eref>. Note that this value MAY
+      change over time due to daylight saving time, and is thus meant to
+      signify only the current value of the user's timezone offset.</c>
+     </texttable>
+    <t>A minimal Person example: 
+    <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+ "id" : "example.org:34KJDCSKJN2HHF0DW20394",
+ "displayName" : "Janey",
+ "name" : {"formatted" : "Jane Doe"},
+ "gender" : "female"
+}       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;person xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+  &lt;displayName&gt;Janey&lt;/displayName&gt;
+  &lt;name&gt;
+    &lt;formatted&gt;Jane Doe&lt;/formatted&gt;
+  &lt;/name&gt;
+  &lt;gender&gt;female&lt;/gender&gt;
+&lt;/person&gt;       
+</artwork>
+    </figure>
+    <figure>
+     <preamble>application/atom+xml representation:</preamble>
+     <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;&lt;!-- person.id --&gt;
+ &lt;title&gt;Janey&lt;/title&gt;&lt;!-- person.displayName --&gt;
+ &lt;updated&gt;2008-03-15T10:00:00Z&lt;/updated&gt;&lt;!-- last profile edit, or datetime.utcnow() --&gt;
+ &lt;author&gt;&lt;name&gt;Janey&lt;/name&gt;&lt;/author&gt;&lt;!-- person.displayName --&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;person xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+     &lt;displayName&gt;Janey&lt;/displayName&gt;
+     &lt;name&gt;
+       &lt;formatted&gt;Jane Doe&lt;/formatted&gt;
+     &lt;/name&gt;
+     &lt;gender&gt;female&lt;/gender&gt;
+   &lt;/person&gt;
+ &lt;/content&gt;
+&lt;/entry&gt;
+</artwork>
+    </figure>Note: The atom:summary element is the appropriate place to put a
+    text or HTML representation of the structured data present in the content
+    element, and the atom:title element is the appropriate place to copy a
+    short descriptive name for the entry, such as name.unstructured. Servers
+    MAY choose to add these or other fields to make their feeds more useful for
+    generic aggregators or tools.</t>
+   </section>
+   </section>
+  <section title="Additional Social Data">
+    <t>Additional Social Data objects are data objects that are
+    contained within other Social Data object. These do not stand
+    alone, and are not directly accessable by API calls such as osapi,
+    REST, RPC and Pipelining.</t>
+   <section title="Account" anchor="Account">
+     <t>Describes an account held by this Person, which MAY be on the Service
+     Provider's service, or MAY be on a different service. Consumers SHOULD NOT
+     assume that this account has been verified by the Service Provider to
+     actually belong to this Person. For each account, the domain is the
+     top-most authoritative domain for this account, e.g. yahoo.com or
+     reader.google.com, and MUST be non-empty. Each account must also contain a
+     non-empty value for either username or userId, and MAY contain both, in
+     which case the two values MUST be for the same account. These accounts can
+     be used to determine if a user on one service is also known to be the same
+     person on a different service, to facilitate connecting to people the user
+     already knows on different services. If Consumers want to turn these
+     accounts into profile URLs, they can use an open-source library like 
+     <xref target="Social-Graph-Node-Mapper" />. 
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>domain</c>
+      <c>string</c>
+      <c>The top-most authoritative domain for this account, e.g.
+      "twitter.com". This is the Primary Sub-Field for this field, for the
+      purposes of sorting and filtering.</c>
+      <c>username</c>
+      <c>string</c>
+      <c>An alphanumeric user name, usually chosen by the user, e.g.
+      "jsmarr".</c>
+      <c>userId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>A user ID associated with this account.</c>
+     </texttable></t>
+   </section>
+   <section title="Address" anchor="Address">
+     <t>The components of a physical mailing address. Service
+     Providers MAY return just the full address as a single string in
+     the formattedsub-field, or they MAY return just the individual
+     component fields using the other sub-fields, or they MAY return
+     both. If both variants are returned, they SHOULD be describing
+     the same address, with the formatted address indicating how the
+     component fields should be combined.</t>
+     <t><texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>country</c>
+      <c>string</c>
+      <c>The country name component.</c>
+      <c>formatted</c>
+      <c>string</c>
+      <c>The full mailing address, formatted for display or use with a mailing
+      label. This field MAY contain newlines. This is the Primary Sub-Field for
+      this field, for the purposes of sorting and filtering.</c>
+      <c>latitude</c>
+      <c>string</c>
+      <c>Expresses the latitude of the location on a map.</c>
+      <c>locality</c>
+      <c>string</c>
+      <c>The city or locality component.</c>
+      <c>longitude</c>
+      <c>string</c>
+      <c>Expresses the longitude of the location on a map.</c>
+      <c>postalCode</c>
+      <c>string</c>
+      <c>The zipcode or postal code component.</c>
+      <c>region</c>
+      <c>string</c>
+      <c>The state or region component.</c>
+      <c>streetAddress</c>
+      <c>string</c>
+      <c>The full street address component, which may include house number,
+      street name, PO BOX, and multi-line extended street address information.
+      This field MAY contain newlines.</c>
+      <c>type</c>
+      <c>string</c>
+      <c>The address type or label. Examples include 'work', 'home'.</c>
+     </texttable></t>
+   </section>
+   <section title="Album"
+            anchor="Album">
+     <t>Albums support collections of media items (video, image, sound).</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>description</c>
+      <c>string</c>
+      <c>Description of the album</c>
+      <c>id</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>Unique identifier for the album.</c>
+      <c>location</c>
+      <c><x:ref>Address</x:ref></c>
+      <c>Location corresponding to the album.</c>
+      <c>mediaItemCount</c>
+      <c>integer</c>
+      <c>Number of items in the album.</c>
+      <c>mediaMimeType</c>
+      <c>Array &lt;string&gt;</c>
+      <c>Array of strings identifying the mime-types of media items in
+      the Album.</c>
+      <c>mediaType</c>
+      <c>Array &lt;string&gt;</c>
+      <c>Array of MediaItem types, types are one of: audio, image, video.</c>
+      <c>owernId</c>
+      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+      <c>ID of the owner of the album.</c>
+      <c>thumbnailUrl</c>
+      <c>string</c>
+      <c>URL to a thumbnail cover of the album.</c>
+      <c>title</c>
+      <c>string</c>
+      <c>the title of the album.</c>
+     </texttable>
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "44332211",
+  "thumbnailUrl" : "http://pages.example.org/albums/4433221-tn.png",
+  "title" : "Example Album",
+  "description" : "This is an example album, and this text is an example description",
+  "location" : { "latitude": 0, "longitude": 0 },
+  "ownerId" : "example.org:55443322"
+}       
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;44332211&lt;/id&gt;
+  &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
+  &lt;title&gt;Example Album&lt;/title&gt;
+  &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
+  &lt;location&gt;
+     &lt;latitude&gt;0&lt;/latitude&gt;
+     &lt;longitude&gt;0&lt;/longitude&gt;
+  &lt;/location&gt;
+  &lt;ownerId&gt;example.org:55443322&lt;/ownerId&gt;
+&lt;/album&gt;       
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;album xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;44332211&lt;/id&gt;
+     &lt;thumbnailUrl&gt;http://pages.example.org/albums/4433221-tn.png&lt;/thumbnailUrl&gt;
+     &lt;title&gt;Example Album&lt;/title&gt;
+     &lt;description&gt;This is an example album, and this text is an example description&lt;/description&gt;
+     &lt;location&gt;
+       &lt;latitude&gt;0&lt;/latitude&gt;
+       &lt;longitude&gt;0&lt;/longitude&gt;
+     &lt;/location&gt;
+     &lt;ownerId&gt;example.org:55443322&lt;/ownerId&gt;
+   &lt;/album&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;&lt;url&gt;example.org:55443322&lt;/url&gt;&lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:44332211&lt;/id&gt;
+&lt;/entry&gt;    
+</artwork>
+     </figure>
+	 <t>
+	 For backwards compatibility with the 0.9 REST data format, the "caption" 
+	 field should be included in the response for an Album and have the same 
+	 value as the "title" field.  Caption is deprecated for 1.0 and will be fully 
+	 removed from the data format in a future version of the spec.
+	 </t>
+     <figure>
+      <preamble>application/json representation with caption for backwards-compatibility:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "44332211",
+  "thumbnailUrl" : "http://pages.example.org/albums/4433221-tn.png",
+  "title" : "Example Album",
+  "caption" : "Example Album",
+  "description" : "This is an example album, and this text is an example description",
+  "location" : { "latitude": 0, "longitude": 0 },
+  "ownerId" : "example.org:55443322"
+}       
+</artwork>
+     </figure>
+   </section>
+   <section title="Group ID"
+            anchor="Group-ID">
+    <t>The group ID must only contain alphanumeric (A-Za-z0-9) characters,
+    underscore(_), dot(.) or dash(-), and must uniquely identify the group in a
+    container.</t>
+    <artwork type="abnf"
+         xml:space="preserve">
+Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" / "@friends" / "@all"
+</artwork>
+   </section>
+   <section title="MediaItem"
+            anchor="MediaItem">
+     <t>Represents images, movies, and audio.
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+       <c>album_id</c>
+       <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+       <c>Album to which the media item belongs.</c>
+       <c>created</c>
+       <c>string</c>
+       <c>Creation datetime associated with the media item -
+       assigned by container in UTC.</c>
+       <c>description</c>
+       <c>string</c>
+       <c>Description of the media item.</c>
+       <c>duration</c>
+       <c>integer</c>
+       <c>For audio/video clips - playtime length in
+       seconds. set to -1/not defined if unknown.</c>
+       <c>file_size</c>
+       <c>long</c>
+       <c>Number of bytes (set to -1/undefined if unknown).</c>
+       <c>id</c>
+       <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
+       <c>Id Associated with the media item.</c>
+       <c>language</c>
+       <c>string</c>
+       <c>Language associated with the media item in ISO
+       639-3 format.</c>
+       <c>last_updated</c>
+       <c>string</c>
+       <c>Update datetime associated with the media item -
+       assigned by container in UTC.</c>
+       <c>location</c>
+       <c>Address</c>
+       <c>Location corresponding to the media item.</c>
+       <c>mime_type</c>
+       <c>string</c>
+       <c>The MIME type of media, specified as a string.</c>
+       <c>num_comments</c>
+       <c>integer</c>
+       <c>Number of comments on the media item.</c>
+       <c>num_views</c>
+       <c>integer</c>
+       <c>Number of views for the media item.</c>
+       <c>num_votes</c>
+       <c>integer</c>
+       <c>Number of votes received for voting.</c>
+       <c>rating</c>
+       <c>integer</c>
+       <c>Average rating of the media item on a scale of 0-10.</c>
+       <c>start_time</c>
+       <c>string</c>
+       <c>For streaming/live content, datetime when the
+       content is available.</c>
+       <c>tagged_people</c>
+       <c>Array&lt;string&gt;</c>
+       <c>Array of string (IDs) of people tagged
+       in the media item.</c>
+       <c>tags</c>
+       <c>Array&lt;string&gt;</c>
+       <c>Tags associated with this media item.</c>
+       <c>thumbnail_url</c>
+       <c>string</c>
+       <c>URL to a thumbnail image of the media item.</c>
+       <c>title</c>
+       <c>string</c>
+       <c>Describing the media item.</c>
+       <c>type</c>
+       <c>string</c>
+       <c>The type of media, specified as a <x:ref>MediaItem</x:ref>.Type object.</c>
+       <c>url</c>
+       <c>string</c>
+       <c>Specifying the URL where the media can be found.</c>
+     </texttable>
+     </t>
+     <figure>
+      <preamble>application/json representation:</preamble>
+      <artwork xml:space="preserve">
+{
+  "id" : "11223344",
+  "thumbnail_url" : "http://pages.example.org/images/11223344-tn.png",
+  "mime_type" : "image/png",
+  "type" : "image",
+  "url" : "http://pages.example.org/images/11223344.png",
+  "album_id" : "44332211"
+}        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;MediaItem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;id&gt;11223344&lt;/id&gt;
+  &lt;thumbnail_url&gt;http://pages.example.org/images/11223344-tn.png&lt;/thumbnail_url&gt;
+  &lt;mimeType&gt;image/png&lt;/mimeType&gt;
+  &lt;type&gt;image&lt;/type&gt;
+  &lt;url&gt;http://pages.example.org/images/11223344.png&lt;/url&gt;
+  &lt;albumId&gt;44332211&lt;/albumId&gt;
+&lt;MediaItem&gt;        
+</artwork>
+     </figure>
+     <figure>
+      <preamble>application/atom+xml representation:</preamble>
+      <artwork xml:space="preserve">
+&lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+ &lt;content type="application/xml"&gt;
+   &lt;mediaItem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+     &lt;id&gt;11223344&lt;/id&gt;
+     &lt;thumbnail_url&gt;http://pages.example.org/images/11223344-tn.png&lt;/thumbnail_url&gt;
+     &lt;mimeType&gt;image/png&lt;/mimeType&gt;
+     &lt;type&gt;image&lt;/type&gt;
+     &lt;url&gt;http://pages.example.org/images/11223344.png&lt;/url&gt;
+     &lt;albumId&gt;44332211&lt;/albumId&gt;
+   &lt;mediaItem&gt;
+ &lt;/content&gt;
+ &lt;title/&gt;
+ &lt;updated&gt;2003-12-13T18:30:02Z&lt;/updated&gt;
+ &lt;author&gt;&lt;url&gt;example.org:55443322&lt;/url&gt;&lt;/author&gt;
+ &lt;id&gt;urn:guid:example.org:11223344&lt;/id&gt;
+&lt;/entry&gt;        
+</artwork>
+     </figure>
+   </section>
+   <section title="Name"
+            anchor="Name">
+     <t>The components of the person's real name. Providers MAY return just the
+     full name as a single string in the formatted sub-field, or they MAY
+     return just the individual component fields using the other sub-fields, or
+     they MAY return both. If both variants are returned, they SHOULD be
+     describing the same name, with the formatted name indicating how the
+     component fields should be combined. 
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>familyName</c>
+      <c>string</c>
+      <c>he family name of this Person, or "Last Name" in most Western
+      languages (e.g. Smarr given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>formatted</c>
+      <c>string</c>
+      <c>The full name, including all middle names, titles, and suffixes as
+      appropriate, formatted for display (e.g. Mr. Joseph Robert Smarr, Esq.).
+      This is the Primary Sub-Field for this field, for the purposes of sorting
+      and filtering.</c>
+      <c>givenName</c>
+      <c>string</c>
+      <c>The given name of this Person, or "First Name" in most Western
+      languages (e.g. Joseph given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>honorificPrefix</c>
+      <c>string</c>
+      <c>The honorific prefix(es) of this Person, or "Title" in most Western
+      languages (e.g. Mr. given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>honorificSuffix</c>
+      <c>string</c>
+      <c>The honorifix suffix(es) of this Person, or "Suffix" in most Western
+      languages (e.g. Esq. given the full name Mr. Joseph Robert Smarr,
+      Esq.).</c>
+      <c>middleName</c>
+      <c>string</c>
+      <c>The middle name(s) of this Person (e.g. Robert given the full name Mr.
+      Joseph Robert Smarr, Esq.).</c>
+     </texttable></t>
+   </section>
+   <section title="Organization" anchor="Organization">
+<t>Describes a current or past organizational affiliation of this contact.
+     Service Providers that support only a single Company Name and Job Title
+     field should represent them with a single organization element with name
+     and title properties, respectively. 
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>address</c>
+      <c><x:ref>Address</x:ref></c>
+      <c>The physical address of this organization.</c>
+      <c>department</c>
+      <c>string</c>
+      <c>The department within this organization.</c>
+      <c>description</c>
+      <c>string</c>
+      <c>A textual description of the role this Person played in this
+      organization. This field MAY contain newlines.</c>
+      <c>endDate</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref> or string</c>
+      <c>The date this Person left this organization or the role specified by
+      title within this organization. This value SHOULD be a valid 
+      <eref target="./Core-Data.xml#Date">Date</eref> if possible, but MAY be an unformatted
+      string, since it is recognized that this field is often presented as
+      free-text.</c>
+      <c>field</c>
+      <c>string</c>
+      <c>The field the Organization is in.</c>
+      <c>location</c>
+      <c>string</c>
+      <c>The physical location of this organization. This is an
+      abbreviated location like "San Francisco". The container could
+      choose to implement either "address" or "location" field, or
+      both.</c>
+      <c>name</c>
+      <c>string</c>
+      <c>The name of the organization (e.g. company, school, or other
+      organization). This field MUST have a non-empty value for each
+      organization returned. This is the Primary Sub-Field for this field, for
+      the purposes of sorting and filtering.</c>
+      <c>salary</c>
+      <c>string</c>
+      <c>The salary the person receieves from the organization</c>
+      <c>startDate</c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref> or string</c> 
+      <c>The date this Person joined this organization. This value SHOULD be a
+      valid <eref target="./Core-Data.xml#Date">Date</eref>
+      if possible, but MAY be an unformatted
+      string, since it is recognized that this field is often presented as
+      free-text.</c>
+      <c>subfield</c>
+      <c>string</c>
+      <c>The subfield the Organization is in.</c>
+      <c>title</c>
+      <c>string</c>
+      <c>The job title or organizational role within this
+      organization.</c>
+      <c>type</c>
+      <c>string</c>
+      <c>The type of organization, with Canonical Values job and school.</c>
+      <c>webpage</c>
+      <c>string</c>
+      <c>A webpage related to the organization.</c>
+     </texttable></t>
+   </section>
+  </section>
+ </middle>
+ <back>
+  <references>
+   <reference anchor='RFC2119'>
+    <front>
+     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+     <author initials='S.'
+             surname='Bradner'
+             fullname='Scott Bradner'>
+      <organization abbrev='HarvardU'>Harvard University</organization>
+     </author>
+     <date month='March'
+           year='1997' />
+    </front>
+    <seriesInfo name='RFC' value='2119' />
+   </reference>
+   <reference anchor='RFC2606'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='D.'
+             surname='Eastlake'
+             fullname='Donald E. Eastlake 3rd'>
+      <organization abbrev='IBM'>IBM</organization>
+     </author>
+     <author initials='A.'
+             surname='Panitz'
+             fullname='Aliza R. Panitz'></author>
+     <date month='June'
+           year='1999' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2606' />
+   </reference>
+   <reference anchor='RFC2234'>
+    <front>
+     <title>Augmented BNF for Syntax Specifications: ABNF</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='2234' />
+   </reference>
+   <reference anchor='RFC20'>
+    <front>
+     <title>ASCII format for Network Interchange</title>
+    </front>
+    <seriesInfo name='RFC'
+                value='20' />
+   </reference>
+   <reference anchor='Social-Graph-Node-Mapper'
+              target='http://code.google.com/p/google-sgnodemapper/'>
+    <front>
+     <title>Social Graph Node Mapper</title>
+    </front>
+   </reference>
+   <reference anchor='CoreData'
+              target="./Core-Data.xml">
+    <front>
+     <title>OpenSocial Core Data Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group
+                       &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
+     <date month='November'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor='SocialGadget'
+              target="./Social-Gadget.xml">
+    <front>
+     <title>OpenSocial Social Gadget Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group
+                       &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
+     <date month='November'
+           year='2010' />
+    </front>
+   </reference>
+   <reference anchor='SocialServer'
+              target="./Social-API-Server.xml">
+    <front>
+     <title>OpenSocial Social API Server Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group
+                       &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
+     <date month='November'
+           year='2010' />
+    </front>
+   </reference>
+  </references>
+ </back>
+</rfc>
+
