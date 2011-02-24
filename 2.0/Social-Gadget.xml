@@ -236,6 +236,100 @@ osapi.activities.create(params).execute(myCallback);
         </figure>
        </section>
       </section>
+      <section title="osapi.activitystreams" anchor="osapi.activitystreams">
+      <x:draft note="ActivityStreams support: Gadget Section" href="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">
+       <t>Service object with functions that map to the 
+       <eref target="./Social-API-Server.xml#ActivityStreams-Service">ActivityStreams service</eref>.</t>
+       <section title="Method Details">
+        <section title="get" anchor="osapi.activitystreams.get">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.get(params)</t>
+          <t hangText="Description">Builds a request to retrieve information from the
+          ActivityStreams service. When no parameter is specified, the container MUST use the 
+          default values, returning the viewer's <eref target="./Social-Data.xml#ActivityEntry">ActivityEntries</eref>.</t>
+          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#ActivityStreams-Service-Get">ActivityStreams service's get method</eref>.</t>
+          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the ActivityStreams service. Executing this request MUST return an <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> objects.</t>
+         </list>
+        </section>
+        <section title="create" anchor="osapi.activitystreams.create">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.create(params)</t>
+          <t hangText="Description">Builds a request to create a new ActivityEntry using the ActivityStreams service.</t>
+          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#ActivityStreams-Service-Create">ActivityStreams service's create method</eref>.  This parameter is REQUIRED and MUST contain the 'activityEntry' property.</t>
+          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the ActivityStreams service. Executing this request MUST attempt to create the specified ActivityEntry and return the newly-created <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> object if successful.</t>
+         </list>
+        </section>
+        <section title="update" anchor="osapi.activitystreams.update">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.update(params)</t>
+          <t hangText="Description">Builds a request to update information stored in the ActivityStreams service.</t>
+          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Activitystreams-Service-Update">ActivityStreams service's update method</eref>.  This parameter is REQUIRED and MUST include the 'activityEntry' property which includes the id of the ActivityEntry to update.</t>
+          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the ActivityStreams service. Executing this request MUST overwrite the existing activity entries on the server, but does not return any values.</t>
+         </list>
+        </section>
+        <section title="delete" anchor="osapi.activitystreams.delete">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.delete(params)</t>
+          <t hangText="Description">Builds a request to delete information stored in the ActivityStreams service.</t>
+          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#ActivityStreams-Service-Delete">ActivityStreams service's delete method</eref>.  This parameter is REQUIRED and MUST include the 'activityEntryId' property.</t>
+          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the MediaItems service. Executing this request MUST remove the specified MediaItems from the server and return them as a JavaScript object.</t>
+         </list>
+        </section>
+       </section>
+       <section title="Examples">
+         <figure>
+         <preamble>A simple example to retrieve the ActivityStreams of the viewer's
+         friends:</preamble>
+         <artwork xml:space="preserve">
+osapi.activitystreams.get({userId: '@viewer', groupId: '@friends', count: 20}).execute(myCallback);</artwork>
+        </figure>
+         <figure>
+         <preamble>An example illustrating all available request parameters for
+         osapi.activitystreams.get():</preamble>
+         <artwork xml:space="preserve">
+var params = {
+    userId: "@me", 
+    groupId: "@self",
+    activityEntryId = ["YYYYYYY", "ZZZZZZZ"],
+    fields: "@all",
+    count: 10,
+    startIndex: 0, 
+    startPage: 0
+};
+osapi.activitystreams.get(params).execute(myCallback);</artwork>
+        </figure>
+         <figure>
+         <preamble>An example to create an ActivityEntry:</preamble>
+         <artwork xml:space="preserve">
+var params = {
+	userId: '@viewer',
+	groupId: '@self',
+	activityEntry: {
+		title: "John posted a photo",
+		postedTime: '2010-04-27T06:02:36+0000',
+		actor: {
+			id: 'john.doe',
+			displayName: 'John Doe'
+		},
+		verb: 'POST',
+		object: {
+			id: 'object3',
+			displayName: 'Frozen Eric',
+			image: {
+				url: 'http://www.example.com/johnsalbum/cover3.jpg',
+				type: 'http://activitystrea.ms/schema/1.0/picture',
+				width: 400,
+				height: 300,
+				duration: 93
+			}
+		}
+	}
+};
+osapi.activitystreams.create(params).execute(callback);</artwork>
+        </figure>
+       </section>
+      </x:draft>
+      </section>
       <section title="osapi.appdata"
                anchor="osapi.appdata">
        <t>Service object with functions that map to the 
