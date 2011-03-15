@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-common-container-specification-2-0-DRAFT"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title abbrev="Common-Container">OpenSocial Common Container Specification 2.0 DRAFT</title>
+  <author fullname='OpenSocial and Container Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="March" year="2011" />
+  <area>General</area>
+  <keyword>OpenSocial</keyword>
+  <keyword>Common Container</keyword>
+ </front>
+ <middle>
+  <section title="Definitions">
+   <section title="Gadget">
+    <t>
+     A web-based software component based on HTML, CSS and JavaScript. It allows
+     developers to write modularized, reusable web applications that work
+     anywhere on the web without modification.
+    </t>
+   </section>
+   <section title="Container">
+    <t>
+     A context into which a gadget is embedded into. This is typically an HTML
+     page, served by an arbitrary web-service, viewable by a browser.
+    </t>
+   </section>
+   <section title="Security token">
+    <t>
+     A security mechanism to allow gadgets to make secure connections to server
+     end points for data that may be valid only for the current user's context.
+     This commonly appears as a query/fragment param st= in the iframe URL.
+    </t>
+   </section>
+  </section>
+
+  <section title="Overview">
+   <t>
+    Common container is a lightweight gadget-and-container framework, based on
+    JavaScript and server-driven end-point. Its mission is to simplify container
+    and gadget integration model. It allow container developers to easily
+    transform their page into a gadget-compliant container that can properly
+    embed gadgets rendered by Shindig-based gadget service. It does not address
+    container-specific business-logic and layout.
+   </t>
+   <t>
+    This document acts as a starting point for a formal specification, to be
+    proposed for OpenSocial 2.0. It is determined to be needed at the
+    OpenSocial 2.0 kick-off meeting. The goal is to compile requirements,
+    describe use cases, identify original authors, and paves way for future
+    developments.
+   </t>
+  </section>
+
+  <section title="Compliance">
+   <t>
+    To be a gadget-compliant container, a container must be able to satisfy
+    requirements defined in this section.
+   </t>
+   <section title="Lightweight">
+    <t>
+     The framework is installed in a container page by a script tag, with its
+     source pointing to the common container JS. This also provides a near-zero
+     barrier to entry for new container clients.
+    </t>
+   </section>
+   <section title="Gadget navigation" anchor="GadgetNavigation">
+    <t>
+     The framework lives in the container page to provide API to container
+     developers to navigate/open and close gadgets on the page, in a way that
+     ensures opened gadgets continue to work, until they are closed.
+    </t>
+   </section>
+   <section title="Setup gadgets.rpc">
+    <t>
+     Sets up container for gadget-to-container, container-to-gadget and
+     gadget-to-gadget communication via gadgets.rpc. This involves setting up
+     relay files and registering callbacks/hooks, to ensure the wiring is
+     all setup to receive all gadgets.rpc mediated commands. Increasing height
+     of gadget is a common example.
+    </t>
+   </section>
+   <section title="Track latency">
+    <t>
+     The framework allows container developers to track the latency times
+     required to do a gadget navigation. This involves starting a timer when a
+     gadget navigation is requested and stopping the timer when a gadget is
+     fully rendered. Latency times can be broadcasted to the container for
+     container-specific consumption.
+    </t>
+   </section>
+   <section title="Auto-refresh security tokens">
+    <t>
+     Its lifespan starts from time when it is instantiated to time when the
+     page is navigated away. AJAX-y pages will tend to have longer lifespan.
+     To avoid expired security tokens, the framework will fetch for new tokens
+     at a regular interval and have the new token pushed to the gadget that
+     requires tokens to be updated.
+    </t>
+   </section>
+   <section title="Promote coherent changes">
+    <t>
+     Changes in a gadget render may require simultaneous change on the container
+     implementation. This framework will allow new container changes to be
+     picked up at the same time when a gadget render service is updated,
+     avoiding version-skew. Additionally, it will also promote all common-
+     container-enabled pages to become updated at the same time.
+    </t>
+   </section>
+  </section>
+
+  <section title="API">
+   <section title="shindig.container.Container">
+    <t>
+     This represents the container. This provides top-most-level set of APIs for
+     container developers, to accomplish functionalities defined in
+     <xref target="GadgetNavigation">GadgetNavigation</xref> and more.
+     Internally, this manages work required to ensure that navigated gadgets
+     continue to work. There MUST be not more than one instance of this in a
+     pages, due to usage of global resources and possible race conditions.
+    </t>
+    <artwork xml:space="preserve">
+// to preload / unload (un-preload) gadgets
+container.preloadGadget(...)
+container.preloadGadgets(...)
+container.unloadGadget(...)
+container.unloadGadgets(...)
+
+// to navigate / close gadget sites
+container.navigateGadget(...)
+container.closeGadget(...)
+
+// to get gadget metatadata
+container.getGadgetMetadata(...)
+
+// to register gadgets.rpc service in container
+container.rpcRegister(...)
+    </artwork>
+   </section>
+   <section title="shindig.container.GadgetSite">
+    <t>
+     This represent the gadget context. Container developers refer a gadget as
+     a GadgetSite.
+    </t>
+    <artwork xml:space="preserve">
+// to manipulate a gadget site
+site.setHeight(...)
+site.setWidth(...)
+we
+// to have container call site via gadgets.rpc.
+site.rpcCall(...)
+    </artwork>
+   </section>
+  </section>
+
+  <section title="Configuring container">
+   <t>
+    Configuring common container is done at instantiation, by passing a
+    bag-style JSON, with keys defined under shindig.container.ContainerConfig.
+    All of these are optional.
+   </t>
+   <t>
+    These affect all gadgets renders, unless overridden by
+    <xref target="ConfiguringGadgetRender">GadgetRenderConfiguration</xref>.
+   </t>
+   <list style="hanging">
+    <t hangText="ALLOW_DEFAULT_VIEW">
+     Allow gadgets to render in unspecified view. Default is true.
+    </t>
+    <t hangText="RENDER_CAJOLE">
+     Whether cajole mode is turned on. Default is true.
+    </t>
+    <t hangText="RENDER_DEBUG">
+     Whether debug mode is turned on. Default is false.
+    </t>
+    <t hangText="RENDER_TEST">
+     Whether test mode is turned on. Default is false.
+    </t>
+   </list>
+   <t>
+    These are not gadget render related.
+   </t>
+   <list style="hanging">
+    <t hangText="RENDER_DEBUG_PARAM">
+     The debug param name to look for in container URL for per-request debugging.
+    </t>
+    <t hangText="TOKEN_REFRESH_INTERVAL">
+     Security token refresh interval (in ms) for debugging. Default is 30 * 60 * 1000.
+    </t>
+    <t hangText="NAVIGATE_CALLBACK">
+     Globally-defined callback function upon gadget navigation. Useful to
+     broadcast timing and stat information back to container.
+    </t>
+    <t hangText="PRELOAD_REF_TIME">
+     Provide server reference time for preloaded data. This time is used
+     instead of each response time in order to support server caching of results.
+    </t>
+    <t hangText="PRELOAD_METADATAS">
+     Contains preloaded hash of gadgets metadata.
+    </t>
+    <t hangText="PRELOAD_TOKENS">
+     Contains preloaded hash of gadgets tokens.
+    </t>
+   </list>
+  </section>
+
+  <section title="Configuring gadget render" anchor="ConfiguringGadgetRender">
+   <t>
+    Requesting for a gadget render with specifics (like view, visual appearance
+    and debug mode) can be made by passing a bag-style JSON, with keys defined
+    under shindig.container.RenderParam into
+    shindig.container.Container.prototype.navigateGadget().
+    All of these are optional.
+   </t>
+   <list style="hanging">
+    <t hangText="ALLOW_DEFAULT_VIEW">
+     Allow gadgets to render in unspecified view
+    </t>
+    <t hangText="CAJOLE">
+     Whether to enable cajole mode.
+    </t>
+    <t hangText="CLASS">
+     Style class to associate to iframe.
+    </t>
+    <t hangText="DEBUG">
+     Whether to turn on debugging mode. Default is false.
+    </t>
+    <t hangText="HEIGHT">
+     The starting gadget iframe height (in pixels). Default is 200.
+    </t>
+    <t hangText="NO_CACHE">
+     Whether to disable cache.
+    </t>
+    <t hangText="TEST_MODE">
+     Whether to enable test mode. Default is false.
+    </t>
+    <t hangText="USER_PREFS">
+     The gadget user prefs to render with.
+    </t>
+    <t hangText="VIEW">
+     The view of gadget to render.
+    </t>
+    <t hangText="WIDTH">
+     The starting gadget iframe width (in pixels). Default is 320.
+    </t>
+   </list>
+  </section>
+
+  <section title="Extensibility">
+   <t>
+    The framework is developed with extensibility in mind.
+   </t>
+   <section title="By namespace overrides">
+    <t>This is done by namespace assignment and augmenting custom methods.</t>
+    <artwork xml:space="preserve">
+// ensure shindig.container is defined here.
+foo.container = shindig.container;
+foo.container.prototype.newMethod = function() { ... }
+    </artwork>
+   </section>
+   <section title="By method overrides">
+    <t>This is done by re-defining overridable methods.</t>
+    <artwork xml:space="preserve">
+foo.container.Container.prototype.onConstructed = function(opt_config) { ... }
+foo.container.GadgetSite.prototype.onConstructed = function() { ... }
+foo.container.GadgetSite.prototype.onNavigateTo = function(data) { ... }
+foo.container.GadgetHolder.prototype.onConstructed = function() { ... }
+foo.container.Service.prototype.onConstructed = function(opt_config) { ... }
+    </artwork>
+   </section>
+   <section title="By mixins">
+    <t>This is done by calling static function addMixin.</t>
+    <artwork xml:space="preserve">
+shindig.container.Container.addMixin('foo', function() { ... });
+    </artwork>
+   </section>
+  </section>
+ </middle>
+</rfc>
+
