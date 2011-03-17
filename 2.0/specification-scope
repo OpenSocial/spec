@@ -13,6 +13,7 @@ Embedded Experiences (http://code.google.com/p/opensocial-resources/issues/detai
 Move security policy to core gadgets (http://code.google.com/p/opensocial-resources/issues/detail?id=1143)
 Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-resources/issues/detail?id=1149)
 Deprecate the existing activity api in favor of activity streams (http://code.google.com/p/opensocial-resources/issues/detail?id=1151)
+Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
 
 
 OpenSocial 2.0 "Bugs"
