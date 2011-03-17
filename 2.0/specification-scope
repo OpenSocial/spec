@@ -12,6 +12,7 @@ Merge/Incorporate Activity Streams (http://code.google.com/p/opensocial-resource
 Embedded Experiences (http://code.google.com/p/opensocial-resources/issues/detail?id=1144)
 Move security policy to core gadgets (http://code.google.com/p/opensocial-resources/issues/detail?id=1143)
 Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-resources/issues/detail?id=1149)
+Deprecate the existing activity api in favor of activity streams (http://code.google.com/p/opensocial-resources/issues/detail?id=1151)
 
 
 OpenSocial 2.0 "Bugs"
