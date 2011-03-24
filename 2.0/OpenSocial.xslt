@@ -64,4 +64,36 @@
       <xsl:apply-templates mode="t-content" select="node()[1]" />
     </div>
   </xsl:template>
+  
+  <xsl:template match="x:testcase">
+      <div style="margin-right: 4px;">
+        <xsl:if test="@href">
+          <a target="_blank" style="color: #339933; text-decoration: underline; margin-right: 4px;" href="{@href}">Test Case</a> 
+        </xsl:if>
+        <xsl:value-of select="@note"/>
+        <xsl:apply-templates mode="t-content" select="node()[1]" />
+      </div>
+  </xsl:template>
+  
+  <xsl:template match="x:deprecated">
+    <div style="border: 2px solid #CCCC33">
+      <div style="background: #CCCC33; color: #000; padding: 2px;">
+        <strong style="margin-right: 4px;">Deprecated</strong>
+        <xsl:choose>
+          <xsl:when test="@use and @href">
+            Use <a target="_blank" style="color: #000; text-decoration: underline; margin-right: 4px;" href="{@href}"><xsl:value-of select="@use"/></a> instead. 
+          </xsl:when>
+          <xsl:when test="@use">
+            Use <xsl:value-of select="@use"/> instead. 
+          </xsl:when>
+          <xsl:when test="@href">
+            <a target="_blank" style="color: #000; text-decoration: underline; margin-right: 4px;" href="{@href}">Link</a>
+          </xsl:when>
+        </xsl:choose>
+        <xsl:value-of select="@note"/>
+      </div>
+      <xsl:apply-templates mode="t-content" select="node()[1]" />
+    </div>
+  </xsl:template>
+  
 </xsl:transform>
