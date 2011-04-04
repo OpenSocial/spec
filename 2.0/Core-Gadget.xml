@@ -151,6 +151,14 @@
     <xref target="GadgetXmlSchema">Gadget XML Schema</xref>.
     Additional elements and attributes MAY be supported, but these elements are
     beyond the scope of this document.</t>
+    
+<x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+A Container MAY support a simplified XML schema.  This format changes some core elements to optional 
+and uses the canonical format for templates and data pipeline blocks.
+The <xref target="SimpleGadgetXmlSchema">Simple Gadget XML Schema</xref> is defined in the appendix.
+</x:draft>    
+    
+    
    <section title="Module"
             anchor="Module">
     <t>The root node of a gadget XML specification is the Module element.</t>
@@ -159,6 +167,15 @@
      specification that container MUST use to interpret the gadget, as described
      in <xref target="Versioning">Versioning</xref>. If absent, the default
      value is "1.0".</t>
+
+
+     <t hangText="@title">
+     <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+The gadget's title.  When using the simple gadget format and excluding the 
+     ModulePrefs element, the title attribute may be placed in the Module element. 
+</x:draft>
+     </t>
+
      <t hangText="text()">This tag has child elements. Containers SHOULD NOT
      interpret child text nodes.</t>
     </list>
@@ -657,6 +674,22 @@
       </list>
      </section>
     </section>
+    
+    <section title="/Data"
+             anchor="DataElement">
+   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+   <t>Contains data pipeline tags defined for the gadget.  
+   Data Pipeline results defined in this block are registered globally for all views by default.
+   Individual Data pipeline tags may be scoped to a particular view(s) by adding the 
+   @view attribute to the tag.  Adding the @view attribute to a data pipeline tag has the same
+   effect as if the data pipeline tags were defined within a data script nested in a Content block.
+   </t>
+   <t>
+   See <xref target="DataPipelining">Data Pipelining</xref> for more information on data pipeline tags.
+   </t>
+   </x:draft>
+    </section>
+    
     <section title="/Content"
              anchor="ContentElement">
      <t>Contains the run time portion of the gadget.</t>
@@ -2973,6 +3006,27 @@ osapi.http.post(params).execute(function(result) {
 &lt;/ModulePrefs&gt;
 </artwork>
    </figure></t>
+   
+   <section title="Data block">
+   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+   <t>A data block may be defined to hold a number of data pipeline tags.  See the 
+   <xref target="DataElement">Data Element</xref> section for more information on this element.
+   <figure>
+    <artwork xml:space="preserve">
+&lt;Module&gt;
+ &lt;Data&gt;
+  &lt;os:DataRequest key="PagedFriends" method="people.get" userId="@owner" groupId="@friends" startIndex="40" count="20"/&gt;
+ &lt;/Data&gt;
+ &lt;Content&gt;
+ ...
+ &lt;/Content&gt;
+&lt;/Module&gt;
+</artwork>
+   </figure></t>
+
+   </x:draft>   
+   </section>
+   
    <section title="Tag: &lt;os:DataRequest&gt;"
            anchor="DataRequest">
     <list style="hanging">
@@ -5359,6 +5413,18 @@ assertEquals(0.30, value);
    
   </section>
   
+  <section title="Simple Gadget XML Schema"
+           anchor="SimpleGadgetXmlSchema">
+<x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+   <t>
+    <figure>
+     <artwork xml:space="preserve">
+
+	</artwork>
+	</figure>
+	</t>
+  </x:draft>
+  </section>
   
   <references>
    <reference anchor='RFC2119'>

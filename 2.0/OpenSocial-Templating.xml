@@ -100,6 +100,38 @@
 </artwork>
    </figure>Templates can also define template markup libraries, which will map
    to XML namespaces.</t>
+   <t>
+   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+   Templates can be used to define inline rendered sections or custom tags.
+   Custom tag templates may be defined inline in the gadget XML or in <xref target="TemplateLibraries">Template Libraries</xref>.  
+   
+</x:draft>
+</t>
+   <section title="Elements and Attributes">
+   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+   <t>
+   Inline templates can be directly embedded in gadget Content blocks using 
+   &lt;script type='text/os-template' &gt; sections or directly within Content
+   blocks having type='osml'.  Custom tag templates may also be embedded inline
+   using os-template script blocks with a @tag attribute, inline with the
+   canonical &lt;Template&gt; syntax, embedded in a gadget XML &lt;Templates&gt;
+   element, or in an externally referenced 
+   <xref target="TemplateLibraries">Template Library</xref>.
+   </t>
+   <section title="/Templates" anchor="TemplatesElement">
+   <t>
+   OpenSocial Templating adds a new &lt;Templates&gt; element as a direct
+   child of the &lt;Module&gt; root.  The format of this element is the same
+   as that defined for <xref target="TemplateLibraries">Template Libraries</xref>.  Custom tag templates defined in this element will be globally available to all views by default.  Any individual custom tag
+   template may be restricted to a specific view(s) by adding a @view attribute
+   to the template definition.
+   </t>
+   </section>
+   
+   </x:draft>
+   </section>
+   
+   
   </section>
   <section title="Reserved Attributes">
    <t>Blocks of markup using OSML appear embedded in other markup within script
@@ -666,9 +698,9 @@ data-pipeline sections.
     These parameters are accessed using the special variable ${My}: 
     <figure>
      <artwork xml:space="preserve">
-&lt;script type="text/os-template" xmlns:myapp="http://example.com/myapp" tag="myapp:HelloWorld"&gt;
+&lt;Template tag="myapp:HelloWorld"&gt;
   &lt;div style="color: ${My.messageColor}"&gt;Your message is: ${My.message}&lt;/div&gt;
-&lt;/script&gt;
+&lt;/Template&gt;
  
 &lt;script type="text/os-template"&gt;
   &lt;myapp:HelloWorld message="Hello World"&gt;
@@ -1068,7 +1100,7 @@ data-pipeline sections.
     </figure></t>
    </section>
   </section>
-  <section title="Template Libraries">
+  <section title="Template Libraries" anchor='TemplateLibraries'>
    <t>While inline templates can be useful for visualizing data, eventually you
    may want to create standalone, reusable templates. A template library can
    define one or more template custom tags, but all of them must be in a single
