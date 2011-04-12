@@ -16,12 +16,10 @@ Deprecate the existing activity api in favor of activity streams (http://code.go
 Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
 Add support for different icon sizes (http://code.google.com/p/opensocial-resources/issues/detail?id=1155)
 Remove Quirks Mode (http://code.google.com/p/opensocial-resources/issues/detail?id=1139)
-Simple Gadget Format
-(http://code.google.com/p/opensocial-resources/issues/detail?id=1162)
-Cross container data requests
-(http://code.google.com/p/opensocial-resources/issues/detail?id=1163)
-Variable substitution standardized on EL syntax 
-(http://code.google.com/p/opensocial-resources/issues/detail?id=1164)
+Simple Gadget Format (http://code.google.com/p/opensocial-resources/issues/detail?id=1162)
+Cross container data requests (http://code.google.com/p/opensocial-resources/issues/detail?id=1163)
+Variable substitution standardized on EL syntax  (http://code.google.com/p/opensocial-resources/issues/detail?id=1164)
+Add support for spaces (http://code.google.com/p/opensocial-resources/issues/detail?id=1135)
 
 OpenSocial 2.0 "Bugs"
 ----------------------
