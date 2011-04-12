@@ -230,7 +230,9 @@ Content-Type: application/json
      <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ]
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetPeople-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -238,16 +240,23 @@ Content-Type: application/json
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetPeople-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Person">Person</eref>&gt;</artwork>
-     <t>Note that the Group-Id can't be '@self' in these requests or only a single Person will be returned.</t>  
+     <t>Note that the Group-Id can't be '@self' in these requests or only a single Person will be returned.</t>       
+     <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+     <t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+     </x:draft>
      <section title="Get People Request Parameters" anchor="GetPeople-Request-Parameters">
         <t>A request for a Collection of Person objects MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+        <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
          <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
-          <c>User ID of person or people to retrieve.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref></c>
+          <c>Context ID of object for which people are retrieved.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref></c>
+          <c>Context Type of object for which people are retrieved.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
           <c>The Group ID of the group of users related to User ID.  Defaults to "@self", which MUST return only the Person object(s) specified by the userId parameter.</c>
@@ -260,6 +269,7 @@ Content-Type: application/json
       etc.) to include the transitive closure of all friends up to the specified
       distance away.</c>
          </texttable>
+   </x:draft>
      </section>
      <section title="Examples">
       <t>Here's an example of a REST request to retrieve the list of a user's friends, and the associated response. Note that 'format=xml' is used to specify that the response should contain XML.
@@ -370,93 +380,96 @@ Content-Type: application/json
 </artwork>   
     </section>
     </section>
-    <section title="Create" anchor="People-Service-Create">
-     <section title="Create a relationship"
-             anchor="People-Service-CreateRelationship">
-     <t>Containers MAY support request to create a new relationships between users. This is a generalization of many use cases including invitation, and contact creation. Containers MAY require a dual opt-in process before the friend record appears in the collection, and in this case SHOULD
-    return a 202 Accepted response, indicating that the request is 'in flight'
-    and may or may not be ultimately successful.</t>
-    <t>Requests and responses for creating a relationship use the following values:</t>
-     <artwork type="abnf"
-         xml:space="preserve">
-<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
-<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
-<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
+	    <section title="Create" anchor="People-Service-Create">
+	     <section title="Create a relationship"
+	             anchor="People-Service-CreateRelationship">
+         <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+	     <t>Containers MAY support request to create a new relationship between user from one side and user or space from another side. This is a generalization of many use cases including invitation, contact creation, space membership request. Containers MAY require a dual opt-in process before the friend or membership record appears in the collection, and in this case SHOULD
+	    return a 202 Accepted response, indicating that the request is 'in flight'
+	    and may or may not be ultimately successful.</t>
+	    <t>Requests and responses for creating a relationship use the following values:</t>
+	     <artwork type="abnf"
+	         xml:space="preserve">
+	<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+	<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> [ "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> ]
+	<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+	<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
 
-<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.create"
-<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateRelationship-Request-Parameters</x:ref>)
+	<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.create"
+	<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateRelationship-Request-Parameters</x:ref>)
 
-<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
-</artwork>
-     <section title="Create Relationship Request Parameters" anchor="CreateRelationship-Request-Parameters">
-        <t>A request to create a relationship MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
-         <texttable align="left">
-          <ttcol>Name</ttcol>
-          <ttcol>Type</ttcol>
-          <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
-          <c>User ID of the person initiating the relationship request.  Defaults to "@me", which MUST return the currently logged in user.</c>
-          <c>groupId</c>
-          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The Group ID specifying the type of relationship.  Defaults to "@friends".</c>
-          <c>person</c>
-          <c><eref target="Social-Data.xml#Person">Person</eref></c>
-          <c>The target of the relationship.</c>
-         </texttable>
-     </section>
-     <section title="Examples">
-       <t>Here is an example of a request to create a friend relationship using the REST protocol.  In this example, the target user (specified in the post body) needs to accept the invitation before being added to the collection, as indicated by the 202 Accepted response.
-        <t>HTTP Request</t>
-        <artwork type="example"
-         xml:space="preserve">
-POST /rest/people/@self/@friends HTTP/1.1
-HOST api.example.org
-Authorization: hh5s93j4hdidpola
-Content Type: application/xml
-&lt;entry xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-  &lt;id>example.org:34KJDCSKJN2HHF0DW20394&lt;/id&gt;
-&lt;/entry&gt;
-</artwork>
-      <t>HTTP Response</t>
-      <artwork type="example"
-         xml:space="preserve">
-HTTP/1.1 202 Accepted
-</artwork>
-       </t>
-       <t>Here is an example of a request to create a friend relationship using the RPC protocol:
-        <artwork type="example" xml:space="preserve">
-POST /rpc HTTP/1.1
-Host: api.example.org
-Authorization: &lt;auth token&gt;
-Content-Type: application/json
-{
-  "method" : "people.create",
-  "id" : "createFriend"
-  "params: {
-    "userId" : "@me",
-    "groupId" : "@friends",
-    "person" : {
-      "id" : "example.org:FF256337"
-    }
-  }
-}</artwork>
-        <t>If successful, the associated response contains no data:</t>
-        <artwork type="example" xml:space="preserve">
-HTTP/1.x 207 Multi-Status
-Content-Type: application/json
-{
-  "id" : "createFriend",
-  "result" : {}
-}  
-</artwork>
-        <t>The URL-addressable equivalent of this RPC request is:</t>
-        <artwork type="example"> http://api.example.org/rpc?method=people.create&amp;id=createFriend&amp;userId=@me&amp;groupId=@friends&amp;person.id=example.org:FF256337</artwork>
-      </t>
-     </section>
-    </section>
-    </section>
+	<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+	</artwork>
+	     <section title="Create Relationship Request Parameters" anchor="CreateRelationship-Request-Parameters">
+	        <t>A request to create a relationship MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+	         <texttable align="left">
+	          <ttcol>Name</ttcol>
+	          <ttcol>Type</ttcol>
+	          <ttcol>Description</ttcol>
+	          <c>userId</c>
+	          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+	          <c>User ID of the person initiating the relationship request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+	          <c>groupId</c>
+	          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+	          <c>The Group ID specifying the type of relationship.  Defaults to "@friends".</c>
+	          <c>context</c>
+	          <c><eref target="Social-Data.xml#Context">Context</eref></c>
+	          <c>The target of the relationship. Can be a space for membership request or a person for contact creation request.</c>
+	         </texttable>
+	     </section>
+	     <section title="Examples">
+	       <t>Here is an example of a request to become a member of a Space using the REST protocol.  In this example, the target context (space that is specified in the post body) needs to accept the invitation before being added to the collection, as indicated by the 202 Accepted response.
+	        <t>HTTP Request</t>
+	        <artwork type="example"
+	         xml:space="preserve">
+	POST /rest/people/@self HTTP/1.1
+	HOST api.example.org
+	Authorization: hh5s93j4hdidpola
+	Content Type: application/xml
+	&lt;entry xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+	  &lt;id>34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+	  &lt;type>@space&lt;/type&gt;
+	&lt;/entry&gt;
+	</artwork>
+	      <t>HTTP Response</t>
+	      <artwork type="example"
+	         xml:space="preserve">
+	HTTP/1.1 202 Accepted
+	</artwork>
+	       </t>
+	       <t>Here is an example of a request to create a member relationship using the RPC protocol:
+	        <artwork type="example" xml:space="preserve">
+	POST /rpc HTTP/1.1
+	Host: api.example.org
+	Authorization: &lt;auth token&gt;
+	Content-Type: application/json
+	{
+	  "method" : "people.create",
+	  "id" : "createMember"
+	  "params: {
+	    "userId" : "@me",
+	    "context" : {
+	      "id" : "FF256337",
+	      "type" : "@space"
+	    }
+	  }
+	}</artwork>
+	        <t>If successful, the associated response contains no data:</t>
+	        <artwork type="example" xml:space="preserve">
+	HTTP/1.x 207 Multi-Status
+	Content-Type: application/json
+	{
+	  "id" : "createMember",
+	  "result" : {}
+	}  
+	</artwork>
+	        <t>The URL-addressable equivalent of this RPC request is:</t>
+	        <artwork type="example"> http://api.example.org/rpc?method=people.create&amp;id=createMember&amp;userId=@me&amp;context.id=FF256337&amp;context.type=@space</artwork>
+	      </t>
+	     </section>
+     </x:draft>
+	    </section>
+	    </section>
     <section title="Update a Person" anchor="People-Service-Update">
      <t>Containers MAY support updating the properties of a Person object.  If the request is successful, the container MUST return the updated Person object. Requests and responses for updating the fields of a Person use the following values:</t>
      <artwork type="abnf"
@@ -506,6 +519,756 @@ Content-Type: application/json
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
 </artwork>
     </section>
+   </section>
+
+<!-- *********************************************************************************** -->
+   <section title="Spaces"
+            anchor="Spaces-Service">
+    <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+    <t>Containers MUST support the Spaces Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Spaces Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/spaces"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "spaces"
+</artwork>
+    <section title="Get"    anchor="Spaces-Service-Get">
+     <t>The Get method supports several different types of queries, from requests for a space or group of spaces to information about what profile fields are available.</t>
+     <section title="Get a Space" anchor="Spaces-Service-GetSpace">
+      <t>Containers MUST support retrieving information about a space. Requests and responses for retrieving a space use the following values:</t>
+      <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/spaces/" <eref target="Core-Data.xml#Space-Id">Space-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetSpace-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "spaces.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetSpace-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Space">Space</eref>
+</artwork>
+      <section title="Get Space Request Parameters" anchor="GetSpace-Request-Parameters">
+        <t>A request for a Space object MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>spaceId</c>
+          <c><eref target="Core-Data.xml#Space-Id">Space-Id</eref></c>
+          <c>Space ID of space to retrieve. Note that the spaceId parameter is not applicable in the REST protocol, as the space is identified in the REST-URI-FRAGMENT.</c>
+          <c>fields</c>
+          <c><eref target="./Core-Data.xml#Array">Array</eref>&lt;String&gt;</c>
+          <c>An array of Space field names.  For standard values, see the <eref target="./Social-Data.xml#Space">Space</eref> object.</c>
+          <c>escapeType</c>
+          <c><eref target="./Social-Data.xml#Escape-Type">Escape-Type</eref></c>
+          <c>Specifies the type of escaping to use on any AppData values included in the response. Defaults to "htmlEscape".</c>
+        </texttable>
+        <t><xref target="AppData-Service">AppData</xref> for the space or collection of spaces returned may be fetched by including "appdata" in the fields
+     parameter. If only a subset of AppData fields are desired, they may be
+     fetched by specifying "appdata.&lt;fieldname&gt;" for each field that
+     needs to be fetched. For example, specifying "appdata.key1,appdata.key2" will return Appdata stored under the keys "key1" and "key2" for the requester.</t>
+      </section>
+      <section title="Examples">
+       <t>Here's an example of a REST request to retrieve a space and the
+     associated response. Note that 'format=xml' is used to specify that the response should contain XML.
+       <t>HTTP Request</t>
+        <artwork type="example"
+         xml:space="preserve">
+GET /rest/spaces/34KJDCSKJN2HHF0DW20394?fields=name,description&amp;format=xml HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+</artwork>
+        <t>HTTP Response</t>
+        <artwork type="example"
+         xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: text/xml
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;space&gt;
+    &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+    &lt;name&gt;English class&lt;/name&gt;
+    &lt;description&gt;English learning course at EPFL&lt;/description&gt;
+  &lt;/space&gt;
+&lt;/response&gt;
+</artwork>
+       </t>
+       <t>Here's the same example to retrieve a space and the
+     associated response using the RPC protocol. 
+        <t>Note that the URL addressable equivalent is:</t>
+        <artwork type="example"> http://api.example.org/rpc?method=spaces.get&amp;id=someSpace&amp;spaceId=34KJDCSKJN2HHF0DW20394</artwork>
+        <t>HTTP Request</t>
+        <artwork type="example"
+         xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "method" : "spaces.get",
+  "id" : "someSpace"
+  "params" : {
+    "spaceId" : "34KJDCSKJN2HHF0DW20394",
+    "fields" : [ "name", "description" ]
+  }
+}
+</artwork>
+        <t>HTTP Response</t>
+        <artwork type="example"
+         xml:space="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "someSpace"
+   "result" : {
+     "id" : "34KJDCSKJN2HHF0DW20394",
+     "name" : "English class",
+     "description" : "English learning course at EPFL"
+   }
+}
+</artwork>
+       </t>
+      </section>
+    </section>
+     <section title="Get a list of Spaces"
+             anchor="Spaces-Service-GetSpaces">
+     <t>Containers MUST support retrieving information about multiple spaces in a single request. Requests and responses for retrieving a list of spaces use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/spaces/" <eref target="Core-Data.xml#Context">Context-Id</eref> [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ]
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetSpaces-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "spaces.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetSpaces-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Space">Space</eref>&gt;</artwork>
+     <t>Note that when Context-Type is not defined, Context-Id is the same as Space-Id and can contain an array.</t> 
+     
+     <section title="Get Spaces Request Parameters" anchor="GetSpaces-Request-Parameters">
+        <t>A request for a Collection of Space objects MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Space-Id">Space-Id</eref>&gt;</c>
+          <c>Context ID of object for which spaces are retrieved or array of Space IDs to retrieve.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref></c>
+          <c>Context Type of object for which spaces are retrieved.</c>
+          <c>fields</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;</c>
+          <c>An array of Space field names.  For standard values, see the <eref target="./Social-Data.xml#Space">Space</eref> object.</c>
+         </texttable>
+     </section>
+     <section title="Examples">
+      <t>Here's an example of a REST request to retrieve the list of all spaces for a person Jane Doe, and the associated response. Note that 'format=xml' is used to specify that the response should contain XML.
+      <t>HTTP Request</t>
+      <artwork type="example"
+         xml:space="preserve">
+GET /rest/spaces/92WEGDFEWSS2GS0DW274EQ/@person?fields=name,description&amp;format=xml HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+</artwork>
+      <t>HTTP Response</t>
+      <artwork type="example"
+         xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: text/xml
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+  &lt;itemsPerPage&gt; 2 &lt;/itemsPerPage&gt;
+  &lt;totalResults&gt; 100 &lt;/totalResults&gt;
+  &lt;entry&gt;
+    &lt;space&gt;
+      &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+      &lt;name&gt;English class&lt;/name&gt;
+      &lt;description&gt;English learning course at EPFL&lt;/description&gt;
+    &lt;/space&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;space&gt;
+      &lt;id&gt;VMK92BFH3DNWRYX39673DF&lt;/id&gt;
+      &lt;name&gt;Movies watching&lt;/name&gt;
+      &lt;description&gt;A space with my friends for organizing our movies watching evenings&lt;/description&gt;
+    &lt;/space&gt;
+  &lt;/entry&gt; 
+&lt;/response&gt;
+</artwork>
+      </t>
+      <t>Here's an example of a RPC request to retrieve the list of a space's friends, and the associated response.
+       <t>HTTP Request</t>
+       <artwork type="example"
+         xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "method" : "spaces.get",
+  "id" : "mySpaces"
+  "params" : {
+    "contextId" : "92WEGDFEWSS2GS0DW274EQ",
+    "contextType" : "@person",
+    "fields" : "name, description"
+  }
+}
+</artwork>
+       <t>HTTP Response</t>
+       <artwork type="example"
+         xml:space="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "mySpaces"
+   "result" : {
+     "startIndex" : 1
+     "itemsPerPage" : 2
+     "totalResults" : 100
+     "entry" : [
+       {
+         "id" : "34KJDCSKJN2HHF0DW20394",
+         "name" : "English class",
+         "description" : "English learning course at EPFL"
+       },
+       {
+         "id" : "VMK92BFH3DNWRYX39673DF",
+         "name" : "Movies watching",
+         "description" : "A space with my friends for organizing our movies watching evenings"
+       }
+     ]
+   }
+}
+</artwork>
+      </t>
+     </section>
+    </section>
+     <section title="Retrieve a list of supported Space fields" anchor="Spaces-Service-GetSupportedFields">
+      <t>Containers MAY support REST requests for supported space fields. Requests and responses for retrieving supported space fields use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/spaces/@supportedFields"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;  
+</artwork>   
+    </section>
+    </section>
+    <section title="Create" anchor="Spaces-Service-Create">
+     <section title="Create a space"
+             anchor="Spaces-Service-CreateSpace">
+     <t>Containers MAY support request to create a new space for a person or a new sub-space for an already existing space.</t>
+    <t>Requests and responses for creating a relationship use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/spaces/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" <eref target="Core-Data.xml#Context">Context-Type</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Space">Space</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "spaces.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateSpace-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          =  <eref target="Core-Data.xml#Space-Id">Space-Id</eref> 
+</artwork>
+     <section title="Create Space Request Parameters" anchor="CreateSpace-Request-Parameters">
+        <t>A request to create a Space MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref></c>
+          <c>Context ID of object for which space is to be created.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref></c>
+          <c>Context Type of object for which space is to be created.</c>
+          <c>space</c>
+          <c><eref target="Social-Data.xml#Space">Space</eref></c>
+          <c>A space data to initialize fields of Space. Note that name field is required.</c>
+         </texttable>
+     </section>
+     <section title="Examples">
+       <t>Here is an example of a request to create a space for a person.
+        <t>HTTP Request</t>
+        <artwork type="example"
+         xml:space="preserve">
+POST /rest/spaces/34KJDCSKJN2HHF0DW20394/@person HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+Content Type: application/xml
+&lt;entry xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;data>
+    &lt;name>English class&lt;/name&gt;
+  &lt;/data>
+&lt;/entry&gt;
+</artwork>
+      <t>HTTP Response</t>
+      <artwork type="example"
+         xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "result" : "3LDKSLDFJ3232432LKJ"
+}
+</artwork>
+       </t>
+       <t>Here is an example of a request to create a space for a person using the RPC protocol:
+        <artwork type="example" xml:space="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+  "method" : "spaces.create",
+  "id" : "createSpace"
+  "params: {
+    "contextId" : "34KJDCSKJN2HHF0DW20394",
+    "contextType" : "@person",
+    "space" : {
+      "name" : "English class"
+    }
+  }
+}</artwork>
+        <t>If successful, the associated response contains id of newly created space:</t>
+        <artwork type="example" xml:space="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "id" : "createSpace",
+  "result" : "3LDKSLDFJ3232432LKJ"
+}  
+</artwork>
+        <t>The URL-addressable equivalent of this RPC request is:</t>
+        <artwork type="example"> http://api.example.org/rpc?method=spaces.create&amp;id=createSpace&amp;contextId=34KJDCSKJN2HHF0DW20394&amp;contextType=@person</artwork>
+      </t>
+     </section>
+    </section>
+    </section>
+    <section title="Update a Space" anchor="Spaces-Service-Update">
+     <t>Containers MAY support updating the properties of a Space object.  If the request is successful, the container MUST return the updated Space object. Requests and responses for updating the fields of a Space use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/spaces/" <eref target="Core-Data.xml#Space-Id">Space-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Space">Space</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "spaces.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateSpace-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Space">Space</eref>
+</artwork>
+     <section title="Update Space Request Parameters" anchor="UpdateSpace-Request-Parameters">
+        <t>A request to update a space MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>spaceId</c>
+          <c><eref target="Core-Data.xml#Space-Id">Space-Id</eref></c>
+          <c>Space ID of the space to be updated.</c>
+          <c>space</c>
+          <c><eref target="Social-Data.xml#Space">Space</eref></c>
+          <c>A Space object containing the updated fields.</c>
+         </texttable>
+     </section>
+    </section>
+    <section title="Delete a Space" anchor="Spaces-Service-Delete">
+     <t>Containers MAY support requests to remove a Space. Requests and responses to remove a Space use the following values:</t>
+     <artwork type="abnf"
+         xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/spaces/" <eref target="Core-Data.xml#Space-Id">Space-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "spaces.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = "{"
+                             &lt;"&gt; "spaceId" &lt;"&gt; ":" &lt;"&gt; <eref target="Core-Data.xml#Space-Id">Space-Id</eref> &lt;"&gt;
+                         "}"
+                         
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+    </section>
+</x:draft>
+   </section>
+
+<!-- *********************************************************************************** -->
+   <section title="Applications"
+            anchor="Applications-Service">
+    <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+    <t>Containers MUST support the Applications Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Applications Service:</t>
+    <artwork type="abnf">
+<eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/applications"
+<eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "applications"
+</artwork>
+    <section title="Get"    anchor="Applications-Service-Get">
+     <t>The Get method supports several different types of queries, from requests for an application or group of applications to information about what profile fields are available.</t>
+     <section title="Get an Application" anchor="Applications-Service-GetApplication">
+      <t>Containers MUST support retrieving information about an application. Requests and responses for retrieving an application use the following values:</t>
+      <artwork type="abnf"
+         xml:application="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/applications/" <eref target="Core-Data.xml#Application-Id">Application-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetApplication-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "applications.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetApplication-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Application">Application</eref>
+</artwork>
+      <section title="Get Application Request Parameters" anchor="GetApplication-Request-Parameters">
+        <t>A request for an Application object MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>applicationId</c>
+          <c><eref target="Core-Data.xml#Application-Id">Application-Id</eref></c>
+          <c>Application ID of application to retrieve. Note that the applicationId parameter is not applicable in the REST protocol, as the application is identified in the REST-URI-FRAGMENT.</c>
+          <c>fields</c>
+          <c><eref target="./Core-Data.xml#Array">Array</eref>&lt;String&gt;</c>
+          <c>An array of Application field names.  For standard values, see the <eref target="./Social-Data.xml#Application">Application</eref> object.</c>
+          <c>escapeType</c>
+          <c><eref target="./Social-Data.xml#Escape-Type">Escape-Type</eref></c>
+          <c>Specifies the type of escaping to use on any AppData values included in the response. Defaults to "htmlEscape".</c>
+        </texttable>
+        <t><xref target="AppData-Service">AppData</xref> for the application or collection of applications returned may be fetched by including "appdata" in the fields
+     parameter. If only a subset of AppData fields are desired, they may be
+     fetched by specifying "appdata.&lt;fieldname&gt;" for each field that
+     needs to be fetched. For example, specifying "appdata.key1,appdata.key2" will return Appdata stored under the keys "key1" and "key2" for the requester.</t>
+      </section>
+      <section title="Examples">
+       <t>Here's an example of a REST request to retrieve an application and the
+     associated response. Note that 'format=xml' is used to specify that the response should contain XML.
+       <t>HTTP Request</t>
+        <artwork type="example"
+         xml:application="preserve">
+GET /rest/applications/34KJDCSKJN2HHF0DW20394?fields=name,appUrl&amp;format=xml HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+</artwork>
+        <t>HTTP Response</t>
+        <artwork type="example"
+         xml:application="preserve">
+HTTP/1.1 200 OK
+Content-Type: text/xml
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;application&gt;
+    &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+    &lt;name&gt;Chat gadget&lt;/name&gt;
+    &lt;appUrl&gt;http://example.org/gadget.xml&lt;/appUrl&gt;
+  &lt;/application&gt;
+&lt;/response&gt;
+</artwork>
+       </t>
+       <t>Here's the same example to retrieve an application and the
+     associated response using the RPC protocol. 
+        <t>Note that the URL addressable equivalent is:</t>
+        <artwork type="example"> http://api.example.org/rpc?method=applications.get&amp;id=someApplication&amp;applicationId=34KJDCSKJN2HHF0DW20394</artwork>
+        <t>HTTP Request</t>
+        <artwork type="example"
+         xml:application="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "method" : "applications.get",
+  "id" : "someApplication"
+  "params" : {
+    "applicationId" : "34KJDCSKJN2HHF0DW20394",
+    "fields" : [ "name", "appUrl" ]
+  }
+}
+</artwork>
+        <t>HTTP Response</t>
+        <artwork type="example"
+         xml:application="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "someApplication"
+   "result" : {
+     "id" : "34KJDCSKJN2HHF0DW20394",
+     "name" : "Chat gadget",
+     "appUrl" : "http://example.org/gadget.xml"
+   }
+}
+</artwork>
+       </t>
+      </section>
+    </section>
+     <section title="Get a list of Applications"
+             anchor="Applications-Service-GetApplications">
+     <t>Containers MUST support retrieving information about multiple applications in a single request. Requests and responses for retrieving a list of applications use the following values:</t>
+     <artwork type="abnf"
+         xml:application="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/applications/" <eref target="Core-Data.xml#Context">Context-Id</eref> ["/" <eref target="Core-Data.xml#Context">Context-Type</eref> ]
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetApplications-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "applications.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetApplications-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Application">Application</eref>&gt;</artwork>
+     <t>Note that when Context-Type is not defined, Context-Id is the same as Application-Id and can contain an array.</t> 
+
+     <section title="Get Applications Request Parameters" anchor="GetApplications-Request-Parameters">
+        <t>A request for a Collection of Application objects MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Application-Id">Application-Id</eref>&gt;</c>
+          <c>Context ID of object or objects for which applications are retrieved or array of Application IDs to retrieve..</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref></c>
+          <c>Context Type of object for which applications are retrieved.</c>
+          <c>fields</c>
+          <c><eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;</c>
+          <c>An array of Application field names.  For standard values, see the <eref target="./Social-Data.xml#Application">Application</eref> object.</c>
+         </texttable>
+     </section>
+     <section title="Examples">
+      <t>Here's an example of a REST request to retrieve the list of all applications for a person Jane Doe, and the associated response. Note that 'format=xml' is used to specify that the response should contain XML.
+      <t>HTTP Request</t>
+      <artwork type="example"
+         xml:application="preserve">
+GET /rest/applications/92WEGDFEWSS2GS0DW274EQ/@person?fields=name,appUrl&amp;format=xml HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+</artwork>
+      <t>HTTP Response</t>
+      <artwork type="example"
+         xml:application="preserve">
+HTTP/1.1 200 OK
+Content-Type: text/xml
+&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
+  &lt;itemsPerPage&gt; 2 &lt;/itemsPerPage&gt;
+  &lt;totalResults&gt; 100 &lt;/totalResults&gt;
+  &lt;entry&gt;
+    &lt;application&gt;
+      &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+      &lt;name&gt;Chat gadget&lt;/name&gt;
+      &lt;appUrl&gt;http://example.org/chat.xml&lt;/appUrl&gt;
+    &lt;/application&gt;
+  &lt;/entry&gt;
+  &lt;entry&gt;
+    &lt;application&gt;
+      &lt;id&gt;VMK92BFH3DNWRYX39673DF&lt;/id&gt;
+      &lt;name&gt;Search gadget&lt;/name&gt;
+      &lt;appUrl&gt;http://example.org/search.xml&lt;/appUrl&gt;
+    &lt;/application&gt;
+  &lt;/entry&gt; 
+&lt;/response&gt;
+</artwork>
+      </t>
+      <t>Here's an example of a RPC request to retrieve the list of a application's friends, and the associated response.
+       <t>HTTP Request</t>
+       <artwork type="example"
+         xml:application="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Type: application/json
+{
+  "method" : "applications.get",
+  "id" : "myApplications"
+  "params" : {
+    "contextId" : "92WEGDFEWSS2GS0DW274EQ",
+    "contextType" : "@person",
+    "fields" : "name, appUrl"
+  }
+}
+</artwork>
+       <t>HTTP Response</t>
+       <artwork type="example"
+         xml:application="preserve">
+HTTP/1.x 207 Multi-Status
+Content-Type: application/json
+{
+   "id" : "myApplications"
+   "result" : {
+     "startIndex" : 1
+     "itemsPerPage" : 2
+     "totalResults" : 100
+     "entry" : [
+       {
+         "id" : "34KJDCSKJN2HHF0DW20394",
+         "name" : "Chat gadget",
+         "appUrl" : "http://example.org/chat.xml"
+       },
+       {
+         "id" : "VMK92BFH3DNWRYX39673DF",
+         "name" : "Search gadget",
+         "appUrl" : "http://example.org/search.xml"
+       }
+     ]
+   }
+}
+</artwork>
+      </t>
+     </section>
+    </section>
+     <section title="Retrieve a list of supported Application fields" anchor="Applications-Service-GetSupportedFields">
+      <t>Containers MAY support REST requests for supported application fields. Requests and responses for retrieving supported application fields use the following values:</t>
+     <artwork type="abnf"
+         xml:application="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/applications/@supportedFields"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;  
+</artwork>   
+    </section>
+    </section>
+    <section title="Create" anchor="Applications-Service-Create">
+     <section title="Create an application"
+             anchor="Applications-Service-CreateApplication">
+     <t>Containers MAY support request to create a new application for a person or for a space.</t>
+    <t>Requests and responses for creating a relationship use the following values:</t>
+     <artwork type="abnf"
+         xml:application="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/applications/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" <eref target="Core-Data.xml#Context">Context-Type</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Application">Application</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "applications.create"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateApplication-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          =  <eref target="Core-Data.xml#Application-Id">Application-Id</eref> 
+</artwork>
+     <section title="Create Application Request Parameters" anchor="CreateApplication-Request-Parameters">
+        <t>A request to create an Application MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref></c>
+          <c>Context ID of object for which application is to be created.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref></c>
+          <c>Context Type of object for which application is to be created.</c>
+          <c>application</c>
+          <c><eref target="Social-Data.xml#Application">Application</eref></c>
+          <c>A application data to initialize fields of Application. Note that name field is required.</c>
+         </texttable>
+     </section>
+     <section title="Examples">
+       <t>Here is an example of a request to create an application for a person.
+        <t>HTTP Request</t>
+        <artwork type="example"
+         xml:application="preserve">
+POST /rest/applications/34KJDCSKJN2HHF0DW20394/@person HTTP/1.1
+HOST api.example.org
+Authorization: hh5s93j4hdidpola
+Content Type: application/xml
+&lt;entry xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
+  &lt;data>
+    &lt;name>Search gadget&lt;/name&gt;
+    &lt;appUrl>http://example.org/chat.xml&lt;/appUrl&gt;
+  &lt;/data>
+&lt;/entry&gt;
+</artwork>
+      <t>HTTP Response</t>
+      <artwork type="example"
+         xml:application="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "result" : "3LDKSLDFJ3232432LKJ"
+}
+</artwork>
+       </t>
+       <t>Here is an example of a request to create an application for a person using the RPC protocol:
+        <artwork type="example" xml:application="preserve">
+POST /rpc HTTP/1.1
+Host: api.example.org
+Authorization: &lt;auth token&gt;
+Content-Type: application/json
+{
+  "method" : "applications.create",
+  "id" : "createApplication"
+  "params: {
+    "contextId" : "34KJDCSKJN2HHF0DW20394",
+    "contextType" : "@person",
+    "application" : {
+      "name" : "Search gadget",
+      "appUrl" : "http://example.org/chat.xml"
+    }
+  }
+}</artwork>
+        <t>If successful, the associated response contains id of newly created application:</t>
+        <artwork type="example" xml:application="preserve">
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "id" : "createApplication",
+  "result" : "3LDKSLDFJ3232432LKJ"
+}  
+</artwork>
+        <t>The URL-addressable equivalent of this RPC request is:</t>
+        <artwork type="example"> http://api.example.org/rpc?method=applications.create&amp;id=createApplication&amp;contextId=34KJDCSKJN2HHF0DW20394&amp;contextType=@person</artwork>
+      </t>
+     </section>
+    </section>
+    </section>
+    <section title="Update an Application" anchor="Applications-Service-Update">
+     <t>Containers MAY support updating the properties of an Application object.  If the request is successful, the container MUST return the updated Application object. Requests and responses for updating the fields of an Application use the following values:</t>
+     <artwork type="abnf"
+         xml:application="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/applications/" <eref target="Core-Data.xml#Application-Id">Application-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Application">Application</eref>
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "applications.update"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateApplication-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Application">Application</eref>
+</artwork>
+     <section title="Update Application Request Parameters" anchor="UpdateApplication-Request-Parameters">
+        <t>A request to update a application MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>applicationId</c>
+          <c><eref target="Core-Data.xml#Application-Id">Application-Id</eref></c>
+          <c>Application ID of the application to be updated.</c>
+          <c>application</c>
+          <c><eref target="Social-Data.xml#Application">Application</eref></c>
+          <c>A Application object containing the updated fields.</c>
+         </texttable>
+     </section>
+    </section>
+    <section title="Delete a Application" anchor="Applications-Service-Delete">
+     <t>Containers MAY support requests to remove an Application. Requests and responses to remove an Application use the following values:</t>
+     <artwork type="abnf"
+         xml:application="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/applications/" <eref target="Core-Data.xml#Application-Id">Application-Id</eref>
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "applications.delete"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = "{"
+                             &lt;"&gt; "applicationId" &lt;"&gt; ":" &lt;"&gt; <eref target="Core-Data.xml#Application-Id">Application-Id</eref> &lt;"&gt;
+                         "}"
+                         
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+</artwork>
+    </section>
+</x:draft>
    </section>
 
 <!-- *********************************************************************************** -->
@@ -675,7 +1438,9 @@ Content-Type: application/json
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> [ "/" (Activity-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Activity-Id&gt;) ] ] 
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ] [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> [ "/" (Activity-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Activity-Id&gt;) ] ] 
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetActivities-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -685,15 +1450,22 @@ Content-Type: application/json
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Activity">Activity</eref> /  <eref target="Core-Data.xml#Collection">Collection</eref>&lt;<eref target="Social-Data.xml#Activity">Activity</eref>&gt;
 <x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
 </artwork>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+</x:draft>
      <section title="Get Activities Request Parameters" anchor="GetActivities-Request-Parameters">
         <t>A request for a Collection of Activity objects MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
-          <c>User ID(s) of the person whose activities are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Id</eref>&gt;</c>
+          <c>Context ID of object or objects (Person or Space) for which activities are retrieved.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Type</eref>&gt;</c>
+          <c>Context Type of object or objects (Person or Space) for which activities are retrieved.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
           <c>The group ID of the group of users whose activities are to be returned.  Defaults to "@self", which MUST return only the Activity objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
@@ -704,6 +1476,7 @@ Content-Type: application/json
           <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
           <c>Optional. Specifies a list of individual activities to include in the response. In the REST protocol, the activityIds are specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
         </texttable>
+</x:draft>
       </section>
      </section>
      <section title="Retrieve a list of supported Activity fields" anchor="Activity-Service-GetSupportedFields">
@@ -724,7 +1497,9 @@ Content-Type: application/json
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ]
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Activity">Activity</eref>
 
@@ -734,19 +1509,27 @@ Content-Type: application/json
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = Activity-Id
 <x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
 </artwork>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+</x:draft>
      <section title="Create Activities Request Parameters" anchor="CreateActivities-Request-Parameters">
         <t>A request to create an Activity MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
-          <c>User ID of the person to associate the activity with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Id</eref>&gt;</c>
+          <c>Context ID of object or objects (Person or Space) with which activities are associated.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Type</eref>&gt;</c>
+          <c>Context Type of object or objects (Person or Space) with which activities are associated.</c>
           <c>activity</c>
           <c><eref target="Social-Data.xml#Activity">Activity</eref></c>
           <c>The activity to associate with the given user.</c>
         </texttable>
+</x:draft>
       </section>
     </section>  
     <section title="Update an activity" anchor="Activities-Service-Update">
@@ -755,7 +1538,9 @@ Content-Type: application/json
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>     = "/activities/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ]
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Activity">Activity</eref>
 
@@ -764,19 +1549,27 @@ Content-Type: application/json
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Activity">Activity</eref>
 </artwork>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+</x:draft>
       <section title="Update Activities Request Parameters" anchor="UpdateActivities-Request-Parameters">
         <t>A request to update an Activity MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
-          <c>User ID(s) of the person the activity is associated with. Defaults to "@me", indicating the currently authenticated user.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Id</eref>&gt;</c>
+          <c>Context ID of object or objects (Person or Space) with which activities are associated.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Type</eref>&gt;</c>
+          <c>Context Type of object or objects (Person or Space) with which activities are associated.</c>
           <c>activity</c>
           <c><eref target="Social-Data.xml#Activity">Activity</eref></c>
-          <c>The activity to update.  Only the 'id' field of the activity is required.</c>
+          <c>The activity to associate with the given user.</c>
         </texttable>
+</x:draft>
       </section>
     </section>  
     <section title="Delete an activity" anchor="Activities-Service-Delete">
@@ -784,7 +1577,10 @@ Content-Type: application/json
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>     = "/activities/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" "@self" [ ]
+"/" <eref target="Core-Data.xml#Context">Context-Type</eref> ]
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Activity">Activity</eref>
 
@@ -793,19 +1589,27 @@ Content-Type: application/json
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
 </artwork>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+</x:draft>
       <section title="Delete Activities Request Parameters" anchor="DeleteActivities-Request-Parameters">
         <t>A request to delete an Activity MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
-          <c>User ID(s) of the person the activity is associated with. Defaults to "@me", indicating the currently authenticated user.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Id</eref>&gt;</c>
+          <c>Context ID of object or objects (Person or Space) with which activities are associated.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Type</eref>&gt;</c>
+          <c>Context Type of object or objects (Person or Space) with which activities are associated.</c>
           <c>activity</c>
           <c><eref target="Social-Data.xml#Activity">Activity</eref></c>
-          <c>The activity to delete. Only the 'id' field of the activity is required.</c>
+          <c>The activity to associate with the given user.</c>
         </texttable>
+</x:draft>
       </section>
     </section>
    </section>
@@ -982,7 +1786,9 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityEntryId=
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ] [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetAppData-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -991,15 +1797,22 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityEntryId=
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#AppData">AppData</eref>
 </artwork>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+</x:draft>
       <section title="Get AppData Request Parameters" anchor="GetAppData-Request-Parameters">
         <t>A request to retrieve AppData MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, the <eref target="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</eref>, and the following additional parameters:</t>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#User-Id">User-Id</eref>&gt;</c>
-          <c>User ID(s) of the person whose AppData is to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Id</eref>&gt;</c>
+          <c>Context ID of object or objects whose AppData is to be retrieved.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref> or <eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Context">Context-Type</eref>&gt;</c>
+          <c>Context Type of object or objects whose AppData is to be retrieved.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
           <c>The group ID of the group of users whose AppData is to be returned.  Defaults to "@self", which MUST return only the AppData objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
@@ -1013,6 +1826,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityEntryId=
           <c><eref target="Social-Data.xml#Escape-Type">Escape-Type</eref></c>
           <c>Specifies the type of escaping to use on AppData values. Defaults to "htmlEscape".</c>
         </texttable>
+</x:draft>
       </section>
     </section>
     <section title="Create AppData" anchor="AppData-Service-Create">
@@ -1023,7 +1837,9 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityEntryId=
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" "@self" [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ] [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#AppData">AppData</eref>
 
@@ -1032,15 +1848,22 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityEntryId=
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
 </artwork>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+</x:draft>
       <section title="Update AppData Request Parameters" anchor="UpdateAppData-Request-Parameters">
         <t>A request to update AppData MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
-          <c>User ID of the person to associate the AppData with. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref></c>
+          <c>Context ID of object whose AppData is to be retrieved.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref></c>
+          <c>Context Type of object whose AppData is to be retrieved.</c>
           <c>appId</c>
           <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
           <c>Optional. Specifies that the response should only contain AppData generated by the given appId. If not included, the container MUST return AppData created by the currently authenticated app.</c>
@@ -1048,6 +1871,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityEntryId=
           <c><eref target="Social-Data.xml#AppData">AppData</eref></c>
           <c>The AppData to create or update.</c>
         </texttable>
+</x:draft>
       </section>
       <section title="Examples">
        <t>Here's an example of updating AppData for a user using the RPC protocol:
@@ -1089,7 +1913,9 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#Context">Context-Id</eref> "/" "@self" [ "/" <eref target="Core-Data.xml#Context">Context-Type</eref> ] [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -1098,15 +1924,22 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#AppData">AppData</eref>
 </artwork>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
+<t>Note that when Context-Type is not defined, Context-Id is the same as User-Id.</t> 
+</x:draft>
       <section title="Delete AppData Request Parameters" anchor="DeleteAppData-Request-Parameters">
         <t>A request to delete AppData MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
+<x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>userId</c>
-          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
-          <c>User ID of the person the AppData belongs to. Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>contextId</c>
+          <c><eref target="Core-Data.xml#Context">Context-Id</eref></c>
+          <c>Context ID of object to which AppData belongs.</c>
+          <c>contextType</c>
+          <c><eref target="Core-Data.xml#Context">Context-Type</eref></c>
+          <c>Context Type of object to which AppData belongs.</c>
           <c>appId</c>
           <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
           <c>Optional. Specifies that the response should only contain AppData generated by the given appId. If not included, the container MUST return AppData created by the currently authenticated app.</c>
@@ -1114,6 +1947,7 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
           <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
           <c>The keys of the AppData to delete.</c>
         </texttable>
+</x:draft>
       </section>
     </section>
    </section>
