@@ -608,8 +608,9 @@ The gadget's title.  When using the simple gadget format and excluding the
      <list style="hanging">
       <t hangText="@name">The name of the preference. Containers MUST provide
       the current value of the preference when this key is passed to the getters found in
-      <xref target="gadgets.Prefs">gadgets.Prefs</xref>. This is also the key used when performing UP substitutions (see
-      <xref target="Localization">Localization</xref>).</t>
+      <xref target="gadgets.Prefs">gadgets.Prefs</xref>. This is also the key used when performing ${Prefs} 
+	  variable substitutions (see
+      <xref target="VariableSubstitution">Variable Substitution</xref>).</t>
       <t hangText="@datatype">The data type for this preference. Valid values
       are "string", "hidden", "bool", "list", and "number". The default value
       is "string".</t>
@@ -1031,8 +1032,115 @@ The gadget's title.  When using the simple gadget format and excluding the
   </section>
   <section title="Variable Substitution"
            anchor="VariableSubstitution">
-   <t>Variables may be substituted into a gadget by replacing special variable
-   tokens with an appropriate value defined elsewhere in the spec. Tokens take
+		   
+<x:draft note="Variable substitution standardized on EL" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1164">
+
+   <t>Variables may be substituted into a gadget by evaluating Expression Language (EL)
+   statements.  EL statements consist of a dollar sign and curly braces 
+   surrounding a statement.  
+	  <figure>
+     <preamble>Example: EL statement</preamble>
+     <artwork xml:space="preserve">
+One plus one is equal to ${1+1}
+	 </artwork>
+    </figure>
+   </t>
+   
+   <t>
+   EL statements may be used to access values stored in reserved variable keys,
+   variables defined with data pipeline tags, or literal values.
+   Containers MUST support resolving variables using this syntax.
+   </t>
+   
+	<section title="Expression Language" anchor="EL">
+	<t>
+	The Expression Language (EL) is based on <xref target="JSPEL">JSPEL</xref>.
+	The EL version in OpenSocial supports all basic operations, such as string
+	concatenation and match functions, but does not currently support defining
+	custom functions.
+	</t>
+	</section>
+	
+	<section title="Variables">
+	<t>
+	All variables are stored in the <xref target="DataContext">DataContext</xref>.
+	</t>
+	</section>
+
+    <section title="Reserved Variable Keys" anchor="ReservedVariableKeys">
+	<t>
+	There are a number of reserved variable keys.  These are reserved for use
+	by the container.  If a gadget attempts to redefine any of these variables,
+	the container MUST generate an error.
+	</t>
+        <texttable align="left">
+         <ttcol>Variable Key</ttcol>
+         <ttcol>Description</ttcol>
+		 <ttcol>Scope</ttcol>
+         <c>Msg</c>
+        <c>Contains all message bundle variables for the current locale.</c>
+		<c>Available anywhere within gadget, including ModulePrefs and root Module element.
+		Message bundle values may reference other message bundle variables by
+		making use of the ${Msg.NAME} syntax within the value.
+		</c>
+         <c>ViewParams</c>
+         <c>Contains all values passed as viewParams with a call to
+		 <xref target="gadgets.views.requestNavigateTo">gadgets.views.requestNavigateTo</xref>.
+		 EL statements against this key will resolve to the same values as calls
+		 against the result of <xref target="gadgets.views.getParams">gadgets.views.getParams</xref>
+		 in the Javascript API.
+		 </c>
+		 <c>Available within Content blocks, <xref target="DataPipelining">Data Pipeline</xref>
+		 tags, and OpenSocial Markup Language (OSML) tags.</c>
+         <c>Prefs</c>
+         <c>Contains all named values defined in the
+		 <xref target="UserPref">UserPref</xref> section of the gadget and module
+		 dimensions and messages.
+		 EL statements against this key will resolve to the same values as calls
+		 against the result of <xref target="gadgets.Prefs">gadgets.Prefs</xref>
+		 in the Javascript API.  Values are exposed as fields to the EL.
+		 Ex: Current language is accessed as ${Prefs.Lang}.
+		 </c>
+		 <c>Available anywhere within gadget.</c>
+		 <c>Top</c>
+		 <c>Reserved variable used by 
+		 <xref target="OpenSocial-Templating">OpenSocial Templating</xref> to represent
+		 the top level variables registered with the <xref target="DataContext">DataContext</xref></c>
+		 <c>Within content and templates</c>
+		 <c>My</c>
+		 <c>Reserved variable used by 
+		 <xref target="OpenSocial-Templating">OpenSocial Templating</xref> to 
+		 hold local variables passed to the template instance.</c>
+		 <c>Within a template instance</c>
+		 <c>Cur</c>
+		 <c>Reserved variable used by OSML repeaters as defined in the
+		 <xref target="OpenSocial-Templating">OpenSocial Templating specification</xref>.
+		 Represents the current value or object as a for-each loop would.
+		 </c>
+		 <c>Within a repeater loop</c>
+		 <c>Context</c>
+		 <c>Variable used by OSML and templates to hold additional variables
+		 generated while processing templates and loops as defined in the 
+		 <xref target="OpenSocial-Templating">OpenSocial Templating specification</xref>.
+		 Additional variables are unique ID, current index in repeat, and count of repeat.
+		 </c>
+		 <c>Within a template or repeater loop</c>
+		 <c>Viewer</c>
+		 <c>Reserved for future use.</c>
+		 <c>N/A</c>
+		 <c>Owner</c>
+		 <c>Reserved for future use.</c>
+		 <c>N/A</c>
+		 <c>Gadget</c>
+		 <c>Reserved for future use.</c>
+		 <c>N/A</c>
+      </texttable>
+	</section>
+	
+	
+	<section title="Deprecated variable format">	   
+   <t>The older variable tokens format has been deprecated in favor of
+   the EL syntax.  The legacy variables take
    the form __&lt;TYPE&gt;_&lt;key&gt;__. For all substitutions, the full token
    is to be replaced by a value for the following values of &lt;TYPE&gt;:</t>
    <list style="hanging">
@@ -1057,12 +1165,15 @@ The gadget's title.  When using the simple gadget format and excluding the
    <t>Containers MUST perform MSG substitutions in the order listed above.
    Containers MUST substitute BIDI, MODULE, and UP tokens after substituting
    MSG values, but they MUST NOT recursively substitute any other tokens.</t>
+   </section>
+   
+ </x:draft>
   </section>
   <section title="Localization"
            anchor="Localization">
    <t>Localization of a gadget is achieved primarily through 
    <xref target="VariableSubstitution">Variable Substitution</xref>, using the
-   MSG token.</t>
+   ${Msg} variable and message bundles.</t>
    <t>To determine appropriate keys and values for substitution, Containers
    MUST select an appropriate /ModulePrefs/Locale based on the following
    rules:</t>
@@ -1072,9 +1183,11 @@ The gadget's title.  When using the simple gadget format and excluding the
     <t>An exact match for language, country = "all".</t>
     <t>Language = "all", country = "all'.</t>
    </list>
-   <t><x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">Containers SHOULD select a Locale that supports the current view over any 
+   <t><x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">
+   Containers SHOULD select a Locale that supports the current view over any 
    other Locale.  The Views supported by a Locale are specified at
    /ModulePrefs/Locale/@views.</x:draft></t>
+   
    <t>Containers MAY provide their own translations or use a third-party
    translation service if there is no appropriate Locale defined in the
    gadget.</t>
@@ -2406,7 +2519,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       'PROFILE'.</t>
     </list>
    </section>
-   <section title="opensocial.data">
+   <section title="opensocial.data" anchor="opensocial.data">
     <t>The opensocial.data namespace provides an API to access the pipelined data on
    the client.  There are methods to get the data returned from the data pipeline, set
    additional data, and listen to changes in data of a given key.</t>
@@ -2445,7 +2558,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
        </list>
       </section>
       <section title="DataContext"
-               anchor="DataContext">
+               anchor="DataContext_Client">
                <t>The DataContect object maintains all the data associated with the current gadget's data pipelining requests.</t>
         <section title="getDataSet" anchor="opensocial.data.DataContext.getDataSet">
        <list style="hanging">
@@ -2988,14 +3101,7 @@ osapi.http.post(params).execute(function(result) {
 ]]&gt;&lt;/Content&gt;
 </artwork>
    </figure>
-   <t>The data that is retrieved will be available in three contexts:</t>
-   <list style="numbers">
-    <t>Proxied content requests. This data will be POSTed to the developer
-    party server with requests for proxied content.</t>
-    <t>OpenSocial Templates. The data will be available as named variables in
-    OpenSocial templates.</t>
-    <t>JavaScript. This data will be available in the JavaScript API.</t>
-   </list>
+
    <t>Data Pipelining creates a new feature name for use in the Gadget
    Specification: opensocial-data. When data pipelining elements are embedded
    in type=@html, the Module must contain this XML:
@@ -3006,7 +3112,31 @@ osapi.http.post(params).execute(function(result) {
 &lt;/ModulePrefs&gt;
 </artwork>
    </figure></t>
+
+      <section title="DataContext"
+               anchor="DataContext">
+   <t>The DataContect object maintains all the data associated with the current 
+   gadget's data pipelining requests.  
+   Items in the data context may be access
+   through <xref target="EL">EL statements</xref> or on the client
+   with the <xref target="opensocial.data">opensocial.data APIs</xref>.
+   </t>
    
+   <t>Data may be placed into the data context with any data pipeline tags,
+   such as <xref target="osVar">&lt;os:Var&gt;</xref>,
+   or through the <xref target="opensocial.data">opensocial.data APIs</xref>.
+   </t>
+
+   <t>Data in the Data Context is available in three contexts:</t>
+   <list style="numbers">
+    <t>Proxied content requests. This data will be POSTed to the developer
+    party server with requests for proxied content.</t>
+    <t>OpenSocial Templates. The data will be available as named variables in
+    OpenSocial templates.</t>
+    <t>JavaScript. This data will be available in the JavaScript API.</t>
+   </list>
+   </section>
+  
    <section title="Data block">
    <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
    <t>A data block may be defined to hold a number of data pipeline tags.  See the 
