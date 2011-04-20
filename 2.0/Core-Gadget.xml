@@ -463,8 +463,10 @@ The gadget's title.  When using the simple gadget format and excluding the
        countries unless a more specific match is found.</t>
        <t hangText="@messages">A URL pointing to an XML document that contains
        nested 
-       <xref target="msg">/ModulePrefs/Locale/msg</xref>elements. Containers
-       MUST honor 
+       <xref target="msg">/ModulePrefs/Locale/msg</xref>elements.  
+	   The XML document should follow the format shown in 
+	   <xref target="MessageBundles">MessageBundles</xref>. 
+	   Containers MUST honor 
        <xref target="Retrieval">Retrieval</xref>and 
        <xref target="Parsing">Parsing</xref>rules for these files. Containers
        MUST treat all child elements of the root XML element in the document as
@@ -1191,7 +1193,7 @@ One plus one is equal to ${1+1}
    <t>Containers MAY provide their own translations or use a third-party
    translation service if there is no appropriate Locale defined in the
    gadget.</t>
-   <t>After selecting a Locale, Containers MUST replace all MSG tokens by using
+   <t>After selecting a Locale, Containers MUST replace all ${Msg} tokens by using
    /ModulePrefs/Locale/msg/@name for keys and /ModulePrefs/Locale/msg/text()
    for values.</t>
    <t>Containers MUST perform BIDI token substitution with the following values
@@ -1209,7 +1211,58 @@ END_EDGE: "right"
 DIR: "ltr"
 REVERSE_DIR: "rtl"
 </artwork>
+
+<section title="Message Bundles" anchor="MessageBundles">
+<x:draft note="Message bundles placed back in spec" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1171">
+<!-- copied from http://code.google.com/apis/gadgets/docs/i18n.html#Bundles -->
+<t>
+The gadgets i18n strategy centers around message bundles. 
+Message bundles are XML files that contain the translated strings 
+for a given locale. Each string is identified by a unique name 
+that is the same across bundles.
+</t>
+
+<t>
+Message bundles can be hosted at any URL, and can be shared between applications.
+Message bundles contain only one locale.
+</t>
+<t>
+Message bundles have the following format:
+</t>
+   <artwork type="example"
+         xml:space="preserve">
+&lt;messagebundle&gt;
+  &lt;msg name="hello_world"&gt; 
+    Hello World. 
+  &lt;/msg&gt; 
+  &lt;msg name="color"&gt;Color&lt;/msg&gt; 
+  &lt;msg name="red"&gt;Red&lt;/msg&gt; 
+  &lt;msg name="green"&gt;Green&lt;/msg&gt; 
+  &lt;msg name="blue"&gt;Blue&lt;/msg&gt; 
+  &lt;msg name="gray"&gt;Gray&lt;/msg&gt; 
+  &lt;msg name="purple"&gt;Purple&lt;/msg&gt; 
+  &lt;msg name="black"&gt;Black&lt;/msg&gt; 
+&lt;/messagebundle&gt; 
+</artwork>
+
+<t>
+By convention, external message bundles are named as &lt;language&gt;_&lt;country&gt;.xml
+Where there is no language- or country-specific value, the convention is to use “ALL.” For example, the file de_ALL.xml applies to all German speakers, regardless of their country. 
+The message bundle ALL_ALL.xml is the file that is used by default.
+</t>
+<t>
+Message bundles may be specified inline or as externally referenced XML files
+in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
+</t>
+
+
+</x:draft>
+</section>
+
   </section>
+  
+  
+  
   <section title="Signed Fetch"
            anchor="SignedFetch">
    <t>Containers MUST support signing of HTTP requests for 
