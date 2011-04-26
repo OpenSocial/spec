@@ -940,9 +940,11 @@ osapi.messages.send(params).execute(messageSentCallback);
        <t hangText="Returns">None.</t>
        </list>
       </section>
+    
       <section title="requestShareApp"
                anchor="opensocial.requestShareApp">
-       <list style="hanging">
+  <x:draft note="Remove Deprecated APIs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">        
+       <list style="hanging"> 
        <t hangText="Signature">&lt;static&gt; void opensocial.requestShareApp(recipients, reason,
        opt_callback, opt_params)</t>
        <t hangText="Description">Requests that the container share this gadget with the
@@ -980,6 +982,7 @@ osapi.messages.send(params).execute(messageSentCallback);
        </texttable></t>
        <t hangText="Returns">None.</t>
        </list>
+         </x:draft>
       </section>
      </section>
     </section>
@@ -1165,10 +1168,12 @@ osapi.messages.send(params).execute(messageSentCallback);
     </section>
     <section title="opensocial.NavigationParameters.DestinationType"
              anchor="opensocial.NavigationParameters.DestinationType">
+ <x:draft note="Remove Deprecated APIs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">                   
      <t>The destinations available for navigation in 
      <xref target="opensocial.requestShareApp">requestShareApp</xref> and 
      <xref target="osapi.messages.send">
      osapi.message.send</xref>.</t>
+</x:draft>
      <list style="hanging">
       <t hangText="RECIPIENT_DESTINATION">
        <t>This field may be used interchangeably with the string
