@@ -128,9 +128,9 @@
        <t>Parse the gadget XML using a <xref target="Parsing">Parse XML Request</xref>, following the behavior defined in <xref target="ElementsAndAttributes">Elements and Attributes</xref>.</t>
        <t>Output gadget content as HTML:</t>
         <list style="numbers">
+         <t><x:draft note="Remove Quirks Mode" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1139">Gadget MUST be rendered in HTML5 by default. See section on <xref target="Doctype">Gadget Doctype</xref>.</x:draft></t>
          <t>Standard HTML header, opening &lt;html&gt; tag and &lt;body&gt;
-         tag. &lt;head&gt; information is optional. Gadgets run in browser
-         quirks mode.</t>
+         tag. &lt;head&gt; information is optional.</t>
          <t><xref target="CoreFeatures">Core gadgets JavaScript libraries</xref> and any additional libraries specified in the gadget. The server SHOULD consolidate all librariess into a single request to minimize the number of HTTP requests made by the client browser. This MAY be followed by JavaScripte required to initialize the included libraries.</t>
          <t>Results from parsing the Gadget XML file and processing the &lt;Content&gt; sections that match the specified View name.</t>
          <t>A single call to gadgets.util.runOnLoadHandlers().</t>
@@ -139,6 +139,15 @@
       </list>
      </t>
      <t>Containers must also be able to process <xref target="DataPipelining">Data Pipelining</xref> and <xref target="OpenSocial-Templating">Templating</xref> elements in the gadget XML spec.</t>
+     <x:draft note="Remove Quirks Mode" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1139"><section title="Gadget Doctype" anchor="Doctype">
+       <t>For Gadgets using an OpenSocial specification version 2.0 or greater, Containers MUST render those Gadgets in HTML5 by default.  If a 
+       Container supports rendering Gadgets with a specification version less than 2.0, those Gadgets 
+       SHOULD continue to be rendered in browser quirks mode. Refer to the 
+       <xref target="Versioning">Versioning</xref> rules for determining Gadget specification version.  Containers MAY support ModulePrefs/@doctype as 
+       a method for allowing Gadgets to override the default behavior.  Containers that implement this SHOULD override the default doctype when 
+       encountering ModulePrefs/@doctype.  Developers should recognize it may not be possible to honor this attribute in all cases such as when 
+       multiple Gadgets are inlined on a single page.</t>
+     </section></x:draft>
    </section>
    <section title="JavaScript Request">
     <t>In order for type="url" gadgets to access JavaScript libraries, the server MUST provide an HTTP service for retrieving core and feature-linked JavaScript. This HTTP service MUST handle requests to URLs provided in the 'libs' parameter described in <xref target="Type">/Content/@type</xref>.  The response to these requests MUST contain JavaScript code corresponding to the API(s) required by the type URL gadget.</t>
@@ -208,6 +217,9 @@ The gadget's title.  When using the simple gadget format and excluding the
       <t hangText="@width">The preferred default width of he gadget, in pixels.
       Containers SHOULD use this value to set an appropriate width for the
       gadget when it is first rendered.</t>
+      <t hangText="@doctype"><x:draft note="Remove Quirks Mode" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1139">Optional.  
+      A string that identifies the preferred rendering method.  When set to "quirksmode", the Gadget SHOULD be rendered in browser quirks mode.  
+      This attribute can later be extended to support other DOCTYPEs.</x:draft></t>
       <t hangText="text()">This tag has child elements. Containers SHOULD NOT
       interpret child text nodes.</t>
      </list>
