@@ -5,8 +5,7 @@ Their membership in OpenSocial MUST be validated prior to them being added to th
 
 Committer Name		Google Account Email	Email (if different)	Verified Foundation Member
 --------------  	-------------------		--------------------	-------------------------- 
-
-
+Mathew Marum		mgmarum@gmail.com		mgmarum@us.ibm.com		Yes
 
 
 
