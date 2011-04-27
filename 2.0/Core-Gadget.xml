@@ -2721,13 +2721,14 @@ var lang = prefs.getLang();
      </section>
      <section title="requestNavigateTo"
               anchor="gadgets.views.requestNavigateTo">
+      <x:draft note="Additional gadget views" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1169">
       <t>&lt;static&gt; gadgets.views.requestNavigateTo(|, |, opt_ownerId)</t>
       <t>Description: Attempts to navigate to this gadget in a different view.
       If the container supports parameter passing it will pass the optional
       parameters along to the gadget in the new view. This also allows for
       navigation to named views on the current surface. Views are composed of
       names that are [Surface](.[Secondary])?. The canonical Surface names are
-      Canvas, Profile, Home. The Secondary names are user defined. When
+      defined by the <xref target="gadgets.views.ViewType">View Type</xref>. The Secondary names are user defined. When
       navigating from [Surface].valueX to [Surface].valueY, the container can
       stay on the same Surface but will show the appropriate &lt;Content&gt;
       sections whose View is [Surface].valueY. When navigating from
@@ -2735,6 +2736,7 @@ var lang = prefs.getLang();
       to the SurfaceB surface and show the appropriate &lt;Content&gt; sections
       whose View is SurfaceB.[Secondary].In no cases must the .[Secondary] item
       ever be declared.</t>
+      </x:draft>
       <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
@@ -2881,31 +2883,63 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
     <!-- ============================== class summary ========================== -->
     <t>Used by
     <xref target="gadgets.views.View">View objects</xref>.</t>
+ <x:draft note="Additional gadget views" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1169">
       <list style="hanging">
+	<t hangText="ABOUT"
+	           anchor="gadgets.views.ViewType.ABOUT">
+	      A view used to provide descriptive information regarding the gadget. This view is typically rendered in a smaller area. The viewer is not always the same as the owner. This field may be used interchangeably with the string 'ABOUT'.</t>
      <t hangText="CANVAS"
               anchor="gadgets.views.ViewType.CANVAS">
       A view where the gadget is displayed in a very large
       mode. It is typically the main content on the page. The viewer is not
       always the same as the owner. This field may be used interchangeably with
       the string 'CANVAS'.</t>
+          <t hangText="EMBEDDED"
+             anchor="gadgets.views.ViewType.EMBEDDED">
+              A view used when an gadget is to be rendered in the context of some other content. For example, an
+              activity stream entry may include a diagram. Rather than requiring the user to navigate to a dashboard,
+              the container may render the gadget "embedded" in the stream. The developer should anticipate that there
+              may be limited chrome surrounding the gadget. The viewer is not
+              always the same as the owner.
+              This field may be used interchangeably with the
+              string 'EMBEDDED'.
+          </t>
      <t hangText="HOME"
               anchor="gadgets.views.ViewType.HOME">
       A view where the gadget is displayed in a small area
       usually on a page with other gadgets. Typically the viewer is the same as
       the owner. This field may be used interchangeably with the string
       'HOME'.</t>
+	<t hangText="PREFERENCES"
+              anchor="gadgets.views.ViewType.PREFERENCES">
+        A view used to allow the user to display and set the user preferences defined by the gadget. For example, it is
+        common for gadgets to present a form for visible user prefs. Because the user preferences are specific to a
+        user, owner and viewer MUST be the same in this view.
+        This field may be used interchangeably with the
+        string 'PREFERENCES'.</t>
      <t hangText="PREVIEW"
               anchor="gadgets.views.ViewType.PREVIEW">
       A demo view of the gadget. In this view the owner and
       viewer are not known. This field may be used interchangeably with the
       string 'PREVIEW'.</t>
-     <t hangText="PROFILE"
-              anchor="gadgets.views.ViewType.PROFILE">
-      A view where the gadget is displayed in a small area
-      usually on a page with other gadgets. The viewer is not always the same
-      as the owner. This field may be used interchangeably with the string
-      'PROFILE'.</t>
-    </list>
+          <t hangText="PROFILE"
+             anchor="gadgets.views.ViewType.PROFILE">
+              A view where the gadget is displayed in a small area
+              usually on a page with other gadgets. A typical use case for this view is for the gadget to be placed on
+              the profile page of a user, for example, a gadget that allows you to schedule a meeting with the person.
+              The viewer is not always the same
+              as the owner. This field may be used interchangeably with the string
+              'PROFILE'.
+          </t>
+          <t hangText="SUPPORT"
+             anchor="gadgets.views.ViewType.SUPPORT">
+              A view used to communicate to the user where to get support information for the gadget. Typically, the
+              gadget is displayed in a small area. The viewer MUST always the same
+              as the owner. This field may be used interchangeably with the string
+              'SUPPORT'.
+          </t>
+      </list>
+</x:draft>
    </section>
    <section title="opensocial.data" anchor="opensocial.data">
     <t>The opensocial.data namespace provides an API to access the pipelined data on
