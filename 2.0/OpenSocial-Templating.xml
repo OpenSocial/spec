@@ -42,12 +42,16 @@
     also provides a means to bind to the OpenSocial APIs and custom, developer
     defined variables. OST accomplishes this through tag libraries and special
     markup.</t>
-	<t>
-	OpenSocial Templating additionally makes use of the 
-	OpenSocial Markup Language (OSML) and Expression Language (EL) to bring dynamic
-	processing and custom tag support to gadgets.  These items are defined more
-	fully in the Social Gadget and Core Gadget specifications, respectively.
-	</t>
+       <t>
+           OpenSocial Templating additionally makes use of the
+           OpenSocial Markup Language (OSML) and Expression Language (EL) to bring dynamic
+           processing and custom tag support to gadgets. These items are defined more
+           fully in the
+           <eref target="./Social-Gadget.xml">Social Gadget</eref>
+           and
+           <eref target="./Core-Gadget.xml">Core Gadget</eref>
+           specifications, respectively.
+       </t>
     <section title="Limitations">
      <t>An OST implementation can fetch, inject, cache, and store data requests
      for the application before any client side code executes. OST does not
