@@ -1759,6 +1759,8 @@ Content-Type: application/json
      <author initials='E.'
              surname='Hammer-Lahav'
              fullname='Eran Hammer-Lahav'></author>
+             <date month='December'
+             year='2007' />
     </front>
    </reference>
    <reference anchor="Core-Data"
@@ -1771,6 +1773,32 @@ Content-Type: application/json
            year='2010' />
     </front>
    </reference>
+   
+   <x:draft note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175"> 
+   <reference anchor="draft-ietf-oauth-v2-15"
+               target="http://www.ietf.org/id/draft-ietf-oauth-v2-15.pdf">
+     <front>
+       <title>The OAuth 2.0 Authorization Protocol</title>
+       <author initials='E.'
+               surname='Hammer-Lahav'
+               fullname='Eran Hammer-Lahav'>
+               <organization>Yahoo !</organization>
+       </author>
+       <author initials='D.'
+               surname='Recordon'
+               fullname='David'>
+               <organization>Facebook</organization>
+       </author>
+       <author initials='D.'
+               surname='Hardt'
+               fullname='Dick'>
+               <organization>Microsoft</organization>
+       </author>
+       <date month='April'
+             year='2011' />
+     </front>
+   </reference>
+   </x:draft>
    <reference anchor="Social-Data"
               target="./Social-Data.xml">
     <front>
