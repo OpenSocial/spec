@@ -900,6 +900,7 @@ COMMA          = <US-ASCII comma (44)>
                       [ #Person-Field ]
                   "}"</artwork>
      <t>Valid definitions for Person-Field are listed in the table below.</t>
+     <x:draft note="Issue 1132 - Proposal to Modify the Social Data Model in OS 2.0" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">     
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -920,6 +921,10 @@ COMMA          = <US-ASCII comma (44)>
       <c>number</c>
       <c>The age of this person. Sometimes sites might want to show
       age without revealing the specific birthday.</c>
+      <c>alternateNames</c>
+      <c><eref target="//Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;<x:ref>Name</x:ref>&gt;</c>
+      <c>List of alernative names. These may include known aliases, maiden-names, nicknames, acceptable
+      alternative forms of the same name (e.g. "James", "Jim", "Jimmy"), etc.</c>
       <c>anniversary</c>
       <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>The wedding anniversary of this person. The value MUST be a
@@ -963,6 +968,14 @@ COMMA          = <US-ASCII comma (44)>
       information about other contacts without their explicit acknowledgment,
       or for services in which users choose to "follow" other users without
       requiring mutual consent, this value will always be false.</c>
+      <c>contactPreference</c>
+      <c>string</c>
+      <c>Human-readable summarization of the Person's contact preferences. For instance,
+      a person may choose to specify something along the lines of, "Please 
+      use instant messaging to contact me prior to calling."</c>
+      <c>dn</c>
+      <c>string</c>
+      <c>This Person's X.500 'Distinguished Name'</c>
       <c>drinker</c>
       <c>string</c>
       <c>Person's drinking status.</c>
@@ -1050,6 +1063,10 @@ COMMA          = <US-ASCII comma (44)>
       <c><x:ref>Name</x:ref></c>
       <c>The broken-out components and fully formatted version of the person's
       real name.</c>
+      <c>nativeName</c>
+      <c><x:ref>Name</x:ref></c>
+      <c>The broken-out components and fully formatted, native-language version
+      of the person's real name.</c>
       <c>networkPresence</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Person's current network status. Specified as one of: AWAY,
@@ -1071,6 +1088,10 @@ COMMA          = <US-ASCII comma (44)>
       <c>pets</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Description of the person's pets</c>
+      <c>orgIdentifier</c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
+      <c>Listing of this person's organizational identifiers (e.g. employee serial number, 
+      student number, etc)</c>
       <c>phoneNumbers</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Phone number for this Person. No canonical value is assumed here. In
@@ -1089,6 +1110,10 @@ COMMA          = <US-ASCII comma (44)>
       <c>politicalViews</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>Person's political views.</c>
+      <c>preferredName</c>
+      <c><x:ref>Name</x:ref></c>
+      <c>The broken-out components and fully formatted version
+      of the person's preferred name.</c>
       <c>preferredUsername</c>
       <c>string</c>
       <c>The preferred username of this person on sites that ask for a username
@@ -1196,6 +1221,7 @@ COMMA          = <US-ASCII comma (44)>
       change over time due to daylight saving time, and is thus meant to
       signify only the current value of the user's timezone offset.</c>
      </texttable>
+     </x:draft>
     <t>A minimal Person example: 
     <figure>
      <preamble>application/json representation:</preamble>
@@ -1781,13 +1807,21 @@ COMMA          = <US-ASCII comma (44)>
      both. If both variants are returned, they SHOULD be describing
      the same address, with the formatted address indicating how the
      component fields should be combined.</t>
-     <t><texttable>
+     <t>
+     <x:draft note="Issue 1132 - Proposal to Modify the Social Data Model in OS 2.0" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">
+     <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
+      <c>building</c>
+      <c>string</c>
+      <c>The building identifier.</c>
       <c>country</c>
       <c>string</c>
       <c>The country name component.</c>
+      <c>floor</c>
+      <c>string</c>
+      <c>The floor identifier</c>
       <c>formatted</c>
       <c>string</c>
       <c>The full mailing address, formatted for display or use with a mailing
@@ -1816,7 +1850,8 @@ COMMA          = <US-ASCII comma (44)>
       <c>type</c>
       <c>string</c>
       <c>The address type or label. Examples include 'work', 'home'.</c>
-     </texttable></t>
+     </texttable>
+     </x:draft></t>
    </section>
    <section title="Album"
             anchor="Album">
