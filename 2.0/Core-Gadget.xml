@@ -85,11 +85,14 @@
     @specificationVersion attribute, the Container MUST display an error
     message to Users, and SHOULD provide the specification versions that it
     does support to Developers.</t>
-    <t>The XML MUST conform to the 
-    <xref target="GadgetXmlSchema">Gadget XML Schema</xref> or the <xref target="MessageBundleSchema">Message Bundle Schema</xref>. These XSD schemas 
-    represent all standard elements and attributes and
-    allow for containers to support additional elements and attributes.
+    <x:draft note="Issue 1142 - Fix XSD, 1.1 Spec stated that XML MUST conform to XSDs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
+    <t>
+    <xref target="GadgetXmlSchema">Gadget XML Schema</xref> and the 
+    <xref target="MessageBundleSchema">Message Bundle Schema</xref> are provided as reference. 
+    These XSD schemas represent the standard elements and attributes defined in the 
+    specification body.  Containers are allowed to support additional elements and attributes.
     </t>
+    </x:draft>
     <t>Containers MAY support non-standard tags and attributes, but they MUST
     be enclosed in a separate XML namespace. This namespace SHOULD reflect the
     name of the organization responsible for the Container to avoid conflicts
@@ -3886,6 +3889,7 @@ dataset would contain content resembling:
   <section title="Gadget XML Schema"
            anchor="GadgetXmlSchema">
    <t>
+   <x:draft note="Issue 1142 - Propose fix for the 1.1 XSD schema in the core server spec" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0"?&gt;
@@ -3913,10 +3917,6 @@ dataset would contain content resembling:
                   &lt;xs:attribute name="sign_owner" type="xs:boolean" default="true"/&gt;
                   &lt;xs:attribute name="sign_viewer" type="xs:boolean" default="true"/&gt;
                   &lt;xs:attribute name="views" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_service_name" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_token_name" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_request_token" type="xs:string" use="optional"/&gt;
-                  &lt;xs:attribute name="oauth_request_token_secret" type="xs:string" use="optional"/&gt;
                 &lt;/xs:complexType&gt;
               &lt;/xs:element&gt;
               &lt;xs:element name="Icon"&gt;
@@ -4005,9 +4005,6 @@ dataset would contain content resembling:
             &lt;xs:attribute name="author_email" type="xs:string" use="optional"/&gt;
             &lt;xs:attribute name="screenshot" type="xs:string" use="optional"/&gt;
             &lt;xs:attribute name="thumbnail" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="directory_title" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="category" type="xs:string" use="optional"/&gt;
-            &lt;xs:attribute name="category2" type="xs:string" use="optional"/&gt;
           &lt;/xs:complexType&gt;
         &lt;/xs:element&gt;
         &lt;xs:element name="UserPref" minOccurs="0" maxOccurs="unbounded"&gt;
@@ -4075,6 +4072,7 @@ dataset would contain content resembling:
       &lt;/xs:element&gt;
     &lt;/xs:sequence&gt;
     &lt;xs:attribute name="feature" type="xs:string" use="required"/&gt;
+    &lt;xs:attribute name="version" type="xs:string" use="optional"/&gt;
     &lt;xs:attribute name="views" type="xs:string" use="optional"/&gt;
   &lt;/xs:complexType&gt;
   &lt;xs:complexType name="OAuthResourceType"&gt;
@@ -4100,6 +4098,7 @@ dataset would contain content resembling:
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
+</x:draft>
    </t>
   </section>
   <section title="Message Bundle Schema"

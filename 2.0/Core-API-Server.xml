@@ -1812,6 +1812,7 @@ Content-Type: application/json
   </references>
   <section title="XML format XSD"
            anchor="XML_format_XSD">
+<x:draft note="Issue 1142 - Propose fix for the 1.1 XSD schema in the core server spec" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0" encoding="utf-8"?&gt;
@@ -1824,39 +1825,34 @@ Content-Type: application/json
     &lt;xs:complexType&gt;
       &lt;xs:choice&gt;      
         &lt;xs:element name="entry" type="xs:anyType" /&gt;
-        &lt;xs:group ref="collection" /&gt;
+        &lt;xs:group ref="tns:collection" /&gt;
         &lt;xs:element name="invalidationKeys" type="tns:InvalidationKeys" /&gt;
       &lt;/xs:choice&gt;
     &lt;/xs:complexType&gt;
   &lt;/xs:element&gt;    
 
-  &lt;xs:group&gt;        
-    &lt;xs:complexType&gt;
-      &lt;xs:sequence&gt;
-        &lt;xs:complexType&gt;
-          &lt;xs:all&gt;
-            &lt;xs:element name="itemsPerPage" type="xs:int" /&gt;
-            &lt;xs:element name="startIndex" type="xs:long" /&gt;
-            &lt;xs:element name="totalResults" type="xs:long" /&gt;
-            &lt;xs:element name="filtered" type="xs:boolean" /&gt;
-            &lt;xs:element name="sorted" type="xs:boolean" /&gt;
-            &lt;xs:element name="updatedSince" type="xs:boolean" /&gt;
-          &lt;/xs:all&gt;
-        &lt;/xs:complexType&gt; 
-        &lt;xs:element name="entry" type="xs:anyType" minOccurs="0" maxOccurs="unbounded" /&gt;
-      &lt;/xs:sequence&gt;
-    &lt;/xs:complexType&gt;
+  &lt;xs:group name="collection"&gt;        
+    &lt;xs:sequence&gt;
+      &lt;xs:element name="itemsPerPage" type="xs:int" /&gt;
+      &lt;xs:element name="startIndex" type="xs:long" /&gt;
+      &lt;xs:element name="totalResults" type="xs:long" /&gt;
+      &lt;xs:element name="filtered" type="xs:boolean" /&gt;
+      &lt;xs:element name="sorted" type="xs:boolean" /&gt;
+      &lt;xs:element name="updatedSince" type="xs:boolean" /&gt;
+      &lt;xs:element name="entry" type="xs:anyType" minOccurs="0" maxOccurs="unbounded" /&gt;
+    &lt;/xs:sequence&gt;
   &lt;/xs:group&gt;        
 
   &lt;xs:complexType name="InvalidationKeys"&gt;
-    &lt;xs:all&gt;
+    &lt;xs:sequence&gt;
       &lt;xs:element name="invalidationKey" type="xs:string" maxOccurs="unbounded" /&gt;
-    &lt;/xs:all&gt;
+    &lt;/xs:sequence&gt;
   &lt;/xs:complexType&gt;
 
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
+</x:draft>
   </section>
  </back>
 </rfc>
