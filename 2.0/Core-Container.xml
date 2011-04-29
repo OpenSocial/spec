@@ -4,10 +4,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-common-container-specification-2-0-DRAFT"
+     docName="core-container-specification-2-0-INCUBATING"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Common-Container">OpenSocial Common Container Specification 2.0 DRAFT</title>
+  <title abbrev="Core-Container">Core Container Specification 2.0 INCUBATING</title>
   <author fullname='OpenSocial and Container Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -16,7 +16,7 @@
   <date month="March" year="2011" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
-  <keyword>Common Container</keyword>
+  <keyword>Core Container</keyword>
  </front>
  <middle>
   <section title="Definitions">
@@ -48,7 +48,7 @@
     JavaScript and server-driven end-point. Its mission is to simplify container
     and gadget integration model. It allow container developers to easily
     transform their page into a gadget-compliant container that can properly
-    embed gadgets rendered by Shindig-based gadget service. It does not address
+    embed gadgets rendered by a gadget service. It does not address
     container-specific business-logic and layout.
    </t>
    <t>
@@ -117,8 +117,11 @@
    </section>
   </section>
 
-  <section title="API">
-   <section title="shindig.container.Container">
+  <section title="Javascript API Reference">
+   <section title="container" anchor="container">
+    <t>Namespace for top level container functions.</t>
+   </section>
+   <section title="container.Container" anchor="container.Container">
     <t>
      This represents the container. This provides top-most-level set of APIs for
      container developers, to accomplish functionalities defined in
@@ -127,44 +130,274 @@
      continue to work. There MUST be not more than one instance of this in a
      pages, due to usage of global resources and possible race conditions.
     </t>
-    <artwork xml:space="preserve">
-// to preload / unload (un-preload) gadgets
-container.preloadGadget(...)
-container.preloadGadgets(...)
-container.unloadGadget(...)
-container.unloadGadgets(...)
-
-// to navigate / close gadget sites
-container.navigateGadget(...)
-container.closeGadget(...)
-
-// to get gadget metatadata
-container.getGadgetMetadata(...)
-
-// to register gadgets.rpc service in container
-container.rpcRegister(...)
-    </artwork>
+    <section title="constructor" anchor="Container-Constructor">
+      <t>container.Container(opt_config)</t>
+      <t>Constructs the container object.</t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>opt_config</c>
+          <c>Object</c>
+          <c>
+            A bag-style JSON object with configuration parameters.  See 
+            <xref target="Configuring-The-Container"></xref>
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="preloadGadget" anchor="container.Container.preloadGadget">
+      <t>container.Container.preloadGadget(gadgetUrl, opt_callback)</t>
+      <t>Description: Pre-load one gadget metadata information.
+        <t>See also:
+          <xref target="container.Container.preloadGadgets">preloadGadgets</xref> 
+        </t>
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>String</c>
+          <c>A URL to the gadget definition.</c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>
+            A callback function to be called when the gadget metdata is returned.
+            The callback function should have one parameter called response.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="preloadGadgets" anchor="container.Container.preloadGadgets">
+      <t>container.Container.preloadGadgets(gadgetUrls, opt_callback)</t>
+      <t>
+        Pre-load gadgets metadata information.
+        This will not render the gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrls</c>
+          <c>Array</c>
+          <c>Gadget URLs to preload.</c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>
+            A callback function to be called when the gadget metdata is returned.
+            The callback function should have one parameter called response.
+          </c>
+        </texttable>
+      </t>    
+    </section>
+    <section title="unloadGadget" anchor="container.Container.unloadGadget">
+      <t>container.Container.unloadGadget(gadgetUrl)</t>
+      <t>
+        Unloads a single gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>String</c>
+          <c>Gadget URL to unload.</c>
+        </texttable>
+      </t>     
+    </section>
+    <section title="unloadGadgets" anchor="container.Container.unloadGadgets">
+      <t>container.Container.unloadGadgets(gadgetUrls)</t>
+      <t>
+        Unload preloaded gadgets.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrls</c>
+          <c>Array</c>
+          <c>Gadget URLs to unload.</c>
+        </texttable>
+      </t>    
+    </section>
+    <section title="navigateGadget" anchor="container.Container.navigateGadget">
+      <t>container.Container.navigateGadget(site, gadgetUrl, viewParams, 
+      renderParams, opt_callback)</t>
+      <t>
+        Renders (navigates) to the specified gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>site</c>
+          <c>container.GadgetSite</c>
+          <c>The gadget site to use to render the gadget</c>
+          <c>gadgetUrl</c>
+          <c>string</c>
+          <c>The gadget URL to render (navigate) to.</c>
+          <c>viewParams</c>
+          <c>Object</c>
+          <c>
+            View parameters to pass to the view being specified in the 
+            renderParams.
+          </c>
+          <c>renderParams</c>
+          <c>Object</c>
+          <c>
+            Contains parameters on how the container wants to render this 
+            gadget see <xref target="ConfiguringGadgetRender"></xref>.
+          </c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>Callback function called after the gadget has been rendered.</c>
+        </texttable>
+      </t>
+    </section>
+    <section title="closeGadget" anchor="container.Container.closeGadget">
+      <t>container.Container.nloseGadget(site)</t>
+      <t>
+        Closes the gadget in the site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>site</c>
+          <c>container.GadgetSite</c>
+          <c>The site containing the gadget to close.</c>
+        </texttable>
+      </t>
+    </section>
+    <section title="getGadgetMetadata" anchor="container.Container.getGadgetMetadata">
+     <t>container.Container.getGadgetMetadatat(gadgetUrl, callback)</t>
+      <t>
+        Gets the metadata for a gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>container.GadgetSite</c>
+          <c>
+            The URL pointing to the gadget definition to get the metadta
+            for.
+          </c>
+          <c>callback</c>
+          <c>function</c>
+          <c>
+            Function called when the metadata has been retrieved.
+            The callback function should have a single response parameter.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="rpcRegister" anchor="container.Container.rpcRegister">
+     <t>container.Container.rpcRegister(service, callback)</t>
+      <t>
+        Registers a function to call for a specified RPC service.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>service</c>
+          <c>String</c>
+          <c>The name of the RPC service.</c>
+          <c>callback</c>
+          <c>function</c>
+          <c>The function to call when the service is envoked.</c>
+        </texttable>
+      </t>
+    </section>
    </section>
-   <section title="shindig.container.GadgetSite">
+   <section title="container.GadgetSite" anchor="container.GadgetSite">
     <t>
      This represent the gadget context. Container developers refer a gadget as
      a GadgetSite.
     </t>
-    <artwork xml:space="preserve">
-// to manipulate a gadget site
-site.setHeight(...)
-site.setWidth(...)
-we
-// to have container call site via gadgets.rpc.
-site.rpcCall(...)
-    </artwork>
+    <section title="setHeight" anchor="container.GadgetSite.setHeight">
+     <t>container.GadgetSite.setHeight(height)</t>
+      <t>
+        Sets the height of the gadget site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>height</c>
+          <c>Number</c>
+          <c>
+            Value to set the gadget site height to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="setWidth" anchor="container.GadgetSite.setWidth">
+     <t>container.GadgetSite.setWidth(width)</t>
+      <t>
+        Sets the width of the gadget site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>width</c>
+          <c>Number</c>
+          <c>
+            Value to set the gadget site width to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="rpcCall" anchor="container.GadgetSite.rpcCall">
+     <t>container.GadgetSite.rpcCall(serviceName, callback, var_args)</t>
+      <t>
+        Sends the RPC call to the current/visible gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>serviceName</c>
+          <c>String</c>
+          <c>
+            The name of the service to call.
+          </c>
+          <c>callback</c>
+          <c>function</c>
+          <c>
+            Function to call upon RPC completion.
+          </c>
+          <c>var_args</c>
+          <c>{....number}</c>
+          <c>
+            Arguments to pass to the recipient.
+          </c>
+        </texttable>
+      </t>
+    </section>
    </section>
   </section>
 
-  <section title="Configuring container">
+  <section title="Configuring The Container" anchor="Configuring-The-Container">
    <t>
     Configuring common container is done at instantiation, by passing a
-    bag-style JSON, with keys defined under shindig.container.ContainerConfig.
+    bag-style JSON, with keys defined under container.ContainerConfig.
     All of these are optional.
    </t>
    <t>
@@ -216,8 +449,8 @@ site.rpcCall(...)
    <t>
     Requesting for a gadget render with specifics (like view, visual appearance
     and debug mode) can be made by passing a bag-style JSON, with keys defined
-    under shindig.container.RenderParam into
-    shindig.container.Container.prototype.navigateGadget().
+    under container.RenderParam into
+    container.Container.prototype.navigateGadget().
     All of these are optional.
    </t>
    <list style="hanging">
@@ -253,20 +486,31 @@ site.rpcCall(...)
     </t>
    </list>
   </section>
-
+  <section title="Highly Recommended Features">
+    <section title="container.Container.ee">
+    </section>
+    <section title="container.Container.openSearch">
+    </section>
+    <section title="container.Container.actions">
+    </section>
+    <section title="container.Cotainer.selection">
+    </section>
+    <section title="container.Container.views">
+    </section>
+  </section>
   <section title="Extensibility">
    <t>
     The framework is developed with extensibility in mind.
    </t>
-   <section title="By namespace overrides">
+   <section title="Namespace Overrides">
     <t>This is done by namespace assignment and augmenting custom methods.</t>
     <artwork xml:space="preserve">
-// ensure shindig.container is defined here.
-foo.container = shindig.container;
+// ensure container is defined here.
+foo.container = container;
 foo.container.prototype.newMethod = function() { ... }
     </artwork>
    </section>
-   <section title="By method overrides">
+   <section title="Method Overrides">
     <t>This is done by re-defining overridable methods.</t>
     <artwork xml:space="preserve">
 foo.container.Container.prototype.onConstructed = function(opt_config) { ... }
@@ -276,10 +520,10 @@ foo.container.GadgetHolder.prototype.onConstructed = function() { ... }
 foo.container.Service.prototype.onConstructed = function(opt_config) { ... }
     </artwork>
    </section>
-   <section title="By mixins">
+   <section title="Mixins">
     <t>This is done by calling static function addMixin.</t>
     <artwork xml:space="preserve">
-shindig.container.Container.addMixin('foo', function() { ... });
+container.Container.addMixin('foo', function() { ... });
     </artwork>
    </section>
   </section>
