@@ -318,32 +318,31 @@ data['Viewer']['Name']
 	set of functions provides string escaping control.  Containers MAY experiment 
 	by adding functions of their own to the EL.
 	</t>
-<list style="hanging">
-	<t hangText="os:htmlEncode">
-Encode HTML markup entities.  At minimum escape greater-than and less-than symbols and quotation marks to their encoded equivalents.</t>
-	<t hangText="os:htmlDecode">
-Unescape an HTML-encoded string.
-	</t>
-	<t hangText="os:urlEncode">
-URL-encode the contained string.  The behavior should mirror the JavaScript function encodeURIComponent.
-	</t>
-	<t hangText="os:urlDecode">
-URL-decode the contained string.  The behavior should mirror the JavaScript function decodeURIComponent.
-	</t>
-	<t hangText="os:filterUrl">
-Apply rules to make the URL safe for inclusion in markup.  Recommendations are to disallow javascript and apply anti-phishing mechanisms.
-	</t>
-	<t hangText="os:jsStringEscape">
-Escape string for inclusion within JavaScript block.
+	<x:draft note="[Issue 1176] EL - removal of 'os:' prefix as it contains illegal function name characters" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1164">
+	     <texttable align="left">
+         <ttcol>EL Function</ttcol>
+         <ttcol>Description</ttcol>
+
+	<c>htmlEncode</c>
+	<c>Encode HTML markup entities.  At minimum escape greater-than and less-than symbols and quotation marks to their encoded equivalents.</c>
+	<c>htmlDecode</c>
+	<c>Unescape an HTML-encoded string.</c>
+	<c>urlEncode</c>
+	<c>URL-encode the contained string.  The behavior should mirror the JavaScript function encodeURIComponent.</c>
+	<c>urlDecode</c>
+	<c>URL-decode the contained string.  The behavior should mirror the JavaScript function decodeURIComponent.</c>
+	<c>filterUrl</c>
+	<c>Apply rules to make the URL safe for inclusion in markup.  Recommendations are to disallow javascript and apply anti-phishing mechanisms.</c>
+	<c>jsStringEscape</c>
+	<c>Escape string for inclusion within JavaScript block.
     <figure>
      <artwork xml:space="preserve">
-var x = "${os:jsStringEscape(someVar)}";
-var y = '${os:jsStringEscape(someVar, true)}';
+var x = "${jsStringEscape(someVar)}";
 </artwork>
     </figure>	
-	</t>
-	</list>
-	
+	</c>
+	</texttable>
+</x:draft>	
    </section>
 <section title="Reserved EL properties">   
 	<t>
