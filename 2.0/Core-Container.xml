@@ -637,9 +637,207 @@
              </section>
           </x:draft>
     </section>
-    <section title="container.Container.actions">
+    <section title="container.Container.actions" anchor="container.actions">
+   <x:draft note="container.Container.actions" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+    <t>The actions feature, as described in the <eref target="./Core-Gadget.xml#gadgets.actions.overview">gadgets.actions overview</eref>, 
+    allows gadgets to contribute actions to various parts of a container's user interface.  The container can then render the actions consistently 
+    in context menus or action areas associated with particular data types, in global contribution areas (ie. navigation links at the top), 
+    or as part of the action areas of each gadget's chrome (ie. gadget's dropdown menu). </t>
+   <section title="Method Details">
+    <t>The container can access actions either by retrieving all actions in the registry, or by data type or path specification, via the three getter functions below: 
+    <eref target="#container.actions.getactions">getActions()</eref>,
+    <eref target="#container.actions.getactionsbytype">getActionsByType()</eref>, and
+    <eref target="#container.actions.getactionsbypath">getActionsByPath()</eref>.  In addition, the container must
+    register an <eref target="#container.actions.registeractionrenderer">action renderer function</eref> in order 
+    to render the actions in its UI, as well as a <eref target="#container.actions.registernavigategadgethandler">navigate gadget handler</eref>
+    to render the gadget upon action execution if the gadget has not yet been rendered.
+    </t>
+      <section title="getActions" anchor="container.actions.getactions">
+     <t>container.Container.actions.getActions()</t>
+     <t>Description: Returns an array of action objects (as described in the 
+        <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) currently active in the container.</t>
+     <t>Returns:</t>
+     <texttable align="left">
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>Object[]</c>
+      <c>Array of <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">action objects</eref> currently in the registry.</c>
+     </texttable>
     </section>
-    <section title="container.Cotainer.selection">
+    <section title="getActionsByPath" anchor="container.actions.getactionsbypath">
+     <t>container.Container.actions.getActionsByPath(path)</t>
+     <t>Description: Returns an array of action objects bound to a specific <eref target="./Core-Gadget.xml#gadgets.actions.paths">path</eref>.  For gadget-specific contributions 
+      (ie. actions that are to be added to a gadget's chrome), this API returns actions with a global identifier for the path. 
+      For example, if a gadget contributes an action to the path "gadget/menu/myaction1", this function would return 
+      an action with path "&lt;gadgetID&gt;/gadget/menu/myaction1" where &lt;gadgetID&gt; represents the specific gadget site in the container's UI.</t>
+     <t>Parameters:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>String</c>
+    <c>Text representation of a path to an action.</c>
+     </texttable>
+     <t>Returns:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>Object[]</c>
+    <c>Array of action objects associated with the given path.</c>
+     </texttable>
+    </section>
+    <section title="getActionsByDataType" anchor="container.actions.getactionsbytype">
+     <t>container.Container.actions.getActionsByObject(dataType)</t>
+     <t>Description: Returns an array of action objects bound to a specific <eref target="./Core-Gadget.xml#gadgets.actions.datatypes">data type</eref>.</t>
+     <t>Parameters:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>String</c>
+    <c>Open Social data type.</c>
+     </texttable>
+     <t>Returns:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>Object[]</c>
+    <c>Array of action objects associated with the given data type.</c>
+     </texttable>
+    </section>
+    <section title="runAction">
+     <t>container.Container.actions.runAction(actionId)</t>
+     <t>Description: Runs the callback function associated with the 
+      actionId in the context of the gadget.  The container should use this as the callback 
+      function in its implementation of initActionRenderer(), wherever the container needs
+      to bind a function to an action's UI.</t>
+     <t>Parameters:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>String</c>
+    <c>Identifier for the action to be executed.</c>
+     </texttable>
+    </section>
+    <section title="registerActionRenderer" anchor="container.actions.registeractionrenderer">
+     <t>container.Container.actions.registerActionRenderer(callbackRenderer)</t>
+     <t>Description: Registers a function to be called when new actions should appear in 
+      the container's UI.  The function will be called when the container receives the 
+      metadata for gadgets containing the actions feature.  At this time, the container may 
+      contribute the action to its UI.</t>
+     <t>Parameters:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>Function</c>
+    <c>Function to render the action in the container's UI.</c>
+     </texttable>
+     <t>Parameters for action renderer function:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>Object</c>
+    <c>JSON representation of action object.</c>
+     </texttable>
+     <t>Example:</t>
+     <artwork type="code">
+var myrenderer = function(actionObject){
+       // draw the UI, toolbars menus, etc using your containers JS library
+       // to do the invocation of the action, call the following API:
+       // container.Container.actions.runAction(actionObject.id);  
+}
+container.Container.actions.registerActionRenderer(myrenderer);
+     </artwork>
+    </section>
+    <section title="registerNavigateGadgetHandler" anchor="container.actions.registernavigategadgethandler">
+     <t>container.Container.actions.registerNavigateGadgetHandler(navigateHandler)</t>
+     <t>Description: Allows the container to implement its specific UI to show a requested gadget as requested 
+      by a declarative action.  The container registers the handler, and the actions feature calls the handler 
+      upon execution of an action, if the gadget is not yet rendered. The container may re-use the gadget site if it 
+      is already visible on the page, or may choose to render it in a new or existing gadget view site.</t>
+     <t>Parameters:</t>
+     <texttable align="left">
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+        <c>Function</c>
+        <c>Function to navigate to gadget in the container's UI.</c>
+       </texttable>
+     <t>Parameters for navigateHandler function:</t>
+     
+     <texttable align="left">
+    <ttcol>Name</ttcol>
+    <ttcol>Type</ttcol>
+    <ttcol>Description</ttcol>
+    <c>gadgetUrl</c>
+    <c>String</c>
+    <c>Gadget Spec URL</c>
+    <c>gadgetId</c>
+    <c>String</c>
+    <c>Identifier for gadget used in the gadget site definition.</c>
+    <c>opt_callback</c>
+    <c>Function</c>
+    <c>Optional callback function to run after navigating to gadget.</c>
+     </texttable>
+     
+     <t>Example:</t>
+     <artwork type="code">
+var myNavigateToHandler = function(gadgetUrl, gadgetId, opt_callback){
+    // invoke common container APIs to show the appropriate gadget
+    // ie. wrapper around call to CommonContainer.navigateGadget(site, gadgetUrl, viewParams, renderParams, opt_callback);
+    // or return the gadgetID of an existing visble gadget navigatingTo the optional viewId.
+    return gadgetId;
+}
+container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler );
+     </artwork>
+    </section>
+   </section>
+  </x:draft>
+   </section>
+   <section title="container.Container.selection" anchor="container.selection">
+  <x:draft note="container.Container.selection" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+   <t>The selection feature allows the container to support a singleton selected object, or array of objects,
+   that can be set by the gadget or the container itself.  For more information, please see the 
+   <eref target="./Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref>.</t>
+   <section title="Method Details">
+    <t>The below methods allow the container itself to interact with the selected object(s).</t>
+    <section title="setSelection" anchor="container.selection.setSelection">
+      <t>container.Container.selection.setSelection(selectionArray)</t> 
+      <t>Description: Sets the selection in the container.  The selection may be an array of multiple objects.
+      </t>
+      <t>Parameters:</t>
+    <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>selectionArray</c>
+         <c>Object[]</c>
+         <c>Array of object(s) to be set as selected, with attributes defined in table below.</c>
+        </texttable>
+      <t>Each selection object must have the following attributes:</t>
+      <texttable align="left">
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>type</c>
+       <c>String</c>
+       <c>Open Social data type, as specified in the <eref target="./Social-Data.xml">Social Data Specification</eref></c>
+     <c>dataObject</c>
+       <c>Object</c>
+       <c>Object representing the selection.</c>
+      </texttable>
+      </section>
+    <section title="getSelection">
+      <t>container.Container.selection.getSelection()</t>
+      <t>Description: Gets the current selection in the container.</t>
+    <t>Returns:</t>
+      <texttable align="left">
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>Object[]</c>
+      <c>The array of currently selected objects, each with type and dataObject properties, as described
+      in the <eref target="./Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref></c>
+      </texttable>
+    </section>
+   </section>
+  </x:draft>
     </section>
     <section title="container.Container.views">
     </section>

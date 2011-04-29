@@ -3807,6 +3807,193 @@ dataset would contain content resembling:
    </t>
   </section>
   <section title="Highly Recommended Features">
+   <section title="gadgets.actions" anchor="gadgets.actions">
+    <x:draft note="gadgets.actions" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+     <section title="Overview" anchor="gadgets.actions.overview">
+	  	 <t>The actions feature allows gadgets to contribute actions to the container's UI. Some containers have 
+	  		global action contribution areas such as the header and footers of the container, which may include links, buttons, or menus.</t>
+	  		
+	  	 <t>Additionally, a gadget may need to contribute actions to specific Open Social Data Objects.  In traditional 
+	  		desktop applications, these actions are often rendered as menu items on context menus when you click on a person 
+	  		or file. For example, when a user right-clicks on a Person object to bring up the context menu, they may see actions
+	  		specific to Person objects, including "Start a Chat" or "View Contact Information."</t>
+	  		
+	  	 <t>Some use cases are as follows:</t>
+	     <t>Action contribution by path  
+			<list style="numbers">
+			 <t>Gadget contributes a top level action to the container, aka such as a link at the top</t>
+			 <t>Gadget contributes a action to the Gadget's drop down menu(drawn by the container)</t>
+			 <t>Gadget contributes an action to a container specific defined path location, such as a container's toolbar</t>
+	    	</list>
+	     </t>
+	     <t>Action contribution to an Open Social Data type
+		   <list style="numbers">
+			<t>Gadget contributes an action to container's Person object. Example, a gadget providing SMS capability can bind to a container's list of active contacts/buddy list.</t>
+			<t>Gadget contributes an action to a container's Message. Example, a new button or action is added to the forward, reply, delete list when displaying a message.</t>
+			<t>Same holds true for all Open Social defined data types Group, Activityâ€¦ etc.</t>
+			<t>Gadgets may bind to any container specific types that are defined.  Containers shall make all efforts to use types in shared namespace and to contribute back new types to the spec to maintain cross-container abilities of gadgets.</t>
+		   </list>
+	     </t>
+	     
+	  	 <t>The container controls how to render the items such that all actions can be rendered consistently throughout the container, 
+	  		regardless of which gadget contributes the action.  Gadgets register actions by specifying a label, icon and a callback 
+	  		function.  Gadget developers do not need to worry about other UI details.</t>
+	
+		 <t>A gadget may programmatically contribute actions at any time by calling addAction(actionObject).  In addition, 
+			a gadget may declaratively contribute an action to the container in the gadget 
+			definition.  This allows actions to be added to the container before the gadget has been fully rendered.</t>
+     </section>
+     <section title="Action Objects" anchor="gadgets.actions.actionobjects">
+      <t>An action object is a JSON representation of an action, and may contain the following attributes:</t>
+      <texttable align="left">
+        <ttcol>Attribute</ttcol>
+       	<ttcol>Description</ttcol>
+       	<ttcol>Required/Optional</ttcol>
+	 	<c>id</c>
+	 	<c>Unique identifier</c>
+	 	<c>Required</c>
+	 	<c>label</c>
+	 	<c>Text string to display for this action</c>
+	 	<c>Required</c>
+	 	<c>path</c>
+	 	<c>The container-defined location for this action, as described in <eref target="#gadgets.actions.paths">Action Paths</eref>.  Example: path=container/menus/Edit</c>
+	 	<c>Optional*</c>
+	 	<c>dataType</c>
+	 	<c>The Open Social Data type, as described in <eref target="#gadgets.actions.datatypes">Action Data Types</eref>, with which to associate this action. Example: opensocial.Person</c>
+	 	<c>Optional*</c>
+	 	<c>tooltip</c>
+	 	<c>Tooltip to display on hovering over an icon</c>
+	 	<c>Optional</c>
+	 	<c>icon</c>
+	 	<c>Path to image icon.  Absolute URL or URL relative to gadget URL</c>
+	 	<c>Optional</c>
+	 	<c>iconSize</c>
+	 	<c>See <eref target="http://code.google.com/p/opensocial-resources/issues/detail?id=1155">related issue on icon size</eref> for more information.</c>
+	 	<c>Optional</c>
+	 	<c>iconOffset</c>
+	 	<c>x and y coordinates of icon if using image sprites</c>
+	 	<c>Optional</c>
+	 	<c>view</c>
+	 	<c>The view ID the gadget should navigate to when the action is invoked.</c>
+	 	<c>Optional</c>
+      </texttable>
+      <t>* Either path or dataType MUST be specified.</t>
+     </section>
+     <section title="Action Locations">
+	  <section title="Paths" anchor="gadgets.actions.paths">
+	   <t>Gadgets may contribute actions to container-defined common action locations.  These may include the following
+	   suggested standardized paths, but the container may also choose to support additional paths to which gadgets 
+	   can contribute:
+	   </t> 
+       <texttable align="left">
+        <ttcol>Path</ttcol>
+       	<ttcol>Description</ttcol>
+	 	<c>container/navigationLinks</c>
+	 	<c>The top level navigation links, providing links to related services.</c>
+		<c>container/menus</c>
+	 	<c>The top level menu.  For example to add a new action to File->New->Presentation path="container/menu/File/New." </c>
+	 	<c>container/toolbars</c>
+	 	<c>Top level toolbars owned by the container. For example to add a new action to Toolbar in a docs editor.</c>
+	 	<c>gadget/menu</c>
+	 	<c>The optional menu drawn by the container, around each gadget.</c>
+	   </texttable>
+	  </section>
+	  <section title="Data Types" anchor="gadgets.actions.datatypes">
+	   <t>Gadgets may use any of the data types defined in <eref target="./Social-Data.xml">Social-Data.xml</eref>
+	      when binding actions to OpenSocial Data types.  These include, but are not limited to, the following:
+		<list style="hanging">
+		 <t><eref target="./Social-Data.xml#Person">opensocial.Person</eref></t>
+		 <t><eref target="./Social-Data.xml#Message">opensocial.Message</eref></t>
+		 <t><eref target="./Social-Data.xml#Activity">opensocial.Activity</eref></t>
+		 <t><eref target="./Social-Data.xml#Group">opensocial.Group</eref></t>
+		</list>
+ 	   </t>
+	  </section>
+	 </section>
+     <section title="Example">
+      <t>Below is an example of the declarative contribution in a gadget's metadata and the javascript code needed to bind action ID to callback function:</t>
+	   <figure>
+		<artwork xml:space="preserve">
+&lt;Module&gt;
+ &lt;ModulePrefs title="Sample VOIP"&gt;
+  &lt;Optional feature="actions"&gt;
+   &lt;Param name="action-contributions"&gt;
+    &lt;![CDATA[
+    &lt;action id="org.samplevoip.callbyperson" dataObject="opensocial.Person" label="Call using VOIP Phone"
+      view="DialByPerson" icon="http://ww.samplervoip.org/phone.gif" /&gt;
+    &lt;action id="org.samplervoip.navLink" path="container/navigationLinks" label="Phone" /&gt;
+    ]]&gt;
+   &lt;/Param&gt;
+  &lt;/Optional&gt;
+ &lt;/ModulePrefs&gt;
+ &lt;Content type="html"&gt;
+  &lt;![CDATA[
+   &lt;script&gt;
+
+	// Bind javascript function to action ID
+	function mycallback{
+		...
+	}
+	var myaction = {
+		id: "org.samplevoip.callbyperson",
+		callback: mycallback
+	}
+	container.actions.addAction(myaction);
+	
+   &lt;/script&gt;
+  ]]&gt;
+ &lt;/Content&gt;
+&lt;/Module&gt;
+  		</artwork>
+	   </figure>
+      </section>
+      <section title="Method Details">
+	   <section title="addAction" anchor="gadgets.actions.addAction">
+	    <t>&lt;static&gt; gadgets.actions.addAction(action)</t>
+	    <t>Description: Adds the specified action(s) to the container.</t>
+	    <t>Parameters:</t>
+		<texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+		 <c>action</c>
+		 <c>Object</c>
+		 <c>The action to be added to the container</c>
+		</texttable>
+	    <t>Example contributing an action to a container's Person object:</t>
+        <artwork type="code">
+var mycallback = function(){
+	...
+};
+
+var myaction = {
+	id: "com.acme.mycallaction",
+	tooltip: "My Action Tooltip",
+	label: "Call Person",
+	icon: "images/myicon.png",
+	callback: mycallback,
+	dataType: "opensocial.Person"
+}
+
+gadgets.actions.addAction(myaction);
+		</artwork>
+	  </section>
+	  <section title="removeAction" anchor="gadgets.actions.removeAction">
+	    <t>&lt;static&gt; container.actions.removeAction (actionId)</t>
+	    <t>Description: Removes the specified action from the container.</t>
+	    <t>Parameters:</t>
+		<texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+		 <c>id</c>
+		 <c>String</c>
+		 <c>The ID referencing the action to be removed from the container</c>
+		</texttable>
+	  </section>
+     </section>
+    </x:draft>
+   </section>
    <section title="gadgets.flash"
             anchor="gadgets.flash">
     <!-- ============================== class summary ========================== -->
@@ -4253,6 +4440,115 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 				</texttable>
 			</t>
 	</section>  
+   </section>
+   <section title="gadgets.selection" anchor="gadgets.selection">
+    <x:draft note="Selection" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+  	 <section title="Overview" anchor="gadgets.selection.overview">
+	  	 <t>The selection feature gives gadgets the ability to participate in the containerâ€™s selection eventing. The concept 
+	  		of selection is common among many containers. Examples include:
+	 		<list style="symbols">
+	  		 <t>selected person in a buddy or contacts list</t>
+	  		 <t>selected activity in an activity stream</t>
+	  		 <t>selected item in a user's profile</t>
+	  		</list>
+	  	 </t>
+	  	 <t>Selection is a user-driven singleton belonging to the container. For example, when a user selects
+	  		a Person in their contact list before sending that Person a message, that Person becomes the selected object.  Typically, a 
+	  		user gesture triggers a gadget to post selection to the containerâ€™s selection service. 
+	  		Each time something is posted to the selection service, gadgets that are registered to listen for selection events are 
+	  		notified. The current selection for the container represents what was posted last and can be queried at any time. The 
+	  		selected object can represent a single object or a collection of objects.</t>
+	  	 <t>Note: gadgets must opt in to publish data via selection and should be aware it is a broadcast event.</t>
+  	</section>
+    <section title="Method Details">
+   		<section title="setSelection" anchor="gadgets.selection.setSelection">
+   			<t>&lt;static&gt; gadgets.selection.setSelection (selectionArray)</t> 
+   			<t>Description: Sets the selection for the container.  The selection may be an array of multiple objects.
+   			</t>
+   			<t>Parameters:
+				<texttable align="left">
+		         <ttcol>Name</ttcol>
+		         <ttcol>Type</ttcol>
+		         <ttcol>Description</ttcol>
+		         <c>selectionArray</c>
+		         <c>Object[]</c>
+		         <c>Array of object(s) to be set as selected, with attributes defined in table below.</c>
+		        </texttable>
+		    </t>
+		    <t>Each selection object must have the following attributes:
+		  	  <texttable align="left">
+		  	   <ttcol>Name</ttcol>
+		  	   <ttcol>Type</ttcol>
+		  	   <ttcol>Description</ttcol>
+		  	   <c>type</c>
+		  	   <c>String</c>
+		  	   <c>Open Social data type, as specified in the <eref target="./Social-Data.xml">Social Data Specification</eref></c>
+			   <c>dataObject</c>
+		  	   <c>Object</c>
+		  	   <c>Object representing the selection.</c>
+		
+		  	  </texttable>
+  	 		</t>
+  	 		<t>
+				Example:
+				<artwork type="code">
+//an array of 2 people who are currently selected
+var selection = [ 
+	{type: "opensocial.Person", dataObject: bob}, {type: "opensocial.Person", dataObject: joe} 
+];
+gadgets.selection.setSelection(selection);
+	   			</artwork>
+   			</t>
+   		</section>
+   		<section title="getSelection" anchor="gadgets.selection.getSelection">
+   			<t>&lt;static&gt; Type: Object[] gadgets.selection.getSelection()</t>
+   			<t>Description: Gets the current selection for the container.</t>
+   			<t>Returns:
+	   			<texttable align="left">
+		         <ttcol>Type</ttcol>
+		         <ttcol>Description</ttcol>
+		         <c>Object[]</c>
+		         <c>The array of currently selected objects, each with type and dataObject properties</c>
+		        </texttable>				
+   			</t>
+   		</section>
+   		<section title="addListener" anchor="gadgets.selection.addListener">
+   			<t>&lt;static&gt; gadgets.selection.addListener(event, callback)</t>
+   			<t>Description: Registers the callback function to be called for the specified selection event.</t>
+   			<t>
+				<texttable align="left">
+		         <ttcol>Name</ttcol>
+		         <ttcol>Type</ttcol>
+		         <ttcol>Description</ttcol>
+		         <c>event</c>
+		         <c>String</c>
+		         <c>The type of selection event [selection | preselection | postselection]</c>
+		         <c>callback</c>
+		         <c>Function</c>
+		         <c>The callback function that is called for the specified selection event.</c>
+		        </texttable>
+   			</t>
+   		</section>
+   		<section title="removeListener" anchor="gadgets.selection.removeListener">
+   			<t>&lt;static&gt; gadgets.selection.removeListener(event, callback)</t>
+   			<t>Description: Unregisters the callback function to be called whenever for the specified selection event.</t>
+   			<t>Parameters:
+	   			<texttable align="left">
+		         <ttcol>Name</ttcol>
+		         <ttcol>Type</ttcol>
+		         <ttcol>Description</ttcol>
+		         <c>event</c>
+		         <c>String</c>
+		         <c>The type of selection event [selection | preselection | postselection]</c>
+		         <c>callback</c>
+		         <c>Function</c>
+		         <c>The callback function to be unregistered.</c>
+		        </texttable>
+   			</t>
+   		</section>
+   		
+   	</section>
+   </x:draft>
    </section>
    <section title="gadgets.skins"
             anchor="gadgets.skins">
