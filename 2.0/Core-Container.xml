@@ -488,6 +488,49 @@
   </section>
   <section title="Highly Recommended Features">
     <section title="container.Container.ee">
+    <x:draft note="Embedded Experiences" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+        <section title="navigate" anchor="container.Container.ee.navigate">
+          <t>container.Container.ee.navigate(element, dataModel, renderParams)</t>
+          <t>
+            Renders an embedded experience from the given embedded experience
+            data model.
+          </t>
+          <t>Parameters: 
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>element</c>
+              <c>HTMLElement</c>
+              <c>The HTML DOM element in which to render the embedded experience.</c>
+              <c>dataModel</c>
+              <c>Object</c>
+              <c>The embedded experience <eref target="./Core-Gadget.xml#Embedded-Experiences-Data-Model">data model</eref>.</c>
+              <c>renderParams</c>
+              <c>Object</c>
+              <c>The render params to use when rendering this embedded experience.</c>
+            </texttable>
+          </t>
+        </section>
+        <section title="close" anchor="container.Container.ee.close">
+          <t>container.Container.ee.close(site)</t>
+          <t>
+            Closes a site containing an embedded experience.  This can close
+            a <xref target="container.GadgetSite">gadget site</xref> or a 
+            URL site.
+          </t>
+          <t>Parameters: 
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>site</c>
+              <c>container.GadgetSite | container.UrlSite</c>
+              <c>The site to close.</c>
+            </texttable>
+          </t>
+        </section>
+      </x:draft>
     </section>
     <section title="container.Container.openSearch">
         <x:draft note="OpenSearch Gadget Contributions"
