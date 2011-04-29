@@ -5961,7 +5961,106 @@ assertEquals(0.30, value);
      </section>
     </section>
    </section>
-   
+   <section title="OpenSearch" anchor="OpenSearch">
+     <x:draft note="OpenSearch Gadget Contributions" href="http://docs.opensocial.org/display/OSD/OpenSearch+Gadget+Contributions">
+	   <t>
+          The OpenSearch feature in OpenSocial allows gadgets to declare
+          that they have searchable material by providing an
+          <eref target="http://www.opensearch.org/Specifications/OpenSearch/1.1">OpenSearch 1.1</eref>
+          description in their gadget definition. The OpenSeach
+          description is passed as a parameter to the OpenSearch feature.
+          Gadget developers may choose to embed the OpenSearch
+          descriptior right in the gadget definition itself, or they may
+          reference an OpenSearch description hosted on a server by using
+          it's URL.
+          Gadget developers SHOULD make the OpenSearch feature optional
+          in thier gadget defintions to allow for ineroperability in all
+          containers.	 
+       </t>
+	   <section title="Data Model">
+	     <t>
+          The OpenSearch description can be declared in two ways,
+          first by embedding it in the gadget definition itself, or
+          secondly by providing a URL to the description document.
+          To do this gadget developers should provide a feature
+          parameter to the OpenSearch feature. The parameter names
+          can be one of the following.
+          <texttable align="left">
+            <ttcol>Parameter Name</ttcol>
+            <ttcol>Description</ttcol>
+            <c>description</c>
+            <c>
+              XML for the full OpenSearch 1.1 description as
+              described on the OpenSearch site.
+            </c>
+            <c>url</c>
+            <c>
+              A URL to the OpenSearch 1.1 description document. 
+            </c>
+          </texttable>
+         </t>
+         <section title="description">
+          <t>
+            The description parameter contains the full XML of the
+            <eref target="http://www.opensearch.org/Specifications/OpenSearch/1.1#OpenSearch_description_document">OpenSearch 1.1 description</eref>,
+            as described in the OpenSearch Specification.
+            The description contains the template url for fetching results, the
+            type of results returned, the title of the search contribution, and
+            other information. Please see the link above for more details.
+          </t>
+         </section>
+         <section title="url">
+          <t>
+            The url parameter points to an XML document that contains the full
+            <eref target="http://www.opensearch.org/Specifications/OpenSearch/1.1#OpenSearch_description_document">OpenSearch 1.1 description</eref>.
+          </t>
+         </section>
+         <section title="Sample Gadgets">
+          <section title="Embedded OpenSearch Description">
+            <figure>
+              <artwork xml:space="preserve">
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt; 
+&lt;Module&gt; 
+  &lt;ModulePrefs title="OpenSearch Example"&gt; 
+    &lt;Optional feature="opensearch"&gt; 
+      &lt;Param name="description"&gt;
+        &lt;![CDATA[
+          &lt;OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"&gt; 
+            &lt;ShortName&gt;Example Search&lt;/ShortName&gt; 
+            &lt;Description&gt;Realtime Example Search&lt;/Description&gt; 
+            &lt;Url type="application/atom+xml" method="get" template="http://search.example.com/search.atom?q={searchTerms}"/&gt;
+            &lt;Image width="16" height="16"&gt;http://search.example.com/favicon.png&lt;/Image&gt; 
+            &lt;InputEncoding&gt;UTF-8&lt;/InputEncoding&gt;
+            &lt;SearchForm&gt;http://search.example.com/&lt;/SearchForm&gt;
+          &lt;/OpenSearchDescription&gt;
+        ]]&gt;
+      &lt;/Param&gt; 
+    &lt;/Optional&gt; 
+  &lt;/ModulePrefs&gt;
+  &lt;Content type="url" href="http://example.com/searchGadget.xml" /&gt; 
+&lt;/Module&gt;
+              </artwork>
+            </figure>
+          </section>
+          <section title="Referenced OpenSearch Description">
+            <figure>
+              <artwork xml:space="preserve">
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt; 
+&lt;Module&gt; 
+  &lt;ModulePrefs title="OpenSearch Example"&gt; 
+    &lt;Optional feature="opensearch"&gt; 
+      &lt;Param name="url"&gt;http://search.example.com/openSearchDescription.xml&lt;/Param&gt; 
+    &lt;/Optional&gt; 
+  &lt;/ModulePrefs&gt;
+  &lt;Content type="url" href="http://example.com/searchGadget.xml" /&gt; 
+&lt;/Module&gt;
+              </artwork>
+            </figure>
+          </section>	
+        </section>
+      </section>
+    </x:draft>
+	</section>
   </section>
   
   <section title="Simple Gadget XML Schema"

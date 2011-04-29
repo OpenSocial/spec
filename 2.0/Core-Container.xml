@@ -490,6 +490,109 @@
     <section title="container.Container.ee">
     </section>
     <section title="container.Container.openSearch">
+        <x:draft note="OpenSearch Gadget Contributions"
+          href="http://docs.opensocial.org/display/OSD/OpenSearch+Gadget+Contributions">
+        <t>
+        The contain APIs for OpenSearch allow containers to access 
+        OpenSearch description information contained within the 
+        gadgets which it has loaded or is currently showing on the
+        page.  Containers can use this information in order to allow
+        users of the container to search accross multiple gadgets
+        at the same time.  
+        </t>
+        <section title="getOpenSearchURLs" anchor="container.Container.opensearch.getOpenSearchURLs">
+        <t>Type: {Array} container.Container.opensearch.getOpenSearchURLs(mimeType)</t>
+          <t>
+            Description: Retrieves all gadget search URLs based on the 
+            data type parameter.  Containers may support zero or more of 
+            the data types.
+          </t>
+          <t>Parameters:
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>mimeType</c>
+              <c>String</c>
+              <c>
+                The type of OpenSearch URLs you want to be returned.  
+                This should be a valid MIME type.
+              </c>
+            </texttable>
+            </t>
+            <t>Returns:
+              <texttable align="left">
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>Array</c>
+                <c>
+                  An array of name and URL pairs, where name
+                  is the display name, and URL is the OpenSearch template
+                  URL.
+                </c>
+              </texttable>
+            </t>
+          </section>
+          <section title="getOpenSearchDescriptions" anchor="container.Container.opensearch.getOpenSearchDescriptions">
+            <t>Type: {Array} container.Container.opensearch.getOpenSearchDescriptions(mimeType)</t>
+              <t>
+                Description: Retrieves all OpenSearch descriptions from gadgets
+                which have OpenSearch feature in their gadget definition.
+              </t>
+              <t>Parameters:
+                <texttable align="left">
+                  <ttcol>Name</ttcol>
+                  <ttcol>Type</ttcol>
+                  <ttcol>Description</ttcol>
+                  <c>mimeType</c>
+                  <c>String</c>
+                  <c>
+                    The MIME for the OpenSearch template URL within the 
+                    OpenSearch description.
+                  </c>
+                </texttable>
+              </t>
+              <t>Returns:
+                <texttable align="left">
+                  <ttcol>Type</ttcol>
+                  <ttcol>Description</ttcol>
+                  <c>Array</c>
+                  <c>
+                    An array of OpenSearch definitions.  The 
+                    definitions should be the JSON representation of the 
+                    OpenSearch definition represented in XML.
+                  </c>
+                </texttable>
+              </t>
+              <t>Example Array Returned By container.opensearch.getOpenSearchDesription
+                <figure>
+                  <artwork xml:space="preserve">
+[ 
+  {
+    "mimeType" : "application/atom+xml",
+    "OpenSearchDescription : {
+      "ShortName" : "Example Search",
+      "Description" : "Realtime Example Search",
+      "Url" : {
+        "@type" : "application/atom+xml",
+        "@method" : "get",
+        "@template" : "http://search.example.com/search.atom?q={searchTerms}"      
+      },
+      "Image" : {
+        "@width" : "16",
+        "@height" : "16",
+        "#text" : "http://search.example.com/favicon.png"
+      },
+      "InputEncoding" : "UTF-8",
+      "SearchForm" : "http://example.search.com/"
+   }
+  }
+]
+                  </artwork>
+                </figure>
+               </t>
+             </section>
+          </x:draft>
     </section>
     <section title="container.Container.actions">
     </section>
