@@ -1349,32 +1349,43 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
   </section>
   <section title="OAuth"
            anchor="OAuth">
-   <t>Containers MUST support OAuth requests for 
-   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>. When
-   proxying a Gadget's request, Containers SHOULD use an OAuth token specific
+   <x:draft note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+   <t>As mentioned previously in this specification and other OpenSocial
+     2.0 specifications, OpenSocial containers MUST be able to proxy
+    OAuth requests for gadgets.  The main mechanism used to accomplish proxy
+    requests is the <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>
+    method.  This method MUST be implemented to handle gadget OAuth proxy
+    requests. When
+   proxying a gadget's request, Core Gadget Servers SHOULD use an OAuth token specific
    to the gadget making the request, and specific to either the Viewer or the
-   Owner of the container page. Furthermore, when proxying a gadget's request,
-   Containers MAY use an OAuth Consumer key and secret specific to the gadget
-   making the request, or they MAY alternatively use the container's OAuth
-   consumer key and secret. For more details, see the 
-   <xref target="OAuth-Core">OAuth spec</xref>.</t>
+   Owner of the container page. This implies that OAuth information, such as access
+   tokens are stored so they may be retrieved by service name,
+   gadget id and user id, although this is implementation specific.</t>
+    <t> When proxying a gadget's request,
+   OpenSocial containers MAY use an OAuth client key and secret specific to the gadget
+   making the request (xoauth_requestor_id request context parameter), 
+   or MAY use the container's OAuth client key and secret. For more details, see the 
+   <xref target="OAuth-Core">OAuth 1.0A specification</xref> or the OAuth 2.0 specification.</t>
    <section title="Consumer Secrets">
-    <t>It is beyond the scope of this document to specify how a Container
-    obtains consumer keys and secrets for Gadgets that it may proxy requests
-    for. As explained above, a Container MAY instead use its own consumer key
-    and secret when making OAuth requests. A Container could even use the
-    RSA_SHA1 signature method, effectively using the same consumer key and
-    secret for all gadgets, and for all OAuth service providers it is proxying
-    requests to.</t>
+    <t>OAuth client keys and secrets are typically obtained by registering a 
+    gadget, application or server with a service provider at a web page provided
+    by the service provider.  Once the keys/secrets
+    are obtained, they are typically placed in a key store on the Core Gadget Server.
+    However, the exact method of accomplishing registration is
+    implementation specific. If a Core Gadget Server uses its own client key
+    and secret when making OAuth requests, it must be registered with each
+    service provider it will communicate with.  In this case, the 
+    Core Gadget Server will use the same client key and client secret for every
+    OAuth request to a particular service provider.</t>
    </section>
    <section title="OAuth Tokens">
     <t>When proxying a 
     <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>of 
     <xref target="gadgets.io.AuthorizationType">
-    gadgets.io.AuthorizationType</xref>'OAUTH', the container SHOULD do the
+    gadgets.io.AuthorizationType</xref> 'OAUTH' for OAuth 1.0A, the container SHOULD do the
     following:</t>
     <list style="numbers">
-     <t>If the container finds an appropriate OAuth access token and secret for
+     <t>If the Core Gadget Server finds an appropriate OAuth access token and secret for
      the request, the Container signs the outgoing request according to the
      OAuth specification.</t>
      <t>If the container finds no appropriate OAuth access token, but an
@@ -1392,7 +1403,41 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
      <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>once
      the user has approved the OAuth access.</t>
     </list>
+    <t>Proxying a request for an OAuth 2 service provider is different based
+      on the grant type being used.  This description is for an authorization
+      grant. 
+    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>of 
+    <xref target="gadgets.io.AuthorizationType">
+    gadgets.io.AuthorizationType</xref> 'OAUTH2' for OAuth 2.0, the container SHOULD do the
+    following:</t>
+    <list style="numbers">
+       <t>It is assumed the Core Gadget Server can find a client key and secret
+          for the service provider to be contacted.  If these cannot be found,
+          a "permanent" failure is returned to the gadget.</t>
+       <t>If the Core Gadget Server finds an appropriate OAuth access token
+          it contacts the service provider resource endpoint using OAuth 2.0 client
+          code that is compatible with the specific OAuth 2.0 implementation of
+          the service provider, passes the token (among other data), and requests 
+          the data. </t>
+       <t>If the Core Gadget Server finds no appropriate OAuth access token, it returns
+          an error to the gadget along with a redirection URL based on
+          the gadget XMLs /ModulePrefs/OAuth/Service/Authorization setting.
+          The gadget is expected to redirect the User Agent
+          (browser) to the authorization URL for the service provider.  Once 
+          the user authenticates and authorizes the gadget, the gadget will
+          receive a redirection URL from the serivce provider that includes 
+          an authorization code.
+          The gadget redirects the User Agent (browser) back to the
+          Core Gadget Server, which receives the authorization code from
+          the service provider.  The Core Gadget Server contacts the token
+          endpoint of the service provider, passing the client key/secrets
+          along with the authorization code to obtain an access token.
+          The Core Gadget Server returns an error to the gadget to indicate
+          a need to retry the makeRequest.  The gadget retries the makeRequest.
+          </t>
+    </list>
    </section>
+   </x:draft>
   </section>
   <section title="JavaScript API Reference" anchor="JavaScript-API-Reference">
     <t>OpenSocial's JavaScript API uses the following patterns:</t>
@@ -1732,8 +1777,12 @@ gadgets.io.makeRequest(url, callback, params);
       with the string 'NONE'.</t>
      <t hangText="OAUTH"
               anchor="gadgets.io.AuthorizationType.OAUTH">
-     The container will use OAuth for authentication. This
+     The container will use OAuth 1.0A for authentication. This
       field may be used interchangeably with the string 'OAUTH'.</t>
+      <t hangText="OAUTH2"
+              anchor="gadgets.io.AuthorizationType.OAUTH2">
+     The container will use OAuth 2.0 for authentication. This
+      field may be used interchangeably with the string 'OAUTH2'.</t>
      <t hangText="SIGNED"
               anchor="gadgets.io.AuthorizationType.SIGNED">
      The request will be signed by the container. This field
