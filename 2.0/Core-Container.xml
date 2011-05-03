@@ -840,6 +840,104 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
   </x:draft>
     </section>
     <section title="container.Container.views">
+    <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs by the Container" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+     <t>
+      The purpose of these APIs is to add the ability for the gadget to open 
+      and/or close gadget and URL sites within the container which it is rendered. 
+      Containers should override the following methods to define the behavior 
+      for opening gadget and URL sites.  The container may choose not to 
+      override these methods, in which case if a gadget calls them the 
+      container won't do anything.
+     </t>
+     <section title="Javascript APIs">
+      <section title="createElementForGadget" anchor="container.createElementForGadget">
+       <t>Type: {Object} container.createElementForGadget(metadata, opt_view, opt_viewTarget)</t>
+       <t>
+        Description: Method called when a gadget wants to open a view of 
+        itself in a new gadget site.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>metadata</c>
+         <c>Object</c>
+         <c>
+          Gadget metadata for the gadget being opened.
+         </c>
+         <c>opt_view </c>
+         <c>string</c>
+         <c>
+          Optional parameter, the surface view that indicates the type of gadget site.
+         </c>
+         <c>opt_viewTarget </c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view that indicates where to open the gadget. For example, tab, dialog or modaldialog.
+         </c>
+        </texttable>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>HTMLElement</c>
+         <c>
+          The DOM element to place the gadget site in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="createElementForUrl" anchor="container.createElementForUrl">
+       <t>Type: {Object} container.createElementForUrl(opt_viewTarget)</t>
+       <t>
+        Description: Method called when a gadget wants to open a URL in a new URL site.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>opt_viewTarget</c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view target to open. If the view target is not included 
+          it is up to the container to choose how to open this URL.
+         </c>
+        </texttable>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>HTMLElement</c>
+         <c>
+          The DOM element to place the URL site object in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="destroyElement" anchor="container.destroyElement">
+       <t>container.destroyElement(id)</t>
+       <t>
+        Description: Method called when a gadget wants to close itself or the 
+        parent gadget wants to close a gadget or URL site it has opened.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>id</c>
+         <c>string</c>
+         <c>
+          The id of the gadget or url site to close.
+         </c>
+        </texttable>
+       </t>
+      </section>
+     </section></x:draft>
     </section>
   </section>
   <section title="Extensibility">

@@ -2492,6 +2492,107 @@ var lang = prefs.getLang();
        current owner</c>
       </texttable></t>
      </section>
+     <section title="openGadget"
+              anchor="gadgets.views.openGadget">
+      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+       <t>&lt;static&gt; gadgets.views.openGadget(resultCallback, idCallback, opt_params)</t>
+       <t>Description: Opens a gadget in the container UI. The location of the gadget site 
+       in the container will be determined by the view target passed in. The container 
+       would open the view in a dialog, if view target is dialog or the gadgets 
+       view in a tab for view target is tab</t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>resultCallback</c>
+         <c>function</c>
+         <c>Callback function to be called when the gadget closes. 
+         The function will be called with the return value as a parameter.</c>
+         <c>idCallback</c>
+         <c>function</c>
+         <c>Callback function to be called with the id of the Site which has been opened </c>
+         <c>opt_params </c>
+         <c>Object</c>
+         <c>These are optional parameters which can be used to open gadgets.  
+         The following parameters may be included in this object. </c>
+        </texttable></t>
+       <t>opt_params:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>view </c>
+         <c>string </c>
+         <c>The surface view that indicates the type of gadget site.</c>
+         <c>viewTarget </c>
+         <c>string </c>
+         <c>The view that indicates where to open the gadget. For example, 
+          <xref target="gadgets.views.ViewType.ViewTarget">tab, dialog or modaldialog</xref>.</c>
+         <c>viewParams </c>
+         <c>Object</c>
+         <c>View parameters for the view being rendered.</c>
+        </texttable></t></x:draft>
+     </section>        
+     <section title="openUrl"
+              anchor="gadgets.views.openUrl">
+      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+       <t>&lt;static&gt; gadgets.views.openUrl(url, idCallback, opt_viewTarget)</t>
+       <t>Description: Opens a URL in the container UI. The location of the URL site will be determined by the container 
+       based on the target view. The container would open the view in a dialog, 
+       if opt_viewTarget=dialog or the gadgets view in a tab for opt_viewTarget=tab</t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>url</c>
+         <c>string</c>
+         <c>URL to a web page to open in a URL site in the container.  (Note this should not be a URL to a gadget definition.)</c>
+         <c>idCallback</c>
+         <c>function</c>
+         <c>Callback function to be called with the id of the site which has been opened</c>
+         <c>opt_viewTarget </c>
+         <c>string </c>
+         <c>Optional parameter,the view that indicates where to open the URL.</c>
+        </texttable></t>
+      </x:draft>
+     </section>
+     <section title="close"
+              anchor="gadgets.views.close">
+      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+       <t>&lt;static&gt; gadgets.views.close(opt_id)</t>
+       <t>Description: Closes an opened site. If the opt_id parameter is null the container will close the calling site.</t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>opt_id</c>
+         <c>string</c>
+         <c>Optional parameter which specifies what site to close. If null it will close the current gadget site.</c>
+        </texttable></t>
+      </x:draft>
+     </section>
+     <section title="setReturnValue"
+              anchor="gadgets.views.setReturnValue">
+      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+       <t>&lt;static&gt; gadgets.views.setReturnValue(returnValue)</t>
+       <t>Description: Sets the return value for the current window. 
+       This method should only be called inside those secondary view types defined in gadgets.views.ViewType. 
+       For example, <xref target="gadgets.views.ViewType.ViewTarget">DIALOG or MODALDIALOG</xref>.</t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>returnValue</c>
+         <c>Object</c>
+         <c>Return value for this window.</c>
+        </texttable></t>
+      </x:draft>
+     </section>
+     
     </section>
    </section>
    <section title="gadgets.views.View"
@@ -2668,6 +2769,26 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
               'SUPPORT'.
           </t>
       </list>
+</x:draft>
+<x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+    <section title="View Target" anchor="gadgets.views.ViewType.ViewTarget">
+      <list style="hanging">
+      <t hangText="TAB"
+              anchor="gadgets.views.ViewType.TAB">
+      A view where the gadget is displayed inside a container tab. 
+      This field may be used interchangeably with the string
+      'TAB'.</t>
+      <t hangText="DIALOG"
+              anchor="gadgets.views.ViewType.DIALOG">
+      A view where the gadget is displayed in a pop up box. This field may be used interchangeably with the string
+      'DIALOG'.</t>
+      <t hangText="MODALDIALOG"
+              anchor="gadgets.views.ViewType.MODALDIALOG">
+      A view where the gadget is displayed in a modal pop up box. This field may be used interchangeably with the string
+      'MODALDIALOG'.</t>
+      
+    </list>
+    </section>
 </x:draft>
    </section>
    <section title="opensocial.data" anchor="opensocial.data">
@@ -4955,6 +5076,20 @@ gadgets.selection.setSelection(selection);
        <c>Object</c>
        <c>An object with width and height properties</c>
       </texttable></t>
+     </section>
+     <section title="getContainerDimensions"
+              anchor="gadgets.window.getContainerDimensions">
+     <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">   	 
+      <t>&lt;static&gt; Type: {Object}
+      gadgets.window.getContainerDimensions()</t>
+      <t>Description: Returns the dimensions of the container displaying this gadget.</t>
+      <t>Returns:
+      <texttable align="left">
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>Object</c>
+       <c>An object with width and height properties</c>
+      </texttable></t></x:draft>
      </section>
      <section title="setTitle"
               anchor="gadgets.window.setTitle">
