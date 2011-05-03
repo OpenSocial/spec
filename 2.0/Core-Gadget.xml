@@ -5080,15 +5080,16 @@ gadgets.selection.setSelection(selection);
      <section title="getContainerDimensions"
               anchor="gadgets.window.getContainerDimensions">
      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">   	 
-      <t>&lt;static&gt; Type: {Object}
-      gadgets.window.getContainerDimensions()</t>
-      <t>Description: Returns the dimensions of the container displaying this gadget.</t>
-      <t>Returns:
+      <t>&lt;static&gt; gadgets.window.getContainerDimensions(resultCallback)</t>
+      <t>Description: Gets the dimensions of the container displaying this gadget through callback function which will be called with the return value as a parameter.</t>
+      <t>Parameter:
       <texttable align="left">
+       <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
-       <c>Object</c>
-       <c>An object with width and height properties</c>
+       <c>resultCallback</c>
+       <c>function</c>
+       <c>Callback function will be called with the return value as a parameter.</c>
       </texttable></t></x:draft>
      </section>
      <section title="setTitle"
