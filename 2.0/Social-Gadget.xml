@@ -1367,76 +1367,8 @@ My best friend is:&lt;br/&gt;
     </figure></t>
    </section>
   </section>
-  <section title="Non-Tags">
-   <t>There are a number of potential tags that can be better supported using
-   templating, for reasons outlined below.</t>
-   <t>Note that most of these capabilities will require using the
-   "opensocial-templates" feature.</t>
-   <section title="Non-Tag: Inserting Text Content">
-    <t>For generating text content, expressions are used instead of tags.</t>
-    <t>Example: 
-    <list style="symbols">
-     <t>${Viewer.name} or</t>
-     <t>${Owner.jobs[0].Title} instead of</t>
-     <t>&lt;os:Name&gt; (note that &lt;os:Name&gt; is for showing a linked
-     name, not for inserting text only).</t>
-    </list>Reasoning: 
-    <list style="symbols">
-     <t>Extends to all OpenSocial fields (see the <eref target="Social-Data.xml#Person">Person</eref> object for a
-     list).</t>
-     <t>Can be used in attributes, such as &lt;input type="submit" value="Share
-     with ${Name}"&gt;.</t>
-    </list></t>
-    <section title="Non-Tags: Flow Control">
-     <t>For conditional content, a conditional statement in OpenSocial
-     templating is used along with an expression.</t>
-     <t>Example: 
-     <list style="symbols">
-      <t>&lt;div if="${!viewer.hasApp}"&gt;&lt;a href="..."&gt;Click here to
-      install!&lt;/a&gt;&lt;/div&gt; or</t>
-      <t>&lt;div if="${jobs[0].Title}"&gt;${name}'s job is
-      ${jobs[0].Title}"&lt;/div&gt;</t>
-     </list>instead of 
-     <list style="symbols">
-      <t>&lt;os:HasApp&gt; etc.</t>
-     </list>Reasoning: 
-     <list style="symbols">
-      <t>Extends well to a large number of conditional constructs (no need for
-      one tag per condition).</t>
-      <t>Equivalently simple to use.</t>
-     </list></t>
-    </section>
-    <section title="Non-Tags: Pronoun">
-     <t>For pronouns, conditional HTML blocks based on gender are used.</t>
-     <t>Example: 
-     <list style="symbols">
-      <t>&lt;span if="${person.gender == 'MALE'}"&gt;He said "boo"&lt;/span&gt;
-      &lt;span if="${person.gender == 'FEMALE'}"&gt;She said "boo"&lt;/span&gt;
-      instead of</t>
-      <t>&lt;span&gt;&lt;os:Pronoun&gt; said "boo"&lt;/span&gt;</t>
-     </list>Reasoning: 
-     <list style="symbols">
-      <t>You need full sentences to localize properly.</t>
-     </list></t>
-    </section>
-    <section title="Non-Tags: Get">
-     <t>Inlining of remote HTML markup is possible via a combination of Data
-     Pipelining's &lt;os:HttpRequest&gt; tag and OpenSocial Templates variable
-     inlining via the ${data} syntax. Thus a dedicated &lt;os:Get&gt; tag is
-     not needed.</t>
-     <t>Example: 
-     <list style="symbols">
-      <t>&lt;os:HttpRequest key="Data" href="http://example.com/data.html"
-      format="text"&gt;</t>
-      <t>Then use &lt;os:Html code="${Data}"/&gt; in your template.</t>
-     </list>Reasoning: 
-     <list style="symbols">
-      <t>Re-using existing capabilities avoids doing the same thing in two
-      different ways.</t>
-     </list></t>
-    </section>
-   </section>
-  </section>
+<x:draft note="Issue 1179 - Remove non-tags section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1179">
+</x:draft>
   <section title="Interaction with Proxied Content">
    <t>The combination of tags, templates, and proxied content leads to a number
    of combinations for developer to use.</t>
