@@ -134,7 +134,7 @@ which defines an encapsulated set of capabilities. OpenSocial has been structure
 this way to support a wide array of adoption use cases that are all considered compliant with the
 specification. For example, it is possible to only offer social
 APIs via REST and be considered a compliant OpenSocial Social API
-Server. Likewise, some implementors may choose to leverage only the
+Server. Likewise, some implementers may choose to leverage only the
 gadget aspect of specification. In this case, they can be considered
 to be a compliant OpenSocial Core Gadget Server.</t>
      <list style="hanging">
@@ -159,7 +159,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 	features as well as add new ones. A robust extension model enables the
 	OpenSocial community to manage the overall complexity of the
 	specification in a clearly documented consistent manner. This model has
-	the following benefits to the OpenSoicial community:</t>
+	the following benefits to the OpenSocial community:</t>
 
 	Keeps the core specification focused on defining the base programming
 	model and social constructs.
@@ -248,7 +248,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 			introduced in order to avoid issues such as collisions in the
 			attribute names of the returned JSON Objects. Therefore, extensions
 			SHOULD use a prefix that uniquely identifies the extended fields. This prefix SHOULD be an underbar '_'. If
-			a feature is also added as part of the exetension, the data model
+			a feature is also added as part of the extension, the data model
 			prefix SHOULD match a namespace declared in the Javascript. </t>
 		<t>It is possible to simply append new fields into the existing
 			models and some providers currently follow this approach. However, it is RECOMMENDED that extensions to the OpenSocial
@@ -273,8 +273,8 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 		
 		<t>  	Below is an example of how the Person model has been
 				extended by two fictional organizations, Acme and DevWorld. Acme has been
-				using OpenSocial for some time, and has extended the modely by
-				appending a field, "Employee Number" directly into the data model. This approach shoudl
+				using OpenSocial for some time, and has extended the model by
+				appending a field, "Employee Number" directly into the data model. This approach should
 				be used for
 				backwards compatibility with existing extensions. As new extensions are
 				proposed, they should follow the pattern illustrated by DevWorld,
@@ -284,7 +284,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 		<preamble>
 			Assuming the extensions have been made available via
 			features to the container, here is the example REST call that would
-			retreive the data.
+			retrieve the data.
 			</preamble>
 		<artwork xml:space="preserve"><![CDATA[
 http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fields=id&fields=name&fields=acme_EmployeeNumber&fields=devworld_nickname&fields=devworld_platform
@@ -360,13 +360,13 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
 	APIs.
 	These kinds of additions to OpenSocial are called "protocol
 	extensions"
-	becuase they introduce new APIs. It is important that these
+	because they introduce new APIs. It is important that these
 	APIs be
 	consistent with the existing programming model. Protocol
 	extensions MUST
 	maintain the semantics of the OpenSocial and MUST NOT
 	modify any API
-	defined by the specification. Protocol exetensions
+	defined by the specification. Protocol extensions
 	MUST
 	provide
 	endpoints in the required protocols as defined by the
@@ -375,7 +375,7 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
 
 	Protocol extensions SHOULD provide
 	extensions for each level of compliance as defined by the OpenSocial
-	specificaiton, e.g. REST APIs for the OpenSocial server as
+	specification, e.g. REST APIs for the OpenSocial server as
 	well as constructs to support OSML and templating. 	
 
 		
