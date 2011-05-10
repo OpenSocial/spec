@@ -671,71 +671,115 @@ RPC-Error = "{"
     </section>
    </section>
   </section>
+  
   <section title="Security" anchor="Security"> 
-   <t>Containers SHOULD carefully consider security. Containers MUST support 
-   <xref target="OAuth-Core-1.0" /> but SHOULD use appropriate policies to
-   determine allowed operations on a per-Consumer and per-user basis. Per 
-   <xref target="OAuth-Core-1.0" />, Containers SHOULD document how a Consumer
-   can direct a user to a Container web page to obtain an oauth_token for
-   future use. Note that this is a vector for phishing if the user is required
-   to enter their credentials.</t>
-   <t>Containers SHOULD support SSL connections for sensitive data as OAuth on
-   its own does not provide encryption or message body integrity checking.
-   Containers should base their security decisions on the type of client in
-   use; a generally available desktop client, for example, cannot effectively
-   protect a Consumer Secret that is installed with each client. The security
-   of communications with a partner service, on the other hand, is dependent on
-   the effectiveness of that service's security procedures. Containers may wish
-   to rate limit requests from unknown clients, or require registration, in
-   order to mitigate risk.</t>
-   <t>Containers SHOULD scope oauth_tokens as narrowly as possible (e.g., allow
-   reading but not writing if a client only performs reads).</t>
-  <section title="Request Authentication and Authorization Context">
-   <t>Each operation has a request context that usually includes
-   authentication and authorization information. Typically, the context
-   information includes the requester id (the user initiating the request) and
-   app ID (the application, or whatever is acting as the user's agent). It may
-   include other container-specific information.</t>
-   <t>Containers MUST be an 
-   <xref target="OAuth-Core-1.0" /> Service Provider (a web application that
-   allows access via OAuth). Containers MAY also support other ways to
-   establish a request context. Containers MUST also support the Consumer
-   Request OAuth extension, in which the end user has not directly authorized
-   the operation. Applications SHOULD ensure that the users have given prior
-   consent, implicitly or explicitly, to the operation or class of operations.
-   However, containers MAY require an additional prior trust relationship be
-   established by the app in order to allow use of Consumer Request OAuth.</t>
-   <t>If a Consumer has a user identifier and wishes to indicate that the
-   operation is being done on behalf of that particular user, it SHOULD provide
-   the OAuth extension parameter xoauth_requestor_id with the OAuth signed
-   parameters. Consumers SHOULD only provide this if the user has given prior
-   consent, implicitly or explicitly, to the operation or class of operations,
-   as it indicates that the operation is being done on behalf of the user.
-   Container SPs MUST either honor the parameter or ignore it as if it were not
-   provided.</t>
-   <t>Thus, a request context usually includes the requesting application (the
-   OAuth Consumer), and MAY include the requesting user, either implicitly via
-   an oauth_token or explicitly via xoauth_requestor_id. It may also include
-   additional information via extensions or other channels (cookies, URI
-   parameters, client SSL certificates, etc.) A container may also accept
-   requests with no authentication or authorization (authnz) information at all
-   for public data. A container may provide a public version (e.g., of a
-   profile) if no authnz information is provided.</t>
-   <t>Note that the data provided for a given RESTful URI MAY vary per
-   requestor or app. Thus, the meaning of the resource at a given URI is "the
-   view of the information available to the current requestor/app combination".
-   In the case where no information is available due to lack of authorization,
-   an HTTP 401 Unauthorized response SHOULD be returned to the client. In the
-   case where at least some view of the information is available, it SHOULD be
-   returned using a 200 status, with a standard OAuth WWW-Authenticate: header
-   indicating that additional information may be available when using a
-   different authnz context.</t>
-   <t>When OAuth is used for authorization on a single RPC the OAuth signature
-   uses the 
-   <xref target="urlAddressing">URL Addressing</xref> representation of the
-   request without the auth param to calculate the signature base string.</t>
+   <x:draft note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+   <t>OpenSocial Containers MUST support TLS 2.0 / SSL connections for sensitive data 
+      since OAuth on its own does not provide encryption or message body integrity checking.
+      Note that TLS 2.0/SSL is required with many scenarios in the OAuth 2.0 specification.</t> 
+   <section title="OAuth 1.0a Support">
+   <t>Core Gadget Servers MUST support Open Authorization 1.0a <xref target="OAuth-Core-1.0" /> 
+      but SHOULD use appropriate policies to determine which operations are allowed on a per-consumer and 
+      per-user basis.</t>
+    <t>When OAuth 1.0a is used for authorization on a single RPC, the OAuth signature
+        uses the <xref target="urlAddressing">URL Addressing</xref> representation of the
+        request without the authorization parameter, in order to calculate the signature base string.</t>
+   </section>
+   <section title="OAuth 2.0 Support">
+     <t>Core Gadget Servers MUST support the authorization server, resource server and client roles
+      defined in section 1.1 of the Open Authorization 2.0 specification <xref target="draft-ietf-oauth-v2-15"/>.</t>
+     <t>A Core Gadget Server MUST provide authorization, token issuance and resource access endpoints per the OAuth 2
+      specification.
+      A Core Gadget Server MUST implement the authorization code and client credential types described in section 4 of the
+      Open Authorization 2.0 specification.  Core Gadget Servers SHOULD implement the implicit grant type.
+      Core Gadget Servers MAY implement the refresh token pattern described 
+      in section 1.5 of  the OAuth 2.0 specification.</t>
+     </section>
+    <section title="Two Party OAuth Optional Parameters">
+      <t>For 2 party (client credential) OAuth requests, if a Core Gadget Server has a user identifier
+      and wishes to indicate that the
+      operation is being done on behalf of that particular user, it SHOULD provide
+      the OAuth extension parameter xoauth_requestor_id along with the OAuth
+      parameters as a query fragment.  Often times, the value for the xoauth_reqeustor_id
+      will be set to the e-mail address of the 
+      user, on who's behalf the Core Gadget Server is making the call.
+      Core Gadget Servers SHOULD only provide the xoauth_requestor_id if the user has given prior
+      consent to the operation or class of operations being done on their behalf.
+      Core Gadget Servers MUST either honor the parameter or ignore it as if it were not
+      provided.</t>
+    </section>
+    <section title="Client Registration">
+      <t>OpenSocial Containers may wish to restrict requests from unknown clients and require gadget registration, 
+      in order to mitigate risk. OpenSocial Containers SHOULD document how to register a gadget with the OpenSocial
+      Container in order to obtain a client identifier and client secret.  This is typically done through a web page,
+      although the exact method is left to the specific implementation.   Note that per the security considerations 
+      mentioned in the OAuth 2.0 specification, client secrets should not be issued to untrusted clients.</t>
+      <t>OpenSocial Containers SHOULD document how to store client identifiers and client secrets on the server in order for
+      a gadget running locally to access remote data in another server.</t>
+    </section>
+    <section title="Redirection during 3 Party OAuth">
+      <t>OpenSocial Containers SHOULD document how the OpenSocial Container handles redirection when authenticating
+      a user and obtaining authorization for a gadget. Note that this is a potential vector for phishing if the 
+      user is required to enter their credentials.  Normally, for three-party OAuth exchanges, the OpenSocial 
+      Container will provide a web page 
+      to collect authentication and scoped authorization information, although the exact method is left to the 
+      specific implementation.</t>
+    </section>
+    <section title="Security Considerations">
+      <t>OpenSocial Containers SHOULD base their security decisions on the type of client in use; 
+      a generally available desktop client, for example, cannot effectively protect a client secret that 
+      is installed with each client (implicit grant). The security of communications with a two-party partner 
+      service, on the other hand, is dependent on the effectiveness of that service's security procedures
+      (client credential grant).  The security of communications with a three party service, involving a 
+      registered server, a client/gadget and the OpenSocial Container, should follow the security guidelines 
+      outlined in the OAuth 2.0 security considerations document (authorization grant).</t>
+      <t>OpenSocial Containers SHOULD provide an ability to scope the authorization to data as narrowly as 
+      possible (e.g., allow reading but not writing if a client only performs reads).</t> 
+    </section>
+   <section title="Access Token Scopes and Expiration Times">
+      <t>OpenSocial Containers SHOULD issue access tokens with short expiration times to limit the scope 
+      of security breaches due to stolen access tokens.  The token expiration policy is left to the 
+      specific implementation and may vary depending on the client requesting the token.  
+      Expiration times of 1 hour or less, and tokens with limited scope may be used with less 
+      trusted clients while expiration times of several hours and tokens with increased scope may be 
+      used for more trusted clients.  An OpenSocial Container SHOULD document (at least for administrators)
+      how to configure token scopes and expiration times if these values are configurable.</t>
+    </section>
+    
+     <section title="Gadget Request Context">
+        <t>Each API call from a gadget to the Core Gadget Server has a request context that usually includes
+           authentication and authorization information. Typically, the context
+           information includes the requester id (the user initiating the request) and
+           app ID (the application, or whatever is acting as the user's agent). It may
+           include other core container-specific information.  The requesting application
+           and user may be implied through the OAuth tokens, or may be provided explicitly
+           in the xoauth_requestor_id optional parameter.  Request contexts can also
+           include things such as cookies, URI parmaters, client SSL certificates and
+           other information.</t>
+      </section>   
+          
+      <section title="Anonymous access to data">
+        <t>An OpenSocial Container may accept
+        requests with no authentication or authorization information
+        for public data. A container may provide a public version (e.g., of a
+        profile) if no authorization information is provided.</t>
+        <t>Note that the data provided for a given RESTful URI MAY vary per
+        requestor or application. The data returned from a resource URI is "the
+        view of the information available to the current requestor/application combination".</t> 
+       </section>
+       
+       <section title="Data Access Return Codes">
+        <t>In the case where no information is available due to lack of authorization,
+        an HTTP 401 Unauthorized response SHOULD be returned to the client. In the
+        case where at least some view of the information is available, it SHOULD be
+        returned using a 200 status, with a standard OAuth WWW-Authenticate: header
+        indicating that additional information may be available when using a
+        different authorization context.</t>
+      </section>
+   </x:draft>  
   </section>
-  </section>
+ 
+  
      <section title="Content Upload" anchor="Content-Upload">
     <section title="Two Step Upload"
              anchor="twoStepUpload">
@@ -1763,6 +1807,38 @@ Content-Type: application/json
              year='2007' />
     </front>
    </reference>
+   
+   <x:draft note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175"> 
+   <reference anchor="draft-ietf-oauth-v2-15"
+               target="http://www.ietf.org/id/draft-ietf-oauth-v2-15.pdf">
+     <front>
+       <title>The OAuth 2.0 Authorization Protocol</title>
+       <author initials='E.'
+               surname='Hammer-Lahav'
+               fullname='Eran Hammer-Lahav'>
+               <organization>Yahoo !</organization>
+       </author>
+       <author initials='D.'
+               surname='Recordon'
+               fullname='David'>
+               <organization>Facebook</organization>
+       </author>
+       <author initials='D.'
+               surname='Hardt'
+               fullname='Dick'>
+               <organization>Microsoft</organization>
+       </author>
+       <date month='April'
+             year='2011' />
+     </front>
+   </reference>
+   </x:draft>
+   
+   
+   
+   
+   
+   
    <reference anchor="Core-Data"
               target="./Core-Data.xml">
     <front>
