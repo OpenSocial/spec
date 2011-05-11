@@ -167,7 +167,6 @@
 <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
 A Container MAY support a simplified XML schema.  This format changes some core elements to optional 
 and uses the canonical format for templates and data pipeline blocks.
-The <xref target="SimpleGadgetXmlSchema">Simple Gadget XML Schema</xref> is defined in the appendix.
 </x:draft>    
     
     
@@ -179,14 +178,6 @@ The <xref target="SimpleGadgetXmlSchema">Simple Gadget XML Schema</xref> is defi
      specification that container MUST use to interpret the gadget, as described
      in <xref target="Versioning">Versioning</xref>. If absent, the default
      value is "1.0".</t>
-
-
-     <t hangText="@title">
-     <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
-The gadget's title.  When using the simple gadget format and excluding the 
-     ModulePrefs element, the title attribute may be placed in the Module element. 
-</x:draft>
-     </t>
 
      <t hangText="text()">This tag has child elements. Containers SHOULD NOT
      interpret child text nodes.</t>
@@ -6558,19 +6549,6 @@ Content-Type: text/html
     </section>
     </x:draft>
   </section>
-  </section>
-  
-  <section title="Simple Gadget XML Schema"
-           anchor="SimpleGadgetXmlSchema">
-<x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
-   <t>
-    <figure>
-     <artwork xml:space="preserve">
-
-	</artwork>
-	</figure>
-	</t>
-  </x:draft>
   </section>
   
   <references>
