@@ -307,102 +307,120 @@ COMMA          = <US-ASCII comma (44)>
     ignore this formatting when rendering the activity.</t>
    </section>
    <section title="ActivityEntry" anchor="ActivityEntry">
-    <x:draft note="ActivityStreams support: Data Section" href="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">
-    <t>An ActivityEntry represents an activity.  A collection of ActivityEntries compose an ActivityStream.</t>
-    <t>This is a <eref target="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">proposal</eref> to incorporate ActivityStreams into the OpenSocial spec.</t>
+    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <t>In its simplest form, an activity consists of an actor, a verb, an an object, and a target. It tells the story of a person performing an action on or with an object -- "Geraldine posted a photo to her album" or "John shared a video". </t>
+    <t>This is a <eref target="http://docs.opensocial.org/display/OSD/ActivityStreams+Proposal">proposal</eref> to incorporate Activity Streams into the OpenSocial specification.</t>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
-      <c>icon</c>
-      <c><x:ref>MediaItem</x:ref></c>
-      <c>Identifies an image resource which provides a visual representation of the activity, intended for human consumption. The image SHOULD be square and SHOULD be suitable for presentation at a small size. An Activity construct MAY have an icon but it MUST NOT have more than one.</c>
-      <c>postedTime</c>
-      <c>string</c>
-      <c>A Date Construct that identifies the time at which the activity occurred. It is important to note that this is not necessarily the same as the time at which the activity was published. An ActivityEntry construct MUST have exactly one Time value.</c>
       <c>actor</c>
       <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Identifies the entity that performed the activity. An ActivityEntry MUST have exactly one actor.</c>
-      <c>verb</c>
+      <c>Describes the entity that performed the activity. An activity MUST contain one actor property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
+      <c>content</c>
       <c>string</c>
-      <c>An absolute URI value that identifies the action of the activity. An ActivityEntry MUST have exactly one verb.</c>
-      <c>object</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Identifies the primary object of the activity. An ActivityEntry MUST have exactly one object.</c>
-      <c>target</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Represents the object to which the activity was performed. The exact meaning of an activity's target is dependent on the verb of the activity, but will often be the object of the English preposition "to". The activity target MUST NOT be used to identify an indirect object that is not a target of the activity. An ActivityEntry MAY have a target but it MUST NOT have more than one.</c>
+      <c>Natural-language description of the activity encoded as a single JSON String containing HTML markup. Visual elements such as thumbnail images MAY be included. An activity MAY contain a content property.</c>
       <c>generator</c>
       <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Represents the application which created this activity, which may be separate from the service to which the activity is published. For example, a third-party application on a mobile phone may be used to post a photo to a photo sharing service. An ActivityEntry MAY have a generator but it MUST NOT have more than one.</c>
+      <c>Describes the application that generated the activity. An activity MAY contain a generator property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
+      <c>icon</c>
+      <c><eref target="./Social-Data.xml#MediaLink">MediaLink</eref></c>
+      <c>Description of a resource providing a visual representation of the object, intended for human consumption. The image SHOULD have an aspect ratio of one (horizontal) to one (vertical) and SHOULD be suitable for presentation at a small size. An activity MAY have an icon property.</c>
+      <c>id</c>
+      <c>string</c>
+      <c>Provides a permanent, universally unique identifier for the activity in the form of an absolute IRI. An activity SHOULD contain a single id property. If an activity does not contain an id property, consumers MAY use the value of the url property as a less-reliable, non-unique identifier.</c>
+      <c>object</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Describes the primary object of the activity. For instance, in the activity, "John saved a movie to his wishlist", the object of the activity is "movie". An activity SHOULD contain an object property whose value is a single Object. If the object property is not contained, the primary object of the activity MAY be implied by context.</c>
+      <c>published</c>
+      <c>string</c>
+      <c>The date and time at which the activity was published. An activity MUST contain a published property.</c>
       <c>provider</c>
       <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Represents the service which is publishing the activity. An ActivityEntry MAY have a provider but it MUST NOT have more than one.</c>
+      <c>Describes the application that published the activity. Note that this is not necessarily the same entity that generated the activity. An activity MAY contain a provider property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
+      <c>target</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Describes the target of the activity. The precise meaning of the activity's target is dependent on the activities verb, but will often be the object the English preposition "to". For instance, in the activity, "John saved a movie to his wishlist", the target of the activity is "wishlist". The activity target MUST NOT be used to identity an indirect object that is not a target of the activity. An activity MAY contain a target property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
       <c>title</c>
       <c>string</c>
-      <c>An HTML representation of the natural language title for this activity. Consumers MAY use the value of this field, if set, as a fallback for when none of the provided verbs are recognized. An ActivityEntry MAY have a title but it MUST NOT have more than one.</c>
-      <c>body</c>
+      <c>Natural-language title or headline for the activity encoded as a single JSON String containing HTML markup. An activity MAY contain a title property.</c>
+      <c>updated</c>
       <c>string</c>
-      <c>An HTML representation of a natural language describing this activity including visual elements such as thumbnails. Consumers MAY use the value of this field, if set, as a fallback for when none of the provided verbs are recognized. An ActivityEntry MAY have a body but it MUST NOT have more than one.</c>
-      <c>links</c>
-      <c>Map&lt;string, Array&lt;<x:ref>StandardLink</x:ref>&gt;&gt;</c>
-      <c>An ActivityEntry MAY have one ore more Standard Links. This component is provided to allow the use of the registry of link relations defined by the Web Linking specification to create links between an Activity Construct and other resources. The Context of the Link is the Object Construct. This component MUST NOT be used to publish data that matches a meaning that could be published by another Activity Streams component.</c>
-      <c>to</c>
-      <c>Array&lt;string&gt;</c>
-      <c>A list of target recipients of this entry.</c>
-      <c>cc</c>
-      <c>Array&lt;string&gt;</c>
-      <c>A list of recipients that will be carbon copied on this ActivityEntry.  These recipients are not the explicit target of this entry.  Their identifiers will be visible to the other recipients.</c>
-      <c>bcc</c>
-      <c>Array&lt;string&gt;</c>
-      <c>A list of recipients that will be blind carbon copied on this ActivityEntry.  These recipients are not the explicit target of this entry.  Their identifiers MUST NOT be visible to the other recipients.</c>
+      <c>The date and time at which a previously published activity has been modified. An Activity MAY contain an updated property.</c>
+      <c>url</c>
+      <c>string</c>
+      <c>An IRI identifying a resource providing an HTML representation of the activity. An activity MAY contain a url property.</c>
+      <c>verb</c>
+      <c>string</c>
+      <c>Identifies the action that the activity describes. An activity SHOULD contain a verb property whose value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in RFC3339. Note that the use of a relative reference other than a simple name is not allowed. If the verb is not specified, or if the value is null, the verb is assumed to be "post".</c>
      </texttable>
     A complete ActivityEntry example
     <figure>
      <preamble>application/json representation:</preamble>
      <artwork xml:space="preserve">
 {
-	"title": "John posted a photo",
-	"body": "John Doe posted a photo to the album Germany 2009",
-	"postedTime": "2010-04-27T06:02:36+0000",
-	"actor": {
-		"id": "john.doe",
-		"displayName": "John Doe"
-	},
-	"to": ["jane.doe", "canonical"],
-	"cc": ["george.doe"],
-	"verb": "post",
-	"links": {
-		"myRel1": 
-			[{"href": "http://www.example.com/johnsalbum/1.jpg", "type": "image/jpg"},
-			{"href": "http://www.example.com/johnsalbum/2.jpg", "type": "image/jpg"}],
-		"myRel2":
-			[{"href": "http://www.example.com/johnsalbum/3.jpg", "type": "image/jpg"},
-			{"href": "http://www.example.com/johnsalbum/4.jpg", "type": "image/jpg"}]
-	},
-	"object": {
-		"id": "object1",
-		"displayName": "Frozen Eric",
-		"link": "http://www.example.com/johnsalbum",
-		"objectType": "picture",
-		"image": {
-			"url": "http://www.example.com/johnsalbum/cover.jpg",
-			"type": "http://activitystrea.ms/schema/1.0/picture",
-			"width": 400,
-			"height": 300,
-			"duration": 93
-		},
-		"actionLinks": [
-			{
-				"target": "http://example.com/johnsalbum/frozen.jpg",
-				"caption": "Frozen at the top of the German Alps"
-			}, {
-				"target": "http://example.com/johnsalbum/sign.jpg",
-				"caption": "Sign of Garmisch-Partenkirchen"
-			}
-		]
-	}
-}	</artwork>
+  provider: {
+    url: "http://example.org/activity-stream"
+  },
+  object: {
+    summary: "Photo posted",
+    image: {
+      height: 250,
+      width: 250,
+      url: "http://example.org/album/my_fluffy_cat_thumb.jpg"
+    },
+    downstreamDuplicates: [
+      "downstream1",
+      "downstream2"
+    ],
+    url: "http://example.org/album/my_fluffy_cat.jpg",
+    id: "object2",
+    upstreamDuplicates: [
+      "upstream1",
+      "upstream2"
+    ],
+    attachments: [
+      {
+        id: "attachment1",
+        objectType: "attachment"
+      },
+      {
+        id: "attachment2",
+        objectType: "attachment"
+      }
+    ],
+    objectType: "photo"
+  },
+  actor: {
+    image: {
+      height: 250,
+      width: 250,
+      url: "http://example.org/martin/image"
+    },
+    url: "http://example.org/john",
+    id: "john.doe",
+    displayName: "John Doe",
+    objectType: "person"
+  },
+  id: "activity2",
+  title: "John posted a new video to his album.",
+  verb: "post",
+  target: {
+    image: {
+      height: 250,
+      width: 250,
+      url: "http://example.org/album/thumbnail.jpg"
+    },
+    url: "http://example.org/album/",
+    id: "target2",
+    displayName: "John's Photo Album",
+    objectType: "photo-album"
+  },
+  generator: {
+    url: "http://example.org/activities-app"
+  },
+  published: "2011-02-10T15:04:55Z"
+}</artwork>
     </figure>
     <figure>
      <preamble>application/xml representation:</preamble>
@@ -411,64 +429,59 @@ COMMA          = <US-ASCII comma (44)>
   &lt;actor&gt;
     &lt;displayName&gt;John Doe&lt;/displayName&gt;
     &lt;id&gt;john.doe&lt;/id&gt;
-  &lt;/actor&gt;
-  &lt;body&gt;John Doe posted a photo to the album Germany 2009&lt;/body&gt;
-  &lt;cc&gt;george.doe&lt;/cc&gt;
-  &lt;links&gt;
-    &lt;entry&gt;
-      &lt;key&gt;myRel1&lt;/key&gt;
-      &lt;value&gt;
-        &lt;link&gt;
-          &lt;href&gt;http://www.example.com/johnsalbum/1.jpg&lt;/href&gt;
-          &lt;type&gt;image/jpg&lt;/type&gt;
-        &lt;/link&gt;
-        &lt;link&gt;
-          &lt;href&gt;http://www.example.com/johnsalbum/2.jpg&lt;/href&gt;
-          &lt;type&gt;image/jpg&lt;/type&gt;
-        &lt;/link&gt;
-      &lt;/value&gt;
-    &lt;/entry&gt;
-    &lt;entry&gt;
-      &lt;key&gt;myRel2&lt;/key&gt;
-      &lt;value&gt;
-        &lt;link&gt;
-          &lt;href&gt;http://www.example.com/johnsalbum/3.jpg&lt;/href&gt;
-          &lt;type&gt;image/jpg&lt;/type&gt;
-        &lt;/link&gt;
-        &lt;link&gt;
-          &lt;href&gt;http://www.example.com/johnsalbum/4.jpg&lt;/href&gt;
-          &lt;type&gt;image/jpg&lt;/type&gt;
-        &lt;/link&gt;
-      &lt;/value&gt;
-    &lt;/entry&gt;
-  &lt;/links&gt;
-  &lt;object&gt;
-    &lt;actionLinks&gt;
-      &lt;actionLink&gt;
-        &lt;caption&gt;Frozen at the top of the German Alps&lt;/caption&gt;
-        &lt;target&gt;http://example.com/johnsalbum/frozen.jpg&lt;/target&gt;
-      &lt;/actionLink&gt;
-      &lt;actionLink&gt;
-        &lt;caption&gt;Sign of Garmisch-Partenkirchen&lt;/caption&gt;
-        &lt;target&gt;http://example.com/johnsalbum/sign.jpg&lt;/target&gt;
-      &lt;/actionLink&gt;
-    &lt;/actionLinks&gt;
-    &lt;displayName&gt;Frozen Eric&lt;/displayName&gt;
-    &lt;id&gt;object1&lt;/id&gt;
     &lt;image&gt;
-      &lt;duration&gt;93&lt;/duration&gt;
-      &lt;height&gt;300&lt;/height&gt;
-      &lt;type&gt;http://activitystrea.ms/schema/1.0/picture&lt;/type&gt;
-      &lt;url&gt;http://www.example.com/johnsalbum/cover.jpg&lt;/url&gt;
-      &lt;width&gt;400&lt;/width&gt;
+      &lt;height&gt;250&lt;/height&gt;
+      &lt;url&gt;http://example.org/john/image&lt;/url&gt;
+      &lt;width&gt;250&lt;/width&gt;
     &lt;/image&gt;
-    &lt;link&gt;http://www.example.com/johnsalbum&lt;/link&gt;
-    &lt;objectType&gt;picture&lt;/objectType&gt;
+    &lt;objectType&gt;person&lt;/objectType&gt;
+    &lt;url&gt;http://example.org/john&lt;/url&gt;
+  &lt;/actor&gt;
+  &lt;generator&gt;
+    &lt;url&gt;http://example.org/activities-app&lt;/url&gt;
+  &lt;/generator&gt;
+  &lt;id&gt;activity2&lt;/id&gt;
+  &lt;object&gt;
+    &lt;attachments&gt;
+      &lt;object&gt;
+        &lt;id&gt;attachment1&lt;/id&gt;
+        &lt;objectType&gt;attachment&lt;/objectType&gt;
+      &lt;/object&gt;
+      &lt;object&gt;
+        &lt;id&gt;attachment2&lt;/id&gt;
+        &lt;objectType&gt;attachment&lt;/objectType&gt;
+      &lt;/object&gt;
+    &lt;/attachments&gt;
+    &lt;downstreamDuplicate&gt;downstream1&lt;/downstreamDuplicate&gt;
+    &lt;downstreamDuplicate&gt;downstream2&lt;/downstreamDuplicate&gt;
+    &lt;id&gt;object2&lt;/id&gt;
+    &lt;image&gt;
+      &lt;height&gt;250&lt;/height&gt;
+      &lt;url&gt;http://example.org/album/my_fluffy_cat_thumb.jpg&lt;/url&gt;
+      &lt;width&gt;250&lt;/width&gt;
+    &lt;/image&gt;
+    &lt;objectType&gt;photo&lt;/objectType&gt;
+    &lt;summary&gt;Photo posted&lt;/summary&gt;
+    &lt;upstreamDuplicate&gt;upstream1&lt;/upstreamDuplicate&gt;
+    &lt;upstreamDuplicate&gt;upstream2&lt;/upstreamDuplicate&gt;
+    &lt;url&gt;http://example.org/album/my_fluffy_cat.jpg&lt;/url&gt;
   &lt;/object&gt;
-  &lt;postedTime&gt;2010-04-27T06:02:36+0000&lt;/postedTime&gt;
-  &lt;title&gt;John posted a photo&lt;/title&gt;
-  &lt;to&gt;jane.doe&lt;/to&gt;
-  &lt;to&gt;canonical&lt;/to&gt;
+  &lt;provider&gt;
+    &lt;url&gt;http://example.org/activity-stream&lt;/url&gt;
+  &lt;/provider&gt;
+  &lt;published&gt;2011-02-10T15:04:55Z&lt;/published&gt;
+  &lt;target&gt;
+    &lt;displayName&gt;John&apos;s Photo Album&lt;/displayName&gt;
+    &lt;id&gt;target2&lt;/id&gt;
+    &lt;image&gt;
+      &lt;height&gt;250&lt;/height&gt;
+      &lt;url&gt;http://example.org/album/thumbnail.jpg&lt;/url&gt;
+      &lt;width&gt;250&lt;/width&gt;
+    &lt;/image&gt;
+    &lt;objectType&gt;photo-album&lt;/objectType&gt;
+    &lt;url&gt;http://example.org/album/&lt;/url&gt;
+  &lt;/target&gt;
+  &lt;title&gt;John posted a new video to his album.&lt;/title&gt;
   &lt;verb&gt;post&lt;/verb&gt;
 &lt;/activityEntry&gt;</artwork>
     </figure>
@@ -1658,143 +1671,114 @@ COMMA          = <US-ASCII comma (44)>
       <c>A user ID associated with this account.</c>
      </texttable></t>
    </section>
-   <section title="ActionLink" anchor="ActionLink">
-    <x:draft note="ActivityStreams support: Data Section" href="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">
-    <t>An Action Link Construct represents a hyperlink at which an action can be performed. An Action Link Construct consists of the logical components defined in the following sections.</t>
+   <section title="ActivityObject" anchor="ActivityObject">
+    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <t>An object is a thing, real or imaginary, which participates in an activity. It may be the entity performing the activity, or the entity on which the activity was performed.</t>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
-      <c>target</c>
+      <c>attachments</c>
+      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
+      <c>A collection of one or more additional, associated objects, similar to the concept of attached files in an email message. An object MAY have an attachments property whose value is a JSON Array of <eref target="./Social-Data.xml#ActivityObject">ActivityObjects</eref>.</c>
+      <c>author</c>
+      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
+      <c>Describes the entity that created or authored the object. An object MAY contain a single author property whose value is an <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref> of any type. Note that the author field identifies the entity that created the object and does not necessarily identify the entity that published the object. For instance, it may be the case that an object created by one person is posted and published to a system by an entirely different entity.</c>
+      <c>content</c>
       <c>string</c>
-      <c>The URL that is the target of this hyperlink. An Action Link Construct MUST have one Target URL and MUST NOT have more than one.</c>
-      <c>caption</c>
-      <c>string</c>
-      <c>The human-readable caption of the UI element that a user will interact with in order to navigate to the Target URL. An Action Link Construct MUST have one Caption and MUST NOT have more than one.</c>
-      </texttable>
-    <t>An example ActionLink</t>
-    <figure>
-     <preamble>application/json representation:</preamble>
-     <artwork xml:space="preserve">
-{
-	"target": "http://example.com/johnsalbum/frozen.jpg",
-	"caption": "Frozen at the top of the German Alps"
-}	</artwork>
-    </figure>
-    <figure>
-     <preamble>application/xml representation:</preamble>
-     <artwork xml:space="preserve">
-&lt;actionLink&gt;
-	&lt;caption&gt;Frozen at the top of the German Alps&lt;/caption&gt;
-	&lt;target&gt;http://example.com/johnsalbum/frozen.jpg&lt;/target&gt;
-&lt;/actionLink&gt;</artwork>
-    </figure>
-
-    </x:draft>
-    </section> 
-    <section title="ActivityObject" anchor="ActivityObject">
-    <x:draft note="ActivityStreams support: Data Section" href="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">
-    <t>An object construct is a thing, real or imaginary, which participates in an activity. It may be the entity performing the activity, or the entity on which the activity was performed. An object consists of the logical components defined in the following sections. Certain object types may further refine the meaning of these components, or they may define additional components. If an object type defines an additional component then it SHOULD also define the representation of that component in one or more serialization formats.</t>
-     <texttable>
-      <ttcol align="left" width="15%">Field Name</ttcol>
-      <ttcol align="left" width="21%">Field Type</ttcol>
-      <ttcol align="left">Description</ttcol>
-      <c>id</c>
-      <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
-      <c>The id of an object construct is an absolute URI that uniquely identifies the object. An Object construct SHOULD have exactly one ID value. If an object construct does not have an ID value consumers MAY use the Permalink URL as a weaker identifier, but must in this case allow for the fact that Permalink URL is not defined to be unique across all objects and be prepared to handle duplicates.</c>
+      <c>Natural-language description of the object encoded as a single JSON String containing HTML markup. Visual elements such as thumbnail images MAY be included. An object MAY contain a content property.</c>
       <c>displayName</c>
       <c>string</c>
-      <c>This string value provides a human readable display name for the object, if the object has a name. An Object construct MAY have a name, but MUST NOT have more than one.</c>
-      <c>summary</c>
-      <c>string</c>
-      <c>This string value provides a human readable description or summary of the Object. An Object construct MAY have a summary, but MUST NOT have more than one.</c>
-      <c>image</c>
-      <c><eref target="./Social-Data.xml#MediaLink">MediaLink</eref></c>
-      <c>Identifies an image resource which provides a visual representation of the object, intended for human consumption. An Object construct MAY have a representative image, but MUST NOT have more than one.</c>
-      <c>link</c>
-      <c>string</c>
-      <c>This URI value identifies a resource which provides an HTML representation of the object. An Object construct MAY have a Permalink URL, but MUST NOT have more than one. The presence of this construct implies a Link whose Context is this Object Construct, whose Link Relation Type is "alternate" and whose Target IRI is the Permalink URL value.</c>
-      <c>objectType</c>
-      <c>string</c>
-      <c>This absolute URI identifies the type of object. An Object construct MUST NOT have more than one objectType.</c>
-      <c>inReplyTo</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>An Object Construct that this object is a response to. An Object Construct MAY have one In Reply To Object, but MUST NOT have more than one. This is not set unless the Object Construct is a response to another Object Construct.</c>
-      <c>attachedObjects</c>
-      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
-      <c>An Object Construct that is attached to this object. An Object Construct MAY have one or more attached objects. An attached Object Construct can be used when one object is used as a wrapper or carrier for another object, similar to the concept of attached files in an email message.</c>
-      <c>replies</c>
-      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
-      <c>An Object Construct that has this Object Construct as its In Reply To Object. An Object Construct MAY have one or more Reply Objects.</c>
-      <c>reactions</c>
-      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
-      <c>An ActivityEntry that describes an Activity whose Object is this Object Construct. An Object Construct MAY have one or more Reaction Activities.</c>
-      <c>actionLinks</c>
-      <c>Array&lt;<eref target="./Social-Data.xml#ActionLink">ActionLink</eref>&gt;</c>
-      <c>ActionLinks that represents an action that a human could peform on this object. An Object Construct MAY have one or more Action Links.</c>
-      <c>upstreamDuplicates</c>
-      <c>Array&lt;string&gt;</c>
-      <c>A string containing the ID value of another Object Construct for which this Object Construct is a duplicate created by re-publishing. An Object Construct MAY have one or more Upstream Duplicate IDs.</c>
+      <c>A natural-language, human-readable and plain-text name for the object. HTML markup MUST NOT be included. An object MAY contain a displayName property. If the object does not specify an objectType property, the object SHOULD specify a displayName.</c>
       <c>downstreamDuplicates</c>
       <c>Array&lt;string&gt;</c>
-      <c>A string containing the ID value of another Object Construct for which was created as a duplicate of this Object Construct. An Object Construct MAY have one or more Downstream Duplicate IDs.</c>
-      <c>standardLinks</c>
-      <c>Map&lt;string, Array&lt;<x:ref>StandardLink</x:ref>&gt;&gt;</c>
-      <c>An Object Construct MAY have one ore more Standard Links. This component is provided to allow the use of the registry of link relations defined by the Web Linking specification to create links between an Object Construct and other resources. The Context of the Link is the Object Construct. This component MUST NOT be used to publish data that matches a meaning that could be published by another Activity Streams component.</c>
+      <c>A JSON Array of one or more absolute IRI's [RFC3987] identifying objects that duplicate this object's content. An object SHOULD contain a downstreamDuplicates property when there are known objects, possibly in a different system, that duplicate the content in this object. This MAY be used as a hint for consumers to use when resolving duplicates between objects received from different sources.</c>
+      <c>id</c>
+      <c>string</c>
+      <c>Provides a permanent, universally unique identifier for the object in the form of an absolute IRI [RFC3987]. An object SHOULD contain a single id property. If an object does not contain an id property, consumers MAY use the value of the url property as a less-reliable, non-unique identifier.</c>
+      <c>image</c>
+      <c><eref target="./Social-Data.xml#MediaLink">MediaLink</eref></c>
+      <c>Description of a resource providing a visual representation of the object, intended for human consumption. An object MAY contain an image property whose value is a <eref target="./Social-Data.xml#MediaLink">MediaLink</eref>.</c>
+      <c>objectType</c>
+      <c>string</c>
+      <c>Identifies the type of object. An object MAY contain an objectType property whose value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in [RFC3987]. Note that the use of a relative reference other than a simple name is not allowed. If no objectType property is contained, the object has no specific type.</c>
+      <c>published</c>
+      <c>string</c>
+      <c>The date and time at which the object was published. An object MAY contain a published property.</c>
+      <c>summary</c>
+      <c>string</c>
+      <c>Natural-language summarization of the object encoded as a single JSON String containing HTML markup. Visual elements such as thumbnail images MAY be included. An activity MAY contain a summary property.</c>
+      <c>updated</c>
+      <c>string</c>
+      <c>The date and time at which a previously published object has been modified. An Object MAY contain an updated property.</c>
+      <c>upstreamDuplicates</c>
+      <c>Array&lt;string&gt;</c>
+      <c>A JSON Array of one or more absolute IRI's [RFC3987] identifying objects that duplicate this object's content. An object SHOULD contain an upstreamDuplicates property when a publisher is knowingly duplicating with a new ID the content from another object. This MAY be used as a hint for consumers to use when resolving duplicates between objects received from different sources.</c>
+      <c>url</c>
+      <c>string</c>
+      <c>An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property</c>
      </texttable>
     <t>An example ActivityObject</t>
     <figure>
      <preamble>application/json representation:</preamble>
      <artwork xml:space="preserve">
 {
-		"id": "object1",
-		"displayName": "Frozen Eric",
-		"link": "http://www.example.com/johnsalbum",
-		"objectType": "picture",
-		"image": {
-			"url": "http://www.example.com/johnsalbum/cover.jpg",
-			"type": "http://activitystrea.ms/schema/1.0/picture",
-			"width": 400,
-			"height": 300,
-			"duration": 93
-		},
-		"actionLinks": [
-			{
-				"target": "http://example.com/johnsalbum/frozen.jpg",
-				"caption": "Frozen at the top of the German Alps"
-			}, {
-				"target": "http://example.com/johnsalbum/sign.jpg",
-				"caption": "Sign of Garmisch-Partenkirchen"
-			}
-		]
-	}
+  summary: "Photo posted",
+  image: {
+    height: 250,
+    width: 250,
+    url: "http://example.org/album/my_fluffy_cat_thumb.jpg"
+  },
+  downstreamDuplicates: [
+    "downstream1",
+    "downstream2"
+  ],
+  url: "http://example.org/album/my_fluffy_cat.jpg",
+  id: "object2",
+  upstreamDuplicates: [
+    "upstream1",
+    "upstream2"
+  ],
+  attachments: [
+    {
+      id: "attachment1",
+      objectType: "attachment"
+    },
+    {
+      id: "attachment2",
+      objectType: "attachment"
+    }
+  ],
+  objectType: "photo"
 }</artwork>
     </figure>
     <figure>
      <preamble>application/xml representation:</preamble>
      <artwork xml:space="preserve">
 &lt;object&gt;
-  &lt;actionLinks&gt;
-    &lt;actionLink&gt;
-      &lt;caption&gt;Frozen at the top of the German Alps&lt;/caption&gt;
-      &lt;target&gt;http://example.com/johnsalbum/frozen.jpg&lt;/target&gt;
-    &lt;/actionLink&gt;
-    &lt;actionLink&gt;
-      &lt;caption&gt;Sign of Garmisch-Partenkirchen&lt;/caption&gt;
-      &lt;target&gt;http://example.com/johnsalbum/sign.jpg&lt;/target&gt;
-    &lt;/actionLink&gt;
-  &lt;/actionLinks&gt;
-  &lt;displayName&gt;Frozen Eric&lt;/displayName&gt;
-  &lt;id&gt;object1&lt;/id&gt;
+  &lt;attachments&gt;
+    &lt;object&gt;
+      &lt;id&gt;attachment1&lt;/id&gt;
+      &lt;objectType&gt;attachment&lt;/objectType&gt;
+    &lt;/object&gt;
+    &lt;object&gt;
+      &lt;id&gt;attachment2&lt;/id&gt;
+      &lt;objectType&gt;attachment&lt;/objectType&gt;
+    &lt;/object&gt;
+  &lt;/attachments&gt;
+  &lt;downstreamDuplicate&gt;downstream1&lt;/downstreamDuplicate&gt;
+  &lt;downstreamDuplicate&gt;downstream2&lt;/downstreamDuplicate&gt;
+  &lt;id&gt;object2&lt;/id&gt;
   &lt;image&gt;
-    &lt;duration&gt;93&lt;/duration&gt;
-    &lt;height&gt;300&lt;/height&gt;
-    &lt;type&gt;http://activitystrea.ms/schema/1.0/picture&lt;/type&gt;
-    &lt;url&gt;http://www.example.com/johnsalbum/cover.jpg&lt;/url&gt;
-    &lt;width&gt;400&lt;/width&gt;
+    &lt;height&gt;250&lt;/height&gt;
+    &lt;url&gt;http://example.org/album/my_fluffy_cat_thumb.jpg&lt;/url&gt;
+    &lt;width&gt;250&lt;/width&gt;
   &lt;/image&gt;
-  &lt;link&gt;http://www.example.com/johnsalbum&lt;/link&gt;
-  &lt;objectType&gt;picture&lt;/objectType&gt;
+  &lt;objectType&gt;photo&lt;/objectType&gt;
+  &lt;summary&gt;Photo posted&lt;/summary&gt;
+  &lt;upstreamDuplicate&gt;upstream1&lt;/upstreamDuplicate&gt;
+  &lt;upstreamDuplicate&gt;upstream2&lt;/upstreamDuplicate&gt;
+  &lt;url&gt;http://example.org/album/my_fluffy_cat.jpg&lt;/url&gt;
 &lt;/object&gt;</artwork>
     </figure>    
     </x:draft>
@@ -2100,38 +2084,34 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      </figure>
    </section>
    <section title="MediaLink" anchor="MediaLink">
-    <x:draft note="ActivityStreams support: Data Section" href="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">
-    <t>A Media Link Construct represents a hyperlink to a media item. A Media Link Construct consists of the logical components defined in the following sections.</t>
+    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <t>Some types of objects may have an alternative visual representation in the form of an image, video or embedded HTML fragments. A Media Link represents a hyperlink to such resources.</t>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
-      <c>url</c>
-      <c>string</c>
-      <c>The URL that is the target of this hyperlink. A Media Link Construct MUST have one Target URL and MUST NOT have more than one.</c>
-      <c>type</c>
-      <c>string</c>
-      <c>A hint to the consumer about the media type of the target resource. A Link Construct MAY have one Media Type but MUST NOT have more than one.</c>
-      <c>width</c>
-      <c>integer</c>
-      <c>A hint to the consumer about the natural width of the resource that is the target of this hyperlink, in pixels. This MAY be included when the target resource is a visual media item such as an image, video or embeddable HTML page, but a Link Construct MUST NOT have more than one Width.</c>
-      <c>height</c>
-      <c>integer</c>
-      <c>A hint to the consumer about the natural height of the resource that is the target of this hyperlink, in pixels. This MAY be included when the target resource is a visual media item such as an image, video or embeddable HTML page, but a Link Construct MUST NOT have more than one Height.</c>
       <c>duration</c>
       <c>integer</c>
-      <c>A hint to the consumer about the length of the resource that is the target of this hyperlink, in seconds. This MAY be included when the target resource is a time-based media item such as an audio or video, but a Link Construct MUST NOT have more than one Duration.</c>
-     </texttable>
+      <c>A hint to the consumer about the length, in seconds, of the media resource identified by the url property. A media link MAY contain a "duration" property when the target resource is a time-based media item such as an audio or video.</c>
+      <c>height</c>
+      <c>integer</c>
+      <c>A hint to the consumer about the height, in pixels, of the media resource identified by the url property. A media link MAY contain a height property when the target resource is a visual media item such as an image, video or embeddable HTML page.</c>
+      <c>url</c>
+      <c>string</c>
+      <c>The IRI of the media resource being linked. A media link MUST have a url property.</c>
+      <c>width</c>
+      <c>integer</c>
+      <c>A hint to the consumer about the width, in pixels, of the media resource identified by the url property. A media link MAY contain a width property when the target resource is a visual media item such as an image, video or embeddable HTML page.</c>
+    </texttable>
     <t>An example MediaLink</t>
     <figure>
      <preamble>application/json representation:</preamble>
      <artwork xml:space="preserve">
 {
-	"url": "http://www.example.com/johnsalbum/cover.jpg",
-	"type": "http://activitystrea.ms/schema/1.0/picture",
-	"width": 400,
-	"height": 300,
-	"duration": 93
+  "url": "http://www.example.com/johnsalbum/cover.jpg",
+  "width": 400,
+  "height": 300,
+  "duration": 93
 }	</artwork>
     </figure>
     <figure>
@@ -2140,7 +2120,6 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
 &lt;image&gt;
   &lt;duration&gt;93&lt;/duration&gt;
   &lt;height&gt;300&lt;/height&gt;
-  &lt;type&gt;http://activitystrea.ms/schema/1.0/picture&lt;/type&gt;
   &lt;url&gt;http://www.example.com/johnsalbum/cover.jpg&lt;/url&gt;
   &lt;width&gt;400&lt;/width&gt;
 &lt;/image&gt;</artwork>
@@ -2258,42 +2237,6 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <c>string</c>
       <c>A webpage related to the organization.</c>
      </texttable></t>
-   </section>
-   <section title="StandardLink" anchor="StandardLink">
-    <x:draft note="ActivityStreams support: Data Section" href="http://wiki.opensocial.org/index.php?title=Merge/incorporate_Activity_Streams_into_OpenSocial">
-    <t>This component is provided to allow the use of the registry of link relations defined by the Web Linking specification to create links between an Activity Construct and other resources. The Context of the Link is the Object Construct. This component MUST NOT be used to publish data that matches a meaning that could be published by another Activity Streams component.</t>
-    <texttable>
-      <ttcol align="left" width="15%">Field Name</ttcol>
-      <ttcol align="left" width="21%">Field Type</ttcol>
-      <ttcol align="left">Description</ttcol>
-      <c>href</c>
-      <c>string</c>
-      <c>Specifies the location of a Web resource, thus defining a link between the current element (the source anchor) and the destination anchor defined by this attribute.</c>
-      <c>inline</c>
-      <c>string</c>
-      <c>Defines an inline element for the link.</c>
-      <c>type</c>
-      <c>string</c>
-      <c>Gives an advisory hint as to the content type of the content available at the link target address.</c>
-    </texttable>
-    <t>An example StandardLink</t>
-    <figure>
-     <preamble>application/json representation:</preamble>
-     <artwork xml:space="preserve">
-{
-	"href": "http://www.example.com/johnsalbum/1.jpg",
-	"type": "image/jpg"
-}	</artwork>
-    </figure>
-    <figure>
-     <preamble>application/xml representation:</preamble>
-     <artwork xml:space="preserve">
-&lt;link&gt;
-  &lt;href&gt;http://www.example.com/johnsalbum/1.jpg&lt;/href&gt;
-  &lt;type&gt;image/jpg&lt;/type&gt;
-&lt;/link&gt;</artwork>
-    </figure>
-    </x:draft>
    </section>
   </section>
  </middle>
