@@ -660,30 +660,23 @@ and uses the canonical format for templates and data pipeline blocks.
       <t>When /Content/@type is "html", Containers MUST perform 
    <xref target="VariableSubstitution">Variable Substitution</xref> on the final
    assembled content section.</t>
+      <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
       <t>When /Content/@type is "url", Containers MUST display a direct view of
-   the value for /Content/@href (for a web context, this SHOULD be an HTML
-   iframe). The Container MUST append the following query string parameters to the URL:
-    <list style="hanging">
-     <t hangText="up_&lt;name&gt;"> A query parameter for each User Preference as a name/value pair.</t>
-     <t hangText="lang">The language of the User viewing the gadget (valid
-     values are the same as for <xref target="Locale">/ModulePrefs/Locale/@lang</xref>).</t>
-     <t hangText="country">The country of the User viewing the gadget. (valid
-     values are the same as for <xref target="Locale">/ModulePrefs/Locale/@country</xref>).</t>
-     <t hangText="libs">A relative URL that points to any JavaScript files
-     necessary to satisfy the features specified in 
-     <xref target="RequireAndOptional">/ModulePrefs/Require and /ModulePrefs/Optional</xref> elements in the Gadget.</t>
-    </list>
+         the value for /Content/@href as specified in the
+      <xref target="ContentRedirect">Content Redirect</xref> section.
       </t>
+      </x:draft>
       </t>
       <t hangText="@href">A URL pointing to an external file containing the
       body of this element.
+      <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
       <t>If @type is "url", this value is REQUIRED. If @type
       is "url", this value represents an external document that SHOULD be
-      presented directly to Users without filtering, typically by rendering an
-      html IFRAME element with @href as the "src" attribute. </t>
-      <t>If @type is "html", the Container
-   MUST make an HTTP GET request to the URL specified by @href, and interpret
-   the response body as though it were /Content/text().</t>
+      presented directly to Users without filtering as specified in the
+      <xref target="ContentRedirect">Content Redirect</xref> section.</t>
+      <t>If @type is "html", the Container MUST
+      <xref targe="ProxiedContent">proxy</xref> the current content section.</t>
+      </x:draft>
       </t>
       <t hangText="@preferred_height">The suggested default height, in pixels,
       to use when rendering this gadget. Containers SHOULD use this value as
@@ -704,6 +697,9 @@ and uses the canonical format for templates and data pipeline blocks.
         conditions when importing gadget XML. This validity check need not be
         performed at render time.</t>
       </t>
+      <t hangText="@authz"><x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">The request issued to the URL in /Content/@href MUST be signed
+        according to the rules specified because of the current /Content/@type.
+      </x:draft></t>
       <t hangText="text()">Contains data in an appropriate format to satisfy
       the requirements for @type. When @type is "html", if no @href is
       specified, this value MUST be a block of html. The text within this element SHOULD be wrapped in CDATA to avoid having to escape HTML tags and to prevent them from being interpreted by the XML parser.</t>
@@ -903,6 +899,30 @@ and uses the canonical format for templates and data pipeline blocks.
      inside of the body of the Content element at this point in time.</t>
     </section>
    </section>
+  </section>
+  <section title="Content Redirect"
+           anchor="ContentRedirect">
+   <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
+   <t>When /Content/@type is "url", Containers MUST display a direct view of
+   the value for /Content/@href (for a web context, this SHOULD be an HTML
+   iframe). The Container MUST append the following query string parameters to the URL:
+    <list style="hanging">
+     <t hangText="up_&lt;name&gt;"> A query parameter for each User Preference as a name/value pair.</t>
+     <t hangText="lang">The language of the User viewing the gadget (valid
+     values are the same as for <xref target="Locale">/ModulePrefs/Locale/@lang</xref>).</t>
+     <t hangText="country">The country of the User viewing the gadget. (valid
+     values are the same as for <xref target="Locale">/ModulePrefs/Locale/@country</xref>).</t>
+     <t hangText="libs">A relative URL that points to any JavaScript files
+     necessary to satisfy the features specified in
+     <xref target="RequireAndOptional">/ModulePrefs/Require and /ModulePrefs/Optional</xref> elements in the Gadget.</t>
+    </list>
+   </t>
+   <t>If the /Content/@authz attribute is present and it equals "signed", the container MUST vouch
+      for the user's identity to the destination server. This follows the steps outlined in the
+      <xref target="SignedFetch">Signed Fetch</xref>
+      section of this specification.
+   </t>
+   </x:draft>
   </section>
   <section title="Versioning"
            anchor="Versioning">
@@ -1223,6 +1243,10 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
            anchor="SignedFetch">
    <t>Containers MUST support signing of HTTP requests for 
    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>, 
+   <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
+   <xref target="ProxiedContent">Proxied Content</xref>,
+   <xref target="ContentRedirect">Content Redirect</xref>,
+   </x:draft>
    <xref target="LifeCycleEvents">Life Cycle Events</xref>, and 
    <xref target="Preload">Preloading</xref>. The container does this by
    doing the following: 
