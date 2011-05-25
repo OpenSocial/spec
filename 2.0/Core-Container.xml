@@ -536,7 +536,7 @@
         <x:draft note="OpenSearch Gadget Contributions"
           href="http://docs.opensocial.org/display/OSD/OpenSearch+Gadget+Contributions">
         <t>
-        The contain APIs for OpenSearch allow containers to access 
+        The container APIs for OpenSearch allow containers to access 
         OpenSearch description information contained within the 
         gadgets which it has loaded or is currently showing on the
         page.  Containers can use this information in order to allow
@@ -635,7 +635,57 @@
                 </figure>
                </t>
              </section>
-          </x:draft>
+            <section title="addOpenSearchCallback"
+                anchor="container.Container.opensearch.addOpenSearchCallback">
+                <t>container.Container.opensearch.addOpenSearchCallback(callback)
+                </t>
+                <t>
+                    Description: Registers a callback function to be called when a new gadget
+                    containing an opensearch feature is preloaded by the container, or when an existing gadget with an opensearch feature is closed. 
+                          </t>
+                <t>
+                    Parameters:
+                    <texttable align="left">
+                        <ttcol>Name</ttcol>
+                        <ttcol>Type</ttcol>
+                        <ttcol>Description</ttcol>
+                        <c>callback</c>
+                        <c>function(Map descriptions, boolean added)</c>
+                        <c>
+                            A callback function to be called when a new gadget
+                            containing a valid opensearch feature is preloaded
+                            by the container, or a gadget containing a valid opensearch feature is closed.
+                           
+                            descriptions: gadget url as a key, open search description as value.
+                            added: true if gadget is added, false if gadget is removed.
+                            
+                        </c>
+                    </texttable>
+                </t>
+            </section>
+            <section title="removeOpenSearchCallback"
+                anchor="container.Container.opensearch.removeOpenSearchCallback">
+                <t>container.Container.opensearch.removeOpenSearchCallback(callback)
+                </t>
+                <t>
+                    Description: Un-registers a callback function registered via
+                    addOpenSearchCallBack()
+                </t>
+                <t>
+                    Parameters:
+                    <texttable align="left">
+                        <ttcol>Name</ttcol>
+                        <ttcol>Type</ttcol>
+                        <ttcol>Description</ttcol>
+                        <c>callback</c>
+                        <c>function</c>
+                        <c>
+                            The callback function to be unregistered
+                        </c>
+                    </texttable>
+                </t>
+            </section>
+    </x:draft>
     </section>
     <section title="container.Container.actions" anchor="container.actions">
    <x:draft note="container.Container.actions" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
