@@ -6335,7 +6335,7 @@ assertEquals(0.30, value);
     &lt;title&gt;Hello World&lt;/title&gt;
     &lt;id&gt;123&lt;/id&gt;
   &lt;/context&gt;
-  &lt;previewImage&gt;http://www.exmaple.com/embedded/123.png&lt;/previewImage&gt;
+  &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
 &lt;/embed&gt;  
         </artwork>
       </figure>
@@ -6350,7 +6350,7 @@ assertEquals(0.30, value);
     &lt;title&gt;Hello World&lt;/title&gt;
     &lt;id&gt;123&lt;/id&gt;
   &lt;/context&gt;
-  &lt;previewImage&gt;http://www.exmaple.com/embedded/123.png&lt;/previewImage&gt;
+  &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
 &lt;/embed&gt;  
         </artwork>
       </figure>
@@ -6358,38 +6358,44 @@ assertEquals(0.30, value);
     <section title="JSON-URL">
       <figure>
         <artwork xml:space="preserve">
+...
 "embed" : {
   "url" : "http://www.example.com/embedded/123"       
 }
+...
         </artwork>
       </figure>
     </section>
     <section title="JSON-Gadget">
       <figure>
         <artwork xml:space="preserve">
+...
 "embed" : {
   "gadget" : "http://www.example.com/embedded/gadget.xml",
   "context" : { 
     "title" : "Hello World",
     "id" : 123
-  }
-  "previewImage" : "http://www.exmaple.com/embedded/123.png"
+  },
+  "previewImage" : "http://www.example.com/embedded/123.png"
 }
+...
         </artwork>
       </figure>
     </section>
     <section title="JSON-Gadget and URL">
       <figure>
         <artwork xml:space="preserve">
+...
 "embed" : {
     "url" : "http://www.example.com/embedded/123",
   "gadget" : "http://www.example.com/embedded/gadget.xml",
   "context" : { 
     "title" : "Hello World",
     "id" : 123
-  }
-  "previewImage" : "http://www.exmaple.com/embedded/123.png"
+  },
+  "previewImage" : "http://www.example.com/embedded/123.png"
 }
+...
         </artwork>
       </figure>
     </section>
@@ -6444,7 +6450,7 @@ assertEquals(0.30, value);
             document.getElementById("contextData").innerHTML = "Context Information For This Gadget: " + value;
           }
           function initData() {
-            opensocial.data.getDataContext().registeListener('org.opensocial.ee.context', myCallback);
+            opensocial.data.getDataContext().registerListener('org.opensocial.ee.context', myCallback);
           }
           gadgets.util.registerOnLoadHandler(initData);
       &lt;/script&gt;
