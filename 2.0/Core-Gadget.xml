@@ -534,16 +534,52 @@ and uses the canonical format for templates and data pipeline blocks.
    </section>
    <section title="Life Cycle Events"
             anchor="LifeCycleEvents">
-    <t>Whenever an "event" (such as installing or removing an application)
+   <x:draft note="Adding back lifecycle event info from 0.9" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1154">
+       <t>Certain types of events may occur during the lifecycle of a gadget that are desirable yet difficult for
+           developers to track. Such events include installs, uninstalls, rate limiting, directory listing changes, and
+           blacklist/whitelist notifications. The gadget specification allows developers to specify URLs that the
+           container will send data to when certain events are triggered.
+       </t>
+       <t>Whenever an "event" (such as installing or removing an application)
     occurs on a Container, and the Gadget has specified a value for a matching
     event name (either as the catch-all "events", or a specific event, named
     "event.eventtype", the Container MUST make an HTTP request to the specified
     URL.</t>
+    <t>If the rel attribute matches
+     "opensocialevent.TYPE", then events of TYPE are sent to that endpoint. An
+     optional method attribute can be set to POST or GET to specify how the
+     request should be sent. The default is GET.
+     <figure>
+      <preamble>Here are some examples:</preamble>
+      <artwork xml:space="preserve">
+&lt;Link rel="event" href="http://www.example.com/pingme" method="POST/&gt;
+&lt;Link rel="event.addapp" href="http://www.example.com/add" /&gt;
+&lt;Link rel="event.removeapp" href="http://www.example.com/remove" /&gt;
+</artwork>
+     </figure></t>
+
+
     <t>The request sent to the specified endpoint MUST be signed according to
     the rules in
     <xref target="SignedFetch">Signed Fetch</xref>. Additionally, one extra
     parameter named "eventtype" MUST be passed. This value MUST be the same as
     the event name part of the 'rel' attribute.</t>
+
+     <t>The following event types are defined. Container custom events should
+     be designated with a domainname prefix to avoid namespace collisions.
+     <texttable>
+      <ttcol align="left">Event</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>addapp</c>
+      <c>Event used to indicate the user has added the application. </c>
+      <c>removeapp</c>
+      <c>Event used to indicate the user has removed the application. </c>
+      <c>app</c>
+      <c>This event indicates that an action has been performed on the app. Note that this action may not have been caused by an action performed by the end user of an application. 
+      For example, it is permissible for an application directory or market place to send these events. In the case of an app event an action attribute MUST be included and valid values
+      are "enabled", "disabled", "approved", "submitted", "rejected", "new" and "banned". </c>
+     </texttable></t>
+   </x:draft>
    </section>
      </section>
 	 
