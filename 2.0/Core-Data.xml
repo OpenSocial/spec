@@ -398,55 +398,20 @@ Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
      <t>A User-Id uses the same format as an <x:ref>Object-Id</x:ref>, but there are several reserved values for common cases.</t>
      <artwork type="abnf"
          xml:space="preserve">
-         <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
-
-User-Id = <x:ref>Object-Id</x:ref> / "@viewer" / "@me"
-
-        </x:draft>
+User-Id = <x:ref>Object-Id</x:ref> / "@owner" / "@viewer" / "@me"
 </artwork>
      <t>The reserved values are defined in the following table:</t>
-     <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">     
      <texttable align="left">
        <ttcol>Value</ttcol>
        <ttcol>Description</ttcol>
+       <c>@owner</c>
+       <c>The user that owns the current page.  For example, if Alice is viewing Bob's profile page, then Bob is the owner.</c>
        <c>@viewer</c>
        <c>The user than is logged in an viewing the current page. For example, if Alice is viewing Bob's profile page, then Alice is the viewer.</c>
        <c>@me</c>
        <c>The currently authenticated user. For example, when an API request is received the user who's credentials are included in the authorization header of the request can be referenced as '@me'.</c>
      </texttable>
-     </x:draft>
    </section>
-   <x:draft note="Spaces Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1135">
-      <section title="Space-Id" anchor="Space-Id">
-        <t>A Space-Id uses the same format as an <x:ref>Object-Id</x:ref></t>
-        <artwork type="abnf"
-            xml:space="preserve">
-Space-Id = <x:ref>Object-Id</x:ref>
-   </artwork>
-      </section>
-    <section title="Application-Id" anchor="Application-Id">
-      <t>A Application-Id uses the same format as an <x:ref>Object-Id</x:ref></t>
-      <artwork type="abnf"
-          xml:space="preserve">
-Application-Id = <x:ref>Object-Id</x:ref>
- </artwork>
-    </section>
-      <section title="Context-Id and Context-Type" anchor="Context">
-           <t>A pair Context-Id and Context-Type represents either a person or a space.</t>
-           <t>A Context-Id uses the same format as an <x:ref>Object-Id</x:ref></t>
-           <artwork type="abnf"
-               xml:space="preserve">
-Context-Id = <x:ref>User-Id</x:ref> / <x:ref>Space-Id</x:ref>
-           </artwork>
-           
-           <t>A Context-Type defines whether the context is a Space or a Person</t>
-           <artwork type="abnf"
-               xml:space="preserve">
-Context-Type = <x:ref>@person</x:ref> / <x:ref>@space</x:ref>
-           </artwork>
-      </section>
-
-   </x:draft>
   </section>
   <section title="Data Representations" anchor="Data-Representations">
    <t>Each resource has three representations, as JSON, XML, and Atom. All data
