@@ -391,6 +391,45 @@
         </texttable>
       </t>
     </section>
+    <x:draft>
+    <section title="addGadgetLifecycleCallback" anchor="container.Container.addGadgetLifecycleCallback">
+     <t>container.Container.addGadgetLifecycleCallback(lifeCycleCallback)</t>
+      <t>
+        Add a callback object to be called when a gadget is added, navigated to or closed.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>lifeCycleCallback</c>
+          <c>function</c>
+          <c>
+            The callback function to call when the gadget lifecycle changes. Needs to have preloaded(metadataResponse), navigated(gadgetSite), closed(gadgetSite) and unloaded(gadgetURL) methods to react to lifecycle events
+            These are invoked(respectively) by the <xref target="container.Container.preloadGadgets">preloadGadgets</xref>, <xref target="container.Container.navigateGadget">navigateGadget</xref>, and <xref target="container.Container.closeGadget">closeGadget</xref> and <xref target="container.Container.unloadGadgets">unloadGadgets</xref> container methods. 
+          </c>
+        </texttable>
+      </t>
+    </section>
+      <section title="removeGadgetLifecycleCallback" anchor="container.Container.removeGadgetLifecycleCallback">
+     <t>container.Container.removeGadgetLifecycleCallback(lifeCycleCallback)</t>
+      <t>
+        Remove a lifecycle callback object from the container's registry.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>lifeCycleCallback</c>
+          <c>function</c>
+          <c>
+           remove a lifecycle callback previously registered with the container 
+          </c>
+        </texttable>
+      </t>
+    </section>
+    </x:draft>
    </section>
   </section>
 
