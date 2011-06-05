@@ -6576,10 +6576,26 @@ assertEquals(0.30, value);
         allow the user to take action on the notification strait from their
         inbox.</t>
         
-        <t>One implementation of embedded experiences in email would be to
-        embed the data model inside the MIME email itself in it's own MIME 
-        part.  The mail client would need to look for this and then render 
-        the embedded experience.</t>
+        <t>The embedded experiences data model may be embedded into MIME
+        emails in order to allow email clients to render an embedded
+        experience.  To send an embedded experience in a MIME email the
+        agent sending the MIME email must conform to the following:
+        
+          <list style="symbols">
+            <t>The MIME email must be a multipart/alternative MIME email.
+            The email needs to be multipart/alternative because the embedded
+            experiences part is just an alternate representation of the 
+            content in the other parts.</t>
+            <t>The MIME email must have at least two MIME parts, one of type 
+            text/html, and one of type application/embed+xml or 
+            application/embed+json. Since the embedded experience relys on 
+            remote content, the text/html part will be needed if the remote 
+            content cannot be rendered.</t>
+            <t>The application/embed+xml or application/embed+json part
+            must contain either the XML or JSON version of the embedded
+            experiences data model.</t>
+          </list>
+        </t>
         
         <figure>
           <artwork xml:space="preserve">
@@ -6598,17 +6614,18 @@ Content-Type: text/plain
 Mary has commeneted on your status.
 
 --XXXXboundary text
-Content-Type: application/embed+json
-{
-  "gadget" : "http://www.socialnetwork.com/embedded/commentgadget.xml",
-  "context" : 123
-}
---XXXXboundary text
 Content-Type: text/html
 
 &lt;html&gt;
 &lt;!-- HTML representation here --&gt;
 &lt;/html&gt;
+
+--XXXXboundary text
+Content-Type: application/embed+json
+{
+  "gadget" : "http://www.socialnetwork.com/embedded/commentgadget.xml",
+  "context" : 123
+}
           </artwork>
         </figure>
       </section>
