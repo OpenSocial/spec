@@ -308,9 +308,26 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="ActivityEntry" anchor="ActivityEntry">
     <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
-    <t>In its simplest form, an activity consists of an actor, a verb, an an object, and a target. It tells the story of a person performing an action on or with an object -- "Geraldine posted a photo to her album" or "John shared a video". </t>
-    <t>This is a <eref target="http://docs.opensocial.org/display/OSD/ActivityStreams+Proposal">proposal</eref> to incorporate Activity Streams into the OpenSocial specification.</t>
-     <texttable>
+    <t>
+	As a person's actions become increasingly distributed, it is
+	important
+	to achieve a level of interoperability betweent the systems
+	that they
+	interact with. The Activity Streams specification has been
+	incorporated in order to improve interoperability with other systems
+	that may not be based on OpenSocial. This will provide implementors and
+	developers a wide range of options for incorporating social data within
+	they applications.</t>
+    
+    <t>In its simplest form, an activity consists of an actor, a verb,
+	an an object, and a target. It tells the story of a person performing
+	an action on or with an object -- "Geraldine posted a photo to her
+	album" or "John shared a video". </t>
+   <t>OpenSocial adds an
+	additional field to the data model, "actionLinks:".
+	Because these are extensions, they are contained in an eclosing
+	"namespace", org.opensocial.</t> 
+   <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
@@ -353,7 +370,11 @@ COMMA          = <US-ASCII comma (44)>
       <c>verb</c>
       <c>string</c>
       <c>Identifies the action that the activity describes. An activity SHOULD contain a verb property whose value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in RFC3339. Note that the use of a relative reference other than a simple name is not allowed. If the verb is not specified, or if the value is null, the verb is assumed to be "post".</c>
+      <c>actionLinks:</c>
+      <c><eref target="./Core-Data.xml#Array">Array&lt;</eref><eref target="./Core-Data.xml#Array">Array&gt;</eref></c>
+      <c>An array of arrays associated with this activity. The internal array consists of &lt;String&gt;, &lt;Target URL&gt;, and &lt;HTTP verb&gt;. The URL represents the target web hook endpoint that can be invoked against the URL using the specified HTTP verb. The String represents a hint that MAY be used by the presentation layer to allow interaction with the user, e.g. a button that invokes an POST. The HTTP verb is optional, and if omitted defaults to GET.</c>
      </texttable>
+
     A complete ActivityEntry example
     <figure>
      <preamble>application/json representation:</preamble>
@@ -419,7 +440,8 @@ COMMA          = <US-ASCII comma (44)>
   generator: {
     url: "http://example.org/activities-app"
   },
-  published: "2011-02-10T15:04:55Z"
+  published: "2011-02-10T15:04:55Z",
+  actionLinks:[{"Create Some Entry","http://someuri/postAction", "POST"}]
 }</artwork>
     </figure>
     <figure>
@@ -1331,7 +1353,13 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="ActivityObject" anchor="ActivityObject">
     <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
-    <t>An object is a thing, real or imaginary, which participates in an activity. It may be the entity performing the activity, or the entity on which the activity was performed.</t>
+    <t>An object is a thing, real or imaginary, which participates in an
+	activity. It may be the entity performing the activity, or the entity
+	on which the activity was performed. Because Activity Streams are often
+	used in the context of a social platform, OpenSocial adds an
+	additional field to the data model, "deliverTo:".
+	Because these are extensions, they are contained in an eclosing
+	"namespace", org.opensocial.</t>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -1375,7 +1403,11 @@ COMMA          = <US-ASCII comma (44)>
       <c>url</c>
       <c>string</c>
       <c>An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property</c>
-     </texttable>
+      <c>deliverTo:</c>
+      <c><eref target="./Core-Data.xml#Array">Array&lt;</eref><eref target="./Core-Data.xml#Global-Id">Global-Id&gt;</eref></c>
+      <c>Many social business systems incorporate the idea that an activity may not be public. By including the "deliverTo:" field, a specific user(s) will receive the activity. The Activity MUST be delivered to the recipients specified in the deliverTo: Array</c>
+ </texttable>
+     
     <t>An example ActivityObject</t>
     <figure>
      <preamble>application/json representation:</preamble>
@@ -1407,7 +1439,10 @@ COMMA          = <US-ASCII comma (44)>
       objectType: "attachment"
     }
   ],
-  objectType: "photo"
+  objectType: "photo",
+  org.opensocial:{
+  	deliverTo:["1245:MySpace.com"]
+  }
 }</artwork>
     </figure>
     <figure>
@@ -1437,6 +1472,7 @@ COMMA          = <US-ASCII comma (44)>
   &lt;upstreamDuplicate&gt;upstream1&lt;/upstreamDuplicate&gt;
   &lt;upstreamDuplicate&gt;upstream2&lt;/upstreamDuplicate&gt;
   &lt;url&gt;http://example.org/album/my_fluffy_cat.jpg&lt;/url&gt;
+  
 &lt;/object&gt;</artwork>
     </figure>    
     </x:draft>
