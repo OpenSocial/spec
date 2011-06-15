@@ -61,4 +61,4 @@ EL functions - remove "os:" prefix (http://code.google.com/p/opensocial-resource
 View Level Features (http://code.google.com/p/opensocial-resources/issues/detail?id=1133)
 ActivityStrea.ms support (http://code.google.com/p/opensocial-resources/issues/detail?id=1140)
 View Enhancements To Support Opening Of Gadgets and URLs (http://code.google.com/p/opensocial-resources/issues/detail?id=1167)
-
+Variable substitution standardized on EL syntax  (http://code.google.com/p/opensocial-resources/issues/detail?id=1164)
