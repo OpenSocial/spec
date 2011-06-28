@@ -1351,6 +1351,9 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
   <section title="OAuth"
            anchor="OAuth">
    <x:draft note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+  <t>Note that the OAuth 2.0 specification is not currently approved by the IETF and references
+  to OAuth 2 capablities are based on version 16 of the OAuth 2.0 specification.
+  </t>
    <t>As mentioned previously in this specification and other OpenSocial
      2.0 specifications, OpenSocial containers MUST be able to proxy
     OAuth requests for gadgets.  The main mechanism used to accomplish proxy
