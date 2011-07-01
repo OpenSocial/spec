@@ -5132,6 +5132,41 @@ gadgets.selection.setSelection(selection);
        attempt to fit the gadget to its content</c>
       </texttable></t>
      </section>
+     <section title="adjustWidth" anchor="gadgets.window.adjustWidth">
+       <x:draft note="gadgets.window.adjustWidth" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1191">
+	     <t>&lt;static&gt; gadgets.window.adjustWidth(opt_width)</t>
+	     <t>Description: Adjusts the gadget width.</t>
+	     <t>Parameters:
+	       <texttable align="left">
+	         <ttcol>Name</ttcol>
+	         <ttcol>Type</ttcol>
+	         <ttcol>Description</ttcol>
+	         <c>opt_width</c>
+	         <c>Number</c>
+	         <c>An optional preferred width in pixels; If not specified, will attempt to fit the gadget to its content</c>
+	       </texttable>
+	     </t>
+       </x:draft>
+     </section>
+     <section title="adjustSize" anchor="gadgets.window.adjustSize">
+       <x:draft note="gadgets.window.adjustSize" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1191">
+         <t>&lt;static&gt; gadgets.window.adjustSize(opt_height, opt_width)</t>
+         <t>Description: Adjusts the gadget size.</t>
+         <t>Parameters:
+           <texttable align="left">
+             <ttcol>Name</ttcol>
+             <ttcol>Type</ttcol>
+             <ttcol>Description</ttcol>
+             <c>opt_height</c>
+             <c>Number</c>
+             <c>An optional preferred height in pixels; If not specified, will attempt to fit the gadget to its content</c>
+             <c>opt_width</c>
+             <c>Number</c>
+             <c>An optional preferred width in pixels; If not specified, will attempt to fit the gadget to its content</c>
+           </texttable>
+         </t>
+       </x:draft>
+     </section>
      <section title="getViewportDimensions"
               anchor="gadgets.window.getViewportDimensions">
       <t>&lt;static&gt; Type: {Object}
