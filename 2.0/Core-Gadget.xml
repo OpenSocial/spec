@@ -85,14 +85,14 @@
     @specificationVersion attribute, the Container MUST display an error
     message to Users, and SHOULD provide the specification versions that it
     does support to Developers.</t>
-    <x:draft note="Issue 1142 - Fix XSD, 1.1 Spec stated that XML MUST conform to XSDs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
+    
     <t>
     <xref target="GadgetXmlSchema">Gadget XML Schema</xref> and the 
     <xref target="MessageBundleSchema">Message Bundle Schema</xref> are provided as reference. 
     These XSD schemas represent the standard elements and attributes defined in the 
     specification body.  Containers are allowed to support additional elements and attributes.
+    <xref target="Issue-1142">Discussion</xref>
     </t>
-    </x:draft>
     <t>Containers MAY support non-standard tags and attributes, but they MUST
     be enclosed in a separate XML namespace. This namespace SHOULD reflect the
     name of the organization responsible for the Container to avoid conflicts
@@ -131,7 +131,7 @@
        <t>Parse the gadget XML using a <xref target="Parsing">Parse XML Request</xref>, following the behavior defined in <xref target="ElementsAndAttributes">Elements and Attributes</xref>.</t>
        <t>Output gadget content as HTML:</t>
         <list style="numbers">
-         <t><x:draft note="Remove Quirks Mode" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1139">Gadget MUST be rendered in HTML5 by default. See section on <xref target="Doctype">Gadget Doctype</xref>.</x:draft></t>
+         <t>Gadget MUST be rendered in HTML5 by default. See section on <xref target="Doctype">Gadget Doctype</xref>. <xref target="Issue-1139">Discussion</xref></t>
          <t>Standard HTML header, opening &lt;html&gt; tag and &lt;body&gt;
          tag. &lt;head&gt; information is optional.</t>
          <t><xref target="CoreFeatures">Core gadgets JavaScript libraries</xref> and any additional libraries specified in the gadget. The server SHOULD consolidate all librariess into a single request to minimize the number of HTTP requests made by the client browser. This MAY be followed by JavaScripte required to initialize the included libraries.</t>
@@ -142,15 +142,15 @@
       </list>
      </t>
      <t>Containers must also be able to process <xref target="DataPipelining">Data Pipelining</xref> and <xref target="OpenSocial-Templating">Templating</xref> elements in the gadget XML spec.</t>
-     <x:draft note="Remove Quirks Mode" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1139"><section title="Gadget Doctype" anchor="Doctype">
+     <section title="Gadget Doctype" anchor="Doctype">
        <t>For Gadgets using an OpenSocial specification version 2.0 or greater, Containers MUST render those Gadgets in HTML5 by default.  If a 
        Container supports rendering Gadgets with a specification version less than 2.0, those Gadgets 
        SHOULD continue to be rendered in browser quirks mode. Refer to the 
        <xref target="Versioning">Versioning</xref> rules for determining Gadget specification version.  Containers MAY support ModulePrefs/@doctype as 
        a method for allowing Gadgets to override the default behavior.  Containers that implement this SHOULD override the default doctype when 
        encountering ModulePrefs/@doctype.  Developers should recognize it may not be possible to honor this attribute in all cases such as when 
-       multiple Gadgets are inlined on a single page.</t>
-     </section></x:draft>
+       multiple Gadgets are inlined on a single page.  <xref target="Issue-1139">Discussion</xref></t>
+     </section>
    </section>
    <section title="JavaScript Request">
     <t>In order for type="url" gadgets to access JavaScript libraries, the server MUST provide an HTTP service for retrieving core and feature-linked JavaScript. This HTTP service MUST handle requests to URLs provided in the 'libs' parameter described in <xref target="Type">/Content/@type</xref>.  The response to these requests MUST contain JavaScript code corresponding to the API(s) required by the type URL gadget.</t>
@@ -211,9 +211,9 @@ and uses the canonical format for templates and data pipeline blocks.
       <t hangText="@width">The preferred default width of he gadget, in pixels.
       Containers SHOULD use this value to set an appropriate width for the
       gadget when it is first rendered.</t>
-      <t hangText="@doctype"><x:draft note="Remove Quirks Mode" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1139">Optional.  
+      <t hangText="@doctype">Optional.  
       A string that identifies the preferred rendering method.  When set to "quirksmode", the Gadget SHOULD be rendered in browser quirks mode.  
-      This attribute can later be extended to support other DOCTYPEs.</x:draft></t>
+      This attribute can later be extended to support other DOCTYPEs. <xref target="Issue-1139">Discussion</xref></t>
       <t hangText="text()">This tag has child elements. Containers SHOULD NOT
       interpret child text nodes.</t>
      </list>
@@ -226,9 +226,9 @@ and uses the canonical format for templates and data pipeline blocks.
        MUST interpret this value as described in
        <xref target="Versioning">Versioning</xref>. If absent, the default value is
        "1.0".</t>
-       <t hangText="@views"><x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">A comma-separated list of Views to load this feature
+       <t hangText="@views">A comma-separated list of Views to load this feature
        for.  This parameter is optional. Containers SHOULD only load the feature 
-       when an appropriate view is being rendered.</x:draft></t>
+       when an appropriate view is being rendered. <xref target="Issue-1133">Discussion</xref></t>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT
        interpret child text nodes.</t>
       </list>
@@ -272,7 +272,7 @@ and uses the canonical format for templates and data pipeline blocks.
 		   for the features that have been removed.  Containers SHOULD include the
 		   largest set of Optional Features that does not produce conflicts.</t>     
     </t>
-    <t><x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">It is possible for there to be Feature version conflicts when two valid 
+    <t>It is possible for there to be Feature version conflicts when two valid 
        Feature dependencies exist for the same Feature.  This situation can occur 
        when the same Feature is declared at a global scope (no @views specified)
        and at a view scope (@views specified) but with differing @version values.
@@ -284,7 +284,7 @@ and uses the canonical format for templates and data pipeline blocks.
        /ModulePrefs/Required/@views and /ModulePrefs/Optional/@views) over other
        Feature declarations. Developers can easily correct this conflict by always
        using the @views attribute for Features in Gadgets that use mixed Feature
-       versions.</x:draft></t>
+       versions. <xref target="Issue-1133">Discussion</xref></t>
    </list>
 
 
@@ -376,10 +376,10 @@ and uses the canonical format for templates and data pipeline blocks.
        populate these values in 
        <xref target="gadgets.util.getFeatureParameters">
        gadgets.util.getFeatureParameters</xref>, with @name representing the
-       key, and the child text node representing the value.<x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133"> Containers SHOULD 
+       key, and the child text node representing the value. Containers SHOULD 
        select configuration parameters from the Feature that explicitly matches 
        the current View (See /ModulePrefs/Required/@views and 
-       /ModulePrefs/Optional/@views) over other Feature declarations.</x:draft></t>
+       /ModulePrefs/Optional/@views) over other Feature declarations. <xref target="Issue-1133">Discussion</xref></t>
        <list style="hanging">
         <t hangText="@name">The name of the parameter. Containers MUST use this
         as the key for inputs to 
@@ -409,7 +409,7 @@ and uses the canonical format for templates and data pipeline blocks.
        endpoints when using an authentication type that requires it. Containers
        MUST pass the viewer id when this value is "true" (default).</t>
        <t hangText="@views">A comma-separated list of Views to pre-fetch this
-       request for.  <x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">This parameter is optional. </x:draft>Containers SHOULD only perform 
+       request for.  This parameter is optional. <xref target="Issue-1133">Discussion</xref> Containers SHOULD only perform 
        preloading when an appropriate view is being rendered.</t>
        <t hangText="text()">Not used at this time.</t>
       </list>
@@ -482,9 +482,9 @@ and uses the canonical format for templates and data pipeline blocks.
        right). Containers SHOULD use this value for determining the appropriate
        rendering direction for gadget content in this locale. This value
        controls language direction variables in <xref target="Localization">Localization</xref>.</t>
-       <t hangText="@views"><x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">A comma-separated list of Views for this
+       <t hangText="@views">A comma-separated list of Views for this
        locale.  This parameter is optional.  Containers SHOULD only select 
-       this locale when an appropriate view is being rendered.</x:draft></t>
+       this locale when an appropriate view is being rendered. <xref target="Issue-1133">Discussion</xref></t>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT
        interpret child text nodes.</t>
       </list>
@@ -696,23 +696,21 @@ and uses the canonical format for templates and data pipeline blocks.
       <t>When /Content/@type is "html", Containers MUST perform 
    <xref target="VariableSubstitution">Variable Substitution</xref> on the final
    assembled content section.</t>
-      <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
+      
       <t>When /Content/@type is "url", Containers MUST display a direct view of
          the value for /Content/@href as specified in the
-      <xref target="ContentRedirect">Content Redirect</xref> section.
+      <xref target="ContentRedirect">Content Redirect</xref> section. <xref target="Issue-1173">Discussion</xref>
       </t>
-      </x:draft>
       </t>
       <t hangText="@href">A URL pointing to an external file containing the
       body of this element.
-      <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
       <t>If @type is "url", this value is REQUIRED. If @type
       is "url", this value represents an external document that SHOULD be
       presented directly to Users without filtering as specified in the
       <xref target="ContentRedirect">Content Redirect</xref> section.</t>
       <t>If @type is "html", the Container MUST
-      <xref targe="ProxiedContent">proxy</xref> the current content section.</t>
-      </x:draft>
+      <xref target="ProxiedContent">proxy</xref> the current content section. <xref target="Issue-1173">Discussion</xref></t>
+      
       </t>
       <t hangText="@preferred_height">The suggested default height, in pixels,
       to use when rendering this gadget. Containers SHOULD use this value as
@@ -733,9 +731,9 @@ and uses the canonical format for templates and data pipeline blocks.
         conditions when importing gadget XML. This validity check need not be
         performed at render time.</t>
       </t>
-      <t hangText="@authz"><x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">The request issued to the URL in /Content/@href MUST be signed
+      <t hangText="@authz">The request issued to the URL in /Content/@href MUST be signed
         according to the rules specified because of the current /Content/@type.
-      </x:draft></t>
+       <xref target="Issue-1173">Discussion</xref></t>
       <t hangText="text()">Contains data in an appropriate format to satisfy
       the requirements for @type. When @type is "html", if no @href is
       specified, this value MUST be a block of html. The text within this element SHOULD be wrapped in CDATA to avoid having to escape HTML tags and to prevent them from being interpreted by the XML parser.</t>
@@ -938,7 +936,7 @@ and uses the canonical format for templates and data pipeline blocks.
   </section>
   <section title="Content Redirect"
            anchor="ContentRedirect">
-   <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
+   
    <t>When /Content/@type is "url", Containers MUST display a direct view of
    the value for /Content/@href (for a web context, this SHOULD be an HTML
    iframe). The Container MUST append the following query string parameters to the URL:
@@ -956,9 +954,9 @@ and uses the canonical format for templates and data pipeline blocks.
    <t>If the /Content/@authz attribute is present and it equals "signed", the container MUST vouch
       for the user's identity to the destination server. This follows the steps outlined in the
       <xref target="SignedFetch">Signed Fetch</xref>
-      section of this specification.
+      section of this specification. <xref target="Issue-1173">Discussion</xref>
    </t>
-   </x:draft>
+   
   </section>
   <section title="Versioning"
            anchor="Versioning">
@@ -1197,10 +1195,10 @@ One plus one is equal to ${1+1}
     <t>An exact match for language, country = "all".</t>
     <t>Language = "all", country = "all'.</t>
    </list>
-   <t><x:draft note="View level features" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">
+   <t>
    Containers SHOULD select a Locale that supports the current view over any 
    other Locale.  The Views supported by a Locale are specified at
-   /ModulePrefs/Locale/@views.</x:draft></t>
+   /ModulePrefs/Locale/@views. <xref target="Issue-1133">Discussion</xref></t>
    
    <t>Containers MAY provide their own translations or use a third-party
    translation service if there is no appropriate Locale defined in the
@@ -1279,12 +1277,11 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
            anchor="SignedFetch">
    <t>Containers MUST support signing of HTTP requests for 
    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>, 
-   <x:draft note="Signing of Content Type URL Redirects" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
+   
    <xref target="ProxiedContent">Proxied Content</xref>,
-   <xref target="ContentRedirect">Content Redirect</xref>,
-   </x:draft>
+   <xref target="ContentRedirect">Content Redirect</xref>, 
    <xref target="LifeCycleEvents">Life Cycle Events</xref>, and 
-   <xref target="Preload">Preloading</xref>. The container does this by
+   <xref target="Preload">Preloading</xref> (<xref target="Issue-1173">Discussion</xref>). The container does this by
    doing the following: 
    <list style="numbers">
     <t>Removing any request parameters with names that begin with oauth,
@@ -3806,7 +3803,6 @@ dataset would contain content resembling:
   <section title="Gadget XML Schema"
            anchor="GadgetXmlSchema">
    <t>
-   <x:draft note="Issue 1142 - Propose fix for the 1.1 XSD schema in the core server spec" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0"?&gt;
@@ -4015,7 +4011,7 @@ dataset would contain content resembling:
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
-</x:draft>
+<xref target="Issue-1142">Discussion</xref>
    </t>
   </section>
   <section title="Message Bundle Schema"
@@ -6672,6 +6668,35 @@ Content-Type: application/embed+json
   </section>
   </section>
   
+  <references title="Discussion">
+  <!-- Spec change issues/discussion -->
+   <reference anchor='Issue-1133'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1133">
+    <front>
+     <title>Proposal for View Level Features in OS 2.0</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1142'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
+    <front>
+     <title>Propose fix for the 1.1 XSD schema in the core server spec</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1139'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1139">
+    <front>
+     <title>Removing Quirks Mode</title>
+    </front>
+   </reference>   
+   <reference anchor='Issue-1173'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
+    <front>
+     <title>Signing of URL Content requests</title>
+    </front>
+   </reference> 
+  
+  </references>
+  <!-- Real references -->
   <references>
    <reference anchor='RFC2119'>
     <front>
