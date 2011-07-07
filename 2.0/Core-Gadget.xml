@@ -164,11 +164,8 @@
     Additional elements and attributes MAY be supported, but these elements are
     beyond the scope of this document.</t>
     
-<x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
-A Container MAY support a simplified XML schema.  This format changes some core elements to optional 
-and uses the canonical format for templates and data pipeline blocks.
-</x:draft>    
-    
+<t>A Container MAY support a simplified XML schema.  This format changes some core elements to optional 
+and uses the canonical format for templates and data pipeline blocks. <xref target="Issue-1162">Discussion</xref>  </t>
     
    <section title="Module"
             anchor="Module">
@@ -672,7 +669,7 @@ and uses the canonical format for templates and data pipeline blocks.
     
     <section title="/Data"
              anchor="DataElement">
-   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+   
    <t>Contains data pipeline tags defined for the gadget.  
    Data Pipeline results defined in this block are registered globally for all views by default.
    Individual Data pipeline tags may be scoped to a particular view(s) by adding the 
@@ -680,9 +677,9 @@ and uses the canonical format for templates and data pipeline blocks.
    effect as if the data pipeline tags were defined within a data script nested in a Content block.
    </t>
    <t>
-   See <xref target="DataPipelining">Data Pipelining</xref> for more information on data pipeline tags.
+   See <xref target="DataPipelining">Data Pipelining</xref> for more information on data pipeline tags. <xref target="Issue-1162">Discussion</xref>  
    </t>
-   </x:draft>
+   
     </section>
     
     <section title="/Content"
@@ -1045,7 +1042,6 @@ and uses the canonical format for templates and data pipeline blocks.
   <section title="Variable Substitution"
            anchor="VariableSubstitution">
 		   
-<x:draft note="Variable substitution standardized on EL" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1164">
 
    <t>Variables may be substituted into a gadget by evaluating Expression Language (EL)
    statements.  EL statements consist of a dollar sign and curly braces 
@@ -1069,7 +1065,7 @@ One plus one is equal to ${1+1}
 	The Expression Language (EL) is based on <xref target="JSPEL">JSPEL</xref>.
 	The EL version in OpenSocial supports all basic operations, such as string
 	concatenation and match functions, but does not currently support defining
-	custom functions.
+	custom functions.  <xref target="Issue-1164">Discussion</xref>
 	</t>
 	</section>
 	
@@ -1178,8 +1174,8 @@ One plus one is equal to ${1+1}
    Containers MUST substitute BIDI, MODULE, and UP tokens after substituting
    MSG values, but they MUST NOT recursively substitute any other tokens.</t>
    </section>
-   
- </x:draft>
+  
+
   </section>
   <section title="Localization"
            anchor="Localization">
@@ -1347,7 +1343,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
   </section>
   <section title="OAuth"
            anchor="OAuth">
-   <x:draft note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+   <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
   <t>Note that the OAuth 2.0 specification is not currently approved by the IETF and references
   to OAuth 2 capablities are based on version 16 of the OAuth 2.0 specification.
   </t>
@@ -1438,7 +1434,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
           </t>
     </list>
    </section>
-   </x:draft>
+   </x:incubating>
   </section>
   <section title="JavaScript API Reference" anchor="JavaScript-API-Reference">
     <t>OpenSocial's JavaScript API uses the following patterns:</t>
@@ -3403,9 +3399,9 @@ osapi.http.post(params).execute(function(result) {
    </section>
   
    <section title="Data block">
-   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+   
    <t>A data block may be defined to hold a number of data pipeline tags.  See the 
-   <xref target="DataElement">Data Element</xref> section for more information on this element.
+   <xref target="DataElement">Data Element</xref> section for more information on this element. <xref target="Issue-1162">Discussion</xref>  
    <figure>
     <artwork xml:space="preserve">
 &lt;Module&gt;
@@ -3419,7 +3415,6 @@ osapi.http.post(params).execute(function(result) {
 </artwork>
    </figure></t>
 
-   </x:draft>   
    </section>
    
    <section title="Tag: &lt;os:DataRequest&gt;"
@@ -6694,7 +6689,18 @@ Content-Type: application/embed+json
      <title>Signing of URL Content requests</title>
     </front>
    </reference> 
-  
+   <reference anchor='Issue-1162'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+    <front>
+     <title>Proposal for Simple Gadget format support in OS 2.0 spec</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1164'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1164">
+    <front>
+     <title>Variable substitution standardized on EL</title>
+    </front>
+   </reference> 
   </references>
   <!-- Real references -->
   <references>

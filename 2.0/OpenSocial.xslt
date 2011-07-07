@@ -65,13 +65,26 @@
     </div>
   </xsl:template>
   
+  <xsl:template match="x:incubating">
+    <div style="border: 2px solid #0d0">
+      <div style="background: #0d0; color: #fff; padding: 2px;">
+        <strong style="margin-right: 4px;">Incubating</strong>
+        <xsl:if test="@href">
+          <a target="_blank" style="color: #fff; text-decoration: underline; margin-right: 4px;" href="{@href}">Link</a> 
+        </xsl:if>
+        <xsl:value-of select="@note"/>
+      </div>
+      <xsl:apply-templates mode="t-content" select="node()[1]" />
+    </div>
+  </xsl:template>
+  
   <xsl:template match="x:testcase">
       <div style="margin-right: 4px;">
         <xsl:if test="@href">
           <a target="_blank" style="color: #339933; text-decoration: underline; margin-right: 4px;" href="{@href}">Test Case</a> 
         </xsl:if>
         <xsl:value-of select="@note"/>
-        <xsl:apply-templates mode="t-content" select="node()[1]" />
+        <xsl:apply-templates mode="t-content" select="node()[1]" /> 
       </div>
   </xsl:template>
   
