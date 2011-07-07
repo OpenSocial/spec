@@ -673,7 +673,7 @@ RPC-Error = "{"
   </section>
   
   <section title="Security" anchor="Security"> 
-   <x:draft note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+   <x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
    <t>OpenSocial Containers MUST support TLS 2.0 / SSL connections for sensitive data 
       since OAuth on its own does not provide encryption or message body integrity checking.
       Note that TLS 2.0/SSL is required with many scenarios in the OAuth 2.0 specification.</t> 
@@ -776,7 +776,7 @@ RPC-Error = "{"
         indicating that additional information may be available when using a
         different authorization context.</t>
       </section>
-   </x:draft>  
+   </x:incubating>  
   </section>
  
   
@@ -1572,6 +1572,10 @@ Content-Type: application/json
   </section>
  </middle>
  <back>
+   <references title="Discussion">
+  <!-- Spec change issues/discussion -->
+
+  </references>
   <references>
    <reference anchor='RFC20'>
     <front>
@@ -1808,7 +1812,7 @@ Content-Type: application/json
     </front>
    </reference>
    
-   <x:draft note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175"> 
+   <x:incubating note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175"> 
    <reference anchor="draft-ietf-oauth-v2-15"
                target="http://www.ietf.org/id/draft-ietf-oauth-v2-15.pdf">
      <front>
@@ -1832,7 +1836,7 @@ Content-Type: application/json
              year='2011' />
      </front>
    </reference>
-   </x:draft>
+   </x:incubating>
    
    
    
@@ -1850,7 +1854,7 @@ Content-Type: application/json
     </front>
    </reference>
    
-   <x:draft note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175"> 
+   <x:incubating note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175"> 
    <reference anchor="draft-ietf-oauth-v2-15"
                target="http://www.ietf.org/id/draft-ietf-oauth-v2-15.pdf">
      <front>
@@ -1874,7 +1878,7 @@ Content-Type: application/json
              year='2011' />
      </front>
    </reference>
-   </x:draft>
+   </x:incubating>
    <reference anchor="Social-Data"
               target="./Social-Data.xml">
     <front>
