@@ -121,6 +121,7 @@ COMMA          = <US-ASCII comma (44)>
     addressable through top level API calls, such as osapi, RPC, REST
     and Pipelining tags.</t>
    <section title="Activity" anchor="Activity">
+    <x:deprecated note="Please Use Activity Streams">
     <t>An OpenSocial Activity represents a short summary or notification of a
     timestamped event, often with pointers for more information.</t>
     <t>Activities are rendered with a title and an optional activity body.  The title and body may be set directly as strings when calling
@@ -305,7 +306,10 @@ COMMA          = <US-ASCII comma (44)>
     </figure>Note: The title field is a string that may only have the following
     html tags: &lt;b&gt;, &lt;i&gt;, &lt;a&gt;, &lt;span&gt;. The container may
     ignore this formatting when rendering the activity.</t>
+   </x:deprecated>
    </section>
+
+
    <section title="ActivityEntry" anchor="ActivityEntry">
     <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
     <t>
