@@ -4107,6 +4107,9 @@ dataset would contain content resembling:
 	 	<c>view</c>
 	 	<c>The view ID the gadget should navigate to when the action is invoked.</c>
 	 	<c>Optional</c>
+	 	<c>url</c>
+	 	<c>Simple actions that are just links can specify a url instead of a callback function.</c>
+	 	<c>Optional</c>
       </texttable>
       <t>* Either path or dataType MUST be specified.</t>
      </section>
@@ -4169,7 +4172,7 @@ dataset would contain content resembling:
 		id: "org.samplevoip.callbyperson",
 		callback: mycallback
 	}
-	container.actions.addAction(myaction);
+	container.actions.updateAction(myaction);
 	
    &lt;/script&gt;
   ]]&gt;
@@ -4209,9 +4212,39 @@ var myaction = {
 gadgets.actions.addAction(myaction);
 		</artwork>
 	  </section>
+	  
+	  
+      <section title="updateAction" anchor="gadgets.actions.updateAction">
+	    <t>&lt;static&gt; gadgets.actions.updateAction(action)</t>
+	    <t>Description: Updates the specified action(s) in the container.</t>
+	    <t>Parameters:</t>
+		<texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+		 <c>action</c>
+		 <c>Object</c>
+		 <c>The action to be updated in the container</c>
+		</texttable>
+	    <t>Example updating a declarative action to bind a callback function:</t>
+        <artwork type="code">
+var mycallback = function(){
+	...
+};
+
+var myaction = {
+	id: "com.acme.mycallaction",
+	callback: mycallback
+}
+
+gadgets.actions.updateAction(myaction);
+		</artwork>
+	  </section>
+	  
+	  
 	  <section title="removeAction" anchor="gadgets.actions.removeAction">
 	    <t>&lt;static&gt; container.actions.removeAction (actionId)</t>
-	    <t>Description: Removes the specified action from the container.</t>
+	    <t>Description: Removes the specified action from the container</t>
 	    <t>Parameters:</t>
 		<texttable align="left">
          <ttcol>Name</ttcol>
@@ -4220,6 +4253,38 @@ gadgets.actions.addAction(myaction);
 		 <c>id</c>
 		 <c>String</c>
 		 <c>The ID referencing the action to be removed from the container</c>
+		</texttable>
+	  </section>
+	  <section title="getActionsByPath" anchor="gadgets.actions.getActionsByPath">
+	    <t>&lt;static&gt; gadgets.actions.getActionsByPath (path, callback)</t>
+	    <t>Description: Gets array of actions from the container at the specified path and passes the result to the callback function</t>
+	    <t>Parameters:</t>
+		<texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+		 <c>path</c>
+		 <c>String</c>
+		 <c>The String representation of the path to the actions</c>
+		 <c>callback</c>
+		 <c>Function</c>
+		 <c>A callback function to handle the returned actions array</c>
+		</texttable>
+	  </section>
+	  <section title="getActionsByDataType" anchor="gadgets.actions.getActionsByDataType">
+	    <t>&lt;static&gt; gadgets.actions.getActionsByDataType (dataType, callback)</t>
+	    <t>Description: Gets array of actions from the container for the specified data type and passes the result to the callback function.</t>
+	    <t>Parameters:</t>
+		<texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+		 <c>dataType</c>
+		 <c>String</c>
+		 <c>The String representation of an OpenSocial data type.</c>
+		 <c>callback</c>
+		 <c>Function</c>
+		 <c>A callback function to handle the returned actions array</c>
 		</texttable>
 	  </section>
      </section>
