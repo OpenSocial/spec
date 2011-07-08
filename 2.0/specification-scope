@@ -28,7 +28,7 @@ OAuth 2.0 support (http://code.google.com/p/opensocial-resources/issues/detail?i
 Add Enterprise Social Data Model Profile (http://code.google.com/p/opensocial-resources/issues/detail?id=1132)
 Cross-container data requests and Service Providers (http://code.google.com/p/opensocial-resources/issues/detail?id=1181)
 Signing of URL Content requests (http://code.google.com/p/opensocial-resources/issues/detail?id=1173)
-
+gadgets.window.adjustWidth (http://code.google.com/p/opensocial-resources/issues/detail?id=1191)
 
 
 OpenSocial 2.0 "Bugs"
@@ -63,3 +63,4 @@ ActivityStrea.ms support (http://code.google.com/p/opensocial-resources/issues/d
 View Enhancements To Support Opening Of Gadgets and URLs (http://code.google.com/p/opensocial-resources/issues/detail?id=1167)
 Variable substitution standardized on EL syntax  (http://code.google.com/p/opensocial-resources/issues/detail?id=1164)
 Add alias to http request parameters to support relative url (http://code.google.com/p/opensocial-resources/issues/detail?id=1178)
+gadgets.window.adjustWidth (http://code.google.com/p/opensocial-resources/issues/detail?id=1191)
