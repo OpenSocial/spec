@@ -1574,7 +1574,12 @@ Content-Type: application/json
  <back>
    <references title="Discussion">
   <!-- Spec change issues/discussion -->
-
+   <reference anchor='Issue-1142'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
+    <front>
+     <title>Fix Gadget XSD</title>
+    </front>
+   </reference>
   </references>
   <references>
    <reference anchor='RFC20'>
@@ -1891,8 +1896,7 @@ Content-Type: application/json
    </reference>
   </references>
   <section title="XML format XSD"
-           anchor="XML_format_XSD">
-<x:draft note="Issue 1142 - Propose fix for the 1.1 XSD schema in the core server spec" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1142">
+           anchor="XML_format_XSD"><xref target="Issue-1142">Discussion</xref>
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0" encoding="utf-8"?&gt;
@@ -1932,7 +1936,6 @@ Content-Type: application/json
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
-</x:draft>
   </section>
  </back>
 </rfc>
