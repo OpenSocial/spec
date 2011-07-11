@@ -111,14 +111,11 @@
    </figure>Templates can also define template markup libraries, which will map
    to XML namespaces.</t>
    <t>
-   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
    Templates can be used to define inline rendered sections or custom tags.
    Custom tag templates may be defined inline in the gadget XML or in <xref target="TemplateLibraries">Template Libraries</xref>.  
-   
-</x:draft>
+   <xref target="Issue-1162">Discussion</xref>
 </t>
    <section title="Elements and Attributes">
-   <x:draft note="Simple gadget format" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
    <t>
    Inline templates can be directly embedded in gadget Content blocks using 
    &lt;script type='text/os-template' &gt; sections or directly within Content
@@ -134,11 +131,10 @@
    child of the &lt;Module&gt; root.  The format of this element is the same
    as that defined for <xref target="TemplateLibraries">Template Libraries</xref>.  Custom tag templates defined in this element will be globally available to all views by default.  Any individual custom tag
    template may be restricted to a specific view(s) by adding a @view attribute
-   to the template definition.
+   to the template definition.  <xref target="Issue-1162">Discussion</xref>
    </t>
    </section>
    
-   </x:draft>
    </section>
    
    
@@ -318,7 +314,6 @@ data['Viewer']['Name']
 	set of functions provides string escaping control.  Containers MAY experiment 
 	by adding functions of their own to the EL.
 	</t>
-	<x:draft note="[Issue 1176] EL - removal of 'os:' prefix as it contains illegal function name characters" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1164">
 	     <texttable align="left">
          <ttcol>EL Function</ttcol>
          <ttcol>Description</ttcol>
@@ -342,7 +337,7 @@ var x = "${jsStringEscape(someVar)}";
     </figure>	
 	</c>
 	</texttable>
-</x:draft>	
+  <xref target="Issue-1176">Discussion</xref>
    </section>
 <section title="Reserved EL properties">   
 	<t>
@@ -1419,6 +1414,20 @@ data-pipeline sections.
   </section>
  </middle>
  <back>
+ <references title="Discussion">
+    <reference anchor='Issue-1162'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+    <front>
+     <title>Simple Gadget Format</title>
+    </front>
+   </reference>
+    <reference anchor='Issue-1176'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1176">
+    <front>
+     <title>Removal of 'os:' prefix as it contains illegal function name characters</title>
+    </front>
+   </reference>    
+ </references>
   <references>
    <reference anchor='RFC2119'>
     <front>
