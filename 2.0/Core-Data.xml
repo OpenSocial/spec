@@ -280,7 +280,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
    </section>
 
    <section title="HTTP-Request-Params" anchor="HTTP-Request-Params">
-     <x:draft note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138"> 
+     <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138"> 
      <t>Readers of this section should also review the Security section in the
         Core API Server specification as well as the OAuth information
         documented in the Core Gadget Specfication. The reader should also
@@ -369,7 +369,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
       <c><eref target="Core-Data.xml#Boolean">Boolean</eref></c>
       <c>Indicates if the current viewer's ID should be included in the request signature. Defaults to "true".</c>
      </texttable>
-     </x:draft>
+     </x:incubating>
    </section>
    <section title="HTTP-Response-Payload">
      <t>When a container makes an HTTP request on behalf of a gadget (e.g. osapi.http.get(), or &lt;os:HttpRequest&gt;) the response will contain the following properties:</t>

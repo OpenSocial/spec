@@ -1219,13 +1219,13 @@ REVERSE_DIR: "rtl"
 </artwork>
 
 <section title="Message Bundles" anchor="MessageBundles">
-<x:draft note="Message bundles placed back in spec" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1171">
+<xref target="Issue-1171">Discussion</xref>
 <!-- copied from http://code.google.com/apis/gadgets/docs/i18n.html#Bundles -->
 <t>
 The gadgets i18n strategy centers around message bundles. 
 Message bundles are XML files that contain the translated strings 
 for a given locale. Each string is identified by a unique name 
-that is the same across bundles.
+that is the same across bundles.  
 </t>
 
 <t>
@@ -1258,11 +1258,9 @@ The message bundle ALL_ALL.xml is the file that is used by default.
 </t>
 <t>
 Message bundles may be specified inline or as externally referenced XML files
-in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
+in the <xref target="Locale">/ModulePrefs/Locale</xref> section. 
 </t>
 
-
-</x:draft>
 </section>
 
   </section>
@@ -2439,7 +2437,6 @@ var lang = prefs.getLang();
      </section>
      <section title="requestNavigateTo"
               anchor="gadgets.views.requestNavigateTo">
-      <x:draft note="Additional gadget views" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1169">
       <t>&lt;static&gt; gadgets.views.requestNavigateTo(|, |, opt_ownerId)</t>
       <t>Description: Attempts to navigate to this gadget in a different view.
       If the container supports parameter passing it will pass the optional
@@ -2452,9 +2449,7 @@ var lang = prefs.getLang();
       sections whose View is [Surface].valueY. When navigating from
       SurfaceA.[Secondary] to SurfaceB.[Secondary], the container will switch
       to the SurfaceB surface and show the appropriate &lt;Content&gt; sections
-      whose View is SurfaceB.[Secondary].In no cases must the .[Secondary] item
-      ever be declared.</t>
-      </x:draft>
+      whose View is SurfaceB.[Secondary].  In no case must the .[Secondary] item be declared. <xref target="Issue-1169">Discussion</xref></t> 
       <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
@@ -2483,12 +2478,11 @@ var lang = prefs.getLang();
      </section>
      <section title="openGadget"
               anchor="gadgets.views.openGadget">
-      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
        <t>&lt;static&gt; gadgets.views.openGadget(resultCallback, idCallback, opt_params)</t>
        <t>Description: Opens a gadget in the container UI. The location of the gadget site 
        in the container will be determined by the view target passed in. The container 
        would open the view in a dialog, if view target is dialog or the gadgets 
-       view in a tab for view target is tab</t>
+       view in a tab for view target is tab.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
          <ttcol>Name</ttcol>
@@ -2521,15 +2515,14 @@ var lang = prefs.getLang();
          <c>viewParams </c>
          <c>Object</c>
          <c>View parameters for the view being rendered.</c>
-        </texttable></t></x:draft>
+        </texttable></t>
      </section>        
      <section title="openUrl"
               anchor="gadgets.views.openUrl">
-      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
        <t>&lt;static&gt; gadgets.views.openUrl(url, idCallback, opt_viewTarget)</t>
        <t>Description: Opens a URL in the container UI. The location of the URL site will be determined by the container 
        based on the target view. The container would open the view in a dialog, 
-       if opt_viewTarget=dialog or the gadgets view in a tab for opt_viewTarget=tab</t>
+       if opt_viewTarget=dialog or the gadgets view in a tab for opt_viewTarget=tab.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
          <ttcol>Name</ttcol>
@@ -2545,13 +2538,11 @@ var lang = prefs.getLang();
          <c>string </c>
          <c>Optional parameter,the view that indicates where to open the URL.</c>
         </texttable></t>
-      </x:draft>
      </section>
      <section title="close"
               anchor="gadgets.views.close">
-      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
        <t>&lt;static&gt; gadgets.views.close(opt_id)</t>
-       <t>Description: Closes an opened site. If the opt_id parameter is null the container will close the calling site.</t>
+       <t>Description: Closes an opened site. If the opt_id parameter is null the container will close the calling site.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
          <ttcol>Name</ttcol>
@@ -2561,15 +2552,14 @@ var lang = prefs.getLang();
          <c>string</c>
          <c>Optional parameter which specifies what site to close. If null it will close the current gadget site.</c>
         </texttable></t>
-      </x:draft>
      </section>
      <section title="setReturnValue"
               anchor="gadgets.views.setReturnValue">
-      <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+      
        <t>&lt;static&gt; gadgets.views.setReturnValue(returnValue)</t>
        <t>Description: Sets the return value for the current window. 
        This method should only be called inside those secondary view types defined in gadgets.views.ViewType. 
-       For example, <xref target="gadgets.views.ViewType.ViewTarget">DIALOG or MODALDIALOG</xref>.</t>
+       For example, <xref target="gadgets.views.ViewType.ViewTarget">DIALOG or MODALDIALOG</xref>.  <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
          <ttcol>Name</ttcol>
@@ -2578,8 +2568,7 @@ var lang = prefs.getLang();
          <c>returnValue</c>
          <c>Object</c>
          <c>Return value for this window.</c>
-        </texttable></t>
-      </x:draft>
+        </texttable> </t>
      </section>
      
     </section>
@@ -2702,11 +2691,10 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
     <!-- ============================== class summary ========================== -->
     <t>Used by
     <xref target="gadgets.views.View">View objects</xref>.</t>
- <x:draft note="Additional gadget views" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1169">
       <list style="hanging">
 	<t hangText="ABOUT"
 	           anchor="gadgets.views.ViewType.ABOUT">
-	      A view used to provide descriptive information regarding the gadget. This view is typically rendered in a smaller area. The viewer is not always the same as the owner. This field may be used interchangeably with the string 'ABOUT'.</t>
+	      A view used to provide descriptive information regarding the gadget. This view is typically rendered in a smaller area. The viewer is not always the same as the owner. This field may be used interchangeably with the string 'ABOUT'. <xref target="Issue-1169">Discussion</xref></t>
      <t hangText="CANVAS"
               anchor="gadgets.views.ViewType.CANVAS">
       A view where the gadget is displayed in a very large
@@ -2721,13 +2709,13 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
               may be limited chrome surrounding the gadget. The viewer is not
               always the same as the owner.
               This field may be used interchangeably with the
-              string 'EMBEDDED'.
+              string 'EMBEDDED'. <xref target="Issue-1169">Discussion</xref>
           </t>
      <t hangText="HOME"
               anchor="gadgets.views.ViewType.HOME">
       A view where the gadget is displayed in a small area
       usually on a page with other gadgets. Typically the viewer is the same as
-      the owner. This field may be used interchangeably with the string
+      the owner. This field may be used interchangeably with the string 
       'HOME'.</t>
 	<t hangText="PREFERENCES"
               anchor="gadgets.views.ViewType.PREFERENCES">
@@ -2735,7 +2723,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
         common for gadgets to present a form for visible user prefs. Because the user preferences are specific to a
         user, owner and viewer MUST be the same in this view.
         This field may be used interchangeably with the
-        string 'PREFERENCES'.</t>
+        string 'PREFERENCES'. <xref target="Issue-1169">Discussion</xref></t>
      <t hangText="PREVIEW"
               anchor="gadgets.views.ViewType.PREVIEW">
       A demo view of the gadget. In this view the owner and
@@ -2755,12 +2743,11 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
               A view used to communicate to the user where to get support information for the gadget. Typically, the
               gadget is displayed in a small area. The viewer MUST always the same
               as the owner. This field may be used interchangeably with the string
-              'SUPPORT'.
+              'SUPPORT'. <xref target="Issue-1169">Discussion</xref>
           </t>
       </list>
-</x:draft>
-<x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
     <section title="View Target" anchor="gadgets.views.ViewType.ViewTarget">
+      <xref target="Issue-1167">Discussion</xref>
       <list style="hanging">
       <t hangText="TAB"
               anchor="gadgets.views.ViewType.TAB">
@@ -2777,8 +2764,8 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       'MODALDIALOG'.</t>
       
     </list>
+
     </section>
-</x:draft>
    </section>
    <section title="opensocial.data" anchor="opensocial.data">
     <t>The opensocial.data namespace provides an API to access the pipelined data on
@@ -4039,7 +4026,7 @@ dataset would contain content resembling:
   </section>
   <section title="Highly Recommended Features">
    <section title="gadgets.actions" anchor="gadgets.actions">
-    <x:draft note="gadgets.actions" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+   <xref target="Issue-1161">Discussion</xref>
      <section title="Overview" anchor="gadgets.actions.overview">
 	  	 <t>The actions feature allows gadgets to contribute actions to the container's UI. Some containers have 
 	  		global action contribution areas such as the header and footers of the container, which may include links, buttons, or menus.</t>
@@ -4288,7 +4275,6 @@ gadgets.actions.updateAction(myaction);
 		</texttable>
 	  </section>
      </section>
-    </x:draft>
    </section>
    <section title="gadgets.flash"
             anchor="gadgets.flash">
@@ -4738,7 +4724,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 	</section>  
    </section>
    <section title="gadgets.selection" anchor="gadgets.selection">
-    <x:draft note="Selection" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+<xref target="Issue-1161">Discussion</xref>
   	 <section title="Overview" anchor="gadgets.selection.overview">
 	  	 <t>The selection feature gives gadgets the ability to participate in the containerâ€™s selection eventing. The concept 
 	  		of selection is common among many containers. Examples include:
@@ -4844,7 +4830,6 @@ gadgets.selection.setSelection(selection);
    		</section>
    		
    	</section>
-   </x:draft>
    </section>
    <section title="gadgets.skins"
             anchor="gadgets.skins">
@@ -5240,9 +5225,8 @@ gadgets.selection.setSelection(selection);
      </section>
      <section title="getContainerDimensions"
               anchor="gadgets.window.getContainerDimensions">
-     <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">   	 
       <t>&lt;static&gt; gadgets.window.getContainerDimensions(resultCallback)</t>
-      <t>Description: Gets the dimensions of the container displaying this gadget through callback function which will be called with the return value as a parameter.</t>
+      <t>Description: Gets the dimensions of the container displaying this gadget through callback function which will be called with the return value as a parameter.   <xref target="Issue-1167">Discussion</xref></t>
       <t>Parameter:
       <texttable align="left">
        <ttcol>Name</ttcol>
@@ -5251,7 +5235,7 @@ gadgets.selection.setSelection(selection);
        <c>resultCallback</c>
        <c>function</c>
        <c>Callback function will be called with the return value as a parameter.</c>
-      </texttable></t></x:draft>
+      </texttable></t>
      </section>
      <section title="setTitle"
               anchor="gadgets.window.setTitle">
@@ -6281,7 +6265,7 @@ assertEquals(0.30, value);
     </section>
    </section>
    <section title="OpenSearch" anchor="OpenSearch">
-     <x:draft note="OpenSearch Gadget Contributions" href="http://docs.opensocial.org/display/OSD/OpenSearch+Gadget+Contributions">
+     <xref target="Issue-1166">Discussion</xref>
      <t>
           The OpenSearch feature in OpenSocial allows gadgets to declare
           that they have searchable material by providing an
@@ -6378,10 +6362,9 @@ assertEquals(0.30, value);
           </section>  
         </section>
       </section>
-    </x:draft>
   </section>
    <section title="Embedded Experiences" anchor="Embedded-Experiences">
-  <x:draft note="Embedded Experiences" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+  <xref target="Issue-1144">Discussion</xref>
     <t>Embedded experiences provides a way for a container to display live 
     content from virtually any content host.  Embedded experiences delegates
     to the content host in order to provide its representation of what the
@@ -6724,7 +6707,6 @@ Content-Type: application/embed+json
         </figure>
       </section>
     </section>
-    </x:draft>
   </section>
   </section>
   
@@ -6764,6 +6746,42 @@ Content-Type: application/embed+json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1164">
     <front>
      <title>Variable substitution standardized on EL</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1171'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1171">
+    <front>
+     <title>MessageBundle example missing from Core Gadget spec localization section</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1169'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1169">
+    <front>
+     <title>Add support for additional views</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1167'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+    <front>
+     <title>View Enhancements To Support Opening Of Gadgets and URLs</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1161'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+    <front>
+     <title>Declarative Actions and Selection </title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1166'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1166">
+    <front>
+     <title>Proposal for OpenSearch Gadget Contributions</title>
+    </front>
+   </reference>  
+   <reference anchor='Issue-1144'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+    <front>
+     <title>Embedded Experiences</title>
     </front>
    </reference> 
   </references>
