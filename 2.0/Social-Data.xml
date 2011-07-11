@@ -121,7 +121,7 @@ COMMA          = <US-ASCII comma (44)>
     addressable through top level API calls, such as osapi, RPC, REST
     and Pipelining tags.</t>
    <section title="Activity" anchor="Activity">
-    <x:deprecated note="Please Use Activity Streams">
+    <x:deprecated note="Deprecated in OpenSocial 2.0.  Will be removed in future version; use Activity Streams instead.">
     <t>An OpenSocial Activity represents a short summary or notification of a
     timestamped event, often with pointers for more information.</t>
     <t>Activities are rendered with a title and an optional activity body.  The title and body may be set directly as strings when calling
@@ -311,7 +311,7 @@ COMMA          = <US-ASCII comma (44)>
 
 
    <section title="ActivityEntry" anchor="ActivityEntry">
-    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <!-- <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
     <t>
 	As a person's actions become increasingly distributed, it is
 	important
@@ -321,16 +321,16 @@ COMMA          = <US-ASCII comma (44)>
 	incorporated in order to improve interoperability with other systems
 	that may not be based on OpenSocial. This will provide implementors and
 	developers a wide range of options for incorporating social data within
-	they applications.</t>
+	their applications.</t>
     
     <t>In its simplest form, an activity consists of an actor, a verb,
 	an an object, and a target. It tells the story of a person performing
 	an action on or with an object -- "Geraldine posted a photo to her
 	album" or "John shared a video". </t>
    <t>OpenSocial adds an
-	additional field to the data model, "actionLinks:".
-	Because these are extensions, they are contained in an eclosing
-	"namespace", org.opensocial.</t> 
+	additional field to the data model, "actionLinks".
+	Because these are extensions, they are contained in an enclosing
+	namespace, "openSocial".</t>
    <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -374,9 +374,9 @@ COMMA          = <US-ASCII comma (44)>
       <c>verb</c>
       <c>string</c>
       <c>Identifies the action that the activity describes. An activity SHOULD contain a verb property whose value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in RFC3339. Note that the use of a relative reference other than a simple name is not allowed. If the verb is not specified, or if the value is null, the verb is assumed to be "post".</c>
-      <c>actionLinks:</c>
-      <c><eref target="./Core-Data.xml#Array">Array&lt;</eref><eref target="./Core-Data.xml#Array">Array&gt;</eref></c>
-      <c>An array of arrays associated with this activity. The internal array consists of &lt;String&gt;, &lt;Target URL&gt;, and &lt;HTTP verb&gt;. The URL represents the target web hook endpoint that can be invoked against the URL using the specified HTTP verb. The String represents a hint that MAY be used by the presentation layer to allow interaction with the user, e.g. a button that invokes an POST. The HTTP verb is optional, and if omitted defaults to GET.</c>
+      <c>actionLinks</c>
+      <c>Array&lt;<eref target="./Social-Data.xml#ActionLink">ActionLink</eref>&gt;</c>
+      <c>An "openSocial" namespaced array of actionLinks associated with this Activity.</c>
      </texttable>
 
     A complete ActivityEntry example
@@ -445,7 +445,13 @@ COMMA          = <US-ASCII comma (44)>
     url: "http://example.org/activities-app"
   },
   published: "2011-02-10T15:04:55Z",
-  actionLinks:[{"Create Some Entry","http://someuri/postAction", "POST"}]
+  openSocial: {
+    actionLinks:[{
+      caption: "Add Friend",
+      target: "http://example.org/friends/jane.doe",
+      httpVerb: "POST"
+    }]
+  }
 }</artwork>
     </figure>
     <figure>
@@ -511,7 +517,6 @@ COMMA          = <US-ASCII comma (44)>
   &lt;verb&gt;post&lt;/verb&gt;
 &lt;/activityEntry&gt;</artwork>
     </figure>
-    </x:draft>
     </section>
    <section title="AppData" anchor="AppData">
      <t>OpenSocial defines a data store that applications can use to
@@ -1336,7 +1341,7 @@ COMMA          = <US-ASCII comma (44)>
      person on a different service, to facilitate connecting to people the user
      already knows on different services. If Consumers want to turn these
      accounts into profile URLs, they can use an open-source library like 
-     <xref target="Social-Graph-Node-Mapper" />. 
+     <xref target="Social-Graph-Node-Mapper" />.</t> 
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -1353,10 +1358,40 @@ COMMA          = <US-ASCII comma (44)>
       <c>userId</c>
       <c><eref target="./Core-Data.xml#Object-Id">Object-Id</eref></c>
       <c>A user ID associated with this account.</c>
-     </texttable></t>
+     </texttable>
+   </section>
+   <section title="ActionLink" anchor="ActionLink">
+     <t>An ActionLink encompasses an action that a user may perform against an actionable resource.
+     It defines a caption for the action to perform, a URL to identify the target actionable resource,
+     and the HTTP operation to invoke the resource with.</t>
+     <t>For example, an "Add Friend" button has a caption
+     (namely, "Add Friend") and references the resource that will be invoked when the button is clicked.</t>
+     <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>caption</c>
+      <c>string</c>
+      <c>Represents a hint that MAY be used by the presentation layer to allow interaction with the user, e.g. a button that invokes an POST.</c>
+      <c>target</c>
+      <c>string</c>
+      <c>URL which represents the target web hook endpoint that can be invoked using the specified HTTP verb.</c>
+      <c>httpVerb</c>
+      <c>string</c>
+      <c>Identifies the HTTP operation to perform against the actionable resource.  Should be one of "GET", "PUT", "POST", "DELETE", or other standard HTTP verb.  The HTTP verb is optional, and if omitted defaults to "GET".</c>
+     </texttable>
+         <figure>
+     <preamble>application/json representation:</preamble>
+     <artwork xml:space="preserve">
+{
+  caption: "Add Friend",
+  target: "http://example.org/friends/jane.doe",
+  httpVerb: "POST"
+}</artwork>
+    </figure>
    </section>
    <section title="ActivityObject" anchor="ActivityObject">
-    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <!-- <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
     <t>An object is a thing, real or imaginary, which participates in an
 	activity. It may be the entity performing the activity, or the entity
 	on which the activity was performed. Because Activity Streams are often
@@ -1479,7 +1514,6 @@ COMMA          = <US-ASCII comma (44)>
   
 &lt;/object&gt;</artwork>
     </figure>    
-    </x:draft>
     </section>
    <section title="Address" anchor="Address">
      <t>The components of a physical mailing address. Service
@@ -1782,7 +1816,7 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      </figure>
    </section>
    <section title="MediaLink" anchor="MediaLink">
-    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <!-- <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
     <t>Some types of objects may have an alternative visual representation in the form of an image, video or embedded HTML fragments. A Media Link represents a hyperlink to such resources.</t>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
@@ -1800,6 +1834,9 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <c>width</c>
       <c>integer</c>
       <c>A hint to the consumer about the width, in pixels, of the media resource identified by the url property. A media link MAY contain a width property when the target resource is a visual media item such as an image, video or embeddable HTML page.</c>
+      <c>mediaItemId</c>
+      <c>string</c>
+      <c>Optional.  Provides a mapping from an Activity Streams MediaLink to an OpenSocial <eref target="./Social-Data.xml#MediaItem">MediaItem</eref>.  Identifies the corresponding MediaItem that this MediaLink maps to, if any.  This field is namespaced as an "openSocial" extension.</c>
     </texttable>
     <t>An example MediaLink</t>
     <figure>
@@ -1809,7 +1846,10 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
   "url": "http://www.example.com/johnsalbum/cover.jpg",
   "width": 400,
   "height": 300,
-  "duration": 93
+  "duration": 93,
+  "openSocial": {
+    "mediaItemId": "mediaItem123"
+  }
 }	</artwork>
     </figure>
     <figure>
@@ -1820,9 +1860,11 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
   &lt;height&gt;300&lt;/height&gt;
   &lt;url&gt;http://www.example.com/johnsalbum/cover.jpg&lt;/url&gt;
   &lt;width&gt;400&lt;/width&gt;
+  &lt;openSocial&gt;
+    &lt;mediaItemId&gt;mediaItem123&lt;/mediaItemId&gt;
+  &lt;/openSocial&gt;
 &lt;/image&gt;</artwork>
     </figure>
-    </x:draft>
     </section> 
     
     

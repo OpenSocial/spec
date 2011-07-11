@@ -810,15 +810,14 @@ Content-Type: application/json
     </section>
    </section>
    <section title="Activity Streams" anchor="ActivityStreams-Service">
-    <x:draft note="Activity Streams support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <!-- <x:draft note="Activity Streams support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
     <t>Containers MUST support the Activity Streams Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Activity Streams Service:</t>
     <artwork type="abnf">
 <eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/activitystreams"
 <eref target="./Core-API-Server.xml#RPC-Method">Service-Name</eref> = "activitystreams"
 </artwork>
-    <section title="Get" anchor="ActivityStreams-Service-Get">
-     <t>The Get method supports multiple queries, including requests for one or more Activity Stream entries and what fields are available.</t>
      <section title="Get Activity Streams" anchor="ActivityStreams-Service-GetActivityStreams">
+       <t>The Get method supports multiple queries, including requests for one or more Activity Stream entries and what fields are available.</t>
        <t>Containers MUST support requests to the Activity Stream service.  Requests and responses for retrieving Activity Stream entries use the following values:</t>
       <artwork type="abnf"
          xml:space="preserve">
@@ -859,7 +858,6 @@ http://api.example.org/rest/activitystreams/john.doe/@self/@app/object1,object2<
 		<artwork type="example">
 http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=object1,object2</artwork>
       </section>
-     </section>
      <section title="Retrieve a list of supported Activity Stream fields" anchor="ActivityStream-Service-GetSupportedFields">
       <t>Containers MAY support REST requests for supported Activity Stream fields. Requests and responses for retrieving supported Activity Stream fields use the following values:</t>
      <artwork type="abnf"
@@ -939,7 +937,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
 <eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
-<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#ActivityEntry">ActivityEntry</eref>
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
 <eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "activitystreams.delete"
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteActivityEntries-Request-Parameters</x:ref>)
@@ -955,13 +953,15 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
           <c>userId</c>
           <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
           <c>User ID(s) of the person the ActivityEntry is associated with. Defaults to "@me", indicating the currently authenticated user.</c>
-          <c>activityEntry</c>
-          <c><eref target="Social-Data.xml#ActivityEntry">ActivityEntry</eref></c>
-          <c>The ActivityEntry to delete. Only the 'id' field of the ActivityEntry is required.</c>
+          <c>activityId</c>
+          <c>string</c>
+          <c>Identifies the ActivityEntry to delete.</c>
         </texttable>
+        <t>Example DELETE request with parameters:</t>
+		<artwork type="example">
+http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=activity123</artwork>
       </section>
     </section>
-    </x:draft>
    </section>
    <section title="AppData"
             anchor="AppData-Service">
