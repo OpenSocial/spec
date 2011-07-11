@@ -1145,8 +1145,6 @@ My best friend is:&lt;br/&gt;
     </figure></t>
    </section>
   </section>
-<x:draft note="Issue 1179 - Remove non-tags section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1179">
-</x:draft>
   <section title="Interaction with Proxied Content">
    <t>The combination of tags, templates, and proxied content leads to a number
    of combinations for developer to use.</t>
@@ -1227,6 +1225,15 @@ High score for John Doe is 100
   </section>  
  </middle>
  <back>
+ 
+ <references title="Discussion">
+    <reference anchor='Issue-1179'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1179">
+    <front>
+     <title>Remove "Non-Tags" section</title>
+    </front>
+   </reference>
+ </references>
   <references>
    <reference anchor='RFC2119'>
     <front>
