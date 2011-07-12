@@ -285,6 +285,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
         Core API Server specification as well as the OAuth information
         documented in the Core Gadget Specfication. The reader should also
         be familiar with the OAuth specification (1.0A or 2.0).</t>
+     </x:incubating>
      <t>The parameters described in this section are set by the gadget running in 
         the Core Container and are passed
         to the Core Gadget Server so that it will appropriately process the request.</t>
@@ -300,11 +301,19 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
         similar characteristics, some of the documented request parameters 
         will be needed.</t>
      <t>Requests to arbitrary URLs use the following parameters:</t>
+     <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+     <t>In the following table, 'alias' is the element that has been added in support of 1178.</t>
+     </x:draft>
      <texttable align="left">
       <ttcol>Name</ttcol>
       <ttcol>Type</ttcol>
       <ttcol>Description</ttcol>
-      <c>authz</c>
+       <c>alias</c>
+       <c>String</c>
+       <c>The external service name, defined by the application developer, as part of the module preferences. This
+             will indicated to the container which external service tag to use.
+       </c>
+       <c>authz</c>
       <c>String</c>
       <c>Indicates the authorization method to use when sending data to the remote server.  
          Must be one of "none", "signed", "oauth" or "oauth2". Defaults to "none".</c>
@@ -369,7 +378,6 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
       <c><eref target="Core-Data.xml#Boolean">Boolean</eref></c>
       <c>Indicates if the current viewer's ID should be included in the request signature. Defaults to "true".</c>
      </texttable>
-     </x:incubating>
    </section>
    <section title="HTTP-Response-Payload">
      <t>When a container makes an HTTP request on behalf of a gadget (e.g. osapi.http.get(), or &lt;os:HttpRequest&gt;) the response will contain the following properties:</t>

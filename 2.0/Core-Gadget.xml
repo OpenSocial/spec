@@ -29,7 +29,7 @@
   <section title="Notation and Conventions">
    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in 
+   document are to be interpreted as described in
    <xref target="RFC2119">RFC2119</xref>.</t>
    <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
   </section>
@@ -46,8 +46,8 @@
    reusable component, or a full-blown application, possibly utilizing or
    communicating with other gadgets.</t>
    <t>This document describes the gadget XML syntax and how it is processed by
-   a compliant gadget server. In addition, the document describes the core 
-   JavaScript APIs that must be made available to every gadget as it is 
+   a compliant gadget server. In addition, the document describes the core
+   JavaScript APIs that must be made available to every gadget as it is
    rendered. In addition to the core JavaScript APIs, gadget servers SHOULD
    support the recommended features listed at the end of this document.</t>
   </section>
@@ -85,11 +85,11 @@
     @specificationVersion attribute, the Container MUST display an error
     message to Users, and SHOULD provide the specification versions that it
     does support to Developers.</t>
-    
+
     <t>
-    <xref target="GadgetXmlSchema">Gadget XML Schema</xref> and the 
-    <xref target="MessageBundleSchema">Message Bundle Schema</xref> are provided as reference. 
-    These XSD schemas represent the standard elements and attributes defined in the 
+    <xref target="GadgetXmlSchema">Gadget XML Schema</xref> and the
+    <xref target="MessageBundleSchema">Message Bundle Schema</xref> are provided as reference.
+    These XSD schemas represent the standard elements and attributes defined in the
     specification body.  Containers are allowed to support additional elements and attributes.
     <xref target="Issue-1142">Discussion</xref>
     </t>
@@ -108,7 +108,7 @@
     Container, but if they do so they MUST provide feedback to the Developer
     explaining the requirement.</t>
     <t>Containers MUST perform variable substitution according to the rules
-    defined in 
+    defined in
     <xref target="VariableSubstitution">Variable Substitution</xref>.</t>
     <t>Containers MUST interpret any relative URLs found in XML attributes or
     values as relative to the gadget spec's URL. Containers MAY refuse to use
@@ -143,12 +143,12 @@
      </t>
      <t>Containers must also be able to process <xref target="DataPipelining">Data Pipelining</xref> and <xref target="OpenSocial-Templating">Templating</xref> elements in the gadget XML spec.</t>
      <section title="Gadget Doctype" anchor="Doctype">
-       <t>For Gadgets using an OpenSocial specification version 2.0 or greater, Containers MUST render those Gadgets in HTML5 by default.  If a 
-       Container supports rendering Gadgets with a specification version less than 2.0, those Gadgets 
-       SHOULD continue to be rendered in browser quirks mode. Refer to the 
-       <xref target="Versioning">Versioning</xref> rules for determining Gadget specification version.  Containers MAY support ModulePrefs/@doctype as 
-       a method for allowing Gadgets to override the default behavior.  Containers that implement this SHOULD override the default doctype when 
-       encountering ModulePrefs/@doctype.  Developers should recognize it may not be possible to honor this attribute in all cases such as when 
+       <t>For Gadgets using an OpenSocial specification version 2.0 or greater, Containers MUST render those Gadgets in HTML5 by default.  If a
+       Container supports rendering Gadgets with a specification version less than 2.0, those Gadgets
+       SHOULD continue to be rendered in browser quirks mode. Refer to the
+       <xref target="Versioning">Versioning</xref> rules for determining Gadget specification version.  Containers MAY support ModulePrefs/@doctype as
+       a method for allowing Gadgets to override the default behavior.  Containers that implement this SHOULD override the default doctype when
+       encountering ModulePrefs/@doctype.  Developers should recognize it may not be possible to honor this attribute in all cases such as when
        multiple Gadgets are inlined on a single page.  <xref target="Issue-1139">Discussion</xref></t>
      </section>
    </section>
@@ -159,14 +159,14 @@
    <section title="Elements and Attributes"
             anchor="ElementsAndAttributes">
     <t>The following XML elements and attributes MUST be supported by the
-    Container as mandated by the 
+    Container as mandated by the
     <xref target="GadgetXmlSchema">Gadget XML Schema</xref>.
     Additional elements and attributes MAY be supported, but these elements are
     beyond the scope of this document.</t>
-    
-<t>A Container MAY support a simplified XML schema.  This format changes some core elements to optional 
+
+<t>A Container MAY support a simplified XML schema.  This format changes some core elements to optional
 and uses the canonical format for templates and data pipeline blocks. <xref target="Issue-1162">Discussion</xref>  </t>
-    
+
    <section title="Module"
             anchor="Module">
     <t>The root node of a gadget XML specification is the Module element.</t>
@@ -200,7 +200,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       Directory.</t>
       <t hangText="@screenshot">Optional. A string that gives the URL of a gadget screenshot. This must be an image on a public web site that is not blocked by robots.txt. PNG is the preferred format, though GIF and JPG are also acceptable. Gadget screenshots should be 280 pixels wide. The height of the screenshot should be the "natural" height of the gadget when it's in use. Containers SHOULD display this image on Directory pages to provide a preview of the gadget to Users.</t>
       <t hangText="@thumbnail">Optional. A string that gives the URL of a gadget thumbnail. This must be an image on a public web site that is not blocked by robots.txt. PNG is the preferred format, though GIF and JPG are also acceptable. Gadget thumbnails should be 120x60 pixels. This
-      SHOULD be smaller than @screenshot and larger than any 
+      SHOULD be smaller than @screenshot and larger than any
       <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref>elements.</t>
       <t hangText="@height">The preferred default height of the gadget, in
       pixels. Containers SHOULD use this value to set an appropriate height for
@@ -208,8 +208,8 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <t hangText="@width">The preferred default width of he gadget, in pixels.
       Containers SHOULD use this value to set an appropriate width for the
       gadget when it is first rendered.</t>
-      <t hangText="@doctype">Optional.  
-      A string that identifies the preferred rendering method.  When set to "quirksmode", the Gadget SHOULD be rendered in browser quirks mode.  
+      <t hangText="@doctype">Optional.
+      A string that identifies the preferred rendering method.  When set to "quirksmode", the Gadget SHOULD be rendered in browser quirks mode.
       This attribute can later be extended to support other DOCTYPEs. <xref target="Issue-1139">Discussion</xref></t>
       <t hangText="text()">This tag has child elements. Containers SHOULD NOT
       interpret child text nodes.</t>
@@ -224,7 +224,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        <xref target="Versioning">Versioning</xref>. If absent, the default value is
        "1.0".</t>
        <t hangText="@views">A comma-separated list of Views to load this feature
-       for.  This parameter is optional. Containers SHOULD only load the feature 
+       for.  This parameter is optional. Containers SHOULD only load the feature
        when an appropriate view is being rendered. <xref target="Issue-1133">Discussion</xref></t>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT
        interpret child text nodes.</t>
@@ -246,7 +246,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    Feature, if by doing so they fully comply with the Feature's
    specification.</t>
 
-   
+
    <list style="hanging">
     <t hangText="Feature Version Conflicts" anchor="FeatureVersionConflicts">
       <t>Containers MAY refuse to support Features or specific versions of Features
@@ -267,17 +267,17 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
 		   false from
 		   <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref>
 		   for the features that have been removed.  Containers SHOULD include the
-		   largest set of Optional Features that does not produce conflicts.</t>     
+		   largest set of Optional Features that does not produce conflicts.</t>
     </t>
-    <t>It is possible for there to be Feature version conflicts when two valid 
-       Feature dependencies exist for the same Feature.  This situation can occur 
+    <t>It is possible for there to be Feature version conflicts when two valid
+       Feature dependencies exist for the same Feature.  This situation can occur
        when the same Feature is declared at a global scope (no @views specified)
        and at a view scope (@views specified) but with differing @version values.
        For example, if we are rendering a Gadget's "default" view and with
-       &lt;Require feature="myfeature" version="1"&gt; and 
+       &lt;Require feature="myfeature" version="1"&gt; and
        &lt;Require feature="myfeature" version="2" views="default"&gt; declared.
        In these cases, Containers SHOULD use the Feature version from the Feature
-       declaration that explicitly matches the current View (See 
+       declaration that explicitly matches the current View (See
        /ModulePrefs/Required/@views and /ModulePrefs/Optional/@views) over other
        Feature declarations. Developers can easily correct this conflict by always
        using the @views attribute for Features in Gadgets that use mixed Feature
@@ -287,7 +287,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
 
    <t>Containers MUST display an error message for any feature that is
    requested by the Gadget as "required" but is not supported by the container.</t>
-   <t>Containers MUST only return true for 
+   <t>Containers MUST only return true for
    <xref target="gadgets.util.hasFeature">gadgets.util.hasFeature</xref> if they
    actually support the given feature name at the version specified in the
    Gadget XML. Containers MAY only return true for this function if the feature
@@ -347,7 +347,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
         <c>1.0.0</c>
          <c>
          <xref target="gadgets.window.adjustHeight">
-         gadgets.window.adjustHeight</xref>and 
+         gadgets.window.adjustHeight</xref>and
          <xref target="gadgets.window.getViewportDimensions">
          gadgets.window.getViewportDimensions</xref></c>
          <c>settitle</c>
@@ -370,20 +370,20 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    </list>
       <section title="/ModulePrefs/Require/Param and /ModulePrefs/Optional/Param">
        <t>Provides configuration parameters for a Feature. Containers MUST
-       populate these values in 
+       populate these values in
        <xref target="gadgets.util.getFeatureParameters">
        gadgets.util.getFeatureParameters</xref>, with @name representing the
-       key, and the child text node representing the value. Containers SHOULD 
-       select configuration parameters from the Feature that explicitly matches 
-       the current View (See /ModulePrefs/Required/@views and 
+       key, and the child text node representing the value. Containers SHOULD
+       select configuration parameters from the Feature that explicitly matches
+       the current View (See /ModulePrefs/Required/@views and
        /ModulePrefs/Optional/@views) over other Feature declarations. <xref target="Issue-1133">Discussion</xref></t>
        <list style="hanging">
         <t hangText="@name">The name of the parameter. Containers MUST use this
-        as the key for inputs to 
+        as the key for inputs to
         <xref target="gadgets.util.getFeatureParameters">
         gadgets.util.getFeatureParameters</xref>.</t>
         <t hangText="text()">The value for the parameter. Containers MUST use
-        this as the value returned when a matching key is found in 
+        this as the value returned when a matching key is found in
         <xref target="gadgets.util.getFeatureParameters">
         gadgets.util.getFeatureParameters</xref>.</t>
        </list>
@@ -395,7 +395,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <list style="hanging">
        <t hangText="@href">The URL of the request to prefetch.</t>
        <t hangText="@authz">The authentication type to use for making this
-       request. Valid values are the same as for 
+       request. Valid values are the same as for
        <xref target="gadgets.io.AuthorizationType">
        gadgets.io.AuthorizationType</xref>, though the names are converted to
        lower case to appear more natural in XML.</t>
@@ -406,25 +406,25 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        endpoints when using an authentication type that requires it. Containers
        MUST pass the viewer id when this value is "true" (default).</t>
        <t hangText="@views">A comma-separated list of Views to pre-fetch this
-       request for.  This parameter is optional. <xref target="Issue-1133">Discussion</xref> Containers SHOULD only perform 
+       request for.  This parameter is optional. <xref target="Issue-1133">Discussion</xref> Containers SHOULD only perform
        preloading when an appropriate view is being rendered.</t>
        <t hangText="text()">Not used at this time.</t>
       </list>
    <t>When honoring the preloading mechanism,
    Containers MUST convert the results of the prefetching operation into a
-   temporary object that is stored and accessed at runtime via 
+   temporary object that is stored and accessed at runtime via
    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.
    Containers MUST only consider a makeRequest call to map to a Preload when
-   all of the following conditions are met: 
-   <t>/ModulePrefs/Preload/@href matches the "url" parameter of 
+   all of the following conditions are met:
+   <t>/ModulePrefs/Preload/@href matches the "url" parameter of
    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.</t>
-   <t>/ModulePrefs/Preload/@authz matches one of the valid parameters for 
+   <t>/ModulePrefs/Preload/@authz matches one of the valid parameters for
    <xref target="gadgets.io.AuthorizationType">
    gadgets.io.AuthorizationType</xref>, converted to lower case.</t>
-   <t>/ModulePrefs/Preload/@sign_owner matches the value passed for 
+   <t>/ModulePrefs/Preload/@sign_owner matches the value passed for
    <xref target="gadgets.io.RequestParameters.SIGN_OWNER">
    gadgets.io.RequestParameters.SIGN_OWNER</xref></t>
-   <t>/ModulePrefs/Preload/@sign_viewer matches the value passed for 
+   <t>/ModulePrefs/Preload/@sign_viewer matches the value passed for
    <xref target="gadgets.io.RequestParameters.SIGN_VIEWER">
    gadgets.io.RequestParameters.SIGN_VIEWER</xref></t>
    <t>/ModulePrefs/Preload/@views matches the current view (the views attribute
@@ -432,7 +432,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
      </section>
      <section title="/ModulePrefs/Icon"
               anchor="Icon">
-      <t>Deprecated. Use 
+      <t>Deprecated. Use
       <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref>instead.</t>
       <t>A link or embedded image that serves as an icon for the gadget.</t>
       <list style="hanging">
@@ -452,7 +452,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
      </section>
      <section title="/ModulePrefs/Locale" anchor="Locale">
       <t>Provides localization information. Containers MUST honor localization
-      rules as specified in 
+      rules as specified in
       <xref target="Localization">Localization</xref>. Each Locale tag
       represents localization information for a single locale.</t>
       <list style="hanging">
@@ -465,12 +465,12 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        value "all", which Containers MUST interpret as applying to all
        countries unless a more specific match is found.</t>
        <t hangText="@messages">A URL pointing to an XML document that contains
-       nested 
-       <xref target="msg">/ModulePrefs/Locale/msg</xref>elements.  
-	   The XML document should follow the format shown in 
-	   <xref target="MessageBundles">MessageBundles</xref>. 
-	   Containers MUST honor 
-       <xref target="Retrieval">Retrieval</xref>and 
+       nested
+       <xref target="msg">/ModulePrefs/Locale/msg</xref>elements.
+	   The XML document should follow the format shown in
+	   <xref target="MessageBundles">MessageBundles</xref>.
+	   Containers MUST honor
+       <xref target="Retrieval">Retrieval</xref>and
        <xref target="Parsing">Parsing</xref>rules for these files. Containers
        MUST treat all child elements of the root XML element in the document as
        though they are child nodes of /ModulePrefs/Locale</t>
@@ -480,7 +480,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        rendering direction for gadget content in this locale. This value
        controls language direction variables in <xref target="Localization">Localization</xref>.</t>
        <t hangText="@views">A comma-separated list of Views for this
-       locale.  This parameter is optional.  Containers SHOULD only select 
+       locale.  This parameter is optional.  Containers SHOULD only select
        this locale when an appropriate view is being rendered. <xref target="Issue-1133">Discussion</xref></t>
        <t hangText="text()">This tag has child elements. Containers SHOULD NOT
        interpret child text nodes.</t>
@@ -491,21 +491,21 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        text().</t>
        <list style="hanging">
         <t hangText="@name">The name of the localized message. The Container
-        MUST use this as the key for the JavaScript API method 
+        MUST use this as the key for the JavaScript API method
         <xref target="gadgets.Prefs.getMsg">gadgets.Prefs.getMsg</xref>and for
-        MSG substitutions (see 
+        MSG substitutions (see
         <xref target="Localization">Localization</xref>).</t>
         <t hangText="text()">The value of the message. Containers MUST
-        substitute this value for @name according to 
+        substitute this value for @name according to
         <xref target="Localization">Localization</xref>rules, and provide this
-        value for any key matching @name in 
+        value for any key matching @name in
         <xref target="gadgets.Prefs.getMsg">gadgets.Prefs.getMsg</xref>.</t>
        </list>
       </section>
      </section>
      <section title="/ModulePrefs/Link"
               anchor="Link">
-   <t>Gadgets MAY specify any number of 
+   <t>Gadgets MAY specify any number of
    <xref target="Link">/ModulePrefs/Link</xref>elements, which the Container
    SHOULD process according to rules specific to the value of
    /ModulePrefs/Link/@rel. Containers MAY support additional links, but they
@@ -515,8 +515,8 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    "events".</t>
       <list style="hanging">
        <t hangText="@rel">The relationship between this link and the document.
-       Valid values are specified in 
-       <xref target="LifeCycleEvents">Life Cycle Events</xref> and 
+       Valid values are specified in
+       <xref target="LifeCycleEvents">Life Cycle Events</xref> and
        <xref target="Icons">Icons</xref>. Containers MAY support additional
        values, but they MUST be namespaced to avoid collisions.</t>
        <t hangText="@href">The URL of the link.</t>
@@ -526,7 +526,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
             anchor="Icons">
     <t>When the value for /ModulePrefs/Link/@rel is "icon", Containers
     SHOULD treat the link as a reference to an image that represents an
-    application icon for the Gadget. This is preferred over using 
+    application icon for the Gadget. This is preferred over using
     <xref target="Icon">/ModulePrefs/Icon</xref>, which is deprecated.</t>
    </section>
    <section title="Life Cycle Events"
@@ -572,14 +572,14 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <c>removeapp</c>
       <c>Event used to indicate the user has removed the application. </c>
       <c>app</c>
-      <c>This event indicates that an action has been performed on the app. Note that this action may not have been caused by an action performed by the end user of an application. 
+      <c>This event indicates that an action has been performed on the app. Note that this action may not have been caused by an action performed by the end user of an application.
       For example, it is permissible for an application directory or market place to send these events. In the case of an app event an action attribute MUST be included and valid values
       are "enabled", "disabled", "approved", "submitted", "rejected", "new" and "banned". </c>
      </texttable></t>
    </x:draft>
    </section>
      </section>
-	 
+
 
      <section title="/ModulePrefs/OAuth"
               anchor="OAuthElement">
@@ -593,13 +593,13 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
         <t hangText="@name">The name of the service, used for referencing OAuth
         services at runtime. This parameter is optional, and if unspecified
         defaults to an empty string. Gadget developers specify which OAuth
-        service they wish to use by passing the service name as a parameter to 
+        service they wish to use by passing the service name as a parameter to
         <xref target="gadgets.io.makeRequest">
         gadgets.io.makeRequest</xref>.</t>
         <t hangText="text()">Not used at this time.</t>
        </list>
        <section title="/ModulePrefs/OAuth/Service/Request">
-        <t>Represents the OAuth request token URL. See 
+        <t>Represents the OAuth request token URL. See
         <xref target="OAuth">OAuth</xref>for details.</t>
         <list style="hanging">
          <t hangText="@url">The URL for the endpoint.</t>
@@ -611,14 +611,14 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
          request to the service where the OAuth parameters may be passed.
          Developers MAY use this value to specify the location of OAuth-related
          parameters. The possible values are "uri-query", "auth-header", and
-         "post-body", corresponding to the options described in 
+         "post-body", corresponding to the options described in
          <xref target="OAuth-Core">Section 5.2 of the OAuth
          specification</xref>. The default value is "auth-header".</t>
          <t hangText="text()">Not used at this time.</t>
         </list>
        </section>
        <section title="/ModulePrefs/OAuth/Service/Access">
-        <t>Represents the OAuth access token URLs. See 
+        <t>Represents the OAuth access token URLs. See
         <xref target="OAuth">OAuth</xref>for details.</t>
         <list style="hanging">
          <t hangText="@url">The URL for the endpoint.</t>
@@ -630,7 +630,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
          request to the service where the OAuth parameters may be passed.
          Developers MAY use this value to specify the location of OAuth-related
          parameters. The possible values are "uri-query", "auth-header", and
-         "post-body", corresponding to the options described in 
+         "post-body", corresponding to the options described in
          <xref target="OAuth-Core">Section 5.2 of the OAuth
          specification</xref>. The default value is "auth-header".</t>
          <t hangText="text()">Not used at this time.</t>
@@ -638,7 +638,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        </section>
        <section title="/ModulePrefs/OAuth/Service/Authorization"
                 anchor="Authorization">
-        <t>The OAuth authorization URL. For details, see 
+        <t>The OAuth authorization URL. For details, see
         <xref target="OAuth-Core">Section 6.2 of OAuth
         specification</xref>.</t>
        </section>
@@ -651,7 +651,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
      <list style="hanging">
       <t hangText="@name">The name of the preference. Containers MUST provide
       the current value of the preference when this key is passed to the getters found in
-      <xref target="gadgets.Prefs">gadgets.Prefs</xref>. This is also the key used when performing ${Prefs} 
+      <xref target="gadgets.Prefs">gadgets.Prefs</xref>. This is also the key used when performing ${Prefs}
 	  variable substitutions (see
       <xref target="VariableSubstitution">Variable Substitution</xref>).</t>
       <t hangText="@datatype">The data type for this preference. Valid values
@@ -659,11 +659,11 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       is "string".</t>
       <t hangText="@display_name">The name of the preference for use when
       rendering an editing interface for prefs. Developers SHOULD use this
-      value to provide a localized name for the preference as described in 
+      value to provide a localized name for the preference as described in
       <xref target="Localization">Localization</xref>. Containers SHOULD use
       this value to render any editing interfaces for Users.</t>
       <t hangText="@default_value">A default value for this preference.
-      Containers MUST provide this value for any calls to the getters in 
+      Containers MUST provide this value for any calls to the getters in
       <xref target="gadgets.Prefs">gadgets.Prefs</xref> whenever the key matches @name.</t>
       <t hangText="@required">Whether or not a valid value needs to be set for
       this preference in order for the gadget to function correctly. Valid
@@ -676,15 +676,15 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    <t>Containers MUST interpret /UserPref elements by making each preference
    available to the Gadget through the <xref target="gadgets.Prefs">gadgets.Prefs</xref> library.
    Containers MUST treat /UserPref/@name as the keys for indexing into
-   stored preference values when invoking the getters of 
+   stored preference values when invoking the getters of
    <xref target="gadgets.Prefs">gadgets.Prefs</xref>.</t>
-   <t>Containers MUST perform 
+   <t>Containers MUST perform
    <xref target="VariableSubstitution">Variable Substitution</xref> for user
    preferences by treating /UserPref/@name as the key in the token and the
    stored value for the preference as the replacement value.</t>
    <t>Containers MUST provide /UserPref/@default_value as the value for the
    preference when the User or Gadget has not set a value explicitly.</t>
-   <t>Containers SHOULD support the following datatypes: 
+   <t>Containers SHOULD support the following datatypes:
    <list>
     <list style="hanging">
      <t hangText="string">A string accessed by gadgets.Prefs.getString. Default
@@ -706,7 +706,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <t>A single value that serves as a constraint on User Preferences when
       /UserPref/@datatype is "enum". Containers SHOULD use EnumValue elements
       to present Users with a menu when rendering a preferences interface. For
-      details on handling enum preferences, see 
+      details on handling enum preferences, see
       <xref target="UserPref">User Preferences</xref>.</t>
       <list style="hanging">
        <t hangText="@value">The value for this enumeration element.</t>
@@ -718,22 +718,66 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       </list>
      </section>
     </section>
-    
+
     <section title="/Data"
              anchor="DataElement">
-   
-   <t>Contains data pipeline tags defined for the gadget.  
+
+   <t>Contains data pipeline tags defined for the gadget.
    Data Pipeline results defined in this block are registered globally for all views by default.
-   Individual Data pipeline tags may be scoped to a particular view(s) by adding the 
+   Individual Data pipeline tags may be scoped to a particular view(s) by adding the
    @view attribute to the tag.  Adding the @view attribute to a data pipeline tag has the same
    effect as if the data pipeline tags were defined within a data script nested in a Content block.
    </t>
    <t>
-   See <xref target="DataPipelining">Data Pipelining</xref> for more information on data pipeline tags. <xref target="Issue-1162">Discussion</xref>  
+   See <xref target="DataPipelining">Data Pipelining</xref> for more information on data pipeline tags. <xref target="Issue-1162">Discussion</xref>
    </t>
-   
+
     </section>
-    
+
+    <section title="/ExternalServices" anchor="ExternalServices">
+        <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+            <t>Currently, when making a remote request, either through the OSAPI or makeRequest, the full URL of the remote
+            service that is being invoked must be specified. However, often, there are multiple service endpoints that
+            use the same API. Consider the following examples. A large enterprise may have a backend system, e.g.
+            SharePoint, or a cloud system, e.g. Salesforce, whose information they would like to make available to
+            application developers. These developers may be internal to the enterprise, or third party application
+            providers.</t>
+
+            <t>In addition, it's not uncommon to have multiple instances of the backend service that can be used, e.g.
+            development, QA, Production. Internal developers should not have to change the gadget definition when moving
+            between these environments. Further, third party vendors need a way to identify a particular service in the
+            gadget XML and then allow for a "late binding" to the actual endpoint that realizes that service. The
+            "Alias" request parameter may be used to satisfy these requirements.</t>
+
+            <t>Configuring an "Alias" works in a manner similar to configuring an OAuth service. That is, in OAuth, there
+            is configuration within the gadget XML to identify which request set of endpoints to use to get the access
+            tokens etc, but the registration of the consumer secret is provided to the container outside of the gadget
+            XML. In the case of "Alias", there is configuration within the gadget XML to name the service and specify
+            which "service tag" the container should use. </t>
+
+            <t>It is possible for the same service tag to be registered for multiple external service endpoints within
+                the same container. For example, there could be multiple SharePoint instances even though the
+                application has one alias. Determination of the proper external service endpoint is at the discretion of
+                the container and various schemes may be used. For example, the container may prompt the user at the
+                time of gadget installation to select which external service endpoint to use.
+            </t>
+
+            <t>One of the primary motivations for Alias is to make it easy for OpenSocial containers to expose legacy
+            systems endpoints to application providers. Therefore, its expected that a common set of service tags will
+            be defined and maintained publicly. One such example is maintained by the OpenSocial community and is
+            available on the wiki at http://docs.opensocial.org/display/OSF/OpenSocial+External+Services+Tag+Registry.</t>
+
+             <section title="/ExternalServices/ServiceTag">
+                 <t>The unique identifier of the API to the external service, e.g. opensocial:service://microsoft.com/sharepoint/api?version=1.</t>
+                 <list style="hanging">
+                    <t hangText="@alias">The name to be used in the "alias" request parameters. The container will use the name to look up the proper service tag.</t>
+                    <t hangText="text()">The tag that identifies the API to the external service.</t>
+                 </list>
+             </section>
+        </x:draft>
+    </section>
+
+
     <section title="/Content"
              anchor="ContentElement">
      <t>Contains the run time portion of the gadget.</t>
@@ -742,10 +786,10 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       element. Valid values are "html" and "url". Containers MUST interpret the
       body of this element according to the specific processing rules for each
       type.
-      <t>When /Content/@type is "html", Containers MUST perform 
+      <t>When /Content/@type is "html", Containers MUST perform
    <xref target="VariableSubstitution">Variable Substitution</xref> on the final
    assembled content section.</t>
-      
+
       <t>When /Content/@type is "url", Containers MUST display a direct view of
          the value for /Content/@href as specified in the
       <xref target="ContentRedirect">Content Redirect</xref> section. <xref target="Issue-1173">Discussion</xref>
@@ -759,7 +803,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <xref target="ContentRedirect">Content Redirect</xref> section.</t>
       <t>If @type is "html", the Container MUST
       <xref target="ProxiedContent">proxy</xref> the current content section. <xref target="Issue-1173">Discussion</xref></t>
-      
+
       </t>
       <t hangText="@preferred_height">The suggested default height, in pixels,
       to use when rendering this gadget. Containers SHOULD use this value as
@@ -813,7 +857,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     &lt;Param name="minify-html"&gt;true&lt;/Param&gt;
 &lt;/Optional&gt;
 </artwork>
-     </figure>The parameters are defined as follows: 
+     </figure>The parameters are defined as follows:
      <list type="symbols">
       <t>expires - The duration in seconds to force as minimum HTTP cache time
       for content fetched through the proxy via a rewritten URL. Default
@@ -840,7 +884,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
      <t>Note that the special use of "*" to denote all URLs should not be
      interpreted as support for GLOB or RegEx matching on strings.</t>
      <t>Containers are free to perform additional optimizations when rewriting
-     links including but not limited to: 
+     links including but not limited to:
      <list type="symbols">
       <t>Extract @import directives from style tags and convert them into link
       tags in the head tag of the containing HTML content.</t>
@@ -889,9 +933,9 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    content for the active view is to be proxied. This is done by checking for
    the presence of a /Content/@href attribute.</t>
    <t>If the attribute is present, the container MUST issue an HTTP request to
-   the URI specified by the href attribute following the rules defined in 
+   the URI specified by the href attribute following the rules defined in
    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>.</t>
-   <t>Attributes on the Content element map to makeRequest as follows: 
+   <t>Attributes on the Content element map to makeRequest as follows:
    <list style="symbols">
     <t>authz: gadgets.io.AuthorizationType (values are canonicalized by
     converting to lower case. Default value is 'none')</t>
@@ -904,10 +948,10 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     <t>refresh_interval: gadgets.io.RequestParameters.REFRESH_INTERVAL</t>
     <t>sign_owner: gadgets.io.RequestParameters.SIGN_OWNER (default 'true')</t>
     <t>sign_viewer: gadgets.io.RequestParameters.SIGN_VIEWER (default 'true')</t>
-   </list></t>   
+   </list></t>
    <t>Note that these attributes also apply to Preload elements.</t>
    <t>The container MUST also add the following parameters to the URI query
-   string: 
+   string:
    <list style="symbols">
     <t>lang: The language of the user viewing the page as specified in Section
     3 i under Process in this document.</t>
@@ -923,7 +967,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    <t>By default, the request is sent to the remote site MUST be sent to the
    remote site as an HTTP GET. When the Content section includes Data
    Pipelining elements, the container MUST send the data to the request URI
-   using an HTTP POST. The structure of this data will match the 
+   using an HTTP POST. The structure of this data will match the
    <eref target="./Core-API-Server.xml#RPC">JSON-RPC format</eref>. For more information on Data Pipelining and Proxied Content, see <xref target="DataPipelining-ProxiedContent"/></t>
    <section title="Processing Results">
     <t>If the response to the proxied request returns a successful HTTP status
@@ -941,11 +985,11 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    </section>
    <section title="Caching">
     <t>Containers SHOULD cache the results of the HTTP request following the
-    recommendations of section 13 of 
+    recommendations of section 13 of
     <xref target="RFC2616">RFC 2616</xref>. If a container does support caching
     of data, it MUST also support overriding HTTP caching by using the value
     specified for refresh_interval.</t>
-    <t>Caches SHOULD be keyed using the following: 
+    <t>Caches SHOULD be keyed using the following:
     <list style="symbols">
      <t>The URI of the proxied request.</t>
      <t>The opensocial owner id, if sign_owner is set to true and requests are
@@ -961,12 +1005,12 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
      <t>The container MUST normalize content bodies in a way that preserves
      semantic meaning in the resulting HTML output. Specifically, containers
      MUST preserve the structure of the document for the context the gadget
-     will be rendered in as follows: 
+     will be rendered in as follows:
      <list style="symbols">
       <t>If the document is a complete HTML document, including opening and
       closing html tags, the container MUST retain the semantic meaning of
       document type definition declarations as well as the relative position of
-      elements in the document. 
+      elements in the document.
       <list style="symbols">
        <t>A container MAY choose to move elements from the head of a document
        and into the body (or vice versa), but the end result MUST behave the
@@ -985,7 +1029,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
   </section>
   <section title="Content Redirect"
            anchor="ContentRedirect">
-   
+
    <t>When /Content/@type is "url", Containers MUST display a direct view of
    the value for /Content/@href (for a web context, this SHOULD be an HTML
    iframe). The Container MUST append the following query string parameters to the URL:
@@ -1005,7 +1049,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <xref target="SignedFetch">Signed Fetch</xref>
       section of this specification. <xref target="Issue-1173">Discussion</xref>
    </t>
-   
+
   </section>
   <section title="Versioning"
            anchor="Versioning">
@@ -1093,11 +1137,11 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
   </section>
   <section title="Variable Substitution"
            anchor="VariableSubstitution">
-		   
+
 
    <t>Variables may be substituted into a gadget by evaluating Expression Language (EL)
-   statements.  EL statements consist of a dollar sign and curly braces 
-   surrounding a statement.  
+   statements.  EL statements consist of a dollar sign and curly braces
+   surrounding a statement.
 	  <figure>
      <preamble>Example: EL statement</preamble>
      <artwork xml:space="preserve">
@@ -1105,13 +1149,13 @@ One plus one is equal to ${1+1}
 	 </artwork>
     </figure>
    </t>
-   
+
    <t>
    EL statements may be used to access values stored in reserved variable keys,
    variables defined with data pipeline tags, or literal values.
    Containers MUST support resolving variables using this syntax.
    </t>
-   
+
 	<section title="Expression Language" anchor="EL">
 	<t>
 	The Expression Language (EL) is based on <xref target="JSPEL">JSPEL</xref>.
@@ -1120,7 +1164,7 @@ One plus one is equal to ${1+1}
 	custom functions.  <xref target="Issue-1164">Discussion</xref>
 	</t>
 	</section>
-	
+
 	<section title="Variables">
 	<t>
 	All variables are stored in the <xref target="DataContext">DataContext</xref>.
@@ -1163,13 +1207,13 @@ One plus one is equal to ${1+1}
 		 </c>
 		 <c>Available anywhere within gadget.</c>
 		 <c>Top</c>
-		 <c>Reserved variable used by 
+		 <c>Reserved variable used by
 		 <xref target="OpenSocial-Templating">OpenSocial Templating</xref> to represent
 		 the top level variables registered with the <xref target="DataContext">DataContext</xref></c>
 		 <c>Within content and templates</c>
 		 <c>My</c>
-		 <c>Reserved variable used by 
-		 <xref target="OpenSocial-Templating">OpenSocial Templating</xref> to 
+		 <c>Reserved variable used by
+		 <xref target="OpenSocial-Templating">OpenSocial Templating</xref> to
 		 hold local variables passed to the template instance.</c>
 		 <c>Within a template instance</c>
 		 <c>Cur</c>
@@ -1180,7 +1224,7 @@ One plus one is equal to ${1+1}
 		 <c>Within a repeater loop</c>
 		 <c>Context</c>
 		 <c>Variable used by OSML and templates to hold additional variables
-		 generated while processing templates and loops as defined in the 
+		 generated while processing templates and loops as defined in the
 		 <xref target="OpenSocial-Templating">OpenSocial Templating specification</xref>.
 		 Additional variables are unique ID, current index in repeat, and count of repeat.
 		 </c>
@@ -1196,20 +1240,20 @@ One plus one is equal to ${1+1}
 		 <c>N/A</c>
       </texttable>
 	</section>
-	
-	
-	<section title="Deprecated variable format">	   
+
+
+	<section title="Deprecated variable format">
    <t>The older variable tokens format has been deprecated in favor of
    the EL syntax.  The legacy variables take
    the form __&lt;TYPE&gt;_&lt;key&gt;__. For all substitutions, the full token
    is to be replaced by a value for the following values of &lt;TYPE&gt;:</t>
    <list style="hanging">
-    <t hangText="MSG">See 
+    <t hangText="MSG">See
     <xref target="Localization">Localization</xref></t>
     <t hangText="BIDI">See <xref target="Localization">Localization</xref></t>
     <t hangText="MODULE">Currently, "ID" is the only &lt;key&gt; value supported. Containers SHOULD provide a unique value
     for ID for each instance of a gadget displayed simultaneously.</t>
-    <t hangText="UP">See 
+    <t hangText="UP">See
     <xref target="UserPref">User Preferences</xref>. Whenever there is no
     value for a token declared in the gadget, Containers SHOULD still replace
     the token with an empty string. Containers MUST NOT replace tokens with an
@@ -1217,7 +1261,7 @@ One plus one is equal to ${1+1}
     gadget in it's original form.</t>
    </list>
    <t>Containers MUST perform substitution on all elements and attributes
-   defined in 
+   defined in
    <xref target="ElementsAndAttributes">Elements and Attributes</xref>, with
    the exceptions of /ModulePrefs/Locale (and children), or any element with an
    explicit enumeration. Containers SHOULD perform substitution on any custom
@@ -1226,12 +1270,12 @@ One plus one is equal to ${1+1}
    Containers MUST substitute BIDI, MODULE, and UP tokens after substituting
    MSG values, but they MUST NOT recursively substitute any other tokens.</t>
    </section>
-  
+
 
   </section>
   <section title="Localization"
            anchor="Localization">
-   <t>Localization of a gadget is achieved primarily through 
+   <t>Localization of a gadget is achieved primarily through
    <xref target="VariableSubstitution">Variable Substitution</xref>, using the
    ${Msg} variable and message bundles.</t>
    <t>To determine appropriate keys and values for substitution, Containers
@@ -1244,10 +1288,10 @@ One plus one is equal to ${1+1}
     <t>Language = "all", country = "all'.</t>
    </list>
    <t>
-   Containers SHOULD select a Locale that supports the current view over any 
+   Containers SHOULD select a Locale that supports the current view over any
    other Locale.  The Views supported by a Locale are specified at
    /ModulePrefs/Locale/@views. <xref target="Issue-1133">Discussion</xref></t>
-   
+
    <t>Containers MAY provide their own translations or use a third-party
    translation service if there is no appropriate Locale defined in the
    gadget.</t>
@@ -1274,10 +1318,10 @@ REVERSE_DIR: "rtl"
 <xref target="Issue-1171">Discussion</xref>
 <!-- copied from http://code.google.com/apis/gadgets/docs/i18n.html#Bundles -->
 <t>
-The gadgets i18n strategy centers around message bundles. 
-Message bundles are XML files that contain the translated strings 
-for a given locale. Each string is identified by a unique name 
-that is the same across bundles.  
+The gadgets i18n strategy centers around message bundles.
+Message bundles are XML files that contain the translated strings
+for a given locale. Each string is identified by a unique name
+that is the same across bundles.
 </t>
 
 <t>
@@ -1290,45 +1334,45 @@ Message bundles have the following format:
    <artwork type="example"
          xml:space="preserve">
 &lt;messagebundle&gt;
-  &lt;msg name="hello_world"&gt; 
-    Hello World. 
-  &lt;/msg&gt; 
-  &lt;msg name="color"&gt;Color&lt;/msg&gt; 
-  &lt;msg name="red"&gt;Red&lt;/msg&gt; 
-  &lt;msg name="green"&gt;Green&lt;/msg&gt; 
-  &lt;msg name="blue"&gt;Blue&lt;/msg&gt; 
-  &lt;msg name="gray"&gt;Gray&lt;/msg&gt; 
-  &lt;msg name="purple"&gt;Purple&lt;/msg&gt; 
-  &lt;msg name="black"&gt;Black&lt;/msg&gt; 
-&lt;/messagebundle&gt; 
+  &lt;msg name="hello_world"&gt;
+    Hello World.
+  &lt;/msg&gt;
+  &lt;msg name="color"&gt;Color&lt;/msg&gt;
+  &lt;msg name="red"&gt;Red&lt;/msg&gt;
+  &lt;msg name="green"&gt;Green&lt;/msg&gt;
+  &lt;msg name="blue"&gt;Blue&lt;/msg&gt;
+  &lt;msg name="gray"&gt;Gray&lt;/msg&gt;
+  &lt;msg name="purple"&gt;Purple&lt;/msg&gt;
+  &lt;msg name="black"&gt;Black&lt;/msg&gt;
+&lt;/messagebundle&gt;
 </artwork>
 
 <t>
 By convention, external message bundles are named as &lt;language&gt;_&lt;country&gt;.xml
-Where there is no language- or country-specific value, the convention is to use “ALL.” For example, the file de_ALL.xml applies to all German speakers, regardless of their country. 
+Where there is no language- or country-specific value, the convention is to use “ALL.” For example, the file de_ALL.xml applies to all German speakers, regardless of their country.
 The message bundle ALL_ALL.xml is the file that is used by default.
 </t>
 <t>
 Message bundles may be specified inline or as externally referenced XML files
-in the <xref target="Locale">/ModulePrefs/Locale</xref> section. 
+in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
 </t>
 
 </section>
 
   </section>
-  
-  
-  
+
+
+
   <section title="Signed Fetch"
            anchor="SignedFetch">
-   <t>Containers MUST support signing of HTTP requests for 
-   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>, 
-   
+   <t>Containers MUST support signing of HTTP requests for
+   <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>,
+
    <xref target="ProxiedContent">Proxied Content</xref>,
-   <xref target="ContentRedirect">Content Redirect</xref>, 
-   <xref target="LifeCycleEvents">Life Cycle Events</xref>, and 
+   <xref target="ContentRedirect">Content Redirect</xref>,
+   <xref target="LifeCycleEvents">Life Cycle Events</xref>, and
    <xref target="Preload">Preloading</xref> (<xref target="Issue-1173">Discussion</xref>). The container does this by
-   doing the following: 
+   doing the following:
    <list style="numbers">
     <t>Removing any request parameters with names that begin with oauth,
     xoauth, or opensocial (case insensitive).</t>
@@ -1358,7 +1402,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
      container arranges other means of key distribution with the target of the
      request.</t>
     </list>
-    <t>Signing the resulting request according to section 9 of the 
+    <t>Signing the resulting request according to section 9 of the
     <eref target="http://oauth.net/core/1.0/#signing_process">OAuth
     specification</eref>.</t>
    </list></t>
@@ -1410,24 +1454,24 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
    gadget id and user id, although this is implementation specific.</t>
     <t> When proxying a gadget's request,
    OpenSocial containers MAY use an OAuth client key and secret specific to the gadget
-   making the request (xoauth_requestor_id request context parameter), 
-   or MAY use the container's OAuth client key and secret. For more details, see the 
+   making the request (xoauth_requestor_id request context parameter),
+   or MAY use the container's OAuth client key and secret. For more details, see the
    <xref target="OAuth-Core">OAuth 1.0A specification</xref> or the OAuth 2.0 specification.</t>
    <section title="Consumer Secrets">
-    <t>OAuth client keys and secrets are typically obtained by registering a 
+    <t>OAuth client keys and secrets are typically obtained by registering a
     gadget, application or server with a service provider at a web page provided
     by the service provider.  Once the keys/secrets
     are obtained, they are typically placed in a key store on the Core Gadget Server.
     However, the exact method of accomplishing registration is
     implementation specific. If a Core Gadget Server uses its own client key
     and secret when making OAuth requests, it must be registered with each
-    service provider it will communicate with.  In this case, the 
+    service provider it will communicate with.  In this case, the
     Core Gadget Server will use the same client key and client secret for every
     OAuth request to a particular service provider.</t>
    </section>
    <section title="OAuth Tokens">
-    <t>When proxying a 
-    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>of 
+    <t>When proxying a
+    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>of
     <xref target="gadgets.io.AuthorizationType">
     gadgets.io.AuthorizationType</xref> 'OAUTH' for OAuth 1.0A, the container SHOULD do the
     following:</t>
@@ -1446,14 +1490,14 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
      service provider to obtain a request token. It then returns an error
      message to the Gadget that contains, among other things, the user
      authorization URL at the target service provider. The Gadget is expected
-     to redirect the User Agent to that authorization URL and re-attempt the 
+     to redirect the User Agent to that authorization URL and re-attempt the
      <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>once
      the user has approved the OAuth access.</t>
     </list>
     <t>Proxying a request for an OAuth 2 service provider is different based
       on the grant type being used.  This description is for an authorization
-      grant. 
-    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>of 
+      grant.
+    <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>of
     <xref target="gadgets.io.AuthorizationType">
     gadgets.io.AuthorizationType</xref> 'OAUTH2' for OAuth 2.0, the container SHOULD do the
     following:</t>
@@ -1464,15 +1508,15 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
        <t>If the Core Gadget Server finds an appropriate OAuth access token
           it contacts the service provider resource endpoint using OAuth 2.0 client
           code that is compatible with the specific OAuth 2.0 implementation of
-          the service provider, passes the token (among other data), and requests 
+          the service provider, passes the token (among other data), and requests
           the data. </t>
        <t>If the Core Gadget Server finds no appropriate OAuth access token, it returns
           an error to the gadget along with a redirection URL based on
           the gadget XMLs /ModulePrefs/OAuth/Service/Authorization setting.
           The gadget is expected to redirect the User Agent
-          (browser) to the authorization URL for the service provider.  Once 
+          (browser) to the authorization URL for the service provider.  Once
           the user authenticates and authorizes the gadget, the gadget will
-          receive a redirection URL from the serivce provider that includes 
+          receive a redirection URL from the serivce provider that includes
           an authorization code.
           The gadget redirects the User Agent (browser) back to the
           Core Gadget Server, which receives the authorization code from
@@ -1533,7 +1577,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
               anchor="gadgets.log">
       <t>&lt;static&gt; gadgets.log(message)</t>
       <t>Description: Log an informational message.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -1547,7 +1591,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
               anchor="gadgets.warn">
       <t>&lt;static&gt; gadgets.warn(message)</t>
       <t>Description: Log a warning message.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -1561,7 +1605,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
               anchor="gadgets.error">
       <t>&lt;static&gt; gadgets.error(message)</t>
       <t>Description: Log an error message.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -1575,7 +1619,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
               anchor="gadgets.setLogLevel">
       <t>&lt;static&gt; gadgets.setLogLevel(logLevel)</t>
       <t>Description: Sets the log level threshold.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -1588,7 +1632,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
     </section>
     <section title="gadgets.log"
              anchor="gadgets.log">
-     <t>Used by 
+     <t>Used by
      <xref target="gadgets.setLogLevel">gadgets.setLogLevel</xref>.</t>
      <list style="hanging">
      <t hangText="INFO"
@@ -1666,7 +1710,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
               anchor="gadgets.io.makeRequest">
       <t>&lt;static&gt; gadgets.io.makeRequest(url, callback, opt_params)</t>
       <t>Description: Fetches content from the provided URL and feeds that
-      content into the callback function. 
+      content into the callback function.
       <figure>
        <preamble>Example:</preamble>
        <artwork xml:space="preserve">
@@ -1696,8 +1740,13 @@ gadgets.io.makeRequest(url, callback, params);
        service provider to gain access.</t>
       </section>
       <section title="Additional parameters">
-       <t>The following additional parameters may be specified in opt_params: 
+       <t>The following additional parameters may be specified in opt_params:
+           <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+                 <t>gadgets.io.RequestParameters.ALIAS was added to the following list</t>
+           </x:draft>
+
        <list style="hanging">
+        <t hangText="gadgets.io.RequestParameters.ALIAS">Specifies the 'Alias' request parameter as defined by <eref target="Core-Data.xml#HTTP-Request-Params">Core-Data Request Parameters.</eref></t>
         <t hangText="gadgets.io.RequestParameters.GET_FULL_HEADERS">Returns the full headers from the response.</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK">The URL to return after authorization.</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN">A
@@ -1763,7 +1812,7 @@ gadgets.io.makeRequest(url, callback, params);
        </section>
       </section>
       <section title="The callback parameter">
-       <t>The function specified as the callback parameter is passed a JavaScript object with the following fields: 
+       <t>The function specified as the callback parameter is passed a JavaScript object with the following fields:
        <list style="hanging">
          <t hangText="data">Parsed data of the response, if applicable. This will contain a different type of data depending on the type of request that was made. See the ContentType parameters for information about what to expect in this field. The raw response text is returned if the response could not be parsed.</t>
          <t hangText="errors">This will contain an array of any errors that occurred when making this request. For example, if a 500 error occurred in the request: [ "500 error" ]</t>
@@ -1778,7 +1827,7 @@ gadgets.io.makeRequest(url, callback, params);
         <t hangText="oauthError">
         If this value is specified, it indicates an
         OAuth-related error occurred. The value will be one of a set of string
-        constants that can be used for programmatically detecting errors. 
+        constants that can be used for programmatically detecting errors.
         </t>
         <t hangText="oauthErrorText">If this value is specified, it indicates
         an OAuth-related error occurred. The value is free-form text that can
@@ -1801,9 +1850,9 @@ gadgets.io.makeRequest(url, callback, params);
          callstack has completed execution.</c>
          <c>opt_params</c>
          <c>Map.&lt;gadgets.io.RequestParameters|Object&gt;</c>
-         <c>Additional 
+         <c>Additional
          <xref target="gadgets.io.RequestParameters">request
-         parameters</xref> or 
+         parameters</xref> or
          <xref target="gadgets.io.ProxyUrlRequestParameters">proxy request
          parameters</xref> </c>
         </texttable>
@@ -1815,9 +1864,9 @@ gadgets.io.makeRequest(url, callback, params);
    <section title="gadgets.io.AuthorizationType"
             anchor="gadgets.io.AuthorizationType">
     <!-- ============================== class summary ========================== -->
-    <t>Used by 
+    <t>Used by
     <xref target="gadgets.io.RequestParameters">RequestParameters</xref>.</t>
-    <list style="hanging"> 
+    <list style="hanging">
      <t hangText="NONE"
               anchor="gadgets.io.AuthorizationType.NONE">
       No authorization. This field may be used interchangeably
@@ -1839,7 +1888,7 @@ gadgets.io.makeRequest(url, callback, params);
    <section title="gadgets.io.ContentType"
             anchor="gadgets.io.ContentType">
     <!-- ============================== class summary ========================== -->
-    <t>Used by 
+    <t>Used by
     <xref target="gadgets.io.RequestParameters">RequestParameters</xref>.</t>
     <list style="hanging">
      <t hangText="DOM"
@@ -1863,7 +1912,7 @@ gadgets.io.makeRequest(url, callback, params);
    <section title="gadgets.io.MethodType"
             anchor="gadgets.io.MethodType">
     <!-- ============================== class summary ========================== -->
-    <t>Defines values for 
+    <t>Defines values for
     <xref target="gadgets.io.RequestParameters.METHOD">
     RequestParameters.METHOD</xref>.</t>
     <list style="hanging">
@@ -1892,7 +1941,7 @@ gadgets.io.makeRequest(url, callback, params);
    <section title="gadgets.io.ProxyUrlRequestParameters"
             anchor="gadgets.io.ProxyUrlRequestParameters">
     <!-- ============================== class summary ========================== -->
-    <t>Used by 
+    <t>Used by
     <xref target="gadgets.io.getProxyUrl">
     gadgets.io.getProxyUrl()</xref> method.</t>
     <list style="hanging">
@@ -1942,7 +1991,7 @@ gadgets.io.makeRequest(url, callback, params);
      <t hangText="METHOD"
               anchor="gadgets.io.RequestParameters.METHOD">
       The method to use when fetching content from the URL;
-      defaults to 
+      defaults to
       <xref target="gadgets.io.MethodType.GET">MethodType.GET</xref>. Valid
       values are specified by
       <xref target="gadgets.io.MethodType">MethodType</xref>. This field may be
@@ -1985,7 +2034,7 @@ gadgets.io.makeRequest(url, callback, params);
               anchor="gadgets.json.parse">
       <t>&lt;static&gt; Type: {Object} gadgets.json.parse(text)</t>
       <t>Description: Parses a JSON string, producing a JavaScript value.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2008,7 +2057,7 @@ gadgets.io.makeRequest(url, callback, params);
               anchor="gadgets.json.stringify">
       <t>&lt;static&gt; Type: {String} gadgets.json.stringify(v)</t>
       <t>Description: Converts a JavaScript value to a JSON string.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2032,7 +2081,7 @@ gadgets.io.makeRequest(url, callback, params);
     <!-- ============================== class summary ========================== -->
     <t>Provides access to user preferences, module dimensions, and messages.
     Clients can access their preferences by constructing an instance of
-    gadgets.Prefs and passing in their module ID. Example: 
+    gadgets.Prefs and passing in their module ID. Example:
     <figure>
      <artwork xml:space="preserve">
 var prefs = new gadgets.Prefs();
@@ -2062,7 +2111,7 @@ var lang = prefs.getLang();
       <t>Type: {Array.&lt;String&gt;} getArray(key)</t>
       <t>Description: Retrieves a preference as an array. UserPref values that
       were not declared as lists are treated as one-element arrays.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2083,7 +2132,7 @@ var lang = prefs.getLang();
               anchor="gadgets.Prefs.getBool">
       <t>Type: {Boolean} getBool(key)</t>
       <t>Description: Retrieves a preference as a boolean.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2117,7 +2166,7 @@ var lang = prefs.getLang();
               anchor="gadgets.Prefs.getFloat">
       <t>Type: {Number} getFloat(key)</t>
       <t>Description: Retrieves a preference as a floating-point value.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2138,7 +2187,7 @@ var lang = prefs.getLang();
               anchor="gadgets.Prefs.getInt">
       <t>Type: {Number} getInt(key)</t>
       <t>Description: Retrieves a preference as an integer.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2184,7 +2233,7 @@ var lang = prefs.getLang();
               anchor="gadgets.Prefs.getMsg">
       <t>Type: {String} getMsg(key)</t>
       <t>Description: Fetches an unformatted message.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2205,7 +2254,7 @@ var lang = prefs.getLang();
               anchor="gadgets.Prefs.getString">
       <t>Type: {String} getString(key)</t>
       <t>Description: Retrieves a preference as a string.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2226,10 +2275,10 @@ var lang = prefs.getLang();
               anchor="gadgets.Prefs.set">
       <t>set(key, val)</t>
       <t>Description: Stores a preference. To use this call, the gadget must
-      require the feature setprefs. 
+      require the feature setprefs.
       <t>Note: If the gadget needs to store an Array it should use setArray
       instead of this call.</t></t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2247,7 +2296,7 @@ var lang = prefs.getLang();
       <t>setArray(key, val)</t>
       <t>Description: Stores an array preference. To use this call, the gadget
       must require the feature setprefs.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2271,7 +2320,7 @@ var lang = prefs.getLang();
               anchor="gadgets.util.escapeString">
       <t>&lt;static&gt; Type: {String} gadgets.util.escapeString(str)</t>
       <t>Description: Escapes the input using HTML entities to make it safer.
-      The following characters are affected: 
+      The following characters are affected:
       <list style="symbols">
        <t>newline (\n, Unicode code point 10)</t>
        <t>carriage return (\r, Unicode 13)</t>
@@ -2284,7 +2333,7 @@ var lang = prefs.getLang();
        <t>line separator (Unicode 8232)</t>
        <t>paragraph separator (Unicode 8233)</t>
       </list></t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2308,7 +2357,7 @@ var lang = prefs.getLang();
       <t>Description: Returns the value of parameters for this feature. A
       gadget specifies parameters using the &lt;Param&gt; subelement of the
       &lt;Requires&gt; or &lt;Optional&gt; element.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2329,7 +2378,7 @@ var lang = prefs.getLang();
               anchor="gadgets.util.hasFeature">
       <t>&lt;static&gt; Type: {Boolean} gadgets.util.hasFeature(feature)</t>
       <t>Description: Returns whether the specified feature is supported.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2352,7 +2401,7 @@ var lang = prefs.getLang();
       <t>Description: Registers an onload handler; a function that's executed
       when the gadget loads. Multiple handlers can be registered, and all will
       be invoked in the same order that they were registered.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2369,7 +2418,7 @@ var lang = prefs.getLang();
       <t>Description: Sanitizes a text string. The returned value is safe to
       assign to innerHTML. The returned value may include HTML tags. If plain
       text is desired, use gadgets.util.escapeString instead.</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2391,7 +2440,7 @@ var lang = prefs.getLang();
               anchor="gadgets.util.unescapeString">
       <t>&lt;static&gt; Type: {String} gadgets.util.unescapeString(str)</t>
       <t>Description: Reverses escapeString</t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2414,7 +2463,7 @@ var lang = prefs.getLang();
             anchor="gadgets.views">
     <!-- ============================== class summary ========================== -->
     <t>Provides operations for dealing with views.
-    <t>See also: 
+    <t>See also:
     <xref target="gadgets.views.View">gadgets.views.View</xref> </t></t>
     <section title="Method Details">
      <section title="bind"
@@ -2423,7 +2472,7 @@ var lang = prefs.getLang();
       environment)</t>
       <t>Description: Binds a URL template with variables in the passed
       environment to produce a URL string.
-      <t>See also: 
+      <t>See also:
       <xref target="gadgets.views.View.getUrlTemplate">
       View.getUrlTemplate()</xref> </t></t>
       <t>Parameters:
@@ -2509,7 +2558,7 @@ var lang = prefs.getLang();
       sections whose View is [Surface].valueY. When navigating from
       SurfaceA.[Secondary] to SurfaceB.[Secondary], the container will switch
       to the SurfaceB surface and show the appropriate &lt;Content&gt; sections
-      whose View is SurfaceB.[Secondary].  In no case must the .[Secondary] item be declared. <xref target="Issue-1169">Discussion</xref></t> 
+      whose View is SurfaceB.[Secondary].  In no case must the .[Secondary] item be declared. <xref target="Issue-1169">Discussion</xref></t>
       <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
@@ -2539,9 +2588,9 @@ var lang = prefs.getLang();
      <section title="openGadget"
               anchor="gadgets.views.openGadget">
        <t>&lt;static&gt; gadgets.views.openGadget(resultCallback, idCallback, opt_params)</t>
-       <t>Description: Opens a gadget in the container UI. The location of the gadget site 
-       in the container will be determined by the view target passed in. The container 
-       would open the view in a dialog, if view target is dialog or the gadgets 
+       <t>Description: Opens a gadget in the container UI. The location of the gadget site
+       in the container will be determined by the view target passed in. The container
+       would open the view in a dialog, if view target is dialog or the gadgets
        view in a tab for view target is tab.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
@@ -2550,14 +2599,14 @@ var lang = prefs.getLang();
          <ttcol>Description</ttcol>
          <c>resultCallback</c>
          <c>function</c>
-         <c>Callback function to be called when the gadget closes. 
+         <c>Callback function to be called when the gadget closes.
          The function will be called with the return value as a parameter.</c>
          <c>idCallback</c>
          <c>function</c>
          <c>Callback function to be called with the id of the Site which has been opened </c>
          <c>opt_params </c>
          <c>Object</c>
-         <c>These are optional parameters which can be used to open gadgets.  
+         <c>These are optional parameters which can be used to open gadgets.
          The following parameters may be included in this object. </c>
         </texttable></t>
        <t>opt_params:
@@ -2570,18 +2619,18 @@ var lang = prefs.getLang();
          <c>The surface view that indicates the type of gadget site.</c>
          <c>viewTarget </c>
          <c>string </c>
-         <c>The view that indicates where to open the gadget. For example, 
+         <c>The view that indicates where to open the gadget. For example,
           <xref target="gadgets.views.ViewType.ViewTarget">tab, dialog or modaldialog</xref>.</c>
          <c>viewParams </c>
          <c>Object</c>
          <c>View parameters for the view being rendered.</c>
         </texttable></t>
-     </section>        
+     </section>
      <section title="openUrl"
               anchor="gadgets.views.openUrl">
        <t>&lt;static&gt; gadgets.views.openUrl(url, idCallback, opt_viewTarget)</t>
-       <t>Description: Opens a URL in the container UI. The location of the URL site will be determined by the container 
-       based on the target view. The container would open the view in a dialog, 
+       <t>Description: Opens a URL in the container UI. The location of the URL site will be determined by the container
+       based on the target view. The container would open the view in a dialog,
        if opt_viewTarget=dialog or the gadgets view in a tab for opt_viewTarget=tab.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
@@ -2615,10 +2664,10 @@ var lang = prefs.getLang();
      </section>
      <section title="setReturnValue"
               anchor="gadgets.views.setReturnValue">
-      
+
        <t>&lt;static&gt; gadgets.views.setReturnValue(returnValue)</t>
-       <t>Description: Sets the return value for the current window. 
-       This method should only be called inside those secondary view types defined in gadgets.views.ViewType. 
+       <t>Description: Sets the return value for the current window.
+       This method should only be called inside those secondary view types defined in gadgets.views.ViewType.
        For example, <xref target="gadgets.views.ViewType.ViewTarget">DIALOG or MODALDIALOG</xref>.  <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
@@ -2630,7 +2679,7 @@ var lang = prefs.getLang();
          <c>Return value for this window.</c>
         </texttable> </t>
      </section>
-     
+
     </section>
    </section>
    <section title="gadgets.views.View"
@@ -2775,7 +2824,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
               anchor="gadgets.views.ViewType.HOME">
       A view where the gadget is displayed in a small area
       usually on a page with other gadgets. Typically the viewer is the same as
-      the owner. This field may be used interchangeably with the string 
+      the owner. This field may be used interchangeably with the string
       'HOME'.</t>
 	<t hangText="PREFERENCES"
               anchor="gadgets.views.ViewType.PREFERENCES">
@@ -2811,7 +2860,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
       <list style="hanging">
       <t hangText="TAB"
               anchor="gadgets.views.ViewType.TAB">
-      A view where the gadget is displayed inside a container tab. 
+      A view where the gadget is displayed inside a container tab.
       This field may be used interchangeably with the string
       'TAB'.</t>
       <t hangText="DIALOG"
@@ -2822,7 +2871,7 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
               anchor="gadgets.views.ViewType.MODALDIALOG">
       A view where the gadget is displayed in a modal pop up box. This field may be used interchangeably with the string
       'MODALDIALOG'.</t>
-      
+
     </list>
 
     </section>
@@ -2957,7 +3006,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
        <t hangText="Returns">None.</t>
        </list>
       </section>
-     </section>     
+     </section>
    </section>
     <section title="osapi"
             anchor="osapi">
@@ -3128,6 +3177,7 @@ specified in the <x:ref>osapi.BatchRequest.add</x:ref> method. The value is the 
           });
 </artwork>
         </figure>
+
        </section>
       </section>
      </section>
@@ -3388,6 +3438,24 @@ osapi.http.post(params).execute(function(result) {
 });
 </artwork>
         </figure>
+
+       <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+        <figure>
+            <preamble>This example demonstrates the use of 'alias'</preamble>
+            <artwork>
+                var params = {
+                    'alias': 'sharepoint',
+                    'href': '/departmentList',
+                    'format': 'json',
+                    'headers': {'Content-Type': ['application/json;charset=utf-8'], "Accept-Language": ["en-us"]}
+                };
+                osapi.http.get(params).execute(function(result) {
+                  if (!result.error) {...}
+                });
+            </artwork>
+        </figure>
+       </x:draft>
+
        </section>
       </section>
   </section>
@@ -3423,13 +3491,13 @@ osapi.http.post(params).execute(function(result) {
 
       <section title="DataContext"
                anchor="DataContext">
-   <t>The DataContect object maintains all the data associated with the current 
-   gadget's data pipelining requests.  
+   <t>The DataContect object maintains all the data associated with the current
+   gadget's data pipelining requests.
    Items in the data context may be access
    through <xref target="EL">EL statements</xref> or on the client
    with the <xref target="opensocial.data">opensocial.data APIs</xref>.
    </t>
-   
+
    <t>Data may be placed into the data context with any data pipeline tags,
    such as <xref target="osVar">&lt;os:Var&gt;</xref>,
    or through the <xref target="opensocial.data">opensocial.data APIs</xref>.
@@ -3444,11 +3512,11 @@ osapi.http.post(params).execute(function(result) {
     <t>JavaScript. This data will be available in the JavaScript API.</t>
    </list>
    </section>
-  
+
    <section title="Data block">
-   
-   <t>A data block may be defined to hold a number of data pipeline tags.  See the 
-   <xref target="DataElement">Data Element</xref> section for more information on this element. <xref target="Issue-1162">Discussion</xref>  
+
+   <t>A data block may be defined to hold a number of data pipeline tags.  See the
+   <xref target="DataElement">Data Element</xref> section for more information on this element. <xref target="Issue-1162">Discussion</xref>
    <figure>
     <artwork xml:space="preserve">
 &lt;Module&gt;
@@ -3463,7 +3531,7 @@ osapi.http.post(params).execute(function(result) {
    </figure></t>
 
    </section>
-   
+
    <section title="Tag: &lt;os:DataRequest&gt;"
            anchor="DataRequest">
     <list style="hanging">
@@ -3514,7 +3582,7 @@ osapi.http.post(params).execute(function(result) {
      </t>
      <t hangText="Returns">A <eref target="Core-API-Server.xml#RPC-Response-Payload">RPC-Response-Payload</eref> object with "id", "error",
    and "result" properties. The "result" object is not available for 4xx or 5xx
-   responses. When available, the "result" object in turn contains a <eref target="Core-Data.xml#HTTP-Response-Paylaod">HTTP-Response-Payload</eref>.</t> 
+   responses. When available, the "result" object in turn contains a <eref target="Core-Data.xml#HTTP-Response-Paylaod">HTTP-Response-Payload</eref>.</t>
    </list>
    <figure>
     <preamble>Example of tag syntax:</preamble>
@@ -3563,7 +3631,7 @@ osapi.http.post(params).execute(function(result) {
 
   <section title="Tag: &lt;os:Var&gt;"
            anchor="osVar">
-    <list style="hanging"> 
+    <list style="hanging">
      <t hangText="Description">Declare a literal value or result of an EL statement under a different key.</t>
      <t hangText="Attributes">The following attributes are supported.
        <texttable align="left">
@@ -3594,10 +3662,10 @@ osapi.http.post(params).execute(function(result) {
 	<t>Attempt to parse it as a JSON value and return the resulting object if successful.</t>
 	<t>If all other processing does not resolve the value, return as a string</t>
 	</list>
-     <t>The value created with os:Var may contain literals, JSON data, or EL statements. 
+     <t>The value created with os:Var may contain literals, JSON data, or EL statements.
 	 An array may be declared using JSON or JavaScript array syntax.
 	</t>
-	
+
 	<t>The below example creates a one-dimensional array with values [1,2,3,5,7]
 	and assigns it to the key "primes" in the data context
 	  <figure>
@@ -3629,12 +3697,12 @@ osapi.http.post(params).execute(function(result) {
 	 </artwork>
     </figure>
 	</t>
-	
-   </section>   
+
+   </section>
   </section>
   <section title="Proxied content" anchor="DataPipelining-ProxiedContent">
    <t>Data pipelining tags can be top level elements in the &lt;Content&gt;
-   section of a gadget using <xref target="ProxiedContent">Proxied Content</xref>. 
+   section of a gadget using <xref target="ProxiedContent">Proxied Content</xref>.
    <figure>
     <preamble>Example</preamble>
     <artwork xml:space="preserve">
@@ -3648,7 +3716,7 @@ osapi.http.post(params).execute(function(result) {
    when preparing a request for proxied content, even if the opensocial-data
    feature is not present.</t>
    <t>The results of the data pipelining requests will be sent to the href of
-   the &lt;Content&gt; section as POSTed JSON data. The structure will be in 
+   the &lt;Content&gt; section as POSTed JSON data. The structure will be in
    <eref target="./Core-API-Server.xml#RPC">JSON-RPC format</eref>.</t>
    <t>Elements in a data pipeline with @userId referencing the viewer (via
    @viewer, @me) will return a 403 (Forbidden) error response if the container
@@ -3663,7 +3731,7 @@ osapi.http.post(params).execute(function(result) {
    <t>With pipelined data prepared for the Javascript API, or otherwise
    embedded in @type="html" content, per-item errors are not modified, but
    errors that fail the entire request are modified by cloning the error into
-   each item. 
+   each item.
    <figure>
    <preamble>Example</preamble>
    <artwork xml:space="preserve">
@@ -3672,9 +3740,9 @@ osapi.http.post(params).execute(function(result) {
     &lt;os:PeopleRequest key="vf" userId="@viewer" groupId="@friends"/&gt;
   &lt;/script&gt;
 </artwork>If the above request failed with a server error, the resulting
-dataset would contain content resembling: 
+dataset would contain content resembling:
    <artwork xml:space="preserve">
- {vwr: {error: {message: 'Server error', code: 500}}, vf: {error: {message: 'Server error', code: 500}}}  
+ {vwr: {error: {message: 'Server error', code: 500}}, vf: {error: {message: 'Server error', code: 500}}}
 </artwork></figure></t>
   </section>
   <section title="Handling of unrecognized tags">
@@ -3766,8 +3834,8 @@ dataset would contain content resembling:
    </t>
   </section>
   </section>
- 
- 
+
+
  </middle>
  <back>
   <section title="Gadget XML Schema"
@@ -4016,16 +4084,16 @@ dataset would contain content resembling:
    <section title="gadgets.actions" anchor="gadgets.actions">
    <xref target="Issue-1161">Discussion</xref>
      <section title="Overview" anchor="gadgets.actions.overview">
-	  	 <t>The actions feature allows gadgets to contribute actions to the container's UI. Some containers have 
+	  	 <t>The actions feature allows gadgets to contribute actions to the container's UI. Some containers have
 	  		global action contribution areas such as the header and footers of the container, which may include links, buttons, or menus.</t>
-	  		
-	  	 <t>Additionally, a gadget may need to contribute actions to specific Open Social Data Objects.  In traditional 
-	  		desktop applications, these actions are often rendered as menu items on context menus when you click on a person 
+
+	  	 <t>Additionally, a gadget may need to contribute actions to specific Open Social Data Objects.  In traditional
+	  		desktop applications, these actions are often rendered as menu items on context menus when you click on a person
 	  		or file. For example, when a user right-clicks on a Person object to bring up the context menu, they may see actions
 	  		specific to Person objects, including "Start a Chat" or "View Contact Information."</t>
-	  		
+
 	  	 <t>Some use cases are as follows:</t>
-	     <t>Action contribution by path  
+	     <t>Action contribution by path
 			<list style="numbers">
 			 <t>Gadget contributes a top level action to the container, aka such as a link at the top</t>
 			 <t>Gadget contributes a action to the Gadget's drop down menu(drawn by the container)</t>
@@ -4040,13 +4108,13 @@ dataset would contain content resembling:
 			<t>Gadgets may bind to any container specific types that are defined.  Containers shall make all efforts to use types in shared namespace and to contribute back new types to the spec to maintain cross-container abilities of gadgets.</t>
 		   </list>
 	     </t>
-	     
-	  	 <t>The container controls how to render the items such that all actions can be rendered consistently throughout the container, 
-	  		regardless of which gadget contributes the action.  Gadgets register actions by specifying a label, icon and a callback 
+
+	  	 <t>The container controls how to render the items such that all actions can be rendered consistently throughout the container,
+	  		regardless of which gadget contributes the action.  Gadgets register actions by specifying a label, icon and a callback
 	  		function.  Gadget developers do not need to worry about other UI details.</t>
-	
-		 <t>A gadget may programmatically contribute actions at any time by calling addAction(actionObject).  In addition, 
-			a gadget may declaratively contribute an action to the container in the gadget 
+
+		 <t>A gadget may programmatically contribute actions at any time by calling addAction(actionObject).  In addition,
+			a gadget may declaratively contribute an action to the container in the gadget
 			definition.  This allows actions to be added to the container before the gadget has been fully rendered.</t>
      </section>
      <section title="Action Objects" anchor="gadgets.actions.actionobjects">
@@ -4091,9 +4159,9 @@ dataset would contain content resembling:
      <section title="Action Locations">
 	  <section title="Paths" anchor="gadgets.actions.paths">
 	   <t>Gadgets may contribute actions to container-defined common action locations.  These may include the following
-	   suggested standardized paths, but the container may also choose to support additional paths to which gadgets 
+	   suggested standardized paths, but the container may also choose to support additional paths to which gadgets
 	   can contribute:
-	   </t> 
+	   </t>
        <texttable align="left">
         <ttcol>Path</ttcol>
        	<ttcol>Description</ttcol>
@@ -4148,7 +4216,7 @@ dataset would contain content resembling:
 		callback: mycallback
 	}
 	container.actions.updateAction(myaction);
-	
+
    &lt;/script&gt;
   ]]&gt;
  &lt;/Content&gt;
@@ -4187,8 +4255,8 @@ var myaction = {
 gadgets.actions.addAction(myaction);
 		</artwork>
 	  </section>
-	  
-	  
+
+
       <section title="updateAction" anchor="gadgets.actions.updateAction">
 	    <t>&lt;static&gt; gadgets.actions.updateAction(action)</t>
 	    <t>Description: Updates the specified action(s) in the container.</t>
@@ -4215,8 +4283,8 @@ var myaction = {
 gadgets.actions.updateAction(myaction);
 		</artwork>
 	  </section>
-	  
-	  
+
+
 	  <section title="removeAction" anchor="gadgets.actions.removeAction">
 	    <t>&lt;static&gt; container.actions.removeAction (actionId)</t>
 	    <t>Description: Removes the specified action from the container</t>
@@ -4590,7 +4658,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
        <c>Parameters for the RPC request</c>
       </texttable></t>
      </section>
-     
+
        <section title="config" anchor="gadgets.rpc.config">
 			<t>&lt;static&gt; gadgets.rpc.config(params)</t>
 			<t>Description: Configures the existing RPC instance with the given parameters. Paramaters is a <xref target="gadgets.rpc.ConfigParameters">gadgets.rpc.ConfigParameters</xref></t>
@@ -4606,10 +4674,10 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 					</c>
 				</texttable>
 			</t>
-	</section>  
-     
+	</section>
+
 	<section title="getReceiverOrigin" anchor="gadgets.rpc.getReceiverOrigin">
-		
+
 			<t>&lt;static&gt; gadgets.rpc.getReceiverOrigin(receiverId)</t>
 			<t>Description: Returns the origin for the given RPC service provider.  If the origin cannot be verified, returns null.</t>
 			<t>
@@ -4634,8 +4702,8 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 				</texttable>
 			</t>
 	</section>
-     
-     
+
+
      <section title="register"
               anchor="gadgets.rpc.register">
       <t>&lt;static&gt; gadgets.rpc.register(serviceName, handler)</t>
@@ -4689,7 +4757,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
       remote procedure calls will fail silently.</t>
      </section>
     </section>
-     
+
      <section title="ConfigParameters" anchor="gadgets.rpc.ConfigParameters">
 			<t>gadgets.rpc.ConfigParameters</t>
 			<t>Description: Object used to hold the parameters into the config method, supports the following properties: </t>
@@ -4709,12 +4777,12 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 					</c>
 				</texttable>
 			</t>
-	</section>  
+	</section>
    </section>
    <section title="gadgets.selection" anchor="gadgets.selection">
 <xref target="Issue-1161">Discussion</xref>
   	 <section title="Overview" anchor="gadgets.selection.overview">
-	  	 <t>The selection feature gives gadgets the ability to participate in the containerâ€™s selection eventing. The concept 
+	  	 <t>The selection feature gives gadgets the ability to participate in the containerâ€™s selection eventing. The concept
 	  		of selection is common among many containers. Examples include:
 	 		<list style="symbols">
 	  		 <t>selected person in a buddy or contacts list</t>
@@ -4723,16 +4791,16 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 	  		</list>
 	  	 </t>
 	  	 <t>Selection is a user-driven singleton belonging to the container. For example, when a user selects
-	  		a Person in their contact list before sending that Person a message, that Person becomes the selected object.  Typically, a 
-	  		user gesture triggers a gadget to post selection to the containerâ€™s selection service. 
-	  		Each time something is posted to the selection service, gadgets that are registered to listen for selection events are 
-	  		notified. The current selection for the container represents what was posted last and can be queried at any time. The 
+	  		a Person in their contact list before sending that Person a message, that Person becomes the selected object.  Typically, a
+	  		user gesture triggers a gadget to post selection to the containerâ€™s selection service.
+	  		Each time something is posted to the selection service, gadgets that are registered to listen for selection events are
+	  		notified. The current selection for the container represents what was posted last and can be queried at any time. The
 	  		selected object can represent a single object or a collection of objects.</t>
 	  	 <t>Note: gadgets must opt in to publish data via selection and should be aware it is a broadcast event.</t>
   	</section>
     <section title="Method Details">
    		<section title="setSelection" anchor="gadgets.selection.setSelection">
-   			<t>&lt;static&gt; gadgets.selection.setSelection (selectionArray)</t> 
+   			<t>&lt;static&gt; gadgets.selection.setSelection (selectionArray)</t>
    			<t>Description: Sets the selection for the container.  The selection may be an array of multiple objects.
    			</t>
    			<t>Parameters:
@@ -4756,15 +4824,15 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 			   <c>dataObject</c>
 		  	   <c>Object</c>
 		  	   <c>Object representing the selection.</c>
-		
+
 		  	  </texttable>
   	 		</t>
   	 		<t>
 				Example:
 				<artwork type="code">
 //an array of 2 people who are currently selected
-var selection = [ 
-	{type: "opensocial.Person", dataObject: bob}, {type: "opensocial.Person", dataObject: joe} 
+var selection = [
+	{type: "opensocial.Person", dataObject: bob}, {type: "opensocial.Person", dataObject: joe}
 ];
 gadgets.selection.setSelection(selection);
 	   			</artwork>
@@ -4779,7 +4847,7 @@ gadgets.selection.setSelection(selection);
 		         <ttcol>Description</ttcol>
 		         <c>Object[]</c>
 		         <c>The array of currently selected objects, each with type and dataObject properties</c>
-		        </texttable>				
+		        </texttable>
    			</t>
    		</section>
    		<section title="addListener" anchor="gadgets.selection.addListener">
@@ -4816,7 +4884,7 @@ gadgets.selection.setSelection(selection);
 		        </texttable>
    			</t>
    		</section>
-   		
+
    	</section>
    </section>
    <section title="gadgets.skins"
@@ -5335,12 +5403,12 @@ gadgets.selection.setSelection(selection);
                     org.opensocial, and all derivities, for use within the OpenSocial specification.
                     Developers MUST NOT use org.opensocial or any derivitive
                     namespace when defining their own topics.</t>
-                
+
             </section>
-            
+
         </section>
         <section title="gadgets.Hub" anchor="gadgets.Hub">
-            
+
             <section title="Method Details">
                 <section title="publish" anchor="publish">
                     <t>publish(topic, payload)</t>
@@ -5445,15 +5513,15 @@ gadgets.selection.setSelection(selection);
         <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe">OpenAjax Hub documentation</eref> for
             more information.</t>
          </section>
-     
+
         </section>
         <section title="Other Methods" anchor="OtherMethods">
-            <t>The 'gadgets.Hub' object is an instance of IframeHubClient and supports some additional methods.  
+            <t>The 'gadgets.Hub' object is an instance of IframeHubClient and supports some additional methods.
             Please see the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.IframeHubClient">OpenAjax Hub documentation</eref> for more information.</t>
-        </section>   
         </section>
-            
-            
+        </section>
+
+
         </section>
 
     <section title="Container Example" anchor="ContainerExample">
@@ -5470,8 +5538,8 @@ gadgets.HubSettings.params = {
  HubClient: {
     onSecurityAlert: function( alertSource, alertType ) {
       alert( "Gadget stopped attempted security breach: " + alertType );
-      window.location.href = "about:blank"; // Forces container to see Frame Phish alert and probably close this gadget 
-    }, 
+      window.location.href = "about:blank"; // Forces container to see Frame Phish alert and probably close this gadget
+    },
     scope: gadgetInstance
   } };
 
@@ -5500,7 +5568,7 @@ gadgets.util.registerOnLoadHandler( function() {
     gadgets.Hub = new OpenAjax.hub.IframeHubClient(  gadgets.HubSettings.params );
 
     // Connect to the ManagedHub
-    gadgets.Hub.connect( gadgets.HubSettings.onConnect ); 
+    gadgets.Hub.connect( gadgets.HubSettings.onConnect );
 
   } catch(e) {
     // TODO: error handling should be consistent with other OS gadget initialization error handling
@@ -5508,7 +5576,7 @@ gadgets.util.registerOnLoadHandler( function() {
 } );
             </artwork>
         </t>
-    
+
     </list>
 </section>
     <section title="Gadget Example" anchor="GadgetExample">
@@ -5526,7 +5594,7 @@ gadgets.HubSettings.params.HubClient.log = function(msg) {
 gadgets.util.registerOnLoadHandler(function() {
         gadgets.Hub.subscribe("org.foo.bar.topic", callback);
         gadgets.Hub.publish("org.foo.bar.topic2", data);
-}); 
+});
    </artwork>
         <t>
             See
@@ -5545,7 +5613,7 @@ gadgets.util.registerOnLoadHandler(function() {
     topic, such as "date", where one widget might provide a start date and
     the other widget an end date, and also because sometimes topic names
     and/or payload types are too generic for automatic mapping.</t>
-    
+
     <section title="Attributes for Wiring Metadata" anchor="AttributesForWiringMetadata">
         <t>
             <texttable align="left">
@@ -5560,28 +5628,28 @@ gadgets.util.registerOnLoadHandler(function() {
                 The dot-delimited topic name, e.g. "org.example.randomNumber". This
                 name follows the rules defined in the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Metadata_1.0_Specification_Widget_Metadata#topic_element_name_attribute">OpenAjax Widget Metadata
                 specification</eref>. Developers of gadgets MAY allow the @name attribute to be ovveridden using user preference variables. See <xref target="usingVariablesForNameAttribute">Using Varuables for @name</xref></c>
-                
+
                 <c>type</c>
                 <c>String</c>
                 <c>Optional</c>
                 <c>Type name for the event's payload data. When not specificed, any
                 type wil be allowed. See <xref target="EventDataTypes">Event Data Types</xref>.</c>
-                
+
                 <c>title</c>
                 <c>String</c>
                 <c>Optional</c>
                 <c>Title for this type of event that is appropriate for a non-technical reader. When not specified, the value of the "name" attribute will be used.</c>
-                
+
                 <c>publish</c>
                 <c>boolean</c>
                 <c>Optional</c>
                 <c>Indicates if the gadget publishes events on this topic. The default value is "false".</c>
-                
+
                 <c>subscribe</c>
                 <c>boolean</c>
                 <c>Optional</c>
                 <c>Indicates if the gadget subscribes to events that are published on this topic. The default value is "false".</c>
-                
+
                 <c>description</c>
                 <c>String</c>
                 <c>Optional</c>
@@ -5592,7 +5660,7 @@ gadgets.util.registerOnLoadHandler(function() {
                 Consider a gadget that subscribes to a topic "com.example.address".
                 The description migh read, "When this gadget receives an event on the com.example.address
                 topic, it displays mass transit options within 10km of the address received as the event payload."</c>
-                
+
                 <c>aboutUrl</c>
                 <c>String</c>
                 <c>Optional</c>
@@ -5618,14 +5686,14 @@ gadgets.util.registerOnLoadHandler(function() {
                 developers to bridge simple mismatches between gadgets. It is
                 important that gadget developers use this mechanism where possible.
                 This will maximize the reusability of gadgets -- a major goal.</t>
-                
+
                 <section title="Example: Using Variables for @name">
                 <t>The following is an example of how to use variable substituion in the definition of the @name attribute.
                 <figure>
                    <artwork xml:space="preserve">
 &lt;Require feature="pubsub-2"&gt;
-  &lt;Param name="topics"&gt;&lt;![CDATA[ 
-     &lt;Topic title="Selected Location" name="__UP_location__" 
+  &lt;Param name="topics"&gt;&lt;![CDATA[
+     &lt;Topic title="Selected Location" name="__UP_location__"
            description="The currently selected location" type="http://nsgs.gov/geo#Place"
            publish="false" subscribe="true" aboutUrl="http://nsgs.gov"&gt;
     &lt;/Topic&gt;
@@ -5634,18 +5702,18 @@ gadgets.util.registerOnLoadHandler(function() {
 &lt;/Require&gt;
                 </artwork></figure></t>
              </section>
-    
+
         </section>
-        
+
     </section>
-    
-    
+
+
     <section title="Event Data Types" anchor="EventDataTypes">
     <t>The OpenAjax Hub has a predefined set of identifiers that are used to indicate the data type. Tooling and runtime
     container code can use this to infer information about the messages being published
     as well as the parameters a gadget expects to receive when it
     subscribes to a topic.</t>
-    
+
     <t>
     The data types provided by the OpenAjax Hub are "built in". These
     are referred to as the OpenAjax common types, and they require no
@@ -5656,7 +5724,7 @@ gadgets.util.registerOnLoadHandler(function() {
     used and is reserved for types defined
     in the specification, e.g.
     social data types.
-        
+
         <texttable align="left">
             <ttcol>Type Name</ttcol>
             <ttcol>Comments</ttcol>
@@ -5664,101 +5732,101 @@ gadgets.util.registerOnLoadHandler(function() {
             <c>ECMAScipt string</c>
         <c>number</c>
             <c>ECMAScipt number </c>
-            
+
             <c>boolean</c>
             <c>ECMAScipt boolean </c>
-             
-             
+
+
             <c>array</c>
             <c>ECMAScipt array, e.g. [ 1, 1, 2, 3, 5, 8 ]. The element type/s are not specified when the generic "array" type is used.</c>
-             
-             
+
+
             <c>object *</c>
             <c>ECMAScipt object, e.g. { foo: "bar", baz: "boo" }. The specifics of the object are not specified when the generic "object" type is used.</c>
-             
-             
+
+
             <c>null *</c>
             <c>ECMAScipt null</c>
-             
-             
-             
+
+
+
             <c>length *</c>
             <c>Any CSS length value <span style="color:red"> Howard 2009.11.10: CSS version?</span></c>
-             
-             
+
+
             <c>color *</c>
             <c>Any CSS color value</c>
-             
-             
+
+
             <c>id</c>
             <c>ID value - probably not useful for OpenSocial Gadgets, but might as well keep the two specs in sync</c>
-             
-             
+
+
             <c>class *</c>
             <c>zero of more CSS class names, separated by spaces</c>
-             
-             
+
+
             <c>style *</c>
             <c>a string that could be used as value for a 'style' attribute</c>
-             
-             
+
+
             <c>url</c>
             <c>A URL <span style="color:red"> Howard 2009.11.09: Do we want "uri" also?</span></c>
-             
-             
+
+
             <c>html</c>
             <c>A fragment of HTML markup.</c>
-             
-             
+
+
             <c>countrycode *</c>
             <c>A string that represents an [http://www.iso.org/iso/country_codes/iso_3166_code_lists.htm A3 ISO 3166 country code].</c>
-             
-             
+
+
             <c>languagecode *</c>
             <c>A string that represents an [http://www.loc.gov/standards/iso639-2/php/code_list.php ISO 639-2 language code].</c>
-             
-             
+
+
             <c>email</c>
             <c>A string that represents an e-mail address.</c>
-             
-             
+
+
             <c>person</c>
             <c>A string that holds a person's name.</c>
-             
-             
+
+
             <c>postalcode</c>
             <c>A string that represents a postal code.</c>
-             
-             
+
+
             <c>phone</c>
             <c>A string that represents a phone number.</c>
-             
-             
+
+
             <c>date *</c>
             <c>A string that represents a date. MUST be expressed using the "Date Time String Format" defined in the [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification] using one of the date-only forms. For example: "2009-12-15"</c>
-             
-             
+
+
             <c>time *</c>
             <c>A string that represents a time of day. MUST be expressed using the "Date Time String Format" defined in the [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification] using one of the time-only forms. For example: "18:45:00Z" or "10:26:24-05:00"</c>
-             
-             
+
+
             <c>timestamp *</c>
             <c>A string that represents a date and time of day. MUST be expressed using the "Date Time String Format" defined in the [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification]. For example: "2009-12-15:18:45.000Z"</c>
-             
-             
+
+
             <c>duration *</c>
             <c>A string that represents a duration. MUST have format "PYYYY-DDDThh:mm:ss.fff". For example, "P0400-152T20:45:33.123" means "400 years, 152 days, 20 hours, 45 minutes, 33.123 seconds, while "P0003-000T01:56:22.000" means "3 years, 1 hour, 56 minutes and 22.000 seconds." (Must use this one variant defined in the ISO 8601 standard). </c>
-             
-             
+
+
             <c>*</c>
             <c>Asterisk, or missing type attribute, means "any datatype"</c>
-                    
+
         </texttable>
-        
+
         </t>
-        
+
     </section>
-    
+
     <section title="Wiring Metadata Format" anchor="WiringMetadataFormat">
 
     <t>
@@ -5767,24 +5835,24 @@ gadgets.util.registerOnLoadHandler(function() {
         topic information. The format of this string is as follows:
  <figure>
  <artwork type="xml:space=preserve">
- 
+
  &lt;Require feature="pubsub-2"&gt;
-  &lt;Param name="topics"&gt;&lt;![CDATA[ 
+  &lt;Param name="topics"&gt;&lt;![CDATA[
     &lt;Topic title="string" name="string" description="string" type="string"
            publish="boolean" subscribe="boolean" aboutUrl="string"&gt;
     &lt;/Topic&gt;
     &lt;!-- etc. for other topics --&gt;
   ]]&lt;/Param&gt;
 &lt;/Require&gt;
- 
+
  </artwork></figure></t>
     </section>
-    
+
     </section>
-</section> 
-   
-   
-   
+</section>
+
+
+
    <section title="JavaScript Internationalization (i18n)">
     <t>A container MUST emit the OpenSocial JavaScript internationalization
     libraries and data files required by the libraries if an application
@@ -6049,7 +6117,7 @@ inclusive
       behavior. The pattern string is allowed to contain string literals, and
       one type of pattern might not work for all locales. In those case, the
       pattern itself could also be locale specific, thus not good for sharing
-      among locales. 
+      among locales.
       <figure>
        <preamble>Example</preamble>
        <artwork xml:space="preserve">
@@ -6057,7 +6125,7 @@ date = new Date(2006, 6, 27, 13, 10, 10, 250);
 assertEquals("13:10:10", gadgets.i18n.formatDateTime("HH:mm:ss", date));
 </artwork>
       </figure></t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -6085,7 +6153,7 @@ assertEquals("13:10:10", gadgets.i18n.formatDateTime("HH:mm:ss", date));
       <t>Description: Format number using the pattern specified. The pattern
       could be a string pattern or one of the predefined patterns. The
       formatted string is returned. If an error is encountered, zero will be
-      returned. 
+      returned.
       <figure>
        <preamble>Example</preamble>
        <artwork xml:space="preserve">
@@ -6095,7 +6163,7 @@ var str = gadgets.i18n.formatNumber(gadgets.i18n.CURRRENCY_PATTERN, 1234.569);
 assertEquals("$1,234.58", str);
 </artwork>
       </figure></t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -6129,7 +6197,7 @@ assertEquals("$1,234.58", str);
       interpretting it as specified by pattern. The parsed result will be saved
       into a Date object ("date"). "start" indicates from where in the string
       the parse should start. This method returns the number of characters
-      consumed. 
+      consumed.
       <figure>
        <preamble>Example</preamble>
        <artwork xml:space="preserve">
@@ -6140,13 +6208,13 @@ assertTrue(date.getDate() == 02);
 assertTrue(gadgets.i18n.parseDateTime("yyyyMMdd", "20051202", 0, date) &gt; 0);
 assertEquals(2005, date.getFullYear());
 assertTrue(date.getMonth() == 12 - 1);
-assertTrue(date.getDate() == 02);   
+assertTrue(date.getDate() == 02);
 </artwork>
       </figure>A whole piece of string is usually the target for parsing. But
       in some cases, you might just want to parse part of the string, "start"
       parameter and return value also make it very convenient. For example,
       suppose you want to parse a string like "88/01, 99/03, 98/05, 97/02", the
-      following code will do the job. 
+      following code will do the job.
       <figure>
        <preamble>Example</preamble>
        <artwork xml:space="preserve">
@@ -6164,7 +6232,7 @@ while(1) {
 }
 </artwork>
       </figure>Similar to the formatting functions, a predefined pattern could
-      also be passed in as the first parameter. 
+      also be passed in as the first parameter.
       <figure>
        <preamble>Example</preamble>
        <artwork xml:space="preserve">
@@ -6176,7 +6244,7 @@ assertEquals(date.getMonth(), 7 - 1);
 assertEquals(date.getDate(), 24);
 </artwork>
       </figure></t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -6208,7 +6276,7 @@ assertEquals(date.getDate(), 24);
       <t>&lt;static&gt; Type: {number} gadgets.i18n.parseNumber(pattern, text,
       opt_pos, opt_currencyCode)</t>
       <t>Description: Parse string to get a number the pattern specified. The
-      pattern could be a string pattern or one of the predefined patterns. 
+      pattern could be a string pattern or one of the predefined patterns.
       <figure>
        <preamble>Example</preamble>
        <artwork xml:space="preserve">
@@ -6219,7 +6287,7 @@ var value = gadgets.i18n.parseNumber(gadgets.i18n.CURRENCY_PATTERN, "0,30 €");
 assertEquals(0.30, value);
 </artwork>
       </figure></t>
-      <t>Parameters: 
+      <t>Parameters:
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -6266,7 +6334,7 @@ assertEquals(0.30, value);
           it's URL.
           Gadget developers SHOULD make the OpenSearch feature optional
           in thier gadget defintions to allow for ineroperability in all
-          containers.  
+          containers.
        </t>
      <section title="Data Model">
        <t>
@@ -6286,7 +6354,7 @@ assertEquals(0.30, value);
             </c>
             <c>url</c>
             <c>
-              A URL to the OpenSearch 1.1 description document. 
+              A URL to the OpenSearch 1.1 description document.
             </c>
           </texttable>
          </t>
@@ -6310,25 +6378,25 @@ assertEquals(0.30, value);
           <section title="Embedded OpenSearch Description">
             <figure>
               <artwork xml:space="preserve">
-&lt;?xml version="1.0" encoding="UTF-8" ?&gt; 
-&lt;Module&gt; 
-  &lt;ModulePrefs title="OpenSearch Example"&gt; 
-    &lt;Optional feature="opensearch"&gt; 
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;Module&gt;
+  &lt;ModulePrefs title="OpenSearch Example"&gt;
+    &lt;Optional feature="opensearch"&gt;
       &lt;Param name="description"&gt;
         &lt;![CDATA[
-          &lt;OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"&gt; 
-            &lt;ShortName&gt;Example Search&lt;/ShortName&gt; 
-            &lt;Description&gt;Realtime Example Search&lt;/Description&gt; 
+          &lt;OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"&gt;
+            &lt;ShortName&gt;Example Search&lt;/ShortName&gt;
+            &lt;Description&gt;Realtime Example Search&lt;/Description&gt;
             &lt;Url type="application/atom+xml" method="get" template="http://search.example.com/search.atom?q={searchTerms}"/&gt;
-            &lt;Image width="16" height="16"&gt;http://search.example.com/favicon.png&lt;/Image&gt; 
+            &lt;Image width="16" height="16"&gt;http://search.example.com/favicon.png&lt;/Image&gt;
             &lt;InputEncoding&gt;UTF-8&lt;/InputEncoding&gt;
             &lt;SearchForm&gt;http://search.example.com/&lt;/SearchForm&gt;
           &lt;/OpenSearchDescription&gt;
         ]]&gt;
-      &lt;/Param&gt; 
-    &lt;/Optional&gt; 
+      &lt;/Param&gt;
+    &lt;/Optional&gt;
   &lt;/ModulePrefs&gt;
-  &lt;Content type="url" href="http://example.com/searchGadget.xml" /&gt; 
+  &lt;Content type="url" href="http://example.com/searchGadget.xml" /&gt;
 &lt;/Module&gt;
               </artwork>
             </figure>
@@ -6336,36 +6404,36 @@ assertEquals(0.30, value);
           <section title="Referenced OpenSearch Description">
             <figure>
               <artwork xml:space="preserve">
-&lt;?xml version="1.0" encoding="UTF-8" ?&gt; 
-&lt;Module&gt; 
-  &lt;ModulePrefs title="OpenSearch Example"&gt; 
-    &lt;Optional feature="opensearch"&gt; 
-      &lt;Param name="url"&gt;http://search.example.com/openSearchDescription.xml&lt;/Param&gt; 
-    &lt;/Optional&gt; 
+&lt;?xml version="1.0" encoding="UTF-8" ?&gt;
+&lt;Module&gt;
+  &lt;ModulePrefs title="OpenSearch Example"&gt;
+    &lt;Optional feature="opensearch"&gt;
+      &lt;Param name="url"&gt;http://search.example.com/openSearchDescription.xml&lt;/Param&gt;
+    &lt;/Optional&gt;
   &lt;/ModulePrefs&gt;
-  &lt;Content type="url" href="http://example.com/searchGadget.xml" /&gt; 
+  &lt;Content type="url" href="http://example.com/searchGadget.xml" /&gt;
 &lt;/Module&gt;
               </artwork>
             </figure>
-          </section>  
+          </section>
         </section>
       </section>
   </section>
    <section title="Embedded Experiences" anchor="Embedded-Experiences">
   <xref target="Issue-1144">Discussion</xref>
-    <t>Embedded experiences provides a way for a container to display live 
+    <t>Embedded experiences provides a way for a container to display live
     content from virtually any content host.  Embedded experiences delegates
     to the content host in order to provide its representation of what the
     content should look like.  It can do this by either using a URL or a gadget.
-    Embedded expereinces can be used in many different contexts.  Some 
-    examples include, but are not limited to, activity streams, emails, and 
+    Embedded expereinces can be used in many different contexts.  Some
+    examples include, but are not limited to, activity streams, emails, and
     ATOM feeds.</t>
-    
+
     <section title="Data Model">
-      <t>A simple data model has been defined in order to represent an 
+      <t>A simple data model has been defined in order to represent an
       embedded experience.  The data model may inclue the following fields.
       </t>
-      
+
       <texttable align="left">
          <ttcol>Field</ttcol>
          <ttcol>Description</ttcol>
@@ -6373,50 +6441,50 @@ assertEquals(0.30, value);
          <c>A URL to a web page that should be used as an embedded experience.
          </c>
          <c>gadget</c>
-         <c>A URL to a gadget definition that should be used as an embedded 
+         <c>A URL to a gadget definition that should be used as an embedded
          experience.</c>
          <c>context</c>
          <c>
             Contextual data the gadget can use in order to know what content to
-            embed.  The format of this data is left up to the provider.  This 
-            should only be included if a gadget is being used as the embedded 
+            embed.  The format of this data is left up to the provider.  This
+            should only be included if a gadget is being used as the embedded
             experience.
          </c>
          <c>previewImage</c>
         <c>(Optional) An image that can act as a preview for the content.</c>
       </texttable>
-      
+
       <t>*The data model must contain at least a URL or gadget.  A URL and
-      a gadget may be present in the same data model, in which case the 
+      a gadget may be present in the same data model, in which case the
       decision about which embedded experience to render is left up to the
       container.</t>
-      
+
       <section title="url">
-        <t>A simple URL may be used as an embedded experience.  A URL provides 
-        the easiest way to provide an  embedded experience as a provider would 
+        <t>A simple URL may be used as an embedded experience.  A URL provides
+        the easiest way to provide an  embedded experience as a provider would
         only have to reference an existing page.</t>
       </section>
-      
+
       <section title="gadget">
-        <t>A gadget may also be used to provide an embedded experience.  
-        Gadgets provide a more advanced embedded experience because they have 
+        <t>A gadget may also be used to provide an embedded experience.
+        Gadgets provide a more advanced embedded experience because they have
         access to all of the gadget and OpenSocial APIs.</t>
       </section>
-      
+
       <section title="context">
-        <t>If a gadget is provided in the data model than a context must also 
+        <t>If a gadget is provided in the data model than a context must also
         be included as well.  The context field can be used to pass data to the
-        gadget so it knows what content is being embedded.  This allows the 
-        gadget to be built abstractly while leveraging the context to know the 
+        gadget so it knows what content is being embedded.  This allows the
+        gadget to be built abstractly while leveraging the context to know the
         specifics of what it is supposed to render.</t>
       </section>
-      
+
       <section title="previewImage">
-        <t>This optional field may be provided in order to show a preview of 
-        the embedded experience without incuring the overhead of rendering the 
+        <t>This optional field may be provided in order to show a preview of
+        the embedded experience without incuring the overhead of rendering the
         actual embedded experience itself.</t>
       </section>
-      
+
       <section title="Example Data Models">
         <section title="XML-URL">
       <figure>
@@ -6437,7 +6505,7 @@ assertEquals(0.30, value);
     &lt;id&gt;123&lt;/id&gt;
   &lt;/context&gt;
   &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
-&lt;/embed&gt;  
+&lt;/embed&gt;
         </artwork>
       </figure>
     </section>
@@ -6452,7 +6520,7 @@ assertEquals(0.30, value);
     &lt;id&gt;123&lt;/id&gt;
   &lt;/context&gt;
   &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
-&lt;/embed&gt;  
+&lt;/embed&gt;
         </artwork>
       </figure>
     </section>
@@ -6461,7 +6529,7 @@ assertEquals(0.30, value);
         <artwork xml:space="preserve">
 ...
 "embed" : {
-  "url" : "http://www.example.com/embedded/123"       
+  "url" : "http://www.example.com/embedded/123"
 }
 ...
         </artwork>
@@ -6473,7 +6541,7 @@ assertEquals(0.30, value);
 ...
 "embed" : {
   "gadget" : "http://www.example.com/embedded/gadget.xml",
-  "context" : { 
+  "context" : {
     "title" : "Hello World",
     "id" : 123
   },
@@ -6490,7 +6558,7 @@ assertEquals(0.30, value);
 "embed" : {
     "url" : "http://www.example.com/embedded/123",
   "gadget" : "http://www.example.com/embedded/gadget.xml",
-  "context" : { 
+  "context" : {
     "title" : "Hello World",
     "id" : 123
   },
@@ -6502,38 +6570,38 @@ assertEquals(0.30, value);
     </section>
       </section>
     </section>
-    
+
     <section title="Views">
       <t>Gadgets may have a dedicated <xref target="gadgets.views.View">view
       </xref> for when they are rendered as an embedded experience.  The view
       name "embedded" has been reserved as the view the container will render
-      when it wants to render an embedded experience.  If this view is not 
+      when it wants to render an embedded experience.  If this view is not
       present the container should render the default view.</t>
     </section>
-    
+
     <section title="Accessing The Context">
-      <t>An embedded experience gadget has the option of requiring some 
-      contextual information in order to render itself.  By abstracting the 
-      data from the gadget itself, it allows gadget developers to develop a 
-      general gadget that can be used for all embedded expereinces of a 
-      specific type.  For example, a gadget developer can develop an 
+      <t>An embedded experience gadget has the option of requiring some
+      contextual information in order to render itself.  By abstracting the
+      data from the gadget itself, it allows gadget developers to develop a
+      general gadget that can be used for all embedded expereinces of a
+      specific type.  For example, a gadget developer can develop an
       embedded experiences gadget to embed videos.  A gadget does not need to
-      be built for each individual video, instead it should be built so that 
-      when it gets the id of the video it knows how to display that video.  
-      The id can be contained in the contextual data from the embedded 
-      experience data model which comes from the service.  The gadget can 
+      be built for each individual video, instead it should be built so that
+      when it gets the id of the video it knows how to display that video.
+      The id can be contained in the contextual data from the embedded
+      experience data model which comes from the service.  The gadget can
       then retreive this data from the container so it can render the correct
       video.</t>
-      
-      <t>Embedded experience gadgets should require the embedded-experiences 
+
+      <t>Embedded experience gadgets should require the embedded-experiences
       feature in their gadget definition in order to access the context.  The
       contextual data is stored in the <xref target="DataContext">data
-      context</xref> object for the gadget.  The key, 
-      org.opensocial.ee.context, has been reserved for storing the context.  
-      Gadgets can add a listener on the data context object for this key, or 
+      context</xref> object for the gadget.  The key,
+      org.opensocial.ee.context, has been reserved for storing the context.
+      Gadgets can add a listener on the data context object for this key, or
       it may retreive the key's value by using the data context APIs.</t>
     </section>
-    
+
     <section title="Gadget Example">
     <t>Below is an example gadget definition which leverages embedded
     expereince.</t>
@@ -6562,27 +6630,27 @@ assertEquals(0.30, value);
         </artwork>
     </figure>
   </section>
-    
+
     <section title="Security">
-      <t>Embedded experiences allows content to rendered on the page that 
-      user has not necessarily asked for, therefore it needs to be secured.  
-      The container should only ever render content that the user has 
+      <t>Embedded experiences allows content to rendered on the page that
+      user has not necessarily asked for, therefore it needs to be secured.
+      The container should only ever render content that the user has
       previously approved.  This specification does not dictate how
-      containers should render embedded expereinces securley.  The 
+      containers should render embedded expereinces securley.  The
       implementation of how to do this is left up to the individual
       containers.</t>
     </section>
-    
+
     <section title="Use Case Examples">
       <section title="Activity Streams">
         <t>One of the most common use cases of embedded experiences will be
-        in activity streams.  By using embedded experiences in activity 
-        streams, it allows content providers to represent the content of 
-        the activity entry in a more interactive fasion.  Not only can you 
-        provide a text description of the activity, but embedded 
-        experiences allows you to provide the actual representation of the 
+        in activity streams.  By using embedded experiences in activity
+        streams, it allows content providers to represent the content of
+        the activity entry in a more interactive fasion.  Not only can you
+        provide a text description of the activity, but embedded
+        experiences allows you to provide the actual representation of the
         object the activity took place on.</t>
-        
+
         <figure>
           <artwork xml:space="preserve">
 {
@@ -6623,7 +6691,7 @@ assertEquals(0.30, value);
           "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
         "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
         ]
-      } 
+      }
     }
   }
 }
@@ -6631,37 +6699,37 @@ assertEquals(0.30, value);
         </figure>
       </section>
       <section title="Email">
-        <t>Numerous services send email notifications to your inbox in 
-        order to let you know something took place that you may be 
-        interested in.  Most of the time however these notifications don't 
-        give you much useful information.  In order to do anything about 
-        the notification you have to go back out to the actual services 
-        website.  By leveraging embedded experiences, services can send an 
-        actual representation of the object the notification is about, and 
+        <t>Numerous services send email notifications to your inbox in
+        order to let you know something took place that you may be
+        interested in.  Most of the time however these notifications don't
+        give you much useful information.  In order to do anything about
+        the notification you have to go back out to the actual services
+        website.  By leveraging embedded experiences, services can send an
+        actual representation of the object the notification is about, and
         allow the user to take action on the notification strait from their
         inbox.</t>
-        
+
         <t>The embedded experiences data model may be embedded into MIME
         emails in order to allow email clients to render an embedded
         experience.  To send an embedded experience in a MIME email the
         agent sending the MIME email must conform to the following:
-        
+
           <list style="symbols">
             <t>The MIME email must be a multipart/alternative MIME email.
             The email needs to be multipart/alternative because the embedded
-            experiences part is just an alternate representation of the 
+            experiences part is just an alternate representation of the
             content in the other parts.</t>
-            <t>The MIME email must have at least two MIME parts, one of type 
-            text/html, and one of type application/embed+xml or 
-            application/embed+json. Since the embedded experience relys on 
-            remote content, the text/html part will be needed if the remote 
+            <t>The MIME email must have at least two MIME parts, one of type
+            text/html, and one of type application/embed+xml or
+            application/embed+json. Since the embedded experience relys on
+            remote content, the text/html part will be needed if the remote
             content cannot be rendered.</t>
             <t>The application/embed+xml or application/embed+json part
             must contain either the XML or JSON version of the embedded
             experiences data model.</t>
           </list>
         </t>
-        
+
         <figure>
           <artwork xml:space="preserve">
 From: notifications@socialnetwork.com
@@ -6673,7 +6741,7 @@ Content-Type: multipart/alternative;
 
 Mary has commented on your status.
 
---XXXXboundary text 
+--XXXXboundary text
 Content-Type: text/plain
 
 Mary has commeneted on your status.
@@ -6697,7 +6765,7 @@ Content-Type: application/embed+json
     </section>
   </section>
   </section>
-  
+
   <references title="Discussion">
   <!-- Spec change issues/discussion -->
    <reference anchor='Issue-1133'
@@ -6711,37 +6779,37 @@ Content-Type: application/embed+json
     <front>
      <title>Propose fix for the 1.1 XSD schema in the core server spec</title>
     </front>
-   </reference> 
+   </reference>
    <reference anchor='Issue-1139'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1139">
     <front>
      <title>Removing Quirks Mode</title>
     </front>
-   </reference>   
+   </reference>
    <reference anchor='Issue-1173'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1173">
     <front>
      <title>Signing of URL Content requests</title>
     </front>
-   </reference> 
+   </reference>
    <reference anchor='Issue-1162'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
     <front>
      <title>Proposal for Simple Gadget format support in OS 2.0 spec</title>
     </front>
-   </reference> 
+   </reference>
    <reference anchor='Issue-1164'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1164">
     <front>
      <title>Variable substitution standardized on EL</title>
     </front>
-   </reference> 
+   </reference>
    <reference anchor='Issue-1171'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1171">
     <front>
      <title>MessageBundle example missing from Core Gadget spec localization section</title>
     </front>
-   </reference> 
+   </reference>
    <reference anchor='Issue-1169'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1169">
     <front>
@@ -6753,7 +6821,7 @@ Content-Type: application/embed+json
     <front>
      <title>View Enhancements To Support Opening Of Gadgets and URLs</title>
     </front>
-   </reference> 
+   </reference>
    <reference anchor='Issue-1161'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
     <front>
@@ -6765,13 +6833,13 @@ Content-Type: application/embed+json
     <front>
      <title>Proposal for OpenSearch Gadget Contributions</title>
     </front>
-   </reference>  
+   </reference>
    <reference anchor='Issue-1144'
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
     <front>
      <title>Embedded Experiences</title>
     </front>
-   </reference> 
+   </reference>
   </references>
   <!-- Real references -->
   <references>
