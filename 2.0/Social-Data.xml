@@ -1994,8 +1994,9 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <c>A webpage related to the organization.</c>
      </texttable></t>
    </section>
-   <x:incubating note="Simple File Object" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1190">   
+ 
    <section title="File" anchor="File">
+      <x:incubating note="Simple File Object" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1190">  
      <t>Describes a generic file or document.
           <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
@@ -2027,8 +2028,9 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <c>The permanent IRI of the file's HTML representation.</c>
      </texttable>
      </t>
+        </x:incubating>
    </section>   
-   </x:incubating>
+
   </section>
  </middle>
  <back>
