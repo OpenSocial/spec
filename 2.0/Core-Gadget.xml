@@ -583,14 +583,66 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
 
      <section title="/ModulePrefs/OAuth"
               anchor="OAuthElement">
-<x:draft note="Issue 1181 - Cross-container data requests" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1181">
-      <t>The OAuth element has been deprecated in favor of the
-	  <xref target="DataPipelining-ServiceProviders">Service Providers feature</xref>
-	  for cases where multiple credentials are desired.  
-	  Primary OAuth credentials for a gadget are managed as defined
-	  in the <xref target="OAuth">OAuth</xref> section.
-	  </t>
-</x:draft>
+      <t>Supplies the Container with OAuth service configuration for the
+      gadget. For details, see
+      <xref target="OAuth">OAuth</xref>. This tag has no attributes and has
+      child elements. Containers SHOULD NOT interpret child text nodes.</t>
+      <section title="/ModulePrefs/OAuth/Service">
+       <t>A single OAuth service configuration.</t>
+       <list style="hanging">
+        <t hangText="@name">The name of the service, used for referencing OAuth
+        services at runtime. This parameter is optional, and if unspecified
+        defaults to an empty string. Gadget developers specify which OAuth
+        service they wish to use by passing the service name as a parameter to 
+        <xref target="gadgets.io.makeRequest">
+        gadgets.io.makeRequest</xref>.</t>
+        <t hangText="text()">Not used at this time.</t>
+       </list>
+       <section title="/ModulePrefs/OAuth/Service/Request">
+        <t>Represents the OAuth request token URL. See 
+        <xref target="OAuth">OAuth</xref>for details.</t>
+        <list style="hanging">
+         <t hangText="@url">The URL for the endpoint.</t>
+         <t hangText="@method">The HTTP verb to use for making the request.
+         Containers MUST use this HTTP method when sending the request to the
+         service URL. This parameter is optional. If unspecified, it defaults
+         to POST.</t>
+         <t hangText="@param_location">One of 3 possible locations in the
+         request to the service where the OAuth parameters may be passed.
+         Developers MAY use this value to specify the location of OAuth-related
+         parameters. The possible values are "uri-query", "auth-header", and
+         "post-body", corresponding to the options described in 
+         <xref target="OAuth-Core">Section 5.2 of the OAuth
+         specification</xref>. The default value is "auth-header".</t>
+         <t hangText="text()">Not used at this time.</t>
+        </list>
+       </section>
+       <section title="/ModulePrefs/OAuth/Service/Access">
+        <t>Represents the OAuth access token URLs. See 
+        <xref target="OAuth">OAuth</xref>for details.</t>
+        <list style="hanging">
+         <t hangText="@url">The URL for the endpoint.</t>
+         <t hangText="@method">The HTTP verb to use for making the request.
+         Containers MUST use this HTTP method when sending the request to the
+         service URL. This parameter is optional. If unspecified, it defaults
+         to POST.</t>
+         <t hangText="@param_location">One of 3 possible locations in the
+         request to the service where the OAuth parameters may be passed.
+         Developers MAY use this value to specify the location of OAuth-related
+         parameters. The possible values are "uri-query", "auth-header", and
+         "post-body", corresponding to the options described in 
+         <xref target="OAuth-Core">Section 5.2 of the OAuth
+         specification</xref>. The default value is "auth-header".</t>
+         <t hangText="text()">Not used at this time.</t>
+        </list>
+       </section>
+       <section title="/ModulePrefs/OAuth/Service/Authorization"
+                anchor="Authorization">
+        <t>The OAuth authorization URL. For details, see 
+        <xref target="OAuth-Core">Section 6.2 of OAuth
+        specification</xref>.</t>
+       </section>
+      </section>
      </section>
     </section>
     <section title="/UserPref"
@@ -844,9 +896,9 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     <t>authz: gadgets.io.AuthorizationType (values are canonicalized by
     converting to lower case. Default value is 'none')</t>
     <t>oauth_received_callback: gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</t>
-	
-<x:draft note="Issue 1181 - Cross-container data requests" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1181">
-</x:draft>
+    <t>oauth_request_token: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</t>
+    <t>oauth_request_token_secret: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</t>
+    <t>oauth_service_name: gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</t>
     <t>oauth_token_name: gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</t>
     <t>oauth_use_token: gadgets.io.RequestParameters.OAUTH_USE_TOKEN</t>
     <t>refresh_interval: gadgets.io.RequestParameters.REFRESH_INTERVAL</t>
@@ -1648,9 +1700,17 @@ gadgets.io.makeRequest(url, callback, params);
        <list style="hanging">
         <t hangText="gadgets.io.RequestParameters.GET_FULL_HEADERS">Returns the full headers from the response.</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK">The URL to return after authorization.</t>
-<x:draft note="Issue 1181 - Cross-container data requests" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1181">
-
-</x:draft>
+        <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN">A
+        service provider may be able to automatically provision a gadget with a
+        request token that is preapproved for access to a resource. The gadget
+        can use that token with the OAUTH_REQUEST_TOKEN parameter. This
+        parameter is optional.</t>
+        <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET">
+        The secret corresponding to a preapproved request token. This parameter
+        is optional.</t>
+        <t hangText="gadgets.io.RequestParameters.OAUTH_SERVICE_NAME">The
+        nickname the gadget uses to refer to the OAuth &lt;Service&gt; element
+        from its XML spec. If unspecified, defaults to "".</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_TOKEN_NAME">The
         nickname the gadget uses to refer to an OAuth token granting access to
         a particular resources. If unspecified, defaults to "". Gadgets can use
@@ -3595,78 +3655,6 @@ osapi.http.post(params).execute(function(result) {
    is unable to also send the opensocial_viewer URL parameter to the 3rd party
    server. The same holds true for @owner and opensocial_owner URL
    parameter.</t>
-  </section>
-  
-  <section title="Service Providers and Cross Container Data Requests" anchor="DataPipelining-ServiceProviders">
-<x:draft note="Issue 1181 - Cross-container data requests" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1181">
-<t>
-   Containers MAY support the ability for a gadget to utilize multiple API credential sets and use them to invoke
-   APIs on different Containers or make secured non-OpenSocial API requests.  This is done by requiring the "service-providers"
-   feature in the ModulePrefs section.  The provider or providers are specified with an &lt;os:serviceProvider%gt; element.
-   This allows a gadget to request OpenSocial data from an alternate container, or use &lt;os:HttpRequest&gt; to make a
-   secure request with a set of credentials other than the primary credentials.
-   </t>
-   <t>
-   Actual credentials, such as OAuth consumer key and secret, are specified out of band from the gadget file.
-   Implementation of out of band key management is left to the containers. One sample implementation would be to provide a secure management console to developer for supplying the service provider keys.  They keys would be registered with the app and under a matched serviceProvider identifying key.  The serviceProvider identifying key is matched by the container during request processing to retrieve the additional credentials to secure the request.
-   </t>
-   
-   <t>
-   <figure>
-   <preamble>Example: Gadget with Service Provider defined and making Cross-container data request</preamble>
-   <artwork xml:space="preserve">
-&lt;Module&gt;
-&lt;ModulePrefs&gt;
-  &lt;Require feature="service-providers" &gt;
-    &lt;os:serviceProvider key="fooNetwork" authz="oauth2"&gt;
-     &lt;uriBasePath&gt;http://fooNet.com/apis/v2/&lt;/uriBasePath&gt;
-    &lt;/os:apiProvider&gt;
-  &lt;/Require&gt;
-&lt;/ModulePrefs&gt;
-&lt;Data&gt;
-
-&lt;os:PeopleRequest key="incontainerPeople" /&gt;
-&lt;os:PeopleRequest key="fooPeople" serviceProvider="fooNetwork" /&gt;
-&lt;os:HttpRequest key="arbitraryFoo" serviceProvider="fooNetwork"
-href="http://fooNet.com/exampleElse/proprietaryStuff" /&gt;
-&lt;/Data&gt;
-&lt;Content&gt;
-I got a proprietary answer of ${arbitraryFoo.SpecialValue} from that endpoint.
-There are ${incontainerPeople.totalResults} people defined in this container.
-There are ${fooPeople.totalResults} people defined on fooNet.
-
-&lt;/Content&gt;
-&lt;/Module&gt;
-	</artwork>
-	</figure>
-	</t>
-
-   <section title="&lt;os:serviceProvider&gt;" >
-   <t>
-   The &lt;os:serviceProvider%gt; element appears within the &lt;Require feature="service-providers"%gt; element and is used to 
-   define and expose specific service providers for use by data pipeline tags.  The service provider is identified by a @key attribute.
-   Data pipeline tags may make use of a particular service provider by specifying a @serviceProvider attribute with the desired 
-   service provider key as the value.
-   </t>
-   <list style="hanging">
-   <t hangText="key">
-   The identifying key for this service provider.
-   </t>
-   <t hangText="key">
-   Attribute identifying key for this service provider.
-   </t>
-   <t hangText="authz">
-   Attribute specifying authorization scheme to use for this service provider.  Containers MUST support values "oauth" corresponding to oauth 1.0.
-   Containers MAY support any other authorization scheme.
-   </t>
-   <t hangText="uriBasePath">
-   Element used to set a base URI for REST API calls.  This acts as the URI base for all OpenSocial data tags invoked on a different container.
-   </t>
-   </list>
-
-   </section>
-	
-</x:draft>
   </section>
   <section title="Handling of errors">
    <t>With pipelined data prepared for proxied content, errors are simply
