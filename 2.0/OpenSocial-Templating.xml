@@ -154,67 +154,6 @@
    consistent meaning and behavior for the attributes in a future release of
    OpenSocial.</t>
   </section>
-  <section title="Security Policy">
-  <t>
-  The Security Policy feature is used by an application to request permissions under 
-  which to run.  Specific permissions are requested with &lt;Param&gt; elements.
-  The Security Policy feature is specified with the feature name "security-policy".
-  A container MAY support the Security Policy feature.
-   <figure>
-    <artwork xml:space="preserve">
-&lt;ModulePrefs &gt;
-  &lt;Optional feature="security-policy" &gt;
-    &lt;Param name="el_escaping"&gt;html&lt;/Param&gt;
-  &lt;/Optional &gt;
-&lt;/ModulePrefs &gt;
-</artwork>
-   </figure>  
-  </t>
-  <section title="Permissions">
-  <t>
-  Permissions are specified by using &lt;Param&gt; elements to identify
-  the permission name and requested value for the permission.
-  A container may override any application-requested permission with its own security policy.
-  </t>
-  <t>
-  The "el_escaping" permission requests escaping behavior for Expression Language (EL)
-  statements within templates.  Valid values are:
-    <list style="symbols">
-  <t>html - Automatically HTML encode all EL statements.  A container MUST HTML escape all elements and attributes.  A container SHOULD prevent any JavaScript code from executing in an EL statement.</t>
-  <t>none - Disables automatic escaping. EL expression results will be
-emitted raw, any markup will be rendered.</t>
-  </list>
-  </t>
-  <t>
-  If an application requests a security policy that is not supported, the container MUST log an error to the gadgets.log.  A container MAY render that gadget using a supported security policy, or display an appropriate error message.  
-  </t>
-  
-  <t>
-Escaping rules specified with the "el_escaping" parameter are applied to all views.  An application 
-may request a different escaping policy for a specific view by specifying the view name as 
-a suffix with a preceeding colon to the el_escaping name.  For example, to specify html escaping on the 'profile' view and no escaping for all other views, the following is used:
-   <figure>
-    <artwork xml:space="preserve">
-&lt;ModulePrefs &gt;
-  &lt;Optional feature="security-policy"&gt;
-    &lt;Param name="el_escaping:profile" &gt;html&lt;/Param&gt;
-    &lt;Param name="el_escaping" &gt;none&lt;/Param&gt;
-  &lt;/Optional &gt;
-&lt;/ModulePrefs &gt;
-</artwork>
-   </figure>  
-  </t>
-  <t>
-Containers SHOULD apply HTML escaping by default to all views that are not otherwise constrained or protected by a security mechanism (ex: jail domained IFrame, trusted partner, pre-filtered content).
-  </t>
-
-  <t>
-  In addition to the above permission, a container may extend the Security Policy 
-  feature to add any container-specific security permission or experiment.
-  </t>
-  </section>
-
-  </section>
   <section title="Expressions">
    <t>Expressions can be embedded into the template XML using the syntax
    ${Expr}. Variable names, properties, and function names are all case-sensitive.
@@ -311,57 +250,57 @@ data['Viewer']['Name']
    </section>
    <section title="Built-in functions">
     <t>The EL will provide a number of built-in functions.  The initial 
-	set of functions provides string escaping control.  Containers MAY experiment 
-	by adding functions of their own to the EL.
-	</t>
-	     <texttable align="left">
+  set of functions provides string escaping control.  Containers MAY experiment 
+  by adding functions of their own to the EL.
+  </t>
+       <texttable align="left">
          <ttcol>EL Function</ttcol>
          <ttcol>Description</ttcol>
 
-	<c>htmlEncode</c>
-	<c>Encode HTML markup entities.  At minimum escape greater-than and less-than symbols and quotation marks to their encoded equivalents.</c>
-	<c>htmlDecode</c>
-	<c>Unescape an HTML-encoded string.</c>
-	<c>urlEncode</c>
-	<c>URL-encode the contained string.  The behavior should mirror the JavaScript function encodeURIComponent.</c>
-	<c>urlDecode</c>
-	<c>URL-decode the contained string.  The behavior should mirror the JavaScript function decodeURIComponent.</c>
-	<c>filterUrl</c>
-	<c>Apply rules to make the URL safe for inclusion in markup.  Recommendations are to disallow javascript and apply anti-phishing mechanisms.</c>
-	<c>jsStringEscape</c>
-	<c>Escape string for inclusion within JavaScript block.
+  <c>htmlEncode</c>
+  <c>Encode HTML markup entities.  At minimum escape greater-than and less-than symbols and quotation marks to their encoded equivalents.</c>
+  <c>htmlDecode</c>
+  <c>Unescape an HTML-encoded string.</c>
+  <c>urlEncode</c>
+  <c>URL-encode the contained string.  The behavior should mirror the JavaScript function encodeURIComponent.</c>
+  <c>urlDecode</c>
+  <c>URL-decode the contained string.  The behavior should mirror the JavaScript function decodeURIComponent.</c>
+  <c>filterUrl</c>
+  <c>Apply rules to make the URL safe for inclusion in markup.  Recommendations are to disallow javascript and apply anti-phishing mechanisms.</c>
+  <c>jsStringEscape</c>
+  <c>Escape string for inclusion within JavaScript block.
     <figure>
      <artwork xml:space="preserve">
 var x = "${jsStringEscape(someVar)}";
 </artwork>
-    </figure>	
-	</c>
-	</texttable>
+    </figure> 
+  </c>
+  </texttable>
   <xref target="Issue-1176">Discussion</xref>
    </section>
 <section title="Reserved EL properties">   
-	<t>
-	A number of root-level property names have been reserved for container-controlled values.  
-	A container MAY override values from an external source (ex: JSON data loaded with os:HttpRequest)
-	if it uses any of the reserved keys at the root level of the data object.
-	</t>
-	<list stype="symbols">
-	<t>startIndex</t>
-	<t>totalResults</t>
-	<t>count</t>
-	<t>itemsPerPage</t>
-	<t>sorted</t>
-	<t>filtered</t>
-	</list>
+  <t>
+  A number of root-level property names have been reserved for container-controlled values.  
+  A container MAY override values from an external source (ex: JSON data loaded with os:HttpRequest)
+  if it uses any of the reserved keys at the root level of the data object.
+  </t>
+  <list stype="symbols">
+  <t>startIndex</t>
+  <t>totalResults</t>
+  <t>count</t>
+  <t>itemsPerPage</t>
+  <t>sorted</t>
+  <t>filtered</t>
+  </list>
    </section>
    </section>
    <section title="EL access to meta-information of DataPipeline variables">
     <t>
-	Much of the data available to the EL through the Data Context is generated
-	by Data Pipeline tags.  The underlying REST endpoints that generate this data
-	includes meta-information in addition to the actual data.  Below is an example 
-	of the JSON response for a list of people.
-	
+  Much of the data available to the EL through the Data Context is generated
+  by Data Pipeline tags.  The underlying REST endpoints that generate this data
+  includes meta-information in addition to the actual data.  Below is an example 
+  of the JSON response for a list of people.
+  
     <figure>
      <artwork xml:space="preserve">
 {
@@ -376,35 +315,35 @@ var x = "${jsStringEscape(someVar)}";
 }
 </artwork>
     </figure>
-	</t>
-	<t>
-	Any EL statements that access this information begin evaluation from the "entry" key.
-	Assuming the above data was placed under a key "friends", the following EL statement
-	would evaluate to "Dick":
+  </t>
+  <t>
+  Any EL statements that access this information begin evaluation from the "entry" key.
+  Assuming the above data was placed under a key "friends", the following EL statement
+  would evaluate to "Dick":
     <figure>
      <artwork xml:space="preserve">
 ${friends[0].displayName)
 </artwork>
     </figure></t>
     <t>
-	Response meta-information that exists above the "entry" key in the raw response
-	may be accessed from the EL key root through the reserved keys "totalResults", "startIndex", etc.  
-	For example, to access the
-	value of "totalResults" from the above example, the following EL statement
-	would be used:
+  Response meta-information that exists above the "entry" key in the raw response
+  may be accessed from the EL key root through the reserved keys "totalResults", "startIndex", etc.  
+  For example, to access the
+  value of "totalResults" from the above example, the following EL statement
+  would be used:
     <figure>
      <artwork xml:space="preserve">
 ${friends.totalResults)
 </artwork>
     </figure>
-	The above statement would evaluate to "100".
-	</t>
-	
-	<t>
-	Data pipeline attributes from the originating request tag may be accessed via the EL
-	through the reserved key "Request".  This key exposes the attributes of the original request
-	through the EL.  The below example shows an originating &lt;os:PeopleRequest&gt; and the
-	EL statement to get the count of records requested.
+  The above statement would evaluate to "100".
+  </t>
+  
+  <t>
+  Data pipeline attributes from the originating request tag may be accessed via the EL
+  through the reserved key "Request".  This key exposes the attributes of the original request
+  through the EL.  The below example shows an originating &lt;os:PeopleRequest&gt; and the
+  EL statement to get the count of records requested.
     <figure>
      <artwork xml:space="preserve">
 &lt;os:PeopleRequest key="friends" userId="@viewer" groupId="@friends" startIndex="1" count="10"/&gt;
@@ -412,16 +351,16 @@ ${friends.totalResults)
 You requested ${friends.Request.count} records.
 </artwork>
     </figure></t>
-	<t>
-	Data items added to the data context that are not the result of a data pipeline 
-	request are not required to expose the "Request" key.  An example of this would be
-	data items added via the Javascript API or with the os:Var tag.
-	</t>
-	<t>
-	A container may attach the request attributes from original data pipeline request tag to the response 
-	data object in the data context or may manage the originating request data in an alternate manner.
-	</t>
-	
+  <t>
+  Data items added to the data context that are not the result of a data pipeline 
+  request are not required to expose the "Request" key.  An example of this would be
+  data items added via the Javascript API or with the os:Var tag.
+  </t>
+  <t>
+  A container may attach the request attributes from original data pipeline request tag to the response 
+  data object in the data context or may manage the originating request data in an alternate manner.
+  </t>
+  
    </section>
   <section title="Variables">
    <t>Data is used with all calls to render templates. When rendering templates
@@ -435,7 +374,7 @@ You requested ${friends.Request.count} records.
    includes everything else or all other declared JavaScript variables.</t>
    <section title="Special Variables">
     <t>Template processing reserves a small set of variables.  Like all variables, 
-	special variables are case-sensitive.</t>
+  special variables are case-sensitive.</t>
     <section title="Top">
      <t>${Top} refers to the data context passed into the template rendering -
      i.e.: for automatic rendering, ${Top} == Data Context; for programmatic
@@ -530,9 +469,9 @@ data['Viewer']['Name']
    </section>
      <section title="Declaring Variables Inline - &lt;os:Var&gt;">
     <t>Variables may be declared in both inline and custom tag templates
-	with the <eref target="Core-Gadget.xml#osVar">os:Var tag</eref>.  
-	The value of os:Var is processed as defined under <eref target="Core-Gadget.xml#osvarProcessingRules">os:Var Processing Rules</eref></t>
-	<t>
+  with the <eref target="Core-Gadget.xml#osVar">os:Var tag</eref>.  
+  The value of os:Var is processed as defined under <eref target="Core-Gadget.xml#osvarProcessingRules">os:Var Processing Rules</eref></t>
+  <t>
 The &lt;os:Var&gt; tag allows for the declaration of literal variables.
 It may be used in inline custom tag templates, inline templates, and 
 data-pipeline sections.  
@@ -544,10 +483,10 @@ data-pipeline sections.
     </figure>
 </t>
     <section title="Scope">
-	<t>
-	 When os:Var is used in inline templates it will not be available until after processing
-	 the os:Var tag in the render pass.
-	</t>
+  <t>
+   When os:Var is used in inline templates it will not be available until after processing
+   the os:Var tag in the render pass.
+  </t>
     <figure>
      <preamble>Example of variable with os:Var</preamble>
      <artwork xml:space="preserve">
@@ -555,21 +494,21 @@ data-pipeline sections.
   &lt;os:Var key="myvar" value="1"/&gt;
 
   This value of myvar is ${myvar}
-	 
-&lt;/script&gt;	 
-	 </artwork>
+   
+&lt;/script&gt;  
+   </artwork>
     </figure>
 
-	<t>
-	Within custom tag templates, &lt;os:Var&gt; defines a new 
-	variable that will be available anywhere within the custom tag template 
-	instance.  When an os:Var tag appears in the 
-	template definition, it will be created after the instance 
-	parameters are attached to ${My}.  
-	In the template definition it will therefore 
-	have access to other custom tag instance parameters and be 
-	able to reference them through the ${My} variable.
-	</t>
+  <t>
+  Within custom tag templates, &lt;os:Var&gt; defines a new 
+  variable that will be available anywhere within the custom tag template 
+  instance.  When an os:Var tag appears in the 
+  template definition, it will be created after the instance 
+  parameters are attached to ${My}.  
+  In the template definition it will therefore 
+  have access to other custom tag instance parameters and be 
+  able to reference them through the ${My} variable.
+  </t>
 
     <figure>
      <preamble>Example of local variable in custom tag definition</preamble>
@@ -593,8 +532,8 @@ data-pipeline sections.
 
 
     </section>
-	
-	</section>
+  
+  </section>
 
   </section>
   <section title="Calling Templates">
@@ -697,7 +636,7 @@ data-pipeline sections.
 &lt;/script&gt;
 </artwork>
     </figure></t>
-	<section title="Parameters to Custom Tags" >
+  <section title="Parameters to Custom Tags" >
     <t>Parameters can be passed into templates as XML attributes or elements.
     These parameters are accessed using the special variable ${My}: 
     <figure>
@@ -713,45 +652,45 @@ data-pipeline sections.
 &lt;/script&gt;
 </artwork>
     </figure></t>
-	<t>
-	Custom tag template parameters are resolved prior to invoking the template, much as
-	a function call resolves parameters prior to passing them to the function.
-	Parameters are resolved using the rules below to determine behavior.
-	All examples assume the myapp:HelloWorld custom tag has already been defined.
-	</t>
+  <t>
+  Custom tag template parameters are resolved prior to invoking the template, much as
+  a function call resolves parameters prior to passing them to the function.
+  Parameters are resolved using the rules below to determine behavior.
+  All examples assume the myapp:HelloWorld custom tag has already been defined.
+  </t>
    <list style="numbers">
     <t>Custom tag instance parameter keys are case-sensitive, regardless of if they
-	are registered as attributes or elements.
-	</t>
+  are registered as attributes or elements.
+  </t>
     <t>When the same parameter name appears as both an element and an
-	attribute, the attribute-defined parameter will take final precedence.
+  attribute, the attribute-defined parameter will take final precedence.
     <figure>
-	<preamble>Below code results in: ${My.message} = "Hello World"</preamble>
+  <preamble>Below code results in: ${My.message} = "Hello World"</preamble>
      <artwork xml:space="preserve">
   &lt;myapp:HelloWorld message="Hello World"&gt;
     &lt;message&gt;This message is overridden&lt;/message&gt;
   &lt;/myapp:HelloWorld&gt;
   </artwork>
     </figure>
-  	
-	</t>
+    
+  </t>
 
     <t>Element parameters that contain attributes will result in an object that has the 
-	attribute values placed as property values of the root object.
+  attribute values placed as property values of the root object.
     <figure>
-	<preamble>Below code results in: ${My.messageStyle.color} = "blue"</preamble>
+  <preamble>Below code results in: ${My.messageStyle.color} = "blue"</preamble>
      <artwork xml:space="preserve">
   &lt;myapp:HelloWorld &gt;
     &lt;messageStyle color="blue" /&gt;
   &lt;/myapp:HelloWorld&gt;
   </artwork>
     </figure>
-	</t>
+  </t>
     <t>If parameters contain repeated elements with the same name, the
-	custom tag instance will treat them as a node list and construct an array
-	with the element contents as the values of each node.
+  custom tag instance will treat them as a node list and construct an array
+  with the element contents as the values of each node.
     <figure>
-	<preamble>Below code results in an array of strings: ${My.stuff} = ["Hello", "Goodbye", "Good luck"]</preamble>
+  <preamble>Below code results in an array of strings: ${My.stuff} = ["Hello", "Goodbye", "Good luck"]</preamble>
      <artwork xml:space="preserve">
   &lt;myapp:HelloWorld &gt;
     &lt;stuff&gt;Hello&lt;/stuff&gt;
@@ -760,37 +699,37 @@ data-pipeline sections.
   &lt;/myapp:HelloWorld&gt;
   </artwork>
     </figure>
-	
-	</t>
-	<t>A namespaced parameter where the namespace matches the namespace of the 
-	defined tag will have the parameter value placed in the ${My} variable under the local name. 
+  
+  </t>
+  <t>A namespaced parameter where the namespace matches the namespace of the 
+  defined tag will have the parameter value placed in the ${My} variable under the local name. 
     <figure>
-	<preamble>Below code results in: ${My.messageColor} = "blue"</preamble>
+  <preamble>Below code results in: ${My.messageColor} = "blue"</preamble>
      <artwork xml:space="preserve">
   &lt;myapp:HelloWorld &gt;
     &lt;myapp:messageColor&gt;blue&lt;/myapp:messageColor&gt;
   &lt;/myapp:HelloWorld&gt;
   </artwork>
     </figure>
-	
-	</t>
-	<t>A namespaced parameter where the namespace does not match the namespace of the defined tag will be discarded and not registered with the ${My} variable.
+  
+  </t>
+  <t>A namespaced parameter where the namespace does not match the namespace of the defined tag will be discarded and not registered with the ${My} variable.
     <figure>
-	<preamble>Below code results in: ${My.messageColor} = "blue" and ${My.message} = undefined</preamble>
+  <preamble>Below code results in: ${My.messageColor} = "blue" and ${My.message} = undefined</preamble>
      <artwork xml:space="preserve">
   &lt;myapp:HelloWorld &gt;
     &lt;myapp:messageColor&gt;blue&lt;/myapp:messageColor&gt;
-    &lt;otherapp:message&gt;This value doesn't apply&lt;/otherapp:messageColor&gt;	
+    &lt;otherapp:message&gt;This value doesn't apply&lt;/otherapp:messageColor&gt;  
   &lt;/myapp:HelloWorld&gt;
   </artwork>
     </figure>
-	
-	</t>
-	
+  
+  </t>
+  
    </list>
 
 
-	</section>
+  </section>
    </section>
    <section title="Data Attribute">
     <t>The scope of data to evaluate (${Cur}) can be explicitly set with the
@@ -1427,6 +1366,12 @@ data-pipeline sections.
      <title>Removal of 'os:' prefix as it contains illegal function name characters</title>
     </front>
    </reference>    
+   <reference anchor='Issue-1143'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1143">
+    <front>
+     <title>Move security policy to core gadgets</title>
+    </front>
+   </reference>   
  </references>
   <references>
    <reference anchor='RFC2119'>

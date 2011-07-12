@@ -644,6 +644,70 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       </section>
      </section>
     </section>
+    
+    <section title="Security Policy" anchor='SecurityPolicy'>
+    <xref target='Issue-1143'>Discussion</xref>
+      <t>
+      The Security Policy feature is used by an application to request permissions under 
+      which to run.  Specific permissions are requested with &lt;Param&gt; elements.
+      The Security Policy feature is specified with the feature name "security-policy".
+      A container MAY support the Security Policy feature.
+       <figure>
+        <artwork xml:space="preserve">
+    &lt;ModulePrefs &gt;
+      &lt;Optional feature="security-policy" &gt;
+        &lt;Param name="el_escaping"&gt;html&lt;/Param&gt;
+      &lt;/Optional &gt;
+    &lt;/ModulePrefs &gt;
+    </artwork>
+       </figure>  
+      </t>
+      <section title="Permissions">
+      <t>
+      Permissions are specified by using &lt;Param&gt; elements to identify
+      the permission name and requested value for the permission.
+      A container may override any application-requested permission with its own security policy.
+      </t>
+      <t>
+      The "el_escaping" permission requests escaping behavior for Expression Language (EL)
+      statements within templates.  Valid values are:
+        <list style="symbols">
+      <t>html - Automatically HTML encode all EL statements.  A container MUST HTML escape all elements and attributes.  A container SHOULD prevent any JavaScript code from executing in an EL statement.</t>
+      <t>none - Disables automatic escaping. EL expression results will be
+    emitted raw, any markup will be rendered.</t>
+      </list>
+      </t>
+      <t>
+      If an application requests a security policy that is not supported, the container MUST log an error to the gadgets.log.  A container MAY render that gadget using a supported security policy, or display an appropriate error message.  
+      </t>
+      
+      <t>
+    Escaping rules specified with the "el_escaping" parameter are applied to all views.  An application 
+    may request a different escaping policy for a specific view by specifying the view name as 
+    a suffix with a preceeding colon to the el_escaping name.  For example, to specify html escaping on the 'profile' view and no escaping for all other views, the following is used:
+       <figure>
+        <artwork xml:space="preserve">
+    &lt;ModulePrefs &gt;
+      &lt;Optional feature="security-policy"&gt;
+        &lt;Param name="el_escaping:profile" &gt;html&lt;/Param&gt;
+        &lt;Param name="el_escaping" &gt;none&lt;/Param&gt;
+      &lt;/Optional &gt;
+    &lt;/ModulePrefs &gt;
+    </artwork>
+       </figure>  
+      </t>
+      <t>
+    Containers SHOULD apply HTML escaping by default to all views that are not otherwise constrained or protected by a security mechanism (ex: jail domained IFrame, trusted partner, pre-filtered content).
+      </t>
+    
+      <t>
+      In addition to the above permission, a container may extend the Security Policy 
+      feature to add any container-specific security permission or experiment.
+      </t>
+      </section>
+
+  </section>
+    
     <section title="/UserPref"
              anchor="UserPref">
      <t>A User Preference specification.</t>
@@ -6849,6 +6913,12 @@ Content-Type: application/embed+json
      <title>Lifecycle events section improperly removed in 1.x</title>
     </front>
    </reference>
+   <reference anchor='Issue-1143'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1143">
+    <front>
+     <title>Move security policy to core gadgets</title>
+    </front>
+   </reference>   
   </references>
   <!-- Real references -->
   <references>
