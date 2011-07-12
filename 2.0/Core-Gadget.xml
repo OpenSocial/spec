@@ -531,7 +531,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    </section>
    <section title="Life Cycle Events"
             anchor="LifeCycleEvents">
-   <x:draft note="Adding back lifecycle event info from 0.9" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1154">
+<xref target="Issue-1154">Discussion</xref>
        <t>Certain types of events may occur during the lifecycle of a gadget that are desirable yet difficult for
            developers to track. Such events include installs, uninstalls, rate limiting, directory listing changes, and
            blacklist/whitelist notifications. The gadget specification allows developers to specify URLs that the
@@ -576,7 +576,6 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       For example, it is permissible for an application directory or market place to send these events. In the case of an app event an action attribute MUST be included and valid values
       are "enabled", "disabled", "approved", "submitted", "rejected", "new" and "banned". </c>
      </texttable></t>
-   </x:draft>
    </section>
      </section>
 
@@ -6842,6 +6841,12 @@ Content-Type: application/embed+json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1191">
     <front>
      <title>gadgets.window.adjustWidth</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1154'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1154">
+    <front>
+     <title>Lifecycle events section improperly removed in 1.x</title>
     </front>
    </reference>
   </references>

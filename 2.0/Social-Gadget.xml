@@ -721,7 +721,7 @@ osapi.messages.send(params).execute(messageSentCallback);
     
       <section title="requestShareApp"
                anchor="opensocial.requestShareApp">
-  <x:draft note="Remove Deprecated APIs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">        
+  <xref target="Issue-1149">Discussion</xref>        
        <list style="hanging"> 
        <t hangText="Signature">&lt;static&gt; void opensocial.requestShareApp(recipients, reason,
        opt_callback, opt_params)</t>
@@ -760,7 +760,6 @@ osapi.messages.send(params).execute(messageSentCallback);
        </texttable></t>
        <t hangText="Returns">None.</t>
        </list>
-         </x:draft>
       </section>
      </section>
     </section>
@@ -946,12 +945,11 @@ osapi.messages.send(params).execute(messageSentCallback);
     </section>
     <section title="opensocial.NavigationParameters.DestinationType"
              anchor="opensocial.NavigationParameters.DestinationType">
- <x:draft note="Remove Deprecated APIs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">                   
+      <xref target="Issue-1149">Discussion</xref>                
      <t>The destinations available for navigation in 
      <xref target="opensocial.requestShareApp">requestShareApp</xref> and 
      <xref target="osapi.messages.send">
      osapi.message.send</xref>.</t>
-</x:draft>
      <list style="hanging">
       <t hangText="RECIPIENT_DESTINATION">
        <t>This field may be used interchangeably with the string
@@ -1231,6 +1229,12 @@ High score for John Doe is 100
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1179">
     <front>
      <title>Remove "Non-Tags" section</title>
+    </front>
+   </reference>
+    <reference anchor='Issue-1149'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">
+    <front>
+     <title>Remove Appendix A, Deprecated JavaScript API</title>
     </front>
    </reference>
  </references>
