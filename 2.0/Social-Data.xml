@@ -1994,6 +1994,41 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       <c>A webpage related to the organization.</c>
      </texttable></t>
    </section>
+   <x:incubating note="Simple File Object" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1190">   
+   <section title="File" anchor="File">
+     <t>Describes a generic file or document.
+          <texttable>
+      <ttcol align="left" width="15%">Field Name</ttcol>
+      <ttcol align="left" width="21%">Field Type</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c>author</c>
+      <c><x:ref>Person</x:ref></c>
+      <c>The person who created the file</c>
+      <c>displayName</c>
+      <c>string</c>
+      <c>The natural-language, human-readable and plain-text title of the file.</c>
+      <c>fileUrl</c>
+      <c>string</c>
+      <c>The IRI of the file described by this object</c>
+      <c>id</c>
+      <c>string</c>
+      <c>The unique identifier for the file object</c>
+      <c>published</c>
+      <c>string</c>
+      <c>The optional time the file object was created in the form of an [RFC3339] "date-time"</c>
+      <c>mimeType</c>
+      <c>string</c>
+      <c>The MIME type of the file described by the object.</c>
+      <c>updated</c>
+      <c>string</c>
+      <c>The optional time the file object was last updated in the form of an [RFC3339] "date-time".</c>
+      <c>url</c>
+      <c>string</c>
+      <c>The permanent IRI of the file's HTML representation.</c>
+     </texttable>
+     </t>
+   </section>   
+   </x:incubating>
   </section>
  </middle>
  <back>
