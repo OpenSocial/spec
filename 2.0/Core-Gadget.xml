@@ -5230,7 +5230,7 @@ gadgets.selection.setSelection(selection);
       </texttable></t>
      </section>
      <section title="adjustWidth" anchor="gadgets.window.adjustWidth">
-       <x:draft note="gadgets.window.adjustWidth" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1191">
+       <xref target="Issue-1191">Discussion</xref>
 	     <t>&lt;static&gt; gadgets.window.adjustWidth(opt_width)</t>
 	     <t>Description: Adjusts the gadget width.</t>
 	     <t>Parameters:
@@ -5243,10 +5243,9 @@ gadgets.selection.setSelection(selection);
 	         <c>An optional preferred width in pixels; If not specified, will attempt to fit the gadget to its content</c>
 	       </texttable>
 	     </t>
-       </x:draft>
      </section>
      <section title="adjustSize" anchor="gadgets.window.adjustSize">
-       <x:draft note="gadgets.window.adjustSize" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1191">
+          <xref target="Issue-1191">Discussion</xref>
          <t>&lt;static&gt; gadgets.window.adjustSize(opt_height, opt_width)</t>
          <t>Description: Adjusts the gadget size.</t>
          <t>Parameters:
@@ -5262,7 +5261,6 @@ gadgets.selection.setSelection(selection);
              <c>An optional preferred width in pixels; If not specified, will attempt to fit the gadget to its content</c>
            </texttable>
          </t>
-       </x:draft>
      </section>
      <section title="getViewportDimensions"
               anchor="gadgets.window.getViewportDimensions">
@@ -6838,6 +6836,12 @@ Content-Type: application/embed+json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
     <front>
      <title>Embedded Experiences</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1191'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1191">
+    <front>
+     <title>gadgets.window.adjustWidth</title>
     </front>
    </reference>
   </references>
