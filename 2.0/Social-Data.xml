@@ -309,19 +309,32 @@ COMMA          = <US-ASCII comma (44)>
    </x:deprecated>
    </section>
 
+  <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
+   <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+       <t>
+           As a person's actions become increasingly distributed, it is
+           important
+           to achieve a level of interoperability betweent the systems
+           that they
+           interact with. The Activity Streams specification has been
+           incorporated in order to improve interoperability with other systems
+           that may not be based on OpenSocial. This will provide implementors and
+           developers a wide range of options for incorporating social data within
+           their applications.
+       </t>
+       <t>
+           OpenSocial introduces support for the Activity Streams 1.0 specification following the pattern of support for
+           Portable Contacts. The data structures for ActivityObject and ActivityEntry are brought into Social-Data, an
+           new service is introduced in Social-API-Server, and application APIs are defined in Social-Gadget. In the
+           case of Activity Streams, there are several constructs that exist in OpenSocial that will be present in the
+           activity stream information that flows within a container and between external Activity Stream endpoints.
+           Included in the definition of the Activity Stream data structures in this specification are mappings to the
+           existing OpenSocial objects.
+       </t>
 
-   <section title="ActivityEntry" anchor="ActivityEntry">
-    <!-- <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
-    <t>
-	As a person's actions become increasingly distributed, it is
-	important
-	to achieve a level of interoperability betweent the systems
-	that they
-	interact with. The Activity Streams specification has been
-	incorporated in order to improve interoperability with other systems
-	that may not be based on OpenSocial. This will provide implementors and
-	developers a wide range of options for incorporating social data within
-	their applications.</t>
+
+       <section title="ActivityEntry" anchor="ActivityEntry">
+
     
     <t>In its simplest form, an activity consists of an actor, a verb,
 	an an object, and a target. It tells the story of a person performing
@@ -331,53 +344,108 @@ COMMA          = <US-ASCII comma (44)>
 	additional field to the data model, "actionLinks".
 	Because these are extensions, they are contained in an enclosing
 	namespace, "openSocial".</t>
-   <texttable>
-      <ttcol align="left" width="15%">Field Name</ttcol>
-      <ttcol align="left" width="21%">Field Type</ttcol>
-      <ttcol align="left">Description</ttcol>
-      <c>actor</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Describes the entity that performed the activity. An activity MUST contain one actor property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
-      <c>content</c>
-      <c>string</c>
-      <c>Natural-language description of the activity encoded as a single JSON String containing HTML markup. Visual elements such as thumbnail images MAY be included. An activity MAY contain a content property.</c>
-      <c>generator</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Describes the application that generated the activity. An activity MAY contain a generator property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
-      <c>icon</c>
-      <c><eref target="./Social-Data.xml#MediaLink">MediaLink</eref></c>
-      <c>Description of a resource providing a visual representation of the object, intended for human consumption. The image SHOULD have an aspect ratio of one (horizontal) to one (vertical) and SHOULD be suitable for presentation at a small size. An activity MAY have an icon property.</c>
-      <c>id</c>
-      <c>string</c>
-      <c>Provides a permanent, universally unique identifier for the activity in the form of an absolute IRI. An activity SHOULD contain a single id property. If an activity does not contain an id property, consumers MAY use the value of the url property as a less-reliable, non-unique identifier.</c>
-      <c>object</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Describes the primary object of the activity. For instance, in the activity, "John saved a movie to his wishlist", the object of the activity is "movie". An activity SHOULD contain an object property whose value is a single Object. If the object property is not contained, the primary object of the activity MAY be implied by context.</c>
-      <c>published</c>
-      <c>string</c>
-      <c>The date and time at which the activity was published. An activity MUST contain a published property.</c>
-      <c>provider</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Describes the application that published the activity. Note that this is not necessarily the same entity that generated the activity. An activity MAY contain a provider property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
-      <c>target</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Describes the target of the activity. The precise meaning of the activity's target is dependent on the activities verb, but will often be the object the English preposition "to". For instance, in the activity, "John saved a movie to his wishlist", the target of the activity is "wishlist". The activity target MUST NOT be used to identity an indirect object that is not a target of the activity. An activity MAY contain a target property whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.</c>
-      <c>title</c>
-      <c>string</c>
-      <c>Natural-language title or headline for the activity encoded as a single JSON String containing HTML markup. An activity MAY contain a title property.</c>
-      <c>updated</c>
-      <c>string</c>
-      <c>The date and time at which a previously published activity has been modified. An Activity MAY contain an updated property.</c>
-      <c>url</c>
-      <c>string</c>
-      <c>An IRI identifying a resource providing an HTML representation of the activity. An activity MAY contain a url property.</c>
-      <c>verb</c>
-      <c>string</c>
-      <c>Identifies the action that the activity describes. An activity SHOULD contain a verb property whose value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in RFC3339. Note that the use of a relative reference other than a simple name is not allowed. If the verb is not specified, or if the value is null, the verb is assumed to be "post".</c>
-      <c>actionLinks</c>
-      <c>Array&lt;<eref target="./Social-Data.xml#ActionLink">ActionLink</eref>&gt;</c>
-      <c>An "openSocial" namespaced array of actionLinks associated with this Activity.</c>
-     </texttable>
+           <texttable>
+               <ttcol align="left" width="15%">Field Name</ttcol>
+               <ttcol align="left" width="21%">Field Type</ttcol>
+               <ttcol align="left">Description</ttcol>
+               <c>actor</c>
+               <c>
+                   <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
+               </c>
+               <c>Describes the entity that performed the activity. An activity MUST contain one actor property whose
+                   value is a single<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
+               </c>
+               <c>content</c>
+               <c>string</c>
+               <c>Natural-language description of the activity encoded as a single JSON String containing HTML markup.
+                   Visual elements such as thumbnail images MAY be included. An activity MAY contain a content property.
+               </c>
+               <c>generator</c>
+               <c>
+                   <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
+               </c>
+               <c>Describes the application that generated the activity. An activity MAY contain a generator property
+                   whose value is a single<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
+                   OpenSocial note: If an OpenSocial application created the Activity Entry, this value SHOULD be the <xref
+                           target="appId">appId</xref>.
+               </c>
+               <c>icon</c>
+               <c>
+                   <eref target="./Social-Data.xml#MediaLink">MediaLink</eref>
+               </c>
+               <c>Description of a resource providing a visual representation of the object, intended for human
+                   consumption. The image SHOULD have an aspect ratio of one (horizontal) to one (vertical) and SHOULD
+                   be suitable for presentation at a small size. An activity MAY have an icon property.
+               </c>
+               <c>id</c>
+               <c>string</c>
+               <c>Provides a permanent, universally unique identifier for the activity in the form of an absolute IRI.
+                   An activity SHOULD contain a single id property. If an activity does not contain an id property,
+                   consumers MAY use the value of the url property as a less-reliable, non-unique identifier. OpenSocial
+                   note: The value of id MUST be the IRI form of the <eref target="./Core-Data.xml#MGlobal-Id">Global-Id</eref>.
+               </c>
+               <c>object</c>
+               <c>
+                   <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
+               </c>
+               <c>Describes the primary object of the activity. For instance, in the activity, "John saved a movie to
+                   his wishlist", the object of the activity is "movie". An activity SHOULD contain an object property
+                   whose value is a single Object. If the object property is not contained, the primary object of the
+                   activity MAY be implied by context.
+               </c>
+               <c>published</c>
+               <c>string</c>
+               <c>The date and time at which the activity was published. An activity MUST contain a published
+                   property.
+               </c>
+               <c>provider</c>
+               <c>
+                   <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
+               </c>
+               <c>Describes the application that published the activity. Note that this is not necessarily the same
+                   entity that generated the activity. An activity MAY contain a provider property whose value is a
+                   single<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>. OpenSocial note: The
+                   provider SHOULD be URL of the domain part of the Global-Id plus the OpenSocial service. Example:
+                   http://mySocialNetwork.com/activitystreams
+               </c>
+               <c>target</c>
+               <c>
+                   <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
+               </c>
+               <c>Describes the target of the activity. The precise meaning of the activity's target is dependent on the
+                   activities verb, but will often be the object the English preposition "to". For instance, in the
+                   activity, "John saved a movie to his wishlist", the target of the activity is "wishlist". The
+                   activity target MUST NOT be used to identity an indirect object that is not a target of the activity.
+                   An activity MAY contain a target property whose value is a single<eref
+                           target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
+               </c>
+               <c>title</c>
+               <c>string</c>
+               <c>Natural-language title or headline for the activity encoded as a single JSON String containing HTML
+                   markup. An activity MAY contain a title property.
+               </c>
+               <c>updated</c>
+               <c>string</c>
+               <c>The date and time at which a previously published activity has been modified. An Activity MAY contain
+                   an updated property.
+               </c>
+               <c>url</c>
+               <c>string</c>
+               <c>An IRI identifying a resource providing an HTML representation of the activity. An activity MAY
+                   contain a url property.
+               </c>
+               <c>verb</c>
+               <c>string</c>
+               <c>Identifies the action that the activity describes. An activity SHOULD contain a verb property whose
+                   value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI"
+                   production in RFC3339. Note that the use of a relative reference other than a simple name is not
+                   allowed. If the verb is not specified, or if the value is null, the verb is assumed to be "post".
+               </c>
+               <c>actionLinks</c>
+               <c>Array&lt;<eref target="./Social-Data.xml#ActionLink">ActionLink</eref>&gt;
+               </c>
+               <c>An "openSocial" namespaced array of actionLinks associated with this Activity.</c>
+           </texttable>
 
     A complete ActivityEntry example
     <figure>
@@ -518,6 +586,10 @@ COMMA          = <US-ASCII comma (44)>
 &lt;/activityEntry&gt;</artwork>
     </figure>
     </section>
+   </x:draft>
+   </section>
+
+
    <section title="AppData" anchor="AppData">
      <t>OpenSocial defines a data store that applications can use to
      read and write user-specific data. This data store can be read by
@@ -1399,53 +1471,106 @@ COMMA          = <US-ASCII comma (44)>
 	additional field to the data model, "deliverTo:".
 	Because these are extensions, they are contained in an eclosing
 	"namespace", org.opensocial.</t>
-     <texttable>
-      <ttcol align="left" width="15%">Field Name</ttcol>
-      <ttcol align="left" width="21%">Field Type</ttcol>
-      <ttcol align="left">Description</ttcol>
-      <c>attachments</c>
-      <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;</c>
-      <c>A collection of one or more additional, associated objects, similar to the concept of attached files in an email message. An object MAY have an attachments property whose value is a JSON Array of <eref target="./Social-Data.xml#ActivityObject">ActivityObjects</eref>.</c>
-      <c>author</c>
-      <c><eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref></c>
-      <c>Describes the entity that created or authored the object. An object MAY contain a single author property whose value is an <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref> of any type. Note that the author field identifies the entity that created the object and does not necessarily identify the entity that published the object. For instance, it may be the case that an object created by one person is posted and published to a system by an entirely different entity.</c>
-      <c>content</c>
-      <c>string</c>
-      <c>Natural-language description of the object encoded as a single JSON String containing HTML markup. Visual elements such as thumbnail images MAY be included. An object MAY contain a content property.</c>
-      <c>displayName</c>
-      <c>string</c>
-      <c>A natural-language, human-readable and plain-text name for the object. HTML markup MUST NOT be included. An object MAY contain a displayName property. If the object does not specify an objectType property, the object SHOULD specify a displayName.</c>
-      <c>downstreamDuplicates</c>
-      <c>Array&lt;string&gt;</c>
-      <c>A JSON Array of one or more absolute IRI's [RFC3987] identifying objects that duplicate this object's content. An object SHOULD contain a downstreamDuplicates property when there are known objects, possibly in a different system, that duplicate the content in this object. This MAY be used as a hint for consumers to use when resolving duplicates between objects received from different sources.</c>
-      <c>id</c>
-      <c>string</c>
-      <c>Provides a permanent, universally unique identifier for the object in the form of an absolute IRI [RFC3987]. An object SHOULD contain a single id property. If an object does not contain an id property, consumers MAY use the value of the url property as a less-reliable, non-unique identifier.</c>
-      <c>image</c>
-      <c><eref target="./Social-Data.xml#MediaLink">MediaLink</eref></c>
-      <c>Description of a resource providing a visual representation of the object, intended for human consumption. An object MAY contain an image property whose value is a <eref target="./Social-Data.xml#MediaLink">MediaLink</eref>.</c>
-      <c>objectType</c>
-      <c>string</c>
-      <c>Identifies the type of object. An object MAY contain an objectType property whose value is a JSON String that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in [RFC3987]. Note that the use of a relative reference other than a simple name is not allowed. If no objectType property is contained, the object has no specific type.</c>
-      <c>published</c>
-      <c>string</c>
-      <c>The date and time at which the object was published. An object MAY contain a published property.</c>
-      <c>summary</c>
-      <c>string</c>
-      <c>Natural-language summarization of the object encoded as a single JSON String containing HTML markup. Visual elements such as thumbnail images MAY be included. An activity MAY contain a summary property.</c>
-      <c>updated</c>
-      <c>string</c>
-      <c>The date and time at which a previously published object has been modified. An Object MAY contain an updated property.</c>
-      <c>upstreamDuplicates</c>
-      <c>Array&lt;string&gt;</c>
-      <c>A JSON Array of one or more absolute IRI's [RFC3987] identifying objects that duplicate this object's content. An object SHOULD contain an upstreamDuplicates property when a publisher is knowingly duplicating with a new ID the content from another object. This MAY be used as a hint for consumers to use when resolving duplicates between objects received from different sources.</c>
-      <c>url</c>
-      <c>string</c>
-      <c>An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY contain a url property</c>
-      <c>deliverTo:</c>
-      <c><eref target="./Core-Data.xml#Array">Array&lt;</eref><eref target="./Core-Data.xml#Global-Id">Global-Id&gt;</eref></c>
-      <c>Many social business systems incorporate the idea that an activity may not be public. By including the "deliverTo:" field, a specific user(s) will receive the activity. The Activity MUST be delivered to the recipients specified in the deliverTo: Array</c>
- </texttable>
+       <texttable>
+           <ttcol align="left" width="15%">Field Name</ttcol>
+           <ttcol align="left" width="21%">Field Type</ttcol>
+           <ttcol align="left">Description</ttcol>
+           <c>attachments</c>
+           <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;
+           </c>
+           <c>A collection of one or more additional, associated objects, similar to the concept of attached files in an
+               email message. An object MAY have an attachments property whose value is a JSON Array of<eref
+                       target="./Social-Data.xml#ActivityObject">ActivityObjects</eref>.
+           </c>
+           <c>author</c>
+           <c>
+               <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
+           </c>
+           <c>Describes the entity that created or authored the object. An object MAY contain a single author property
+               whose value is an
+               <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
+               of any type. Note that the author field identifies the entity that created the object and does not
+               necessarily identify the entity that published the object. For instance, it may be the case that an
+               object created by one person is posted and published to a system by an entirely different entity.
+               OpenSocial note: A common use case is for the "author" to be an OpenSocial. Containers SHOULD use the IRI
+               form of the
+               <eref target="./Core-Data.xml#Global-Id">Global-Id</eref>
+               as the value.
+           </c>
+           <c>content</c>
+           <c>string</c>
+           <c>Natural-language description of the object encoded as a single JSON String containing HTML markup. Visual
+               elements such as thumbnail images MAY be included. An object MAY contain a content property.
+           </c>
+           <c>displayName</c>
+           <c>string</c>
+           <c>A natural-language, human-readable and plain-text name for the object. HTML markup MUST NOT be included.
+               An object MAY contain a displayName property. If the object does not specify an objectType property, the
+               object SHOULD specify a displayName.
+           </c>
+           <c>downstreamDuplicates</c>
+           <c>Array&lt;string&gt;</c>
+           <c>A JSON Array of one or more absolute IRI's [RFC3987] identifying objects that duplicate this object's
+               content. An object SHOULD contain a downstreamDuplicates property when there are known objects, possibly
+               in a different system, that duplicate the content in this object. This MAY be used as a hint for
+               consumers to use when resolving duplicates between objects received from different sources.
+           </c>
+           <c>id</c>
+           <c>string</c>
+           <c>Provides a permanent, universally unique identifier for the object in the form of an absolute IRI
+               [RFC3987]. An object SHOULD contain a single id property. If an object does not contain an id property,
+               consumers MAY use the value of the url property as a less-reliable, non-unique identifier.
+           </c>
+           <c>image</c>
+           <c>
+               <eref target="./Social-Data.xml#MediaLink">MediaLink</eref>
+           </c>
+           <c>Description of a resource providing a visual representation of the object, intended for human consumption.
+               An object MAY contain an image property whose value is a<eref target="./Social-Data.xml#MediaLink">
+                   MediaLink</eref>.
+           </c>
+           <c>objectType</c>
+           <c>string</c>
+           <c>Identifies the type of object. An object MAY contain an objectType property whose value is a JSON String
+               that is non-empty and matches either the "isegment-nz-nc" or the "IRI" production in [RFC3987]. Note that
+               the use of a relative reference other than a simple name is not allowed. If no objectType property is
+               contained, the object has no specific type.
+           </c>
+           <c>published</c>
+           <c>string</c>
+           <c>The date and time at which the object was published. An object MAY contain a published property.</c>
+           <c>summary</c>
+           <c>string</c>
+           <c>Natural-language summarization of the object encoded as a single JSON String containing HTML markup.
+               Visual elements such as thumbnail images MAY be included. An activity MAY contain a summary property.
+           </c>
+           <c>updated</c>
+           <c>string</c>
+           <c>The date and time at which a previously published object has been modified. An Object MAY contain an
+               updated property.
+           </c>
+           <c>upstreamDuplicates</c>
+           <c>Array&lt;string&gt;</c>
+           <c>A JSON Array of one or more absolute IRI's [RFC3987] identifying objects that duplicate this object's
+               content. An object SHOULD contain an upstreamDuplicates property when a publisher is knowingly
+               duplicating with a new ID the content from another object. This MAY be used as a hint for consumers to
+               use when resolving duplicates between objects received from different sources.
+           </c>
+           <c>url</c>
+           <c>string</c>
+           <c>An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY
+               contain a url property
+           </c>
+           <c>deliverTo:</c>
+           <c>
+               <eref target="./Core-Data.xml#Array">Array&lt;</eref>
+               <eref target="./Core-Data.xml#Global-Id">Global-Id&gt;</eref>
+           </c>
+           <c>Many social business systems incorporate the idea that an activity may not be public. By including the
+               "deliverTo:" field, a specific user(s) will receive the activity. The Activity MUST be delivered to the
+               recipients specified in the deliverTo: Array
+           </c>
+       </texttable>
      
     <t>An example ActivityObject</t>
     <figure>
@@ -1679,6 +1804,13 @@ COMMA          = <US-ASCII comma (44)>
 </artwork>
      </figure>
    </section>
+   <section title="AppId" anchor="appId">
+    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+     <t>appId is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.</t>
+    </x:draft>
+   </section>
+
+
    <section title="Group ID"
             anchor="Group-ID">
     <t>The group ID must only contain alphanumeric (A-Za-z0-9) characters,
@@ -1818,27 +1950,44 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
    <section title="MediaLink" anchor="MediaLink">
     <!-- <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
     <t>Some types of objects may have an alternative visual representation in the form of an image, video or embedded HTML fragments. A Media Link represents a hyperlink to such resources.</t>
-     <texttable>
-      <ttcol align="left" width="15%">Field Name</ttcol>
-      <ttcol align="left" width="21%">Field Type</ttcol>
-      <ttcol align="left">Description</ttcol>
-      <c>duration</c>
-      <c>integer</c>
-      <c>A hint to the consumer about the length, in seconds, of the media resource identified by the url property. A media link MAY contain a "duration" property when the target resource is a time-based media item such as an audio or video.</c>
-      <c>height</c>
-      <c>integer</c>
-      <c>A hint to the consumer about the height, in pixels, of the media resource identified by the url property. A media link MAY contain a height property when the target resource is a visual media item such as an image, video or embeddable HTML page.</c>
-      <c>url</c>
-      <c>string</c>
-      <c>The IRI of the media resource being linked. A media link MUST have a url property.</c>
-      <c>width</c>
-      <c>integer</c>
-      <c>A hint to the consumer about the width, in pixels, of the media resource identified by the url property. A media link MAY contain a width property when the target resource is a visual media item such as an image, video or embeddable HTML page.</c>
-      <c>mediaItemId</c>
-      <c>string</c>
-      <c>Optional.  Provides a mapping from an Activity Streams MediaLink to an OpenSocial <eref target="./Social-Data.xml#MediaItem">MediaItem</eref>.  Identifies the corresponding MediaItem that this MediaLink maps to, if any.  This field is namespaced as an "openSocial" extension.</c>
-    </texttable>
-    <t>An example MediaLink</t>
+       <texttable>
+           <ttcol align="left" width="15%">Field Name</ttcol>
+           <ttcol align="left" width="21%">Field Type</ttcol>
+           <ttcol align="left">Description</ttcol>
+           <c>duration</c>
+           <c>integer</c>
+           <c>A hint to the consumer about the length, in seconds, of the media resource identified by the url property.
+               A media link MAY contain a "duration" property when the target resource is a time-based media item such
+               as an audio or video.
+           </c>
+           <c>height</c>
+           <c>integer</c>
+           <c>A hint to the consumer about the height, in pixels, of the media resource identified by the url property.
+               A media link MAY contain a height property when the target resource is a visual media item such as an
+               image, video or embeddable HTML page.
+           </c>
+           <c>url</c>
+           <c>string</c>
+           <c>The IRI of the media resource being linked. A media link MUST have a url property. OpenSocial note: Many
+               OpenSocial containers currently use
+               <eref target="./Social-Data.xml#MediaItem">Media Items</eref>
+               as defined by this specification. When a container creates a Media Link that is based on a Media Item,
+               the Media Link URL MUST match the URL of the Media Item.
+           </c>
+           <c>width</c>
+           <c>integer</c>
+           <c>A hint to the consumer about the width, in pixels, of the media resource identified by the url property. A
+               media link MAY contain a width property when the target resource is a visual media item such as an image,
+               video or embeddable HTML page.
+           </c>
+           <c>mediaItemId</c>
+           <c>string</c>
+           <c>Optional. Provides a mapping from an Activity Streams MediaLink to an OpenSocial<eref
+                   target="./Social-Data.xml#MediaItem">MediaItem</eref>. Identifies the corresponding MediaItem that
+               this MediaLink maps to, if any. This field is namespaced as an "openSocial" extension.
+           </c>
+       </texttable>
+       <t>An example MediaLink</t>
     <figure>
      <preamble>application/json representation:</preamble>
      <artwork xml:space="preserve">
