@@ -529,19 +529,21 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     application icon for the Gadget. This is preferred over using
     <xref target="Icon">/ModulePrefs/Icon</xref>, which is deprecated.</t>
    </section>
-   <section title="Life Cycle Events"
+   <section title="Gadget Lifecycle Events"
             anchor="LifeCycleEvents">
 <xref target="Issue-1154">Discussion</xref>
-       <t>Certain types of events may occur during the lifecycle of a gadget that are desirable yet difficult for
-           developers to track. Such events include installs, uninstalls, rate limiting, directory listing changes, and
-           blacklist/whitelist notifications. The gadget specification allows developers to specify URLs that the
-           container will send data to when certain events are triggered.
+       <t>There are multiple parties interested in gadget lifecycle events.  Gadget lifecycle event notifications
+        could be contained within the browser or transmitted over the web. The gadget specification
+        provides a mechanism for generating web notifications about important lifecycle events.
+        Such events include installs, uninstalls, rate limiting, directory listing changes, and
+        blacklist/whitelist notifications. The <xref target='Link'>Link</xref> element allows
+        developers to specify URLs that the container will send data to when certain events are triggered.
        </t>
        <t>Whenever an "event" (such as installing or removing an application)
     occurs on a Container, and the Gadget has specified a value for a matching
     event name (either as the catch-all "events", or a specific event, named
     "event.eventtype", the Container MUST make an HTTP request to the specified
-    URL.</t>
+    URL.  It is recommended that these requests be signed.</t>
     <t>If the rel attribute matches
      "opensocialevent.TYPE", then events of TYPE are sent to that endpoint. An
      optional method attribute can be set to POST or GET to specify how the
