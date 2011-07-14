@@ -810,7 +810,7 @@ Content-Type: application/json
     </section>
    </section>
    <section title="Activity Streams" anchor="ActivityStreams-Service">
-    <!-- <x:draft note="Activity Streams support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
+    <xref target='Issue-1140'>Discussion</xref>
     <t>Containers MUST support the Activity Streams Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Activity Streams Service:</t>
     <artwork type="abnf">
 <eref target="./Core-API-Server.xml#Discovery">XRDS-Type</eref>    = "http://ns.opensocial.org/2008/opensocial/activitystreams"
@@ -1625,6 +1625,16 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
   </section>
  </middle>
  <back>
+ 
+   <references title="Discussion">
+  <!-- Spec change issues/discussion -->
+   <reference anchor='Issue-1140'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <front>
+     <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
+    </front>
+   </reference>
+  </references>
   <references>
    <reference anchor='RFC2119'>
     <front>

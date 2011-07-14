@@ -132,20 +132,17 @@ Boolean = "true" / "false"
     returned. The paging mechanisms described here are based on the OpenSearch
     standard with the additional requirement that all indexes are 0 based.</t>
    </section>
-   <section title="Activity Streams Support" anchor="ActivityStreamsCollection">
-       <x:draft note="Issue 1140 - Activity Streams"
-                href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
-           OpenSocial 2.0 has incorporated support for the Activity Streams community specification. This specification
+   <section title="Activity Streams Support" anchor="ActivityStreamsCollection"><xref target='Issue-1140'>Discussion</xref>
+           <t>OpenSocial 2.0 has incorporated support for the Activity Streams community specification. This specification
            also defines a collection structure. In order to maintain compatibility with endpoints that expect an
            Activity Streams collection definition, OpenSocial containers SHOULD append the additional fields onto
-           collection structures that are returned from the ActivityStreams service.
+           collection structures that are returned from the ActivityStreams service.</t>
 
-           Note: The OpenSocial specification declares that extensions should be wrapped in "tags" that "namespace" the
+           <t>Note: The OpenSocial specification declares that extensions should be wrapped in "tags" that "namespace" the
            extended fields. This is done primarily to avoid collisions. However, an endpoint that is configured to
            receive an Activity Stream collection would not expect collection fields to be wrapped. Therefore, in order
            to support interoperability, an exception has been made for OpenSocial Collection. Fields from Activity
-           Streams Collection SHOULD be appended directly to OpenSocial Collection.
-       </x:draft>
+           Streams Collection SHOULD be appended directly to OpenSocial Collection.</t>
     <artwork type="abnf"
          xml:space="preserve">
 Collection = "{"
@@ -245,29 +242,30 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
 </artwork>
    </section>
    <section title="Mapping Global Id to an IRI" anchor="IRI-Mapping">
-     <x:draft note="Issue 1140 - Activity Streams" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
-         There are several external systems and specifications that leverage the use of IRI as the way to uniquely and
+   <xref target='Issue-1140'>Discussion</xref>
+         <t>There are several external systems and specifications that leverage the use of IRI as the way to uniquely and
          globally identify an object. Activity Streams is an example of one such specification. OpenSocial's uses a
          slightly different format for uniquely identifying objects. To support interoperability with other containers
          as well as Activity Stream endpoints, OpenSocial 2.0 introduces an alternate format for uniquely identifying
-         its objects that is based upon the IRI scheme.
+         its objects that is based upon the IRI scheme.</t>
 
-         IRI is an acronym for "Internationalized Resource Identifier". It has a structure similar to a URL. From the
+         <t>IRI is an acronym for "Internationalized Resource Identifier". It has a structure similar to a URL. From the
          perspective of OpenSocial, the objective is to easily map the components of Global Id into an IRI that may be
-         used to access the resource, e.g. via REST endpoints. To create an IRI, the following pattern should be used:
+         used to access the resource, e.g. via REST endpoints. To create an IRI, the following pattern should be used:</t>
+		<list style="symbols">
+         <t>Global Id will map to the IRI iauthority.</t>
+         <t>Local Id will include an IRI ipath-absolute that represents the OpenSocial service, plus an IRI ipath-rootless
+         that contains the Local-Id.</t>
+        </list>
 
-         Global Id will map to the IRI iauthority.
-         Local Id will include an IRI ipath-absolute that represents the OpenSocial service, plus an IRI ipath-rootless
-         that contains the Local-Id.
-
-         An example of this mapping is as follows. Let's assume that we have an OpenSocial based container named
+         <t>An example of this mapping is as follows. Let's assume that we have an OpenSocial based container named
          "MySocial". It's domain is "MySocial.com". Each user is given a unique user Id, e.g. 1234. The OpenSocial
-         Object Id is: MySocial.com:1234
+         Object Id is: MySocial.com:1234</t>
 
-         To construct an IRI from the Global Id using the mapping above, the result would be:
-         https://MySocial.com/people/1234
+         <t>To construct an IRI from the Global Id using the mapping above, the result would be:
+         https://MySocial.com/people/1234</t>
 
-         IRI that are created MUST conform to the patterns defined in the OpenSocial Core API Server specification. It
+         <t>IRI that are created MUST conform to the patterns defined in the OpenSocial Core API Server specification. It
          is RECOMMENDED that they conform to Section 2.1, REST. The ipath-absolute SHOULD be an OpenSocial service as
          defined in the Social API Server specification. However, this is not mandated because it is the intent that the
          programming model defined by this specification be extended. Therefore, new services may be added outside of a
@@ -275,8 +273,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
          that is NOT defined by the OpenSocial specification, it is RECOMMENDED that a definition of that service be
          publicly available via the Internet. Where an IRI is used in the specification, as in the Activity Streams,
          containers MUST support this alternate form of Global ID. Containers SHOULD use this alternate form of Global
-         ID as a replacement for Global ID.
-     </x:draft>
+         ID as a replacement for Global ID.</t>
    </section>
 
    <section title="HTTP-Request-Params" anchor="HTTP-Request-Params">
@@ -301,9 +298,6 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
         similar characteristics, some of the documented request parameters 
         will be needed.</t>
      <t>Requests to arbitrary URLs use the following parameters:</t>
-     <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
-     <t>In the following table, 'alias' is the element that has been added in support of 1178.</t>
-     </x:draft>
      <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138"> 
      <t>In the following table, the 'oauth2' authorization method and other OAuth2 references were added in support of 1138.</t>
      </x:incubating>
@@ -314,7 +308,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
        <c>alias</c>
        <c>String</c>
        <c>The external service name, defined by the application developer, as part of the module preferences. This
-             will indicated to the container which external service tag to use.
+             will indicated to the container which external service tag to use. <xref target='Issue-1178'>Discussion</xref>
        </c>
        <c>authz</c>
       <c>String</c>
@@ -544,6 +538,22 @@ User-Id = <x:ref>Object-Id</x:ref> / "@owner" / "@viewer" / "@me"
   </section>
  </middle>
  <back>
+ 
+ <references title="Discussion">
+    <!-- Spec change issues/discussion -->
+   <reference anchor='Issue-1140'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <front>
+     <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1178'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+    <front>
+     <title>Add 'alias' to HTTP Request</title>
+    </front>
+   </reference>
+ </references>
   <references>
    <reference anchor='RFC2119'>
     <front>

@@ -800,7 +800,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     </section>
 
     <section title="/ExternalServices" anchor="ExternalServices">
-        <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+            <xref target='Issue-1178'>Discussion</xref>
             <t>Currently, when making a remote request, either through the OSAPI or makeRequest, the full URL of the remote
             service that is being invoked must be specified. However, often, there are multiple service endpoints that
             use the same API. Consider the following examples. A large enterprise may have a backend system, e.g.
@@ -839,7 +839,6 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
                     <t hangText="text()">The tag that identifies the API to the external service.</t>
                  </list>
              </section>
-        </x:draft>
     </section>
 
 
@@ -1808,12 +1807,9 @@ gadgets.io.makeRequest(url, callback, params);
       </section>
       <section title="Additional parameters">
        <t>The following additional parameters may be specified in opt_params:
-           <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
-                 <t>gadgets.io.RequestParameters.ALIAS was added to the following list</t>
-           </x:draft>
 
        <list style="hanging">
-        <t hangText="gadgets.io.RequestParameters.ALIAS">Specifies the 'Alias' request parameter as defined by <eref target="Core-Data.xml#HTTP-Request-Params">Core-Data Request Parameters.</eref></t>
+        <t hangText="gadgets.io.RequestParameters.ALIAS">Specifies the 'Alias' request parameter as defined by <eref target="Core-Data.xml#HTTP-Request-Params">Core-Data Request Parameters.</eref> <xref target='Issue-1178'>Discussion</xref></t>
         <t hangText="gadgets.io.RequestParameters.GET_FULL_HEADERS">Returns the full headers from the response.</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK">The URL to return after authorization.</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN">A
@@ -3506,7 +3502,7 @@ osapi.http.post(params).execute(function(result) {
 </artwork>
         </figure>
 
-       <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+       
         <figure>
             <preamble>This example demonstrates the use of 'alias'</preamble>
             <artwork>
@@ -3521,7 +3517,7 @@ osapi.http.post(params).execute(function(result) {
                 });
             </artwork>
         </figure>
-       </x:draft>
+       <xref target='Issue-1178'>Discussion</xref>
 
        </section>
       </section>
@@ -6921,6 +6917,12 @@ Content-Type: application/embed+json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1143">
     <front>
      <title>Move security policy to core gadgets</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1178'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
+    <front>
+     <title>Add 'alias' to HTTP Request</title>
     </front>
    </reference>   
   </references>

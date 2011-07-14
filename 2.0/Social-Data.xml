@@ -310,7 +310,7 @@ COMMA          = <US-ASCII comma (44)>
    </section>
 
   <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
-   <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+   <xref target='Issue-1140'>Discussion</xref>
        <t>
            As a person's actions become increasingly distributed, it is
            important
@@ -353,7 +353,7 @@ COMMA          = <US-ASCII comma (44)>
                    <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
                </c>
                <c>Describes the entity that performed the activity. An activity MUST contain one actor property whose
-                   value is a single<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
+                   value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
                </c>
                <c>content</c>
                <c>string</c>
@@ -365,7 +365,7 @@ COMMA          = <US-ASCII comma (44)>
                    <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>
                </c>
                <c>Describes the application that generated the activity. An activity MAY contain a generator property
-                   whose value is a single<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
+                   whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
                    OpenSocial note: If an OpenSocial application created the Activity Entry, this value SHOULD be the <xref
                            target="appId">appId</xref>.
                </c>
@@ -404,7 +404,7 @@ COMMA          = <US-ASCII comma (44)>
                </c>
                <c>Describes the application that published the activity. Note that this is not necessarily the same
                    entity that generated the activity. An activity MAY contain a provider property whose value is a
-                   single<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>. OpenSocial note: The
+                   single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>. OpenSocial note: The
                    provider SHOULD be URL of the domain part of the Global-Id plus the OpenSocial service. Example:
                    http://mySocialNetwork.com/activitystreams
                </c>
@@ -416,7 +416,7 @@ COMMA          = <US-ASCII comma (44)>
                    activities verb, but will often be the object the English preposition "to". For instance, in the
                    activity, "John saved a movie to his wishlist", the target of the activity is "wishlist". The
                    activity target MUST NOT be used to identity an indirect object that is not a target of the activity.
-                   An activity MAY contain a target property whose value is a single<eref
+                   An activity MAY contain a target property whose value is a single <eref
                            target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
                </c>
                <c>title</c>
@@ -586,7 +586,6 @@ COMMA          = <US-ASCII comma (44)>
 &lt;/activityEntry&gt;</artwork>
     </figure>
     </section>
-   </x:draft>
    </section>
 
 
@@ -998,18 +997,18 @@ COMMA          = <US-ASCII comma (44)>
                       [ #Person-Field ]
                   "}"</artwork>
                   
-     <x:draft note="Issue 1132 - Proposal to Modify the Social Data Model in OS 2.0" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">
+     
 
          <t>OpenSocial defines many common attributes associated with a person and is aligned with the Portable Contacts
              specification. However, only display name and id are required and all others are optional. In practice,
              support for these fields varies greatly among containers. As OpenSocial continues to be adopted as an
              enterprise programming model, many of these fields are not appropriate based on the considerations of Human
-             Resource guidelines.</t>
+             Resource guidelines.  <xref target='Issue-1132'>Discussion</xref></t>
 
              <t>In an attempt to balance the needs of consumer vs corporate
              focused OpenSocial applications, and increase interoperability, the specification is refining attempting to
              provide clarity around attributes that are broadly applicable across both the consumer and enterprise
-             domain, and those that are more appropriate for consumer oriented systems.
+             domain, and those that are more appropriate for consumer oriented systems.  
          </t>
 
          <t>The generally applicable field definitions for Person are listed in the table below.</t>
@@ -1195,7 +1194,7 @@ COMMA          = <US-ASCII comma (44)>
      </texttable>
      
      <t>In addition to the table above, the socially oriented fields definition of the
-     Person include the following. Note that all extended properties are optional and may not be appropriate for use in all applications.</t>
+     Person include the following. Note that all extended properties are optional and may not be appropriate for use in all applications.  <xref target='Issue-1132'>Discussion</xref></t>
      
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
@@ -1395,8 +1394,6 @@ COMMA          = <US-ASCII comma (44)>
     MAY choose to add these or other fields to make their feeds more useful for
     generic aggregators or tools.</t>
     
-    
-         </x:draft>
    </section>
  
 
@@ -1470,7 +1467,7 @@ COMMA          = <US-ASCII comma (44)>
     </figure>
    </section>
    <section title="ActivityObject" anchor="ActivityObject">
-    <!-- <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
+    <xref target='Issue-1140'>Discussion</xref>
     <t>An object is a thing, real or imaginary, which participates in an
 	activity. It may be the entity performing the activity, or the entity
 	on which the activity was performed. Because Activity Streams are often
@@ -1656,20 +1653,20 @@ COMMA          = <US-ASCII comma (44)>
      the same address, with the formatted address indicating how the
      component fields should be combined.</t>
      <t>
-     <x:draft note="Issue 1132 - Proposal to Modify the Social Data Model in OS 2.0" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">
+     
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
       <c>building</c>
       <c>string</c>
-      <c>The building identifier.</c>
+      <c>The building identifier. <xref target='Issue-1132'>Discussion</xref></c>
       <c>country</c>
       <c>string</c>
       <c>The country name component.</c>
       <c>floor</c>
       <c>string</c>
-      <c>The floor identifier</c>
+      <c>The floor identifier.  <xref target='Issue-1132'>Discussion</xref></c>
       <c>formatted</c>
       <c>string</c>
       <c>The full mailing address, formatted for display or use with a mailing
@@ -1699,7 +1696,7 @@ COMMA          = <US-ASCII comma (44)>
       <c>string</c>
       <c>The address type or label. Examples include 'work', 'home'.</c>
      </texttable>
-     </x:draft></t>
+     </t>
    </section>
    <section title="Album"
             anchor="Album">
@@ -1812,9 +1809,9 @@ COMMA          = <US-ASCII comma (44)>
      </figure>
    </section>
    <section title="AppId" anchor="appId">
-    <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
-     <t>appId is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.</t>
-    </x:draft>
+    
+     <t>appId is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.  <xref target='Issue-1140'>Discussion</xref></t>
+    
    </section>
 
 
@@ -1955,7 +1952,7 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      </figure>
    </section>
    <section title="MediaLink" anchor="MediaLink">
-    <!-- <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140"> -->
+    <xref target='Issue-1140'>Discussion</xref>
     <t>Some types of objects may have an alternative visual representation in the form of an image, video or embedded HTML fragments. A Media Link represents a hyperlink to such resources.</t>
        <texttable>
            <ttcol align="left" width="15%">Field Name</ttcol>
@@ -2027,7 +2024,7 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
    <section title="Name"
             anchor="Name">
             
-     <x:draft note="Issue 1132 - Proposal to Modify the Social Data Model in OS 2.0" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">     
+     
             
      <t>The components of the person's real name. Providers MAY return just the
      full name as a single string in the formatted sub-field, or they MAY
@@ -2072,16 +2069,15 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
       
       <c>pronunciation</c>
       <c>string</c>
-      <c>A string describing the appropriate natural-language pronunciation of the name.</c>
+      <c>A string describing the appropriate natural-language pronunciation of the name. <xref target='Issue-1132'>Discussion</xref></c>
       
       <c>pronunciationUrl</c>
       <c>string</c>
       <c>An IRI to an audio resource illustrating the appropriate natural-language
-      pronunciation of the name.</c>
+      pronunciation of the name. <xref target='Issue-1132'>Discussion</xref></c>
       
      </texttable></t>
      
-     </x:draft>
      
    </section>
    <section title="Organization" anchor="Organization">
@@ -2190,6 +2186,21 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
   </section>
  </middle>
  <back>
+   <references title="Discussion">
+  <!-- Spec change issues/discussion -->
+   <reference anchor='Issue-1140'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <front>
+     <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1132'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">
+    <front>
+     <title>Proposal to Modify the Social Data Model in OS 2.0</title>
+    </front>
+   </reference>
+  </references>
   <references>
    <reference anchor='RFC2119'>
     <front>

@@ -237,7 +237,7 @@ osapi.activities.create(params).execute(myCallback);
        </section>
       </section>
       <section title="osapi.activitystreams" anchor="osapi.activitystreams">
-       <x:draft note="Activity Streams 1.0 support: Data Section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+       <xref target='Issue-1140'>Discussion</xref>
        <t>Service object with functions that map to the 
        <eref target="./Social-API-Server.xml#ActivityStreams-Service">Activity Streams service</eref>.</t>
        <section title="Method Details">
@@ -328,7 +328,6 @@ var params = {
 osapi.activitystreams.create(params).execute(callback);</artwork>
         </figure>
        </section>
-      </x:draft>
       </section>
       <section title="osapi.appdata"
                anchor="osapi.appdata">
@@ -1235,6 +1234,12 @@ High score for John Doe is 100
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">
     <front>
      <title>Remove Appendix A, Deprecated JavaScript API</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1140'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+    <front>
+     <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
     </front>
    </reference>
  </references>
