@@ -304,6 +304,9 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
      <x:draft note="Add 'alias' to HTTP Request" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
      <t>In the following table, 'alias' is the element that has been added in support of 1178.</t>
      </x:draft>
+     <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138"> 
+     <t>In the following table, the 'oauth2' authorization method and other OAuth2 references were added in support of 1138.</t>
+     </x:incubating>
      <texttable align="left">
       <ttcol>Name</ttcol>
       <ttcol>Type</ttcol>

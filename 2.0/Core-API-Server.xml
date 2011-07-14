@@ -673,7 +673,7 @@ RPC-Error = "{"
   </section>
   
   <section title="Security" anchor="Security"> 
-   <x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+
    <t>OpenSocial Containers MUST support TLS 2.0 / SSL connections for sensitive data 
       since OAuth on its own does not provide encryption or message body integrity checking.
       Note that TLS 2.0/SSL is required with many scenarios in the OAuth 2.0 specification.</t> 
@@ -685,6 +685,7 @@ RPC-Error = "{"
         uses the <xref target="urlAddressing">URL Addressing</xref> representation of the
         request without the authorization parameter, in order to calculate the signature base string.</t>
    </section>
+   <x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
    <section title="OAuth 2.0 Support">
      <t>Core Gadget Servers MUST support the authorization server, resource server and client roles
       defined in section 1.1 of the Open Authorization 2.0 specification <xref target="draft-ietf-oauth-v2-15"/>.</t>
@@ -695,6 +696,7 @@ RPC-Error = "{"
       Core Gadget Servers MAY implement the refresh token pattern described 
       in section 1.5 of  the OAuth 2.0 specification.</t>
      </section>
+   </x:incubating>
     <section title="Two Party OAuth Optional Parameters">
       <t>For 2 party (client credential) OAuth requests, if a Core Gadget Server has a user identifier
       and wishes to indicate that the
@@ -712,8 +714,11 @@ RPC-Error = "{"
       <t>OpenSocial Containers may wish to restrict requests from unknown clients and require gadget registration, 
       in order to mitigate risk. OpenSocial Containers SHOULD document how to register a gadget with the OpenSocial
       Container in order to obtain a client identifier and client secret.  This is typically done through a web page,
-      although the exact method is left to the specific implementation.   Note that per the security considerations 
+      although the exact method is left to the specific implementation.</t>
+      <x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+      <t>Note that per the security considerations 
       mentioned in the OAuth 2.0 specification, client secrets should not be issued to untrusted clients.</t>
+      </x:incubating>
       <t>OpenSocial Containers SHOULD document how to store client identifiers and client secrets on the server in order for
       a gadget running locally to access remote data in another server.</t>
     </section>
@@ -730,11 +735,14 @@ RPC-Error = "{"
       a generally available desktop client, for example, cannot effectively protect a client secret that 
       is installed with each client (implicit grant). The security of communications with a two-party partner 
       service, on the other hand, is dependent on the effectiveness of that service's security procedures
-      (client credential grant).  The security of communications with a three party service, involving a 
+      (client credential grant).</t>
+<x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+      <t>  The security of communications with a three party service, involving a 
       registered server, a client/gadget and the OpenSocial Container, should follow the security guidelines 
       outlined in the OAuth 2.0 security considerations document (authorization grant).</t>
       <t>OpenSocial Containers SHOULD provide an ability to scope the authorization to data as narrowly as 
       possible (e.g., allow reading but not writing if a client only performs reads).</t> 
+</x:incubating>
     </section>
    <section title="Access Token Scopes and Expiration Times">
       <t>OpenSocial Containers SHOULD issue access tokens with short expiration times to limit the scope 
@@ -776,7 +784,7 @@ RPC-Error = "{"
         indicating that additional information may be available when using a
         different authorization context.</t>
       </section>
-   </x:incubating>  
+   
   </section>
  
   
