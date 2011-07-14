@@ -66,3 +66,4 @@ Add alias to http request parameters to support relative url (http://code.google
 gadgets.window.adjustWidth (http://code.google.com/p/opensocial-resources/issues/detail?id=1191)
 Clarify life cycle events (http://code.google.com/p/opensocial-resources/issues/detail?id=1154)
 Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-resources/issues/detail?id=1149)
+Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
