@@ -998,13 +998,21 @@ COMMA          = <US-ASCII comma (44)>
                       [ #Person-Field ]
                   "}"</artwork>
                   
-     <x:draft note="Issue 1132 - Proposal to Modify the Social Data Model in OS 2.0" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">     
-     
-     <t>The Person-Field is divided into separate Core and Extended definitions
-     in order to better support the broadly varying needs of consumer vs corporate
-     focused OpenSocial applications.</t>
-     
-     <t>The core definitions for Person-Field are listed in the table below.</t>
+     <x:draft note="Issue 1132 - Proposal to Modify the Social Data Model in OS 2.0" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1132">
+
+         <t>OpenSocial defines many common attributes associated with a person and is aligned with the Portable Contacts
+             specification. However, only display name and id are required and all others are optional. In practice,
+             support for these fields varies greatly among containers. As OpenSocial continues to be adopted as an
+             enterprise programming model, many of these fields are not appropriate based on the considerations of Human
+             Resource guidelines.</t>
+
+             <t>In an attempt to balance the needs of consumer vs corporate
+             focused OpenSocial applications, and increase interoperability, the specification is refining attempting to
+             provide clarity around attributes that are broadly applicable across both the consumer and enterprise
+             domain, and those that are more appropriate for consumer oriented systems.
+         </t>
+
+         <t>The generally applicable field definitions for Person are listed in the table below.</t>
      
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
@@ -1186,9 +1194,8 @@ COMMA          = <US-ASCII comma (44)>
       signify only the current value of the user's timezone offset.</c>
      </texttable>
      
-     <t>In addition to the Core definition above, the Extended definition of the 
-     Person-Field includes the following. Note that all extended properties are 
-     considered optional and may not be appropriate for use in all applications.</t>
+     <t>In addition to the table above, the socially oriented fields definition of the
+     Person include the following. Note that all extended properties are optional and may not be appropriate for use in all applications.</t>
      
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
