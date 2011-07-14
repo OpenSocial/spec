@@ -543,7 +543,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     occurs on a Container, and the Gadget has specified a value for a matching
     event name (either as the catch-all "events", or a specific event, named
     "event.eventtype", the Container MUST make an HTTP request to the specified
-    URL.  It is recommended that these requests be signed.</t>
+    URL.</t>
     <t>If the rel attribute matches
      "opensocialevent.TYPE", then events of TYPE are sent to that endpoint. An
      optional method attribute can be set to POST or GET to specify how the
