@@ -391,7 +391,7 @@
         </texttable>
       </t>
     </section>
-    <x:draft>
+    <x:incubating note="Gadget Lifecycle registry" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1185">
     <section title="addGadgetLifecycleCallback" anchor="container.Container.addGadgetLifecycleCallback">
      <t>container.Container.addGadgetLifecycleCallback(lifeCycleCallback)</t>
       <t>
@@ -429,7 +429,7 @@
         </texttable>
       </t>
     </section>
-    </x:draft>
+    </x:incubating>
    </section>
   </section>
 
@@ -527,7 +527,7 @@
   </section>
   <section title="Highly Recommended Features">
     <section title="container.Container.ee">
-    <x:draft note="Embedded Experiences" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+    <x:incubating note="Embedded Experiences" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
         <section title="navigate" anchor="container.Container.ee.navigate">
           <t>container.Container.ee.navigate(element, dataModel, renderParams)</t>
           <t>
@@ -569,11 +569,11 @@
             </texttable>
           </t>
         </section>
-      </x:draft>
+      </x:incubating>
     </section>
     <section title="container.Container.openSearch">
-        <x:draft note="OpenSearch Gadget Contributions"
-          href="http://docs.opensocial.org/display/OSD/OpenSearch+Gadget+Contributions">
+        <x:incubating note="OpenSearch Gadget Contributions"
+          href="http://code.google.com/p/opensocial-resources/issues/detail?id=1166">
         <t>
         The container APIs for OpenSearch allow containers to access 
         OpenSearch description information contained within the 
@@ -724,10 +724,10 @@
                     </texttable>
                 </t>
             </section>
-    </x:draft>
+    </x:incubating>
     </section>
     <section title="container.Container.actions" anchor="container.actions">
-	<x:draft note="container.Container.actions" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+	<x:incubating note="container.Container.actions" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
       <t>The actions feature, as described in the <eref target="./Core-Gadget.xml#gadgets.actions.overview">gadgets.actions overview</eref>, 
       allows gadgets to contribute actions to various parts of a container's user interface.  The container can then render the actions consistently 
       in context menus or action areas associated with particular data types, in global contribution areas (ie. navigation links at the top), 
@@ -937,10 +937,10 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
 	      </artwork>
         </section>
       </section>
-    </x:draft>
+    </x:incubating>
 	</section>
   <section title="container.Container.selection" anchor="container.selection">
-  <x:draft note="container.Container.selection" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+  <x:incubating note="container.Container.selection" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
    <t>The selection feature allows the container to support a singleton selected object, or array of objects,
    that can be set by the gadget or the container itself.  For more information, please see the 
    <eref target="./Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref>.</t>
@@ -985,10 +985,10 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
       </texttable>
     </section>
    </section>
-  </x:draft>
+  </x:incubating>
     </section>
     <section title="container.Container.views">
-    <x:draft note="View Enhancements To Support Opening Of Gadgets and URLs by the Container" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+    <x:incubating note="View Enhancements To Support Opening Of Gadgets and URLs by the Container" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
      <t>
       The purpose of these APIs is to add the ability for the gadget to open 
       and/or close gadget and URL sites within the container which it is rendered. 
@@ -1085,7 +1085,7 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
         </texttable>
        </t>
       </section>
-     </section></x:draft>
+     </section></x:incubating>
     </section>
   </section>
   <section title="Extensibility">
