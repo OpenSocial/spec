@@ -127,6 +127,9 @@ COMMA          = <US-ASCII comma (44)>
    <xref target="RFC5023">AtomPub</xref>, using a set of generic mapping rules.
    The mapping rules allow a server to write to a single interface rather than
    implementing the protocol three times.</t>
+   <x:deprecated note="ATOM Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1152">
+   <t>Support for the ATOM format is being deprecated in the OpenSocial 2.0 release.  Consumers should start migrating to using <xref target="RFC4627">JSON</xref> or XML representations.</t>
+   </x:deprecated>
    <t>OpenSocial container servers are free to define additional
    representations but MUST support at least the JSON and Atom formats for all
    resources and XML for the people calls. XML MAY be supported for the rest of

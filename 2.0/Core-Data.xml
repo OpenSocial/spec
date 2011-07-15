@@ -469,6 +469,9 @@ User-Id = <x:ref>Object-Id</x:ref> / "@owner" / "@viewer" / "@me"
    </section>
   </section>
   <section title="Data Representations" anchor="Data-Representations">
+   <x:deprecated note="ATOM Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1152">
+   <t>Support for the ATOM format is being deprecated in the OpenSocial 2.0 release.  Consumers should start migrating to using JSON or XML representations.</t>
+   </x:deprecated>
    <t>Each resource has three representations, as JSON, XML, and Atom. All data
    must be representable in each format. The XML and JSON formats have a one to
    one mapping while the Atom format is defined separately for each type of
