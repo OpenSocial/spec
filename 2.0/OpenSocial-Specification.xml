@@ -145,7 +145,39 @@ to be a compliant OpenSocial Core Gadget Server.</t>
       <t hangText="OpenSocial Container">To be considered an OpenSocial Container, a site MUST fulfill all the requirements for an Social API Server and a Social Gadget Container.</t>
      </list>
    <t>In all cases, a site MUST fulfill the requirements in <xref target="Extensions">Extensions</xref>.</t>
-  </section>
+
+      <section title="Deprecating and Incubating APIs" anchor="DeprecatingAndIncubatingAPIs">
+          <t>One of the original goals of the OpenSocial community is to be able to constantly innovate and bring new
+              and exciting features into the specification. At the same time, as more and more systems deploy OpenSocial
+              into production, the community has a responsibility to provide a clear roadmap when new capability will be
+              added and, when necessary, existing capability removed.
+          </t>
+          <section title="Rules for Deprecating APIs" anchor="RulesForDeprecatingAPIs">
+              <t>While APIs have been deprecated in the past, there have been conventions, but no clear rules, on when
+                  they can be removed rom the specification. For example, OpenSocial 1.0 deprecated a set of JavaScript
+                  APIs (see Appendix A). These are no longer carried forward in version 2.0. APIs MAY be deprecated by
+                  the community in any development cycle of the specification. However, support for the APIs MUST NOT be
+                  removed until a major version of the specification is published. The versioning scheme of the
+                  specification itself follows the definition outlined in <xref target="Core-Gadget">Core Gadget Specification</xref>.
+              </t>
+          </section>
+          <section title="Incubating APIs" anchor="RulesForIncubatingAPIs">
+              <t>Areas of the specification that are marked as incubating represent capability that the community would
+                  like to standardize. Practical experience has shown that even though OpenSocial's development process
+                  requires a prototype be used to demonstrate the implementation, there are of the specification that
+                  have been interpreted or implemented slightly differently, resulting in less than satisfactory
+                  interoperability. To address this, the OpenSocial community has adopted the idea of "incubating" parts
+                  of the specification. The intent is to clearly communicate the direction of the specification and
+                  provide a clean set of APIs and provide early adopters with a mechanism that will help achieve
+                  interoperability. As incubating parts of the specification mature, every effort will be made not to
+                  change the APIs. However, these APIs MAY change and are not considered under the purview of the
+                  versioning rules of the specification.
+              </t>
+          </section>
+      </section>
+
+
+</section>
   
   
 
