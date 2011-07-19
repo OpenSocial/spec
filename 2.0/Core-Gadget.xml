@@ -2609,7 +2609,7 @@ var lang = prefs.getLang();
      </section>
      <section title="requestNavigateTo"
               anchor="gadgets.views.requestNavigateTo">
-      <t>&lt;static&gt; gadgets.views.requestNavigateTo(|, |, opt_ownerId)</t>
+      <t>&lt;static&gt; gadgets.views.requestNavigateTo(view, opt_params, opt_ownerId)</t>
       <t>Description: Attempts to navigate to this gadget in a different view.
       If the container supports parameter passing it will pass the optional
       parameters along to the gadget in the new view. This also allows for
@@ -2627,12 +2627,12 @@ var lang = prefs.getLang();
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
-       <c>|</c>
+       <c>view</c>
        <c>gadgets.views.View</c>
        <c>{string} view If set to a string, the name of the view to navigate
        to. If set to a View, the View object to navigate to. Passing a View has
        been deprecated.</c>
-       <c>|</c>
+       <c>opt_params</c>
        <c>Map.&lt;String|String&gt;</c>
        <c>{string} opt_params If the value is an object, it represents
        parameters to pass to the gadget after it has been navigated to on the
