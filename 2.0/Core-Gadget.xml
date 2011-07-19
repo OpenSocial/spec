@@ -829,7 +829,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
             <t>One of the primary motivations for Alias is to make it easy for OpenSocial containers to expose legacy
             systems endpoints to application providers. Therefore, its expected that a common set of service tags will
             be defined and maintained publicly. One such example is maintained by the OpenSocial community and is
-            available on the wiki at http://docs.opensocial.org/display/OSF/OpenSocial+External+Services+Tag+Registry.</t>
+            available on the wiki at http://docs.opensocial.org/display/OSD/OpenSocial+External+Services+Tag+Registry.</t>
 
              <section title="/ExternalServices/ServiceTag">
                  <t>The unique identifier of the API to the external service, e.g. opensocial:service://microsoft.com/sharepoint/api?version=1.</t>
