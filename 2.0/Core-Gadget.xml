@@ -159,10 +159,9 @@
    <section title="Elements and Attributes"
             anchor="ElementsAndAttributes">
     <t>The following XML elements and attributes MUST be supported by the
-    Container as mandated by the
-    <xref target="GadgetXmlSchema">Gadget XML Schema</xref>.
+    Container.
     Additional elements and attributes MAY be supported, but these elements are
-    beyond the scope of this document.</t>
+    beyond the scope of this document. <xref target="Issue-1179">Discussion</xref></t>
 
 <t>A Container MAY support a simplified XML schema.  This format changes some core elements to optional
 and uses the canonical format for templates and data pipeline blocks. <xref target="Issue-1162">Discussion</xref>  </t>
@@ -6925,6 +6924,12 @@ Content-Type: application/embed+json
      <title>Add 'alias' to HTTP Request</title>
     </front>
    </reference>   
+   <reference anchor='Issue-1179'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1179">
+    <front>
+     <title>Specification Cleanup</title>
+    </front>
+   </reference>  
   </references>
   <!-- Real references -->
   <references>
