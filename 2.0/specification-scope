@@ -67,3 +67,4 @@ gadgets.window.adjustWidth (http://code.google.com/p/opensocial-resources/issues
 Clarify life cycle events (http://code.google.com/p/opensocial-resources/issues/detail?id=1154)
 Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-resources/issues/detail?id=1149)
 Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
+Fix missing params on requestNavigateTo (http://code.google.com/p/opensocial-resources/issues/detail?id=1148)
