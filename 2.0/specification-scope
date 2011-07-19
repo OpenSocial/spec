@@ -40,6 +40,7 @@ Fix XSD for core gadget (http://code.google.com/p/opensocial-resources/issues/de
 Fix missing prams on requestNavigateTo (http://code.google.com/p/opensocial-resources/issues/detail?id=1148)
 Defining terms "OSML" and "EL" in template specification (http://code.google.com/p/opensocial-resources/issues/detail?id=1170)
 Remove "Non-Tags" section from Social Gadget spec(http://code.google.com/p/opensocial-resources/issues/detail?id=1179)
+Core-Container.xml cleanup (http://code.google.com/p/opensocial-resources/issues/detail?id=1197)
 
 
 Call for Votes
@@ -68,3 +69,4 @@ Clarify life cycle events (http://code.google.com/p/opensocial-resources/issues/
 Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-resources/issues/detail?id=1149)
 Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
 Fix missing params on requestNavigateTo (http://code.google.com/p/opensocial-resources/issues/detail?id=1148)
+Core-Container.xml cleanup (http://code.google.com/p/opensocial-resources/issues/detail?id=1197)
