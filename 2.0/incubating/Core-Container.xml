@@ -489,6 +489,57 @@
      Contains preloaded hash of gadgets tokens.
     </t>
    </list>
+   <list style="hanging">
+    <t hangText="GET_LANGUAGE">
+     A callback function that will return the correct language locale part to use when 
+     asking the server to render a gadget or when asking the server for 1 or more 
+     gadget's metadata.
+    </t>
+    <t hangText="GET_COUNTRY">
+     A callback function that will return the correct country locale part to use when 
+     asking the server to render a gadget or when asking the server for 1 or more
+     gadget's metadata.
+    </t>
+    <t hangText="GET_PREFERENCES">
+     A callback function that will return the preferences to use when asking the server 
+     to render a gadget or when asking the server for gadget metadata.  The format 
+     returned here should be the same as is required for USER_PREFS 
+     <xref target="ConfiguringGadgetRender"></xref>. It will be 
+     passed the following parameters:
+
+     <texttable align="left">
+      <ttcol>Name</ttcol>
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>siteId</c>
+      <c>string</c>
+      <c>Gadget Site ID</c>
+      <c>gadgetUrl</c>
+      <c>string</c>
+      <c>Gadget Url</c>
+     </texttable>
+    </t>
+    <t hangText="SET_PREFERENCES">
+     A callback function that will persist the preferences.  It will be passed the 
+     following parameters:
+
+     <texttable align="left">
+      <ttcol>Name</ttcol>
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>siteId</c>
+      <c>string</c>
+      <c>Gadget Site ID</c>
+      <c>gadgetUrl</c>
+      <c>string</c>
+      <c>Gadget Url</c>
+      <c>preferences</c>
+      <c>object</c>
+      <c>Preferences to persist.  The format supplied here will be the same as is 
+       required for USER_PREFS <xref target="ConfiguringGadgetRender"></xref>.</c>
+     </texttable>
+    </t>
+   </list>
   </section>
 
   <section title="Configuring gadget render" anchor="ConfiguringGadgetRender">
@@ -522,7 +573,9 @@
      Whether to enable test mode. Default is false.
     </t>
     <t hangText="USER_PREFS">
-     The gadget user prefs to render with.
+     The gadget user prefs to render with. If undefined, and GET_PREFERENCES 
+     <xref target="Configuring-The-Container"></xref> has been provided when configuring 
+     the container, the container should use GET_PREFERENCES to obtain preferences.
     </t>
     <t hangText="VIEW">
      The view of gadget to render.
