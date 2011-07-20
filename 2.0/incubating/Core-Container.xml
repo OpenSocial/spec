@@ -321,8 +321,8 @@
         </texttable>
       </t>
     </section>
-    <x:incubating note="Gadget Lifecycle registry" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1185">
     <section title="addGadgetLifecycleCallback" anchor="container.Container.addGadgetLifecycleCallback">
+    <xref target="Issue-1185">Discussion</xref>
      <t>container.Container.addGadgetLifecycleCallback(lifeCycleCallback)</t>
       <t>
         Add a callback object to be called when a gadget is added, navigated to or closed.
@@ -367,7 +367,6 @@
         </texttable>
       </t>
     </section>
-    </x:incubating>
    </section>
    <section title="container.GadgetSite" anchor="container.GadgetSite">
     <t>
@@ -535,7 +534,7 @@
   </section>
   <section title="Highly Recommended Features">
     <section title="container.Container.ee">
-    <x:incubating note="Embedded Experiences" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+    <xref target="Issue-1144">Discussion</xref>
         <section title="navigate" anchor="container.Container.ee.navigate">
           <t>container.Container.ee.navigate(element, dataModel, renderParams)</t>
           <t>
@@ -577,11 +576,9 @@
             </texttable>
           </t>
         </section>
-      </x:incubating>
     </section>
     <section title="container.Container.openSearch">
-        <x:incubating note="OpenSearch Gadget Contributions"
-          href="http://code.google.com/p/opensocial-resources/issues/detail?id=1166">
+    <xref target="Issue-1166">Discussion</xref>
         <t>
         The container APIs for OpenSearch allow containers to access 
         OpenSearch description information contained within the 
@@ -732,10 +729,9 @@
                     </texttable>
                 </t>
             </section>
-    </x:incubating>
     </section>
     <section title="container.Container.actions" anchor="container.actions">
-	<x:incubating note="container.Container.actions" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+    <xref target="Issue-1161">Discussion</xref>
       <t>The actions feature, as described in the <eref target="../Core-Gadget.xml#gadgets.actions.overview">gadgets.actions overview</eref>, 
       allows gadgets to contribute actions to various parts of a container's user interface.  The container can then render the actions consistently 
       in context menus or action areas associated with particular data types, in global contribution areas (ie. navigation links at the top), 
@@ -945,10 +941,9 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
 	      </artwork>
         </section>
       </section>
-    </x:incubating>
 	</section>
   <section title="container.Container.selection" anchor="container.selection">
-  <x:incubating note="container.Container.selection" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+  <xref target="Issue-1161">Discussion</xref>
    <t>The selection feature allows the container to support a singleton selected object, or array of objects,
    that can be set by the gadget or the container itself.  For more information, please see the 
    <eref target="../Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref>.</t>
@@ -993,10 +988,9 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
       </texttable>
     </section>
    </section>
-  </x:incubating>
     </section>
     <section title="container.Container.views">
-    <x:incubating note="View Enhancements To Support Opening Of Gadgets and URLs by the Container" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+    <xref target="Issue-1167">Discussion</xref>
      <t>
       The purpose of these APIs is to add the ability for the gadget to open 
       and/or close gadget and URL sites within the container which it is rendered. 
@@ -1121,7 +1115,7 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
         </texttable>
        </t>
       </section>
-     </section></x:incubating>
+     </section>
     </section>
   </section>
   <section title="Extensibility">
@@ -1154,5 +1148,40 @@ container.Container.addMixin('foo', function() { ... });
    </section>
   </section>
  </middle>
+ <back>
+   <references title="Discussion">
+  <!-- Spec change issues/discussion -->
+   <reference anchor='Issue-1185'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1185">
+    <front>
+     <title>Gadget Lifecycle registry</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1144'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+    <front>
+     <title>Embedded Experiences</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1166'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1166">
+    <front>
+     <title>OpenSearch Gadget Contributions</title>
+    </front>
+   </reference>   
+   <reference anchor='Issue-1161'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+    <front>
+     <title>Declarative Actions &amp; Selection</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1167'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+    <front>
+     <title>View Enhancements To Support Opening Of Gadgets and URLs by the Container</title>
+    </front>
+   </reference>   
+  </references> 
+ </back>
 </rfc>
 
