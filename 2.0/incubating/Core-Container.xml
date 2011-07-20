@@ -914,8 +914,7 @@ container.Container.actions.registerHideActionHandler(myHideActionHandler);
             <c>navigateHandler</c>
             <c>Function</c>
             <c>The container's function to render and navigate to gadgets in its UI.
-            The function takes in two parameters: the gadget spec url and the gadget 
-            metadata.</c>
+            </c>
           </texttable>
           <t>Parameters for navigateHandler function:</t>
           <texttable align="left">
@@ -928,20 +927,39 @@ container.Container.actions.registerHideActionHandler(myHideActionHandler);
             <c>metadata</c>
             <c>Object</c>
             <c>JSON object for the gadget's metadata.</c>
+            <c>opt_params</c>
+            <c>Object</c>
+            <c>A bag-style JSON object that contains parameters to indicate 
+               how the container should render the specified gadget.</c>
           </texttable>
           <t>Example:</t>
           <artwork type="code">
 var myNavigateToHandler = function(gadgetUrl, metadata){
-    // invoke common container APIs to show the appropriate gadget
-    // ie. wrapper around call to CommonContainer.navigateGadget(site, gadgetUrl, viewParams, renderParams, opt_callback);
-    // or return the gadgetID of an existing visble gadget navigatingTo the optional viewId.
+// invoke common container APIs to show the appropriate gadget, this could be viewed as a 
+// wrapper call to CommonContainer.navigateGadget(site, gadgetUrl, viewParams, renderParams, opt_callback);
+// or return the gadgetID of an existing visble gadget navigatingTo the optional viewId.
     return gadgetId;
 }
 container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler );
 	      </artwork>
         </section>
-      </section>
-	</section>
+        <section title="Handling the view and view_target Parameters " anchor="ActionsOptParams">
+		   <t>
+		    Actions may specify the view to render or the target location in the container UI to render the gadget.
+		    This information is passed to the navigateHandler in the form of a bag-style JSON object with keys 
+		    defined in actions.OptParam.  All of these are optional.
+		   </t>
+		   <list style="hanging">
+		    <t hangText="VIEW">
+		     The view of gadget to render.
+		    </t>
+		    <t hangText="VIEW_TARGET">
+		     The target area of the container to render the view.
+		    </t>
+		   </list>
+	  </section>
+    </section>
+  </section>
   <section title="container.Container.selection" anchor="container.selection">
   <xref target="Issue-1161">Discussion</xref>
    <t>The selection feature allows the container to support a singleton selected object, or array of objects,
@@ -1097,7 +1115,7 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
        </t>
       </section>
       <section title="destroyElement" anchor="container.views.destroyElement">
-       <t>container.views.destroyElement(id)</t>
+       <t>container.views.destroyElement(site)</t>
        <t>
         Description: Method called when a gadget wants to close itself or the 
         parent gadget wants to close a gadget or URL site it has opened.
@@ -1107,10 +1125,10 @@ container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler )
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
          <ttcol>Description</ttcol>
-         <c>id</c>
-         <c>string</c>
+         <c>site</c>
+         <c>Object</c>
          <c>
-          The id of the gadget or url site to close.
+          The the gadget or url site to close.
          </c>
         </texttable>
        </t>
