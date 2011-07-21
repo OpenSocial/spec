@@ -247,7 +247,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 		Javascript APIs declared as features. There are two kinds of features,
 		core and optional. For example, the core API gadgets.viewes.View
 		defines how gadgets work with and request different amounts of real
-		estate in the browser. An example optional feature is gadgets.skins..
+		estate in the browser. An example optional feature is gadgets.skins.
 		Because of the existing separation between core and optional features,
 		OpenSocial is already layered to handle gadget extensions. In order to avoid undue burden on
 		implementation of domain specific or container specific behavior,
@@ -378,8 +378,12 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
 			Omitting the "type=XML" query parameter from the request will return a JSON document.  
 			</preamble>
 			<artwork><![CDATA[
-[{"id":"viewer","data":{"acme_EmployeeNumber":"1122998877","devWorldData":{"devworld_nickname":"The Wiz..."},"id":"john.doe","name":{"formatted":"John Doe","familyName":"Doe","givenName":"John"},"displayName":"Johnny"}}]
-			]]>
+[{"id":"viewer","data":{"acme_EmployeeNumber":"1122998877",
+"devWorldData":{"devworld_nickname":"The Wiz..."},
+"id":"john.doe",
+"name":{"formatted":"John Doe","familyName":"Doe","givenName":"John"},"displayName":"Johnny"}
+}]
+]]>
 			</artwork>
 			</figure>
 		
@@ -478,8 +482,8 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Core Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="Core-API-Server"
@@ -488,8 +492,8 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Core API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="Social-Gadget"
@@ -498,8 +502,8 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Social Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="Social-API-Server"
@@ -508,8 +512,18 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
      <title>OpenSocial Social API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
+    </front>
+   </reference>
+   <reference anchor="Core-Container"
+              target="./incubating/Core-Container.xml">
+    <front>
+     <title>OpenSocial Core Container Specification</title>
+     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+     </author>
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
   </references>
