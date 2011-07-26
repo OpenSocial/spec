@@ -3394,7 +3394,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>params</c>
-            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Params">HTTP-Request-Parameters</eref></c>
             <c>A JavaScript representation of HTTP-Request-Parameters.</c>
            </texttable>
           </t>
@@ -3419,7 +3419,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>params</c>
-            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Params">HTTP-Request-Parameters</eref></c>
             <c>A JavaScript representation of HTTP-Request-Parameters.</c>
            </texttable>
           </t>
@@ -3444,7 +3444,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>params</c>
-            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Params">HTTP-Request-Parameters</eref></c>
             <c>A JavaScript representation of HTTP-Request-Parameters.  osapi.http.post supports an additional property, 'body', whose value is used as the post body of the HTTP request.</c>
            </texttable>
           </t>
@@ -3469,7 +3469,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>params</c>
-            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Params">HTTP-Request-Parameters</eref></c>
             <c>A JavaScript representation of HTTP-Request-Parameters.   osapi.http.put supports an additional property, 'body', whose value is used as the post body of the HTTP request.</c>
            </texttable>
           </t>
@@ -3494,7 +3494,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>params</c>
-            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Params">HTTP-Request-Parameters</eref></c>
             <c>A JavaScript representation of HTTP-Request-Parameters.</c>
            </texttable>
           </t>
@@ -3520,7 +3520,7 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>params</c>
-            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Params">HTTP-Request-Parameters</eref></c>
             <c>A JavaScript representation of HTTP-Request-Parameters.</c>
            </texttable>
           </t>
