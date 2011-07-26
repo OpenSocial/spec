@@ -1033,6 +1033,9 @@ GIF89....&lt;image data&gt;
 
     </section>
     <section title="HTTP-Status-Code">
+    <x:incubating note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175">
+    <t>References below to OAuth 2.0 are incubating changes in the OpenSocial 2.0 specification.</t>
+    </x:incubating>
    <texttable>
     <ttcol align="left">Status Code</ttcol>
     <ttcol align="left">Description</ttcol>
@@ -1051,7 +1054,7 @@ GIF89....&lt;image data&gt;
     
     <list style="symbols">
      <t>Missing OAuth authorization credentials as described in 
-     <xref target="OAuth-Consumer-Request-1.0-Draft-1" />.</t>
+     <xref target="OAuth-Consumer-Request-1.0-Draft-1" /> for OAuth 1.0a or in <xref target='draft-ietf-oauth-v2-20'/> for OAuth 2.0 requests.</t>
      <t>OAuth authorization credentials are present, but the user identity is
      not authorized to access the protected resource. If the request already
      included authorization credentials, the 401 response indicates that the
