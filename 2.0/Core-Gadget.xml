@@ -203,7 +203,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <t hangText="@height">The preferred default height of the gadget, in
       pixels. Containers SHOULD use this value to set an appropriate height for
       the gadget when it is first rendered.</t>
-      <t hangText="@width">The preferred default width of he gadget, in pixels.
+      <t hangText="@width">The preferred default width of the gadget, in pixels.
       Containers SHOULD use this value to set an appropriate width for the
       gadget when it is first rendered.</t>
       <t hangText="@doctype">Optional.
@@ -1993,6 +1993,11 @@ gadgets.io.makeRequest(url, callback, params);
               anchor="gadgets.io.MethodType.POST">
       Container support for this method type is OPTIONAL. This
       field may be used interchangeably with the string 'POST'.</t>
+     <t hangText="PATCH"
+              anchor="gadgets.io.MethodType.PATCH">
+      <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1200" note="Add support for HTTP PATCH">
+      Container support for this method type is OPTIONAL. This
+      field may be used interchangeably with the string 'PATCH'.</x:incubating></t>
      <t hangText="PUT"
               anchor="gadgets.io.MethodType.PUT">
       Container support for this method type is OPTIONAL. This
@@ -3503,6 +3508,36 @@ execution with <x:ref>osapi.Request.execute</x:ref> or batch operations with
           </t>
          </list>
         </section>
+        <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1200" note="Add support for HTTP PATCH">
+        <section title="patch"
+                 anchor="osapi.http.patch">
+         <list style="hanging">
+          <t hangText="Signature">&lt;static&gt; <x:ref>osapi.Request</x:ref> osapi.http.patch(params)</t>
+          <t hangText="Description">Creates a PATCH request to an arbitrary URL.</t>
+          <t hangText="Parameters">
+           <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>params</c>
+            <c><eref target="Core-Data.xml#HTTP-Request-Parameters">HTTP-Request-Parameters</eref></c>
+            <c>A JavaScript representation of HTTP-Request-Parameters.</c>
+           </texttable>
+          </t>
+          <t hangText="Returns">
+           <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c><x:ref>osapi.Request</x:ref></c>
+            <c>A request to patch information at an arbitrary URL.</c>
+           </texttable>
+          </t>
+         </list>
+        </section>
+        </x:incubating>
+
+
+
        <section title="Examples">
         <figure>
          <preamble>Suppose a request to http://www.somephotosite.com/latest
