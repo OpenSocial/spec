@@ -221,7 +221,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 	terminology and semantics with the specification. As the extension
 	develops, it MUST conform to the guidelines and life cycle defined in
 	the OpenSocial Development Process. For example, extensions are
-	required to provide a publically available prototype that demonstrates
+	required to provide a publicly available prototype that demonstrates
 	that it can be implemented as well as a corresponding set of test
 	cases. Extensions MUST be defined in a manner that is consistent with
 	the programming model defined in the versions of the specification to
@@ -303,15 +303,13 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 			consistent extension pattern. </t>
 			
 		<section title="A Note on XML Schema Validation">
-		<t>
-			In OpenSocial 1.0, the canonical XSDs do not contain extension points,
-			e.g.xs:any. Therefore, XML instance documents of extensions that have
-			added attributes ore elements to the data model or gadget metadata
-			will not validate.
-			Therefore, extensions MUST NOT require schema validation. Containers that are
-			not supporting extensions MAY validate the gadget metadata and the
-			data models.
-		</t>
+            <t>
+                The OpenSocial specification does not provide cannonical XML schema. Those provided with the
+                specification are for reference and illustrative purposes only. XML instance documents are not expected
+                to be validated and containers MUST NOT require schema validation. Containers that are
+                not supporting extensions MAY validate the gadget metadata and the
+                data models.
+            </t>
 	</section>
 			
 	
