@@ -19,7 +19,17 @@
   <keyword>Core Container</keyword>
  </front>
  <middle>
-  <section title="Definitions">
+
+     <section title="Incubating Status" anchor="incubatingstatus">
+         <t>All content in this specification of OpenSocial is considered to be incubating. It is provided as a
+             guide to the developers wishing to implement this specification. The API defined in this specification
+             is provisional, and while the community will work to keep the API stable, it may change based on
+             implementation experience, additional requirements, or other factors.
+         </t>
+     </section>
+
+
+  <section title="Definitions" anchor="Definitions">
    <section title="Gadget">
     <t>
      A web-based software component based on HTML, CSS and JavaScript. It allows
@@ -27,13 +37,13 @@
      anywhere on the web without modification.
     </t>
    </section>
-   <section title="Container">
+   <section title="Container" anchor="ContainerDefintion">
     <t>
      A context into which a gadget is embedded into. This is typically an HTML
      page, served by an arbitrary web-service, viewable by a browser.
     </t>
    </section>
-   <section title="Security token">
+   <section title="Security token" anchor="SecurityTokenDefinition">
     <t>
      A security mechanism to allow gadgets to make secure connections to server
      end points for data that may be valid only for the current user's context.
@@ -42,7 +52,7 @@
    </section>
   </section>
 
-  <section title="Overview">
+  <section title="Overview" anchor="Overview">
    <t>
     Common container is a lightweight gadget-and-container framework, based on
     JavaScript and server-driven end-point. Its mission is to simplify container
@@ -51,21 +61,14 @@
     embed gadgets rendered by a gadget service. It does not address
     container-specific business-logic and layout.
    </t>
-   <t>
-    This document acts as a starting point for a formal specification, to be
-    proposed for OpenSocial 2.0. It is determined to be needed at the
-    OpenSocial 2.0 kick-off meeting. The goal is to compile requirements,
-    describe use cases, identify original authors, and paves way for future
-    developments.
-   </t>
   </section>
 
-  <section title="Compliance">
+  <section title="Compliance" anchor="Compliance">
    <t>
-    To be a gadget-compliant container, a container must be able to satisfy
+    To be a gadget-compliant container, a container MUST be able to satisfy
     requirements defined in this section.
    </t>
-   <section title="Lightweight">
+   <section title="Lightweight" anchor="Lightweight">
     <t>
      The framework is installed in a container page by a script tag, with its
      source pointing to the common container JS. This also provides a near-zero
@@ -79,7 +82,7 @@
      ensures opened gadgets continue to work, until they are closed.
     </t>
    </section>
-   <section title="Setup gadgets.rpc">
+   <section title="Setup gadgets.rpc" anchor="SetupGadgetsRPC">
     <t>
      Sets up container for gadget-to-container, container-to-gadget and
      gadget-to-gadget communication via gadgets.rpc. This involves setting up
@@ -88,7 +91,7 @@
      of gadget is a common example.
     </t>
    </section>
-   <section title="Track latency">
+   <section title="Track latency" anchor="TrackLatency">
     <t>
      The framework allows container developers to track the latency times
      required to do a gadget navigation. This involves starting a timer when a
@@ -97,7 +100,7 @@
      container-specific consumption.
     </t>
    </section>
-   <section title="Auto-refresh security tokens">
+   <section title="Auto-refresh security tokens" anchor="AutoRefreshSecurityTokens">
     <t>
      Its lifespan starts from time when it is instantiated to time when the
      page is navigated away. AJAX-y pages will tend to have longer lifespan.
@@ -106,7 +109,7 @@
      requires tokens to be updated.
     </t>
    </section>
-   <section title="Promote coherent changes">
+   <section title="Promote coherent changes" anchor="PromoteCoherentChanges">
     <t>
      Changes in a gadget render may require simultaneous change on the container
      implementation. This framework will allow new container changes to be
@@ -117,7 +120,7 @@
    </section>
   </section>
 
-  <section title="Javascript API Reference">
+  <section title="Javascript API Reference" anchor="JavaScriptAPIReference">
    <section title="container" anchor="container">
     <t>Namespace for top level container functions.</t>
    </section>
@@ -128,7 +131,7 @@
      <xref target="GadgetNavigation">GadgetNavigation</xref> and more.
      Internally, this manages work required to ensure that navigated gadgets
      continue to work. There MUST be not more than one instance of this in a
-     pages, due to usage of global resources and possible race conditions.
+     page, due to usage of global resources and possible race conditions.
     </t>
     <section title="constructor" anchor="Container-Constructor">
       <t>container.Container(opt_config)</t>
@@ -262,7 +265,7 @@
       </t>
     </section>
     <section title="closeGadget" anchor="container.Container.closeGadget">
-      <t>container.Container.nloseGadget(site)</t>
+      <t>container.Container.closeGadget(site)</t>
       <t>
         Closes the gadget in the site.
       </t>
