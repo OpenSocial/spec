@@ -29,6 +29,7 @@ Add Enterprise Social Data Model Profile (http://code.google.com/p/opensocial-re
 Cross-container data requests and Service Providers (http://code.google.com/p/opensocial-resources/issues/detail?id=1181)
 Signing of URL Content requests (http://code.google.com/p/opensocial-resources/issues/detail?id=1173)
 gadgets.window.adjustWidth (http://code.google.com/p/opensocial-resources/issues/detail?id=1191)
+Add support for new HTTP method PATCH (http://code.google.com/p/opensocial-resources/issues/detail?id=1200)
 
 
 OpenSocial 2.0 "Bugs"
@@ -70,3 +71,4 @@ Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-re
 Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
 Fix missing params on requestNavigateTo (http://code.google.com/p/opensocial-resources/issues/detail?id=1148)
 Core-Container.xml cleanup (http://code.google.com/p/opensocial-resources/issues/detail?id=1197)
+Add support for new HTTP method PATCH (http://code.google.com/p/opensocial-resources/issues/detail?id=1200)
