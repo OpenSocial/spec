@@ -164,6 +164,7 @@ osapi.people.get(params).execute(function(result) {
         </figure>
        </section>
       </section>
+<x:deprecated note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead." href="#osapi.activitystreams">
       <section title="osapi.activities"
                anchor="osapi.activities">
        <t>Service object with functions that map to the 
@@ -235,6 +236,7 @@ osapi.activities.create(params).execute(myCallback);
         </figure>
        </section>
       </section>
+</x:deprecated>
       <section title="osapi.activitystreams" anchor="osapi.activitystreams">
        <xref target='Issue-1140'>Discussion</xref>
        <t>Service object with functions that map to the 
@@ -819,9 +821,17 @@ osapi.messages.send(params).execute(messageSentCallback);
      <xref target="opensocial.Environment.supportsField">
      Environment.supportsField()</xref> </t></t>
      <list style="hanging">
+     <x:deprecated note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead." href="#osapi.activitystreams">
+     <list style="hanging">
       <t hangText="ACTIVITY">
        <t>This field may be used interchangeably with the string
        'activity'.</t>
+      </t>
+     </list>
+     </x:deprecated>
+      <t hangText="ACTIVITY_ENTRY">
+       <t>This field may be used interchangeably with the string
+       'activityEntry'.</t>
       </t>
       <t hangText="ADDRESS">
        <t>This field may be used interchangeably with the string
@@ -1030,21 +1040,40 @@ osapi.messages.send(params).execute(messageSentCallback);
 </artwork>
    </figure>
   </section>
-  <section title="&lt;os:ActivitiesRequest&gt;"
-           anchor="ActivitiesRequest">
-   <list style="hanging">
-    <t hangText="Description">A request to get activities. This is equivalent to using
-   &lt;os:DataRequest&gt; with @method of "activities.get".</t>
-    <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the <eref target="Social-API-Server.xml#Activities-Service-Get">Activities service's get method</eref>, except the 'appId' parameter can not be changed from "@app".</t> 
-    <t hangtext="Returns">A <eref target="./Social-Data.xml#Activity">Activity</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Activity">Activity</eref> objects.</t>
-   </list>
-   <figure>
-    <preamble>Example:</preamble>
-    <artwork xml:space="preserve">
-&lt;os:ActivitiesRequest key="ViewerActivities" userid="@viewer" startIndex="40" count="20"/&gt;
-</artwork>
-   </figure>
-  </section>
+
+    <section title="&lt;os:ActivitiesRequest&gt;"
+             anchor="ActivitiesRequest">
+               <x:deprecated note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead.">
+     <list style="hanging">
+      <t hangText="Description">A request to get activities. This is equivalent to using
+     &lt;os:DataRequest&gt; with @method of "activities.get".</t>
+      <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the <eref target="Social-API-Server.xml#Activities-Service-Get">Activities service's get method</eref>, except the 'appId' parameter can not be changed from "@app".</t> 
+      <t hangtext="Returns">A <eref target="./Social-Data.xml#Activity">Activity</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Activity">Activity</eref> objects.</t>
+     </list>
+     <figure>
+      <preamble>Example:</preamble>
+      <artwork xml:space="preserve">
+  &lt;os:ActivitiesRequest key="ViewerActivities" userid="@viewer" startIndex="40" count="20"/&gt;
+  </artwork>
+     </figure>
+       </x:deprecated>
+    </section>
+
+    <section title="&lt;os:ActivityStreamsRequest&gt;"
+             anchor="ActivityStreamsRequest">
+     <list style="hanging">
+      <t hangText="Description">A request to get activity entries. This is equivalent to using
+     &lt;os:DataRequest&gt; with @method of "activitystreams.get".</t>
+      <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the <eref target="Social-API-Server.xml#ActivityStreams-Service-GetActivityStreams">ActivityStreams service's get method</eref>, except the 'appId' parameter can not be changed from "@app".</t> 
+      <t hangtext="Returns">A <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> objects.</t>
+     </list>
+     <figure>
+      <preamble>Example:</preamble>
+      <artwork xml:space="preserve">
+  &lt;os:ActivitiesRequest key="ViewerActivities" userid="@viewer" startIndex="40" count="20"/&gt;
+  </artwork>
+     </figure>
+    </section>
   </section>
   <section title="Templating">
   <t>This specification defines a set of tags, known as OpenSocial Markup Language (OSML) tags, that extend the templating capabilities of the Core Gadget Container specification.</t>

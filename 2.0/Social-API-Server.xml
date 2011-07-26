@@ -659,7 +659,7 @@ Content-Type: application/json
    </section>
 
 <!-- *********************************************************************************** -->
-
+<x:deprecated note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead.">
    <section title="Activities"
             anchor="Activities-Service">
     <t>Containers MUST support the Activities Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Activities Service:</t>
@@ -808,6 +808,7 @@ Content-Type: application/json
       </section>
     </section>
    </section>
+</x:deprecated>
    <section title="Activity Streams" anchor="ActivityStreams-Service">
     <xref target='Issue-1140'>Discussion</xref>
     <t>Containers MUST support the Activity Streams Service.  Individual operations are required or optional as indicated in the sections that follow. Containers MUST use the following values to define the Activity Streams Service:</t>
