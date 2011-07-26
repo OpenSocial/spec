@@ -304,7 +304,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
 			
 		<section title="A Note on XML Schema Validation">
             <t>
-                The OpenSocial specification does not provide cannonical XML schema. Those provided with the
+                The OpenSocial specification does not provide canonical XML schema. Those provided with the
                 specification are for reference and illustrative purposes only. XML instance documents are not expected
                 to be validated and containers MUST NOT require schema validation. Containers that are
                 not supporting extensions MAY validate the gadget metadata and the
