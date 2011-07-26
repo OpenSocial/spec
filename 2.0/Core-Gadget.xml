@@ -2648,7 +2648,7 @@ var lang = prefs.getLang();
      </section>
      <section title="openGadget"
               anchor="gadgets.views.openGadget">
-       <t>&lt;static&gt; gadgets.views.openGadget(resultCallback, idCallback, opt_params)</t>
+       <t>&lt;static&gt; gadgets.views.openGadget(resultCallback, navigateCallback, opt_params)</t>
        <t>Description: Opens a gadget in the container UI. The location of the gadget site
        in the container will be determined by the view target passed in. The container
        would open the view in a dialog, if view target is dialog or the gadgets
@@ -2691,7 +2691,7 @@ var lang = prefs.getLang();
      <section title="openEmbeddedExperience" 
      anchor="gadgets.views.openEmbeddedExperience">
      <t>&lt;static&gt; 
-     gadgets.views.openEmbeddedExperience(resultCallback, idCallback, opt_params)</t>
+     gadgets.views.openEmbeddedExperience(resultCallback, navigateCallback, dataModel, opt_params)</t>
        <t>Description: Opens an embedded experience in the container UI. The location 
        of the gadget or URL site in the container will be determined by the view target 
        passed in. The container would open the embedded experience in a dialog, if view 
