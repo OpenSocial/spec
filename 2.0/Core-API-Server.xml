@@ -1046,6 +1046,7 @@ GIF89....&lt;image data&gt;
      <t>Invalid request URI</t>
      <t>Invalid HTTP Header</t>
      <t>Receiving an unsupported, nonstandard parameter</t>
+     <t>A parameter is repeated</t>
      <t>Receiving an invalid HTTP Message Body</t>
     </list></c>
     <c>401 UNAUTHORIZED</c>
