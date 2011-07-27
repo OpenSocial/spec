@@ -867,14 +867,18 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <xref target="ProxiedContent">proxy</xref> the current content section. <xref target="Issue-1173">Discussion</xref></t>
 
       </t>
-      <t hangText="@preferred_height">The suggested default height, in pixels,
-      to use when rendering this gadget. Containers SHOULD use this value as
-      the default height for a gadget in any environment that allows gadgets to
-      have variable heights.</t>
-      <t hangText="@preferred_width">The suggested default width, in pixels, to
-      use when rendering this gadget. Containers SHOULD use this value as the
-      default width for a gadget in any environment that allows gadgets to have
-      variable widths.</t>
+         <t hangText="@preferred_height">The suggested default height, in pixels,
+             to use when rendering this gadget. Containers SHOULD use this value as
+             the default height for a gadget in any environment that allows gadgets to
+             have variable heights. If both the @height and @preferred_height are specified, the container SHOULD
+             respect the value of @preferred_height.
+         </t>
+         <t hangText="@preferred_width">The suggested default width, in pixels, to
+             use when rendering this gadget. Containers SHOULD use this value as the
+             default width for a gadget in any environment that allows gadgets to have
+             variable widths. If both the @width and @preferred_width are specified, the container SHOULD respect the
+             value of @preferred_width.
+         </t>
       <t hangText="@view">A comma delimited list of Views in which to include the content in this section. Example: &lt;Content view="Profile, Home, Home.About"/&gt;
         contains Content for three named views: Profile, Home, and Home.About.
       <t>To assemble a View, all Content sections where @view contains the required view name are concatenated.  Concatenation does not happen when the @href is set on a
