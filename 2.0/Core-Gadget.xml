@@ -1931,6 +1931,7 @@ gadgets.io.makeRequest(url, callback, params);
     <!-- ============================== class summary ========================== -->
     <t>Used by
     <xref target="gadgets.io.RequestParameters">RequestParameters</xref>.</t>
+
     <list style="hanging">
      <t hangText="NONE"
               anchor="gadgets.io.AuthorizationType.NONE">
@@ -1942,8 +1943,11 @@ gadgets.io.makeRequest(url, callback, params);
       field may be used interchangeably with the string 'OAUTH'.</t>
       <t hangText="OAUTH2"
               anchor="gadgets.io.AuthorizationType.OAUTH2">
+     <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
      The container will use OAuth 2.0 for authentication. This
-      field may be used interchangeably with the string 'OAUTH2'.</t>
+      field may be used interchangeably with the string 'OAUTH2'.
+     </x:incubating>
+     </t>
      <t hangText="SIGNED"
               anchor="gadgets.io.AuthorizationType.SIGNED">
      The request will be signed by the container. This field
