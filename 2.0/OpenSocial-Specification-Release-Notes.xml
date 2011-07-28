@@ -26,6 +26,18 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
+ 
+    <section title="Version 2.0">
+    <t>Published August, 2011</t>
+    <t>During the development of OpenSocial 2.0, the community leveraged the use of change management tools to better track work items, changes, and who was contributing. The complete set of issues worked on by the community is available at the Google Code project where the spec "lives". For convenience, that list is captured here as well.</t>
+
+       <section title="OpenSocial 2.0 Published Issues">
+      <t>
+       List of <eref target='http://code.google.com/p/opensocial-resources/'>opensocial-resources</eref> project issues published in OpenSocial 2.0 is accessible at <eref target="http://bit.ly/os20publishedspecissues">http://bit.ly/os20publishedspecissues</eref>.
+       </t>
+    </section>
+
+    </section>
     <section title="Version 1.1">
     <t>Published November 18, 2010</t>
     <t>
