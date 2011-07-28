@@ -4,7 +4,7 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-templating-specification-2-0-DRAFT"
+     docName="opensocial-templating-specification-2-0 - Release Candidate 2"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
   <title abbrev="OpenSocial Templating">OpenSocial Templating Specification 2.0 DRAFT</title>
