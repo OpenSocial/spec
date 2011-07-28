@@ -138,20 +138,20 @@ gadget aspect of specification. In this case, they can be considered
 to be a compliant OpenSocial Core Gadget Server.</t>
       <list style="hanging">
           <t hangText="Core API Server">To be considered a Core API Server, a site MUST fulfill all the requirements
-              defined in the<xref target="Core-API-Server">Core API Server Specification</xref>.
+              defined in the <xref target="Core-API-Server">Core API Server Specification</xref>.
           </t>
           <t hangText="Core Gadget Container">To be considered a Gadget Container, a site MUST fulfill all the
-              requirements defined in the<xref target="Core-Gadget">Core Gadget Specification</xref>. Note: The
-              <xref target="Core-Container">Core Container Specification</xref>
+              requirements defined in the <xref target="Core-Gadget">Core Gadget Specification</xref>. Note: The
+               <xref target="Core-Container">Core Container Specification</xref>
               is incubating as part of OpenSocial 2.0. It is RECOMMENDED that developers wishing to implement a Core
               Gadget Container should use this incubating specification as guide for the container API.
           </t>
           <t hangText="Social API Server">To be considered a Social API Server, a site MUST be a Core API Server and
-              MUST fulfill all the requirements defined in the<xref target="Social-API-Server">Social API Server
+              MUST fulfill all the requirements defined in the <xref target="Social-API-Server">Social API Server
                   Specification</xref>.
           </t>
           <t hangText="Social Gadget Container">To be considered a Social Gadget Container, a site MUST be a Core Gadget
-              Container and MUST fulfill all the requirements defined in the<xref target="Social-Gadget">Social Gadget
+              Container and MUST fulfill all the requirements defined in the <xref target="Social-Gadget">Social Gadget
                   Specification</xref>.
           </t>
           <t hangText="OpenSocial Container">To be considered an OpenSocial Container, a site MUST fulfill all the
@@ -168,7 +168,7 @@ to be a compliant OpenSocial Core Gadget Server.</t>
           </t>
           <section title="Rules for Deprecating APIs" anchor="RulesForDeprecatingAPIs">
               <t>While APIs have been deprecated in the past, there have been conventions, but no clear rules, on when
-                  they can be removed rom the specification. For example, OpenSocial 1.0 deprecated a set of JavaScript
+                  they can be removed from the specification. For example, OpenSocial 1.0 deprecated a set of JavaScript
                   APIs (see Appendix A). These are no longer carried forward in version 2.0. APIs MAY be deprecated by
                   the community in any development cycle of the specification. However, support for the APIs MUST NOT be
                   removed until a major version of the specification is published. The versioning scheme of the
