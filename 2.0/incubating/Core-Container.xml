@@ -611,6 +611,10 @@
               <c>renderParams</c>
               <c>Object</c>
               <c>The render params to use when rendering this embedded experience.</c>
+              <c>opt_callback</c>
+              <c>function</c>
+              <c>Called when the embedded experience has been rendered.  The 
+              function takes in two parameters, the site and the metadata.</c>
             </texttable>
           </t>
         </section>
@@ -631,6 +635,27 @@
               <c>The site to close.</c>
             </texttable>
           </t>
+        </section>
+        <section title="Configuring An Embedded Experience To Render" anchor="EEConfigure">
+          <t>
+          Render params can be passed to the navigate function 
+          (<xref target="container.Container.ee.navigate"></xref>) to configure how
+          the embedded experience should render.
+          All of these are optional.
+          </t>
+          <list style="hanging">
+            <t hangText="GADGET_RENDER_PARAMS">
+            A bag of JSON style parameters from <xref target="ConfiguringGadgetRender"></xref>
+            </t>
+            <t hangText="URL_RENDER_PARAMS">
+            A bag of JSON style parameters which can specify height and width 
+            for a URL embedded experience.
+            </t>
+            <t hangText="GADGET_VIEW_PARAMS">
+            A bag of JSON style parameters which will be passed to the 
+            embedded experience view if the embedded experience is a gadget.
+            </t>
+          </list>
         </section>
     </section>
     <section title="container.Container.openSearch">
@@ -980,9 +1005,6 @@ container.Container.actions.registerHideActionHandler(myHideActionHandler);
             <c>gadgetUrl</c>
             <c>String</c>
             <c>Gadget Spec URL</c>
-            <c>metadata</c>
-            <c>Object</c>
-            <c>JSON object for the gadget's metadata.</c>
             <c>opt_params</c>
             <c>Object</c>
             <c>A bag-style JSON object that contains parameters to indicate 
@@ -990,8 +1012,8 @@ container.Container.actions.registerHideActionHandler(myHideActionHandler);
           </texttable>
           <t>Example:</t>
           <artwork type="code">
-var myNavigateToHandler = function(gadgetUrl, metadata){
-// invoke common container APIs to show the appropriate gadget, this could be viewed as a 
+var myNavigateToHandler = function(gadgetUrl, opt_params){
+// invoke common container APIs to show the appropriate gadg  et, this could be viewed as a 
 // wrapper call to CommonContainer.navigateGadget(site, gadgetUrl, viewParams, renderParams, opt_callback);
 // or return the gadgetID of an existing visble gadget navigatingTo the optional viewId.
     return gadgetId;
