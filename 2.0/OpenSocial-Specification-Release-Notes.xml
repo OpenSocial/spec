@@ -26,18 +26,39 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
- 
-    <section title="Version 2.0">
-    <t>Published August, 2011</t>
-    <t>During the development of OpenSocial 2.0, the community leveraged the use of change management tools to better track work items, changes, and who was contributing. The complete set of issues worked on by the community is available at the Google Code project where the spec "lives". For convenience, that list is captured here as well.</t>
 
-       <section title="OpenSocial 2.0 Published Issues">
-      <t>
-       List of <eref target='http://code.google.com/p/opensocial-resources/'>opensocial-resources</eref> project issues published in OpenSocial 2.0 is accessible at <eref target="http://bit.ly/os20publishedspecissues">http://bit.ly/os20publishedspecissues</eref>.
-       </t>
+    <section title="OpenSocial 2.0" anchor="OpenSocial20">
+        <section title="Major Changes" anchor="OpenSocial20MajorChanges">
+            <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
+                <t>The community determined, that in practice, use of the ATOM serialization format of OpenSocial
+                    information was not utilized. In addition, there are also several adjacent community driven
+                    specifications that use JSON as the preferred data format. As a result, the community decided to
+                    simplify the specification and deprecate the requirement to support ATOM as a serialization format.
+                </t>
+            </section>
+            <section title="Deprecated Support for ATOM" anchor="DeprecatedAtomSupport">
+                <t>OpenSocial 2.0 introduces support for ActivityStreams. This is to support two primary use cases.
+                    First, activity streams provides a richer, more complete data model. Second, it is the desire and
+                    intent of OpenSocial to be interoperable with as many systems as possible. Leveraging Activity
+                    Streams allows OpenSocial containers to exchange information with other systems that may or may not
+                    support this standard. As part of this, additional, optional fields have been added to OpenSocial
+                    Collection. The existing Activity format and API has been deprecated and will be removed in a later
+                    release.
+                </t>
+            </section>
+        </section>
+
+     <section title="Published Issues">
+         <t>
+             List of
+             <eref target='http://code.google.com/p/opensocial-resources/'>opensocial-resources</eref>
+             project issues published in OpenSocial 2.0 is accessible at<eref
+                 target="http://bit.ly/os20publishedspecissues">http://bit.ly/os20publishedspecissues</eref>.
+         </t>
+     </section>
     </section>
 
-    </section>
+
     <section title="Version 1.1">
     <t>Published November 18, 2010</t>
     <t>
