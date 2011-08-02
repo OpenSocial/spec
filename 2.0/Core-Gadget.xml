@@ -2677,8 +2677,8 @@ var lang = prefs.getLang();
          The function will be called with the return value as a parameter.</c>
          <c>navigateCallback</c>
          <c>function</c>
-         <c>Callback function to be called with the metadata and site of the gadget once 
-         its opened.</c>
+         <c>Callback function to be called with the site handler and metadata as parameters.
+         The site handler can only be used as parameter in gadgets.views.close(opt_site_handler).</c>
          <c>opt_params </c>
          <c>Object</c>
          <c>These are optional parameters which can be used to open gadgets.
@@ -2721,8 +2721,8 @@ var lang = prefs.getLang();
          The function will be called with the return value as a parameter.</c>
          <c>navigateCallback</c>
          <c>function</c>
-         <c>Callback function to be called with the metadata and site of the gadget once 
-         its opened.</c>
+         <c>Callback function to be called with the site handler and metadata as parameters.
+         The site handler can only be used as parameter in gadgets.views.close(opt_site_handler).</c>
          <c>dataModel</c>
          <c>Object</c>
          <c>The embedded experiences data model.  
@@ -2762,7 +2762,8 @@ var lang = prefs.getLang();
          <c>URL to a web page to open in a URL site in the container.  (Note this should not be a URL to a gadget definition.)</c>
          <c>navigateCallback</c>
          <c>function</c>
-         <c>Callback function to be called with the site which has been opened</c>
+         <c>Callback function to be called with the handler of the site which has been opened.
+         The site handler can only be used as paramater in gadgets.views.close(opt_site_handler).</c>
          <c>opt_viewTarget </c>
          <c>string </c>
          <c>Optional parameter,the view that indicates where to open the URL.</c>
@@ -2770,17 +2771,17 @@ var lang = prefs.getLang();
      </section>
      <section title="close"
               anchor="gadgets.views.close">
-       <t>&lt;static&gt; gadgets.views.close(opt_site)</t>
-       <t>Description: Closes an opened site. If the opt_site parameter is null the container 
+       <t>&lt;static&gt; gadgets.views.close(opt_site_handler)</t>
+       <t>Description: Closes an opened site. If the opt_site_handler parameter is null the container 
        will close the calling site.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
         <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
          <ttcol>Description</ttcol>
-         <c>opt_site</c>
+         <c>opt_site_handler</c>
          <c>Object</c>
-         <c>Optional parameter which specifies what site to close. If null it will close the current gadget site.</c>
+         <c>Optional parameter which specifies handler to what site to close. If null it will close the current gadget site.</c>
         </texttable></t>
      </section>
      <section title="setReturnValue"
@@ -2797,7 +2798,7 @@ var lang = prefs.getLang();
          <ttcol>Description</ttcol>
          <c>returnValue</c>
          <c>Object</c>
-         <c>Return value for this window.</c>
+         <c>A serializable JSON object which specifies return value.</c>
         </texttable> </t>
      </section>
 
@@ -2992,6 +2993,14 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
               anchor="gadgets.views.ViewType.MODALDIALOG">
       A view where the gadget is displayed in a modal pop up box. This field may be used interchangeably with the string
       'MODALDIALOG'.</t>
+      <t hangText="FLOAT"
+              anchor="gadgets.views.ViewType.FLOAT">
+      A view where the gadget is displayed in a floating box. It is similar to the 'DIALOG' view type, but without chrome around it. This field may be used interchangeably with the string
+      'FLOAT'.</t>
+      <t hangText="SIDEBAR"
+              anchor="gadgets.views.ViewType.SIDEBAR">
+      A view where the gadget is displayed in a sidebar area. This field may be used interchangeably with the string
+      'SIDEBAR'.</t>
 
     </list>
 
