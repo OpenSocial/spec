@@ -5,10 +5,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-gadget-specification-2-0 - Release Candidate 2"
+     docName="opensocial-social-gadget-specification-2-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Social-Gadget">OpenSocial Social Gadget Specification 2.0 DRAFT</title>
+  <title abbrev="Social-Gadget">OpenSocial Social Gadget Specification 2.0</title>
   <author fullname="OpenSocial and Gadgets Specification Group">
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -1309,8 +1309,8 @@ High score for John Doe is 100
      <title>OpenSocial Core Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
   </references>

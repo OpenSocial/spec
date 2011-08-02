@@ -5,10 +5,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-api-server-specification-2-0 - Release Candidate 2"
+     docName="opensocial-social-api-server-specification-2-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Social-API-Server">OpenSocial Social API Server Specification 2.0 DRAFT</title>
+  <title abbrev="Social-API-Server">OpenSocial Social API Server Specification 2.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -1697,8 +1697,8 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
      <title>OpenSocial Core Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="Core-API-Server"
@@ -1707,8 +1707,8 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
      <title>OpenSocial Core API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="Social-Data"
@@ -1717,8 +1717,8 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
      <title>OpenSocial Social Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
   </references>

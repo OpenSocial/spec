@@ -3,11 +3,11 @@
 <?rfc toc="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN" "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-wap-extension-specification-2.0 - Release Candidate 2"
+     docName="opensocial-wap-extension-specification-2.0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <front>
     <title abbrev="WAP-Extension">OpenSocial WAP Extension Specification</title>
-    <author fullname='OpenSocial and Gadgets Specification Group 2-0-DRAFT'>
+    <author fullname='OpenSocial and Gadgets Specification Group 2-0'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>

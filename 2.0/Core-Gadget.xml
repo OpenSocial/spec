@@ -4,10 +4,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-core-gadget-specification-2-0-Release Candidate 2"
+     docName="opensocial-core-gadget-specification-2-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification 2.0 DRAFT</title>
+  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification 2.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -4510,6 +4510,68 @@ gadgets.actions.updateAction(myaction);
           <c>The current <xref target="gadgets.selection">selection</xref>.  This is an optional parameter.</c>
         </texttable>
       </section>
+      <section title="registerShowActionsListener" anchor="gadgets.actions.registerShowActionsListener">
+        <t>&lt;static&gt; gadgets.actions.registerShowActionsListener (showActionsHandler)</t>
+        <t>Description: Registers a function to render actions in the gadget. The function will be called whenever new actions
+        are added to the container.  The gadget can use this listener to add the new actions to its UI.</t>
+        <t>Parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>showActionsHandler</c>
+          <c>Function</c>
+          <c>The gadgets's function to render actions in its UI. The function takes in one parameter which is an array of action objects to render.</c>
+        </texttable>
+        <t>Parameters for show actions handler function:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>actionObjs</c>
+          <c>Object[]</c>
+          <c>An array of action objects.</c>
+        </texttable>
+        <t>Example:</t>
+        <artwork type="code">
+var myShowActionsHandler = function(actionObjs){
+       // draw the UI, toolbars menus, etc
+       // to do the invocation of the action, call the following API:
+       // gadgets.actions.runAction(actionObjs[0].id);  
+}
+gadgets.actions.registerShowActionsHandler(myShowActionHandler);
+        </artwork>
+      </section>
+      <section title="registerHideActionsListener" anchor="gadgets.actions.registerHideActionsListener">
+        <t>&lt;static&gt; gadgets.actions.registerHideActionsListener (hideActionsHandler)</t>
+        <t>Description: Registers a function to remove actions from the gadget. The function will be called whenever
+        the container unloads a gadget which contributes actions.</t>
+        <t>Parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>hideActionsHandler</c>
+          <c>Function</c>
+          <c>The gadgets's function to hide actions in its UI. The function takes in one parameter which is an array of action objects to hide.</c>
+        </texttable>
+        <t>Parameters for hide actions handler function:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>actionObjs</c>
+          <c>Object[]</c>
+          <c>An array of action objects.</c>
+        </texttable>
+        <t>Example:</t>
+        <artwork type="code">
+var myhideActionsHandler = function(actionObjs){
+       // remove any UI elements that were created to represent the action
+}
+gadgets.actions.registerHideActionsHandler(myHideActionHandler);
+        </artwork>        
+      </section>
      </section>
    </section>
    <section title="gadgets.flash"
@@ -7133,8 +7195,8 @@ Content-Type: application/embed+json
      <title>OpenSocial Templating Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='March'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="OpenSocial-Specification"
@@ -7143,8 +7205,8 @@ Content-Type: application/embed+json
      <title>OpenSocial Templating Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="xsdpart1"
@@ -7259,8 +7321,8 @@ Content-Type: application/embed+json
      <title>OpenSocial Core API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='March'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor="Social-API-Server"
@@ -7269,8 +7331,8 @@ Content-Type: application/embed+json
      <title>OpenSocial Social API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
      </author>
-     <date month='March'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor='JSPEL'

@@ -26,7 +26,7 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
-    <section title="OpenSocial 2.0" anchor="OpenSocial20">
+    <section title="Version 2.0" anchor="OpenSocial20">
         <section title="Major Changes" anchor="OpenSocial20MajorChanges">
             <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
                 <t>The community determined, that in practice, use of the ATOM serialization format of OpenSocial
@@ -49,7 +49,6 @@
               <t>OpenSocial 2.0 introduces some changes that simplifies how Gadgets can define Templates and perform 
                   Data Pipelining within a Gadget's specification.  An inlined template had to previously be defined
                   within a script tag, but now it's possible to define a template library within a Gadget specification.
-                  
               </t>
             </section>
             <section title="Important Incubating API included in OpenSocial 2.0" anchor="IncubatingInOS20">
@@ -60,7 +59,7 @@
                     So in order to allow flexibility to adjust to changes in the OAuth 2.0 specification, 
                     OAuth 2.0 support in OpenSocial 2.0 is incubating.  The API in OpenSocial 2.0 is 
                     based upon revision 20 of the OAuth 2.0 draft specification.  Note that OpenSocial 2.0 
-                    continues support OAuth 1.0a.
+                    continues to support OAuth 1.0a.
                   </t>
                   <t hangText="Common Container">
                     In OpenSocial 2.0, a new optional specification has been added for a common 
@@ -76,7 +75,7 @@
            <t>
                List of
                <eref target='http://code.google.com/p/opensocial-resources/'>opensocial-resources</eref>
-               project issues published in OpenSocial 2.0 is accessible at<eref
+               project issues published in OpenSocial 2.0 is accessible at <eref
                    target="http://bit.ly/os20publishedspecissues">http://bit.ly/os20publishedspecissues</eref>.
            </t>
        </section>

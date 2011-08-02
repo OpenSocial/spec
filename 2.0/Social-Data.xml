@@ -5,10 +5,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-data-specification-2-0- - Release Candidate 2"
+     docName="opensocial-social-data-specification-2-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title>OpenSocial Social Data Specification 2.0 DRAFT</title>
+  <title>OpenSocial Social Data Specification 2.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -2257,8 +2257,8 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Core Data Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor='SocialGadget'
@@ -2267,8 +2267,8 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Social Gadget Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
    <reference anchor='SocialServer'
@@ -2277,8 +2277,8 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>OpenSocial Social API Server Specification</title>
      <author fullname='OpenSocial and Gadgets Specification Group
                        &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'></author>
-     <date month='November'
-           year='2010' />
+     <date month='August'
+           year='2011' />
     </front>
    </reference>
   </references>
