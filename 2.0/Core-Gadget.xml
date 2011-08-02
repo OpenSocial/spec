@@ -4493,6 +4493,23 @@ gadgets.actions.updateAction(myaction);
 		 <c>A callback function to handle the returned actions array</c>
 		</texttable>
 	  </section>
+      <section title="runAction" anchor="gadgets.actions.runAction">
+        <t>&lt;static&gt; gadgets.actions.runAction (actionId, opt_selection)</t>
+        <t>Description: Executes the action callback associated with the specified actionId in the context of the gadget which
+        contributed that action.  The gadget should call this method whenever an action is triggered by the user.</t>
+        <t>Parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>actionId</c>
+          <c>String</c>
+          <c>The id of the action to execute.</c>
+          <c>opt_selection</c>
+          <c>Object</c>
+          <c>The current <xref target="gadgets.selection">selection</xref>.  This is an optional parameter.</c>
+        </texttable>
+      </section>
      </section>
    </section>
    <section title="gadgets.flash"

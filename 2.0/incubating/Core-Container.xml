@@ -900,7 +900,7 @@
           </texttable>
         </section>
         <section title="runAction">
-          <t>container.Container.actions.runAction(actionId)</t>
+          <t>container.Container.actions.runAction(actionId, opt_selection)</t>
           <t>Description: Renders the gadget if it has not yet been rendered, and 
             executes the action callback associated with the specified actionId in 
             the context of the gadget.  The container should call this function 
@@ -913,6 +913,9 @@
             <c>actionId</c>
             <c>String</c>
             <c>Identifier for the action to be executed.</c>
+            <c>opt_selection</c>
+            <c>Object</c>
+            <c>The current <xref target="container.selection">selection</xref>.  This is an optional parameter.</c>
           </texttable>
         </section>
         <section title="registerShowActionHandler" anchor="container.actions.registershowactionhandler">
