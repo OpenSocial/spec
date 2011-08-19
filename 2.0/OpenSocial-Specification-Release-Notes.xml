@@ -28,14 +28,14 @@
  <middle>
     <section title="Version 2.0" anchor="OpenSocial20">
         <section title="Major Changes" anchor="OpenSocial20MajorChanges">
-            <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
+            <section title="Deprecated Support for ATOM" anchor="DeprecatedAtomSupport">
                 <t>The community determined, that in practice, use of the ATOM serialization format of OpenSocial
                     information was not utilized. In addition, there are also several adjacent community driven
                     specifications that use JSON as the preferred data format. As a result, the community decided to
                     simplify the specification and deprecate the requirement to support ATOM as a serialization format.
                 </t>
             </section>
-            <section title="Deprecated Support for ATOM" anchor="DeprecatedAtomSupport">
+            <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
                 <t>OpenSocial 2.0 introduces support for ActivityStreams. This is to support two primary use cases.
                     First, activity streams provides a richer, more complete data model. Second, it is the desire and
                     intent of OpenSocial to be interoperable with as many systems as possible. Leveraging Activity
