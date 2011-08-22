@@ -4511,7 +4511,7 @@ gadgets.actions.updateAction(myaction);
         </texttable>
       </section>
       <section title="registerShowActionsListener" anchor="gadgets.actions.registerShowActionsListener">
-        <t>&lt;static&gt; gadgets.actions.registerShowActionsListener (showActionsHandler)</t>
+        <t>&lt;static&gt; gadgets.actions.registerShowActionsListener (showActionsListener)</t>
         <t>Description: Registers a function to render actions in the gadget. The function will be called whenever new actions
         are added to the container.  The gadget can use this listener to add the new actions to its UI.</t>
         <t>Parameters:</t>
@@ -4519,7 +4519,7 @@ gadgets.actions.updateAction(myaction);
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>showActionsHandler</c>
+          <c>showActionsListener</c>
           <c>Function</c>
           <c>The gadgets's function to render actions in its UI. The function takes in one parameter which is an array of action objects to render.</c>
         </texttable>
@@ -4534,16 +4534,16 @@ gadgets.actions.updateAction(myaction);
         </texttable>
         <t>Example:</t>
         <artwork type="code">
-var myShowActionsHandler = function(actionObjs){
+var myShowActionsListener = function(actionObjs){
        // draw the UI, toolbars menus, etc
        // to do the invocation of the action, call the following API:
        // gadgets.actions.runAction(actionObjs[0].id);  
 }
-gadgets.actions.registerShowActionsHandler(myShowActionHandler);
+gadgets.actions.registerShowActionsListener(myShowActionsListener);
         </artwork>
       </section>
       <section title="registerHideActionsListener" anchor="gadgets.actions.registerHideActionsListener">
-        <t>&lt;static&gt; gadgets.actions.registerHideActionsListener (hideActionsHandler)</t>
+        <t>&lt;static&gt; gadgets.actions.registerHideActionsListener (hideActionsListener)</t>
         <t>Description: Registers a function to remove actions from the gadget. The function will be called whenever
         the container unloads a gadget which contributes actions.</t>
         <t>Parameters:</t>
@@ -4551,7 +4551,7 @@ gadgets.actions.registerShowActionsHandler(myShowActionHandler);
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>hideActionsHandler</c>
+          <c>hideActionsListener</c>
           <c>Function</c>
           <c>The gadgets's function to hide actions in its UI. The function takes in one parameter which is an array of action objects to hide.</c>
         </texttable>
@@ -4566,10 +4566,10 @@ gadgets.actions.registerShowActionsHandler(myShowActionHandler);
         </texttable>
         <t>Example:</t>
         <artwork type="code">
-var myhideActionsHandler = function(actionObjs){
+var myhideActionsListener = function(actionObjs){
        // remove any UI elements that were created to represent the action
 }
-gadgets.actions.registerHideActionsHandler(myHideActionHandler);
+gadgets.actions.registerHideActionsListener(myHideActionsListener);
         </artwork>        
       </section>
      </section>
