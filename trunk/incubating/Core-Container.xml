@@ -1,0 +1,1286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='../OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="core-container-specification-2-0-INCUBATING"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title abbrev="Core-Container">Core Container Specification 2.0 INCUBATING</title>
+  <author fullname='OpenSocial and Container Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="August" year="2011" />
+  <area>General</area>
+  <keyword>OpenSocial</keyword>
+  <keyword>Core Container</keyword>
+ </front>
+ <middle>
+
+     <section title="Incubating Status" anchor="incubatingstatus">
+         <t>All content in this specification of OpenSocial is considered to be incubating. It is provided as a
+             guide to the developers wishing to implement this specification. The API defined in this specification
+             is provisional, and while the community will work to keep the API stable, it may change based on
+             implementation experience, additional requirements, or other factors.
+         </t>
+     </section>
+
+
+  <section title="Definitions" anchor="Definitions">
+   <section title="Gadget">
+    <t>
+     A web-based software component based on HTML, CSS and JavaScript. It allows
+     developers to write modularized, reusable web applications that work
+     anywhere on the web without modification.
+    </t>
+   </section>
+   <section title="Container" anchor="ContainerDefintion">
+    <t>
+     A context into which a gadget is embedded into. This is typically an HTML
+     page, served by an arbitrary web-service, viewable by a browser.
+    </t>
+   </section>
+   <section title="Security token" anchor="SecurityTokenDefinition">
+    <t>
+     A security mechanism to allow gadgets to make secure connections to server
+     end points for data that may be valid only for the current user's context.
+     This commonly appears as a query/fragment param st= in the iframe URL.
+    </t>
+   </section>
+  </section>
+
+  <section title="Overview" anchor="Overview">
+   <t>
+    Common container is a lightweight gadget-and-container framework, based on
+    JavaScript and server-driven end-point. Its mission is to simplify container
+    and gadget integration model. It allow container developers to easily
+    transform their page into a gadget-compliant container that can properly
+    embed gadgets rendered by a gadget service. It does not address
+    container-specific business-logic and layout.
+   </t>
+  </section>
+
+  <section title="Compliance" anchor="Compliance">
+   <t>
+    To be a gadget-compliant container, a container MUST be able to satisfy
+    requirements defined in this section.
+   </t>
+   <section title="Lightweight" anchor="Lightweight">
+    <t>
+     The framework is installed in a container page by a script tag, with its
+     source pointing to the common container JS. This also provides a near-zero
+     barrier to entry for new container clients.
+    </t>
+   </section>
+   <section title="Gadget navigation" anchor="GadgetNavigation">
+    <t>
+     The framework lives in the container page to provide API to container
+     developers to navigate/open and close gadgets on the page, in a way that
+     ensures opened gadgets continue to work, until they are closed.
+    </t>
+   </section>
+   <section title="Setup gadgets.rpc" anchor="SetupGadgetsRPC">
+    <t>
+     Sets up container for gadget-to-container, container-to-gadget and
+     gadget-to-gadget communication via gadgets.rpc. This involves setting up
+     relay files and registering callbacks/hooks, to ensure the wiring is
+     all setup to receive all gadgets.rpc mediated commands. Increasing height
+     of gadget is a common example.
+    </t>
+   </section>
+   <section title="Track latency" anchor="TrackLatency">
+    <t>
+     The framework allows container developers to track the latency times
+     required to do a gadget navigation. This involves starting a timer when a
+     gadget navigation is requested and stopping the timer when a gadget is
+     fully rendered. Latency times can be broadcasted to the container for
+     container-specific consumption.
+    </t>
+   </section>
+   <section title="Auto-refresh security tokens" anchor="AutoRefreshSecurityTokens">
+    <t>
+     Its lifespan starts from time when it is instantiated to time when the
+     page is navigated away. AJAX-y pages will tend to have longer lifespan.
+     To avoid expired security tokens, the framework will fetch for new tokens
+     at a regular interval and have the new token pushed to the gadget that
+     requires tokens to be updated.
+    </t>
+   </section>
+   <section title="Promote coherent changes" anchor="PromoteCoherentChanges">
+    <t>
+     Changes in a gadget render may require simultaneous change on the container
+     implementation. This framework will allow new container changes to be
+     picked up at the same time when a gadget render service is updated,
+     avoiding version-skew. Additionally, it will also promote all common-
+     container-enabled pages to become updated at the same time.
+    </t>
+   </section>
+  </section>
+
+  <section title="Javascript API Reference" anchor="JavaScriptAPIReference">
+   <section title="container" anchor="container">
+    <t>Namespace for top level container functions.</t>
+   </section>
+   <section title="container.Container" anchor="container.Container">
+    <t>
+     This represents the container. This provides top-most-level set of APIs for
+     container developers, to accomplish functionalities defined in
+     <xref target="GadgetNavigation">GadgetNavigation</xref> and more.
+     Internally, this manages work required to ensure that navigated gadgets
+     continue to work. There MUST be not more than one instance of this in a
+     page, due to usage of global resources and possible race conditions.
+    </t>
+    <section title="constructor" anchor="Container-Constructor">
+      <t>container.Container(opt_config)</t>
+      <t>Constructs the container object.</t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>opt_config</c>
+          <c>Object</c>
+          <c>
+            A bag-style JSON object with configuration parameters.  See 
+            <xref target="Configuring-The-Container"></xref>
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="preloadGadget" anchor="container.Container.preloadGadget">
+      <t>container.Container.preloadGadget(gadgetUrl, opt_callback)</t>
+      <t>Description: Pre-load one gadget metadata information.
+        <t>See also:
+          <xref target="container.Container.preloadGadgets">preloadGadgets</xref> 
+        </t>
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>String</c>
+          <c>A URL to the gadget definition.</c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>
+            A callback function to be called when the gadget metdata is returned.
+            The callback function should have one parameter called response.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="preloadGadgets" anchor="container.Container.preloadGadgets">
+      <t>container.Container.preloadGadgets(gadgetUrls, opt_callback)</t>
+      <t>
+        Pre-load gadgets metadata information.
+        This will not render the gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrls</c>
+          <c>Array</c>
+          <c>Gadget URLs to preload.</c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>
+            A callback function to be called when the gadget metdata is returned.
+            The callback function should have one parameter called response.
+          </c>
+        </texttable>
+      </t>    
+    </section>
+    <section title="unloadGadget" anchor="container.Container.unloadGadget">
+      <t>container.Container.unloadGadget(gadgetUrl)</t>
+      <t>
+        Unloads a single gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>String</c>
+          <c>Gadget URL to unload.</c>
+        </texttable>
+      </t>     
+    </section>
+    <section title="unloadGadgets" anchor="container.Container.unloadGadgets">
+      <t>container.Container.unloadGadgets(gadgetUrls)</t>
+      <t>
+        Unload preloaded gadgets.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrls</c>
+          <c>Array</c>
+          <c>Gadget URLs to unload.</c>
+        </texttable>
+      </t>    
+    </section>
+    <section title="navigateGadget" anchor="container.Container.navigateGadget">
+      <t>container.Container.navigateGadget(site, gadgetUrl, viewParams, 
+      renderParams, opt_callback)</t>
+      <t>
+        Renders (navigates) to the specified gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>site</c>
+          <c>container.GadgetSite</c>
+          <c>The gadget site to use to render the gadget</c>
+          <c>gadgetUrl</c>
+          <c>string</c>
+          <c>The gadget URL to render (navigate) to.</c>
+          <c>viewParams</c>
+          <c>Object</c>
+          <c>
+            View parameters to pass to the view being specified in the 
+            renderParams.
+          </c>
+          <c>renderParams</c>
+          <c>Object</c>
+          <c>
+            Contains parameters on how the container wants to render this 
+            gadget see <xref target="ConfiguringGadgetRender"></xref>.
+          </c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>Callback function called after the gadget has been rendered.</c>
+        </texttable>
+      </t>
+    </section>
+    <section title="closeGadget" anchor="container.Container.closeGadget">
+      <t>container.Container.closeGadget(site)</t>
+      <t>
+        Closes the gadget in the site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>site</c>
+          <c>container.GadgetSite</c>
+          <c>The site containing the gadget to close.</c>
+        </texttable>
+      </t>
+    </section>
+    <section title="getGadgetMetadata" anchor="container.Container.getGadgetMetadata">
+     <t>container.Container.getGadgetMetadatat(gadgetUrl, callback)</t>
+      <t>
+        Gets the metadata for a gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>container.GadgetSite</c>
+          <c>
+            The URL pointing to the gadget definition to get the metadta
+            for.
+          </c>
+          <c>callback</c>
+          <c>function</c>
+          <c>
+            Function called when the metadata has been retrieved.
+            The callback function should have a single response parameter.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="rpcRegister" anchor="container.Container.rpcRegister">
+     <t>container.Container.rpcRegister(service, callback)</t>
+      <t>
+        Registers a function to call for a specified RPC service.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>service</c>
+          <c>String</c>
+          <c>The name of the RPC service.</c>
+          <c>callback</c>
+          <c>function</c>
+          <c>The function to call when the service is envoked.</c>
+        </texttable>
+      </t>
+    </section>
+    <section title="addGadgetLifecycleCallback" anchor="container.Container.addGadgetLifecycleCallback">
+    <xref target="Issue-1185">Discussion</xref>
+     <t>container.Container.addGadgetLifecycleCallback(lifeCycleCallback)</t>
+      <t>
+        Add a callback object to be called when a gadget is added, navigated to or closed.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>lifeCycleCallback</c>
+          <c>function</c>
+          <c>
+            The callback function to call when the gadget lifecycle changes. Needs to have preloaded(metadataResponse), 
+            navigated(gadgetSite), closed(gadgetSite) and unloaded(gadgetURL) methods to react to lifecycle events
+            These are invoked(respectively) by the <xref target="container.Container.preloadGadgets">preloadGadgets</xref>, 
+            <xref target="container.Container.navigateGadget">navigateGadget</xref>, and 
+            <xref target="container.Container.closeGadget">closeGadget</xref> and 
+            <xref target="container.Container.unloadGadgets">unloadGadgets</xref> container methods.  Containers may also
+            choose to call some of the 
+            <eref target="../Core-Gadget.xml#LifeCycleEvents">gadget lifecycle events</eref> 
+            in the core gadget spec in order to inform the gadget host
+            that the gadget has been added/removed from the container.
+          </c>
+        </texttable>
+      </t>
+    </section>
+      <section title="removeGadgetLifecycleCallback" anchor="container.Container.removeGadgetLifecycleCallback">
+     <t>container.Container.removeGadgetLifecycleCallback(lifeCycleCallback)</t>
+      <t>
+        Remove a lifecycle callback object from the container's registry.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>lifeCycleCallback</c>
+          <c>function</c>
+          <c>
+           remove a lifecycle callback previously registered with the container 
+          </c>
+        </texttable>
+      </t>
+    </section>
+   </section>
+   <section title="container.GadgetSite" anchor="container.GadgetSite">
+    <t>
+     This represent the gadget context. Container developers refer a gadget as
+     a GadgetSite.
+    </t>
+    <section title="setHeight" anchor="container.GadgetSite.setHeight">
+     <t>container.GadgetSite.setHeight(height)</t>
+      <t>
+        Sets the height of the gadget site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>height</c>
+          <c>Number</c>
+          <c>
+            Value to set the gadget site height to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="setWidth" anchor="container.GadgetSite.setWidth">
+     <t>container.GadgetSite.setWidth(width)</t>
+      <t>
+        Sets the width of the gadget site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>width</c>
+          <c>Number</c>
+          <c>
+            Value to set the gadget site width to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="rpcCall" anchor="container.GadgetSite.rpcCall">
+     <t>container.GadgetSite.rpcCall(serviceName, callback, var_args)</t>
+      <t>
+        Sends the RPC call to the current/visible gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>serviceName</c>
+          <c>String</c>
+          <c>
+            The name of the service to call.
+          </c>
+          <c>callback</c>
+          <c>function</c>
+          <c>
+            Function to call upon RPC completion.
+          </c>
+          <c>var_args</c>
+          <c>{....number}</c>
+          <c>
+            Arguments to pass to the recipient.
+          </c>
+        </texttable>
+      </t>
+    </section>
+   </section>
+  </section>
+
+  <section title="Configuring The Container" anchor="Configuring-The-Container">
+   <t>
+    Configuring common container is done at instantiation, by passing a
+    bag-style JSON, with keys defined under container.ContainerConfig.
+    All of these are optional.
+   </t>
+   <t>
+    These affect all gadgets renders, unless overridden by
+    <xref target="ConfiguringGadgetRender">GadgetRenderConfiguration</xref>.
+   </t>
+   <list style="hanging">
+    <t hangText="ALLOW_DEFAULT_VIEW">
+     Allow gadgets to render in unspecified view. Default is true.
+    </t>
+    <t hangText="RENDER_CAJOLE">
+     Whether cajole mode is turned on. Default is true.
+    </t>
+    <t hangText="RENDER_DEBUG">
+     Whether debug mode is turned on. Default is false.
+    </t>
+    <t hangText="RENDER_TEST">
+     Whether test mode is turned on. Default is false.
+    </t>
+   </list>
+   <t>
+    These are not gadget render related.
+   </t>
+   <list style="hanging">
+    <t hangText="RENDER_DEBUG_PARAM">
+     The debug param name to look for in container URL for per-request debugging.
+    </t>
+    <t hangText="TOKEN_REFRESH_INTERVAL">
+     Security token refresh interval (in ms) for debugging. Default is 30 * 60 * 1000.
+    </t>
+    <t hangText="NAVIGATE_CALLBACK">
+     Globally-defined callback function upon gadget navigation. Useful to
+     broadcast timing and stat information back to container.
+    </t>
+    <t hangText="PRELOAD_REF_TIME">
+     Provide server reference time for preloaded data. This time is used
+     instead of each response time in order to support server caching of results.
+    </t>
+    <t hangText="PRELOAD_METADATAS">
+     Contains preloaded hash of gadgets metadata.
+    </t>
+    <t hangText="PRELOAD_TOKENS">
+     Contains preloaded hash of gadgets tokens.
+    </t>
+   </list>
+   <list style="hanging">
+    <t hangText="GET_LANGUAGE">
+     A callback function that will return the correct language locale part to use when 
+     asking the server to render a gadget or when asking the server for 1 or more 
+     gadget's metadata.
+    </t>
+    <t hangText="GET_COUNTRY">
+     A callback function that will return the correct country locale part to use when 
+     asking the server to render a gadget or when asking the server for 1 or more
+     gadget's metadata.
+    </t>
+    <t hangText="GET_PREFERENCES">
+     A callback function that will return the preferences to use when asking the server 
+     to render a gadget or when asking the server for gadget metadata.  The format 
+     returned here should be the same as is required for USER_PREFS 
+     <xref target="ConfiguringGadgetRender"></xref>. It will be 
+     passed the following parameters:
+
+     <texttable align="left">
+      <ttcol>Name</ttcol>
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>siteId</c>
+      <c>string</c>
+      <c>Gadget Site ID</c>
+      <c>gadgetUrl</c>
+      <c>string</c>
+      <c>Gadget Url</c>
+     </texttable>
+    </t>
+    <t hangText="SET_PREFERENCES">
+     A callback function that will persist the preferences.  It will be passed the 
+     following parameters:
+
+     <texttable align="left">
+      <ttcol>Name</ttcol>
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>siteId</c>
+      <c>string</c>
+      <c>Gadget Site ID</c>
+      <c>gadgetUrl</c>
+      <c>string</c>
+      <c>Gadget Url</c>
+      <c>preferences</c>
+      <c>object</c>
+      <c>Preferences to persist.  The format supplied here will be the same as is 
+       required for USER_PREFS <xref target="ConfiguringGadgetRender"></xref>.</c>
+     </texttable>
+    </t>
+   </list>
+  </section>
+
+  <section title="Configuring gadget render" anchor="ConfiguringGadgetRender">
+   <t>
+    Requesting for a gadget render with specifics (like view, visual appearance
+    and debug mode) can be made by passing a bag-style JSON, with keys defined
+    under container.RenderParam into
+    container.Container.prototype.navigateGadget().
+    All of these are optional.
+   </t>
+   <list style="hanging">
+    <t hangText="ALLOW_DEFAULT_VIEW">
+     Allow gadgets to render in unspecified view
+    </t>
+    <t hangText="CAJOLE">
+     Whether to enable cajole mode.
+    </t>
+    <t hangText="CLASS">
+     Style class to associate to iframe.
+    </t>
+    <t hangText="DEBUG">
+     Whether to turn on debugging mode. Default is false.
+    </t>
+    <t hangText="HEIGHT">
+     The starting gadget iframe height (in pixels). Default is 200.
+    </t>
+    <t hangText="NO_CACHE">
+     Whether to disable cache.
+    </t>
+    <t hangText="TEST_MODE">
+     Whether to enable test mode. Default is false.
+    </t>
+    <t hangText="USER_PREFS">
+     The gadget user prefs to render with. If undefined, and GET_PREFERENCES 
+     <xref target="Configuring-The-Container"></xref> has been provided when configuring 
+     the container, the container should use GET_PREFERENCES to obtain preferences.
+    </t>
+    <t hangText="VIEW">
+     The view of gadget to render.
+    </t>
+    <t hangText="WIDTH">
+     The starting gadget iframe width (in pixels). Default is 320.
+    </t>
+   </list>
+  </section>
+  <section title="Highly Recommended Features">
+    <section title="container.Container.ee">
+    <xref target="Issue-1144">Discussion</xref>
+        <section title="navigate" anchor="container.Container.ee.navigate">
+          <t>container.Container.ee.navigate(element, dataModel, renderParams)</t>
+          <t>
+            Renders an embedded experience from the given embedded experience
+            data model.
+          </t>
+          <t>Parameters: 
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>element</c>
+              <c>HTMLElement</c>
+              <c>The HTML DOM element in which to render the embedded experience.</c>
+              <c>dataModel</c>
+              <c>Object</c>
+              <c>The embedded experience <eref target="../Core-Gadget.xml#EEDataModel">data model</eref>.</c>
+              <c>renderParams</c>
+              <c>Object</c>
+              <c>The render params to use when rendering this embedded experience.</c>
+              <c>opt_callback</c>
+              <c>function</c>
+              <c>Called when the embedded experience has been rendered.  The 
+              function takes in two parameters, the site and the metadata.</c>
+            </texttable>
+          </t>
+        </section>
+        <section title="close" anchor="container.Container.ee.close">
+          <t>container.Container.ee.close(site)</t>
+          <t>
+            Closes a site containing an embedded experience.  This can close
+            a <xref target="container.GadgetSite">gadget site</xref> or a 
+            URL site.
+          </t>
+          <t>Parameters: 
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>site</c>
+              <c>container.GadgetSite | container.UrlSite</c>
+              <c>The site to close.</c>
+            </texttable>
+          </t>
+        </section>
+        <section title="Configuring An Embedded Experience To Render" anchor="EEConfigure">
+          <t>
+          Render params can be passed to the navigate function 
+          (<xref target="container.Container.ee.navigate"></xref>) to configure how
+          the embedded experience should render.
+          All of these are optional.
+          </t>
+          <list style="hanging">
+            <t hangText="GADGET_RENDER_PARAMS">
+            A bag of JSON style parameters from <xref target="ConfiguringGadgetRender"></xref>
+            </t>
+            <t hangText="URL_RENDER_PARAMS">
+            A bag of JSON style parameters which can specify height and width 
+            for a URL embedded experience.
+            </t>
+            <t hangText="GADGET_VIEW_PARAMS">
+            A bag of JSON style parameters which will be passed to the 
+            embedded experience view if the embedded experience is a gadget.
+            </t>
+          </list>
+        </section>
+    </section>
+    <section title="container.Container.openSearch">
+    <xref target="Issue-1166">Discussion</xref>
+        <t>
+        The container APIs for OpenSearch allow containers to access 
+        OpenSearch description information contained within the 
+        gadgets which it has loaded or is currently showing on the
+        page.  Containers can use this information in order to allow
+        users of the container to search accross multiple gadgets
+        at the same time.  
+        </t>
+        <section title="getOpenSearchURLs" anchor="container.Container.opensearch.getOpenSearchURLs">
+        <t>Type: {Array} container.Container.opensearch.getOpenSearchURLs(mimeType)</t>
+          <t>
+            Description: Retrieves all gadget search URLs based on the 
+            data type parameter.  Containers may support zero or more of 
+            the data types.
+          </t>
+          <t>Parameters:
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>mimeType</c>
+              <c>String</c>
+              <c>
+                The type of OpenSearch URLs you want to be returned.  
+                This should be a valid MIME type.
+              </c>
+            </texttable>
+            </t>
+            <t>Returns:
+              <texttable align="left">
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>Array</c>
+                <c>
+                  An array of name and URL pairs, where name
+                  is the display name, and URL is the OpenSearch template
+                  URL.
+                </c>
+              </texttable>
+            </t>
+          </section>
+          <section title="getOpenSearchDescriptions" anchor="container.Container.opensearch.getOpenSearchDescriptions">
+            <t>Type: {Array} container.Container.opensearch.getOpenSearchDescriptions(mimeType)</t>
+              <t>
+                Description: Retrieves all OpenSearch descriptions from gadgets
+                which have OpenSearch feature in their gadget definition.
+              </t>
+              <t>Parameters:
+                <texttable align="left">
+                  <ttcol>Name</ttcol>
+                  <ttcol>Type</ttcol>
+                  <ttcol>Description</ttcol>
+                  <c>mimeType</c>
+                  <c>String</c>
+                  <c>
+                    The MIME for the OpenSearch template URL within the 
+                    OpenSearch description.
+                  </c>
+                </texttable>
+              </t>
+              <t>Returns:
+                <texttable align="left">
+                  <ttcol>Type</ttcol>
+                  <ttcol>Description</ttcol>
+                  <c>Array</c>
+                  <c>
+                    An array of OpenSearch definitions.  The 
+                    definitions should be the JSON representation of the 
+                    OpenSearch definition represented in XML.
+                  </c>
+                </texttable>
+              </t>
+              <t>Example Array Returned By container.opensearch.getOpenSearchDesription
+                <figure>
+                  <artwork xml:space="preserve">
+[ 
+  {
+    "mimeType" : "application/atom+xml",
+    "OpenSearchDescription : {
+      "ShortName" : "Example Search",
+      "Description" : "Realtime Example Search",
+      "Url" : {
+        "@type" : "application/atom+xml",
+        "@method" : "get",
+        "@template" : "http://search.example.com/search.atom?q={searchTerms}"      
+      },
+      "Image" : {
+        "@width" : "16",
+        "@height" : "16",
+        "#text" : "http://search.example.com/favicon.png"
+      },
+      "InputEncoding" : "UTF-8",
+      "SearchForm" : "http://example.search.com/"
+   }
+  }
+]
+                  </artwork>
+                </figure>
+               </t>
+             </section>
+            <section title="addOpenSearchCallback"
+                anchor="container.Container.opensearch.addOpenSearchCallback">
+                <t>container.Container.opensearch.addOpenSearchCallback(callback)
+                </t>
+                <t>
+                    Description: Registers a callback function to be called when a new gadget
+                    containing an opensearch feature is preloaded by the container, or when an existing gadget with an opensearch feature is closed. 
+                          </t>
+                <t>
+                    Parameters:
+                    <texttable align="left">
+                        <ttcol>Name</ttcol>
+                        <ttcol>Type</ttcol>
+                        <ttcol>Description</ttcol>
+                        <c>callback</c>
+                        <c>function(Map descriptions, boolean added)</c>
+                        <c>
+                            A callback function to be called when a new gadget
+                            containing a valid opensearch feature is preloaded
+                            by the container, or a gadget containing a valid opensearch feature is closed.
+                           
+                            descriptions: gadget url as a key, open search description as value.
+                            added: true if gadget is added, false if gadget is removed.
+                            
+                        </c>
+                    </texttable>
+                </t>
+            </section>
+            <section title="removeOpenSearchCallback"
+                anchor="container.Container.opensearch.removeOpenSearchCallback">
+                <t>container.Container.opensearch.removeOpenSearchCallback(callback)
+                </t>
+                <t>
+                    Description: Un-registers a callback function registered via
+                    addOpenSearchCallBack()
+                </t>
+                <t>
+                    Parameters:
+                    <texttable align="left">
+                        <ttcol>Name</ttcol>
+                        <ttcol>Type</ttcol>
+                        <ttcol>Description</ttcol>
+                        <c>callback</c>
+                        <c>function</c>
+                        <c>
+                            The callback function to be unregistered
+                        </c>
+                    </texttable>
+                </t>
+            </section>
+    </section>
+    <section title="container.Container.actions" anchor="container.actions">
+    <xref target="Issue-1161">Discussion</xref>
+      <t>The actions feature, as described in the <eref target="../Core-Gadget.xml#gadgets.actions.overview">gadgets.actions overview</eref>, 
+      allows gadgets to contribute actions to various parts of a container's user interface.  The container can then render the actions consistently 
+      in context menus or action areas associated with particular data types, in global contribution areas (ie. navigation links at the top), 
+      or as part of the action areas of each gadget's chrome (ie. gadget's dropdown menu). </t>
+      <section title="Method Details">
+        <t>The container can access actions either by retrieving an action from the registry based on a specified identifier, or retrieving all actions 
+        by data type or path specification, via the four getter functions below: 
+          <eref target="#container.actions.getaction">getAction()</eref>,
+          <eref target="#container.actions.getallactions">getAllAction()</eref>,
+          <eref target="#container.actions.getactionsbytype">getActionsByType()</eref>, and
+          <eref target="#container.actions.getactionsbypath">getActionsByPath()</eref>.  In addition, the container must
+          register a <eref target="#container.actions.registershowactionshandler">show actions function</eref> in order 
+          to render the actions in its UI, as well as a <eref target="#container.actions.registerhideactionshandler">hide actions function</eref>
+          to remove the actions from its UI when a contributing gadget has been unloaded.
+          The container must register a <eref target="#container.actions.registernavigategadgethandler">navigate gadget handler</eref>
+          to render and navigate to the gadget upon action execution if the gadget has not yet been rendered.
+        </t>
+        <section title="getAction" anchor="container.actions.getaction">
+          <t>container.Container.actions.getAction(actionId)</t>
+          <t>Description: Returns the action object (as described in the 
+            <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
+            associated with the specified id.</t>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object</c>
+            <c>An <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">action object</eref> currently in the registry with the specified ID.</c>
+          </texttable>
+        </section>
+        <section title="getAllActions" anchor="container.actions.getallactions">
+          <t>container.Container.actions.getAllActions()</t>
+          <t>Description: Returns an array of action objects (as described in the 
+              <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
+              currently in the registry.</t>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object[]</c>
+            <c>An array of <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">action objects</eref> currently in the registry.</c>
+          </texttable>
+        </section>
+        <section title="getActionsByPath" anchor="container.actions.getactionsbypath">
+          <t>container.Container.actions.getActionsByPath(path)</t>
+          <t>Description: Returns an array of action objects bound to a specific <eref target="../Core-Gadget.xml#gadgets.actions.paths">path</eref>.  For gadget-specific contributions 
+            (ie. actions that are to be added to a gadget's chrome), this API returns actions with a global identifier for the path. 
+            For example, if a gadget contributes an action to the path "gadget/menu/myaction1", this function would return 
+            an action with path "&lt;gadgetID&gt;/gadget/menu/myaction1" where &lt;gadgetID&gt; represents the specific gadget site in the container's UI.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>path</c>
+            <c>String</c>
+            <c>Text representation of a path to an action.</c>
+          </texttable>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object[]</c>
+            <c>Array of action objects associated with the given path.</c>
+          </texttable>
+        </section>
+        <section title="getActionsByDataType" anchor="container.actions.getactionsbytype">
+          <t>container.Container.actions.getActionsByObject(dataType)</t>
+          <t>Description: Returns an array of action objects bound to a specific <eref target="../Core-Gadget.xml#gadgets.actions.datatypes">data type</eref>.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>dataType</c>
+            <c>String</c>
+            <c>Open Social data type.</c>
+          </texttable>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object[]</c>
+            <c>Array of action objects associated with the given data type.</c>
+          </texttable>
+        </section>
+        <section title="runAction">
+          <t>container.Container.actions.runAction(actionId, opt_selection)</t>
+          <t>Description: Renders the gadget if it has not yet been rendered, and 
+            executes the action callback associated with the specified actionId in 
+            the context of the gadget.  The container should call this function 
+            whenever an action is triggered by the user.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>actionId</c>
+            <c>String</c>
+            <c>Identifier for the action to be executed.</c>
+            <c>opt_selection</c>
+            <c>Object</c>
+            <c>The current <xref target="container.selection">selection</xref>.  This is an optional parameter.</c>
+          </texttable>
+        </section>
+        <section title="registerShowActionsHandler" anchor="container.actions.registershowactionshandler">
+          <t>container.Container.actions.registerShowActionsHanlder(showActionsHandler)</t>
+          <t>Description: Registers a function to render actions in the container.  
+           The function will be called when the container preloads a gadget(s) containing action contributions,
+           as well as when a gadget programmatically adds an action via the gadgets API.  At this time, the container may 
+           contribute the action to its UI.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>showActionHandler</c>
+            <c>Function</c>
+            <c>The container's function to render actions in its UI. The
+            function takes in one parameter which is an array of action objects to render.</c>
+          </texttable>
+          <t>Parameters for show actions handler function:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>actionObjs</c>
+            <c>Object[]</c>
+            <c>An array of action objects.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork type="code">
+var myShowActionsHandler = function(actionObjs){
+       // draw the UI, toolbars menus, etc using your containers JS library
+       // to do the invocation of the action, call the following API:
+       // container.Container.actions.runAction(actionObject[0].id);  
+}
+container.Container.actions.registerShowActionsHandler(myShowActionsHandler);
+          </artwork>
+        </section>
+        <section title="registerHideActionsHandler" anchor="container.actions.registerhideactionshandler">
+          <t>container.Container.actions.registerHideActionsHanlder(hideActionsHandler)</t>
+          <t>Description: Registers a function to remove actions from the container.  
+           The function will be called when the container unloads a gadget containing action contributions.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>hideActionHandler</c>
+            <c>Function</c>
+            <c>The container's function to remove actions from its UI. The
+            function takes in one parameter which is an array of action objects to remove.</c>
+          </texttable>
+          <t>Parameters for hide actions handler function:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>actionObjs</c>
+            <c>Object[]</c>
+            <c>An array of action objects.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork type="code">
+var myHideActionsHandler = function(actionObjs){
+       // remove any UI elements that were created to represent the action  
+}
+container.Container.actions.registerHideActionsHandler(myHideActionsHandler);
+          </artwork>
+        </section>        
+        <section title="registerNavigateGadgetHandler" anchor="container.actions.registernavigategadgethandler">
+          <t>container.Container.actions.registerNavigateGadgetHandler(navigateHandler)</t>
+          <t>Description: Allows the container to implement its specific UI to show a requested gadget as requested 
+          by a declarative action.  The container registers the handler, and the actions feature calls the handler 
+          upon execution of an action, if the gadget is not yet rendered. The container may re-use the gadget site if it 
+          is already visible on the page, or may choose to render it in a new or existing gadget view site.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>navigateHandler</c>
+            <c>Function</c>
+            <c>The container's function to render and navigate to gadgets in its UI.
+            </c>
+          </texttable>
+          <t>Parameters for navigateHandler function:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>gadgetUrl</c>
+            <c>String</c>
+            <c>Gadget Spec URL</c>
+            <c>opt_params</c>
+            <c>Object</c>
+            <c>A bag-style JSON object that contains parameters to indicate 
+               how the container should render the specified gadget.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork type="code">
+var myNavigateToHandler = function(gadgetUrl, opt_params){
+// invoke common container APIs to show the appropriate gadg  et, this could be viewed as a 
+// wrapper call to CommonContainer.navigateGadget(site, gadgetUrl, viewParams, renderParams, opt_callback);
+// or return the gadgetID of an existing visble gadget navigatingTo the optional viewId.
+    return gadgetId;
+}
+container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler );
+	      </artwork>
+        </section>
+        <section title="Handling the view and view_target Parameters " anchor="ActionsOptParams">
+		   <t>
+		    Actions may specify the view to render or the target location in the container UI to render the gadget.
+		    This information is passed to the navigateHandler in the form of a bag-style JSON object with keys 
+		    defined in actions.OptParam.  All of these are optional.
+		   </t>
+		   <list style="hanging">
+		    <t hangText="VIEW">
+		     The view of gadget to render.
+		    </t>
+		    <t hangText="VIEW_TARGET">
+		     The target area of the container to render the view.
+		    </t>
+		   </list>
+	  </section>
+    </section>
+  </section>
+  <section title="container.Container.selection" anchor="container.selection">
+  <xref target="Issue-1161">Discussion</xref>
+   <t>The selection feature allows the container to support a singleton selected object, or array of objects,
+   that can be set by the gadget or the container itself.  For more information, please see the 
+   <eref target="../Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref>.</t>
+   <section title="Method Details">
+    <t>The below methods allow the container itself to interact with the selected object(s).</t>
+    <section title="setSelection" anchor="container.selection.setSelection">
+      <t>container.Container.selection.setSelection(selectionArray)</t> 
+      <t>Description: Sets the selection in the container.  The selection may be an array of multiple objects.
+      </t>
+      <t>Parameters:</t>
+    <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>selectionArray</c>
+         <c>Object[]</c>
+         <c>Array of object(s) to be set as selected, with attributes defined in table below.</c>
+        </texttable>
+      <t>Each selection object must have the following attributes:</t>
+      <texttable align="left">
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>type</c>
+       <c>String</c>
+       <c>Open Social data type, as specified in the <eref target="../Social-Data.xml">Social Data Specification</eref></c>
+     <c>dataObject</c>
+       <c>Object</c>
+       <c>Object representing the selection.</c>
+      </texttable>
+      </section>
+    <section title="getSelection">
+      <t>container.Container.selection.getSelection()</t>
+      <t>Description: Gets the current selection in the container.</t>
+    <t>Returns:</t>
+      <texttable align="left">
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>Object[]</c>
+      <c>The array of currently selected objects, each with type and dataObject properties, as described
+      in the <eref target="../Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref></c>
+      </texttable>
+    </section>
+   </section>
+    </section>
+    <section title="container.Container.views">
+    <xref target="Issue-1167">Discussion</xref>
+     <t>
+      The purpose of these APIs is to add the ability for the gadget to open 
+      and/or close gadget and URL sites within the container which it is rendered. 
+      Containers should override the following methods to define the behavior 
+      for opening gadget and URL sites.  The container may choose not to 
+      override these methods, in which case if a gadget calls them the 
+      container won't do anything.
+     </t>
+     <section title="Javascript APIs">
+      <section title="createElementForGadget" anchor="container.views.createElementForGadget">
+       <t>Type: {Object} container.views.createElementForGadget(metadata, opt_view, opt_viewTarget)</t>
+       <t>
+        Description: Method called when a gadget wants to open a view of 
+        itself in a new gadget site.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>metadata</c>
+         <c>Object</c>
+         <c>
+          Gadget metadata for the gadget being opened.
+         </c>
+         <c>opt_view </c>
+         <c>string</c>
+         <c>
+          Optional parameter, the surface view that indicates the type of gadget site.
+         </c>
+         <c>opt_viewTarget </c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view that indicates where to open the gadget. For example, tab, dialog or modaldialog.
+         </c>
+        </texttable>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>HTMLElement</c>
+         <c>
+          The DOM element to place the gadget site in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="createElementForEmbeddedExperience" anchor="container.views.createElementForEmbeddedExperience">
+       <t>Type: {Object} container.views.createElementForEmbeddedExperience(opt_viewTarget)</t>
+       <t>
+        Description: Method called when a gadget wants to open an embedded experience.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>opt_viewTarget </c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view that indicates where to open the gadget. For example, tab, dialog or modaldialog.
+         </c>
+        </texttable>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>HTMLElement</c>
+         <c>
+          The DOM element to place the gadget site in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="createElementForUrl" anchor="container.views.createElementForUrl">
+       <t>Type: {Object} container.views.createElementForUrl(opt_viewTarget)</t>
+       <t>
+        Description: Method called when a gadget wants to open a URL in a new URL site.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>opt_viewTarget</c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view target to open. If the view target is not included 
+          it is up to the container to choose how to open this URL.
+         </c>
+        </texttable>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>HTMLElement</c>
+         <c>
+          The DOM element to place the URL site object in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="destroyElement" anchor="container.views.destroyElement">
+       <t>container.views.destroyElement(site)</t>
+       <t>
+        Description: Method called when a gadget wants to close itself or the 
+        parent gadget wants to close a gadget or URL site it has opened.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>site</c>
+         <c>Object</c>
+         <c>
+          The the gadget or url site to close.
+         </c>
+        </texttable>
+       </t>
+      </section>
+     </section>
+    </section>
+  </section>
+  <section title="Extensibility">
+   <t>
+    The framework is developed with extensibility in mind.
+   </t>
+   <section title="Namespace Overrides">
+    <t>This is done by namespace assignment and augmenting custom methods.</t>
+    <artwork xml:space="preserve">
+// ensure container is defined here.
+foo.container = container;
+foo.container.prototype.newMethod = function() { ... }
+    </artwork>
+   </section>
+   <section title="Method Overrides">
+    <t>This is done by re-defining overridable methods.</t>
+    <artwork xml:space="preserve">
+foo.container.Container.prototype.onConstructed = function(opt_config) { ... }
+foo.container.GadgetSite.prototype.onConstructed = function() { ... }
+foo.container.GadgetSite.prototype.onNavigateTo = function(data) { ... }
+foo.container.GadgetHolder.prototype.onConstructed = function() { ... }
+foo.container.Service.prototype.onConstructed = function(opt_config) { ... }
+    </artwork>
+   </section>
+   <section title="Mixins">
+    <t>This is done by calling static function addMixin.</t>
+    <artwork xml:space="preserve">
+container.Container.addMixin('foo', function() { ... });
+    </artwork>
+   </section>
+  </section>
+ </middle>
+ <back>
+   <references title="Discussion">
+  <!-- Spec change issues/discussion -->
+   <reference anchor='Issue-1185'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1185">
+    <front>
+     <title>Gadget Lifecycle registry</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1144'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+    <front>
+     <title>Embedded Experiences</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1166'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1166">
+    <front>
+     <title>OpenSearch Gadget Contributions</title>
+    </front>
+   </reference>   
+   <reference anchor='Issue-1161'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+    <front>
+     <title>Declarative Actions &amp; Selection</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1167'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+    <front>
+     <title>View Enhancements To Support Opening Of Gadgets and URLs by the Container</title>
+    </front>
+   </reference>   
+  </references> 
+ </back>
+</rfc>
+
