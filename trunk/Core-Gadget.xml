@@ -623,7 +623,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
          <t hangText="@url">The URL for the endpoint.</t>
          <t hangText="@method">The HTTP verb to use for making the request.
          Containers MUST use this HTTP method when sending the request to the
-         service URL. This parameter is optional. If unspecified, it defaults
+         service URL. This parameter is OPTIONAL. If unspecified, it defaults
          to POST.</t>
          <t hangText="@param_location">One of 3 possible locations in the
          request to the service where the OAuth parameters may be passed.
@@ -643,6 +643,56 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        </section>
       </section>
      </section>
+    
+   <x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">    
+     <section title="/ModulePrefs/OAuth2"
+              anchor="OAuth2Element">
+      <t>Supplies the Container with OAuth 2.0 service configuration for the
+      gadget. For details, see
+      <xref target="OAuth">OAuth</xref>. This tag has no attributes and has
+      child elements. Containers SHOULD NOT interpret child text nodes.</t>
+      <section title="/ModulePrefs/OAuth2/Service">
+       <t>A single OAuth 2.0 service configuration.</t>
+       <list style="hanging">
+        <t hangText="@name">The name of the service, used for referencing OAuth 2.0
+        services at runtime. This parameter is optional, and if unspecified
+        defaults to an empty string. Gadget developers specify which OAuth 2.0
+        service they wish to use by passing the service name as a parameter to
+        <xref target="gadgets.io.makeRequest">
+        gadgets.io.makeRequest</xref>.</t>
+        <t hangText="@scope">The value of the OAuth 2.0 scope parameter to be used by default
+        in requests.  This value is superseded when
+        <xref target="gadgets.io.RequestParameters.OAUTH2_SCOPE">
+        gadgets.io.RequestParameters.OAUTH2_SCOPE</xref> is used.
+        Access Token Scope is defined in Section 3.3 of the
+        <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.
+        This parameter is OPTIONAL.</t>
+        <t hangText="text()">Not used at this time.</t>
+       </list>
+       <section title="/ModulePrefs/OAuth/Service/Authorization"
+                anchor="Authorization">
+        <t>Represents the OAuth 2.0 authorization endpoint. For details, see
+        Section 3.1 of <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.
+        Containers MAY provide a default value if this element is not included.</t>
+         <t hangText="@url">The URL for the endpoint.</t>
+         <t hangText="@method">The HTTP verb to use for making the request.
+         Containers MUST use this HTTP method when sending the request to the
+         service URL. This parameter is OPTIONAL. If unspecified, it defaults
+         to GET.</t>
+         <t hangText="text()">Not used at this time.</t>        
+       </section>       
+       <section title="/ModulePrefs/OAuth/Service/Token">
+        <t>Represents the OAuth 2.0 token endpoint. For details, see
+        Section 3.2 of <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.
+        Containers MAY provide a default value if this element is not included.</t>
+        <list style="hanging">
+         <t hangText="@url">The URL for the endpoint.</t>
+         <t hangText="text()">Not used at this time.</t>
+        </list>
+       </section>
+      </section>
+     </section>
+</x:draft>
     </section>
     
     <section title="Security Policy" anchor='SecurityPolicy'>
@@ -1009,6 +1059,9 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     <t>oauth_request_token: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</t>
     <t>oauth_request_token_secret: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</t>
     <t>oauth_service_name: gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</t>
+    <x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">
+    <t>oauth2_scope: gadgets.io.RequestParameters.OAUTH2_SCOPE</t>
+    </x:draft>
     <t>oauth_token_name: gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</t>
     <t>oauth_use_token: gadgets.io.RequestParameters.OAUTH_USE_TOKEN</t>
     <t>refresh_interval: gadgets.io.RequestParameters.REFRESH_INTERVAL</t>
@@ -1505,7 +1558,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
            anchor="OAuth">
    <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
   <t>Note that the OAuth 2.0 specification is not currently approved by the IETF and references
-  to OAuth 2 capablities are based on version 16 of the OAuth 2.0 specification.
+  to OAuth 2 capabilities are based on version 21 of the OAuth 2.0 specification.
   </t>
   </x:incubating>
    <t>As mentioned previously in this specification and other OpenSocial
@@ -1523,7 +1576,8 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
    OpenSocial containers MAY use an OAuth client key and secret specific to the gadget
    making the request (xoauth_requestor_id request context parameter),
    or MAY use the container's OAuth client key and secret. For more details, see the
-   <xref target="OAuth-Core">OAuth 1.0A specification</xref> or the OAuth 2.0 specification.</t>
+   <xref target="OAuth-Core">OAuth 1.0A specification</xref> or the 
+   <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.</t>
    <section title="Consumer Secrets">
     <t>OAuth client keys and secrets are typically obtained by registering a
     gadget, application or server with a service provider at a web page provided
@@ -1825,6 +1879,13 @@ gadgets.io.makeRequest(url, callback, params);
         <t hangText="gadgets.io.RequestParameters.OAUTH_SERVICE_NAME">The
         nickname the gadget uses to refer to the OAuth &lt;Service&gt; element
         from its XML spec. If unspecified, defaults to "".</t>
+        <t hangText="gadgets.io.RequestParameters.OAUTH2_SCOPE" 
+        anchor="gadgets.io.RequestParameters.OAUTH2_SCOPE">
+        <x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">The value of the 
+        OAuth 2.0 scope parameter to be used with this request.  Access Token Scope is
+        defined in Section 3.3 of the <xref target='draft-ietf-oauth-v2-21'>
+        OAuth 2.0</xref> specification.
+        </x:draft></t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_TOKEN_NAME">The
         nickname the gadget uses to refer to an OAuth token granting access to
         a particular resources. If unspecified, defaults to "". Gadgets can use
@@ -7358,6 +7419,29 @@ Content-Type: application/embed+json
    		<author>TBD</author>
    		<date/>
    	</front>
+   </reference>
+   <reference anchor="draft-ietf-oauth-v2-21"
+               target="http://tools.ietf.org/html/draft-ietf-oauth-v2-21">
+     <front>
+       <title>The OAuth 2.0 Authorization Protocol</title>
+       <author initials='E.'
+               surname='Hammer-Lahav'
+               fullname='Eran Hammer-Lahav'>
+               <organization>Yahoo !</organization>
+       </author>
+       <author initials='D.'
+               surname='Recordon'
+               fullname='David'>
+               <organization>Facebook</organization>
+       </author>
+       <author initials='D.'
+               surname='Hardt'
+               fullname='Dick'>
+               <organization>Microsoft</organization>
+       </author>
+       <date month='September'
+             year='2011' />
+     </front>
    </reference>
   </references>
  </back>
