@@ -4062,6 +4062,7 @@ dataset would contain content resembling:
   <section title="Gadget XML Schema"
            anchor="GadgetXmlSchema">
    <t>
+<x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0"?&gt;
@@ -4169,6 +4170,22 @@ dataset would contain content resembling:
                   &lt;xs:attribute name="name" type="xs:string" use="optional"/&gt;
                 &lt;/xs:complexType&gt;
               &lt;/xs:element&gt;
+              &lt;xs:element name="OAuth2" minOccurs="0" maxOccurs="1"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:sequence&gt;
+                    &lt;xs:element name="Service" maxOccurs="unbounded"&gt;
+                      &lt;xs:complexType&gt;
+                        &lt;xs:all&gt;
+                          &lt;xs:element name="Authorization" type="OAuthResourceType" minOccurs="0"/&gt;
+                          &lt;xs:element name="Token" type="OAuthResourceType" minOccurs="0"/&gt;
+                        &lt;/xs:all&gt;
+                      &lt;/xs:complexType&gt;
+                    &lt;/xs:element&gt;
+                  &lt;/xs:sequence&gt;
+                  &lt;xs:attribute name="name" type="xs:string" use="optional"/&gt;
+                  &lt;xs:attribute name="scope" type="xs:string" use="optional"/&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
             &lt;/xs:choice&gt;
             &lt;xs:attribute name="title" type="xs:string" use="optional"/&gt;
             &lt;xs:attribute name="title_url" type="xs:string" use="optional"/&gt;
@@ -4270,6 +4287,7 @@ dataset would contain content resembling:
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
+    </x:draft>
 <xref target="Issue-1142">Discussion</xref>
    </t>
   </section>
