@@ -5,18 +5,80 @@ The community will vote on that change record.
 Please see http://docs.opensocial.org/display/OSD/Spec+Changes for more details
 
 
-
-OpenSocial Trunk Proposals
--------------------------
+OpenSocial 2.0.1 Bugs & Proposals
+------------------------
+Missing datatypes in message section (http://code.google.com/p/opensocial-resources/issues/detail?id=1180)
 OAuth 2.0 service configuration in ModulePrefs (http://code.google.com/p/opensocial-resources/issues/detail?id=1209)
+Content upload spec consistency (http://code.google.com/p/opensocial-resources/issues/detail?id=1211)
+Core Gadget Specification missing Content/@authz attribute in XSD (http://code.google.com/p/opensocial-resources/issues/detail?id=1212) 
+Person required fields inconsistency (http://code.google.com/p/opensocial-resources/issues/detail?id=1218)
+Remove incubating tags from OAuth 2.0 sections (http://code.google.com/p/opensocial-resources/issues/detail?id=1220)
 
 
-
-
-
-
-Call for Community Votes
-Date Range  - Description
+OpenSocial 2.0 Proposals
 -------------------------
-26-Aug-2011 - 02-Sep-2011   Approve Ryan Baxter as a committer to the OpenSocial Resources Project (rjbaxter@us.ibm.com // rbaxter85@gmail.com)
+View Level Features (http://code.google.com/p/opensocial-resources/issues/detail?id=1133)
+Merge/Incorporate Activity Streams (http://code.google.com/p/opensocial-resources/issues/detail?id=1050)
+Embedded Experiences (http://code.google.com/p/opensocial-resources/issues/detail?id=1144)
+Move security policy to core gadgets (http://code.google.com/p/opensocial-resources/issues/detail?id=1143)
+Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-resources/issues/detail?id=1149)
+Deprecate the existing activity api in favor of activity streams (http://code.google.com/p/opensocial-resources/issues/detail?id=1151)
+Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
+Add support for different icon sizes (http://code.google.com/p/opensocial-resources/issues/detail?id=1155)
+Remove Quirks Mode (http://code.google.com/p/opensocial-resources/issues/detail?id=1139)
+Simple Gadget Format (http://code.google.com/p/opensocial-resources/issues/detail?id=1162)
+Cross container data requests (http://code.google.com/p/opensocial-resources/issues/detail?id=1163)
+Variable substitution standardized on EL syntax  (http://code.google.com/p/opensocial-resources/issues/detail?id=1164)
+Add support for spaces (http://code.google.com/p/opensocial-resources/issues/detail?id=1135)
+Declarative Actions and Selection (http://code.google.com/p/opensocial-resources/issues/detail?id=1161)
+OpenSearch Gadget Contribution (http://code.google.com/p/opensocial-resources/issues/detail?id=1166)
+View Enhancements To Support Opening Of Gadgets and URLs (http://code.google.com/p/opensocial-resources/issues/detail?id=1167)
+Common Container Specification(http://code.google.com/p/opensocial-resources/issues/detail?id=1145)
+OAuth 2.0 support (http://code.google.com/p/opensocial-resources/issues/detail?id=1138)
+Add Enterprise Social Data Model Profile (http://code.google.com/p/opensocial-resources/issues/detail?id=1132)
+Cross-container data requests and Service Providers (http://code.google.com/p/opensocial-resources/issues/detail?id=1181)
+Signing of URL Content requests (http://code.google.com/p/opensocial-resources/issues/detail?id=1173)
+gadgets.window.adjustWidth (http://code.google.com/p/opensocial-resources/issues/detail?id=1191)
+Add support for new HTTP method PATCH (http://code.google.com/p/opensocial-resources/issues/detail?id=1200)
 
+
+OpenSocial 2.0 "Bugs"
+----------------------
+Remove ID spec from requestShareApp (http://code.google.com/p/opensocial-resources/issues/detail?id=1150)
+Clarify text in section 4 (http://code.google.com/p/opensocial-resources/issues/detail?id=1153)
+Clarify life cycle events (http://code.google.com/p/opensocial-resources/issues/detail?id=1154)
+Fix XSD for core gadget (http://code.google.com/p/opensocial-resources/issues/detail?id=1142)
+Fix missing prams on requestNavigateTo (http://code.google.com/p/opensocial-resources/issues/detail?id=1148)
+Defining terms "OSML" and "EL" in template specification (http://code.google.com/p/opensocial-resources/issues/detail?id=1170)
+Remove "Non-Tags" section from Social Gadget spec(http://code.google.com/p/opensocial-resources/issues/detail?id=1179)
+Core-Container.xml cleanup (http://code.google.com/p/opensocial-resources/issues/detail?id=1197)
+
+
+Call for Votes
+---------------------
+Fix XSD for core gadget (http://code.google.com/p/opensocial-resources/issues/detail?id=1142)
+Embedded Experiences (http://code.google.com/p/opensocial-resources/issues/detail?id=1144)
+Simple Gadget Format (http://code.google.com/p/opensocial-resources/issues/detail?id=1162)
+Remove "Non-Tags" section from Social Gadget spec(http://code.google.com/p/opensocial-resources/issues/detail?id=1179)
+Remove Quirks Mode (http://code.google.com/p/opensocial-resources/issues/detail?id=1139)
+Move security policy to core gadgets (http://code.google.com/p/opensocial-resources/issues/detail?id=1143)
+OpenSearch Gadget Contribution (http://code.google.com/p/opensocial-resources/issues/detail?id=1166)
+Cross-container data requests and Service Providers (http://code.google.com/p/opensocial-resources/issues/detail?id=1181)
+Add Enterprise Social Data Model Profile (http://code.google.com/p/opensocial-resources/issues/detail?id=1132)
+OAuth 2.0 support (http://code.google.com/p/opensocial-resources/issues/detail?id=1138)
+Declarative Actions and Selection (http://code.google.com/p/opensocial-resources/issues/detail?id=1161)
+Add support for additional views (http://code.google.com/p/opensocial-resources/issues/detail?id=1169)
+Signing of URL Content requests (http://code.google.com/p/opensocial-resources/issues/detail?id=1173)
+EL functions - remove "os:" prefix (http://code.google.com/p/opensocial-resources/issues/detail?id=1176)
+View Level Features (http://code.google.com/p/opensocial-resources/issues/detail?id=1133)
+ActivityStrea.ms support (http://code.google.com/p/opensocial-resources/issues/detail?id=1140)
+View Enhancements To Support Opening Of Gadgets and URLs (http://code.google.com/p/opensocial-resources/issues/detail?id=1167)
+Variable substitution standardized on EL syntax  (http://code.google.com/p/opensocial-resources/issues/detail?id=1164)
+Add alias to http request parameters to support relative url (http://code.google.com/p/opensocial-resources/issues/detail?id=1178)
+gadgets.window.adjustWidth (http://code.google.com/p/opensocial-resources/issues/detail?id=1191)
+Clarify life cycle events (http://code.google.com/p/opensocial-resources/issues/detail?id=1154)
+Remove Appendix A from social-gadget.xml (http://code.google.com/p/opensocial-resources/issues/detail?id=1149)
+Remove support for ATOM (http://code.google.com/p/opensocial-resources/issues/detail?id=1152)
+Fix missing params on requestNavigateTo (http://code.google.com/p/opensocial-resources/issues/detail?id=1148)
+Core-Container.xml cleanup (http://code.google.com/p/opensocial-resources/issues/detail?id=1197)
+Add support for new HTTP method PATCH (http://code.google.com/p/opensocial-resources/issues/detail?id=1200)
