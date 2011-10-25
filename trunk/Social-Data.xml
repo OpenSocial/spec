@@ -973,13 +973,16 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="Person"
             anchor="Person">
-     <t>Each person returned MUST include the "id", "name", and
-     "thumbnailUrl" fields with non-empty values, but all other fields
+     <x:draft note="Issue 1218 - Person required fields inconsistency" 
+              href="http://code.google.com/p/opensocial-resources/issues/detail?id=1218">
+     <t>Each person returned MUST include the "id" and "name" fields 
+     with non-empty values, but all other fields
      are optional, and it is recognized that not all Service Providers
      are able to provide data for all the supported fields. The field
      list below is broad so that there is a standard field name
      available among Service Providers that do support any of these
      fields.</t>
+     </x:draft>
      <t>There are two special Person objects that can be requested
      directly: the VIEWER and the OWNER. To understand the
      distinction, imagine you're checking out a coworker's profile on
