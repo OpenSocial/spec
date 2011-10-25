@@ -4059,7 +4059,7 @@ dataset would contain content resembling:
   <section title="Gadget XML Schema"
            anchor="GadgetXmlSchema">
    <t>
-<x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">
+<x:draft note="Multiple issues: Issue 1212 - Core Gadget Specification missing Content/@authz attribute in XSD, Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0"?&gt;
@@ -4081,6 +4081,7 @@ dataset would contain content resembling:
                         &lt;xs:enumeration value="none"/&gt;
                         &lt;xs:enumeration value="signed"/&gt;
                         &lt;xs:enumeration value="oauth"/&gt;
+                        &lt;xs:enumeration value="oauth2"/&gt;
                       &lt;/xs:restriction&gt;
                     &lt;/xs:simpleType&gt;
                   &lt;/xs:attribute&gt;
@@ -4229,6 +4230,16 @@ dataset would contain content resembling:
                     &lt;xs:restriction base="xs:string"&gt;
                       &lt;xs:enumeration value="html"/&gt;
                       &lt;xs:enumeration value="url"/&gt;
+                    &lt;/xs:restriction&gt;
+                  &lt;/xs:simpleType&gt;
+                &lt;/xs:attribute&gt;
+                &lt;xs:attribute name="authz" use="optional" default="none"&gt;
+                  &lt;xs:simpleType&gt;
+                    &lt;xs:restriction base="xs:string"&gt;
+                      &lt;xs:enumeration value="none"/&gt;
+                      &lt;xs:enumeration value="signed"/&gt;
+                      &lt;xs:enumeration value="oauth"/&gt;
+                      &lt;xs:enumeration value="oauth2"/&gt;
                     &lt;/xs:restriction&gt;
                   &lt;/xs:simpleType&gt;
                 &lt;/xs:attribute&gt;
