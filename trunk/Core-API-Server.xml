@@ -687,10 +687,10 @@ RPC-Error = "{"
         uses the <xref target="urlAddressing">URL Addressing</xref> representation of the
         request without the authorization parameter, in order to calculate the signature base string.</t>
    </section>
-   <x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
    <section title="OAuth 2.0 Support">
+   <xref target="Issue-1138">Discussion</xref>
      <t>Core Gadget Servers MUST support the authorization server, resource server and client roles
-      defined in section 1.1 of the Open Authorization 2.0 specification <xref target="draft-ietf-oauth-v2-20"/>.</t>
+      defined in section 1.1 of the Open Authorization 2.0 specification <xref target="draft-ietf-oauth-v2-22"/>.</t>
      <t>A Core Gadget Server MUST provide authorization, token issuance and resource access endpoints per the OAuth 2
       specification.
       A Core Gadget Server MUST implement the authorization code and client credential types described in section 4 of the
@@ -698,7 +698,6 @@ RPC-Error = "{"
       Core Gadget Servers MAY implement the refresh token pattern described 
       in section 1.5 of  the OAuth 2.0 specification.</t>
      </section>
-   </x:incubating>
     <section title="Two Party OAuth Optional Parameters">
       <t>For 2 party (client credential) OAuth requests, if a Core Gadget Server has a user identifier
       and wishes to indicate that the
@@ -717,10 +716,9 @@ RPC-Error = "{"
       in order to mitigate risk. OpenSocial Containers SHOULD document how to register a gadget with the OpenSocial
       Container in order to obtain a client identifier and client secret.  This is typically done through a web page,
       although the exact method is left to the specific implementation.</t>
-      <x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
       <t>Note that per the security considerations 
       mentioned in the OAuth 2.0 specification, client secrets should not be issued to untrusted clients.</t>
-      </x:incubating>
+      <xref target="Issue-1138">Discussion</xref>
       <t>OpenSocial Containers SHOULD document how to store client identifiers and client secrets on the server in order for
       a gadget running locally to access remote data in another server.</t>
     </section>
@@ -738,13 +736,12 @@ RPC-Error = "{"
       is installed with each client (implicit grant). The security of communications with a two-party partner 
       service, on the other hand, is dependent on the effectiveness of that service's security procedures
       (client credential grant).</t>
-<x:incubating note="Issue 1138 - OAuth 2.0 Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
       <t>  The security of communications with a three party service, involving a 
       registered server, a client/gadget and the OpenSocial Container, should follow the security guidelines 
       outlined in the OAuth 2.0 security considerations document (authorization grant).</t>
       <t>OpenSocial Containers SHOULD provide an ability to scope the authorization to data as narrowly as 
       possible (e.g., allow reading but not writing if a client only performs reads).</t> 
-</x:incubating>
+      <xref target="Issue-1138">Discussion</xref>
     </section>
    <section title="Access Token Scopes and Expiration Times">
       <t>OpenSocial Containers SHOULD issue access tokens with short expiration times to limit the scope 
@@ -1033,9 +1030,6 @@ GIF89....&lt;image data&gt;
 
     </section>
     <section title="HTTP-Status-Code">
-    <x:incubating note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175">
-    <t>References below to OAuth 2.0 are incubating changes in the OpenSocial 2.0 specification.</t>
-    </x:incubating>
    <texttable>
     <ttcol align="left">Status Code</ttcol>
     <ttcol align="left">Description</ttcol>
@@ -1055,7 +1049,7 @@ GIF89....&lt;image data&gt;
     
     <list style="symbols">
      <t>Missing OAuth authorization credentials as described in 
-     <xref target="OAuth-Consumer-Request-1.0-Draft-1" /> for OAuth 1.0a or in <xref target='draft-ietf-oauth-v2-20'/> for OAuth 2.0 requests.</t>
+     <xref target="OAuth-Consumer-Request-1.0-Draft-1" /> for OAuth 1.0a or in <xref target='draft-ietf-oauth-v2-22'/> for OAuth 2.0 requests.</t>
      <t>OAuth authorization credentials are present, but the user identity is
      not authorized to access the protected resource. If the request already
      included authorization credentials, the 401 response indicates that the
@@ -1594,6 +1588,12 @@ Content-Type: application/json
      <title>Fix Gadget XSD</title>
     </front>
    </reference>
+   <reference anchor='Issue-1138'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+    <front>
+     <title>OAuth 2.0 Support</title>
+    </front>
+   </reference>
   </references>
   <references>
    <reference anchor='RFC20'>
@@ -1831,9 +1831,9 @@ Content-Type: application/json
     </front>
    </reference>
    
-   <x:incubating note="Issue 1175 Add OAuth 2.0 spec to reference" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1175"> 
-   <reference anchor="draft-ietf-oauth-v2-20"
-               target="http://tools.ietf.org/html/draft-ietf-oauth-v2-20">
+    
+   <reference anchor="draft-ietf-oauth-v2-22"
+               target="http://tools.ietf.org/html/draft-ietf-oauth-v2-22">
      <front>
        <title>The OAuth 2.0 Authorization Protocol</title>
        <author initials='E.'
@@ -1851,12 +1851,10 @@ Content-Type: application/json
                fullname='Dick'>
                <organization>Microsoft</organization>
        </author>
-       <date month='July'
+       <date month='September'
              year='2011' />
      </front>
    </reference>
-   </x:incubating>
-   
    <reference anchor="Core-Data"
               target="./Core-Data.xml">
     <front>

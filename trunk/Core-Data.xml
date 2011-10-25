@@ -276,12 +276,12 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
    </section>
 
    <section title="HTTP-Request-Params" anchor="HTTP-Request-Params">
-     <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138"> 
+      
      <t>Readers of this section should also review the Security section in the
         Core API Server specification as well as the OAuth information
         documented in the Core Gadget Specfication. The reader should also
         be familiar with the OAuth specification (1.0A or 2.0).</t>
-     </x:incubating>
+     <xref target='Issue-1138'>Discussion</xref>
      <t>The parameters described in this section are set by the gadget running in 
         the Core Container and are passed
         to the Core Gadget Server so that it will appropriately process the request.</t>
@@ -297,9 +297,6 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
         similar characteristics, some of the documented request parameters 
         will be needed.</t>
      <t>Requests to arbitrary URLs use the following parameters:</t>
-     <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138"> 
-     <t>In the following table, the 'oauth2' authorization method and other OAuth2 references were added in support of 1138.</t>
-     </x:incubating>
      <texttable align="left">
       <ttcol>Name</ttcol>
       <ttcol>Type</ttcol>
@@ -312,7 +309,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
        <c>authz</c>
       <c>String</c>
       <c>Indicates the authorization method to use when sending data to the remote server.  
-         Must be one of "none", "signed", "oauth" or "oauth2". Defaults to "none".</c>
+         Must be one of "none", "signed", "oauth" or "oauth2". Defaults to "none". <xref target='Issue-1138'>Discussion</xref></c>
       <c>format</c>
       <c>String</c>
       <c>Format data is returned in for processing, values are "json" or "text". Defaults to "json". Optional</c>
@@ -324,7 +321,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
       <c>The URL to send the request to. Required.</c>
       <c>oauth_service_name</c>
       <c>String</c>
-      <c>Gagdget XML can define more than one "clause" that represents an end point protected by OAuth
+      <c>Gadget XML can define more than one "clause" that represents an end point protected by OAuth
       	  that the gadget accesses.
       	  This parameter identifies the "service element" or "xml nickname" in the gadget XML
       	  that identifies the OAuth information to be used for this specific request.
@@ -553,6 +550,12 @@ User-Id = <x:ref>Object-Id</x:ref> / "@owner" / "@viewer" / "@me"
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1178">
     <front>
      <title>Add 'alias' to HTTP Request</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1138'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+    <front>
+     <title>OAuth 2.0 Support</title>
     </front>
    </reference>
  </references>

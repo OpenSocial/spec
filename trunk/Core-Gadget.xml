@@ -665,14 +665,14 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
         <xref target="gadgets.io.RequestParameters.OAUTH2_SCOPE">
         gadgets.io.RequestParameters.OAUTH2_SCOPE</xref> is used.
         Access Token Scope is defined in Section 3.3 of the
-        <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.
+        <xref target='draft-ietf-oauth-v2-22'>OAuth 2.0</xref> specification.
         This parameter is OPTIONAL.</t>
         <t hangText="text()">Not used at this time.</t>
        </list>
        <section title="/ModulePrefs/OAuth/Service/Authorization"
                 anchor="Authorization">
         <t>Represents the OAuth 2.0 authorization endpoint. For details, see
-        Section 3.1 of <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.
+        Section 3.1 of <xref target='draft-ietf-oauth-v2-22'>OAuth 2.0</xref> specification.
         Containers MAY provide a default value if this element is not included.</t>
          <t hangText="@url">The URL for the endpoint.</t>
          <t hangText="@method">The HTTP verb to use for making the request.
@@ -683,7 +683,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        </section>       
        <section title="/ModulePrefs/OAuth/Service/Token">
         <t>Represents the OAuth 2.0 token endpoint. For details, see
-        Section 3.2 of <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.
+        Section 3.2 of <xref target='draft-ietf-oauth-v2-22'>OAuth 2.0</xref> specification.
         Containers MAY provide a default value if this element is not included.</t>
         <list style="hanging">
          <t hangText="@url">The URL for the endpoint.</t>
@@ -1556,11 +1556,10 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
   </section>
   <section title="OAuth"
            anchor="OAuth">
-   <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
   <t>Note that the OAuth 2.0 specification is not currently approved by the IETF and references
-  to OAuth 2 capabilities are based on version 21 of the OAuth 2.0 specification.
+  to OAuth 2 capabilities are based on version 22 of the OAuth 2.0 specification.
   </t>
-  </x:incubating>
+  <xref target='Issue-1138'>Discussion</xref>
    <t>As mentioned previously in this specification and other OpenSocial
      2.0 specifications, OpenSocial containers MUST be able to proxy
     OAuth requests for gadgets.  The main mechanism used to accomplish proxy
@@ -1577,7 +1576,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
    making the request (xoauth_requestor_id request context parameter),
    or MAY use the container's OAuth client key and secret. For more details, see the
    <xref target="OAuth-Core">OAuth 1.0A specification</xref> or the 
-   <xref target='draft-ietf-oauth-v2-21'>OAuth 2.0</xref> specification.</t>
+   <xref target='draft-ietf-oauth-v2-22'>OAuth 2.0</xref> specification.</t>
    <section title="Consumer Secrets">
     <t>OAuth client keys and secrets are typically obtained by registering a
     gadget, application or server with a service provider at a web page provided
@@ -1615,7 +1614,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
      <xref target="gadgets.io.makeRequest">gadgets.io.makeRequest</xref>once
      the user has approved the OAuth access.</t>
     </list>
-    <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+    
     <t>Proxying a request for an OAuth 2 service provider is different based
       on the grant type being used.  This description is for an authorization
       grant.
@@ -1649,7 +1648,7 @@ in the <xref target="Locale">/ModulePrefs/Locale</xref> section.
           a need to retry the makeRequest.  The gadget retries the makeRequest.
           </t>
     </list>
-    </x:incubating>
+    <xref target='Issue-1138'>Discussion</xref>
    </section>
   </section>
   <section title="JavaScript API Reference" anchor="JavaScript-API-Reference">
@@ -1883,7 +1882,7 @@ gadgets.io.makeRequest(url, callback, params);
         anchor="gadgets.io.RequestParameters.OAUTH2_SCOPE">
         <x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">The value of the 
         OAuth 2.0 scope parameter to be used with this request.  Access Token Scope is
-        defined in Section 3.3 of the <xref target='draft-ietf-oauth-v2-21'>
+        defined in Section 3.3 of the <xref target='draft-ietf-oauth-v2-22'>
         OAuth 2.0</xref> specification.
         </x:draft></t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_TOKEN_NAME">The
@@ -2004,10 +2003,8 @@ gadgets.io.makeRequest(url, callback, params);
       field may be used interchangeably with the string 'OAUTH'.</t>
       <t hangText="OAUTH2"
               anchor="gadgets.io.AuthorizationType.OAUTH2">
-     <x:incubating note="Issue 1138 - OAuth 2.0 Specification" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
      The container will use OAuth 2.0 for authentication. This
-      field may be used interchangeably with the string 'OAUTH2'.
-     </x:incubating>
+      field may be used interchangeably with the string 'OAUTH2'. <xref target='Issue-1138'>Discussion</xref>
      </t>
      <t hangText="SIGNED"
               anchor="gadgets.io.AuthorizationType.SIGNED">
@@ -7188,7 +7185,13 @@ Content-Type: application/embed+json
     <front>
      <title>Specification Cleanup</title>
     </front>
-   </reference>  
+   </reference>
+   <reference anchor='Issue-1138'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
+    <front>
+     <title>OAuth 2.0 Support</title>
+    </front>
+   </reference>
   </references>
   <!-- Real references -->
   <references>
@@ -7438,8 +7441,8 @@ Content-Type: application/embed+json
    		<date/>
    	</front>
    </reference>
-   <reference anchor="draft-ietf-oauth-v2-21"
-               target="http://tools.ietf.org/html/draft-ietf-oauth-v2-21">
+   <reference anchor="draft-ietf-oauth-v2-22"
+               target="http://tools.ietf.org/html/draft-ietf-oauth-v2-22">
      <front>
        <title>The OAuth 2.0 Authorization Protocol</title>
        <author initials='E.'
