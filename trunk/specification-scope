@@ -13,6 +13,7 @@ Content upload spec consistency (http://code.google.com/p/opensocial-resources/i
 Core Gadget Specification missing Content/@authz attribute in XSD (http://code.google.com/p/opensocial-resources/issues/detail?id=1212) 
 Person required fields inconsistency (http://code.google.com/p/opensocial-resources/issues/detail?id=1218)
 Remove incubating tags from OAuth 2.0 sections (http://code.google.com/p/opensocial-resources/issues/detail?id=1220)
+Reserve namespaces for opensocial contructs (http://code.google.com/p/opensocial-resources/issues/detail?id=1137)
 
 
 Call for Community Votes
