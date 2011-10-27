@@ -811,61 +811,61 @@ COMMA          = <US-ASCII comma (44)>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
       <c>appUrl</c>
-      <c></c>
+      <c>string</c>
       <c>Identifies the application that generated this message.</c>
       <c>body</c>
-      <c></c>
+      <c>string</c>
       <c>The main text of the message. HTML attributes are allowed and
       are sanitized by the container.</c>
       <c>bodyId</c>
-      <c></c>
+      <c>string</c>
       <c>The main text of the message as a message template. Specifies
       the message ID to use in the gadget xml.</c>
       <c>collectionIds</c>
-      <c></c>
+      <c>Array &lt;string&gt;</c>
       <c>Identifies the messages collection IDs this message is
       contained in.</c>
       <c>id</c>
-      <c></c>
+      <c>string</c>
       <c>Unique ID for this message.</c>
       <c>inReplyTo</c>
-      <c></c>
+      <c>string</c>
       <c>Message ID, use for threaded comments/messages. Reference the
       sematics of the Atom Threading model defined in rfc4685. URLs
       should be mapped to Atom &lt;link rel="type" .../&gt;</c>
       <c>recipients</c>
-      <c></c>
+      <c>Array &lt;string&gt;</c>
       <c>Array of person IDs.</c>
       <c>replies</c>
-      <c></c>
+      <c>Array &lt;string&gt;</c>
       <c>Array of message ids. Reference the sematics of the Atom
       Threading model defined in rfc4685. URLs should be mapped to
       Atom &lt;link rel="type" .../&gt;</c>
       <c>senderId</c>
-      <c></c>
+      <c>string</c>
       <c>Id of person who sent the message.</c>
       <c>status</c>
-      <c></c>
+      <c>string</c>
       <c>Status of the message. (NEW, READ, DELETED).</c>
       <c>timeSent</c>
-      <c></c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>UTC time message was sent.</c>
       <c>title</c>
-      <c></c>
+      <c>string</c>
       <c>The title of the message. HTML attributes are allowed and are
       sanitized by the container.</c>
       <c>titleId</c>
-      <c></c>
+      <c>string</c>
       <c>The title of the message as a message template. Specifies the
       message ID to use in the gadget xml.</c>
       <c>type</c>
-      <c></c>
-      <c>The title of the message.</c>
+      <c>string</c>
+      <c>The type of the message.</c>
       <c>updated</c>
-      <c></c>
+      <c><eref target="./Core-Data.xml#Date">Date</eref></c>
       <c>Last update for this message.</c>
       <c>urls</c>
-      <c></c>
+      <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>List of related URLs for this message. Supported URL types
       include 'alternate', alternate for for this mailbox (text/html
       being the most common).</c>
