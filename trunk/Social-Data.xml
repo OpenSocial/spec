@@ -806,6 +806,7 @@ COMMA          = <US-ASCII comma (44)>
    <section title="Message"
             anchor="Message">
      <t>Valid definitions for Message-Field are listed in the table below.</t>
+     <x:draft note="Issue 1180 - Missing datatypes in message section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1180">
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -870,6 +871,7 @@ COMMA          = <US-ASCII comma (44)>
       include 'alternate', alternate for for this mailbox (text/html
       being the most common).</c>
      </texttable>
+     </x:draft>
     <t>A Message example follows. For brevity, details of the 'sender' field,
     an OpenSocial Person, are omitted. </t>
     <figure>
