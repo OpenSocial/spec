@@ -419,7 +419,7 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
 	provide
 	endpoints in the required protocols as defined by the
 	specification,
-	e.g. XML, JSON, ATOM.
+	e.g. XML, JSON.
 
 	Protocol extensions SHOULD provide
 	extensions for each level of compliance as defined by the OpenSocial
@@ -435,7 +435,7 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
 
 <section title="OpenSocial Reserved Namespace">
 <x:draft note="Issue 1137 - Reserve namespaces for opensocial contructs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1137">
-<t>The "org.opensocial" is a reserved namespace for use throughout the specification. Implementors MUST not introduce unspecified properties of the namespace.</t>
+<t>The "org.opensocial" is a reserved namespace for use throughout the specification. Implementors MUST NOT introduce unspecified properties of the namespace.</t>
 </x:draft>
 </section> <!-- Reserved Namespace -->
 
