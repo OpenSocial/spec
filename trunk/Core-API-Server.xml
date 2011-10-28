@@ -790,9 +790,11 @@ RPC-Error = "{"
      <section title="Content Upload" anchor="Content-Upload">
     <section title="Two Step Upload"
              anchor="twoStepUpload">
+     <x:draft note="Issue 1211 - Content Upload spec consistency check/cleanup" 
+              href="http://code.google.com/p/opensocial-resources/issues/detail?id=1211">
      <t>Content Upload is a generic mechanism to allow for a standard way to
-     upload content. A common place to apply content upload will be against an
-     existing Album or MediaItem endpoint. In most scenarios an uploaded
+     upload content.  This mechanism MAY be used to upload to an
+     existing Album, MediaItem endpoint, or where appropriate. In most scenarios an uploaded
      content is associated with creation of an entity. Upload of content
      routinely causes the creation of the entity. For example, uploading a
      photo causes the container to create a new media item. The application can
@@ -824,7 +826,7 @@ GIF89a....&lt;binary data&gt;
     &lt;content type="application/xml"&gt;
       &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
         &lt;id&gt;223344&lt;/id&gt;
-        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;mediaType&gt;IMAGE&lt;/mediaType&gt;
       &lt;/mediaitem&gt;
     &lt;/content&gt;
     &lt;title /&gt;
@@ -845,7 +847,7 @@ GIF89a....&lt;binary data&gt;
   &lt;content type="application/xml"&gt;
     &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
         &lt;id&gt;223344&lt;/id&gt;
-        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;mediaType&gt;IMAGE&lt;/mediaType&gt;
         &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
         &lt;title&gt;Lena&lt;/title&gt;
     &lt;/mediaitem&gt;
@@ -870,7 +872,7 @@ GIF89a....&lt;binary data&gt;
     &lt;content type="application/xml"&gt;
       &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
         &lt;id&gt;223344&lt;/id&gt;
-        &lt;media_type&gt;IMAGE&lt;/media_type&gt;
+        &lt;mediaType&gt;IMAGE&lt;/mediaType&gt;
         &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
         &lt;title&gt;Lena&lt;/title&gt;
       &lt;/mediaitem&gt;
@@ -882,29 +884,7 @@ GIF89a....&lt;binary data&gt;
 &lt;/feed&gt;
 </artwork>
      </figure>The response indicates that the media item was updated.</t>
-     <t>Step 2: Upload the image in the media item place holder 
-     <figure>
-      <preamble>Request</preamble>
-      <artwork xml:space="preserve">
-POST /album/112233/mediaitem/223344 HTTP/1.1
-&lt;usual headers&gt;
-Accept-Type: application/xml
-Content-Type: image/gif
-Content-Length: length
-GIF89a....&lt;binary data&gt;
-</artwork>
-     </figure>
-     <figure>
-      <preamble>Response</preamble>
-      <artwork xml:space="preserve">
-&lt;response xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
-  &lt;startIndex&gt; 1 &lt;/startIndex&gt;
-  &lt;itemsPerPage&gt; 1 &lt;/itemsPerPage&gt;
-  &lt;totalResults&gt; 1 &lt;/totalResults&gt;
-  &lt;entry&gt; ... &lt;/entry&gt;
-&lt;/response&gt;       
-</artwork>
-     </figure></t>
+     </x:draft>
     </section>
     <section title="Shortcut Upload Method">
      <t>The shortcut upload mechanism is OPTIONAL. This two step process shown
@@ -915,7 +895,7 @@ GIF89a....&lt;binary data&gt;
      <figure>
       <preamble>Request</preamble>
       <artwork xml:space="preserve">
-POST /album/112233/mediaitem/?title=Lena&amp;media_type=IMAGE HTTP/1.1
+POST /album/112233/mediaitem/?title=Lena&amp;mediaType=IMAGE HTTP/1.1
 &lt;usual headers&gt;
 Accept-Type: application/json
 Content-Type: image/gif
@@ -933,7 +913,7 @@ GIF89a....&lt;binary data&gt;
   "entry" : {
     "id" : "223344",
     "title" : "Lena",
-    "media_type" : "IMAGE",
+    "mediaType" : "IMAGE",
   }
 }        
 </artwork>
