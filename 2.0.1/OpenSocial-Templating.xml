@@ -1,0 +1,1427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="opensocial-templating-specification-2-0-1-DRAFT"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title abbrev="OpenSocial Templating">OpenSocial Templating Specification 2.0.1 DRAFT</title>
+  <author fullname='OpenSocial and Gadgets Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="October" year="2011" />
+  <area>General</area>
+  <keyword>OpenSocial</keyword>
+  <keyword>social networking</keyword>
+  <keyword>REST</keyword>
+  <keyword>XML</keyword>
+  <keyword>Extensible Markup Language</keyword>
+  <keyword>JSON</keyword>
+  <keyword>JavaScript Object Notation</keyword>
+  <keyword>Atom</keyword>
+ </front>
+ <middle>
+  <section title="Notation and Conventions">
+   <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in 
+   <xref target="RFC2119">RFC2119</xref>.</t>
+   <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+  </section>
+  <section title="Overview">
+   <t></t>
+   <section title="What is OpenSocial Templating?">
+    <t>OpenSocial Templating (OST) provides a declarative way for gadget
+    developers to create templates by copying and pasting HTML, then making
+    minor modifications to that HTML. Because OST is part of OpenSocial, it
+    also provides a means to bind to the OpenSocial APIs and custom, developer
+    defined variables. OST accomplishes this through tag libraries and special
+    markup.</t>
+       <t>
+           OpenSocial Templating additionally makes use of the
+           OpenSocial Markup Language (OSML) and Expression Language (EL) to bring dynamic
+           processing and custom tag support to gadgets. These items are defined more
+           fully in the
+           <eref target="./Social-Gadget.xml">Social Gadget</eref>
+           and
+           <eref target="./Core-Gadget.xml">Core Gadget</eref>
+           specifications, respectively.
+       </t>
+    <section title="Limitations">
+     <t>An OST implementation can fetch, inject, cache, and store data requests
+     for the application before any client side code executes. OST does not
+     represent a full replacement for JavaScript. OST assumes that applications
+     can fallback to JavaScript whenever a combination of application and
+     container cannot make use of a given OST feature.</t>
+    </section>
+   </section>
+  </section>
+  <section title="Gadget Feature Name">
+   <t>OST creates a new feature name for use in the Gadgets Specification:
+   opensocial-templates. When a Module requires OST, the Module must contain
+   this XML: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;ModulePrefs&gt;
+  &lt;Require feature="opensocial-templates"/&gt;
+&lt;/ModulePrefs&gt;
+</artwork>
+   </figure></t>
+   <t>A common usage of the feature would be with other OpenSocial features. 
+   <figure>
+    <preamble>Example</preamble>
+    <artwork xml:space="preserve">
+&lt;ModulePrefs title="Hello World"&gt;
+  &lt;Require feature="opensocial" version="1.1.0"/&gt;
+  &lt;!-- Allows templates --&gt;
+  &lt;Require feature="opensocial-templates"/&gt;
+  &lt;!-- Allows multiple views to be defined and thus rendered client or server --&gt;
+  &lt;Require feature="views"/&gt;
+&lt;/ModulePrefs&gt;
+</artwork>
+   </figure></t>
+  </section>
+  <section title="Template Format">
+   <t>The canonical template format is a well-formed XML document. This
+   document can include HTML tags which will be output directly when rendering
+   the template, and custom tags which will be evaluated when rendering the
+   template. 
+   <figure>
+    <preamble>Example</preamble>
+    <artwork xml:space="preserve">
+&lt;Template&gt;
+  &lt;div style="font-size: 20px"&gt;Hello world!&lt;/div&gt;
+&lt;/Template&gt;
+</artwork>
+   </figure></t>
+   <t>A common use case will be embedding this XML into an HTML document. The
+   following snippet can be embedded directly into a gadget &lt;Content&gt;
+   section or HTML document: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;script type="text/os-template"&gt;
+  &lt;div style="font-size: 20px"&gt;Hello ${Viewer.name.formatted}!&lt;/div&gt;
+&lt;/script&gt;
+</artwork>
+   </figure>Templates can also define template markup libraries, which will map
+   to XML namespaces.</t>
+   <t>
+   Templates can be used to define inline rendered sections or custom tags.
+   Custom tag templates may be defined inline in the gadget XML or in <xref target="TemplateLibraries">Template Libraries</xref>.  
+   <xref target="Issue-1162">Discussion</xref>
+</t>
+   <section title="Elements and Attributes">
+   <t>
+   Inline templates can be directly embedded in gadget Content blocks using 
+   &lt;script type='text/os-template' &gt; sections or directly within Content
+   blocks having type='osml'.  Custom tag templates may also be embedded inline
+   using os-template script blocks with a @tag attribute, inline with the
+   canonical &lt;Template&gt; syntax, embedded in a gadget XML &lt;Templates&gt;
+   element, or in an externally referenced 
+   <xref target="TemplateLibraries">Template Library</xref>.
+   </t>
+   <section title="/Templates" anchor="TemplatesElement">
+   <t>
+   OpenSocial Templating adds a new &lt;Templates&gt; element as a direct
+   child of the &lt;Module&gt; root.  The format of this element is the same
+   as that defined for <xref target="TemplateLibraries">Template Libraries</xref>.  Custom tag templates defined in this element will be globally available to all views by default.  Any individual custom tag
+   template may be restricted to a specific view(s) by adding a @view attribute
+   to the template definition.  <xref target="Issue-1162">Discussion</xref>
+   </t>
+   </section>
+   
+   </section>
+   
+   
+  </section>
+  <section title="Reserved Attributes">
+   <t>Blocks of markup using OSML appear embedded in other markup within script
+   tags. The type of an OSML script is set to "text/os-template". The only
+   attribute that an OpenSocial OSML processor MUST understand is @tag. The
+   OSML processor MUST ignore any attributes it does not recognize. The
+   OpenSocial specification reserves the following attribute names for future
+   usage: 
+   <list style="symbols">
+    <t>@autoRender</t>
+    <t>@id</t>
+    <t>@name</t>
+   </list>Containers MAY choose to experiment with these attributes to define a
+   consistent meaning and behavior for the attributes in a future release of
+   OpenSocial.</t>
+  </section>
+  <section title="Expressions">
+   <t>Expressions can be embedded into the template XML using the syntax
+   ${Expr}. Variable names, properties, and function names are all case-sensitive.
+   <figure>
+    <preamble>Example template content with an expression</preamble>
+    <artwork xml:space="preserve">
+&lt;div&gt;Hello ${Viewer.Name}&lt;/div&gt;
+</artwork>
+   </figure></t>
+   <t>Expressions are honored inside text nodes and attribute values. They will
+   be ignored inside tag and attribute names.</t>
+   <t>Expressions are defined using a subset of the 
+   <xref target="JSPEL">JSP Expression Language</xref>, with a couple of minor
+   modifications. We use a subset of the JSP Expression Language specification.
+   This allows for expressions that are raw variable references, as in the
+   example above, or expressions with operators: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;div&gt;Next step is ${Step + 1}&lt;/div&gt;
+</artwork>
+   </figure></t>
+   <t>JSP Expression Language allows you to use most standard operators
+   (comparison, arithmetic, etc.), although some operators have an alternate
+   name for use in XML. ${a &lt; b} becomes ${a lt b}, ${a &gt; b} becomes ${a
+   gt b}, ${a &amp;&amp; b} becomes ${a and b}, etc.</t>
+   <t>Expressions are usually evaluated as strings. The only exception is when
+   expressions are in attributes without additional text content, and in this
+   case, the value of the expression is the object referenced, and this object
+   is passed to the template for processing. In the following example, the
+   viewer is passed in to the os:Name template. 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;os:Name person="${Viewer}"/&gt;
+</artwork>
+   </figure></t>
+   <t>Unless an overriding Security Policy is applied, strings are escaped 
+   before inserting into the HTML document. By default
+   strings are HTML escaped, which is the equivalent of setting the "el_escaping" 
+   permission to "html" with a Security Policy.</t>
+   <section title="Expressions and special HTML attributes">
+    <t>HTML specified some element attributes whose mere presence affects
+    browser behavior. For example, the @selected attribute of the
+    &lt;option&gt; tag. An exception is made for this small subset of
+    attributes: if their value contains an expression which evaluates to a
+    "false-like" value (that is any of, null/undefined, the boolean false, the
+    number 0, empty string, or the literal string "false"), the attribute will
+    be removed during template processing.</t>
+    <t>This allows markup like the following to work as expected and cause the
+    Viewer option to become selected: 
+    <figure>
+     <artwork xml:space="preserve">
+&lt;select&gt;
+  &lt;option repeat="${friends}" selected="${Cur.id == Viewer.id}" &gt;${Cur.name.formatted}&lt;/option&gt;
+&lt;/select&gt;                                    
+</artwork>
+    </figure></t>
+    <t>Some examples of tag-attribute combinations to which special processing
+    will apply: 
+    <list style="symbols">
+     <t>@selected attribute of the &lt;option&gt; tag</t>
+     <t>@checked attribute of the &lt;input&gt; tag</t>
+     <t>@disabled attribute of the &lt;input&gt;, &lt;button&gt;,
+     &lt;select&gt; and &lt;textarea&gt; tags</t>
+    </list></t>
+   </section>
+   <section title="Variable evaluation in Expressions">
+    <t>Variables are accessed using Foo.Bar (or Foo.Bar.Baz) notation. .Bar
+    maps to getting the property Bar on the JSON object. If Top and Viewer are
+    JSON objects, then 
+    <figure>
+     <artwork xml:space="preserve">
+${Top.Viewer.Name}
+</artwork>
+    </figure>evaluates to 
+    <figure>
+     <artwork xml:space="preserve">
+data['Viewer']['Name']
+</artwork>
+    </figure></t>
+    <t>Properties of DOM Nodes have special evaluation rules. For a given Node
+    object, ${Node.Param} will attempt to evaluate as follows: 
+    <list style="symbols">
+     <t>First look for the @Param attribute on the node. If it exists, its
+     string value is returned.</t>
+     <t>Next, look for child nodes with the local name "Param" (namespaces are
+     not supported for DOM property evaluation). If no nodes are found, return
+     null. If a single node is found, it is returned. Otherwise a NodeList
+     containing all the found nodes is returned.</t>
+    </list></t>
+    <t>Evaluation of Nodes or lists of Nodes as strings results in the merged
+    text content of these nodes. So &lt;Color&gt;Red&lt;/Color&gt; would become
+    the string "Red". This is mostly applicable to results of ${My} evaluation
+    (see below).</t>
+   </section>
+   <section title="Built-in functions">
+    <t>The EL will provide a number of built-in functions.  The initial 
+  set of functions provides string escaping control.  Containers MAY experiment 
+  by adding functions of their own to the EL.
+  </t>
+       <texttable align="left">
+         <ttcol>EL Function</ttcol>
+         <ttcol>Description</ttcol>
+
+  <c>htmlEncode</c>
+  <c>Encode HTML markup entities.  At minimum escape greater-than and less-than symbols and quotation marks to their encoded equivalents.</c>
+  <c>htmlDecode</c>
+  <c>Unescape an HTML-encoded string.</c>
+  <c>urlEncode</c>
+  <c>URL-encode the contained string.  The behavior should mirror the JavaScript function encodeURIComponent.</c>
+  <c>urlDecode</c>
+  <c>URL-decode the contained string.  The behavior should mirror the JavaScript function decodeURIComponent.</c>
+  <c>filterUrl</c>
+  <c>Apply rules to make the URL safe for inclusion in markup.  Recommendations are to disallow javascript and apply anti-phishing mechanisms.</c>
+  <c>jsStringEscape</c>
+  <c>Escape string for inclusion within JavaScript block.
+    <figure>
+     <artwork xml:space="preserve">
+var x = "${jsStringEscape(someVar)}";
+</artwork>
+    </figure> 
+  </c>
+  </texttable>
+  <xref target="Issue-1176">Discussion</xref>
+   </section>
+<section title="Reserved EL properties">   
+  <t>
+  A number of root-level property names have been reserved for container-controlled values.  
+  A container MAY override values from an external source (ex: JSON data loaded with os:HttpRequest)
+  if it uses any of the reserved keys at the root level of the data object.
+  </t>
+  <list stype="symbols">
+  <t>startIndex</t>
+  <t>totalResults</t>
+  <t>count</t>
+  <t>itemsPerPage</t>
+  <t>sorted</t>
+  <t>filtered</t>
+  </list>
+   </section>
+   </section>
+   <section title="EL access to meta-information of DataPipeline variables">
+    <t>
+  Much of the data available to the EL through the Data Context is generated
+  by Data Pipeline tags.  The underlying REST endpoints that generate this data
+  includes meta-information in addition to the actual data.  Below is an example 
+  of the JSON response for a list of people.
+  
+    <figure>
+     <artwork xml:space="preserve">
+{
+   "startIndex" : 1,
+   "itemsPerPage" : 3,
+   "totalResults" : 100,
+   "entry" : [
+      {"id": "6221", "displayName": "Tom" },
+      {"id": "1222", "displayName": "Dick"},
+      {"id": "925", "displayName": "Harry"}
+   ]
+}
+</artwork>
+    </figure>
+  </t>
+  <t>
+  Any EL statements that access this information begin evaluation from the "entry" key.
+  Assuming the above data was placed under a key "friends", the following EL statement
+  would evaluate to "Dick":
+    <figure>
+     <artwork xml:space="preserve">
+${friends[0].displayName)
+</artwork>
+    </figure></t>
+    <t>
+  Response meta-information that exists above the "entry" key in the raw response
+  may be accessed from the EL key root through the reserved keys "totalResults", "startIndex", etc.  
+  For example, to access the
+  value of "totalResults" from the above example, the following EL statement
+  would be used:
+    <figure>
+     <artwork xml:space="preserve">
+${friends.totalResults)
+</artwork>
+    </figure>
+  The above statement would evaluate to "100".
+  </t>
+  
+  <t>
+  Data pipeline attributes from the originating request tag may be accessed via the EL
+  through the reserved key "Request".  This key exposes the attributes of the original request
+  through the EL.  The below example shows an originating &lt;os:PeopleRequest&gt; and the
+  EL statement to get the count of records requested.
+    <figure>
+     <artwork xml:space="preserve">
+&lt;os:PeopleRequest key="friends" userId="@viewer" groupId="@friends" startIndex="1" count="10"/&gt;
+...
+You requested ${friends.Request.count} records.
+</artwork>
+    </figure></t>
+  <t>
+  Data items added to the data context that are not the result of a data pipeline 
+  request are not required to expose the "Request" key.  An example of this would be
+  data items added via the Javascript API or with the os:Var tag.
+  </t>
+  <t>
+  A container may attach the request attributes from original data pipeline request tag to the response 
+  data object in the data context or may manage the originating request data in an alternate manner.
+  </t>
+  
+   </section>
+  <section title="Variables">
+   <t>Data is used with all calls to render templates. When rendering templates
+   through Javascript, - i.e.:
+   opensocial.template.getTemplate('foo').renderInto(div, data) - data can be
+   passed in explicitly. When no data is supplied, such as when templates are
+   automatically rendered, the default application Data Context, which can be
+   populated declaratively via Data Pipelining, will be used. The data passed
+   in must be a JSON object. The templates will have two 'types' of variables.
+   One set is a set of global objects with reserved names. The other set
+   includes everything else or all other declared JavaScript variables.</t>
+   <section title="Special Variables">
+    <t>Template processing reserves a small set of variables.  Like all variables, 
+  special variables are case-sensitive.</t>
+    <section title="Top">
+     <t>${Top} refers to the data context passed into the template rendering -
+     i.e.: for automatic rendering, ${Top} == Data Context; for programmatic
+     rendering via template.renderInto(div, data) -&gt; ${Top} == data.</t>
+    </section>
+    <section title="Context">
+     <t>${Context} is a holding area for additional variables generated while
+     processing templates. ${Context} will include the following set of
+     properties: 
+     <list style="symbols">
+      <t>${Context.UniqueId} A unique ID of the template being rendered. This
+      value is useful for generating HTML IDs.</t>
+      <t>${Context.Index} The index of the current item in the list that is
+      being processed via a "repeat" tag.</t>
+      <t>${Context.Count} The count of items in the list that is being
+      processed via a "repeat" tag.</t>
+     </list></t>
+    </section>
+    <section title="Cur">
+     <t>${Cur} refers to the current data item being processed, either within a
+     repeater, or specified via the @cur attribute (see below). At the top of
+     the template rendering stack ${Cur} == ${Top}. When a custom tag is
+     invoked, ${Cur} will start out as null.</t>
+    </section>
+    <section title="My">
+     <t>${My} refers to data that is passed into a template via Custom Tag XML.
+     ${My} is only available within templates invoked as Custom Tags.</t>
+     <t>The ${My} variable evaluates to the XML template node that was used to
+     invoke the current Custom Tag, with all expressions, conditional elements
+     and repeated elements already processed.</t>
+     <t>Properties of ${My} are evaluated as with any other DOM node (see
+     above), with one exception: any attribute expressions that would normally
+     evaluate to Objects are not converted to string by default. So, for
+     &lt;foo:Bar person="${Viewer}"/&gt;, ${My.Viewer} will resolve to an
+     Object whose properties can be further accessed:
+     ${My.Viewer.name.formatted}. 
+     <figure>
+      <preamble>Example of a template that uses ${My}</preamble>
+      <artwork xml:space="preserve">
+&lt;script type="text/os-template" xmlns:myapp="http://example.com" tag="myapp:EmployeeCard"&gt;
+  &lt;div class="card" style="background: ${My.color};"&lt; 
+    &lt;img src="${My.employee.photo}"/&gt; ${My.employee.name}
+  &lt;/div&gt;
+&lt;/script&gt;                 
+&lt;script type="text/os-template" xmlns:myapp="http://example.com"&gt;
+  &lt;myapp:EmployeeCard color="red" employee="${Viewer}"/>
+&lt;/script&gt;                                                                     
+</artwork>
+     </figure></t>
+    </section>
+    <section title="Precedence Rules for Special Variables">
+     <t>Special variable names are optional for all but ${Context}. Expressions
+     will be evaluated against each of the other special variable contexts. The
+     first matching variable will be the result of expression evaluation. The
+     order of precedence is ${Cur}, ${My} and then ${Top}. For example,
+     ${Top.Name} == ${Name} unless there exists ${Cur.Name} or ${My.Name}. The
+     following examples show why this is helpful: 
+     <figure>
+      <preamble>Example with special variables in place</preamble>
+      <artwork xml:space="preserve">
+&lt;div repeat="${Top.ViewerFriends}"&gt;
+  &lt;div&gt;${Cur.Name}"&lt;/div&gt;
+  &lt;div repeat="${Cur.Phone}"&gt;${Cur.Number} of type ${Cur.Type}&lt;/div&gt;
+&lt;/div&gt;
+</artwork>
+     </figure>
+     <figure>
+      <preamble>Equivalent script using precedence rules</preamble>
+      <artwork xml:space="preserve">
+&lt;div repeat="${ViewerFriends}"&gt;
+  &lt;div&gt;${Name}"&lt;/div&gt;
+  &lt;div repeat="${Phone}"&gt;${Number} of type ${Type}&lt;/div&gt;
+&lt;/div&gt;
+</artwork>
+     </figure></t>
+     <t>"Top" refers to the data context passed in via Javascript, so ${Top}
+     will return the data passed in during template rendering.</t>
+     <t>Variables are accessed using Foo.Bar (or Foo.Bar.Baz) notation. .Bar
+     maps to getting the property Bar on the JSON object. If Top and Viewer are
+     JSON objects, then 
+     <figure>
+      <artwork xml:space="preserve">
+${Top.Viewer.Name}
+</artwork>
+     </figure>evaluates to 
+     <figure>
+      <artwork xml:space="preserve">
+data['Viewer']['Name']
+</artwork>
+     </figure></t>
+    </section>
+   </section>
+     <section title="Declaring Variables Inline - &lt;os:Var&gt;">
+    <t>Variables may be declared in both inline and custom tag templates
+  with the <eref target="Core-Gadget.xml#osVar">os:Var tag</eref>.  
+  The value of os:Var is processed as defined under <eref target="Core-Gadget.xml#osvarProcessingRules">os:Var Processing Rules</eref></t>
+  <t>
+The &lt;os:Var&gt; tag allows for the declaration of literal variables.
+It may be used in inline custom tag templates, inline templates, and 
+data-pipeline sections.  
+
+    <figure>
+     <preamble>Example of a simple variable</preamble>
+     <artwork xml:space="preserve">&lt;os:Var key="mytemp" value="1"/&gt;
+</artwork>
+    </figure>
+</t>
+    <section title="Scope">
+  <t>
+   When os:Var is used in inline templates it will not be available until after processing
+   the os:Var tag in the render pass.
+  </t>
+    <figure>
+     <preamble>Example of variable with os:Var</preamble>
+     <artwork xml:space="preserve">
+&lt;script  type="text/os-template"&gt;
+  &lt;os:Var key="myvar" value="1"/&gt;
+
+  This value of myvar is ${myvar}
+   
+&lt;/script&gt;  
+   </artwork>
+    </figure>
+
+  <t>
+  Within custom tag templates, &lt;os:Var&gt; defines a new 
+  variable that will be available anywhere within the custom tag template 
+  instance.  When an os:Var tag appears in the 
+  template definition, it will be created after the instance 
+  parameters are attached to ${My}.  
+  In the template definition it will therefore 
+  have access to other custom tag instance parameters and be 
+  able to reference them through the ${My} variable.
+  </t>
+
+    <figure>
+     <preamble>Example of local variable in custom tag definition</preamble>
+     <artwork xml:space="preserve">
+&lt;script tag="my:Foo" type="text/os-template"&gt;
+  &lt;os:Var key="moreWords" value="${My.words} are just some words passed in" />
+  &lt;h1&gt;You said ${My.words}&lt;/h1&gt;
+  ${moreWords}
+&lt;/script&gt;
+
+&lt;script type="text/os-template"&gt;
+  Inline content here.  And then a tag
+  
+  &lt;my:Foo &gt;
+  &lt;words &gt;Good, bad, and ugly&lt;/words&gt;
+  
+  &lt;/my:Foo &gt;
+&lt;/script&gt;
+</artwork>
+    </figure>
+
+
+    </section>
+  
+  </section>
+
+  </section>
+  <section title="Calling Templates">
+   <t>Templates can be rendered automatically, or via a Javascript API
+   available under the opensocial.template namespace (see below). An
+   implementing container may disable the Javascript API for some or all
+   application Views. In this case templates will only be renderable
+   automatically when the application loads.</t>
+   <section title="Automatic Rendering of Templates">
+    <t>Templates embedded into the application markup via &lt;script&gt;
+    elements will be processed automatically when the application loads. By
+    default, templates will be rendered into the application content in the
+    place where they appear in the markup. 
+    <figure>
+     <preamble>Example of an automatically rendered template</preamble>
+     <artwork xml:space="preserve">
+&lt;h1&gt;
+  &lt;script type="text/os-template"&gt;
+    Hello, &lt;os:Name person="${Viewer}"/&gt;
+  &lt;/script&gt;
+&lt;/h1&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>Result of rendering such markup</preamble>
+     <artwork xml:space="preserve">
+&lt;h1&gt;
+  Hello, &lt;span class="name"&gt;John Doe&lt;/span&gt;
+&lt;/h1&gt;
+</artwork>
+    </figure></t>
+    <t>Automatic rendering is done against the application Data Context which
+    can be populated declaratively via Data Pipelining, or programmatically via
+    opensocial.data.DataContext.putDataSet().</t>
+    <t>Automatic rendering can be prevented by setting the
+    "disableAutoProcessing" parameter of the opensocial-templates feature in
+    the gadget spec 
+    <figure>
+     <artwork xml:space="preserve">
+&lt;Require feature="opensocial-templates"&gt;
+  &lt;Param name="disableAutoProcessing"&gt;true&lt;/Param&gt;
+&lt;/Require&gt;
+</artwork>
+    </figure></t>
+   </section>
+   <section title="Required Data">
+    <t>Data required for rendering of inline templates can be specified using
+    the @require attribute. The attribute value must be a comma-separated list
+    of top-level variable names required to render this template. If the
+    application Data Context does not have all of these variables set,
+    automatic rendering of the template will be deferred until the time they
+    become available. 
+    <figure>
+     <preamble>This template will only render when both ${Viewer} and ${Owner}
+     are set</preamble>
+     <artwork xml:space="preserve">
+&lt;script type="text/os-template" require="Viewer, Owner"&gt;
+  Hello, &lt;os:Name person="${Viewer}"/&gt;, welcome to &lt;os:Name person="${Owner}"/&gt;'s application 
+&lt;/script&gt;
+</artwork>
+    </figure></t>
+   </section>
+   <section title="Automatic Re-Rendering">
+    <t>It is possible to request that the template be re-rendered when any of
+    its required data changes. This is done by setting @autoUpdate attribute to
+    "true". When this is set, the template will re-render any time any of its
+    required data is modified via opensocial.data.DataContext.putDataSet(key,
+    data). 
+    <figure>
+     <preamble>Example of using @autoUpdate</preamble>
+     <artwork xml:space="preserve">
+&lt;script type="text/os-template" require="Friend" autoUpdate="true"&gt;
+  You have selected, &lt;os:Name person="${Friend}"/&gt;. 
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+  function setFriend(friend) {
+    opensocial.data.DataContext.putDataSet("Friend", friend);
+  }
+&lt;/script&gt;
+</artwork>
+    </figure></t>
+   </section>
+   <section title="Custom Tags">
+    <t>During rendering templates can call other templates via Custom Tags. You
+    can add a @tag attribute to any template (both on the &lt;Template&gt;
+    element or on the &lt;script&gt; tag for embedded templates). This allows
+    the template to be called by using an XML element of the same name.</t>
+    <t>The value of the @tag attribute must be a namespaced string. Creating
+    custom tags in the default (HTML) namespace is not allowed.</t>
+    <t>Templates defined via inline &lt;script&gt; elements that also specify a
+    @tag attribute do not get rendered in place automatically. 
+    <figure>
+     <preamble>Example of defining a custom tag and then calling it</preamble>
+     <artwork xml:space="preserve">
+&lt;script type="text/os-template" xmlns:myapp="http://example.com/myapp" tag="myapp:HelloWorld"&gt;
+  &lt;div style="font-size: 40px"&gt;Hello World&lt;/div&gt;
+&lt;/script&gt;
+&lt;script type="text/os-template"&gt;
+  &lt;myapp:HelloWorld/&gt;
+&lt;/script&gt;
+</artwork>
+    </figure></t>
+  <section title="Parameters to Custom Tags" >
+    <t>Parameters can be passed into templates as XML attributes or elements.
+    These parameters are accessed using the special variable ${My}: 
+    <figure>
+     <artwork xml:space="preserve">
+&lt;Template tag="myapp:HelloWorld"&gt;
+  &lt;div style="color: ${My.messageColor}"&gt;Your message is: ${My.message}&lt;/div&gt;
+&lt;/Template&gt;
+ 
+&lt;script type="text/os-template"&gt;
+  &lt;myapp:HelloWorld message="Hello World"&gt;
+    &lt;messageColor&gt;blue&lt;/messageColor&gt;
+  &lt;/myapp:HelloWorld&gt;
+&lt;/script&gt;
+</artwork>
+    </figure></t>
+  <t>
+  Custom tag template parameters are resolved prior to invoking the template, much as
+  a function call resolves parameters prior to passing them to the function.
+  Parameters are resolved using the rules below to determine behavior.
+  All examples assume the myapp:HelloWorld custom tag has already been defined.
+  </t>
+   <list style="numbers">
+    <t>Custom tag instance parameter keys are case-sensitive, regardless of if they
+  are registered as attributes or elements.
+  </t>
+    <t>When the same parameter name appears as both an element and an
+  attribute, the attribute-defined parameter will take final precedence.
+    <figure>
+  <preamble>Below code results in: ${My.message} = "Hello World"</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld message="Hello World"&gt;
+    &lt;message&gt;This message is overridden&lt;/message&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+    
+  </t>
+
+    <t>Element parameters that contain attributes will result in an object that has the 
+  attribute values placed as property values of the root object.
+    <figure>
+  <preamble>Below code results in: ${My.messageStyle.color} = "blue"</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;messageStyle color="blue" /&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+  </t>
+    <t>If parameters contain repeated elements with the same name, the
+  custom tag instance will treat them as a node list and construct an array
+  with the element contents as the values of each node.
+    <figure>
+  <preamble>Below code results in an array of strings: ${My.stuff} = ["Hello", "Goodbye", "Good luck"]</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;stuff&gt;Hello&lt;/stuff&gt;
+    &lt;stuff&gt;Goodbye&lt;/stuff&gt;
+    &lt;stuff&gt;Good luck&lt;/stuff&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+  
+  </t>
+  <t>A namespaced parameter where the namespace matches the namespace of the 
+  defined tag will have the parameter value placed in the ${My} variable under the local name. 
+    <figure>
+  <preamble>Below code results in: ${My.messageColor} = "blue"</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;myapp:messageColor&gt;blue&lt;/myapp:messageColor&gt;
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+  
+  </t>
+  <t>A namespaced parameter where the namespace does not match the namespace of the defined tag will be discarded and not registered with the ${My} variable.
+    <figure>
+  <preamble>Below code results in: ${My.messageColor} = "blue" and ${My.message} = undefined</preamble>
+     <artwork xml:space="preserve">
+  &lt;myapp:HelloWorld &gt;
+    &lt;myapp:messageColor&gt;blue&lt;/myapp:messageColor&gt;
+    &lt;otherapp:message&gt;This value doesn't apply&lt;/otherapp:messageColor&gt;  
+  &lt;/myapp:HelloWorld&gt;
+  </artwork>
+    </figure>
+  
+  </t>
+  
+   </list>
+
+
+  </section>
+   </section>
+   <section title="Data Attribute">
+    <t>The scope of data to evaluate (${Cur}) can be explicitly set with the
+    @cur attribute. For example, to repeat over Interests of the first object
+    in Friends, you can use this expression: 
+    <figure>
+     <artwork xml:space="preserve">
+&lt;div cur="${Friends[0]}"&gt;
+  &lt;div repeat="${Interests}"&gt;
+    ${Title}
+  &lt;/div&gt;
+&lt;/div&gt;
+</artwork>
+    </figure></t>
+   </section>
+  </section>
+  <section title="Conditional Content">
+   <t>Content can be displayed conditionally based on evaluation of an
+   expression. Elements with an @if attribute will only be displayed if the @if
+   attribute evaluates to true. For example, the following will only be
+   displayed if Top.YourScore == Top.HighScore: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;div if="${Top.YourScore == Top.HighScore}"&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
+</artwork>
+   </figure></t>
+   <t>The contents of an &lt;os:If&gt; element are only displayed if the
+   @condition attribute evaluates to true. 
+   <figure>
+    <preamble>The example above rewritten using the &lt;os:If&gt;
+    element</preamble>
+    <artwork xml:space="preserve">
+&lt;os:If condition="${Top.YourScore == Top.HighScore}"&gt;
+  &lt;div&gt;You have the high score of ${Top.YourScore}!&lt;/div&gt;
+&lt;/os:If&gt;
+</artwork>
+   </figure></t>
+   <t>Note: The @if attribute, and the @condition attribute of &lt;os:If/&gt;
+   will be evaluated as a boolean. This means null or empty string values will
+   evaluate to "false". A Node, NodeList or non-empty string will evaluate to
+   "true".</t>
+   <t>The use of @if and @repeat attributes on &lt;os:If/&gt; is not
+   supported.</t>
+   <t>The @if attribute can be used on any element within a template other than
+   &lt;os:If/&gt; and &lt;os:Repeat/&gt;. Some examples are as follows: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;!-- Custom tags --&gt;
+&lt;os:Name person="${Top.Owner}" if="${Top.HasOwner}"/&gt;
+  
+&lt;!-- Tag contents --&gt;
+&lt;os:Button&gt;
+  &lt;title&gt;Click me!&lt;/title&gt;
+  &lt;help if="${Top.Viewer.NeedsHelp}"&gt;You need help.&lt;/help&gt;
+&lt;/os:Button&gt;
+</artwork>
+   </figure></t>
+  </section>
+  <section title="Repeated Elements">
+   <t>Tags can be rendered multiple times based on evaluation of an
+   expression.</t>
+   <t>Tags with a @repeat attribute are displayed once for each item in
+   evaluating the expression in the repeat attribute. The current item in the
+   repeated list will be put into the ${Cur} variable.</t>
+   <t>The value of the @repeat attribute will be evaluated as a list. If the
+   result is a scalar value, (including mixed content which evaluates to a
+   string) it will be treated as a list of one element. 
+   <figure>
+    <preamble>Example</preamble>
+    <artwork xml:space="preserve">
+&lt;div repeat="${Top.ViewerFriends}"&gt;
+  Your friend's name is ${Cur.Name}
+&lt;/div&gt;
+</artwork>
+   </figure>The contents of an &lt;os:Repeat&gt; element is displayed once for
+   each item in evaluating the expression in the @expression attribute. The
+   current item in the repeated list will be put into the ${Cur} variable, and
+   a @var attribute can also be used to rename the iteration variable. 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;os:Repeat expression="${Top.ViewerFriends}"&gt;
+  &lt;div&gt;
+    Your friend's name is ${Cur.Name}
+  &lt;/div&gt;
+&lt;/os:Repeat&gt;
+</artwork>
+   </figure>and 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;os:Repeat expression="${Top.ViewerFriends}" var="Friend"&gt;
+  &lt;div&gt;
+    Your friend's name is ${Friend.Name}
+  &lt;/div&gt;
+&lt;/os:Repeat&gt;
+</artwork>
+   </figure></t>
+   <t>The use of @if and @repeat attributes on &lt;os:Repeat/&gt; is not
+   supported.</t>
+   <t>Repeating over an expression that evaluates to a NodeList or a single
+   Node (such as the result of ${My.tag}) will result in one iteration
+   rendering for each Node found. In this case, the ${Cur} variable will be set
+   to the current node for each successive iteration.</t>
+   <t>Repeaters are evaluated before conditionals on the same element. This
+   allows a conditional to apply to each iteration of a repeater. The following
+   template, for example, would list all the viewer's friends with a profile
+   URL: 
+   <figure>
+    <preamble>Repeated elements evaluated on each iteration.</preamble>
+    <artwork xml:space="preserve">
+&lt;div repeat="${Top.ViewerFriends}" if="${Cur.ProfileUrl}"&gt;
+  Link to: &lt;a href="${Cur.ProfileUrl}"&gt;${Cur.Name}&lt;/a&gt;
+&lt;/div&gt;
+</artwork>
+   </figure>
+   <figure>
+    <preamble>This is equivalent to</preamble>
+    <artwork xml:space="preserve">
+&lt;os:Repeat expression="${Top.ViewerFriends}"&gt;
+  &lt;os:If condition="${Cur.ProfileUrl}"&gt;
+    &lt;div&gt;Link to: &lt;a href="${Cur.ProfileUrl}"&gt;${Cur.Name}&lt;/a&gt;&lt;/div&gt;
+  &lt;/os:If&gt;
+&lt;/os:Repeat&gt;
+</artwork>
+   </figure></t>
+   <section title="Loop Context">
+    <t>The ${Context} special variables can be used during repeater processing
+    to access repeater state. Its properties are ${Context.Count} which holds
+    the total number of elements in the repeater list, and ${Context.Index}
+    which is the number of the current iteration, a value from 0 to
+    ${Context.Count} - 1. 
+    <figure>
+     <preamble>Example</preamble>
+     <artwork xml:space="preserve">
+&lt;div repeat="${Top.ViewerFriends}"&gt;
+  Showing friend ${Context.Index + 1} of ${Context.Count}: 
+  Your friend's name is ${Cur.Name}
+&lt;/div&gt;
+</artwork>
+    </figure></t>
+   </section>
+   <section title="Nested Repeaters">
+    <t>To support nested repeaters, custom names can be specified for the
+    current item variable and the current context variable via the @var and
+    @context attributes respectively. The values are then made available as
+    variables specified, as well as with their default names. (So when
+    @var="Foo" is used, each item is made available in ${Cur} and in ${Foo}.) 
+    <figure>
+     <preamble>Example</preamble>
+     <artwork xml:space="preserve">
+&lt;!-- Renaming variable ${Cur} --&gt;
+&lt;ul repeat="${Top.ViewerFriends}" var="Friend"&gt;
+  &lt;li repeat="${Friend.Books}"&gt;
+    &lt;!-- Here ${Cur} refers to the current Book --&gt;
+    ${Friend.Name} likes to read ${Cur}
+  &lt;/li&gt;  
+&lt;/ul&gt;
+ 
+&lt;!-- Specifying an Context variable --&gt;
+&lt;div repeat="rows" context="Outer"&gt;
+  &lt;div repeat="cols" context="Inner"&gt;
+    &lt;myapp:DrawPoint row="${Outer.Index}" col="${Inner.Index}"/&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</artwork>
+    </figure></t>
+   </section>
+  </section>
+  <section title="os:Html">
+   <t>As stated above, all expression evaluation results will be treated as a
+   String, and escaped in a context-appropriate manner. However, there are
+   cases where HTML markup from trusted sources needs to be injected into the
+   template from the DataContext. For such use cases, the built-in
+   &lt;os:Html&gt; tag may be used.</t>
+   <t>The &lt;os:Html&gt; tag will evaluate its @code attribute as a string,
+   and render the resulting code as HTML. 
+   <figure>
+    <preamble>Example of using &lt;os:Html&gt;:</preamble>
+    <artwork xml:space="preserve">
+&lt;div repeat="${BlogEntries}"&gt;
+  &lt;h2&gt;${Cur.Title}&lt;/h2&gt;
+  &lt;p&gt;&lt;os:Html code="${Cur.Summary}"/&gt;&lt;/p&gt;
+  &lt;a href="${Cur.Url}"&gt;Read more...&lt;/a&gt;
+&lt;/div&gt;
+</artwork>
+   </figure>Containers may chose to define what subset of HTML will be honored
+   by the &lt;os:Html&gt; tag, and what will be sanitized away. Containers
+   should allow minimal functionality such as making text bold or changing its
+   color, as well as creating links and inserting images.</t>
+  </section>
+  <section title="os:Render">
+   <t>A template may also define locations to render custom blocks of content.
+   This is done using the &lt;os:Render&gt; tag and the content block is always
+   identified by the @content attribute. The @content attribute names an
+   immediate child node of the template instance or current repeater item if it
+   is a DOM element. The contents of the designated node will be rendered in
+   place of the &lt;os:Render&gt; tag. If multiple child elements match, the
+   container MUST merge the results of all matches into one, concatenated
+   element. If 2 or more &lt;os:Render&gt; elements have the same value for
+   @content, then the resulting evaluation appears once per &lt;os:Render&gt;
+   element. A container MUST ignore any XML elements or other content within
+   the &lt;os:Render&gt; tag. The container MAY emit a diagnostic error to
+   gadgets.log indicating the content being ignored. The container MUST ignore
+   any namespace prefixes on the value of the @content attribute.
+   @content="foo" will match "foo" elements in the same namespace as the
+   template.</t>
+   <t>For example, consider the following template: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;script type="text/os-template" tag="myapp:BoxWithTitle"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates" &gt;
+  &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
+  &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
+&lt;/script&gt;
+</artwork>
+   </figure>The preceding example declares two os:Render elements: title and
+   body. When evaluating a usage of this template, the container will look for
+   two elements at the following paths, ignoring any XML namespace on the
+   elements (
+   <eref target="http://www.w3.org/TR/xpath#section-Node-Set-Functions">
+   XPath</eref>) : 
+   <list style="symbols">
+    <t>/myapp:BoxWithTitle/child::(local-name() = title)</t>
+    <t>/myapp:BoxWithTitle/child::(local-name() = body)</t>
+   </list>Because of the existing processing rules, the contents of the
+   elements will have already been processed by the container. The results of
+   that evaluation are copied into the template in place of the
+   &lt;os:Render&gt; element. Returning to the previous example, a developer
+   may write: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;script type="text/os-template"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates" &gt;
+  &lt;myapp:BoxWithTitle&gt;
+    &lt;myapp:title&gt;This is the title&lt;/myapp:title&gt;
+    &lt;myapp:body&gt;
+      &lt;div style="font-size:40px"&gt;Boo!&lt;/div&gt;
+      &lt;div&gt;from &lt;os:Name person="${Top.Viewer}"/&gt;&lt;/div&gt;
+    &lt;myapp:body&gt;
+  &lt;/myapp:BoxWithTitle&gt;
+&lt;/script&gt;
+</artwork>
+   </figure>When evaluating the above content, a container follows these steps:
+   
+   <list style="numbers">
+    <t>Evaluate the content of the myapp:BoxWithTitle tag. The result nodes
+    will be used to fullfill os:Render directives.</t>
+    <t>Begin evaluation of the myapp:BoxWithTitle template.</t>
+    <t>For each os:Render tag encountered, find the appropriate tags from step
+    (1) that match os:Render's @content.</t>
+    <t>Replace the os:Render tag with child nodes of all the tags found in step
+    (3).</t>
+    <t>Replace the entire myapp:BoxWithTitle tag with the result of rendering
+    the m:BWT template.</t>
+   </list></t>
+   <t>
+    <figure>
+     <preamble>Example: Resulting HTML DOM</preamble>
+     <artwork xml:space="preserve">
+&lt;div class="box-title"&gt;This is the title&lt;/div&gt;
+&lt;div class="box-content"&gt;
+   &lt;div style="font-size:40px"&gt;Boo!&lt;/div&gt;
+   &lt;div&gt;from &lt;a href="http://www.example.com/profile/1234"&gt;Scott&lt;/a&gt;&lt;/div&gt;
+&lt;/div&gt;
+</artwork>
+    </figure>
+   </t>
+   <section title="Nesting">
+    <t>The nature of this feature allows for templates to nest within os:Render
+    tags. Given the evaluation rules, the myapp:BoxWithTitle example could also
+    be used as this: 
+    <figure>
+     <preamble>Template</preamble>
+     <artwork xml:space="preserve">
+&lt;script type="text/os-template" tag="myapp:BoxWithTitle"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates"&gt;
+  &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
+  &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
+  &lt;div&gt;Hi {$My.parameter}&lt;div&gt;
+&lt;/script&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>Gadget Markup</preamble>
+     <artwork xml:space="preserve">
+&lt;script type="text/os-template"
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates"&gt;
+  &lt;myapp:BoxWithTitle parameter="scott"&gt;
+    &lt;myapp:title&gt;This is the title&lt;/myapp:title&gt;
+    &lt;myapp:body&gt;
+      &lt;myapp:BoxWithTitle parameter="chris"&gt;
+          &lt;myapp:title&gt;Inner Title&lt;/myapp:title&gt;
+          &lt;myapp:body&gt;This is goofy&lt;/myapp:body&gt;
+      &lt;/myapp:BoxWithTitle&gt;
+    &lt;/myapp:body&gt;
+  &lt;/myapp:BoxWithTitle&gt;
+&lt;/script&gt;
+</artwork>
+    </figure>
+    <figure>
+     <preamble>Rendered version</preamble>
+     <artwork xml:space="preserve">
+&lt;div class="box-title"&gt;This is the title&lt;/div&gt;
+&lt;div class="box-content"&gt;
+    &lt;div class="box-title"&gt;Inner Title&lt;/div&gt;
+    &lt;div class="box-content"&gt;This is goofy
+        &lt;div&gt;Hi chris&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div&gt;Hi scott&lt;/div&gt;
+&lt;/div&gt;
+</artwork>
+    </figure></t>
+   </section>
+  </section>
+  <section title="Template Libraries" anchor='TemplateLibraries'>
+   <t>While inline templates can be useful for visualizing data, eventually you
+   may want to create standalone, reusable templates. A template library can
+   define one or more template custom tags, but all of them must be in a single
+   namespace. Template libraries are packaged into a sandalone XML file of the
+   following format: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;Templates xmlns:foo="http://foo.com/"&gt;
+  &lt;Namespace prefix="foo" url="http://foo.com/"/&gt;
+ 
+  &lt;Style&gt;
+    &lt;!-- Set global CSS for your library here --&gt;
+    .warning { color: red; }
+  &lt;/Style&gt;
+ 
+  &lt;JavaScript&gt;
+    &lt;!-- Define global functions for your library here --&gt;
+    function usedByAllTemplates() { ... };
+  &lt;/JavaScript&gt;
+ 
+  &lt;!-- Simple declarative tag foo:bar --&gt;
+  &lt;Template tag="foo:bar"&gt;
+    &lt;!-- Define markup for foo:bar here --&gt;
+  &lt;/Template&gt;
+ 
+  &lt;!-- Complex tag foo:baz with local CSS and JavaScript --&gt;
+  &lt;TemplateDef tag="foo:baz"&gt;
+    &lt;Template&gt; &lt;!-- Define markup for foo:baz here --&gt; &lt;/Template&gt;
+    &lt;Style&gt; &lt;!-- Set CSS for foo:baz here --&gt; &lt;/Style&gt;
+    &lt;JavaScript&gt;
+      &lt;!-- Define functions for the foo:baz template here --&gt;
+      function usedByFooBaz() { ... };
+    &lt;/JavaScript&gt;
+  &lt;/TemplateDef&gt;
+&lt;/Templates&gt;
+</artwork>
+   </figure>
+   <figure>
+    <preamble>For example</preamble>
+    <artwork xml:space="preserve">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;Templates xmlns:os="http://opensocial.org/templates"&gt;
+  &lt;Namespace prefix="os" url="http://opensocial.org/templates"&gt;
+  &lt;Style&gt;
+    large-font: {
+      font-size: 20px;
+    }
+  &lt;/Style&gt;
+  &lt;Template tag="os:HelloWorld"&gt;
+    &lt;div style="large-font"&gt;Hello World!&lt;/div&gt;
+  &lt;/Template&gt;
+  &lt;TemplateDef tag="os:ShowPerson"&gt;
+    &lt;Style&gt;
+      profile-image: {
+        padding-right: 5px;
+        width: 32px;
+        height: 32px;
+      }
+    &lt;/Style&gt;
+    &lt;Template&gt;
+      &lt;img if="${My.person.ThumbnailUrl}" src="${My.person.ThumbnailUrl}"
+          class="profile-image"/&gt;
+      &lt;a href="${My.person.ProfileUrl}" target="_top"&gt;${My.person.Name}&lt;/a&gt;
+    &lt;/Template&gt;
+  &lt;/TemplateDef&gt;
+&lt;/Templates&gt;
+</artwork>
+   </figure>Syntax: 
+   <list style="symbols">
+    <t>&lt;Templates&gt;: Declares all the namespaces used in this library to
+    the XML parser. You must put this tag at the outer-most level of your XML
+    file and list all the custom and pre-defined namespaces that you use in
+    this library. Use the syntax xmlns:namespace_prefix="namespace_URL" for
+    each namespace. For example, if you use any tags in the OpenSocial
+    namespace via the OpenSocial Templates library, you must include
+    xmlns:os="http://www.opensocial.org/".</t>
+    <t>&lt;Namespace&gt;: Declares your custom namespace to the OpenSocial
+    Templates API. You should only create one namespace per library file. Set
+    the values of your namespace's prefix and URL using the syntax
+    prefix="namespace_prefix" url="namespace_URL".</t>
+    <t>&lt;Style&gt;: Defines style settings in CSS for your library (at the
+    top-level of the XML file) or individual templates (within
+    &lt;TemplateDef/&gt; tags).</t>
+    <t>&lt;JavaScript&gt;: Defines JavaScript functions for your library (at
+    the top-level of the XML file) or individual templates (within
+    &lt;TemplateDef/&gt; tags).</t>
+    <t>&lt;Template&gt;: Sets declarative markup for a template.</t>
+    <t>&lt;TemplateDef&gt;: Defines a more complex template, which can enclose
+    its own local &lt;Template/&gt;, &lt;Style/&gt;, and &lt;JavaScript/&gt;
+    tags.</t>
+   </list>Containers should load the &lt;os:*&gt; template tags by default, and
+   it is not required that they be defined as a standalone XML file. Other tag
+   libraries can be loaded by default in a container - for example, Example.com
+   might have a set of &lt;example:*&gt; tags available.</t>
+   <section title="Loading Template Libraries">
+    <t>If an application requires a template library to work, it can request
+    the library be loaded before any template processing takes place. This can
+    be done via a &lt;Param name="requireLibrary"&gt; tag placed inside the
+    &lt;Require feature="opensocial-templates"&gt; tag: 
+    <figure>
+     <artwork xml:space="preserve">
+&lt;Require feature="opensocial-templates"&gt;
+  &lt;Param name="requireLibrary"&gt;http://www.example.com/templates.xml&lt;/Param&gt;
+&lt;/Require&gt;                                    
+</artwork>
+    </figure>The Param content must be a URL pointing to a valid Template
+    library XML file. Relative URLs are interpreted in relation to the location
+    of the Gadget Spec XML file.</t>
+    <t>Multiple libraries may be requested by repeated occurrences of the
+    requireLibrary Param: 
+    <figure>
+     <artwork xml:space="preserve">
+&lt;Require feature="opensocial-templates"&gt;
+  &lt;Param name="requireLibrary"&gt;http://www.example.com/templates.xml&lt;/Param&gt;
+  &lt;Param name="requireLibrary"&gt;http://www.example.com/moretemplates.xml&lt;/Param&gt;
+&lt;/Require&gt;                                                                 
+</artwork>
+    </figure>The container will trim all whitespace around each URL. For URLs
+    that legitimately contain whitespace, it must be properly encoded.</t>
+    <t>NOTE: Implementing containers may disallow loading third party template
+    libraries on some or all gadget Views. Additionally, containers may
+    disallow template libraries to inject Javascript code on some or all of the
+    Views.</t>
+   </section>
+  </section>
+  <section title="Localization">
+   <t>Templates will have the ability to substitute localized text content on a
+   per-language basis.</t>
+   <t>Gadgets already have a facility for defining localized messages. In the
+   gadget prefs, you can specify the URL for localized message bundles on a
+   per-language basis: 
+   <figure>
+    <artwork xml:space="preserve">
+&lt;ModulePrefs title="ListenToThis"&gt; 
+  &lt;Locale messages="http://www.listentostuff.com/messages.xml"/&gt; 
+  &lt;Locale lang="de" messages="http://www.listentostuff.com/messages-DE.xml"/&gt; 
+&lt;/ModulePrefs&gt;
+</artwork>
+   </figure>Each bundle is a list of &lt;msg&gt; elements with localized
+   content inside: 
+   <figure>
+    <preamble>For example</preamble>
+    <artwork xml:space="preserve">
+&lt;messagebundle&gt; 
+  &lt;msg name="PLAY_SONG"&gt;Click here to play ${song.title}&lt;/msg&gt; 
+&lt;/messagebundle&gt;
+</artwork>
+   </figure>Also note that in OpenSocial API 0.9, you will be able to inline
+   &lt;msg&gt; elements into the gadget directly without creating separate
+   files for each locale.</t>
+   <t>Localized messages will be accessible via the ${Msg} variable: 
+   <figure>
+    <preamble>For example</preamble>
+    <artwork xml:space="preserve">
+&lt;a href="${song.url}"&gt;${Msg.PLAY_SONG}&lt;/a&gt;
+</artwork>
+   </figure>Any ${} markup in the message body will be honored - in the above
+   example, the ${song.title} reference in the message will be evaluated at the
+   time of template rendering. Repeaters and conditionals in messages will not
+   be processed. Variable markup will be evaluated in the context in which the
+   message is placed. (Note how the message in the example references the
+   ${song} variable available at the point of message inclusion.)</t>
+   <t>It's important to realize that this sets ${Msg} apart from other variable
+   inclusion markup - variable references will NOT be processed in any other
+   output.</t>
+   <t>If a particular message is undefined for a locale and missing from the
+   default bundle (prefs.getMsg(key) returns null in these cases), an error
+   message should be rendered in its place for easy debugging.</t>
+  </section>
+  <section title="Javascript API">
+   <t>Template-related Javascript API may be exposed by implementing containers
+   for some or all views. Such API will allow developers to render templates
+   programmatically.</t>
+   <section title="opensocial.template"
+            anchor="opensocial.template">
+    <!-- ============================== class summary ========================== -->
+    <t>Template-related functionality will be exposed via the
+    opensocial.template namespace object.</t>
+    <!-- ============================= method details ========================== -->
+    <section title="Method Details">
+     <section title="getTemplate">
+      <t>&lt;static&gt; Type: {opensocial.template.Template}
+      opensocial.template.getTemplate(tag)</t>
+      <t>Description: Returns the Template object (see below) registered with
+      "tag", or null if it doesn't exist.</t>
+      <t>Parameters: 
+      <texttable>
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>tag</c>
+       <c>String</c>
+       <c>The tag used to identify the template.</c>
+      </texttable></t>
+      <t>Returns: 
+      <texttable>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>opensocial.template.Template</c>
+       <c>The Template object registered with the specified tag, or null if no
+       such template exists</c>
+      </texttable></t>
+     </section>
+     <section title="process">
+      <t>&lt;static&gt; Type: {void} opensocial.template.process()</t>
+      <t>Description: (Re)processes the application templates, rendering ones
+      that are ready.</t>
+     </section>
+     <section title="disableAutoProcessing">
+      <t>&lt;static&gt; Type: {void}
+      opensocial.template.disableAutoProcessing()</t>
+      <t>Description: Prevent automatic template processing. Equivalent to
+      setting the "disableAutoProcessing" Param. If processing has already
+      happened, this will throw an exception. After automatic processing is
+      disabled, the templates can be processed by calling
+      opensocial.template.process() manually.</t>
+     </section>
+    </section>
+   </section>
+   <section title="opensocial.template.Template"
+            anchor="opensocial.template.Template">
+    <!-- ============================== class summary ========================== -->
+    <t>The result of calling opensocial.template.getTemplate(name) is a
+    Template object that can be rendered programmatically.</t>
+    <!-- ============================= method details ========================== -->
+    <section title="Method Details">
+     <section title="render">
+      <t>Type: {Element} opensocial.template.Template.render(data)</t>
+      <t>Description: Renders the template with supplied JSON data, and returns
+      the DOM Node containing the result.</t>
+      <t>Parameters: 
+      <texttable>
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>data</c>
+       <c>Object</c>
+       <c>The JSON data to use for rendering. This becomes ${Top} in variable
+       evaluation. If this is omitted, opensocial.data.DataContext will be used
+       by default</c>
+      </texttable></t>
+      <t>Returns: 
+      <texttable>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>Element</c>
+       <c>The Element containing DOM created by rendering the template.</c>
+      </texttable></t>
+     </section>
+     <section title="renderInto">
+      <t>Type: {void} opensocial.template.Template.renderInto(element,
+      data)</t>
+      <t>Description: Renders the template with supplied JSON data and inserts
+      the result into the specified DOM element, replacing any previous
+      content</t>
+      <t>Parameters: 
+      <texttable>
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>element</c>
+       <c>Element</c>
+       <c>The DOM element to host the render result. Any current content in
+       this element will be cleared by this method</c>
+       <c>data</c>
+       <c>Object</c>
+       <c>The JSON data to use for rendering. This becomes ${Top} in variable
+       evaluation. If this is omitted, opensocial.data.DataContext will be used
+       by default</c>
+      </texttable></t>
+     </section>
+    </section>
+   </section>
+   <section title="Example of Javascript API use">
+    <t>
+     <figure>
+      <preamble>Example of using Javascript API</preamble>
+      <artwork xml:space="preserve">
+&lt;script type="text/os-template" tag="myapp:songs" xmlns:myapp="http://example.com/myapp"&gt;
+  &lt;h1&gt;Songs in ${playlist}&lt;/h1&gt;
+  &lt;ul&gt;
+    &lt;li repeat="${songs}" var="song"&gt;
+       ${Context.Index + 1}: ${song.Title} by ${song.Artist} (${song.SongLength}) 
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+  function showSongs(playlistName, songArray) {
+    var template = opensocial.template.getTemplate("myapp:songs");
+    var data = {
+      playlist: playlistName,
+      songs: songArray
+    }
+    var outputDiv = document.getElementById("songDiv");
+    template.renderInto(outputDiv, data);
+  }
+  . . .
+  showSongs("My Playlist", [
+    { Title: "Yesterday", Artist: "Beatles", SongLength: "2:35" },
+    { Title: "Thriller", Artist: "Michael Jackson", SongLength: "37:21" }
+  ]); 
+&lt;/script&gt;                                   
+</artwork>
+     </figure>
+    </t>
+   </section>
+  </section>
+ </middle>
+ <back>
+ <references title="Discussion">
+    <reference anchor='Issue-1162'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1162">
+    <front>
+     <title>Simple Gadget Format</title>
+    </front>
+   </reference>
+    <reference anchor='Issue-1176'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1176">
+    <front>
+     <title>Removal of 'os:' prefix as it contains illegal function name characters</title>
+    </front>
+   </reference>    
+   <reference anchor='Issue-1143'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1143">
+    <front>
+     <title>Move security policy to core gadgets</title>
+    </front>
+   </reference>   
+ </references>
+  <references>
+   <reference anchor='RFC2119'>
+    <front>
+     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+     <author initials='S.'
+             surname='Bradner'
+             fullname='Scott Bradner'>
+      <organization abbrev='HarvardU'>Harvard University</organization>
+     </author>
+     <date month='March'
+           year='1997' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2119' />
+   </reference>
+   <reference anchor='RFC2606'>
+    <front>
+     <title>Reserved Top Level DNS Names</title>
+     <author initials='D.'
+             surname='Eastlake'
+             fullname='Donald E. Eastlake 3rd'>
+      <organization abbrev='IBM'>IBM</organization>
+     </author>
+     <author initials='A.'
+             surname='Panitz'
+             fullname='Aliza R. Panitz'></author>
+     <date month='June'
+           year='1999' />
+    </front>
+    <seriesInfo name='RFC'
+                value='2606' />
+   </reference>
+   <reference anchor='JSPEL'
+              target="https://jsp.dev.java.net/spec/jsp-2_1-fr-spec-el.pdf">
+    <front>
+     <title>Java Server Pages Expression Language</title>
+     <author initials='K.'
+             surname='Chung'
+             fullname='Kin-Man Chung'></author>
+     <author initials='P.'
+             surname='DeLisle'
+             fullname='Pierre Delisle'></author>
+     <author initials='M.'
+             surname='Roth'
+             fullname='Mark Roth'></author>
+     <date month='May'
+           year='2006' />
+    </front>
+   </reference>
+  </references>
+ </back>
+</rfc>
+
