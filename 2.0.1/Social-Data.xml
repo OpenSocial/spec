@@ -5,16 +5,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-data-specification-2-0-1-DRAFT"
+     docName="opensocial-social-data-specification-2-0-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title>OpenSocial Social Data Specification 2.0.1 DRAFT</title>
+  <title>OpenSocial Social Data Specification 2.0.1</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="October" year="2011" />
+  <date month="November" year="2011" />
   <abstract>
    <t>This document defines all the data objects used in the
    OpenSocial APIs. Objects defined here make use of the <xref
@@ -806,7 +806,7 @@ COMMA          = <US-ASCII comma (44)>
    <section title="Message"
             anchor="Message">
      <t>Valid definitions for Message-Field are listed in the table below.</t>
-     <x:draft note="Issue 1180 - Missing datatypes in message section" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1180">
+     <xref target="Issue-1180">Discussion</xref>
      <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
       <ttcol align="left" width="21%">Field Type</ttcol>
@@ -871,7 +871,7 @@ COMMA          = <US-ASCII comma (44)>
       include 'alternate', alternate for for this mailbox (text/html
       being the most common).</c>
      </texttable>
-     </x:draft>
+     
     <t>A Message example follows. For brevity, details of the 'sender' field,
     an OpenSocial Person, are omitted. </t>
     <figure>
@@ -975,16 +975,13 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="Person"
             anchor="Person">
-     <x:draft note="Issue 1218 - Person required fields inconsistency" 
-              href="http://code.google.com/p/opensocial-resources/issues/detail?id=1218">
      <t>Each person returned MUST include the "id" and "name" fields 
      with non-empty values, but all other fields
      are optional, and it is recognized that not all Service Providers
      are able to provide data for all the supported fields. The field
      list below is broad so that there is a standard field name
      available among Service Providers that do support any of these
-     fields.</t>
-     </x:draft>
+     fields. <xref target="Issue-1218">Discussion</xref></t>
      <t>There are two special Person objects that can be requested
      directly: the VIEWER and the OWNER. To understand the
      distinction, imagine you're checking out a coworker's profile on
@@ -2204,6 +2201,18 @@ Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
      <title>Proposal to Modify the Social Data Model in OS 2.0</title>
     </front>
    </reference>
+   <reference anchor='Issue-1218'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1218">
+    <front>
+     <title>Person required fields inconsistency</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1180'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1180">
+    <front>
+     <title>Missing datatypes in message section</title>
+    </front>
+   </reference> 
   </references>
   <references>
    <reference anchor='RFC2119'>

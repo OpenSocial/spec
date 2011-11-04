@@ -4,16 +4,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-core-gadget-specification-2-0-1-DRAFT"
+     docName="opensocial-core-gadget-specification-2-0-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification 2.0.1 DRAFT</title>
+  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification 2.0.1</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-<date month="October" year="2011" />
+<date month="November" year="2011" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -644,9 +644,10 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       </section>
      </section>
     
-   <x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">    
+       
      <section title="/ModulePrefs/OAuth2"
               anchor="OAuth2Element">
+      <xref target='Issue-1209'>Discussion</xref>
       <t>Supplies the Container with OAuth 2.0 service configuration for the
       gadget. For details, see
       <xref target="OAuth">OAuth</xref>. This tag has no attributes and has
@@ -692,7 +693,6 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        </section>
       </section>
      </section>
-</x:draft>
     </section>
     
     <section title="Security Policy" anchor='SecurityPolicy'>
@@ -1059,9 +1059,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
     <t>oauth_request_token: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</t>
     <t>oauth_request_token_secret: gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</t>
     <t>oauth_service_name: gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</t>
-    <x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">
-    <t>oauth2_scope: gadgets.io.RequestParameters.OAUTH2_SCOPE</t>
-    </x:draft>
+    <t>oauth2_scope: gadgets.io.RequestParameters.OAUTH2_SCOPE <xref target="Issue-1209">Discussion</xref></t>
     <t>oauth_token_name: gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</t>
     <t>oauth_use_token: gadgets.io.RequestParameters.OAUTH_USE_TOKEN</t>
     <t>refresh_interval: gadgets.io.RequestParameters.REFRESH_INTERVAL</t>
@@ -1880,11 +1878,10 @@ gadgets.io.makeRequest(url, callback, params);
         from its XML spec. If unspecified, defaults to "".</t>
         <t hangText="gadgets.io.RequestParameters.OAUTH2_SCOPE" 
         anchor="gadgets.io.RequestParameters.OAUTH2_SCOPE">
-        <x:draft note="Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">The value of the 
-        OAuth 2.0 scope parameter to be used with this request.  Access Token Scope is
+        The value of the OAuth 2.0 scope parameter to be used with this request.  Access Token Scope is
         defined in Section 3.3 of the <xref target='draft-ietf-oauth-v2-22'>
-        OAuth 2.0</xref> specification.
-        </x:draft></t>
+        OAuth 2.0</xref> specification.  <xref target="Issue-1209">Discussion</xref>
+        </t>
         <t hangText="gadgets.io.RequestParameters.OAUTH_TOKEN_NAME">The
         nickname the gadget uses to refer to an OAuth token granting access to
         a particular resources. If unspecified, defaults to "". Gadgets can use
@@ -4058,8 +4055,7 @@ dataset would contain content resembling:
  <back>
   <section title="Gadget XML Schema"
            anchor="GadgetXmlSchema">
-   <t>
-<x:draft note="Multiple issues: Issue 1212 - Core Gadget Specification missing Content/@authz attribute in XSD, Issue 1209 - OAuth 2.0 service configuration in ModulePrefs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">
+   <t> 
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0"?&gt;
@@ -4295,8 +4291,9 @@ dataset would contain content resembling:
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
-    </x:draft>
 <xref target="Issue-1142">Discussion</xref>
+<xref target="Issue-1209">Discussion</xref>
+<xref target="Issue-1212">Discussion</xref>
    </t>
   </section>
   <section title="Message Bundle Schema"
@@ -7203,6 +7200,21 @@ Content-Type: application/embed+json
      <title>OAuth 2.0 Support</title>
     </front>
    </reference>
+   
+   <reference anchor='Issue-1209'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1209">
+    <front>
+     <title>OAuth 2.0 service configuration in ModulePrefs</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1212'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1212">
+    <front>
+     <title>Core Gadget Specification missing Content/@authz attribute in XSD</title>
+    </front>
+   </reference>
+   
   </references>
   <!-- Real references -->
   <references>

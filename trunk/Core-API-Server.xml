@@ -5,16 +5,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-core-api-server-specification-2-0-1-DRAFT"
+     docName="opensocial-core-api-server-specification-2-0-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-API-Server">OpenSocial Core API Server Specification 2.0.1 DRAFT</title>
+  <title abbrev="Core-API-Server">OpenSocial Core API Server Specification 2.0.1</title>
   <author fullname="OpenSocial and Gadgets Specification Group">
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-<date month="October" year="2011" />
+<date month="November" year="2011" />
   <abstract>
    <t>This document describes a method for making information
    and services programatically available on the internet.</t>
@@ -790,8 +790,7 @@ RPC-Error = "{"
      <section title="Content Upload" anchor="Content-Upload">
     <section title="Two Step Upload"
              anchor="twoStepUpload">
-     <x:draft note="Issue 1211 - Content Upload spec consistency check/cleanup" 
-              href="http://code.google.com/p/opensocial-resources/issues/detail?id=1211">
+     <xref target="Issue-1211">Discussion</xref>
      <t>Content Upload is a generic mechanism to allow for a standard way to
      upload content.  This mechanism MAY be used to upload to an
      existing Album, MediaItem endpoint, or where appropriate. In most scenarios an uploaded
@@ -826,7 +825,7 @@ GIF89a....&lt;binary data&gt;
     &lt;content type="application/xml"&gt;
       &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
         &lt;id&gt;223344&lt;/id&gt;
-        &lt;mediaType&gt;IMAGE&lt;/mediaType&gt;
+        &lt;type&gt;IMAGE&lt;/type&gt;
       &lt;/mediaitem&gt;
     &lt;/content&gt;
     &lt;title /&gt;
@@ -847,7 +846,7 @@ GIF89a....&lt;binary data&gt;
   &lt;content type="application/xml"&gt;
     &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
         &lt;id&gt;223344&lt;/id&gt;
-        &lt;mediaType&gt;IMAGE&lt;/mediaType&gt;
+        &lt;type&gt;IMAGE&lt;/type&gt;
         &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
         &lt;title&gt;Lena&lt;/title&gt;
     &lt;/mediaitem&gt;
@@ -872,7 +871,7 @@ GIF89a....&lt;binary data&gt;
     &lt;content type="application/xml"&gt;
       &lt;mediaitem xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
         &lt;id&gt;223344&lt;/id&gt;
-        &lt;mediaType&gt;IMAGE&lt;/mediaType&gt;
+        &lt;type&gt;IMAGE&lt;/type&gt;
         &lt;url&gt;http://cdn.example.org/223344.gif&lt;/url&gt;
         &lt;title&gt;Lena&lt;/title&gt;
       &lt;/mediaitem&gt;
@@ -884,7 +883,7 @@ GIF89a....&lt;binary data&gt;
 &lt;/feed&gt;
 </artwork>
      </figure>The response indicates that the media item was updated.</t>
-     </x:draft>
+     
     </section>
     <section title="Shortcut Upload Method">
      <t>The shortcut upload mechanism is OPTIONAL. This two step process shown
@@ -895,7 +894,7 @@ GIF89a....&lt;binary data&gt;
      <figure>
       <preamble>Request</preamble>
       <artwork xml:space="preserve">
-POST /album/112233/mediaitem/?title=Lena&amp;mediaType=IMAGE HTTP/1.1
+POST /album/112233/mediaitem/?title=Lena&amp;type=IMAGE HTTP/1.1
 &lt;usual headers&gt;
 Accept-Type: application/json
 Content-Type: image/gif
@@ -913,7 +912,7 @@ GIF89a....&lt;binary data&gt;
   "entry" : {
     "id" : "223344",
     "title" : "Lena",
-    "mediaType" : "IMAGE",
+    "type" : "IMAGE",
   }
 }        
 </artwork>
@@ -1572,6 +1571,12 @@ Content-Type: application/json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
     <front>
      <title>OAuth 2.0 Support</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1211'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1211">
+    <front>
+     <title>Content Upload spec consistency check/cleanup</title>
     </front>
    </reference>
   </references>

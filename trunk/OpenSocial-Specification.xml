@@ -4,16 +4,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-specification-2-0-1-DRAFT"
+     docName="opensocial-specification-2-0-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="OpenSocial Specification">OpenSocial Specification 2.0.1 DRAFT</title>
+  <title abbrev="OpenSocial Specification">OpenSocial Specification 2.0.1</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="October" year="2011" />
+  <date month="November" year="2011" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -434,21 +434,24 @@ http://someOpenSocialContainer/social/rest/people/john.doe/@self?format=xml&fiel
 
 
 <section title="OpenSocial Reserved Namespace">
-<x:draft note="Issue 1137 - Reserve namespaces for opensocial contructs" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1137">
+<xref target='Issue-1137'>Discussion</xref>
 <t>The "org.opensocial" is a reserved namespace for use throughout the specification. Implementors MUST NOT introduce unspecified properties of the namespace.</t>
-</x:draft>
 </section> <!-- Reserved Namespace -->
 
 </section> <!-- Extensions Root -->
-
-
-
-  
-  
   
   
  </middle>
  <back>
+ <references title="Discussion">
+ <!-- Spec change/issue discussion -->
+   <reference anchor='Issue-1137'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1137">
+    <front>
+      <title>Reserve namespace for OpenSocial constructs</title>
+    </front>
+   </reference>
+ </references>
   <references>
    <reference anchor='RFC2119'>
     <front>

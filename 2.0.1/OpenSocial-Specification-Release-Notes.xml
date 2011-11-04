@@ -43,9 +43,7 @@
                List of
                <eref target='http://code.google.com/p/opensocial-resources/'>opensocial-resources</eref>
                project issues published in OpenSocial 2.0.1 is accessible at <eref
-                   target="http://code.google.com/p/opensocial-resources/issues/list?can=2&amp;q=OpenSocial%3D2.0.1&amp;colspec=ID+Type+Container+Stars+Summary+Status&amp;cells=tiles">
-                   http://code.google.com/p/opensocial-resources/issues/list?can=2&amp;q=OpenSocial%3D2.0.1&amp;colspec=ID+Type+Container+Stars+Summary+Status&amp;cells=tiles
-                   </eref>.  (TODO: Create bit.ly address for final query after voting.)
+                   target="http://bit.ly/os201publishedspecissues">http://bit.ly/os201publishedspecissues</eref>.
            </t>       
         </section>
     </section>
