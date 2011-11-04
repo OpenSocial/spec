@@ -1309,7 +1309,7 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#MediaItem">MediaItem</eref>
 
-<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "mediaItem.create"
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "mediaItems.create"
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>CreateMediaItem-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = MediaItem-Id
