@@ -26,6 +26,29 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
+     <section title="Version 2.0.1" anchor="OpenSocial201">
+        <section title="Major Changes" anchor="OpenSocial201MajorChanges">
+          <section title="OAuth 2.0 Support Finalized">
+              <t>
+              OpenSocial 2.0.1 revised the OAuth 2.0 related parts of OpenSocial and moved support out of incubating.
+              As part of these changes, an OAuth2 element was also introduced to Gadget ModulePrefs.  
+              The API in OpenSocial 2.0.1 is based upon revision 22 of the OAuth 2.0 draft specification 
+              which is currently under AD evaluation at IETF.  
+              OpenSocial 2.0 continues to support OAuth 1.0a in addition to OAuth 2.0.
+              </t>
+          </section>
+        </section>
+        <section title="Published Issues" anchor="PublishedInOS201">
+           <t>
+               List of
+               <eref target='http://code.google.com/p/opensocial-resources/'>opensocial-resources</eref>
+               project issues published in OpenSocial 2.0.1 is accessible at <eref
+                   target="http://code.google.com/p/opensocial-resources/issues/list?can=2&amp;q=OpenSocial%3D2.0.1&amp;colspec=ID+Type+Container+Stars+Summary+Status&amp;cells=tiles">
+                   http://code.google.com/p/opensocial-resources/issues/list?can=2&amp;q=OpenSocial%3D2.0.1&amp;colspec=ID+Type+Container+Stars+Summary+Status&amp;cells=tiles
+                   </eref>.  (TODO: Create bit.ly address for final query after voting.)
+           </t>       
+        </section>
+    </section>
     <section title="Version 2.0" anchor="OpenSocial20">
         <section title="Major Changes" anchor="OpenSocial20MajorChanges">
             <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
