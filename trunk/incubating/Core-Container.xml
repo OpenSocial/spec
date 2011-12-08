@@ -1028,6 +1028,52 @@ var myNavigateToHandler = function(gadgetUrl, opt_params){
 container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler );
 	      </artwork>
         </section>
+        <section title="addListener" anchor="container.actions.addlistener">
+          <t>container.Container.actions.addListener(listener, opt_actionId)</t>
+          <t>Description: Allows the container to listen for actions firing. The actions feature
+          calls the listener upon execution of an action, with the same arguments as the 
+          gadgets.actions.runAction(actionId, opt_selection).</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>listener</c>
+            <c>Function</c>
+            <c>The listener</c>
+            <c>opt_actionId</c>
+            <c>String</c>
+            <c>An optional action id.  If not provided, listener will be notified for all action ids.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork type="code">
+container.Container.actions.addListener(function(actionId, opt_selection) {
+  // Possibly handle some ui positioning or other ui related operation when this interesting action is run.
+}, "some.interesting.gadget.action");
+          </artwork>
+        </section>
+        <section title="removeListener" anchor="container.actions.removelistener">
+          <t>container.Container.actions.removeListener(listener)</t>
+          <t>Description: Remove the listener from the collection of listeners.  The listener will no longer
+          be called by the actions feature.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>listener</c>
+            <c>Function</c>
+            <c>The listener to remove</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork type="code">
+var listener = function() {
+  // Possibly handle some ui positioning or other ui related operation when this interesting action is run.
+};
+container.Container.actions.addListener(listener, "some.interesting.gadget.action");
+container.Container.actions.removeListener(listener);
+          </artwork>
+        </section>
         <section title="Handling the view and view_target Parameters " anchor="ActionsOptParams">
 		   <t>
 		    Actions may specify the view to render or the target location in the container UI to render the gadget.
