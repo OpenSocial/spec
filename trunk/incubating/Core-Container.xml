@@ -504,9 +504,9 @@
      gadget's metadata.
     </t>
     <t hangText="GET_PREFERENCES">
-     A callback function that will return the preferences to use when asking the server 
-     to render a gadget or when asking the server for gadget metadata.  The format 
-     returned here should be the same as is required for USER_PREFS 
+     A function that will asynchronously fetch the preferences to use when asking the
+     server to render a gadget or when asking the server for gadget metadata. The 
+     format of the preferences here should be the same as is required for USER_PREFS 
      <xref target="ConfiguringGadgetRender"></xref>. It will be 
      passed the following parameters:
 
@@ -520,6 +520,10 @@
       <c>gadgetUrl</c>
       <c>string</c>
       <c>Gadget Url</c>
+      <c>callback</c>
+      <c>function(/*Object*/ preferences)</c>
+      <c>An asynchronous callback that will receive the value of the fetched 
+       preferences, if any.</c>
      </texttable>
     </t>
     <t hangText="SET_PREFERENCES">

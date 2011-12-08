@@ -5,18 +5,6 @@ The community will vote on that change record.
 Please see http://docs.opensocial.org/display/OSD/Spec+Changes for more details
 
 
-OpenSocial 2.0.1 Proposals
+OpenSocial 2.0.x Proposals
 ------------------------
-Missing datatypes in message section (http://code.google.com/p/opensocial-resources/issues/detail?id=1180)
-OAuth 2.0 service configuration in ModulePrefs (http://code.google.com/p/opensocial-resources/issues/detail?id=1209)
-Content upload spec consistency (http://code.google.com/p/opensocial-resources/issues/detail?id=1211)
-Core Gadget Specification missing Content/@authz attribute in XSD (http://code.google.com/p/opensocial-resources/issues/detail?id=1212) 
-Person required fields inconsistency (http://code.google.com/p/opensocial-resources/issues/detail?id=1218)
-Remove incubating tags from OAuth 2.0 sections (http://code.google.com/p/opensocial-resources/issues/detail?id=1220)
-Reserve namespaces for opensocial contructs (http://code.google.com/p/opensocial-resources/issues/detail?id=1137)
-
-
-Call for Community Votes
-Date Range  - Description
--------------------------
-26-Aug-2011 - 02-Sep-2011   Approve Ryan Baxter as a committer to the OpenSocial Resources Project (rjbaxter@us.ibm.com // rbaxter85@gmail.com)
+Update common container GET_PREFERENCES interface to be async (http://code.google.com/p/opensocial-resources/issues/detail?id=1203)
