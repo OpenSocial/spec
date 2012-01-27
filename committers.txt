@@ -1,11 +1,12 @@
 The purpose of this document is to act as a mechanism to enable voting by the community on new committers for the spec. 
-This will work in similar fashing to voting on spec changes, where a row will be added for each person nominated.
+This will work in similar fashion to voting on spec changes, where a row will be added for each person nominated.
 Their membership in OpenSocial MUST be validated prior to them being added to this document.
 
 
 Committer Name		Google Account Email	Email (if different)	Verified Foundation Member
 --------------  	-------------------		--------------------	-------------------------- 
-Mathew Marum		mgmarum@gmail.com		mgmarum@us.ibm.com		Yes
+Matthew Marum		  mgmarum@gmail.com		  mgmarum@us.ibm.com		Yes
+Ryan Baxter       rbaxter85@gmail.com   rjbaxter@us.ibm.com   Yes
 
 
 
