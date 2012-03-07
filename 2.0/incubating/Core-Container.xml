@@ -326,47 +326,73 @@
     </section>
     <section title="addGadgetLifecycleCallback" anchor="container.Container.addGadgetLifecycleCallback">
     <xref target="Issue-1185">Discussion</xref>
-     <t>container.Container.addGadgetLifecycleCallback(lifeCycleCallback)</t>
+     <t>container.Container.addGadgetLifecycleCallback(name, lifeCycleCallback)</t>
       <t>
-        Add a callback object to be called when a gadget is added, navigated to or closed.
+        Add a named callback object to be called when a gadget is added, navigated to or closed.  The object 
+        should be a map of lifecycle event names to handler functions.
       </t>
       <t>Parameters:
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
+          <c>name</c>
+          <c>string</c>
+          <c>The name of the callback object you are adding</c>
           <c>lifeCycleCallback</c>
           <c>function</c>
           <c>
-            The callback function to call when the gadget lifecycle changes. Needs to have preloaded(metadataResponse), 
-            navigated(gadgetSite), closed(gadgetSite) and unloaded(gadgetURL) methods to react to lifecycle events
-            These are invoked(respectively) by the <xref target="container.Container.preloadGadgets">preloadGadgets</xref>, 
-            <xref target="container.Container.navigateGadget">navigateGadget</xref>, and 
-            <xref target="container.Container.closeGadget">closeGadget</xref> and 
-            <xref target="container.Container.unloadGadgets">unloadGadgets</xref> container methods.  Containers may also
-            choose to call some of the 
-            <eref target="../Core-Gadget.xml#LifeCycleEvents">gadget lifecycle events</eref> 
-            in the core gadget spec in order to inform the gadget host
-            that the gadget has been added/removed from the container.
+            The callback object.  When lifecycle events occur, any matching function in this object will be fired.
+            Supported lifecycle events:
+            <list style="hanging">
+	            <t hangText="osapi.container.CallbackType.ON_BEFORE_PRELOAD">
+	              Called before a gadget(s) is preloaded.
+	            </t>
+	            <t hangText="osapi.container.CallbackType.ON_PRELOADED">
+		            Called after a gadget(s) has finished preloading.
+	            </t>
+	            <t hangText="osapi.container.CallbackType.ON_BEFORE_NAVIGATE">
+		            Called before navigate is called.
+	            </t>
+	            <t hangText="osapi.container.CallbackType.ON_NAVIGATED">
+                Called after navigation has completed.
+              </t>
+              <t hangText="osapi.container.CallbackType.ON_BEFORE_CLOSE">
+                Called before a gadget is closed.
+              </t>
+              <t hangText="osapi.container.CallbackType.ON_CLOSED">
+                Called after a gadget has been closed.
+              </t>
+              <t hangText="osapi.container.CallbackType.ON_BEFORE_UNLOAD">
+                Called before a gadget has been unloaded.
+              </t>
+              <t hangText="osapi.container.CallbackType.ON_UNLOADED">
+                Called after a gadget has been unloaded.
+              </t>
+              <t hangText="osapi.container.CallbackType.ON_BEFORE_RENDER">
+                Called before render is called.
+              </t>
+              <t hangText="osapi.container.CallbackType.ON_RENDER">
+                Called after a gadget has rendered.
+              </t>
+	          </list>
           </c>
         </texttable>
       </t>
     </section>
       <section title="removeGadgetLifecycleCallback" anchor="container.Container.removeGadgetLifecycleCallback">
-     <t>container.Container.removeGadgetLifecycleCallback(lifeCycleCallback)</t>
+     <t>container.Container.removeGadgetLifecycleCallback(name)</t>
       <t>
-        Remove a lifecycle callback object from the container's registry.
+        Remove a named lifecycle callback object from the container's registry.
       </t>
       <t>Parameters:
         <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>lifeCycleCallback</c>
-          <c>function</c>
-          <c>
-           remove a lifecycle callback previously registered with the container 
-          </c>
+          <c>name</c>
+          <c>string</c>
+          <c>Name of the lifecycle callback object to remove</c>
         </texttable>
       </t>
     </section>
