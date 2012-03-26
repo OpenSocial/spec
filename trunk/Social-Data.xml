@@ -5,16 +5,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-data-specification-2-0-1"
+     docName="opensocial-social-data-specification-2-5-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title>OpenSocial Social Data Specification 2.0.1</title>
+  <title>OpenSocial Social Data Specification 2.5.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="November" year="2011" />
+  <date month="March" year="2012" />
   <abstract>
    <t>This document defines all the data objects used in the
    OpenSocial APIs. Objects defined here make use of the <xref
@@ -754,7 +754,7 @@ COMMA          = <US-ASCII comma (44)>
       <ttcol align="left" width="21%">Field Type</ttcol>
       <ttcol align="left">Description</ttcol>
       <c>id</c>
-      <c><x:ref>Group-ID</x:ref></c>
+      <c><x:ref>Group-Id</x:ref></c>
       <c>Unique ID for this group <x:highlight>Required</x:highlight>.</c>
       <c>title</c>
       <c>String</c>
@@ -1809,21 +1809,21 @@ COMMA          = <US-ASCII comma (44)>
 </artwork>
      </figure>
    </section>
-   <section title="AppId" anchor="appId">
+   <section title="App Id" anchor="App-Id">
     
-     <t>appId is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.  <xref target='Issue-1140'>Discussion</xref></t>
+     <t>The app Id is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.  <xref target='Issue-1140'>Discussion</xref></t>
     
    </section>
 
 
-   <section title="Group ID"
-            anchor="Group-ID">
-    <t>The group ID must only contain alphanumeric (A-Za-z0-9) characters,
+   <section title="Group Id"
+            anchor="Group-Id">
+    <t>The group Id must only contain alphanumeric (A-Za-z0-9) characters,
     underscore(_), dot(.) or dash(-), and must uniquely identify the group in a
     container.</t>
     <artwork type="abnf"
          xml:space="preserve">
-Group-ID = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" / "@friends" / "@all"
+Group-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" / "@friends" / "@all"
 </artwork>
    </section>
    <section title="MediaItem"

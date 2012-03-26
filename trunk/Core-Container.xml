@@ -4,29 +4,21 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="core-container-specification-2-0-1-INCUBATING"
+     docName="core-container-specification-2-5-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-Container">Core Container Specification 2.0.1 INCUBATING</title>
+  <title abbrev="Core-Container">Core Container Specification 2.5.0</title>
   <author fullname='OpenSocial and Container Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="November" year="2011" />
+  <date month="March" year="2012" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>Core Container</keyword>
  </front>
  <middle>
-
-     <section title="Incubating Status" anchor="incubatingstatus">
-         <t>All content in this specification of OpenSocial is considered to be incubating. It is provided as a
-             guide to the developers wishing to implement this specification. The API defined in this specification
-             is provisional, and while the community will work to keep the API stable, it may change based on
-             implementation experience, additional requirements, or other factors.
-         </t>
-     </section>
 
 
   <section title="Definitions" anchor="Definitions">

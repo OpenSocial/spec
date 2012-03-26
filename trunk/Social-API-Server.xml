@@ -5,16 +5,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-api-server-specification-2-0-1"
+     docName="opensocial-social-api-server-specification-2-5-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Social-API-Server">OpenSocial Social API Server Specification 2.0.1</title>
+  <title abbrev="Social-API-Server">OpenSocial Social API Server Specification 2.5.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="November" year="2011" />
+  <date month="March" year="2012" />
   <abstract>
    <t>This document describes a method for making social network information
    and services programatically available on the internet.</t>
@@ -249,7 +249,7 @@ Content-Type: application/json
           <c>User ID of person or people to retrieve.  Defaults to "@me", which MUST return the currently logged in user.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The Group ID of the group of users related to User ID.  Defaults to "@self", which MUST return only the Person object(s) specified by the userId parameter.</c>
+          <c>The Group Id of the group of users related to User ID.  Defaults to "@self", which MUST return only the Person object(s) specified by the userId parameter.</c>
           <c>fields</c>
           <c><eref target="Core-Data.xml#Array">Array</eref>&lt;String&gt;</c>
           <c>An array of Person field names.  For standard values, see the <eref target="./Social-Data.xml#Person">Person</eref> object.</c>
@@ -399,7 +399,7 @@ Content-Type: application/json
           <c>User ID of the person initiating the relationship request.  Defaults to "@me", which MUST return the currently logged in user.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The Group ID specifying the type of relationship.  Defaults to "@friends".</c>
+          <c>The Group Id specifying the type of relationship.  Defaults to "@friends".</c>
           <c>person</c>
           <c><eref target="Social-Data.xml#Person">Person</eref></c>
           <c>The target of the relationship.</c>
@@ -481,7 +481,7 @@ Content-Type: application/json
           <c>User ID of the person initiating the update request.  Defaults to "@me", which MUST return the currently logged in user.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The Group ID specifying the type of relationship.  Defaults to "@self".</c>
+          <c>The Group Id specifying the type of relationship.  Defaults to "@self".</c>
           <c>person</c>
           <c><eref target="Social-Data.xml#Person">Person</eref></c>
           <c>A Person object containing the updated fields.</c>
@@ -650,7 +650,7 @@ Content-Type: application/json
           <c>User ID of the person initiating the group deletion request.  Defaults to "@me", which MUST return the currently logged in user.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>Group ID specifying group to be deleted.</c>
+          <c>Group Id specifying group to be deleted.</c>
          </texttable>
      </section>
 
@@ -674,7 +674,7 @@ Content-Type: application/json
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> [ "/" (Activity-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Activity-Id&gt;) ] ] 
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activities/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Social-Data.xml#App-Id">App-Id</eref> [ "/" (Activity-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Activity-Id&gt;) ] ] 
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetActivities-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -695,7 +695,7 @@ Content-Type: application/json
           <c>User ID(s) of the person whose activities are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The group ID of the group of users whose activities are to be returned.  Defaults to "@self", which MUST return only the Activity objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>The group Id of the group of users whose activities are to be returned.  Defaults to "@self", which MUST return only the Activity objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>appId</c>
           <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
           <c>Optional. Specifies that the response should only contain activities generated by the given appId. If not included, the container MUST return activities created by the currently authenticated app. In the REST protocol, the appId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
@@ -822,7 +822,7 @@ Content-Type: application/json
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> [ "/" (Activity-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Activity-Id&gt;) ] ] 
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Social-Data.xml#App-Id">App-Id</eref> [ "/" (Activity-Id / <eref target="Core-Data.xml#Array">Array</eref>&lt;Activity-Id&gt;) ] ] 
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetActivityStreams-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -846,7 +846,7 @@ http://api.example.org/rest/activitystreams/john.doe/@self/@app/object1,object2<
           <c>User ID(s) of the person whose activities are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The group ID of the group of users whose ActivityEntries are to be returned.  Defaults to "@self", which MUST return only the ActivityEntries specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>The group Id of the group of users whose ActivityEntries are to be returned.  Defaults to "@self", which MUST return only the ActivityEntries specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>appId</c>
           <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
           <c>Optional. Specifies that the response should only contain ActivityEntries generated by the given appId. If not included, the container MUST return ActivityEntries created by the currently authenticated app. In the REST protocol, the appId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
@@ -981,7 +981,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=activ
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> [ "/" <eref target="Social-Data.xml#App-Id">App-Id</eref> ] 
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetAppData-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -1001,7 +1001,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=activ
           <c>User ID(s) of the person whose AppData is to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The group ID of the group of users whose AppData is to be returned.  Defaults to "@self", which MUST return only the AppData objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>The group Id of the group of users whose AppData is to be returned.  Defaults to "@self", which MUST return only the AppData objects specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>appId</c>
           <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
           <c>Optional. Specifies that the response should only contain AppData generated by the given appId. If not included, the container MUST return AppData created by the currently authenticated app. In the REST protocol, the appId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
@@ -1022,7 +1022,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=activ
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Social-Data.xml#App-Id">App-Id</eref> ] 
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#AppData">AppData</eref>
 
@@ -1088,7 +1088,7 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Core-Data.xml#App-Id">App-Id</eref> ] 
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/appdata/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" <eref target="Social-Data.xml#App-Id">App-Id</eref> ] 
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -1150,7 +1150,7 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
           <c>User ID(s) of the person whose Albums are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The group ID of the group of users whose Albums are to be returned.  Defaults to "@self", which MUST return only the Albums specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>The group Id of the group of users whose Albums are to be returned.  Defaults to "@self", which MUST return only the Albums specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>appId</c>
           <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
           <c>Optional. Specifies that the response should only contain Albums generated by the given appId. If not included, the container MUST return Albums created by the currently authenticated app. In the REST protocol, the appId is not used, indicating the container MUST return Albums created by the currently authenticated app.</c>
@@ -1287,12 +1287,12 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
           <c>User ID(s) of the person whose MediaItems are to be returned.  Defaults to "@me", indicating the currently authenticated user. In the REST protocol, userId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The group ID of the group of users whose MediaItems are to be returned.  Defaults to "@self", which MUST return only the MediaItems specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
+          <c>The group Id of the group of users whose MediaItems are to be returned.  Defaults to "@self", which MUST return only the MediaItems specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>albumId</c>
           <c><eref target="Core-Data.xml#Object-Id">Object-Id</eref></c>
           <c>The ID of the album whose MediaItems are to be returned.  If no albumId is provided, then the container SHOULD return media items from all albums.  In the REST protocol, the albumId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>appId</c>
-          <c><eref target="Core-Data.xml#App-Id">App-Id</eref></c>
+          <c><eref target="Social-Data.xml#App-Id">App-Id</eref></c>
           <c>Optional. Specifies that the response should only contain MediaItems generated by the given appId. If not included, the container MUST return MediaItems created by the currently authenticated app. In the REST protocol, the appId is not used, indicating the container MUST return MediaItems created by the currently authenticated app.</c>
           <c>id</c>
           <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>

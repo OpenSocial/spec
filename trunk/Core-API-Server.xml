@@ -757,7 +757,7 @@ RPC-Error = "{"
         <t>Each API call from a gadget to the Core Gadget Server has a request context that usually includes
            authentication and authorization information. Typically, the context
            information includes the requester id (the user initiating the request) and
-           app ID (the application, or whatever is acting as the user's agent). It may
+           app Id (the application, or whatever is acting as the user's agent). It may
            include other core container-specific information.  The requesting application
            and user may be implied through the OAuth tokens, or may be provided explicitly
            in the xoauth_requestor_id optional parameter.  Request contexts can also

@@ -4,16 +4,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-core-gadget-specification-2-0-1"
+     docName="opensocial-core-gadget-specification-2-5-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification 2.0.1</title>
+  <title abbrev="Core-Gadget">OpenSocial Core Gadget Specification 2.5.0</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-<date month="November" year="2011" />
+<date month="March" year="2012" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -1176,7 +1176,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    attribute on the root Module element, and the versions of any Features
    they use by including the @version attribute on
    /ModulePrefs/Require and /ModulePrefs/Optional elements.</t>
-   <t>The version of this specification is "1.1.0". The versions of standard
+   <t>The versions of standard
    Features defined by this specification are detailed in
    <xref target="RequireAndOptional">ModulePrefs</xref>. Extensions to the OpenSocial
    specification MUST define the version of any Features specified by the
