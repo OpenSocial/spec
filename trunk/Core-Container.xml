@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type='text/xsl' href='../OpenSocial.xslt' ?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
