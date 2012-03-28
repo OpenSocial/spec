@@ -1251,7 +1251,22 @@ container.Container.actions.removeListener(listener);
          <c>
           Optional parameter, the view that indicates where to open the gadget. For example, tab, dialog or modaldialog.
          </c>
-        </texttable>
+         <c>opt_coordinates </c>
+         <c>Object</c>
+         <c>
+          Object containing the desired absolute positioning css parameters 
+          (top|bottom|left|right) with appropriate values. 
+          
+          Container implementations SHOULD honor optionally specified 
+          coordinates for the FLOAT viewTarget. Containers MAY honor
+          coordinates for any other target they choose.
+         </c>
+         <c>opt_rel </c>
+         <c>Element</c>
+         <c>
+          The element to which opt_coordinates values are relative.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref>
        </t>
        <t>Returns:
         <texttable align="left">
@@ -1279,7 +1294,22 @@ container.Container.actions.removeListener(listener);
          <c>
           Optional parameter, the view that indicates where to open the gadget. For example, tab, dialog or modaldialog.
          </c>
-        </texttable>
+         <c>opt_coordinates </c>
+         <c>Object</c>
+         <c>
+          Object containing the desired absolute positioning css parameters 
+          (top|bottom|left|right) with appropriate values. 
+                    
+          Container implementations SHOULD honor optionally specified 
+          coordinates for the FLOAT viewTarget. Containers MAY honor
+          coordinates for any other target they choose.
+         </c>
+         <c>opt_rel </c>
+         <c>Element</c>
+         <c>
+          The element to which opt_coordinates values are relative.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref>
        </t>
        <t>Returns:
         <texttable align="left">
@@ -1308,7 +1338,22 @@ container.Container.actions.removeListener(listener);
           Optional parameter, the view target to open. If the view target is not included 
           it is up to the container to choose how to open this URL.
          </c>
-        </texttable>
+         <c>opt_coordinates </c>
+         <c>Object</c>
+         <c>
+          Object containing the desired absolute positioning css parameters 
+          (top|bottom|left|right) with appropriate values. 
+          
+          Container implementations SHOULD honor optionally specified 
+          coordinates for the FLOAT viewTarget. Containers MAY honor
+          coordinates for any other target they choose.
+         </c>
+         <c>opt_rel </c>
+         <c>Element</c>
+         <c>
+          The element to which opt_coordinates values are relative.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref>
        </t>
        <t>Returns:
         <texttable align="left">
@@ -1407,7 +1452,13 @@ container.Container.addMixin('foo', function() { ... });
     <front>
      <title>View Enhancements To Support Opening Of Gadgets and URLs by the Container</title>
     </front>
-   </reference>   
+   </reference>
+   <reference anchor='Issue-1231'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1231">
+    <front>
+     <title>Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations</title>
+    </front>
+   </reference>
   </references> 
  </back>
 </rfc>

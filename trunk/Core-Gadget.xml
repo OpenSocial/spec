@@ -2740,6 +2740,7 @@ var lang = prefs.getLang();
          The following parameters may be included in this object. </c>
         </texttable></t>
        <t>opt_params:
+       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
         <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
@@ -2754,7 +2755,20 @@ var lang = prefs.getLang();
          <c>viewParams </c>
          <c>Object</c>
          <c>View parameters for the view being rendered.</c>
-        </texttable></t>
+         <c>coordinates</c>
+         <c>Object</c>
+         <c>
+           Object containing the desired absolute positioning css parameters 
+           (top|bottom|left|right) with appropriate values. All values are 
+           relative to the calling gadget. Do not specify top AND bottom or
+           left AND right parameters to indirectly define height and width. Use 
+           viewParams for that. The result of doing so here is undefined.
+           
+           Container implementations SHOULD honor optionally specified 
+           coordinates for the FLOAT viewTarget. Containers MAY honor 
+           coordinates for any other target they choose.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref></x:draft></t>
      </section>
      <section title="openEmbeddedExperience" 
      anchor="gadgets.views.openEmbeddedExperience">
@@ -2788,6 +2802,7 @@ var lang = prefs.getLang();
          The following parameters may be included in this object. </c>
         </texttable></t>
        <t>opt_params:
+       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
         <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
@@ -2799,7 +2814,21 @@ var lang = prefs.getLang();
          <c>viewParams </c>
          <c>Object</c>
          <c>View parameters for the view being rendered.</c>
-        </texttable></t>
+         <c>coordinates</c>
+         <c>Object</c>
+         <c>
+           Object containing the desired absolute positioning css parameters 
+           (top|bottom|left|right) with appropriate values. All values are 
+           relative to the calling gadget. Do not specify top AND bottom or
+           left AND right parameters to indirectly define height and width. Use 
+           viewParams for that. The result of doing so here is undefined.
+           
+           Container implementations SHOULD honor optionally specified 
+           coordinates for the FLOAT viewTarget. Containers MAY honor 
+           coordinates for any other target they choose.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref>
+        </x:draft></t>
      </section>
      <section title="openUrl"
               anchor="gadgets.views.openUrl">
@@ -2808,6 +2837,7 @@ var lang = prefs.getLang();
        based on the target view. The container would open the view in a dialog,
        if opt_viewTarget=dialog or the gadgets view in a tab for opt_viewTarget=tab.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
+       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
         <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
@@ -2822,7 +2852,20 @@ var lang = prefs.getLang();
          <c>opt_viewTarget </c>
          <c>string </c>
          <c>Optional parameter,the view that indicates where to open the URL.</c>
-        </texttable></t>
+         <c>opt_coordinates</c>
+         <c>Object</c>
+         <c>
+           Optional parameter, Object containing the desired absolute 
+           positioning css parameters (top|bottom|left|right) with appropriate
+           values. All values are relative to the calling gadget. You may 
+           specify top AND bottom or left AND right parameters to indirectly 
+           define height and width.
+           
+           Container implementations SHOULD honor optionally specified 
+           coordinates for the FLOAT viewTarget. Containers MAY honor 
+           coordinates for any other target they choose.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref></x:draft></t>
      </section>
      <section title="close"
               anchor="gadgets.views.close">
@@ -7215,6 +7258,12 @@ Content-Type: application/embed+json
     </front>
    </reference>
    
+   <reference anchor='Issue-1231'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1231">
+    <front>
+     <title>Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations</title>
+    </front>
+   </reference>
   </references>
   <!-- Real references -->
   <references>
