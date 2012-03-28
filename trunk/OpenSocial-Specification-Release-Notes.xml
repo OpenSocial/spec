@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="November" year="2011" />
+  <date month="March" year="2012" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -26,6 +26,14 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
+      <section title="Version 2.5.0" anchor="OpenSocial250">
+        <section title="Major Changes" anchor="OpenSocial250MajorChanges">
+
+        </section>
+        <section title="Published Issues" anchor="PublishedInOS250">
+       
+        </section>
+    </section>
      <section title="Version 2.0.1" anchor="OpenSocial201">
         <section title="Major Changes" anchor="OpenSocial201MajorChanges">
           <section title="OAuth 2.0 Support Finalized" anchor="OAuthFinalizedInOpenSocial201">
