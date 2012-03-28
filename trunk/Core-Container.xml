@@ -345,7 +345,7 @@
         </texttable>
       </t>
     </section>
-      <section title="removeGadgetLifecycleCallback" anchor="container.Container.removeGadgetLifecycleCallback">
+    <section title="removeGadgetLifecycleCallback" anchor="container.Container.removeGadgetLifecycleCallback">
      <t>container.Container.removeGadgetLifecycleCallback(lifeCycleCallback)</t>
       <t>
         Remove a lifecycle callback object from the container's registry.
@@ -359,6 +359,55 @@
           <c>function</c>
           <c>
            remove a lifecycle callback previously registered with the container 
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="updateContainerSecurityToken" anchor="container.Container.updateContainerSecurityToken">
+     <t>container.Container.updateContainerSecurityToken(callback, token, ttl)</t>
+      <t>
+        Update and schedule refreshing of container token.  This function will
+        use the config function 
+        <xref target="Configuring-The-Container">osapi.container.ContainerConfig.GET_CONTAINER_TOKEN</xref>
+        to fetch a container token if needed, unless the token is specified, in
+        which case the token will be updated with the provided value immediately.
+        Will call the supplied callback when complete. If no refresh is necessary,
+        callback will be called immediately. All arguments are optional. This
+        function always executes asynchronously. Example:
+        <figure>
+          <artwork xml:space="preserve">
+var Container; // my already created container object (trust me)
+Container.updateContainerSecurityToken(null, "123132413123124eefdsaf12ewefsdf", 3600 /* 1 hour */);
+// or
+Container.updateContainerSecurityToken(function() {
+  // Perform operation that needs to be done with a valid security token.
+});
+// or
+Container.updateContainerSecurityToken(function() {
+  // Perform operation that needs to be done with a valid security token.
+}, "123qefwsdafqw4rawerfasdgv", 1800 /* 30 min */);
+          </artwork>
+        </figure>
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>callback</c>
+          <c>function</c>
+          <c>Called when new security token has been set in the container.</c>
+          <c>token</c>
+          <c>String</c>
+          <c>
+           The security token to set immediately. If this is specified, ttl
+           must also be specified.
+          </c>
+          <c>ttl</c>
+          <c>number</c>
+          <c>
+           Time in seconds that the token is valid for. If this is specified,
+           then token must also be specified.
           </c>
         </texttable>
       </t>
@@ -537,6 +586,40 @@
       <c>object</c>
       <c>Preferences to persist.  The format supplied here will be the same as is 
        required for USER_PREFS <xref target="ConfiguringGadgetRender"></xref>.</c>
+     </texttable>
+    </t>
+    <t hangText="GET_CONTAINER_TOKEN">
+     A callback function used to retrieve a security token for the container. 
+     Containers who specify this config value can call 
+     CommonContainer.updateContainerSecurityToken after the creation of the
+     common container to start the scheduling of container token refreshes. It
+     will be passed the following parameters:
+
+     <texttable align="left">
+      <ttcol>Name</ttcol>
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>result</c>
+      <c>function</c>
+      <c>Deliver the result of the token fetch by calling result(token, ttl) with 
+       the updated token and the token's new time-to-live in seconds. This
+       callback function must be called with unspecified values in the event of
+       an error. Example: 
+        <figure>
+        	<artwork xml:space="preserve">
+var config = {};
+config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = function(result) {
+  var token, ttl, error = false;
+  /* Do work to set token and ttl values */
+  if (error) {
+  	result();
+  } else {
+  	result(token, ttl);
+  }
+};      
+        	</artwork>
+        </figure>
+      </c>
      </texttable>
     </t>
    </list>
