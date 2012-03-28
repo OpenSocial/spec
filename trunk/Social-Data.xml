@@ -366,7 +366,7 @@ COMMA          = <US-ASCII comma (44)>
                <c>Describes the application that generated the activity. An activity MAY contain a generator property
                    whose value is a single <eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>.
                    OpenSocial note: If an OpenSocial application created the Activity Entry, this value SHOULD be the <xref
-                           target="appId">appId</xref>.
+                           target="App-Id">appId</xref>.
                </c>
                <c>icon</c>
                <c>
@@ -1809,13 +1809,25 @@ COMMA          = <US-ASCII comma (44)>
 </artwork>
      </figure>
    </section>
+   <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1223" note="Issue 1223:  App-Id &amp; @app definitions missing">
    <section title="App Id" anchor="App-Id">
     
-     <t>The app Id is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.  <xref target='Issue-1140'>Discussion</xref></t>
-    
+     <t>The app Id is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.  There are reserved values for common cases.  <xref target='Issue-1140'>Discussion</xref></t>
+    <artwork type="abnf"
+         xml:space="preserve">
+App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
+</artwork>
+     <t>The reserved values are defined in the following table:</t>
+     <texttable align="left">
+       <ttcol>Value</ttcol>
+       <ttcol>Description</ttcol>
+       <c>@app</c>
+       <c>The application currently in use.</c>
+     </texttable>
    </section>
 
-
+   <xref target='Issue-1223'>Discussion</xref>
+</x:draft>
    <section title="Group Id"
             anchor="Group-Id">
     <t>The group Id must only contain alphanumeric (A-Za-z0-9) characters,
@@ -2211,6 +2223,12 @@ Group-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" /
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1180">
     <front>
      <title>Missing datatypes in message section</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1223'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1223">
+    <front>
+     <title>App-Id &amp; @app definitions missing</title>
     </front>
    </reference> 
   </references>
