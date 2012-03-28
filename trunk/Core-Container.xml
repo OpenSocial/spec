@@ -1324,8 +1324,10 @@ container.Container.actions.removeListener(listener);
       <section title="destroyElement" anchor="container.views.destroyElement">
        <t>container.views.destroyElement(site)</t>
        <t>
-        Description: Method called when a gadget wants to close itself or the 
-        parent gadget wants to close a gadget or URL site it has opened.
+        Description: Method called when a gadget wants to close, or a gadget that used the open-views 
+        feature to open a gadget view wants to close that gadget view.  This method MUST ultimately call
+        container.closeGadget(site) so that the gadget's lifecycle events are completed in addition to 
+        any DOM cleanup the container implementation may wish to do.
        </t>
        <t>Parameters:
         <texttable align="left">
