@@ -278,24 +278,26 @@ Content-Type: text/xml
   &lt;startIndex&gt; 1 &lt;/startIndex&gt;
   &lt;itemsPerPage&gt; 2 &lt;/itemsPerPage&gt;
   &lt;totalResults&gt; 100 &lt;/totalResults&gt;
-  &lt;entry&gt;
-    &lt;person&gt;
-      &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
-      &lt;name&gt;
-        &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
-      &lt;/name&gt;
-      &lt;gender&gt;female&lt;/gender&gt;
-    &lt;/person&gt;
-  &lt;/entry&gt;
-  &lt;entry&gt;
-    &lt;person&gt;
-      &lt;id&gt;VMK92BFH3DNWRYX39673DF&lt;/id&gt;
-      &lt;name&gt;
-        &lt;unstructured&gt;John Smith&lt;/unstructured&gt;
-      &lt;/name&gt;
-      &lt;gender&gt;male&lt;/gender&gt;
-    &lt;/person&gt;
-  &lt;/entry&gt; 
+  &lt;list&gt;
+    &lt;entry&gt;
+      &lt;person&gt;
+        &lt;id&gt;34KJDCSKJN2HHF0DW20394&lt;/id&gt;
+        &lt;name&gt;
+          &lt;unstructured&gt;Jane Doe&lt;/unstructured&gt;
+        &lt;/name&gt;
+        &lt;gender&gt;female&lt;/gender&gt;
+      &lt;/person&gt;
+    &lt;/entry&gt;
+    &lt;entry&gt;
+      &lt;person&gt;
+        &lt;id&gt;VMK92BFH3DNWRYX39673DF&lt;/id&gt;
+        &lt;name&gt;
+          &lt;unstructured&gt;John Smith&lt;/unstructured&gt;
+        &lt;/name&gt;
+        &lt;gender&gt;male&lt;/gender&gt;
+      &lt;/person&gt;
+    &lt;/entry&gt;
+  &lt;/list&gt;
 &lt;/response&gt;
 </artwork>
       </t>
@@ -328,7 +330,7 @@ Content-Type: application/json
      "startIndex" : 1
      "itemsPerPage" : 2
      "totalResults" : 100
-     "entry" : [
+     "list" : [
        {
          "id" : "34KJDCSKJN2HHF0DW20394",
          "name" : { "unstructured" : "Jane Doe"},
