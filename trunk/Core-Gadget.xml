@@ -5258,6 +5258,7 @@ gadgets.selection.setSelection(selection);
    </section>
    <section title="gadgets.skins"
             anchor="gadgets.skins">
+<x:deprecated href="http://code.google.com/p/opensocial-resources/issues/detail?id=1275" note="Deprecated in OpenSocial 2.5">            
     <!-- ============================== class summary ========================== -->
     <t>Provides operations for getting display information about the currently
     shown skin.</t>
@@ -5286,9 +5287,11 @@ gadgets.selection.setSelection(selection);
       </texttable></t>
      </section>
     </section>
+</x:deprecated>
    </section>
    <section title="gadgets.skins.Property"
             anchor="gadgets.skins.Property">
+<x:deprecated href="http://code.google.com/p/opensocial-resources/issues/detail?id=1275" note="Deprecated in OpenSocial 2.5">      
     <!-- ============================== class summary ========================== -->
     <t>All of the display values that can be fetched and used in the gadgets
     UI. These are the supported keys for the
@@ -5313,9 +5316,11 @@ gadgets.selection.setSelection(selection);
       The color in which the main font should be rendered. This
       field may be used interchangeably with the string 'FONT_COLOR'.</t>
     </list>
+</x:deprecated>
    </section>
    <section title="gadgets.Tab"
             anchor="gadgets.Tab">
+    <x:deprecated href="http://code.google.com/p/opensocial-resources/issues/detail?id=1275" note="Deprecated in OpenSocial 2.5">
     <!-- ============================== class summary ========================== -->
     <t>Tab class for gadgets. You create tabs using the TabSet addTab() method.
     To get Tab objects, use the TabSet getSelectedTab() or getTabs() methods.
@@ -5387,9 +5392,11 @@ gadgets.selection.setSelection(selection);
       </texttable></t>
      </section>
     </section>
+    </x:deprecated>
    </section>
    <section title="gadgets.TabSet"
             anchor="gadgets.TabSet">
+<x:deprecated href="http://code.google.com/p/opensocial-resources/issues/detail?id=1275" note="Deprecated in OpenSocial 2.5">      
     <!-- ============================== class summary ========================== -->
     <t>A class gadgets can use to make tabs.</t>
     <!-- ============================== constructor details ==================== -->
@@ -5576,6 +5583,7 @@ gadgets.selection.setSelection(selection);
       </texttable></t>
      </section>
     </section>
+    </x:deprecated>
    </section>
    <section title="gadgets.window"
             anchor="gadgets.window">

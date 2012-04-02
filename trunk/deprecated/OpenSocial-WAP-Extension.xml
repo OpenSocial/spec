@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?xml-stylesheet type='text/xsl' href='../OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN" "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
      docName="opensocial-wap-extension-specification-2-5-0-draft"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
   <front>
-    <title abbrev="WAP-Extension">OpenSocial WAP Extension Specification 2.5.0 DRAFT</title>
+    <title abbrev="WAP-Extension">DEPRECATED OpenSocial WAP Extension Specification 2.5.0 DRAFT</title>
     <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
@@ -24,6 +24,14 @@
     <keyword>Atom</keyword>
   </front>
   <middle>
+  
+       <section title="Specification Deprecated in OpenSocial 2.5" anchor="deprecatedspec">
+         <t>All content in this specification of OpenSocial is deprecated as of OpenSocial 2.5. It is provided as a
+             guide to the developers wishing to implement this specification for compatibility purposes. 
+             The API defined in this specification is subject to removal at the next major release of the OpenSocial specification.
+         </t>
+     </section>
+     
     <section title="Notation and Conventions">
       <t>Keywords such as, "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" used in this
@@ -33,7 +41,7 @@
     </section>
     <section title="Overview">
       <t>OpenSocial Containers have a standard design that provides JavaScript APIs for enabling rich web applications within a Web browser via an IFrame sandbox. This works well for the typical use case, since most modern web browswers have support JavaScript as well as IFrames. However, when running applications on WAP enabled devices, JavaScript &amp; IFrames are not always available. As it stands today, OpenSocial Gadgets cannot run on most WAP devices.</t>
-   		Many people access the Internet via mobile devices. There are even countries where Internet access is more available on mobile devices than PCs.
+   		<t>Many people access the Internet via mobile devices. There are even countries where Internet access is more available on mobile devices than PCs.</t>
       <t>The OpenSocial WAP Extension is defines how to support mobile devices which do not support JavaScript or IFrames. An application Requiring this extension uses OpenSocial RESTful APIs to retrieve OpenSocial Data, such as Social Data from a Social Networking Site (SNS.) This document describes an architecture and common features required to enable an OpenSocial WAP Server via this OpenSocial WAP Extension. An implementation wishing to support WAP devices SHOULD support features described in this document.</t>
     </section>
     <section title="Compliance">
