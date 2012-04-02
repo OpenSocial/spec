@@ -938,7 +938,7 @@ data-pipeline sections.
    <figure>
     <artwork xml:space="preserve">
 &lt;script type="text/os-template" tag="myapp:BoxWithTitle"
-    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates" &gt;
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/" &gt;
   &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
   &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
 &lt;/script&gt;
@@ -960,7 +960,7 @@ data-pipeline sections.
    <figure>
     <artwork xml:space="preserve">
 &lt;script type="text/os-template"
-    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates" &gt;
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/" &gt;
   &lt;myapp:BoxWithTitle&gt;
     &lt;myapp:title&gt;This is the title&lt;/myapp:title&gt;
     &lt;myapp:body&gt;
@@ -1003,7 +1003,7 @@ data-pipeline sections.
      <preamble>Template</preamble>
      <artwork xml:space="preserve">
 &lt;script type="text/os-template" tag="myapp:BoxWithTitle"
-    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates"&gt;
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/"&gt;
   &lt;div class="box-title"&gt;&lt;os:Render content="title"/&gt;&lt;/div&gt;
   &lt;div class="box-content"&gt;&lt;os:Render content="body"/&gt;&lt;/div&gt;
   &lt;div&gt;Hi {$My.parameter}&lt;div&gt;
@@ -1014,7 +1014,7 @@ data-pipeline sections.
      <preamble>Gadget Markup</preamble>
      <artwork xml:space="preserve">
 &lt;script type="text/os-template"
-    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/templates"&gt;
+    xmlns:myapp="http://example.com/myapp" xmlns:os="http://opensocial.org/"&gt;
   &lt;myapp:BoxWithTitle parameter="scott"&gt;
     &lt;myapp:title&gt;This is the title&lt;/myapp:title&gt;
     &lt;myapp:body&gt;
@@ -1084,8 +1084,8 @@ data-pipeline sections.
     <preamble>For example</preamble>
     <artwork xml:space="preserve">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;Templates xmlns:os="http://opensocial.org/templates"&gt;
-  &lt;Namespace prefix="os" url="http://opensocial.org/templates"&gt;
+&lt;Templates xmlns:os="http://opensocial.org/"&gt;
+  &lt;Namespace prefix="os" url="http://opensocial.org/"&gt;
   &lt;Style&gt;
     large-font: {
       font-size: 20px;
