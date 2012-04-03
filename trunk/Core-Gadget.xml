@@ -4098,8 +4098,11 @@ dataset would contain content resembling:
  <back>
   <section title="Gadget XML Schema"
            anchor="GadgetXmlSchema">
+           
    <t> 
+   <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1224" note="Issue 1224: Missing ExternalServices tag in the gadget schema">
     <figure>
+    
      <artwork xml:space="preserve">
 &lt;?xml version="1.0"?&gt;
 &lt;xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"&gt;
@@ -4291,6 +4294,17 @@ dataset would contain content resembling:
             &lt;/xs:simpleContent&gt;
           &lt;/xs:complexType&gt;
         &lt;/xs:element&gt;
+        &lt;xs:element name="ExternalServices" minOccurs="0" maxOccurs="1"&gt;
+          &lt;xs:complexType&gt;
+            &lt;xs:sequence&gt;
+              &lt;xs:element name="ServiceTag" maxOccurs="unbounded"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:attribute name="alias" type="xs:string" use="required"/&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+            &lt;/xs:sequence&gt;
+          &lt;/xs:complexType&gt;
+        &lt;/xs:element&gt;
       &lt;/xs:sequence&gt;
       &lt;xs:attribute name="specificationVersion" type="xs:string" use="optional" default="1.0.0"/&gt;
     &lt;/xs:complexType&gt;
@@ -4334,6 +4348,8 @@ dataset would contain content resembling:
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
+<xref target="Issue-1224">Discussion</xref>
+</x:draft>
 <xref target="Issue-1142">Discussion</xref>
 <xref target="Issue-1209">Discussion</xref>
 <xref target="Issue-1212">Discussion</xref>
@@ -7270,6 +7286,13 @@ Content-Type: application/embed+json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1231">
     <front>
      <title>Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1224'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1224">
+    <front>
+     <title>Missing ExternalServices tag in the gadget schema</title>
     </front>
    </reference>
   </references>
