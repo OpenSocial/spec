@@ -1974,10 +1974,12 @@
       notifications and MAY ignore any &lt;Link&gt; element specifying an
       event identifier.</t>
       
-      <t>The optional "method" attribute can be specified on the &lt;Link&gt;
-      element to indicate the HTTP request method to be used when sending 
-      the event notification. Valid values are either "GET" or "POST". When
-      not specified, the default is assumed to be "GET".</t>
+      <t>The optional <spanx style="verb">method</spanx> attribute can be 
+      specified on the &lt;Link&gt; element to indicate the HTTP request 
+      method to be used when sending the event notification. Valid values are 
+      either <spanx style="verb">GET</spanx> or <spanx style="verb">POST</spanx>. 
+      When not specified, the default is assumed to be 
+      <spanx style="verb">GET</spanx>.</t>
       
       <figure><artwork><![CDATA[
   <Module>
@@ -1995,9 +1997,9 @@
       ]]></artwork>
       </figure>
       
-      <t>The "rel" attribute on the &lt;Link&gt; element identifies the type 
-      of event the gadget developer is interested in receiving. The event 
-      identifier syntax used as the value of the rel is: </t>
+      <t>The <spanx style="verb">rel</spanx> attribute on the &lt;Link&gt; 
+      element identifies the type of event the gadget developer is interested 
+      in receiving. The event identifier syntax used as the value of the rel is: </t>
       
       <figure><artwork>
   segment = 1*( ALPHA / DIGIT )
@@ -2039,20 +2041,22 @@
         represents all other events using the "org.opensocial." prefix.</t>
       </list>
       
-      <t>Use of the "org.opensocial." prefix is reserved by this specification.
-      Implementations MUST NOT use event identifiers that use the "org.opensocial."
-      prefix other than those defined above. Implementations are free to 
-      define additional event type identifiers that use prefixes other than 
-      "org.opensocial.".</t>
+      <t>Use of the <spanx style="verb">org.opensocial.</spanx> prefix is 
+      reserved by this specification. Implementations MUST NOT use event 
+      identifiers that use the "org.opensocial." prefix other than those 
+      defined above. Implementations are free to define additional event 
+      type identifiers that use prefixes other than 
+      <spanx style="verb">org.opensocial.</spanx>.</t>
 
       <section title="Lifecycle Event Notifications">
       
         <t>Whenever a significant lifecycle event occurs for a particular
         gadget specification, the container MAY send an event notification
         to the IRI identified by any &lt;Link&gt; element provided by that 
-        gadget specification whose "rel" attribute values identifies the 
-        event. If the container supports sending event notifications, one
-        notification SHOULD be sent for each matching &lt;Link&gt; element.</t>
+        gadget specification whose <spanx style="verb">rel</spanx> attribute 
+        values identifies the event. If the container supports sending event 
+        notifications, one notification SHOULD be sent for each matching 
+        &lt;Link&gt; element.</t>
         
         <t>For instance, given the following partial gadget specification:</t>
       
@@ -2076,45 +2080,69 @@
         two event notifications will be sent:
           <list style="symbols">
             <t>One to the endpoint "http://example.org/event" identified by
-            the "org.opensocial.event" rel value, and</t>
+            the <spanx style="verb">org.opensocial.event</spanx> rel value, and</t>
             <t>One to the endpoint "http://example.org/event/registered" identified
-            by the "org.opensocial.event.registered" rel value.</t>
+            by the <spanx style="verb">org.opensocial.event.registered</spanx> rel value.</t>
           </list>
         </t>
         
         <t>Each event notification is sent as an HTTP request message using the
-        method declared by the &lt;Link&gt; elements "method" attribute. If the
-        "method" attribute is not specified, then the HTTP GET method is used.</t>
+        method declared by the &lt;Link&gt; elements <spanx style="verb">method</spanx> 
+        attribute. If the <spanx style="verb">method</spanx> attribute is not 
+        specified, then the HTTP GET method is used.</t>
         
-        <t>The container MUST add the additional "eventtype" query string parameter
-        to the IRI specified by the &lt;Link&gt; element. The value MUST be 
-        the name part of the event identifier provided in the "rel" attribute
-        (e.g. if rel="org.opensocial.event.registered", then "eventtype" will 
-        equal "registered"). If the event identifier does not have a name 
-        component (as is the case with the special identifier 
-        "org.opensocial.event") then value of "eventtype" MUST be set to
+        <t>The container MUST add the additional <spanx style="verb">eventtype</spanx> 
+        query string parameter to the IRI specified by the &lt;Link&gt; element. 
+        The value MUST be the name part of the event identifier provided in the 
+        <spanx style="verb">rel</spanx> attribute (e.g. if 
+        <spanx style="verb">rel="org.opensocial.event.registered"</spanx>, then 
+        <spanx style="verb">eventtype</spanx> will equal <spanx style="verb">registered</spanx>). 
+        If the event identifier does not have a name component (as is the case 
+        with the special identifier <spanx style="verb">org.opensocial.event</spanx>) 
+        then value of <spanx style="verb">eventtype</spanx> MUST be set to
         a name specific to event that triggered the notification.</t>
         
-        <t>All event notification requests MUST be signed as specified by 
-        <xref target="SignedFetch"/>.</t>
+        <t>If the &lt;Link&gt; element includes an <spanx style="verb">authz</spanx>
+        attribute that specifies a value other than <spanx style="verb">none</spanx>,
+        the notification MUST be authenticated using the authentication mechanism
+        specified as described in <xref target="authentication"/>. If the 
+        <spanx style="verb">authz</spanx> attribute specifies a value of 
+        <spanx style="verb">none</spanx>, no authentication mechanism is to 
+        be used. If the <spanx style="verb">authz</spanx> attribute is not 
+        specified, the notification MUST be authenticated using the 
+        <xref target="SignedFetch">Signed Fetch</xref> mechanism.</t>
         
         <figure><preamble>In the example given, the notification sent to 
-        "http://example.org/event" will utilize the HTTP POST method:</preamble>
+        "http://example.org/event" will utilize the HTTP POST method 
+        (line breaks are added to the request URI for readability):</preamble>
         <artwork>
-  POST /event?eventtype=registered HTTP/1.1
+  POST /event?eventtype=registered
+    &oauth_consumer_key=myappkey
+    &oauth_nonce=7sGE00xSfY4PBStICbXyPbIliNymOhu2
+    &oauth_signature_method=HMAC-SHA1
+    &oauth_timestamp=1290013827
+    &oauth_version=1.0
+    &opensocial_app_id=myappid
+    &opensocial_app_url=
+    &oauth_signature=N7mODAf9OJ1DXQRPisRqGK4DNMo= HTTP/1.1
   Host: example.org
   
-  TODO: Finish Example
+  // TODO: What is the payload?
         </artwork></figure>
       
         <figure><preamble>The notification sent to "http://example.org/event/registered"
-        will utilize HTTP GET (line breaks are added for readability):</preamble>
+        will utilize HTTP GET (line breaks are added to the request URI 
+        for readability):</preamble>
         <artwork>
   GET /event?eventtype=registered
-&oauth_consumer_key=myappkey&oauth_nonce=7sGE00xSfY4PBStICbXyPbIliNymOhu2
-&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1290013827&oauth_version=1.0
-&opensocial_app_id=myappid&opensocial_app_url=
-&oauth_signature=N7mODAf9OJ1DXQRPisRqGK4DNMo= HTTP/1.1
+    &oauth_consumer_key=myappkey
+    &oauth_nonce=7sGE00xSfY4PBStICbXyPbIliNymOhu2
+    &oauth_signature_method=HMAC-SHA1
+    &oauth_timestamp=1290013827
+    &oauth_version=1.0
+    &opensocial_app_id=myappid
+    &opensocial_app_url=
+    &oauth_signature=N7mODAf9OJ1DXQRPisRqGK4DNMo= HTTP/1.1
   Host: example.org
         </artwork></figure>
       
@@ -2128,15 +2156,23 @@
         deprecated event identifiers that MAY continued to be supported
         by containers for backwards compatibility:
           <list style="hanging">
-            <t hangText="event">Equivalent to "org.opensocial.event".</t>
-            <t hangText="event.addapp">Equivalent to "org.opensocial.event.installed"</t>
-            <t hangText="event.removeapp">Equivalent to "org.opensocial.event.uninstalled"</t>
+            <t hangText="event">Equivalent to <spanx style="verb">org.opensocial.event</spanx>.</t>
+            <t hangText="event.addapp">Equivalent to <spanx style="verb">org.opensocial.event.installed</spanx></t>
+            <t hangText="event.removeapp">Equivalent to <spanx style="verb">org.opensocial.event.uninstalled</spanx></t>
             <t hangText="event.app">Provides an indication that some action
             has been performed on the gadget. The specific action performed
-            is identified by adding an additional "action" parameter to the 
-            GET or POST request. The valid "action" values are "enabled", 
-            "disabled", "approved", "submitted", "rejected", "new" and 
-            "banned".</t>
+            is identified by adding an additional <spanx style="verb">action</spanx> 
+            parameter to the GET or POST request. The valid "action" values are:
+              <list style="symbols">
+                <t><spanx style="verb">enabled</spanx>, </t> 
+                <t><spanx style="verb">disabled</spanx>, </t>
+                <t><spanx style="verb">approved</spanx>, </t>
+                <t><spanx style="verb">submitted</spanx>, </t>
+                <t><spanx style="verb">rejected</spanx>, </t>
+                <t><spanx style="verb">new</spanx>, and </t>
+                <t><spanx style="verb">banned</spanx></t>
+              </list>
+            </t>
           </list>
         </t>
       </section>
@@ -3347,7 +3383,7 @@
     <!--  END DATA PIPELINING -->
   
   
-    <section title="Authenticating Requests to Remote Endpoints">
+    <section title="Authenticating Requests to Remote Endpoints" anchor="authentication">
     
       <t>In order to perform the functions their programmed for, many 
       gadget specifications require the ability to access content and 
