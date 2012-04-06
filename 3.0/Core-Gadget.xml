@@ -5,6 +5,7 @@
   <!ENTITY rfc2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'> 
   <!ENTITY rfc2606 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2606.xml'> 
   <!ENTITY rfc2616 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'> 
+  <!ENTITY rfc5234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5234.xml'>
   <!ENTITY rfc3986 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml'> 
   <!ENTITY rfc3987 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3987.xml'>
   <!ENTITY infoset PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xml-infoset-20040204.xml'> 
@@ -20,27 +21,25 @@
   <!ENTITY oahub PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/oahub.xml'>
   
 ]>
-<rfc ipr="full3978"
-     docName="opensocial-core-gadget-specification-2-0"
-     xmlns:x="http://purl.org/net/xml2rfc/ext">
- <front>
-  <title abbrev="Core-Gadget">OpenSocial Application Specification 3.0</title>
-  <author fullname='OpenSocial and Gadgets Specification Group'>
-   <address>
-    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
-   </address>
-  </author>
-  <date month="August" year="2011" />
-  <area>General</area>
-  <keyword>OpenSocial</keyword>
-  <keyword>social networking</keyword>
-  <keyword>REST</keyword>
-  <keyword>XML</keyword>
-  <keyword>Extensible Markup Language</keyword>
-  <keyword>JSON</keyword>
-  <keyword>JavaScript Object Notation</keyword>
-  <keyword>Atom</keyword>
- </front>
+<rfc ipr="full3978" docName="opensocial-core-gadget-specification-3-0" xmlns:x="http://purl.org/net/xml2rfc/ext">
+  <front>
+    <title abbrev="Core-Gadget">OpenSocial Application Specification 3.0</title>
+    <author fullname='OpenSocial and Gadgets Specification Group'>
+      <address>
+        <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+      </address>
+    </author>
+    <date month="August" year="2011" />
+    <area>General</area>
+    <keyword>OpenSocial</keyword>
+    <keyword>social networking</keyword>
+    <keyword>REST</keyword>
+    <keyword>XML</keyword>
+    <keyword>Extensible Markup Language</keyword>
+    <keyword>JSON</keyword>
+    <keyword>JavaScript Object Notation</keyword>
+    <keyword>Atom</keyword>
+  </front>
   <middle>
     <section title="Overview">
     
@@ -72,6 +71,77 @@
         document are to be interpreted as described in
         <xref target="RFC2119" />.</t>
         <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+        
+        <t>Some sections of this specification are illustrated with fragments
+        of a <xref target="RFC5234">Augmented Backus-Naur Form</xref> (ABNF) grammar.
+        The rules specified are normative.</t>
+        
+        <t>The following core rules are included by reference, as defined in
+        <xref target="RFC5234"/>, Appendix B.1: ALPHA (letters), DIGIT (decimal 0-9), 
+        HTAB (horizontal tab), and SP (space).</t>
+        
+        <figure><preamble>The following additional ABNF rules are defined:</preamble>
+        <artwork>
+  OWS = *( SP / HTAB )
+        </artwork></figure>
+        
+        <t>Some sections of this specification are illustrated with fragments 
+        of a non-normative <xref target="RNC">RELAX-NG Compact Schema</xref>. 
+        However, the text of the specification provides the definition of 
+        conformance. In several cases, portions of the non-normative RELAX-NG 
+        schema will reference ABNF rules.</t>
+        
+        <figure><preamble>For example, the following example ABNF rule:</preamble>
+        <artwork>
+  abc = "a" "b" "c"
+        </artwork></figure>
+ 
+        <figure><preamble>Can be referenced within the RELAX-NG schema fragment
+        to define the acceptable value of an XML attribute:</preamble><artwork>
+  foo = element foo {
+    attribute a { abc }?
+  }
+        </artwork></figure>
+  
+        <figure><preamble>Within the RELAX-NG grammar, the rules "undefinedAttribute" and 
+        "extensionElement" are defined as follows:</preamble><artwork>
+  namespace local = ""
+  
+  undefinedAttribute =
+    attribute * - (xml:base | xml:lang) { text }
+
+  anyElement =
+    element * {
+      (attribute * { text }
+       | text
+       | anyElement)*
+      }
+    
+  simpleExtensionElement =
+    element * {
+      text
+    }
+
+  structuredExtensionElement =
+    element * {
+      (attribute * { text }+,
+      (text|anyElement)*)
+      | (attribute * { text }*,
+      (text?, anyElement+, (text|anyElement)*))
+    }
+
+  extensionElement =
+    simpleExtensionElement | 
+    structuredExtensionElement
+        </artwork></figure>
+  
+        <t>This specification allows the use of <xref target="RFC3987">IRIs</xref>. 
+        Every <xref target="RFC3986">URI</xref> is also an IRI, so a URI may be 
+        used wherever an IRI is named. There are two special considerations: 
+        (1) when an IRI that is not also a URI is given for dereferencing, 
+        it MUST be mapped to a URI using the steps in Section 3.1 of RFC 3987.
+        and (2) when an IRI is serving as an identifier, it MUST NOT be 
+        so mapped.</t>
       </section>
       
       <section title="Versioning" anchor="Versioning">
@@ -163,7 +233,7 @@
       
     </section>
     
-    <section title="The Gadget Specification Document" anchor="ElementsAndAttributes">
+    <section title="The Application Specification Document" anchor="ElementsAndAttributes">
    
       <t>An OpenSocial Application Specification is an XML document that 
       contains the meta-data and content for an application.</t>
@@ -175,23 +245,16 @@
         However, this specification uses the term "element" when referring to 
         "Element Information Items" as defined by the XML Infoset specification, 
         and the term "attribute" when referring to "Attribute Information Items".</t>
-      
-        <t>Some sections of this specification are illustrated with fragments 
-        of a non-normative <xref target="RNC">RELAX-NG Compact Schema</xref>. 
-        However, the text of the specification provides the definition of 
-        conformance.</t>
-  
+        
         <t>Currently, no XML Namespace is defined for any of the elements 
         defined by this specification. Neither is there a MIME Media Type
         specific for Gadget Specification Documents.</t>
         
-        <t>This specification allows the use of <xref target="RFC3987">IRIs</xref>. 
-        Every <xref target="RFC3986">URI</xref> is also an IRI, so a URI may be 
-        used wherever an IRI is named. There are two special considerations: 
-        (1) when an IRI that is not also a URI is given for dereferencing, 
-        it MUST be mapped to a URI using the steps in Section 3.1 of RFC 3987.
-        and (2) when an IRI is serving as an identifier, it MUST NOT be 
-        so mapped.</t>
+        <t>All relative IRI and URI references contained within the 
+        Application Specification document, including those contained within 
+        the the textual content of &lt;Content&gt; elements, are relative to
+        the Application Specification Document's URL as known by the 
+        container.</t>
         
       </section>
  
@@ -267,7 +330,8 @@
           <t>The <spanx style="verb">title</spanx> attribute specifies the 
           application's title. If provided, a container SHOULD use this value 
           in any situation where a title bar or other identifying name 
-          is required.</t>
+          is required. The value MAY be localized as described in 
+          <xref target="Localization" />.</t>
         
           <t>If provided, containers SHOULD use the value of the 
           <spanx style="verb">title_url</spanx> attribute to provide 
@@ -275,7 +339,8 @@
           <spanx style="verb">title</spanx> attribute is displayed.</t>
         
           <t>The <spanx style="verb">description</spanx> attribute provides 
-          an optional, human-readable description of the application.</t>
+          an optional, human-readable description of the application. 
+          The value MAY be localized as described in <xref target="Localization" />.</t>
         
           <t>The <spanx style="verb">author</spanx> attribute optionally 
           provides the name of the author of the application.</t>
@@ -331,23 +396,22 @@
           feature-dependent detail.</t>
         
           <figure><artwork>
+  Param = element Param {
+    attribute name { text },
+    undefinedAttribute*,
+    text?
+  }   
         
   dependency = 
     attribute feature { text },
     attribute version { version },
-    attribute views { text },
+    attribute views { viewnames },
     undefinedAttribute*,
     Param*,
     extensionElement,
         
   Optional = element Optional { dependency }
-  Require = element Require { dependency }
-        
-  Param = element Param {
-    attribute name { text },
-    undefinedAttribute*,
-    text
-  }      
+  Require = element Require { dependency }   
           </artwork></figure>
       
           <t>Features are collections of processing rules and JavaScript
@@ -365,9 +429,9 @@
           described in <xref target="Versioning"/>.</t>
         
           <t>The <spanx style="verb">views</spanx> attribute specifies a 
-          comma separated list of views for which the Feature is either 
-          optional or required. Containers SHOULD only load features when 
-          an appropriate view is being rendered.</t>
+          comma separated list of <xref target="content-processing-model">views</xref> 
+          for which the Feature is either optional or required. Containers 
+          SHOULD only load features when an appropriate view is being rendered.</t>
         
           <t>For every feature identified using a &lt;Require&gt; element, 
           the container to required to provide an implementation that matches the 
@@ -477,7 +541,7 @@
   Preload = element Preload {
     SignedFetch,
     attribute href { IRI },
-    attribute views { text }?
+    attribute views { viewnames }?
   }
           </artwork></figure>
         
@@ -490,10 +554,11 @@
           fetch as described in <xref target="signed-fetch"/>.</t>
         
           <t>The <spanx style="verb">views</spanx> attribute provides a 
-          comma-separated list of views for which this &lt;Preload&gt; element 
-          applies. Containers SHOULD NOT preload resources that are not 
-          specified for the view being rendered. If no "views" attribute is 
-          specified, then the content SHOULD be preloaded for all views.</t>
+          comma-separated list of <xref target="content-processing-model">views</xref> 
+          for which this &lt;Preload&gt; element applies. Containers SHOULD NOT 
+          preload resources that are not specified for the view being rendered. 
+          If no <spanx style="verb">views</spanx> attribute is specified, 
+          then the content SHOULD be preloaded for all views.</t>
           
           <t>The container will process all of the &lt;Preload&gt; elements
           defined for a particular view when it begins rendering the view 
@@ -601,7 +666,7 @@
     attribute lang { "all" | text }?,
     attribute country { "all" | text }?,
     attribute language_direction { "rtl" | "ltr" }?,
-    attribute views { text },
+    attribute views { viewnames },
     undefinedAttribute*
   }
   
@@ -640,10 +705,10 @@
           discussed in detail in <xref target="Localization"/>.</t>
       
           <t>The optional <spanx style="verb">views</spanx> attribute specifies 
-          a comma-separated list of views for which the Locale information 
-          applies. Containers SHOULD only use the information provided by the 
-          containing &lt;Locale&gt; element when an appropriate view is being 
-          rendered.</t>
+          a comma-separated list of <xref target="content-processing-model">views</xref>
+          for which the Locale information applies. Containers SHOULD only use 
+          the information provided by the containing &lt;Locale&gt; element when 
+          an appropriate view is being rendered.</t>
         
           <t>The optional <spanx style="verb">messages</spanx> attribute 
           specifies the IRI of an XML document conforming to the 
@@ -706,7 +771,8 @@
       attribute url { IRI },
       undefinedAttribute*,
       extensionElement*
-    }?
+    }?,
+    extensionElement*
   }
   
   OAuthResourceType = {
@@ -788,8 +854,10 @@
     }?,
     element Token {
       attribute url {IRI},
-      undefinedAttribute*
-    }?
+      undefinedAttribute*,
+      extensionElement*
+    }?,
+    extensionElement*
   }
           </artwork></figure>
         
@@ -871,18 +939,19 @@
       attribute display_value { text }?,
       undefinedAttribute*,
       extensionElement*
-    }*,
-    extensionElement*
+    }*
   }
   
-  EnumPref = element SimpleUserPref | EnumUserPref
+  UserPref = element SimpleUserPref | EnumUserPref
           </artwork></figure>
         
           <t>The <spanx style="verb">datatype</spanx> attribute specifies the 
           data type for the instances of the preference value at runtime. 
-          Valid values are "string", "hidden", "bool", "list" and "number". 
-          If not specified, the value is assumed to be "string". For more 
-          information on <spanx style="verb">datatype</spanx>, refer to 
+          Valid values are <spanx style="verb">string</spanx>, 
+          <spanx style="verb">hidden</spanx>, <spanx style="verb">bool</spanx>, 
+          <spanx style="verb">list</spanx> and <spanx style="verb">number</spanx>. 
+          If not specified, the value is assumed to be <spanx style="verb">string</spanx>. 
+          For more information on <spanx style="verb">datatype</spanx>, refer to 
           <xref target="datatypes-values"/> below.</t>
         
           <t>The <spanx style="verb">display_name</spanx> attribute specifies 
@@ -1049,7 +1118,8 @@
           within the &lt;ServiceTag&gt; is not allowed.</t>
        
           <t>Currently, when making a remote request from within a gadget using
-          either the <spanx style="verb">OSAPI</spanx> or <spanx style="verb">gadgets.io.makeRequest</spanx> APIs, 
+          either the <spanx style="verb">osapi.http</spanx> or 
+          <spanx style="verb">gadgets.io.makeRequest</spanx> APIs, 
           the full URL of the remote service that is being invoked must be known
           to the gadget and specified within the request, along with all other 
           details of the request. Often, however, it is desirable to offload the 
@@ -1064,7 +1134,7 @@
           <t>Once an alias for a service is established, a gadget specification
           can use the &lt;ServiceTag&gt; element within &lt;ExternalServices&gt;
           to declare a gadget-specific reference label for the alias that can be 
-          used when invoking the <spanx style="verb">OSAPI</spanx> or 
+          used when invoking the <spanx style="verb">osapi.http</spanx> or 
           <spanx style="verb">gadgets.io.makeRequest</spanx> APIs in place of 
           the URL.</t>
 
@@ -1143,12 +1213,11 @@
     undefinedAttribute*
   }
         
-  UrlContent = element Content {
+  RedirectedContent = element Content {
     CommonContent,
     SignedFetch,
     attribute type { "url" },
-    attribute href ( IRI ),
-    extensionElement*
+    attribute href ( IRI )
   }
   
   ProxiedContent = element Content {
@@ -1165,7 +1234,7 @@
     text
   }
   
-  Content = UrlContent | HtmlContent | ProxiedContent
+  Content = RedirectedContent | HtmlContent | ProxiedContent
           </artwork></figure>
        
           <t>The required <spanx style="verb">type</spanx> attribute specifies 
@@ -1240,7 +1309,8 @@
             
             <figure><artwork>
   name = 1*(ALPHA / DIGIT)
-  view-name = name *["." name]
+  viewname = name *["." name]
+  viewnames = viewname *[ OWS "," OWS name]
             </artwork></figure>
             
             <t>Containers MAY assign specific meaning to particular view names.
@@ -1339,7 +1409,7 @@
             and either a specific view name is not specified in the render 
             request or the view name that is specified does not exist within 
             the application specification. If there are no &lt;Content&gt;
-            elements within the application specification that are not 
+            elements within the application specification  
             associated with the unnamed default (i.e. no &lt;Content&gt;
             elements that do not have a <spanx style="verb">view</spanx>
             attribute), then the container will attempt to render the 
@@ -1383,17 +1453,18 @@
               </artwork></figure>
             
               <t>When the container renders the default view for the gadget, it 
-              will select this &lt;Content&gt; element and display the HTML "&lt;div>Hello World!&lt;/div>"
-              to the user.</t>
+              will select this &lt;Content&gt; element and display the HTML 
+              "&lt;div>Hello World!&lt;/div>" to the user.</t>
             
               <figure><preamble>An equivalent example can be provided by using the 
-              "home" view in the element's <spanx style="verb">view</spanx> attribute:</preamble><artwork>
+              "home" view in the element's <spanx style="verb">view</spanx> attribute:</preamble>
+              <artwork>
   &lt;Content type="html" view="home">&lt![CDATA[
     &lt;div>Hello World!&lt;/div>
   ]]&gt;&lt;/Content>
               </artwork></figure>
             
-              <t>If a gadget provides multiple "html" &ltContent&gt; elements that
+              <t>If a gadget provides multiple type "html" &ltContent&gt; elements that
               specify the same view, the content is concatenated together when 
               rendered in the order those &lt;Content&gt; elements appear within
               the gadget specification:</t>
@@ -1503,17 +1574,17 @@
     There was an error retrieving the content.
   &lt;/Content>
               </artwork></figure>
-            
-              <t>Containers SHOULD cache the results of the HTTP request following
-              the recommendations of Section 13 of <xref target="RFC2616"/>. If
-              a container does support caching of data, it MUST also support
-              using the "refresh_interval" parameter to override the default 
-              caching directives. TODO: How does that work?</t>
               
-              <t>TODO: Discuss the cache key requirements... the ones that are
-              in the spec currently need to be clarified.</t>
+              <t>Typically, the container will issue an HTTP GET request to 
+              retrieve the content referenced by the <spanx style="verb">href</spanx>
+              attribute. However, there are times when additional information 
+              beyond that provided by the request URI of an HTTP GET is required.
+              In such cases, proxy type &lt;Content&gt; elements MAY contain 
+              <xref target="data-pipeline-proxy">Data Pipeline</xref> elements
+              that define the payload of an HTTP POST request to fetch the 
+              remote content.</t>
               
-              <t>TODO: Discuss Pipelined content</t>
+              <t>TODO: Add section about Caching under capabilities.</t>
             
             </section>
           
@@ -1571,10 +1642,10 @@
           
             <section title="Authentication for Proxied and Redirected Content" anchor="signed-fetch">
             
-              <t>For Proxied and Redirected Content (as well as the &lt;Preload&gt;
-              element) the Signed Fetch mechanism described in 
-              <xref target="SignedFetch"/> MAY be used to specify the type of
-              authentication used in the request sent to the remote service.</t>
+              <t>For Proxied and Redirected Content, the Signed Fetch mechanism 
+              described in <xref target="SignedFetch"/> MAY be used to specify 
+              the type of authentication used in the request sent to the remote 
+              service.</t>
             
               <figure><preamble>The Signed Fetch attributes defined below MAY
               be used on any Proxied and Redirected Content elements:</preamble><artwork>
@@ -1618,53 +1689,94 @@
   SignedFetch = NoAuth | OAuth1 | OAuth 2 | SignedAuth
               </artwork></figure>
             
-              <t>The "authz" attribute identifies the authentication type used when
-              submitting the request to fetch the resource. The valid values
-              are "none", "oauth", "oauth2" or "signed" and each correspond to
-              the values and meanings defined for the <spanx style="verb">gadgets.io.AuthorizationType</spanx> API.
-              When not specified, the default is assumed to be "none" indicating
-              that authentication is to be used.</t>
+              <t>The <spanx style="verb">authz</spanx> attribute identifies the 
+              authentication type used when submitting the request to fetch the 
+              resource. The valid values are <spanx style="verb">none</spanx>, 
+              <spanx style="verb">oauth</spanx>, <spanx style="verb">oauth2</spanx> 
+              or <spanx style="verb">signed</spanx>.
+              When not specified, the default is assumed to be 
+              <spanx style="verb">none</spanx> indicating that no 
+              authentication mechanism is to be used.</t>
           
-              <t>When "authz" is equal to "oauth", requests sent to the 
-              remote service MUST be authenticated using the OAuth 1.0 protocol.</t>
+              <t>When <spanx style="verb">authz</spanx> is equal to 
+              <spanx style="verb">oauth</spanx>, requests sent to the 
+              remote service MUST be authenticated using the OAuth 1.0 
+              protocol as described in <xref target="auth.oauth1" />.</t>
               
-              <t>When "authz" is equal to "oauth2", requests sent to the 
-              remote service MUST be authenticated using the OAuth 2.0 protocol.</t>
+              <t>When <spanx style="verb">authz</spanx> is equal to 
+              <spanx style="verb">oauth2</spanx>, requests sent to the 
+              remote service MUST be authenticated using the OAuth 2.0 
+              protocol as described in <xref target="auth.oauth2" />.</t>
               
-              <t>When "authz" is either "oauth" or "oauth2", the following 
-              additional optional attributes MAY be included as defined by 
-              <xref target="OAuth"/>:
+              <t>When <spanx style="verb">authz</spanx> is either 
+              <spanx style="verb">oauth</spanx> or <spanx style="verb">oauth2</spanx>, 
+              the following additional optional attributes MAY be included as 
+              defined by <xref target="OAuth"/>:
                 <list style="symbols">
                   <t>oauth_received_callback</t>
                   <t>oauth_received_callback</t>
                   <t>oauth_request_token</t>
                   <t>oauth_request_token_secret</t>
                   <t>oauth_service_name</t>
-                  <t>oauth2_scope</t>
                   <t>oauth_token_name</t>
                 </list>
               </t>
+              
+              <t>Further, when <spanx style="verb">authz</spanx> is equal to
+              <spanx style="verb">oauth2</spanx>, the optional <spanx style="verb">oauth2_scope</spanx>
+              attribute MAY be included as defined by <xref target="OAuth"/>.</t>
           
-              <t>When "authz" is equal to "signed", the "Signed Fetch" mechanism
+              <t>When <spanx style="verb">authz</spanx> is equal to 
+              <spanx style="verb">signed</spanx>, the "Signed Fetch" mechanism
               described by <xref target="SignedFetch"/> is to be used.</t>
           
-              <t>The "sign_owner" attribute indicates whether the identity of the 
-              gadget "OWNER" needs be included in the request sent to fetch the
-              resource. If the value of this attribute is "true", the container 
-              MUST include the identity of the gadget "OWNER".</t>
+              <t>The <spanx style="verb">sign_owner</spanx> attribute indicates 
+              whether the identity of the gadget "OWNER" needs be included in 
+              the request sent to fetch the resource. If the value of this 
+              attribute is "true", the container MUST include the identity of 
+              the gadget "OWNER".</t>
               
-              <t>The "sign_viewer" attribute indicates whether the identity of the
-              current gadget "VIEWER" needs to be included in the request sent to
-              fetch the resource. If the value of this attribute is "true", the
+              <t>The <spanx style="verb">sign_viewer</spanx> attribute indicates 
+              whether the identity of the current gadget "VIEWER" needs to be 
+              included in the request sent to fetch the resource. If the value 
+              of this attribute is <spanx style="verb">true</spanx>, the
               container MUST include the identity of the gadget "VIEWER".</t>
-            
-              <t>TODO: Define refresh_interval.. currently it's role in 
-              signed fetch is undefined</t>
-            
+
             </section>
           
           </section>
         </section>
+
+        <section title="Extensibility">
+
+          <t>This specification defines the complete XML vocabulary 
+          of the OpenSocial Application Specification document. Markup
+          from other vocabularies ("foreign markup") can be used within
+          an Application Specification.</t>
+          
+          <t>Note that future versions of this specification can add
+          elements and attributes to the Application Specification
+          vocabulary. Software written to conform to this version of the 
+          specification will be unable to process such markup correctly
+          and will not be able to distinguish it from markup error. For
+          the purposes of this discussion, all unrecognized markup from 
+          the Application Specification vocabulary will be considered
+          to be "foreign markup".</t>
+          
+          <t>This vocabulary allows foreign markup anywhere in an Application
+          Specification document, except where it is explicitly forbidden. 
+          Containers that encounter foreign markup in a location that is
+          legal according to this specification MUST NOT stop processing or
+          signal an error.  It might be the case that the container is
+          able to process the foreign markup correctly and does so.  Otherwise,
+          such markup is termed "unknown foreign markup".</t>
+
+          <t>When unknown foreign markup is encountered as a child of any 
+          element, containers MAY bypass the markup and any textual content 
+          and MUST NOT change their behavior as a result of the markup's presence.</t>
+
+        </section>
+
       </section> <!-- END DOCUMENT STRUCTURE -->
   
     </section>
@@ -1974,7 +2086,7 @@
       
       </section>
     
-      <section title="Using Data Pipeline Vaiables">
+      <section title="Using Data Pipeline Variables">
       
         <t>For all gadget instances, there is a <spanx style="verb">DataContext</spanx>
         object that stores and provides access to all of the data associated with
