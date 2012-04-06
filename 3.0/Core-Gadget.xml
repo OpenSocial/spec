@@ -564,8 +564,8 @@
           defined for a particular view when it begins rendering the view 
           by sending an HTTP GET request to the location specified in the
           <spanx style="verb">href</spanx> attribute. The responses to 
-          these requests will then be cached by the container in accordance
-          to the standard <xref target="RFC2616">HTTP Caching rules</xref>.</t>
+          these requests will then be cached by the container as described
+          in <xref target="caching"/></t>
         
           <t>When an HTTP GET request for the same IRI is submitted using 
           either the <spanx style="verb">gadgets.io.makeRequest</spanx> or
@@ -1782,6 +1782,120 @@
     </section>
   
   <section title="Container-Provided Capabilities">
+  
+    <section title="Caching" anchor="caching">
+    
+      <t>Application developers are provided with a variety of mechanisms 
+      for accessing external, web-accessible resources. They can, for instance:
+        <list style="symbols">
+          <t>Use Redirected or Proxy type &lt;Content&gt; elements,</t>
+          <t>Preload resources using the &lt;Preload&gt; elements,</t>
+          <t>Link to icons, screenshots and thumbnail images,</t>
+          <t>Send arbitary HTTP requests using the <spanx style="verb">osapi.http</spanx>
+          and <spanx style="verb">gadgets.io.makeRequest</spanx> APIs,</t>
+          <t>or use <xref target="DataPipelining">Data Pipeline elements</xref>
+          to access resources.</t>
+        </list>
+      </t>
+      
+      <t>The container is also permitted to cache the Application Specification
+      Document itself.</t>
+      
+      <t>In each of these cases, the container is responsible for sending the 
+      actual HTTP request messages to the remote resource and making the 
+      data returned in the response available to the application. In order to 
+      optimize performance and reduce the overall number of HTTP requests that
+      are actually sent, containers SHOULD provide caching of HTTP responses 
+      as defined in <xref target="RFC2616" />. If the container provides caching,
+      it MUST honor all requirements as specified by <xref target="RFC2616"/>.</t>
+      
+      <figure><preamble>For example, given the following partial application
+      specification document:</preamble><artwork>
+  &lt;Module&gt;
+    ...
+    &lt;Content type="html" href="http://example.org/foo" /&gt;
+  &lt;/Module&gt;
+      </artwork></figure>
+      
+      <figure><preamble>When the container attempts to render the default view of the 
+      application, it will send an HTTP GET request to the IRI provided</preamble>
+      <artwork>
+  GET /foo HTTP/1.1
+  Host: example.org
+      </artwork></figure>
+      
+      <figure><preamble>Assuming the server return a successful response that
+      includes appropriate caching instructions:</preamble><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: text/html
+  Cache-Control: must-revalidate, max-age=3600
+  ETag: "abc123zyx"
+  
+  &lt;html&gt...&lt;/html&gt;
+      </artwork></figure>
+    
+      <t>The container is permitted to cache the response and use the cached
+      representation in response to all subsequent requests to the same 
+      request URI, without revalidation for a period of 3600 seconds (1 hour),
+      after which the container is required to revalidate the resource to 
+      determine if any changes to the resource representation have occurred.</t>
+      
+      <figure><preamble>Such revalidation is performed by issuing a conditional HTTP request
+      as defined by <xref target="RFC2616"/>:</preamble><artwork>
+  GET /foo HTTP/1.1
+  Host: example.org
+  If-None-Match: "abc123zyx"
+      </artwork></figure>
+      
+      <t>If the server returns a response indicating that the resource has 
+      been modified (i.e. with a 412 Precondition Failed in this example),
+      the container is permitted to continue using the cached representation
+      of the resource to fulfill the request.</t>
+      
+      <t>For all XML elements within the Application Specification Document
+      that represent a request for an external resource (&lt;Preload&gt;, 
+      &lt;Link&gt;, &lt;Content&lt; and &lt;os:HttpRequest&gt;), an additional
+      <spanx style="verb">refresh_interval</spanx> attribute MAY be specified
+      whose value indicates the total number of seconds the container SHOULD
+      consider a cached response to be valid. If specified, and the value indicates
+      a period of time that is less than the period of time established by either
+      the Expires header in the HTTP response or either the Cache-Control max-age 
+      or s-maxage directives (as specified by <xref target="RFC2616" />), then
+      the value of the <spanx style="verb">refresh_interval</spanx> attribute
+      overrides the default caching characteristics. The container MUST NOT 
+      cache a response for longer than the period of time specified by either 
+      the Expires header, max-age directive or s-maxage directives.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  &lt;Content type="html" href="http://example.org/foo" refresh_interval="3600" /&gt;
+      </artwork></figure>
+      
+      <t>For all JavaScript API requests that represent a request for an 
+      external resource, such as each of the <spanx style="verb">osapi.http</spanx>
+      methods and the <spanx style="verb">gadgets.io.makeRequest</spanx> API,
+      an optional "REFRESH_INTERVAL" parameter MAY be specified whose value
+      indicates the total number of seconds that container SHOULD consider
+      a cached response to be valid. If specified, the same rules apply as 
+      those specified for the <spanx style="verb">refresh_interval</spanx>
+      attribute.</t>
+      
+      <t>For convenience, the JavaScript alias 
+      <spanx style="verb">gadgets.io.RequestParameters.REFRESH_INTERVAL</spanx>
+      is provided for the "REFRESH_INTERVAL" parameter.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  gadgets.io.makeRequest(
+    "http://example.org/foo",
+    function(response) {
+      // ...
+    },
+    {
+      gadgets.io.RequestParameters.REFRESH_INTERVAL: 3600
+    }
+  );
+      </artwork></figure>
+    
+    </section>
   
     <section title="Gadget Lifecycle Events" anchor="gadget-lifecycle-events">
     
@@ -4198,13 +4312,7 @@
                  <c>REFRESH_INTERVAL</c>
                  <c>gadgets.io.ProxyUrlRequestParameters.REFRESH_INTERVAL</c>
                  <c>Explicitly sets the numer of seconds content will be cached 
-                 by the container. By default, the HTTP caching headers will be 
-                 respected for fetched content. If the refresh interval is set, 
-                 this value will take precedence over any HTTP cache headers. 
-                 If this value is not set and there are no HTTP caching headers 
-                 specified, this value will default to 3600 (one hour). Note that 
-                 Signed requests and objects with POST_DATA present will generally 
-                 not be cached..</c>
+                 by the container as described in <xref target="caching" />.</c>
                </texttable>
              </t>
              
@@ -4443,13 +4551,7 @@
                  <c>REFRESH_INTERVAL</c>
                  <c>gadgets.io.RequestParameters.REFRESH_INTERVAL</c>
                  <c>Explicitly sets the numer of seconds content will be cached 
-                 by the container. By default, the HTTP caching headers will be 
-                 respected for fetched content. If the refresh interval is set, 
-                 this value will take precedence over any HTTP cache headers. 
-                 If this value is not set and there are no HTTP caching headers 
-                 specified, this value will default to 3600 (one hour). Note that 
-                 Signed requests and objects with POST_DATA present will generally 
-                 not be cached..</c>
+                 by the container as specified by <xref target="caching"/>.</c>
                  
                  <c>SIGN_OWNER</c>
                  <c>gadgets.io.RequestParameters.SIGN_OWNER</c>
@@ -8191,13 +8293,7 @@
                   <c>refresh_interval</c>
                   <c>Number (non-negative integer)</c>
                   <c>Explicitly sets the numer of seconds content will be cached 
-                  by the container. By default, the HTTP caching headers will be 
-                  respected for fetched content. If the refresh interval is set, 
-                  this value will take precedence over any HTTP cache headers. 
-                  If this value is not set and there are no HTTP caching headers 
-                  specified, this value will default to 3600 (one hour). Note that 
-                  Signed requests and objects with "body" present will generally 
-                  not be cached..</c>
+                  by the container as specified by <xref target="caching" />.</c>
                  
                   <c>sign_owner</c>
                   <c>Boolean</c>
@@ -8281,15 +8377,8 @@
               </artwork></figure>
               
               <t>The container MAY choose to provide cached responses in 
-              response to an <spanx style="verb">osapi.http</spanx> Request.
-              If the container implements caching, it MUST properly support
-              all Cache-Directives provided by the HTTP Response header. 
-              The "refresh_interval" property MAY be specified on the 
-              HTTP Request Parameters Object to override the default cache
-              expiration. Note that the responses to HTTP POST, PUT, PATCH
-              and DELETE operations, and any operation for which the "authz"
-              parameter is any value other than "NONE" will typically not 
-              be cached by the container.</t>
+              response to an <spanx style="verb">osapi.http</spanx> Request 
+              as specified by <xref target="caching"/>.</t>
               
               <t>When an error occurs during the processing of an HTTP 
               request, or when the HTTP Response uses a status code that
