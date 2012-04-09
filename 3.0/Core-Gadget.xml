@@ -357,7 +357,7 @@
           publicly-accessible web site that is not blocked by a robots.txt file. 
           The preferred format is PNG, though GIF and JPG are also acceptable. 
           Gadget screenshots SHOULD be 280 pixels wide. The height of the 
-          screenshot SHOULD be the "natural" height of the gadget, in pixels, 
+          screenshot SHOULD be the "natural" height of the application, in pixels, 
           when it is in use.</t>
       
           <t>The <spanx style="verb">thumbnail</spanx> attribute provides an 
@@ -373,7 +373,7 @@
           <t>The optional <spanx style="verb">height</spanx> and 
           <spanx style="verb">width</spanx> attributes respectively define, 
           in pixels, the preferred default display height and width of the 
-          gadget. Container's SHOULD use these values when establishing the
+          application. Container's SHOULD use these values when establishing the
           appropriate display dimensions for the application.</t>
       
           <t>The optional <spanx style="verb">doctype</spanx> attribute is a 
@@ -416,9 +416,9 @@
           </artwork></figure>
       
           <t>Features are collections of processing rules and JavaScript
-          Library APIs that provide specific functionality to a gadget. A 
+          Library APIs that provide specific functionality to a application. A 
           feature might also place various constraints and rules on the 
-          container and gadget when in use. Containers are required to honor 
+          container and application when in use. Containers are required to honor 
           the constraints and rules of any feature it claims to support.</t>
         
           <t>The <spanx style="verb">feature</spanx> attribute on the 
@@ -446,10 +446,10 @@
           the <spanx style="verb">version</spanx> attribute.</t>
         
           <t>Containers MUST NOT substitute versions of features that do not 
-          match that which is requested by the gadget.</t>
+          match that which is requested by the application.</t>
         
           <t>Containers SHOULD support as many versions of a feature as is 
-          practical to facilitate backwards compatibility with existing gadgets.</t>
+          practical to facilitate backwards compatibility with existing applications.</t>
       
           <t>Containers are permitted to refuse to support features or specific 
           versions of features that are known or assumed to be incompatible 
@@ -525,7 +525,7 @@
             
             <t>When a feature dependency for a specific view has been defined, 
             the container SHOULD make only the parameters from the view-specific 
-            dependency available to the gadget using the getFeatureParameters
+            dependency available to the application using the getFeatureParameters
             API.</t>
        
           </section>
@@ -579,7 +579,7 @@
         <section title="The &lt;Link&gt; Element">
       
           <t>The &lt;Link&gt; element is used to associate a variety of additional
-          resources with the gadget specification. At a minimum, the element MUST
+          resources with the specification document. At a minimum, the element MUST
           contain the <spanx style="verb">rel</spanx> and 
           <spanx style="verb">href</spanx> attributes.</t>
         
@@ -599,7 +599,7 @@
           dereferencing and therefore MUST be mapped to a URL following the 
           rules specified in <xref target="RFC3987"/>.</t>
         
-          <t>The specific relationship between the gadget specification and the 
+          <t>The specific relationship between the specification document and the 
           referenced resource is specified by the value of the 
           <spanx style="verb">rel</spanx> attribute. The value of the 
           <spanx style="verb">rel</spanx> attribute can be any string value. 
@@ -620,38 +620,20 @@
           <texttable>
             <ttcol align="left" width="15%">rel</ttcol>
             <ttcol align="left">Description</ttcol>
-          
             <c><spanx style="verb">icon</spanx></c>
-            <c>Used to link an image resource to the gadget specification that 
-            serves as a representative icon for the gadget.</c>
-          
-            <c><spanx style="verb">event</spanx></c>
-            <c>Used to associate a remote endpoint to which 
-            <xref target="gadget-lifecycle-events">Gadget Lifecycle Events</xref> 
-            are to be delivered.</c>
-          
-            <c><spanx style="verb">event.addapp</spanx></c>
-            <c>Used to associate a remote endpoint to which 
-            <xref target="gadget-lifecycle-events">Gadget Lifecycle Events</xref> 
-            matching the "event.addapp" event are to be delivered.</c>
-          
-            <c><spanx style="verb">event.removeapp</spanx></c>
-            <c>Used to associate a remote endpoint to which 
-            <xref target="gadget-lifecycle-events">Gadget Lifecycle Events</xref> 
-            matching the "event.removeapp" event are to be delivered.</c>
-          
-            <c><spanx style="verb">event.app</spanx></c>
-            <c>Used to associate a remote endpoint to which 
-            <xref target="gadget-lifecycle-events">Gadget Lifecycle Events</xref> 
-            matching the "event.app" event are are to be delivered.</c>
-          
+            <c>Used to link an image resource to the specification document that 
+            serves as a representative icon for the application.</c>
           </texttable>
+          
+          <t>Additional link relations specific to the Application Lifecycle
+          Events capability are described in <xref target="gadget-lifecycle-events"/>.</t>
+          
         </section>
       
         <section title="The &lt;Locale&gt; Element">
       
           <t>The &lt;Locale&gt; element is used to provide localization 
-          information for a gadget. Containers are required to honor 
+          information for an application. Containers are required to honor 
           localization rules as specified in <xref target="Localization">
           Localization</xref>. Each Locale tag represents localization
           information for a single locale.</t>
@@ -747,7 +729,7 @@
         <section title="The &lt;OAuth&gt; Element">
       
           <t>The &lt;OAuth&gt; element supplies the container with OAuth 1.0
-          specific configuration details for the gadget. For details see
+          specific configuration details for the application. For details see
           <xref target="OAuth"/>.</t>
         
           <figure><artwork>        
@@ -760,7 +742,7 @@
         
           <t>The &lt;OAuth&gt; element contains zero or more &lt;Service&gt;
           elements, each of which detail a specific OAuth 1.0 service associated
-          with the gadget.</t>
+          with the application.</t>
         
           <figure><artwork>        
   Service = element Service {
@@ -827,7 +809,7 @@
         <section title="The &lt;OAuth2&gt; Element">
       
           <t>The &lt;OAuth2&gt; element supplies the container with OAuth 2.0
-          specific configuration details for the gadget. For details see
+          specific configuration details for the application. For details see
           <xref target="OAuth"/>.</t>
         
           <figure><artwork>        
@@ -840,7 +822,7 @@
         
           <t>The &lt;OAuth2&gt; element contains zero or more &lt;Service&gt;
           elements, each of which detail a specific OAuth 2.0 service associated
-          with the gadget.</t>
+          with the application.</t>
         
           <figure><artwork>        
   Service = element Service {
@@ -900,14 +882,14 @@
       
         <section title="The &lt;UserPref&gt; Element">
       
-          <t>The &lt;UserPref&gt; element is used within a gadget specification
-          to define a "user preference" for use within instances of the gadget. 
+          <t>The &lt;UserPref&gt; element is used within a specification document
+          to define a "user preference" for use within instances of the application. 
           Each instance of the &lt;UserPref&gt; element defines exactly one 
           preference value. Multiple &lt;UserPref&gt; elements MAY be used within 
-          a gadget specification.</t>
+          a specification document.</t>
         
           <t>Containers MUST process each &lt;UserPref&gt; by making each 
-          available to the gadget via the <spanx style="verb">gadgets.Prefs</spanx>
+          available to the application via the <spanx style="verb">gadgets.Prefs</spanx>
           API, using the value of &lt;UserPref&gt; element's required 
           <spanx style="verb">name</spanx> attribute as the index key for 
           storing and retrieving preferences using the API.</t>
@@ -969,7 +951,7 @@
         
           <t>The <spanx style="verb">required</spanx> attribute specifies 
           whether instances of the preference require a valid value in order 
-          for the gadget to function correctly. Valid values are either 
+          for the application to function correctly. Valid values are either 
           <spanx style="verb">true</spanx> or <spanx style="verb">false</spanx>. 
           If not specified, the value is assumed to be <spanx style="verb">false</spanx>. 
           If the value is <spanx style="verb">true</spanx>, Containers are
@@ -1101,7 +1083,7 @@
       
           <t>The &lt;ExternalServices&gt; element contains zero or more
           &lt;ServiceTag&gt; elements used to establish an "alias"
-          for container-managed external services utilized by the gadget.</t>
+          for container-managed external services utilized by the application.</t>
         
           <figure><artwork>
   ExternalServices = element ExternalServices {
@@ -1115,31 +1097,31 @@
         
           <t>The &lt;ServiceTag&gt; element has a single <spanx style="verb">alias</spanx>
           attribute whose value is a string and textual content that provides 
-          a gadget-specific plain-text label for the alias. Additional markup 
+          an application-specific plain-text label for the alias. Additional markup 
           within the &lt;ServiceTag&gt; is not allowed.</t>
        
-          <t>Currently, when making a remote request from within a gadget using
+          <t>Currently, when making a remote request from within an application using
           either the <spanx style="verb">osapi.http</spanx> or 
           <spanx style="verb">gadgets.io.makeRequest</spanx> APIs, 
           the full URL of the remote service that is being invoked must be known
-          to the gadget and specified within the request, along with all other 
+          to the application and specified within the request, along with all other 
           details of the request. Often, however, it is desirable to offload the 
           responsibility of managing access to external services to the container,
           for instance, when multiple services are available that implement the
-          same protocol and it would be difficult for a single gadget to keep 
-          track of all instances; or when a potentially untrusted gadget needs to be given
+          same protocol and it would be difficult for a single application to keep 
+          track of all instances; or when a potentially untrusted application needs to be given
           access to secure backend systems. In such cases, a container can choose
           to manage all of the details involved with connecting to and communicating
-          with the service and expose that service to the gadget via an "alias".</t>
+          with the service and expose that service to the application via an "alias".</t>
         
-          <t>Once an alias for a service is established, a gadget specification
+          <t>Once an alias for a service is established, a specification document
           can use the &lt;ServiceTag&gt; element within &lt;ExternalServices&gt;
-          to declare a gadget-specific reference label for the alias that can be 
+          to declare an application-specific reference label for the alias that can be 
           used when invoking the <spanx style="verb">osapi.http</spanx> or 
           <spanx style="verb">gadgets.io.makeRequest</spanx> APIs in place of 
           the URL.</t>
 
-          <t>For example, suppose that a gadget requires access to a backend 
+          <t>For example, suppose that an application requires access to a backend 
           enterprise application that implements a proprietary communications 
           protocol. Software is added to the container that allows it to 
           communicate with the backend system. All of the details including the
@@ -1147,9 +1129,9 @@
           within the container by an administrator and an alias is assigned to
           the service: "opensocial:service://example.com/api?version=1".</t>
         
-          <t>The gadget developer then creates the gadget specification and adds
+          <t>The developer then creates the specification document and adds
           a &lt;ServiceTag&gt; element referencing the alias and created a lobel
-          for the alias that can be used within the gadget's Javascript:</t>
+          for the alias that can be used within the application's Javascript:</t>
         
           <figure><artwork><![CDATA[
   <Module>
@@ -1180,22 +1162,22 @@
   </Module>
           ]]></artwork></figure>
         
-          <t>When the gadget is installed, the container will attempt to match
+          <t>When the application is installed, the container will attempt to match
           the alias specified in the &lt;ServiceTag&gt; to any known configured
           services -- in this case, our backend enterprise service -- and will 
-          automatically proxy all gadget requests to the "EnterpriseService" label
+          automatically proxy all requests to the "EnterpriseService" label
           to the backend service.</t>
         
           <t>It is possible for multiple service instances managed by a
           single container to share the same alias; for instance, when there are 
           multiple servers available that implement the same communication protocols. 
-          In such cases, when the gadget is installed, the container can either 
+          In such cases, when the application is installed, the container can either 
           automatically select an appropriate service instance to map the &lt;ServiceTag&gt;
-          to or provide a choice to the user installing the gadget to select 
+          to or provide a choice to the user installing the application to select 
           which service instance to use.</t>
         
           <t>If a &lt;ServiceTag&gt; specifies an alias that is not currently 
-          known to the container, installation of the gadget SHOULD fail and 
+          known to the container, installation of the application SHOULD fail and 
           an error reported.</t>
       
         </section>
@@ -1203,7 +1185,7 @@
         <section title="The &lt;Content&gt; Element">
       
           <t>The &lt;Content&gt; element provides the user interface and 
-          runtime code for the gadget. A gadget specification MUST have 
+          runtime code for the application. A specification document MUST have 
           at least one &lt;Content&gt; element.</t>
         
           <figure><artwork>
@@ -1274,7 +1256,7 @@
             attribute that specifies a comma-separated list of views. A single 
             application can support multiple views. Each view is associated 
             with at least one &lt;Content&gt; element. When the container 
-            renders a gadget with multiple &lt;Content&gt; elements, it will 
+            renders an application with multiple &lt;Content&gt; elements, it will 
             use the view name to select the appropriate content.</t>    
           </list>
 
@@ -1333,7 +1315,7 @@
                 <c>embedded</c>
                 <c>Identifies a View that is intended for use primarily with 
                 <xref target="EmbeddedExperiences">Embedded Experiences</xref>.
-                When a container displays a gadget using the 
+                When a container displays an application View using the 
                 <spanx style="verb">gadgets.views.openEmbeddedExperience</spanx>
                 API, it will, by default, render the "embedded" View.</c>
                 
@@ -1446,14 +1428,14 @@
 
             <section title="HTML Content">
           
-              <figure><preamble>The simplest form of content provided by a gadget is HTML 
+              <figure><preamble>The simplest form of content provided by an application is HTML 
               associated with the unnamed default view:</preamble><artwork>
   &lt;Content type="html">&lt![CDATA[
     &lt;div>Hello World!&lt;/div>
   ]]&gt;&lt;/Content>
               </artwork></figure>
             
-              <t>When the container renders the default view for the gadget, it 
+              <t>When the container renders the default view for the application, it 
               will select this &lt;Content&gt; element and display the HTML 
               "&lt;div>Hello World!&lt;/div>" to the user.</t>
             
@@ -1465,10 +1447,10 @@
   ]]&gt;&lt;/Content>
               </artwork></figure>
             
-              <t>If a gadget provides multiple type "html" &ltContent&gt; elements that
+              <t>If an application provides multiple type "html" &ltContent&gt; elements that
               specify the same view, the content is concatenated together when 
               rendered in the order those &lt;Content&gt; elements appear within
-              the gadget specification:</t>
+              the specification document:</t>
             
               <figure><preamble>For instance, given two "html" Content elements 
               for the "home" view:</preamble><artwork>
@@ -1505,9 +1487,9 @@
             <section title="Proxied Content">
           
               <t>As an alternative to including HTML markup directly within 
-              the gadget specification, a &lt;Content&gt; element that uses
+              the specification document, a &lt;Content&gt; element that uses
               type="html" MAY reference an external resource containing 
-              HTML markup using the "href" attribute. When the gadget is 
+              HTML markup using the "href" attribute. When the View is 
               rendered, the container will fetch the external resource and 
               process it's HTML content as if it were included directly 
               within the &lt;Content&gt; element. This is commonly referred
@@ -1518,7 +1500,7 @@
   &lt;Content type="html" href="http://example.org/hello.html"/>
               </artwork></figure>
               
-              <t>When rendering the default view for a gadget containing
+              <t>When rendering the default view for an application containing
               the above &lt;Content&gt; element, the container will issue an 
               HTTP request to the address provided by the 
               <spanx style="verb">href</spanx> attribute to retrieve the content.</t>
@@ -1593,11 +1575,11 @@
             
               <t>When using Proxied Content, the container is responsible for
               sending the HTTP request to the remote server and processing the
-              content while the gadget is being rendered. Alternatively, by 
+              content while the view is being rendered. Alternatively, by 
               using <spanx style="verb">type="url"</spanx> within the &lt;Content&gt; 
               element, the container can be instructed to provide a "direct view" 
               of the content retrieved from the remote source without additional 
-              processing. When the gadget is being rendered for display within 
+              processing. When the view is being rendered for display within 
               a Web Browser, this can be achieved by using an HTML IFrame whose 
               src attribute is set to the value of the &lt;Content&gt; element's 
               <spanx style="verb">href</spanx> attribute. This is commonly 
@@ -1620,12 +1602,12 @@
                   country code.</t>
                   <t hangText="libs">A relative URL reference that points to 
                   any JavaScript resources necessary to satisfy the optional 
-                  or required features listed within the gadget specifications 
+                  or required features listed within the specification document's
                   &lt;ModulePrefs&gt;. TODO: this needs more explanation</t>
                 </list>
               </t>
             
-              <figure><preamble>When rendering the default view for a gadget containing
+              <figure><preamble>When rendering the default view for an application containing
               the above Redirected Content element, a Web-browser based container 
               would generate the following:</preamble><artwork>
   ...
@@ -1732,16 +1714,16 @@
               described by <xref target="SignedFetch"/> is to be used.</t>
           
               <t>The <spanx style="verb">sign_owner</spanx> attribute indicates 
-              whether the identity of the gadget "OWNER" needs be included in 
+              whether the identity of the "OWNER" needs be included in 
               the request sent to fetch the resource. If the value of this 
               attribute is "true", the container MUST include the identity of 
-              the gadget "OWNER".</t>
+              the "OWNER".</t>
               
               <t>The <spanx style="verb">sign_viewer</spanx> attribute indicates 
-              whether the identity of the current gadget "VIEWER" needs to be 
+              whether the identity of the current "VIEWER" needs to be 
               included in the request sent to fetch the resource. If the value 
               of this attribute is <spanx style="verb">true</spanx>, the
-              container MUST include the identity of the gadget "VIEWER".</t>
+              container MUST include the identity of the "VIEWER".</t>
 
             </section>
           
@@ -1788,7 +1770,7 @@
     
       <t>Many applications require the ability to access content and 
       resources that are external to the container currently hosting 
-      instances of the gadget. Such information and resources are often
+      instances of the application. Such information and resources are often
       sensitive in nature and requests need to include authentication
       and authorization details.</t>
       
@@ -1819,7 +1801,7 @@
       access to a remote resource is required, including:
         <list style="symbols">
           <t>Processing &lt;Preload&gt; and &lt;Link&gt; elements within 
-          the gadget specifications &lt;ModulePrefs&gt;,</t>
+          the specification document's &lt;ModulePrefs&gt;,</t>
           <t>Processing Data Pipeline &ls;os:HttpRequest&gt; elements,</t>
           <t>Processing proxy and redirect type &lt;Content&gt; elements,</t>
           <t>All uses of the <spanx style="verb">osapi</spanx> JavaScript APIs, and </t>
@@ -1892,7 +1874,7 @@
   var user = opensocial.data.getDataSet("Viewer").id; // returns "tom"
   // malicious user injects a different id ...
   user = "alice";
-  // the gadget then executes as normal...
+  // the code then executes as normal...
   var params = {
     "opensocial_viewer_id" : user};
   gadgets.io.makeRequest(
@@ -1926,7 +1908,7 @@
                 </t>
                 <t hangText="opensocial_app_url">
                   An IRI provided by the container that represents the 
-                  gadget for which the request is being sent. The 
+                  application for which the request is being sent. The 
                   IRI provided is used to identify the application specification
                   rather than individual instances.
                 </t>
@@ -2102,7 +2084,7 @@
         limited permission to an application to perform some action on that 
         resource on behalf of the owner. For instance, an application might
         wish to display a listing of documents owned by the current viewer. 
-        Before displaying that list of files, the gadget works with the container
+        Before displaying that list of files, the application works with the container
         to request authorization from the viewer to access the service
         used to manage documents and files. Such access can be limited by the
         viewer, for example, to allow only simple read operations that occur
@@ -2136,7 +2118,7 @@
         <t>From the application developer's point of view, there are no differences
         between working with OAuth-protected resources provided by the container 
         or those provided by a third-party. The sections that follow detail 
-        the responsibilities, requirements and mechanisms gadget developers
+        the responsibilities, requirements and mechanisms application developers
         need to work with the OAuth protocol. Additional requirements and 
         considerations for OpenSocial Container implementations are discussed
         within the OpenSocial Common Container specification [TODO: Ref CC spec].</t>
@@ -2186,7 +2168,7 @@
           ]]></artwork></figure>
           
           <t>Once declared, developers can use the specified OAuth services 
-          anywhere within the gadget's specification where remote resources 
+          anywhere within the specification document where remote resources 
           are accessed, including uses of the <spanx style="verb">osapi</spanx> 
           and <spanx style="verb">gadgets.io.makeRequest</spanx> JavaScript
           APIs, &lt;Preload&gt; elements, &lt;Link&gt; elements, and
@@ -2249,7 +2231,7 @@
               <c>In certain circumstances, instances of an application can be 
               preauthorized to access particular resources and issued an 
               OAuth Request Token in advance. The OAUTH_REQUEST_TOKEN parameter
-              allows the gadget to provide such preapproved request tokens to the 
+              allows the application to provide such preapproved request tokens to the 
               container for use.</c>
               
               <c>OAUTH_REQUEST_TOKEN_SECRET</c>
@@ -2267,12 +2249,12 @@
               
               <c>OAUTH_TOKEN_NAME</c>
               <c>gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</c>
-              <c>Provides a simple label that gadget can use to refer to the 
+              <c>Provides a simple label that application can use to refer to the 
               OAuth Access Token granting access to particular resources.
               If unspecified the value is assumed to be an empty string. 
               Gadget instances can use multiple token names if they access
-              multiple resources from a single source. For example, a gadget
-              that access a contact list and a calendar might used the 
+              multiple resources from a single source. For example, an application
+              that accesses a contact list and a calendar might used the 
               token name "contacts" to refer to the OAuth token providing 
               access to the contact data and the name "calendar" to refer to
               the token providing access to the calendar.</c>
@@ -2280,7 +2262,7 @@
               <c>OAUTH_USE_TOKEN</c>
               <c>gadgets.io.RequestParameters.OAUTH_USE_TOKEN</c>
               <c>For certain kinds of actions on certain resources, an OAuth
-              service provider might not require that the container and gadget
+              service provider might not require that the container and application
               walk through the complete OAuth process to acquire an
               Access Token. In such scenarios, the service providing access
               to the resource will verify the OAuth Consumer Key provided 
@@ -2291,7 +2273,7 @@
               Access Token has been issued. Typically, however, most resource
               providers will only allow a requester to access protected resources
               if an Access Token is included in the request. The OAUTH_USE_TOKEN
-              parameter can be used by the gadget as a hint to the container 
+              parameter can be used by the application as a hint to the container 
               as to whether the acquisition and use of an Access Token is 
               required or optional. The value MUST be one of:
                 <list style="hangText">
@@ -2311,7 +2293,7 @@
                     Tells the container that use of the Access Token 
                     is required. If an appropriate Access Token has not
                     yet been acquired, the container will work with the 
-                    gadget and the OAuth Service Provider to seek appropriate
+                    application and the OAuth Service Provider to seek appropriate
                     authorization and acquire an Access Token.
                   </t>
                 </list>
@@ -2434,8 +2416,8 @@
         
           <t>When the container receives any request for which the OAuth
           protocol is to be used, regardless of whether the request is 
-          submitted via the JavaScript API or via elements in the gadget
-          specification, it MUST adhere to the following requirements and 
+          submitted via the JavaScript API or via elements in the
+          specification document, it MUST adhere to the following requirements and 
           processing model:</t>
           
           <list style="numbers">
@@ -2481,7 +2463,7 @@
                 an Access Token is acquired, a request using the token
                 will be sent to the server. If a token cannot be 
                 acquired, the container will report an error back 
-                to the gadget.</t>
+                to the application.</t>
               </list>
             </t>
           </list>
@@ -2628,7 +2610,7 @@
     <section title="Variable Substitution" anchor="VariableSubstitution">
   
       <t>The Variable Substitution capability provides the ability 
-      for gadget developers to use special "Expression Language" (EL) 
+      for application developers to use special "Expression Language" (EL) 
       statements within their application specifications that the container 
       will replace with appropriate values when a View is rendered.</t>
   
@@ -2719,7 +2701,7 @@
         predefined scopes below, and <spanx style="verb">{Var}</spanx> specifies 
         a specific variable within the identified scope. The applicability of 
         each Prefix and Var combination will vary depending on where within the 
-        gadget specification the variable substitution is occurring.</t>
+        specification document the variable substitution is occurring.</t>
         
         <t>Container implementations and individual extensions to the core 
         OpenSocial specification are free to introduce additional reserved 
@@ -2823,15 +2805,15 @@
         -- now deprecated -- alternative expression syntax. Container
         implementations are permitted to continue supporting the deprecated
         syntax to provide backwards compatibility for older, 
-        existing gadget specifications, however, gadget developers creating 
-        new gadget specifications MUST NOT use the deprecated format.</t>
+        existing specification documents, however, developers creating 
+        new applications MUST NOT use the deprecated format.</t>
         
         <t>The legacy syntax takes the form <spanx style="verb">__{Prefix}_{Var}__</spanx> 
         where <spanx style="verb">{Prefix}</spanx> identifies one of the 
         predefined scopes below, and <spanx style="verb">{Var}</spanx> specifies 
         a specific variable within the identified scope.</t>
  
-        <figure><preamble>For instance, in the partial gadget example that 
+        <figure><preamble>For instance, in the partial example that 
         follows, the expression <spanx style="verb">__MSG_FOO__</spanx> is 
         replaced for the localized value identified by the key 
         <spanx style="verb">FOO</spanx> within the localized message bundle:</preamble>
@@ -2873,15 +2855,15 @@
           
           <c>MODULE</c>
           <c>Originally intended to provide a context for information about 
-          the gadget specification itself. Currently, <spanx style="verb">ID</spanx> 
+          the specification document itself. Currently, <spanx style="verb">ID</spanx> 
           is the only variable key supported (e.g. <spanx style="verb">__MODULE_ID__</spanx>). 
           When used, the container SHOULD replace the <spanx style="verb">__MODULE_ID__</spanx> 
-          expression with a unique ID value for each instance of a gadget 
+          expression with a unique ID value for each instance of an application 
           displayed simultaneously.</c>
           
           <c>UP</c>
           <c>References all named values defined by &lt;UserPref&gt; elements
-          contained in the gadget specification. The values of the 
+          contained in the specification document. The values of the 
           <spanx style="verb">{Var}</spanx> component correlate to each defined 
           user preference. Expression statements using this prefix will resolve 
           to the same values as calls to the <spanx style="verb">gadgets.Prefs</spanx> 
@@ -2897,7 +2879,7 @@
       <section title="Processing Requirements">
       
         <t>Containers perform Variable Substitution when application views
-        are rendered or when metadata about the gadget is displayed.
+        are rendered or when metadata about the application is displayed.
         For instance, if the container includes an application specification 
         within a listing of applicatioms available to install and use on a page, 
         then the container will perform any substitution necessary on the 
@@ -2907,7 +2889,7 @@
         attributes or elements in the application specification document 
         exception of &lt;Locale&gt;, &lt;msg&gt;, &lt;EnumValue&gt; elements, 
         but only when the content of those elements and attributes is 
-        currently being rendered. If, for instance, a gadget contains 
+        currently being rendered. If, for instance, a application contains 
         multiple &lt;Content&gt; elements, each of which identify different
         views, the container will only process substitutions that are 
         included within the content for the view currently being rendered.
@@ -2920,7 +2902,7 @@
         <t>Variable substitution MUST NOT be applied recursively and 
         circular dependencies detected within variables MUST be ignored
         and treated as literal values rather than expressions. For instance,
-        within the following partial gadget specification:</t>
+        within the following partial application specification:</t>
         
         <figure><artwork><![CDATA[
   <Module xmlns:os="http://ns.opensocial.org/2008/markup">
@@ -2978,15 +2960,15 @@
       <t>How the container determines the current language and country 
       of the viewer is not defined by this specification.</t>
       
-      <t>If a matching &lt;Locale&gt; is not found within the gadget 
-      specification, the container is permitted to provide it's own
+      <t>If a matching &lt;Locale&gt; is not found within the 
+      specification document, the container is permitted to provide it's own
       localization data.</t>
 
       <t>Once an appropriate &lt;Locale&gt; has ben selected, containers
       are required to replace all Msg expressions for which a replacement
       value can be determined.</t>
       
-      <t>For example, given the following partial gadget specification:</t>
+      <t>For example, given the following partial specification:</t>
       
       <figure><artwork><![CDATA[
   <Module>
@@ -3148,82 +3130,149 @@
     <!-- END LOCALIZATION -->
    
     
-    <section title="Gadget Lifecycle Events" anchor="gadget-lifecycle-events">
+    <section title="Application Lifecycle Events" anchor="gadget-lifecycle-events">
     
-      <t>The Gadget Lifecycle Event capability allows an OpenSocial
+      <t>The Application Lifecycle Event capability allows an OpenSocial
       server and container to send notifications to a remote endpoint
-      of the gadget developer's choosing whenever events significant
-      to the lifecycle of an individual instance of the gadget occur.
+      of the application developer's choosing whenever events significant
+      to the lifecycle of an individual instance of the application occur.
       Such notifications can be used for a variety of purposes, including,
       but not limited to, the provisioning of additional resources external
-      to the container that instances of the gadget require to operate.</t>
+      to the container that instances of the application require to operate.</t>
     
-      <t>Every instance of a gadget processed and rendered by a container 
-      follows the same basic general lifecycle:</t>
+      <t>Every instance of an application processed and rendered by a container 
+      follows the same basic general lifecycle.</t>
       
-      <list style="hanging">
-        <t hangText="Pending">occurs prior to a gadget specification document
+      <t>The syntax used to identify individual types of events within the 
+      application lifecycle is: </t>
+      
+      <figure><artwork>
+  segment = 1*( ALPHA / DIGIT )
+  prefix = segment *("." segment ) "."
+  name = segment *("." segment)
+  event = [prefix] "event" [ "." name ]
+      </artwork></figure>
+      
+      <t>The following events are defined:</t>
+      
+      <texttable>
+        <ttcol>Name</ttcol>
+        <ttcol>Identifier</ttcol>
+        <ttcol>Description</ttcol>
+        
+        <c>Pending</c>
+        <c>org.opensocial.event.pending</c>
+        <c>occurs prior to an application specification document
         being "Registered" with the container. This is an intermediate step in
-        a gadget's lifecycle that occurs, for example, when a gadget developer
-        first submits the gadget specification to the container, or when an
-        Embedded Experience that references a previously unknown gadget specification
+        a application's lifecycle that occurs, for example, when a developer
+        first submits the specification document to the container, or when an
+        Embedded Experience that references a previously unknown specification
         is encountered, and that specification has not yet been processed. This
         phase in the lifecycle implies that additional action might be required
-        before the gadget specification can be considered to be "Registered".</t>
-        <t hangText="Rejected">occurs when "Registration" of a "Pending" 
-        gadget specification cannot be completed for any reason. For instance, 
-        if the registration of the gadget is rejected by an administrator.</t>
-        <t hangText="Registered">occurs after the container first becomes
-        aware of the Gadget Specification Document. For instance, when an 
-        administrator adds a gadget specification to a catalog of available 
-        gadget's, or when a previously unknown gadget specification is 
+        before the application can be considered to be "Registered".</c>
+        
+        <c>Rejected</c>
+        <c>org.opensocial.event.rejected</c>
+        <c>occurs when "Registration" of a "Pending" 
+        specification document cannot be completed for any reason. For instance, 
+        if the registration is rejected by an administrator.</c>
+        
+        <c>Registered</c>
+        <c>org.opensocial.event.registered</c>
+        <c>occurs after the container first becomes
+        aware of the Application Specification Document. For instance, when an 
+        administrator adds an application to a catalog of available 
+        applications, or when a previously unknown application is 
         referenced within an Embedded Experience currently being processed
-        by a container.</t>
-        <t hangText="Available">occurs when the gadget specification becomes
+        by a container.</c>
+        
+        <c>Available</c>
+        <c>org.opensocial.event.available</c>
+        <c>occurs when the application becomes
         available for use by the container. In order to be considered 
-        "Available", a gadget specification MUST have first passed
-        through the "Registered" phase. There are a number of actions 
-        that can trigger the availability of a gadget specification such 
-        as an administrator approving the registration or adding the gadget
-        to a "whitelist" of acceptable gadgets.</t>
-        <t hangText="Unavailable">occurs when the gadget specification becomes
-        unavailable for use by the container. Unavailable gadgets are known 
+        "Available", an application MUST have first passed through the 
+        "Registered" phase. There are a number of actions that can trigger the 
+        availability of an application such as an administrator approving the 
+        registration or adding the application to a "whitelist" of acceptable 
+        applications.</c>
+        
+        <c>Unavailable</c>
+        <c>org.opensocial.event.unavailable</c>
+        <c>occurs when the application becomes
+        unavailable for use by the container. Unavailable applications are known 
         to the container ("Registered") but cannot be used for some reason. 
-        Examples include gadgets that have been added to a "blacklist" or 
-        have otherwise been disabled for some reason.</t>
-        <t hangText="Updated">occurs whenever the gadget specification known
+        Examples include applications that have been added to a "blacklist" or 
+        have otherwise been disabled for some reason.</c>
+        
+        <c>Updated</c>
+        <c>org.opensocial.event.updated</c>
+        <c>occurs whenever the application specification known
         to the container has been updated. This can happen whenever a new 
-        version of the gadget specification is provided to the container.</t>
-        <t hangText="Installed">occurs when a specific instance of a gadget 
+        version of the application is provided to the container.</c>
+        
+        <c>Installed</c>
+        <c>org.opensocial.event.installed</c>
+        <c>occurs when a specific instance of an application 
         is provisioned for use. For instance, when an instance is added to a 
-        page. Only "Available" gadgets can be "Installed". Installing a gadget
-        is not the same as "opening" or "rendering" the gadget.</t>
-        <t hangText="Configured">occurs whenever the configuration details for 
-        an installed gadget have been modified.</t>
-        <t hangText="Restriction">occurs whenever the functionality of a particular
-        instance of the gadget has been restricted in some way. For instance, 
-        if the operation of the gadget has caused it to exceed request rate 
+        page. Only "Available" applications can be "Installed". Installing an
+        application is not the same as "opening" or "rendering" the application.</c>
+        
+        <c>Configured</c>
+        <c>org.opensocial.event.configured</c>
+        <c>occurs whenever the configuration details for 
+        an installed application have been modified.</c>
+        
+        <c>Restriction</c>
+        <c>org.opensocial.event.restriction</c>
+        <c>occurs whenever the functionality of a particular
+        instance of the application has been restricted in some way. For instance, 
+        if the operation of the application has caused it to exceed request rate 
         limitations or quotas and the container responds by limiting the 
-        actions the gadget instance is permitted to perform. Another example
+        actions the application instance is permitted to perform. Another example
         could be when the container has limited the security policy permissions
-        underwhich the instance of the gadget is operating.</t>
-        <t hangText="Opened">occurs whenever an "Installed" instance of a 
-        gadget is opened or rendered by the container.</t>
-        <t hangText="Closed">occurs whenever an "Installed" instance of a 
-        gadget is closed by the container. Note that closing a gadget is not the 
-        same as uninstalling it. A closed gadget can be reopened later.</t>
-        <t hangText="Uninstalled">occurs when a provisioned instance of a 
-        gadget is destroyed. This lifecycle event implies that all resources
-        associated with a specific gadget instance are to be deallocated.</t>
-        <t hangText="Unregistered">occurs when a "Registered" gadget specification
-        is removed from the container.</t>
-      </list>
+        underwhich the instance of the application is operating.</c>
+        
+        <c>Opened</c>
+        <c>org.opensocial.event.opened</c>
+        <c>occurs whenever an "Installed" instance of an 
+        application is opened or rendered by the container.</c>
+        
+        <c>Closed</c>
+        <c>org.opensocial.event.closed</c>
+        <c>occurs whenever an "Installed" instance of an 
+        application is closed by the container. Note that closing an 
+        application is not the same as uninstalling it. A closed application 
+        can be reopened later.</c>
+        
+        <c>Uninstalled</c>
+        <c>org.opensocial.event.uninstalled</c>
+        <c>occurs when a provisioned instance of an 
+        application is destroyed. This lifecycle event implies that all resources
+        associated with a specific application instance are to be deallocated.</c>
+        
+        <c>Unregistered</c>
+        <c>org.opensocial.event.unregistered</c>
+        <c>occurs when a "Registered" application specification is removed 
+        from the container.</c>
+      </texttable>
       
-      <t>A gadget developer can indicate interest in receiving notification 
+      <t>A developer can indicate interest in receiving notification 
       whenever any of these lifecycle events occur by using the &lt;Link&gt;
-      element. Containers are not, however, required to send lifecycle event 
-      notifications and MAY ignore any &lt;Link&gt; element specifying an
-      event identifier.</t>
+      element with a <spanx style="verb">rel</spanx> attribute value equal to
+      the identifier of the event. Containers are not, however, required to send 
+      lifecycle event notifications and MAY ignore any &lt;Link&gt; element 
+      specifying an event identifier.</t>
+      
+      <t>The special identifier <spanx style="verb">org.opensocial.event</spanx>
+      can be used to indicate interest in receiving notification for all 
+      event types.</t>
+      
+      <t>Use of the <spanx style="verb">org.opensocial.</spanx> prefix is 
+      reserved by this specification. Implementations MUST NOT use event 
+      identifiers that use the <spanx style="verb">org.opensocial.</spanx> 
+      prefix other than those defined above. Implementations are free to 
+      define additional event type identifiers that use prefixes other than 
+      <spanx style="verb">org.opensocial.</spanx>.</t>
       
       <t>The optional <spanx style="verb">method</spanx> attribute can be 
       specified on the &lt;Link&gt; element to indicate the HTTP request 
@@ -3248,68 +3297,16 @@
       ]]></artwork>
       </figure>
       
-      <t>The <spanx style="verb">rel</spanx> attribute on the &lt;Link&gt; 
-      element identifies the type of event the gadget developer is interested 
-      in receiving. The event identifier syntax used as the value of the rel is: </t>
-      
-      <figure><artwork>
-  segment = 1*( ALPHA / DIGIT )
-  prefix = segment *("." segment ) "."
-  name = segment *("." segment)
-  event = [prefix] "event" [ "." name ]
-      </artwork></figure>
-      
-      <t>This specification defines the following event identifiers:</t>
-      
-      <list style="hanging">
-        <t hangText="org.opensocial.event.pending">Identifies the "Pending" 
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.rejected">Identifies the "Rejected"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.registered">Identifies the "Registered"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.available">Identifies the "Available"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.unavailable">Identifies the "Unavailable"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.updated">Identifies the "Updated"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.installed">Identifies the "Installed"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.configured">Identifies the "Configured"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.restriction">Identifies the "Restriction"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.opened">Identifies the "Opened"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.closed">Identifies the "Closed"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.uninstalled">Identifies the "Uninstalled"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event.unregistered">Identifies the "Unregistered"
-        lifecycle event.</t>
-        <t hangText="org.opensocial.event">A specially defined "wildcard" that 
-        represents all other events using the "org.opensocial." prefix.</t>
-      </list>
-      
-      <t>Use of the <spanx style="verb">org.opensocial.</spanx> prefix is 
-      reserved by this specification. Implementations MUST NOT use event 
-      identifiers that use the "org.opensocial." prefix other than those 
-      defined above. Implementations are free to define additional event 
-      type identifiers that use prefixes other than 
-      <spanx style="verb">org.opensocial.</spanx>.</t>
-
       <section title="Lifecycle Event Notifications">
       
         <t>Whenever a significant lifecycle event occurs for a particular
-        gadget specification, the container MAY send an event notification
-        to the IRI identified by any &lt;Link&gt; element provided by that 
-        gadget specification whose <spanx style="verb">rel</spanx> attribute 
-        values identifies the event. If the container supports sending event 
-        notifications, one notification SHOULD be sent for each matching 
-        &lt;Link&gt; element.</t>
+        application, the container MAY send an event notification to the IRI 
+        identified by any &lt;Link&gt; element provided whose 
+        <spanx style="verb">rel</spanx> attribute values identify the event. 
+        If the container supports sending event notifications, one notification 
+        SHOULD be sent for each matching &lt;Link&gt; element.</t>
         
-        <t>For instance, given the following partial gadget specification:</t>
+        <t>For instance, given the following partial specification:</t>
       
         <figure><artwork><![CDATA[
   <Module>
@@ -3327,8 +3324,8 @@
         ]]></artwork>
         </figure>
         
-        <t>When the gadget specification is registered within the container, 
-        two event notifications will be sent:
+        <t>When the application is registered with the container, two event 
+        notifications will be sent:
           <list style="symbols">
             <t>One to the endpoint "http://example.org/event" identified by
             the <spanx style="verb">org.opensocial.event</spanx> rel value, and</t>
@@ -3411,7 +3408,7 @@
             <t hangText="event.addapp">Equivalent to <spanx style="verb">org.opensocial.event.installed</spanx></t>
             <t hangText="event.removeapp">Equivalent to <spanx style="verb">org.opensocial.event.uninstalled</spanx></t>
             <t hangText="event.app">Provides an indication that some action
-            has been performed on the gadget. The specific action performed
+            has been performed on the application. The specific action performed
             is identified by adding an additional <spanx style="verb">action</spanx> 
             parameter to the GET or POST request. The valid "action" values are:
               <list style="symbols">
@@ -3430,25 +3427,25 @@
     </section>
     <!-- END GADGET LIFECYCLE EVENTS -->
  
-  
     <section title="Data Pipelining" anchor="DataPipelining">
     
-      <t>Data Pipelining is a declarative mechanism for defining the data a 
-      gadget requires from the container. XML Elements are used to associate
+      <t>Data Pipelining is a declarative mechanism for defining the data an 
+      application requires from the container. XML Elements are used to associate
       variable keys with specific kinds of data from a variety of different 
       sources. For instance, the &lt;os:DataRequest&gt; element can be used
       to access social data provided by the OpenSocial container, while the 
       &lt;os:HttpRequest&gt; element can provide access to content from any 
       HTTP endpoint.</t>
       
-      <t>All Data Pipeline elements have a 'key' attribute whose value is
-      used to uniquely identify the data. Such keys can be used within 
-      Expression Language statements used for Variable Substitution or 
-      with JavaScript API calls. Key names are always case-sensitive.</t>
+      <t>All Data Pipeline elements have a <spanx style="verb">key</spanx> 
+      attribute whose value is used to uniquely identify the data. Such keys 
+      can be used within Expression Language statements used for Variable 
+      Substitution or with JavaScript API calls. Key names are always 
+      case-sensitive.</t>
 
       <figure><preamble>The following illustrates a basic example of 
-      Data Pipelining in a partial gadget specification:</preamble>
-      <artwork xml:space="preserve"><![CDATA[
+      Data Pipelining in a partial application specification:</preamble>
+      <artwork><![CDATA[
   <Module xmlns:os="http://ns.opensocial.org/2008/markup">
     ...
     <Data>
@@ -3473,16 +3470,16 @@
         </list>
       </t>
       
-      <t>The placement of Data Pipeline elements will determine where the 
-      data associatd with the key specified will be made available to the 
-      container while the gadget is being rendered. The considerations 
+      <t>The placement of Data Pipeline elements will determine when and where 
+      the data associated with the key specified will be made available to the 
+      container while an application view is being rendered. The considerations 
       and requirements for each of the options listed above are discussed 
       in detail in the relevant sections that follow.</t>
       
       <section title="The DataContext" anchor="DataContext">
-        <t>For every gadget instance, a <spanx style="verb">DataContext</spanx>
+        <t>For every application instance, a <spanx style="verb">DataContext</spanx>
         object is created that maintains all of the data associated with the 
-        gadget instance's Data Pipeline elements. The information contained 
+        instance's Data Pipeline elements. The information contained 
         within the <spanx style="verb">DataContext</spanx> is available for
         use with Variable Substitution via Expression Language statements 
         or via the <spanx style="verb">opensocial.data</spanx> APIs; and while
@@ -3499,21 +3496,23 @@
         register the resulting data with the <spanx style="verb">DataContext</spanx>
         for all views.</t>
         
-        <t>Individual Data Pipeline elements, however, MAY specify a "view" 
-        attribute whose value is a comma separated list of specific views 
-        for which the element is associated. Such elements will only be 
-        processed and added to the <spanx style="verb">DataContext</spanx>
-        when the identified views are being rendered.</t>
+        <t>Individual Data Pipeline elements, however, MAY specify a 
+        <spanx style="verb">view</spanx> attribute whose value is a comma 
+        separated list of specific views for which the element is associated. 
+        Such elements will only be processed and added to the 
+        <spanx style="verb">DataContext</spanx> when the identified views are 
+        being rendered.</t>
         
         <figure><preamble>In the following example, the &lt;os:HttpRequest&gt;
-        element using key "foo" is registered globally and available within 
-        all views while the &lt;os:HttpRequest&gt; element using key "bar"
-        is only processed and available when the "example" view is being 
+        element using key <spanx style="verb">foo</spanx> is registered globally 
+        and available within all views while the &lt;os:HttpRequest&gt; element 
+        using key <spanx style="verb">bar</spanx> is only processed and 
+        available when the <spanx style="verb">example</spanx> view is being 
         rendered:</preamble><artwork><![CDATA[
   <Module>
     ...
     <Data>
-      <os:HttpRequest key="foo" href="http://example.com/api" />
+      <os:HttpRequest key="foo" href="http://example.org/api" />
       <os:HttpRequest key="bar" href="http://example.com/api" view="example"/>
     </Data>
     <Content type="html">
@@ -3527,9 +3526,10 @@
         
         <t>Multiple Data Pipeline elements MUST NOT share the same value for
         the key attribute unless each is specifically targeted at a different 
-        view. In the following example, the key "foo" would resolve to the 
-        value "abc" when the default view is rendered and to "123" when the 
-        "example" view is rendered:</t>
+        view. In the following example, the key <spanx style="verb">foo</spanx> 
+        would resolve to the value <spanx style="verb">abc</spanx> when the 
+        default view is rendered and to <spanx style="verb">123</spanx> when the 
+        <spanx style="verb">example</spanx> view is rendered:</t>
         
         <figure><artwork><![CDATA[
   <Module>
@@ -3539,10 +3539,10 @@
       <os:Var key="foo" value="abc" view="example" />
     </Data>
     <Content type="html">
-      ...
+      The value is ${foo}
     </Content>
     <Content type="html" view="example">
-      ...
+      The value is ${foo}
     </Content>
   </Module>       
         ]]></artwork></figure>
@@ -3577,11 +3577,12 @@
         </artwork></figure>
         
         <t>As illustrated, when Data Pipeline elements are embedded within 
-        HTML Content, the gadget specification MUST require the "opensocial-data"
+        HTML Content, the specification document MUST require the "opensocial-data"
         feature using the &lt;Require&gt; element within the &lt;ModulePrefs&gt;.</t>
         
         <t>The Data Pipeline elements themselves are contained within an
-        HTML script tag whose type attribute specifies "text/os-data". Also
+        HTML script tag whose <spanx style="verb">type</spanx> attribute 
+        specifies the value <spanx style="verb">text/os-data</spanx>. Also
         note that the Data Pipeline XML namespace is declared for the "os:" 
         prefix. This is required in order for the embedded Data Pipeline 
         elements to processed properly while the content is being rendered.</t>
@@ -3589,14 +3590,14 @@
         <t>Data Pipeline elements defined in this manner are scoped specifically
         to the &lt;Content&gt; element in which they are embedded, meaning that
         the data each provides to the <spanx style="verb">DataContext</spanx>
-        will be available for expression statements and API calls that are 
+        will be available only for expression statements and API calls that are 
         also in the same &lt;Content&gt; element.</t>
         
         <t>If an embedded Data Pipeline element specifies the same key as a
         Data Pipeline element contained within the &lt;Data&gt; element, 
         the value provided by the embedded elements takes precedence. In the 
         following example, the variable "foo" will resolve to "123" when 
-        the default view is rendered:</t>
+        the default unnamed view is rendered:</t>
       
         <figure><artwork>
   &lt;Module>
@@ -3618,7 +3619,7 @@
       
       <section title="Data Pipeline Elements and Proxied Content" anchor="data-pipeline-proxy">
       
-        <t>When using Proxied Content to render a view for a gadget,
+        <t>When using Proxied Content to render a view for an application,
         the container typically sends an HTTP GET request to the IRI
         provided by the &lt;Content&gt; element's href attribute. 
         In such cases, any information the remote endpoint needs to 
@@ -3636,10 +3637,10 @@
   <Content type="html" href="http://example.org/remote-server?id=${ViewParams.id}" />
         ]]></artwork></figure>
         
-        <figure><preamble>The ${ViewParams.id} expression would be replaced with
-        an appropriate value drawn from the View Parameters passed into the 
-        gadget, and HTTP request sent to the remote endpoint by the 
-        container would use HTTP GET:</preamble><![CDATA[
+        <figure><preamble>The <spanx style="verb">${ViewParams.id}</spanx> 
+        expression would be replaced with an appropriate value drawn from the 
+        View Parameters passed into the application, and HTTP request sent to the 
+        remote endpoint by the container would use HTTP GET:</preamble><![CDATA[
   GET /remote-server?id=abc123 HTTP/1.1
   Host: example.org
   Accept: application/json
@@ -3701,7 +3702,8 @@
         ]]></artwork></figure>
         
         <figure><preamble>The JSON data posted to the remote server would 
-        include the value of "key1" and the error information for "key2":</preamble>
+        include the value of <spanx style="verb">key1</spanx> and the error 
+        information for <spanx style="verb">key2</spanx>:</preamble>
         <artwork><![CDATA[
   POST / HTTP/1.1
   Host: example.org
@@ -3718,12 +3720,12 @@
   }
         ]]></artwork></figure>
         
-        <t>When a gadget specification uses unrecognized Data Pipeline tags,
+        <t>When an application specification uses unrecognized Data Pipeline tags,
         the container is given the choice of either ignoring it or specifying
         a 404 (Not Found) error within the JSON using the basic error structure
         defined in [TODO: Reference to Core API spec].</t>
         
-        <figure><preamble>In the example below, the gadget specification uses
+        <figure><preamble>In the example below, the application specification uses
         an undefined, hypothetical Data Pipeline extension:</preamble><artwork><![CDATA[
   <Content type="html" href="http://example.org">
     <os:Var key="key1" value="abc" />
@@ -3732,7 +3734,7 @@
         ]]></artwork></figure>
         
         <figure><preamble>The JSON generated for the HTTP POST would either 
-        omit "key2" entirely:</preamble>
+        omit <spanx style="verb">key2</spanx> entirely:</preamble>
         <artwork><![CDATA[
   POST / HTTP/1.1
   Host: example.org
@@ -3743,7 +3745,8 @@
   }
         ]]></artwork></figure>
 
-        <figure><preamble>Or indicate that key2 could not be resolved:</preamble>
+        <figure><preamble>Or indicate that <spanx style="verb">key2</spanx> 
+        could not be resolved:</preamble>
         <artwork><![CDATA[
   POST / HTTP/1.1
   Host: example.org
@@ -3760,12 +3763,6 @@
   }
         ]]></artwork></figure>
 
-        <t>In response to the HTTP POST request, the remote server SHOULD
-        return HTML content suitable for rendering by the container. Such
-        content will be processed in the same way as type "html" &lt;Content&gt;
-        elements and MAY contain embedded Data Pipeline elements using the 
-        customized HTML &lt;script&gt; tag.</t>
-
       </section>
       
       <section title="The Data Pipeline Elements">
@@ -3781,18 +3778,19 @@
         </t>
         
         <t>The XML Namespace for each of the Data Pipeline elements is
-        "http://ns.opensocial.org/2008/markup". By convention, this 
-        specification uses the namespace prefix "os:" for the Data
-        Pipeline Namespace. Note, however, that the choice of prefix
+        <spanx style="verb">http://ns.opensocial.org/2008/markup</spanx>. 
+        By convention, this specification uses the namespace prefix "os:" for 
+        the Data Pipeline Namespace. Note, however, that the choice of prefix
         is arbitrary and not semantically equivalent.</t>
         
         <t>Implementations MAY define additional Data Pipeline elements 
-        that use an XML Namespace other than "http://ns.opensocial.org/2008/markup".
-        Such extensions MUST contain a "key" attribute whose value specifies
-        the name that will be used to associate that element's resolved value
-        within the <spanx style="verb">DataContext</spanx>. Containers are 
-        recommended to ignore any Data Pipeline elements they do not support or 
-        do not understand.</t>
+        that use an XML Namespace other than 
+        <spanx style="verb">http://ns.opensocial.org/2008/markup</spanx>.
+        Such extensions MUST contain a <spanx style="verb">key</spanx> 
+        attribute whose value specifies the name that will be used to associate 
+        that element's resolved value within the <spanx style="verb">DataContext</spanx>. 
+        Containers are recommended to ignore any Data Pipeline elements they 
+        do not support or do not understand.</t>
       
         <figure><artwork>
   namespace os = "http://ns.opensocial.org/2008/markup"
@@ -3807,7 +3805,7 @@
         
           <t>The &lt;os:DataRequest&gt;</t> element is used to access social
           data provided by the container. It is generally equivalent to the 
-          JavaScript API methods provided to the gadget by the container to 
+          JavaScript API methods provided to the application by the container to 
           access information such as the identity of the current viewer, 
           a particular users group of friends, an activity stream, and so forth.
           the &lt;os:DataRequest&gt; element can only be used to access content
@@ -3820,26 +3818,28 @@
   }
           </artwork></figure>
 
-          <t>In addition to the "key" attribute required for all Data Pipeline
-          elements, the &lt;os:DataRequest&gt; element MUST contain a "method"
-          attribute whose value identifies the data retrieval operation that
-          is to be performed as defined by [TODO: Reference to new core data/api
+          <t>In addition to the <spanx style="verb">key</spanx> attribute 
+          required for all Data Pipeline elements, the &lt;os:DataRequest&gt; 
+          element MUST contain a <spanx style="verb">method</spanx> attribute 
+          whose value identifies the data retrieval operation that is to be 
+          performed as defined by [TODO: Reference to new core data/api
           spec]. All additional attributes contained by the &lt;os:DataRequest&gt;
           are to be mapped directly to the identically named input parameters 
-          for the data retrieval operation specified by the "method".</t>
+          for the data retrieval operation specified by the 
+          <spanx style="verb">method</spanx>.</t>
           
           <t>Child elements or any additional content provided within the 
           &lt;os:DataRequest&gt; element SHOULD be ignored.</t>
           
-          <t>For example, the "people.get" operation defined by 
-          [TODO: Core Data/API Spec] allows a gadget to retrieve information
-          about people known to the container. It can, for instance, be used
-          to retrieve basic profile details about an individual or retrieve a 
-          listing of associated profiles (e.g. a "friends" list).</t>
+          <t>For example, the <spanx style="verb">people.get</spanx> operation 
+          defined by [TODO: Core Data/API Spec] allows an application to retrieve 
+          information about people known to the container. It can, for instance, 
+          be used to retrieve basic profile details about an individual or 
+          retrieve a listing of associated profiles (e.g. a "friends" list).</t>
           
-          <figure><preamble>When invoked using the JavaScript API to retrieve the listing
-          of profiles associated with the gadget's current viewer, the 
-          method is invoked as:</preamble><artwork>
+          <figure><preamble>When invoked using the JavaScript API to retrieve 
+          the listing of profiles associated with the application's current viewer, 
+          the method is invoked as:</preamble><artwork>
   var params = {"userId": "@viewer", "groupId": "@friends"};
   osapi.people.get(params).execute(callback);
   
@@ -3852,9 +3852,10 @@
           ]]></artwork></figure>
           
           <t>Assuming the method identified was processed successfully, the 
-          "friends" variable will be added to the <spanx style="verb">DataContext</spanx>
-          with a value identical to that provided as input to the callback 
-          function in the previous JavaScript API.</t>
+          <spanx style="verb">friends</spanx> variable will be added to the 
+          <spanx style="verb">DataContext</spanx> with a value identical to that 
+          provided as input to the callback function in the previous 
+          JavaScript API.</t>
         
         </section>
         
@@ -3863,11 +3864,11 @@
           <t>The &lt;os:HttpRequest&gt;</t> element is used to access arbitrary
           content from a remote HTTP endpoint. It is generally equivalent to the 
           <spanx style="verb">osapi.http</spanx> JavaScript API methods provided 
-          to the gadget by the container. Currently, only HTTP GET and POST 
+          to the application by the container. Currently, only HTTP GET and POST 
           methods are supported.</t>
           
           <figure><artwork>
-  DataRequest = element os:DataRequest {
+  HttpRequest = element os:HttpRequest {
     BaseDataPipeline,
     SignedFetch,
     attribute method { "get" | "post" },
@@ -3875,25 +3876,31 @@
   }
           </artwork></figure>
         
-          <t>In addition to the "key" attribute required for all Data Pipeline
-          elements, the &lt;os:HttpRequest&gt; element MUST contain a "method"
-          attribute whose value is either "get" or "post" indicating the HTTP 
-          request method to use for the request, and an "href" attribute whose
-          value specifies a dereferenceable IRI to which the request will be 
-          sent. If not specified, the value of the "method" attribute will be 
-          assumed to be "get". All additional attributes contained by the 
-          &lt;os:HttpRequest&gt; are to be mapped directly to the identically 
-          named input parameters defined for corresponding 
-          <spanx style="verb">osapi.http.get</spanx> or <spanx style="verb">osapi.http.post</spanx>
-          JavaScript APIs.</t>
+          <t>In addition to the <spanx style="verb">key</spanx> attribute 
+          required for all Data Pipeline elements, the &lt;os:HttpRequest&gt; 
+          element MUST contain a <spanx style="verb">method</spanx>
+          attribute whose value is either <spanx style="verb">get</spanx> or 
+          <spanx style="verb">post</spanx> indicating the HTTP 
+          request method to use for the request, and an 
+          <spanx style="verb">href</spanx> attribute whose value specifies a 
+          dereferenceable IRI to which the request will be sent. If not 
+          specified, the value of the <spanx style="verb">method</spanx> 
+          attribute will be assumed to be <spanx style="verb">get</spanx>. 
+          All additional attributes contained by the &lt;os:HttpRequest&gt; 
+          are to be mapped directly to the identically named input parameters 
+          defined for corresponding <spanx style="verb">osapi.http.get</spanx> 
+          or <spanx style="verb">osapi.http.post</spanx> JavaScript APIs.</t>
           
           <t>Child elements or any additional content provided within the 
           &lt;os:HttpRequest&gt; element SHOULD be ignored.</t>
           
           <figure><preamble>For example, the <spanx style="verb">osapi.http.get</spanx>
           operation can be used to retrieve content from a remote endpoint 
-          located a "http://example.org/foo":</preamble><artwork>
-  var params = {"format":"json", "authz":"signed"};
+          located at "http://example.org/foo":</preamble><artwork>
+  var params = {
+    "href": "http://example.org/foo",
+    "format":"json", 
+    "authz":"signed"};
   osapi.http.get(params).execute(callback);
   
   function callback(results) { ... }
@@ -3901,7 +3908,9 @@
           
           <figure><preamble>The equivalent operation using the &lt;os:HttpRequest&gt;
           element would be:</preamble><artwork><![CDATA[
-  <os:HttpRequest key="results" format="json" authz="signed" />
+  <os:HttpRequest key="results" 
+    href="http://example.org/foo" 
+    format="json" authz="signed" />
           ]]></artwork></figure>
           
           <t>Assuming the method identified was processed successfully, the 
@@ -4008,9 +4017,10 @@
   Var = SimpleVar | JsonVar
           </artwork></figure>
         
-          <t>In addition to the "key" attribute required for all 
-          Data Pipeline elements, the &lt;os:Var&gt; element can either 
-          contain a "value" attribute or contain textual content.</t>
+          <t>In addition to the <spanx style="verb">key</spanx> attribute 
+          required for all Data Pipeline elements, the &lt;os:Var&gt; element 
+          can either contain a <spanx style="verb">value</spanx> attribute or 
+          contain textual content.</t>
           
           <figure><preamble>The following &lt;os:Var&gt; examples are equivalent:</preamble>
           <artwork><![CDATA[
@@ -4029,7 +4039,7 @@
               containing the values 1, 2, 3, 4 and 5 will be created. If 
               successfully parsed, the Array will be stored into the 
               <spanx style="verb">DataContext</spanx> and processing will end.</t>
-              <t>If unable to parse as an array, the container will attempt 
+              <t>If unable to parse as an Array, the container will attempt 
               to parse the value as a JSON Object. If successfully parsed, the
               object will be stored into the <spanx style="verb">DataContext</spanx>
               and processing will end.</t>
@@ -4063,7 +4073,7 @@
           vary depending on a range of criteria including input parameters
           or the results returned by other Data Pipeline elements.</t>
           
-          <t>For instance, when the gadget needs to display the next 
+          <t>For instance, when the application needs to display the next 
           set of results from a paged-collection, the view 
           parameters specifying the current page can be passed into
           the &lt;os:HttpRequest&gt; or &lt;os:DataRequest&gt;
@@ -4088,10 +4098,13 @@
           
           <t>When referencing the results of other Data Pipeline elements 
           in this way, Expression Language statements can access the input 
-          parameters and additional metadata about the referenced results by using the special reserved
-          "Request" property on the referenced key, e.g. "${PagedFriends.Request.userId}"</t>
+          parameters and additional metadata about the referenced results by 
+          using the special reserved <spanx style="verb">Request</spanx> 
+          property on the referenced key, e.g. 
+          <spanx style="verb">${PagedFriends.Request.userId}</spanx>.</t>
           
-          <t>The metadata properties provided by the "Request" property include:
+          <t>The metadata properties provided by the <spanx style="verb">Request</spanx> 
+          property include:
             <list style="symbols">
               <t>All of the attributes defined on the referenced Data Pipeline
               element (in the previous example, these would include "key", "method",
@@ -4130,25 +4143,25 @@
     <section title="Core Features">
     
       <t>Core Features are provided automatically by the container for 
-      all gadget instances without requiring the gadget to declare them
+      all application instances without requiring the application to declare them
       using either the &lt;Require&gt; or &lt;Optional&gt; element in 
       the &lt;ModulePrefs&gt;</t>
       
       <section title="The Logging Feature" anchor="gadgets.log">
     
-        <t>The Logging Feature provides gadgets with a basic mechanism to 
+        <t>The Logging Feature provides a basic mechanism to 
         log messages for debugging and informational purposes. The 
         "Log" to which such messages are recorded is container specific. 
         Whether and how each container chooses to provide access to the 
         collection of recorded messages is considered beyond the scope 
         of this specification.</t>
          
-        <t>The Logging Feature is automatically enabled for all gadgets.</t>    
+        <t>The Logging Feature is automatically enabled for all applications.</t>    
     
         <section title="JavaScript API">
         
           <t>The Logging Feature provides the following JavaScript API methods
-          and constants to gadget developers:</t>
+          and constants to developers:</t>
         
          <section title="gadgets.log" anchor="gadgets.log">
          
@@ -4283,16 +4296,16 @@
 
        <section title="The IO Feature">
       
-         <t>The IO Feature provides gadgets with a mechanism for retrieving
+         <t>The IO Feature provides a mechanism for retrieving
          external content provided either by the container or other remote 
          endpoints.</t>
          
-         <t>The IO Feature is automatically enabled for all gadgets.</t> 
+         <t>The IO Feature is automatically enabled for all applications.</t> 
       
          <section title="JavaScript API"> 
       
            <t>The IO Feature provides the following JavaScript API methods
-           and constants to gadget developers:</t>
+           and constants to developers:</t>
       
            <section title="gadgets.io.encodeValues" anchor="gadgets.io.encodeValues">
            
@@ -4331,13 +4344,13 @@
            
            <section title="gadgets.io.getProxyUrl" anchor="gadgets.io.getProxyUrl">
            
-             <t>When a gadget needs to load data from an external source -- for 
+             <t>When an application needs to load data from an external source -- for 
              instance, an image or script resource -- it can either choose to 
              access that content directly or proxy the request for the content 
              through the container. In the latter case, the 
              <spanx style="verb">gadgets.io.getProxyUrl</spanx> can be used to 
              ask the container to generate a "Proxy URL" for the remote resource that the 
-             gadget would use in place of the resource's own direct URL.</t>
+             application would use in place of the resource's own direct URL.</t>
            
              <figure><artwork>
   &lt;static&gt; &lt;String&gt; gadgets.io.getProxyUrl(url, opt_params)
@@ -4433,7 +4446,7 @@
                      
                  <c>ALIAS</c>
                  <c>gadgets.io.RequestParameters.ALIAS</c>
-                 <c>When a gadget specification uses the &lt;ExternalService&gt;
+                 <c>When a specification document uses the &lt;ExternalService&gt;
                  element to define an alias for a Container-managed external 
                  service, the optional "ALIAS" parameter can be used in place 
                  of the <spanx style="verb">gadgets.io.makeRequest</spanx> methods
@@ -4539,7 +4552,7 @@
                  <c>OAUTH_SERVICE_NAME</c>
                  <c>gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</c>
                  <c>When the "AUTHORIZATION" parameter is equal to either "OAUTH"
-                 or "OAUTH2", and the gadget specification document uses the 
+                 or "OAUTH2", and the specification document uses the 
                  &lt;OAuth&gt; or &lt;OAuth2&gt; elements within the &lt;ModulePrefs&gt;
                  to define associated OAuth services, the "OAUTH_SERVICE_NAME" 
                  parameter specifies the name of the &lt;Service&gt; element 
@@ -4559,7 +4572,7 @@
                  <c>OAUTH_TOKEN_NAME</c>
                  <c>gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</c>
                  <c>When the "AUTHORIZATION" parameter is equal to either "OAUTH"
-                 or "OAUTH2", the gadget MAY use the "OAUTH_TOKEN_NAME" to specify
+                 or "OAUTH2", the application MAY use the "OAUTH_TOKEN_NAME" to specify
                  an alias for the OAuth Access Token used for the request. If the 
                  container does not yet have an appropriate Access Token to use
                  with the request, it will follow the appropriate steps to acquire 
@@ -4629,7 +4642,7 @@
              <section title="The callback parameter and the Response Object">
              
                <t>When the container finished processing the request, the 
-               response data is returned to the gadget by passing a Response 
+               response data is returned to the application by passing a Response 
                Object as a parameter to the provided callback function.</t>
              
                <t>The properties of the Response object passed to the callback
@@ -4722,12 +4735,12 @@
         <t>The JSON Feature provides operations for serializing objects to
         and from a JSON-formatted String.</t>
         
-        <t>The JSON Feature is automatically enabled for all gadgets.</t>
+        <t>The JSON Feature is automatically enabled for all applications.</t>
     
         <section title="JavaScript API">
         
           <t>The JSON Feature provides the following JavaScript API methods
-          to gadget developers:</t>
+          to developers:</t>
         
           <section title="gadgets.json.parse" anchor="gadgets.json.parse">
             <t>The <spanx style="verb">gadgets.json.parse</spanx> method 
@@ -4780,26 +4793,26 @@
        <section title="The User Preferences Feature" anchor="gadgets.Prefs">
         
          <t>The User Preferences Feature provides access to user preferences,
-         preferred gadget rendering dimensions and the localized collection of
+         preferred rendering dimensions and the localized collection of
          messages selected by the container for a view currently being rendered
          by the container.</t>
          
-         <t>The User Preferences Feature is automatically enabled for all gadgets.</t>
+         <t>The User Preferences Feature is automatically enabled for all applications.</t>
     
          <section title="JavaScript API">
     
            <t>The User Preferences Feature provides the following JavaScript 
-           API objects and methods to gadget developers:</t>
+           API objects and methods to developers:</t>
     
            <section title="The gadgets.Prefs Object" anchor="gadgets.Prefs.ctor">
            
              <t>Instances of the <spanx style="verb">gadgets.Prefs</spanx> Object
-             provide access to the user preferences, preferred gadget rendering
+             provide access to the user preferences, preferred rendering
              dimensions and localized collection of messages selected by the container
-             for a specific gadget instance.</t>
+             for a specific application instance.</t>
              
              <t>Instances of the object are created using the JavaScript new 
-             keyword. The specific ID of the gadget instance MAY be passed in as
+             keyword. The specific ID of the application instance MAY be passed in as
              an optional parameter. If not specified, the value is assumed to be
              the default ID. TODO: as defined by what?</t>
              
@@ -5013,7 +5026,7 @@
          
            <t>By default, the <spanx style="verb">gadgets.Prefs</spanx> object
            provides read-only access to the stored user preferences for 
-           particular gadget instance. In order to modify the user preference
+           particular application instance. In order to modify the user preference
            values, the "setprefs" feature MUST be specified using either 
            the &lt;Require&gt; or &lt;Optional&gt; element within the 
            &lt;ModulePrefs&gt;.</t>
@@ -5033,7 +5046,7 @@
            
            <section title="JavaScript API">
            
-             <t>When the "setprefs" feature is enabled for a gadget, two 
+             <t>When the "setprefs" feature is enabled for an application, two 
              additional JavaScript methods: <spanx style="verb">set</spanx>
              and <spanx style="verb">setArray</spanx> are enabled for use 
              on the <spanx style="verb">gadgets.Prefs</spanx> object.</t>
@@ -5084,14 +5097,12 @@
       <section title="The Utility Feature" anchor="gadgets.util">
        
         <t>The Utility Feature provides general purpose utility functions
-        for use by all gadgets.</t>
-        
-        <t>The Utility Feature is automatically enabled for all gadgets.</t>
+        that are available automatically for all applications.</t>
        
         <section title="JavaScript API">
         
           <t>The Utility Feature provides the following JavaScript API methods
-          to gadget developers:</t>
+          to developers:</t>
         
           <section title="gadgets.util.escapeString" anchor="gadgets.util.escapeString">
           
@@ -5184,7 +5195,7 @@
           
             <t>The <spanx style="verb">gadgets.util.hasFeature</spanx> returns 
             whether or not the specified feature has been enabled for this 
-            gadget instance.</t>
+            application instance.</t>
             
             <figure><artwork>
   &lt;static&gt; &lt;Boolean&gt; gadgets.util.hasFeature(feature)
@@ -5196,7 +5207,7 @@
           
             <t>The <spanx style="verb">gadgets.util.registerOnLoadHandler</spanx>
             method registers a Function that the container will execute immediately
-            after loading the gadget. Multiple Functions can be registered; all 
+            after loading the application. Multiple Functions can be registered; all 
             will be invoked in the same order in which they were registered.</t>
             
             <figure><artwork>
@@ -5257,7 +5268,7 @@
     <section title="Recommended Features">
     
       <t>Recommended Features SHOULD be implemented by a container and 
-      made available to gadget instances that specify the feature 
+      made available to application instances that specify the feature 
       ID using either the &lt;Require&gt; or &lt;Optional&gt; element in
       the &lt;ModulePrefs&gt;</t>
    
@@ -5265,26 +5276,26 @@
 
      <t>Some container implementations reserve portions of their user 
      interface for providing links, menus, buttons, etc that are 
-     distinct from the gadgets they host. The "Action Contributions"
-     feature allows gadgets to contribute functionality to these reserved
+     distinct from the applications they host. The "Action Contributions"
+     feature allows applications to contribute functionality to these reserved
      areas.</t>
 
-     <t>Additionally, gadgets can use the feature to associate actions with
+     <t>Additionally, applications can use the feature to associate actions with
      specific types of OpenSocial objects. In traditional desktop applications,
      such actions are often rendered as options on context menus when you 
      click on an object such as a person or file. For instance, selecting 
      a Person object might display options like "Start a Chat" or 
      "View Contact Information". With the "Action Contributions" feature, 
-     a gadget can notify the container of which such actions it can provide 
+     an application can notify the container of which such actions it can provide 
      so that when a user selects the action, the container can direct the 
-     appropriate gadget to carry it out.</t>
+     appropriate application to carry it out.</t>
      
      <t>Containers SHOULD support the "Action Contributions" feature.</t>
 
      <t>The "Action Contributions" feature is enabled by specifying the 
      "actions" feature name with either an &lt;Optional&gt;
      or &lt;Require&gt; element within the &lt;ModulePrefs&gt;. The 
-     actions contributed by the gadget are specified using a &lt;Param&gt;
+     actions contributed by the application are specified using a &lt;Param&gt;
      element with the name "action-contributions" within the feature declaration.</t>
      
      <figure><preamble>The following example defines an optional dependency
@@ -5328,7 +5339,7 @@
      types is similar. Rather than specifying the location to which the 
      action is to be added, the &lt;action&gt; element specifies the 
      data type. In either case, a callback function provided by the 
-     gadget is registered and invoked to handle the action:</preamble><artwork>
+     application is registered and invoked to handle the action:</preamble><artwork>
   &lt;Module>
     &lt;ModulePrefs title="Sample VOIP">
       &lt;Require feature="actions">
@@ -5378,9 +5389,9 @@
   gadgets.actions.addAction(myaction);      
      </artwork></figure>
   
-     <figure><preamble>In some simple cases, an action provided by a gadget might simply 
+     <figure><preamble>In some simple cases, an action provided by an application might simply 
      be handled by navigating to an IRI. It such cases, a callback function
-     is not required and the gadget developer can simply provide the IRI 
+     is not required and the application developer can simply provide the IRI 
      in the action declaration. For instance, in the example below, the 
      container will display the provided IRI in a new tab when the "Contact US"
      navigation action is selected:</preamble><artwork>
@@ -5402,7 +5413,7 @@
      
      <t>TODO: What happens is viewTarget is not specified and url is provided??</t>
   
-     <t>When registering actions, gadget developers need only provide basic
+     <t>When registering actions, application developers need only provide basic
      information about the action such as a unique identifier, text label,
      icon and callback function. Containers are responsible for determining 
      how contributed actions are to be rendered.</t>
@@ -5412,12 +5423,12 @@
      
        <t>The &lt;action&gt; element, as illustrated in the previous 
        examples, is used within the value of &lt;Param name="action-contributions"&gt;
-       elements to declaratively define the actions provided by a gadget. The
+       elements to declaratively define the actions provided by an application. The
        "action-contributions" parameter value can have any number of 
        &lt;action&gt; elements, each of which MUST specify a unique "id" 
        attribute. Each actions ID MUST be unique within the scope of the 
-       container -- that is, if multiple gadget's are rendered by
-       the container, all of the actions contributed by each of the gadgets 
+       container -- that is, if multiple application's are rendered by
+       the container, all of the actions contributed by each of the applications 
        MUST specify different IDs.</t>
        
        <t>There is no XML namespace defined for the &lt;action&gt; element.</t>
@@ -5469,20 +5480,20 @@
            can display when rendering the action item. For instance, when
            rendering the action as a menu item, the contain can display the 
            icon next to the label. If a relative path is provided, it MUST
-           be resolved relative to the URL of the gadget specification document.</t>
+           be resolved relative to the URL of the specification document.</t>
            <t hangText="iconSize">TODO: Need more info</t>
            <t hangText="iconOffset">TODO: Need more info</t>
-           <t hangText="view">The name of the gadget view the container 
+           <t hangText="view">The name of the application view the container 
            SHOULD render when the action is invoked.</t>
            <t hangText="viewTarget">Specifies where the specified view is 
            to be rendered. Different container implementations MAY support
-           the ability for individual gadget views to be displayed outside 
-           the main area allocated to the gadget by the container. Examples 
+           the ability for individual application views to be displayed outside 
+           the main area allocated to the application by the container. Examples 
            include rendering within a modal dialog box, or within a 
            "sidebar" area provided by the container. Acceptable values for
            the viewTarget attribute are "TAB", "DIALOG", "MODALDIALOG",
            "FLOAT" and "SIDEBAR". If not specified, the view will be rendered
-           within the area already allocated to the gadget.</t>
+           within the area already allocated to the application.</t>
            <t hangText="url">An IRI to use in place of a callback function.
            When used, the container will display the content of the URL 
            when the action is selected rather than invoking a JavaScript
@@ -5494,7 +5505,7 @@
      
      <section title="Action Contribution Paths" anchor="gadgets.actions.paths">
      
-       <t>When a gadget contributes actions to the container's user interface,
+       <t>When an application contributes actions to the container's user interface,
        the intended location where the action is to be rendered is specified
        using a "path". The collection of available paths for which actions
        can be contributed is specific to each individual container implementation. 
@@ -5523,9 +5534,9 @@
            </t>
            <t hangText="&quot;gadget/menu&quot;">
              Identifies an "options" menu that a container might 
-             provide for a gadget instance. Typically, such menus
+             provide for a application instance. Typically, such menus
              provide options and tools associated with a specific
-             gadget instance.
+             application instance.
            </t>
          </list>
        </t>
@@ -5533,7 +5544,7 @@
        <t>Contribution paths are hierarchical and container specific. For 
        instance, if a container supports a top level menu system such 
        as those typically found in many traditional desktop applications,
-       a gadget might use path="container/menu/File" to add items to the 
+       an application might use path="container/menu/File" to add items to the 
        containers "File" menu. The depth of the path hierarchy is entirely
        determined by the container. Each segment of the path is separated
        by the forward slash (/) character.</t>
@@ -5548,7 +5559,7 @@
        
        <t>The API is used, for instance, to register callback functions to 
        handle actions, register or modify actions programmatically, or 
-       work with contributions provided by other gadget specifications.</t>
+       work with contributions provided by other specification documents.</t>
        
        <section title="The Action Object" anchor="gadgets.actions.actionobjects">
        
@@ -5578,7 +5589,7 @@
            <c>Tooltip to display on hovering over an icon</c>
 
            <c>icon</c>
-           <c>Path to image icon.  Absolute URL or URL relative to gadget URL</c>
+           <c>Path to image icon.</c>
 
            <c>iconSize</c>
            <c>TODO: need more info</c>
@@ -5587,7 +5598,7 @@
            <c>TODO: need more info</c>
 
            <c>view</c>
-           <c>The view ID the gadget should navigate to when the action is invoked.</c>
+           <c>The view ID the application should navigate to when the action is invoked.</c>
 
            <c>viewTarget</c>
            <c>The target area to render the view.</c>
@@ -5643,7 +5654,7 @@
        <section title="gadgets.actions.updateAction" anchor="gadgets.actions.updateAction">
        
          <t>Modifies the specified action contributed to the container.
-         TODO: Question: any action or just actions provided by this one gadget?</t>
+         TODO: Question: any action or just actions provided by this one application?</t>
        
          <figure><artwork>
   &lt;static&gt; gadgets.actions.updateAction(action)
@@ -5686,7 +5697,7 @@
        <section title="gadgets.actions.removeAction" anchor="gadgets.actions.removeAction">
        
          <t>Removes the specified action from the container.
-         TODO: I assume a gadget can only remove it's own actions
+         TODO: I assume a application can only remove it's own actions
          </t>
          
          <figure><artwork>
@@ -5714,7 +5725,7 @@
          <t>Retrieves the collection of actions registered at the specified 
          path and passes the result to the provided callback function as 
          a JavaScript Array. TODO: is this all actions for the container, 
-         or just this gadgets?? TODO: is this hierarchical</t>
+         or just this application?? TODO: is this hierarchical</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.getActionsByPath(path, callback)
@@ -5747,7 +5758,7 @@
          <t>Retrieves the collection of actions registered for the specified
          data type and passes the result to the provided callback function
          a JavaScript Array. TODO: is this all actions for the container or
-         just this gadgets??</t>
+         just this application??</t>
        
          <figure><artwork>
   &lt;static&gt; gadgets.actions.getActionsByDataType(dataType, callback)
@@ -5808,9 +5819,9 @@
        <section title="gadgets.actions.registerShowActionsListener" anchor="gadgets.actions.registerShowActionsListener">
        
          <t>Registers a callback function that the container will call whenever 
-         new actions are added to the container. A gadget can use this listener
+         new actions are added to the container. An application can use this listener
          to provide a rendering of any action contributed to the container
-         by any other gadget.</t>
+         by any other application.</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.registerShowActionsListener (listener)
@@ -5823,7 +5834,7 @@
              <ttcol>Description</ttcol>
              <c>listener</c>
              <c>Function</c>
-             <c>The gadgets's function to render actions in its UI. The 
+             <c>The application's function to render actions in its UI. The 
              function will be invoked with one parameter which is an array 
              of action objects to render.</c>
            </texttable>           
@@ -5842,7 +5853,7 @@
       <section title="gadgets.actions.registerHideActionsListener" anchor="gadgets.actions.registerHideActionsListener">
       
         <t>Registers a callback function that the container will call whenever
-        the a gadget that contributes actions is removed from the container.</t>
+        the an application that contributes actions is removed from the container.</t>
         
          <figure><artwork>
   &lt;static&gt; gadgets.actions.registerHideActionsListener (listener)
@@ -5855,7 +5866,7 @@
              <ttcol>Description</ttcol>
              <c>listener</c>
              <c>Function</c>
-             <c>The gadgets's function to render actions in its UI. The 
+             <c>The application's function to render actions in its UI. The 
              function will be invoked with one parameter which is an array 
              of action objects to hide.</c>
            </texttable>           
@@ -5951,12 +5962,12 @@
 
   <section title="The DataContext Feature" anchor="opensocial.data">
    
-    <t>The Data Context Feature allows a gadget utilizing the 
+    <t>The Data Context Feature allows an application utilizing the 
     <xref target="DataPipeline">Data Pipeline</xref> capability 
     provided by the container to access the <spanx style="verb">DataContext</spanx> 
-    associated with the gadget instance.</t>
+    associated with the application instance.</t>
     
-    <t>The DataContext feature is enabled for a gadget by specifying 
+    <t>The DataContext feature is enabled for a application by specifying 
     feature="opensocial.data" using either a &lt;Requires&gt; or &lt;Optional&gt;
     element within the &lt;ModulePrefs&gt;.</t>
     
@@ -5983,13 +5994,13 @@
     
     <section title="JavaScript API">
     
-      <t>When enabled for a gadget instance, the DataContext Feature makes
+      <t>When enabled for an application instance, the DataContext Feature makes
       the following methods and objects available for use.</t>
     
       <section title="opensocial.data.getContext" anchor="opensocial.data.getContext">  
         <t>The <spanx style="verb">opensocial.data.getContext</spanx> method
         returns the <spanx style="verb">DataContext</spanx> object associated 
-        with the gadget instance.</t>
+        with the application instance.</t>
         
         <figure><artwork>
   &lt;static&gt; &lt;DataContext&gt; opensocial.data.getContext()
@@ -5999,7 +6010,7 @@
       <section title="The DataContext Object" anchor="DataContext_Client">
       
         <t>The DataContect object maintains all the data associated with the 
-        current gadget's data pipelining requests. Instances of the object 
+        current application's data pipelining requests. Instances of the object 
         are acquired by calling the <spanx style="verb">opensocial.data.getContext</spanx>
         method.</t>
         
@@ -6102,7 +6113,7 @@
      <section title="The Embedded Experiences Feature" anchor="Embedded-Experiences">
 
       <t>Embedded experiences provide a mechanism for embedding OpenSocial
-      gadgets and other web-accessible content sources directly into a 
+      Applications and other web-accessible content sources directly into a 
       variety of contexts such as Activity Streams, email messages and Atom feeds.
       The mechanism works by inserting a small structure of data that includes
       a reference to the embedded content along with contextual data an OpenSocial
@@ -6116,21 +6127,21 @@
         <ttcol align="left">Description</ttcol>
         
         <c><spanx style="verb">context</spanx></c>
-        <c>If the Embedded Experience is used to embed an OpenSocial gadget,
-        the "context" field is used to pass data to the gadget so that it 
-        knows exactly which content to render. For instance, a gadget that 
+        <c>If the Embedded Experience is used to embed an OpenSocial Application,
+        the "context" field is used to pass data to the application so that it 
+        knows exactly which content to render. For instance, an application that 
         displays a person's profile information will need to know which 
-        profile to display; a gadget that displays an album of recent photos
+        profile to display; an application that displays an album of recent photos
         will need to know the identity of the album to display. The content
         of the "context" field is undefined and specific to each individual 
-        gadget definition with one exception: the special property name 
+        application definition with one exception: the special property name 
         "opensocial" is reserved for use by the container implementation.
         The "context" properties JSON object value or XML element structure 
         MUST NOT contain a property named "opensocial".</c>
   
         <c><spanx style="verb">gadget</spanx></c>
-        <c>A URL to an OpenSocial Gadget definition document that defines the 
-        gadget to be embedded.</c>
+        <c>A URL to an OpenSocial Application specification document that defines the 
+        application to be embedded.</c>
         
         <c><spanx style="verb">imageData</spanx></c>
         <c>An optional string value that containing Base64-encoded binary data for an
@@ -6165,7 +6176,7 @@
       in the JSON object.</t>
       
       <figure><preamble>For instance, a simple JSON Embedded Experience
-      that references an OpenSocial gadget:</preamble>
+      that references an OpenSocial Application:</preamble>
       <artwork>
     {
       "gadget" : "http://www.example.com/embedded/gadget.xml",
@@ -6265,20 +6276,20 @@
       <section title="Considerations for Embedded Gadgets">
   
         <section title="The &quot;embedded&quot; View">
-          <t>When rendering a gadget as an embedded experience, the container
-          will look within the gadget definition for a view named "embedded". 
+          <t>When rendering an application as an embedded experience, the container
+          will look within the specification document for a view named "embedded". 
           Gadget developers can use this view to specify a customized
-          view of the gadget that is specific to the embedded experience. If 
-          an "embedded" view is not found within the gadget definition, the 
-          contain SHOULD render the gadget's default view.</t>
+          view of the application that is specific to the embedded experience. If 
+          an "embedded" view is not found within the specification document, the 
+          contain SHOULD render the application's default unnamed view.</t>
         </section>
   
         <section title="Accessing The Context">
-          <t>An embedded experience gadget has the option of requiring some
+          <t>An embedded experience application has the option of requiring some
           contextual information in order to render itself.  By abstracting the
-          data from the gadget itself, gadget developers can develop
-          generalized gadgets that can be used for all embedded expereinces of a
-          specific type.  For example, a gadget developed to display videos can 
+          data from the application itself, developers can develop
+          generalized applications that can be used for all embedded experiences of a
+          specific type.  For example, an application developed to display videos can 
           be built so that the id of the video is contained and extracted from
           the embedded experience's "context" property.</t>
           
@@ -6292,9 +6303,9 @@
           </artwork></figure>
   
           <t>Gadgets that are written to support embedded experiences MUST require 
-          the "embedded-experiences" feature within their gadget definition in 
+          the "embedded-experiences" feature within their specification document in 
           order to access the context.  The contextual data is stored within the 
-          <xref target="DataContext">data context</xref> object for the gadget.  
+          <xref target="DataContext">data context</xref> object for the application.  
           The key, "org.opensocial.ee.context", is used to access the context.
           Gadgets can add a listener on the data context object for this key, or
           it may retreive the key's value by using the data context APIs.</t>
@@ -6433,10 +6444,10 @@
       is up to the container. The "preferredExperience.target" property allows the 
       creator of the embedded experience to indicate that it would prefer the
       container to use the "gadget" property for rendering, and specifically that
-      the "my-ee-view" view within that gadget be used. The "preferredExperience.display"
-      property indicates that rather than simply displaying the gadget automatically,
+      the "my-ee-view" view within that application be used. The "preferredExperience.display"
+      property indicates that rather than simply displaying the application automatically,
       the embedded experience's creator would rather the container initially display a 
-      hyperlink that, when clicked, causes the gadget to be displayed.</t>
+      hyperlink that, when clicked, causes the application to be displayed.</t>
       
       <texttable>
         <ttcol align="left" width="15%">Property</ttcol>
@@ -6587,7 +6598,7 @@
           <ttcol align="left" width="15%">Property</ttcol>
           <ttcol align="left">Description</ttcol>
           <c><spanx style="verb">view</spanx></c>
-          <c>The preferred gadget view to render. If not specified, the value "embedded" is assumed.</c>
+          <c>The preferred application view to render. If not specified, the value "embedded" is assumed.</c>
           <c><spanx style="verb">viewTarget</spanx></c>
           <c>Specifies where the container SHOULD render the view. Possible 
           values are "TAB", "DIALOG", "MODALDIALOG", "FLOAT", and "SIDEBAR".</c>
@@ -6752,7 +6763,7 @@
     <section title="The Flash Feature" anchor="gadgets.flash">
       
       <t>The "Flash" feature provides three JavaScript methods that
-      simplify the embedding of Flash-based content in gadgets.
+      simplify the embedding of Flash-based content in applications.
       The feature is enabled by specifying feature="flash" using 
       either the &lt;Require&gt; or &lt;Optional&gt; elements in
       the &lt;ModulePrefs&gt;. The "Flash" feature defines no 
@@ -6760,7 +6771,7 @@
       
       <t>Containers SHOULD support the "Flash" feature.</t>
       
-      <figure><preamble>In the partial gadget specification below, 
+      <figure><preamble>In the partial application specification below, 
       we declare that the "flash" feature is required and render a
       remote flash resource within the default view:</preamble><artwork>
   &lt;Module&gt;
@@ -6786,7 +6797,7 @@
       <section title="JavaScript API">
 
         <t>The following JavaScript APIs are enabled when the "Flash"
-        feature is enabled for a gadget.</t>
+        feature is enabled for an application.</t>
 
         <section title="gadgets.flash.embedCachedFlash" anchor="gadgets.flash.embedCachedFlash">
         
@@ -6894,16 +6905,16 @@
    
     <t>The "JavaScript i18n" feature provides a JavaScript 
     API for localized parsing and formatting of dates, times, numbers and 
-    currency according to the rules for the gadget's locale as set
+    currency according to the rules for the application's locale as set
     by the container. The feature is specified by including either an 
     "Optional" or "Required" element within the "ModulePrefs" The feature 
     identifier is "opensocial-i18n".</t>
    
-    <t>Once available, gadget developer's can use the feature via the 
+    <t>Once available, developer's can use the feature via the 
     "gadgets.i18n" JavaScript class.</t>
     
-    <t>The locale used by a gadget is established by the container when 
-    the gadget is rendered. The i18n feature will use the country 
+    <t>The locale used by an application is established by the container when 
+    the view is rendered. The i18n feature will use the country 
     and language specified in the locale to load the appropriate formatter
     and parser for any given date, time, number or currency.</t>
     
@@ -7254,13 +7265,13 @@
     <section title="The MiniMessage Feature" anchor="gadgets.MiniMessage">
 
       <t>The "MiniMessage" feature provides a simple mechanism for displaying 
-      temporary messages to users of a gadget. Such messages typically appear
+      temporary messages to users of an application. Such messages typically appear
       at the top of the area allocated by the container for display of the 
-      gadget and are dismissed either programmatically or by user action.
+      application and are dismissed either programmatically or by user action.
       Examples of typical uses of the MiniMessage feature include:
         <list style="symbols">
          <t>Displaying temporary status messages: loading, saving, etc.</t>
-         <t>Displaying promotional messages: new features, new gadget, etc.</t>
+         <t>Displaying promotional messages: new features, new application, etc.</t>
          <t>Displaying debug and error messages: bad input, failed connection to server, etc.</t>
         </list>
       </t>
@@ -7272,7 +7283,7 @@
       &lt;ModulePrefs&gt;. JavaScript APIs are used to create and manipulate
       the messages. No parameters are specified for the MiniMessage feature.</t>
       
-      <figure><preamble>In the partial gadget specification below, the 
+      <figure><preamble>In the partial specification document below, the 
       "MiniMessage" feature is required and a simple message that dismisses
       automatically after 10 seconds is created:</preamble><artwork>
   &lt;Module&gt;
@@ -7285,7 +7296,7 @@
         ... 
         var messages = new gadgets.MiniMessage(gadgets.Prefs.getModuleId());
         var content = document.createElement('div');
-        content.innerHTML = "Welcome to my gadget.";
+        content.innerHTML = "Welcome to my application.";
         messages.createTimerMessage(content, 10);
         ...
       &lt;/script&gt;
@@ -7295,17 +7306,17 @@
       </artwork></figure>
       
       <t>Typically, only a single <spanx style="verb">gadgets.MiniMessage</spanx>
-      object needs to be created for each gadget view. Multiple messages can
+      object needs to be created for each view. Multiple messages can
       be created and managed by a single instance.</t>
       
       <t>By default, all messages will be displayed in a special reserved 
       area provided by the container at the top of the area allocated to 
-      rendering the gadget. However, developers can select alternative 
+      rendering the view. However, developers can select alternative 
       locations either for all messages or specific individual messages 
       by passing in additional parameters to the JavaScript API.</t>
       
       <figure><preamble>In the following example, all messages are rendered
-      in an area dedicated by the gadget view for messages:</preamble><artwork>
+      in an area dedicated by the view for messages:</preamble><artwork>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
       &lt;Require feature="minimessage" /&gt;
@@ -7328,8 +7339,8 @@
       </artwork></figure>
       
       <figure><preamble>Individual messages can be displayed anywhere within
-      the gadget either by specifying the HTML markup directly within the
-      gadget and referencing it when creating the message or by using DOM 
+      the application either by specifying the HTML markup directly within the
+      application and referencing it when creating the message or by using DOM 
       methods in JavaScript. For example, in the following example, a message 
       is created and positioned individually:</preamble><artwork>
   &lt;Module&gt;
@@ -7354,13 +7365,13 @@
 
       <section title="JavaScript API">
       
-        <t>When the "MiniMessage" feature is enabled for a gadget, the 
+        <t>When the "MiniMessage" feature is enabled for a application, the 
         follow JavaScript objects and methods are provided:</t>
 
         <section title="The gadgets.MiniMessage Object" anchor="gadgets.MiniMessage.ctor">
         
           <t>The <spanx style="verb">gadgets.MiniMessage</spanx> object is
-          used to create and manage messages for a gadget. Typically, only a 
+          used to create and manage messages for an application. Typically, only a 
           single instance of the object needs to be created for all messages 
           within a given view.</t>
           
@@ -7376,7 +7387,7 @@
               <ttcol>Description</ttcol>
               <c>id</c>
               <c>String</c>
-              <c>The container provided unique identifier of the gadget 
+              <c>The container provided unique identifier of the application 
               instance. This value can be determined using the 
               <spanx style="verb">gadgets.Prefs.getModuleId()</spanx>
               method.</c>
@@ -7502,33 +7513,33 @@
       
    <section title="The OAuth Popup Feature" anchor="gadgets.oauth.Popup">
 
-     <t>When a gadget attempts to access remote resources that are 
+     <t>When an application attempts to access remote resources that are 
      protected using either the OAuth 1.0a or 2.0 protocol, the 
-     container is required to first determine if the gadget has 
+     container is required to first determine if the application has 
      received appropriate authorization in the form of an "Access Token".
-     If a token is not available, the container must ask the gadget 
+     If a token is not available, the container must ask the application 
      to first acquire the appropriate authorization.</t>
      
      <t>With most scenarios, this is achieved by redirecting the user
      to the third party OAuth Authorization Service and asking them to 
-     approve access. While gadget developers are responsible for determining 
+     approve access. While application developers are responsible for determining 
      how such redirection occurs, they can use the OAuth Popup Feature to 
      simplify the process and to promote consistent, familiar behavior.</t>
      
-     <t>The feature works by generating a hyperlink within the gadget's 
+     <t>The feature works by generating a hyperlink within the application's 
      user interface that, when clicked, opens a window that displays the
      third party OAuth Authoriation Service's interface. When opened, the
-     gadget is notified via a callback function that the window is open. 
+     application is notified via a callback function that the window is open. 
      The user will either approve or deny the request and then dismiss the 
-     window, returning the user back to the gadget's user interface. The 
-     gadget can either then automatically proceed with processing the 
+     window, returning the user back to the application's user interface. The 
+     application can either then automatically proceed with processing the 
      request or wait for the user to notify it when it continue.</t>
      
-     <t>Use of the OAuth Popup Feature is enabled within a gadget by using
+     <t>Use of the OAuth Popup Feature is enabled within an application by using
      feature="oauthpopup" in either a &lt;Require&gt; or &lt;Optional&gt;
      element with the &lt;ModulePrefs&gt;. Once enabled, the 
      <spanx style="verb">gadgets.oauth.Popup</spanx> object will become 
-     available for use within the JavaScript of a gadget view.</t>
+     available for use within the JavaScript of a view.</t>
      
      <figure><preamble>The example below illustrates the basic operation of
      the OAuth Popup Feature:</preamble><artwork>
@@ -7541,7 +7552,7 @@
     &lt;/ModulePrefs>
     &lt;Content type="html">&lt;![CDATA[
       &lt;div>
-        &lt;a href="#" id="personalize">Personalize this gadget&lt;/a>
+        &lt;a href="#" id="personalize">Personalize this application&lt;/a>
       &lt;/div>
   
       &lt;div>Please click
@@ -7598,9 +7609,9 @@
 
      <section title="JavaScript API">
      
-       <t>When the OAuth Popup Feature is enabled for a gadget, the 
+       <t>When the OAuth Popup Feature is enabled for an application, the 
        <spanx style="verb">gadgets.oauth.Popup</spanx> object becomes 
-       available for use within the gadget's JavaScript code.</t>
+       available for use within the application's JavaScript code.</t>
      
        <section title="The gadgets.oauth.Popup Object" anchor="gadgets.oauth.Popup.ctor">
        
@@ -7683,13 +7694,12 @@
    <!-- END OAUTH POPUP -->
 
    <section title="The OpenSearch Feature" anchor="OpenSearch">
-       <t>The "opensearch" feature allows gadgets to declare
+       <t>The "opensearch" feature allows applications to declare
        that searchable material is provided using an
        <eref target="http://www.opensearch.org/Specifications/OpenSearch/1.1">OpenSearch 1.1</eref>
        description. Containers can use the search descriptions provided
-       by multiple gadgets to, for example, provide a single, integrated container-wide
-       search capability that aggregates results from multiple sources provided
-       by the gadget's.</t>
+       by multiple applications to, for example, provide a single, integrated container-wide
+       search capability that aggregates results from multiple sources.</t>
        
        <t>The OpenSeach description can either be passed directly 
        as a parameter of the feature or by reference using the URL of a description document.</t>
@@ -7765,7 +7775,7 @@
         by the container, the "osapi" feature provides a higher-level abstraction
         that is more specific to OpenSocial's specific data and API model.</t>
         
-        <t>The OpenSocial API Feature is enabled for a gadget instance by specifying
+        <t>The OpenSocial API Feature is enabled for an application instance by specifying
         feature="osapi" using either the &lt;Require&gt; or &lt;Optional&gt;
         element within the &lt;ModulePrefs&gt;.</t>
         
@@ -7782,7 +7792,7 @@
      
         <section title="JavaScript API">
         
-          <t>When the "osapi" feature is enabled for a gadget instance,
+          <t>When the "osapi" feature is enabled for an application instance,
           the container will generate and provide one Service object 
           instance for each Social Data Service provided by the container.
           Each Service object instance is accessible via a distinct 
@@ -7875,13 +7885,13 @@
           ]]></artwork></figure>
           
           <t>Containers are free to determine the set of Social Data Services
-          they support and expose to gadgets. Definitions for a handful of 
+          they support and expose to applications. Definitions for a handful of 
           common Social Data Services are provided in [TODO: Reference]. Gadget
           developers cannot assume that all containers will support the same 
           set of services and MUST therefore be prepared to gracefully handle
           cases where any given service is not available.</t>
           
-          <figure><preamble>One method gadget developers can use to safely 
+          <figure><preamble>One method developers can use to safely 
           prepare for such cases is to test for the existence of the service
           and method, as in the following example:</preamble><artwork>
   if (osapi.people && osapi.people.getViewer) {
@@ -8204,7 +8214,7 @@
                   
                   <c>alias</c>
                   <c>String</c>
-                  <c>When a gadget specification uses the &lt;ExternalService&gt;
+                  <c>When a specification document uses the &lt;ExternalService&gt;
                   element to define an alias for a Container-managed external 
                   service, the optional "alias" parameter can be used in place 
                   of the "href" property to identify the external service to which the 
@@ -8256,7 +8266,7 @@
                   <c>oauth_service_name</c>
                   <c>String</c>
                   <c>When the "authz" parameter is equal to either "OAUTH"
-                  or "OAUTH2", and the gadget specification document uses the 
+                  or "OAUTH2", and the specification document uses the 
                   &lt;OAuth&gt; or &lt;OAuth2&gt; elements within the &lt;ModulePrefs&gt;
                   to define associated OAuth services, the "oauth_service_name" 
                   parameter specifies the name of the &lt;Service&gt; element 
@@ -8294,7 +8304,7 @@
                   <c>oauth_token_name</c>
                   <c>String</c>
                   <c>When the "authz" parameter is equal to either "OAUTH"
-                  or "OAUTH2", the gadget MAY use the "oauth_token_name" to specify
+                  or "OAUTH2", the application MAY use the "oauth_token_name" to specify
                   an alias for the OAuth Access Token used for the request. If the 
                   container does not yet have an appropriate Access Token to use
                   with the request, it will follow the appropriate steps to acquire 
@@ -8396,7 +8406,7 @@
               content of the HTTP Response message, encoded as character 
               data, will be included in the HTTP Response Object.</t>
             
-              <figure><preamble>For example, suppose that a gadget wishes to 
+              <figure><preamble>For example, suppose that an application wishes to 
               retrieve a JSON document located at http://example.org/latest-photos.
               For the sake of the example, the JSON document has the following
               structure:</preamble><artwork>
@@ -8455,8 +8465,8 @@
 
   <section title="The PubSub Feature" anchor="interGadgetEventing">
 
-    <t>The inter-gadget eventing feature, common known as "pub/sub", provides
-    for loosely-coupled and asynchronous inter-gadget communication based
+    <t>The inter-application eventing feature, common known as "pub/sub", provides
+    for loosely-coupled and asynchronous inter-application communication based
     on the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Introduction">
     OpenAjax Hub 2.0</eref> specification.</t>
     
@@ -8467,7 +8477,7 @@
         of events,</t>
         <t>Methods for publishing and subscribing to events, and </t>
         <t>Mechanisms for declaratively specifying metadata within
-        a gadget's XML definition relevant to publishing and subscribing 
+        a application's XML definition relevant to publishing and subscribing 
         to events.</t>
       </list>
     </t>
@@ -8477,15 +8487,15 @@
         <t>First, a container that supports the "pub/sub" feature needs to 
         initialize the Hub and all default settings.</t>
         <t>Second, a container can bootstrap and simplify the connection of 
-        a gadget to the hub by registering an onLoad handler using the 
+        an application to the hub by registering an onLoad handler using the 
         gadgets.util.registerOnLoadHandler API. </t>
-        <t>Third, once the Hub is initialized by the container, individual gadget's
+        <t>Third, once the Hub is initialized by the container, individual applications
         that declare support for the "pubsub-2" feature using either the 
         "Optional" or "Required" tag within the Gadget specifications 
         "ModulePrefs" can use the provided JavaScript APIs to publish 
         events to the hub using "topics", or use the JavaScript APIs to
-        subscribe to "topics" published by the Hub. When a gadget publishes
-        and event to the Hub using a specific topic, all gadget's connected 
+        subscribe to "topics" published by the Hub. When an application publishes
+        an event to the Hub using a specific topic, all application's connected 
         to that Hub and subscribed to the same topic will receive a copy 
         of the event.</t>
       </list>
@@ -8513,7 +8523,7 @@
    HubClient: {
       onSecurityAlert: function( alertSource, alertType ) {
         alert( "Gadget stopped attempted security breach: " + alertType );
-        window.location.href = "about:blank"; // Forces container to see Frame Phish alert and probably close this gadget
+        window.location.href = "about:blank"; // Forces container to see Frame Phish alert and probably close this application
       },
       scope: gadgetInstance
     } }; 
@@ -8525,13 +8535,13 @@
         <t>Register an onLoad handler
           <t>An onLoad handler to actually create the HubClient and connect it
           to the ManagedHub. Delaying the HubClient creation and
-          connection allows the gadget to override default values stored
+          connection allows the application to override default values stored
           in gadgets.HubSettings. For example, IframeHubClient
           supports params properties such as seed, tokenLength and log,
-          which are not set by default; and a gadget might need to
+          which are not set by default; and an application might need to
           override onSecurityAlert and/or scope, for which default values
           are provided. More importantly, the onComplete function for
-          HubClient.connect usually sets up the gadget's subscriptions by
+          HubClient.connect usually sets up the application's subscriptions by
           calling gadgets.Hub.subscribe, or if the connection fails
           asynchronously, the onComplete function handles the error.</t>
           <figure><artwork type="code">
@@ -8545,7 +8555,7 @@
       gadgets.Hub.connect( gadgets.HubSettings.onConnect );
   
     } catch(e) {
-      // TODO: error handling should be consistent with other OS gadget initialization error handling
+      // TODO: error handling should be consistent with other OS application initialization error handling
     }
   } );
           </artwork></figure>
@@ -8555,12 +8565,12 @@
     
     <section title="Examples" anchor="GadgetExample">
 
-      <t>The following illustrates a non-normative example of a gadget that 
+      <t>The following illustrates a non-normative example of an application that 
       subscribes to a topic published by the Hub.</t>
       
       <t>Note that, by default, all of the necessary defaults parameters
-      on the underlying HubClient connected for the gadget were initialized
-      when the gadget was loaded. If the gadget developer wishes to override the 
+      on the underlying HubClient connected for the application were initialized
+      when the application was loaded. If the developer wishes to override the 
       default parameters to the HubClient constructor, it can do so by 
       setting values on gadgets.HubSettings as illustrated in the example.</t>
 
@@ -8611,7 +8621,7 @@
   &lt;/Module&gt;
    </artwork></figure>
 
-     <t>Similarly, below is a non-normative example of a gadget that 
+     <t>Similarly, below is a non-normative example of an application that 
      publishes events to the Hub:</t>
      
      <figure><artwork>
@@ -8652,9 +8662,9 @@
       
         <t>The <spanx style="verb">gadgets.Hub</spanx> object is a fully 
         compliant Hub as defined by the OpenAjax Hub 2.0 specification.
-        When the gadget specification specifies a dependency on the 
+        When the specification document specifies a dependency on the 
         "pubsub-2" feature, an instance of the Hub is created automatically 
-        by the container and provided to the gadget.</t>
+        by the container and provided to the application.</t>
       
         <section title="gadgets.Hub.publish" anchor="publish">
         
@@ -8800,10 +8810,10 @@
 
     <section title="The &lt;Topic&gt; Element">
     
-      <t>As illustrated by the previous example gadgets, the "pubsub-2" feature 
-      provides a means of allowing gadget developers to declaratively describe
-      the topics their gadget's support directly within the feature declaration
-      within the "ModulePrefs" element.</t>
+      <t>As illustrated by the previous example, the "pubsub-2" feature 
+      provides a means of allowing developers to declaratively describe
+      the which topics an application utilizes directly within the feature 
+      declaration within the "ModulePrefs" element.</t>
       
       <figure><preamble>For example:</preamble>
       <artwork>
@@ -8824,10 +8834,10 @@
   &lt;/Module&gt;
       </artwork></figure>
     
-      <t>When gadgets use the &lt;Topic&gt; element, containers are able
-      to "wire" gadgets together either automatically or via a user interface
-      that allows a user to connect gadgets that publish events to a given
-      topic to gadgets that subscribe to those events.</t>
+      <t>When applications use the &lt;Topic&gt; element, containers are able
+      to "wire" applications together either automatically or via a user interface
+      that allows a user to connect applications that publish events to a given
+      topic to applications that subscribe to those events.</t>
 
       <t>No XML namespace is defined for the &lt;Topic&gt; element.</t>
       
@@ -8875,23 +8885,23 @@
           <c>publish</c>
           <c>boolean</c>
           <c>Optional</c>
-          <c>Indicates if the gadget publishes data to this topic. 
+          <c>Indicates if the application publishes data to this topic. 
           The default value is "false".</c>
 
           <c>subscribe</c>
           <c>boolean</c>
           <c>Optional</c>
-          <c>Indicates if the gadget subscribes to data published to this topic. 
+          <c>Indicates if the application subscribes to data published to this topic. 
           The default value is "false".</c>
 
           <c>description</c>
           <c>String</c>
           <c>Optional</c>
           <c>
-          The textual description of the gadget's publish or subscribe
-          endpoint. This can be used as an indication of the gadget's behavior.
-          Consider a gadget that subscribes to a topic "com.example.address".
-          The description migh read, "When this gadget receives an event on 
+          The textual description of the application's publish or subscribe
+          endpoint. This can be used as an indication of the application's behavior.
+          Consider an application that subscribes to a topic "com.example.address".
+          The description might read, "When this application receives an event on 
           the com.example.address topic, it displays mass transit options 
           within 10km of the address received as the event payload."</c>
 
@@ -8926,12 +8936,11 @@
         type information is specified when the data is published to a topic 
         is undefined by this specification.</t> 
         
-        <t>A gadget specification developer 
-        can use the "type" attribute on the &lt;Topic&gt; element to indicate 
+        <t>A developer can use the "type" attribute on the &lt;Topic&gt; element to indicate 
         the specific type of data it publishes to a topic or is interested in 
         receiving. Containers that support typing of payloads can use this 
         information to more intelligently route data to interested subscribers.
-        For instance, one gadget might only be interested in receiving payloads
+        For instance, one application might only be interested in receiving payloads
         of type "org.example.foo" from the topic "my.topic" while another might
         only want type "org.example.bar" payloads.</t>
 
@@ -9025,11 +9034,11 @@
   
       <t>Gadget's often require the ability to perform potentially 
       dangerous or sensitive operations or work with sensitive information.
-      Such gadget's SHOULD only be allowed to perform those operations 
+      Such application's SHOULD only be allowed to perform those operations 
       if explicitly granted permission to do so by the container or the
       user.</t>
    
-      <t>The Security Policy feature is used by a gadget to request 
+      <t>The Security Policy feature is used by an application to request 
       permissions under which to run.  Specific permissions are requested 
       with &lt;Param&gt; elements, with the "name" attribute on the 
       Param element identifying the feature and the text content of
@@ -9039,10 +9048,12 @@
       or &lt;Require&gt; element. A container MAY support the 
       Security Policy feature.</t>
       
-      <t>Containers MAY override any gadget-request permission with its 
-      own security policy.</t>
+      <t>Containers MAY override any requested permission with its own 
+      more restrictive security policy. The container SHOULD NOT grant 
+      permissions to any application that are less restrictive than those
+      explicitly requested by the application.</t>
   
-      <figure><preamble>A gadget requesting optional permissions from the 
+      <figure><preamble>An application requesting optional permissions from the 
       container:</preamble><artwork xml:space="preserve">
     &lt;ModulePrefs &gt;
       &lt;Optional feature="security-policy" &gt;
@@ -9053,7 +9064,7 @@
       
       <t>If an application requests a security policy that is not supported, 
       the container MUST log an error to the gadgets.log.  A container MAY 
-      render that gadget using a supported security policy, or display an 
+      render that application using a supported security policy, or display an 
       appropriate error message. TODO: Clarify this</t>
       
       <t>Containers are free to define their own permissions for any purpose.
@@ -9066,25 +9077,25 @@
    
    <section title="The Selection Feature" anchor="gadgets.selection">
        
-    <t>It is common for an OpenSocial container to display multiple gadgets 
+    <t>It is common for an OpenSocial container to display multiple applications 
     within a single display area. Often, when a user performs some action 
-    in one gadget, the other gadget's displayed need to respond in some 
+    in one view, another other displayed application needs to respond in some 
     appropriate manner. For instance, if the user selects a person in their
-    contact list in one gadget, another gadget can be triggered to display
+    contact list in one view, another view can be triggered to display
     the selected person's profile information, while another can display 
     a listing of documents owned by that person. In order to enable such 
-    functionality, the container needs to provide gadgets with a way of 
+    functionality, the container needs to provide applications with a way of 
     determining the currently selected object.</t>
     
-     <t>The Selection feature provides gadgets the ability to participate in 
-     the container's selection eventing. It is enabled for a gadget by 
+     <t>The Selection feature provides the ability to participate in 
+     the container's selection eventing. It is enabled for an application by 
      specifying feature="selection" within either a &lt;Require&gt; or 
      &lt;Optional&gt; element within the &lt;ModulePrefs&gt;.</t>
      
-     <t>Once the feature is enabled, the gadget can either get or set the 
+     <t>Once the feature is enabled, the application can either get or set the 
      current selection for the container.</t>
      
-     <figure><preamble>The example below illustrates how a gadget can set 
+     <figure><preamble>The example below illustrates how an application can set 
      the current selection for the container:</preamble><artwork>
   &lt;Module&gt;
     &lt;ModulePrefs title="Sample Selection Changer" height="250"&gt;
@@ -9110,7 +9121,7 @@
      </artwork></figure>
      
      <t>At any given time, a container only has one selected object that is 
-     visible to all gadgets for which selection is enabled. Any gadget can 
+     visible to all applications for which selection is enabled. Any application can 
      access the currently selected object for the container by using either
      the <spanx style="verb">gadgets.selection.getSelection</spanx> method
      or by registering a callback function that the container will invoke
@@ -9118,7 +9129,7 @@
 
     <section title="JavaScript API">
     
-      <t>The following JavaScript methods are provided to gadgets 
+      <t>The following JavaScript methods are provided to applications 
       when the "selection" feature is enabled.</t>
     
       <section title="The Selection Object">
@@ -9179,7 +9190,7 @@
         <t>No return value is specified.</t> 
         
         <t>Calling the <spanx style="verb">gadgets.selection.setSelection</spanx>
-        method will trigger the container to send notifications to all gadgets
+        method will trigger the container to send notifications to all applications
         that have registered selection listener callback functions.</t>
         
       </section>
@@ -9265,9 +9276,9 @@
       <section title="The View Features" anchor="gadgets.views">
 
         <t>The View Features provide operations for interacting with 
-        the collection of Views provided by a gadget specification. There
+        the collection of Views provided by a specification document. There
         are two distinct View-related features, each of which are enabled
-        for a gadget instance by specifying their respective feature 
+        for an application instance by specifying their respective feature 
         identifiers using either the &lt;Require&gt; or &lt;Optional&gt;
         elements within the &lt;ModulePrefs&gt;</t>
         
@@ -9300,50 +9311,50 @@
               <list style="hanging">
                 <t hangText="ABOUT" anchor="gadgets.views.ViewType.ABOUT">
                   A view used to provide descriptive information regarding the 
-                  gadget. This view is typically rendered in a smaller area. 
+                  application. This view is typically rendered in a smaller area. 
                   The viewer is not always the same as the owner. This field 
                   may be used interchangeably with the string 'ABOUT'.</t>
                 <t hangText="CANVAS" anchor="gadgets.views.ViewType.CANVAS">
-                  A view where the gadget is displayed in a very large
+                  A view where the application is displayed in a very large
                   mode. It is typically the main content on the page. The 
                   viewer is not always the same as the owner. This field may 
                   be used interchangeably with the string 'CANVAS'.</t>
                 <t hangText="EMBEDDED" anchor="gadgets.views.ViewType.EMBEDDED">
-                  A view used when an gadget is to be rendered in the context 
+                  A view used when an application is to be rendered in the context 
                   of some other content. For example, an activity stream entry 
                   may include a diagram. Rather than requiring the user to 
-                  navigate to a dashboard, the container may render the gadget 
+                  navigate to a dashboard, the container may render the application 
                   "embedded" in the stream. The developer should anticipate 
-                  that there may be limited chrome surrounding the gadget. The 
+                  that there may be limited chrome surrounding the application. The 
                   viewer is not always the same as the owner. This field may 
                   be used interchangeably with the string 'EMBEDDED'.</t>
                 <t hangText="HOME" anchor="gadgets.views.ViewType.HOME">
-                  A view where the gadget is displayed in a small area usually 
-                  on a page with other gadgets. Typically the viewer is the 
+                  A view where the application is displayed in a small area usually 
+                  on a page with other applications. Typically the viewer is the 
                   same as the owner. This field may be used interchangeably 
                   with the string 'HOME'.</t>
                 <t hangText="PREFERENCES" anchor="gadgets.views.ViewType.PREFERENCES">
                   A view used to allow the user to display and set the user 
-                  preferences defined by the gadget. For example, it is
-                  common for gadgets to present a form for visible user prefs. 
+                  preferences defined by the application. For example, it is
+                  common for applications to present a form for visible user prefs. 
                   Because the user preferences are specific to a user, owner 
                   and viewer MUST be the same in this view. This field may be 
                   used interchangeably with the string 'PREFERENCES'.</t>
                 <t hangText="PREVIEW" anchor="gadgets.views.ViewType.PREVIEW">
-                  A demo view of the gadget. In this view the owner and
+                  A demo view of the application. In this view the owner and
                   viewer are not known. This field may be used interchangeably 
                   with the string 'PREVIEW'.</t>
                 <t hangText="PROFILE" anchor="gadgets.views.ViewType.PROFILE">
-                  A view where the gadget is displayed in a small area
-                  usually on a page with other gadgets. A typical use case 
-                  for this view is for the gadget to be placed on the profile 
-                  page of a user, for example, a gadget that allows you to 
+                  A view where the application is displayed in a small area
+                  usually on a page with other applications. A typical use case 
+                  for this view is for the application to be placed on the profile 
+                  page of a user, for example, an application that allows you to 
                   schedule a meeting with the person. The viewer is not always 
                   the same as the owner. This field may be used interchangeably 
                   with the string 'PROFILE'.</t>
                 <t hangText="SUPPORT" anchor="gadgets.views.ViewType.SUPPORT">
                   A view used to communicate to the user where to get support 
-                  information for the gadget. Typically, the gadget is displayed 
+                  information for the application. Typically, the application is displayed 
                   in a small area. The viewer MUST always the same as the owner. 
                   This field may be used interchangeably with the string
                   'SUPPORT'.</t>
@@ -9354,22 +9365,22 @@
               <t>TODO: Need this explained</t>
               <list style="hanging">
                 <t hangText="TAB" anchor="gadgets.views.ViewType.TAB">
-                  A view where the gadget is displayed inside a container tab.
+                  A view where the application is displayed inside a container tab.
                   This field may be used interchangeably with the string 'TAB'.</t>
                 <t hangText="DIALOG" anchor="gadgets.views.ViewType.DIALOG">
-                  A view where the gadget is displayed in a pop up box. This 
+                  A view where the application is displayed in a pop up box. This 
                   field may be used interchangeably with the string 'DIALOG'.</t>
                 <t hangText="MODALDIALOG" anchor="gadgets.views.ViewType.MODALDIALOG">
-                  A view where the gadget is displayed in a modal pop up box. 
+                  A view where the application is displayed in a modal pop up box. 
                   This field may be used interchangeably with the string
                   'MODALDIALOG'.</t>
                 <t hangText="FLOAT" anchor="gadgets.views.ViewType.FLOAT">
-                  A view where the gadget is displayed in a floating box. It 
+                  A view where the application is displayed in a floating box. It 
                   is similar to the 'DIALOG' view type, but without chrome 
                   around it. This field may be used interchangeably with the 
                   string 'FLOAT'.</t>
                 <t hangText="SIDEBAR" anchor="gadgets.views.ViewType.SIDEBAR">
-                  A view where the gadget is displayed in a sidebar area. This
+                  A view where the application is displayed in a sidebar area. This
                   field may be used interchangeably with the string 'SIDEBAR'.</t>
               </list>
             </section>
@@ -9379,7 +9390,7 @@
               <t>TODO: Need more detail here</t>
 
               <t>The <spanx style="verb">gadgets.views.View</spanx> object 
-              represents a View supported by a gadget. Instances of the 
+              represents a View supported by an application. Instances of the 
               <spanx style="verb">gadgets.views.View</spanx> object are 
               provided by the container </t>
               
@@ -9442,7 +9453,7 @@
               <section title="gadgets.views.View.isOnlyVisibleGadget" anchor="gadgets.views.View.isOnlyVisibleGadget">
               
                 <t>The <spanx style="verb">gadgets.views.View.isOnlyVisibleGadget</spanx>
-                returns True if the gadget instance is the only gadget currently 
+                returns True if the application instance is the only application currently 
                 visibly displayed by the container. No input parameters are specified.</t>
               
                 <figure><artwork>
@@ -9520,9 +9531,9 @@
             
               <t>The <spanx style="verb">gadgets.views.getSupportedViews</spanx>
               method returns a JavaScript object mapping all of the supported
-              primary <spanx style="verb">gadgets.views.View</spanx> objects for a gadget 
+              primary <spanx style="verb">gadgets.views.View</spanx> objects for an application 
               to the view name. Note that only primary views will be included, 
-              for instance, if the gadget specification defines views named 
+              for instance, if the specification document defines views named 
               "Canvas.About", "Profile.About", "Home.About", "Canvas.Help", etc,
               the returned views will be: "Canvas", "Home" and "Profile".</t>
               
@@ -9536,7 +9547,7 @@
             
               <t>The <spanx style="verb">gadgets.views.requestNavigateTo</spanx>
               method is used to request that the container render a specific 
-              gadget view. If the container supports parameter passing, it will 
+              view. If the container supports parameter passing, it will 
               pass the optional parameters when rendering the new view. </t>
             
               <figure><artwork>
@@ -9567,20 +9578,20 @@
           
           <section title="JavaScript API">
        
-            <t>Enabling the "open-views" feature for a gadget provides the
+            <t>Enabling the "open-views" feature provides the
             following additional methods on the <spanx style="verb">gadgets.views</spanx>
             object.</t>
       
             <t>The "open-views" feature depends directly on the more basic
             functionality provided by the "views" feature; so by including 
-            "open-views" in a gadget specification using either the 
+            "open-views" in a specification document using either the 
             &lt;Require&gt; or &lt;Optional&gt; elements, the Objects and methods
             of the "views" feature are also made available.</t>
       
             <section title="gadgets.views.openGadget" anchor="gadgets.views.openGadget">
             
               <t>The <spanx style="verb">gadgets.views.openGadget</spanx> 
-              method requests that a gadget view be rendered by the 
+              method requests that a view be rendered by the 
               container.</t>
             
               <figure><artwork>
@@ -9595,23 +9606,23 @@
                   <c>resultCallback</c>
                   <c>Function</c>
                   <c>Specifies a callback Function that will be invoked by the
-                  container when the requested gadget has been closed using the 
+                  container when the requested application has been closed using the 
                   <spanx style="verb">gadgets.views.close</spanx> method. If 
                   the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
-                  was called within the opened gadget, then the value specified
+                  was called within the opened view, then the value specified
                   will be passed to the callback function as a parameter.</c>
                   <c>navigateCallback</c>
                   <c>Function</c>
                   <c>Specifies a callback Function that will be invoked by the 
-                  container when the requested gadget has been rendered. The 
-                  identifier the container assigns to the rendered gadget, 
+                  container when the requested view has been rendered. The 
+                  identifier the container assigns to the rendered view, 
                   along with any additional appropriate metadata will be passed
                   to the function as parameters. The identifier can be used 
                   with the <spanx style="verb">gadgets.views.close</spanx> method
-                  to subsequently close the opened gadget view.</c>
+                  to subsequently close the opened view.</c>
                   <c>opt_params</c>
                   <c>Object</c>
-                  <c>Specifies optional parameters that affect how the gadget
+                  <c>Specifies optional parameters that affect how the
                   view is to be rendered.</c>
                 </texttable>              
               </t>
@@ -9626,13 +9637,13 @@
                   <ttcol>Description</ttcol>
                   <c>view</c>
                   <c>String </c>
-                  <c>Identifies the specific gadget view the container is to 
-                  render. If not provided, the gadget will render the gadgets
-                  default view.</c>
+                  <c>Identifies the specific view the container is to 
+                  render. If not provided, the container will render the
+                  default unnamed view.</c>
                   <c>viewTarget </c>
                   <c>String </c>
                   <c>Identifies where and how the container is to render the 
-                  gadget, specified as a 
+                  view, specified as a 
                   <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
                   For example, specifying a viewTarget of "modalDialog" will
                   cause the view to be rendered by the container in a modal
@@ -9649,7 +9660,7 @@
                   MAY be used to provide suggested positioning information
                   the container can use when deciding where, within the 
                   container, the view is to be renderered relative to the 
-                  opening gadget.</c>
+                  opening application.</c>
                 </texttable>
               </t>
               
@@ -9707,20 +9718,20 @@
                   <c>resultCallback</c>
                   <c>Function</c>
                   <c>Specifies a callback Function that will be invoked by the
-                  container when the requested gadget has been closed using the 
+                  container when the specified view has been closed using the 
                   <spanx style="verb">gadgets.views.close</spanx> method. If 
                   the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
-                  was called within the opened gadget, then the value specified
+                  was called within the opened view, then the value specified
                   will be passed to the callback function as a parameter.</c>
                   <c>navigateCallback</c>
                   <c>Function</c>
                   <c>Specifies a callback Function that will be invoked by the 
-                  container when the requested gadget has been rendered. The 
-                  identifier the container assigns to the rendered gadget, 
+                  container when the requested view has been rendered. The 
+                  identifier the container assigns to the rendered view, 
                   along with any additional appropriate metadata will be passed
                   to the function as parameters. The identifier can be used 
                   with the <spanx style="verb">gadgets.views.close</spanx> method
-                  to subsequently close the opened gadget view.</c>
+                  to subsequently close the opened view.</c>
                   <c>dataModel</c>
                   <c></c>
                   <c>Specifies the Embedded Experiences Data model to use 
@@ -9729,7 +9740,7 @@
                   as defined in <xref target="Embedded-Experiences"/>.</c>
                   <c>opt_params</c>
                   <c>Object</c>
-                  <c>Specifies optional parameters that affect how the gadget
+                  <c>Specifies optional parameters that affect how the
                   view is to be rendered.</c>
                 </texttable>              
               </t>
@@ -9744,13 +9755,13 @@
                   <ttcol>Description</ttcol>
                   <c>view</c>
                   <c>String </c>
-                  <c>Identifies the specific gadget view the container is to 
-                  render. If not provided, the gadget will render the gadgets
-                  default view.</c>
+                  <c>Identifies the specific view the container is to 
+                  render. If not provided, the container will render the
+                  default unnamed view.</c>
                   <c>viewTarget </c>
                   <c>String </c>
                   <c>Identifies where and how the container is to render the 
-                  gadget, specified as a 
+                  view, specified as a 
                   <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
                   For example, specifying a viewTarget of "modalDialog" will
                   cause the view to be rendered by the container in a modal
@@ -9767,7 +9778,7 @@
                   MAY be used to provide suggested positioning information
                   the container can use when deciding where, within the 
                   container, the view is to be renderered relative to the 
-                  opening gadget.</c>
+                  opening view.</c>
                 </texttable>
               </t>
               
@@ -9823,16 +9834,16 @@
                   <c>navigateCallback</c>
                   <c>Function</c>
                   <c>Specifies a callback Function that will be invoked by the 
-                  container when the requested gadget has been rendered. The 
-                  identifier the container assigns to the rendered gadget, 
+                  container when the requested view has been rendered. The 
+                  identifier the container assigns to the rendered view, 
                   along with any additional appropriate metadata will be passed
                   to the function as parameters. The identifier can be used 
                   with the <spanx style="verb">gadgets.views.close</spanx> method
-                  to subsequently close the opened gadget view.</c>
+                  to subsequently close the opened view.</c>
                   <c>opt_viewTarget </c>
                   <c>String </c>
                   <c>Optionally identifies where and how the container is to render the 
-                  gadget, specified as a <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
+                  view, specified as a <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
                   For example, specifying a viewTarget of "modalDialog" will
                   cause the URL to be rendered by the container within a modal
                   popup dialog box; whereas specifying a viewTarget of "tab"
@@ -9869,7 +9880,7 @@
             <section title="gadgets.views.close" anchor="gadgets.views.close">
             
               <t>The <spanx style="verb">gadgets.views.close</spanx> method 
-              requests that a given gadget view be closed.</t>
+              requests that a given view be closed.</t>
             
               <figure><artwork>
   &lt;static&gt; &lt;Void&gt; gadgets.views.close(opt_site_handler)
@@ -9883,7 +9894,9 @@
                   <c>opt_site_handler</c>
                   <c>Object</c>
                   <c>Optional parameter which specifies handler to what site 
-                  to close. If null it will close the current gadget site.</c>
+                  to close. If null or unspecified, it will close the view 
+                  within which the call to <spanx style="verb">gadgets.views.close</spanx>
+                  was made.</c>
                 </texttable>
               </t>
             </section>
@@ -9951,7 +9964,7 @@
             
               <t>The <spanx style="verb">gadgets.window.getContainerDimensions</spanx>
               method detects the height and width of the container 
-              displaying the gadget and passes those to a provided 
+              displaying the view and passes those to a provided 
               callback function.</t>
             
               <figure><artwork>
@@ -9990,28 +10003,28 @@
                   <c>Number</c>
                   <c>Specifies the suggested absolute top position, in pixels,
                   of the rendered content relative to the top position of the 
-                  opening gadget. If "top" is specified, the "bottom" property
+                  opening view. If "top" is specified, the "bottom" property
                   MUST NOT be specified.</c>
                   
                   <c>bottom</c>
                   <c>Number</c>
                   <c>Specifies the suggested absolute bottom position, in pixels,
                   of the rendered content relative to the bottom position of the 
-                  opening gadget. If "bottom" is specified, the "top" property
+                  opening view. If "bottom" is specified, the "top" property
                   MUST NOT be specified.</c>
                   
                   <c>left</c>
                   <c>Number</c>
                   <c>Specifies the suggested absolute left position, in pixels,
                   of the rendered content relative to the bottom position of the
-                  opening gadget. If "left" is specified, the "right" property
+                  opening view. If "left" is specified, the "right" property
                   MUST NOT be specified.</c>
                   
                   <c>right</c>
                   <c>Number</c>
                   <c>Specifies the suggested absolute right position, in pixels,
                   of the rendered content relative to the right position of the
-                  opening gadget. If "right" is specified, the "left" property
+                  opening view. If "right" is specified, the "left" property
                   MUST NOT be specified.</c>
                   
                 </texttable>
@@ -10048,13 +10061,13 @@
    <section title="The Window Features" anchor="gadgets.window">
     
      <t>Window features are a range of additional capabilities that can 
-     be enabled a gadget for getting information about and modifying the
-     display area for a gadget.</t>
+     be enabled for an application for getting information about and modifying the
+     display area for a view.</t>
      
      <section title="The &quot;settitle&quot; Feature">
      
-       <t>The "settitle" feature allows a gadget to modify the displayed 
-       title the container uses for the gadget instance. Whether or not
+       <t>The "settitle" feature allows an application to modify the displayed 
+       title the container uses for the application instance. Whether or not
        the title is displayed is up to the container.</t>
        
        <t>The "settitle" feature is enabled by specifying feature="settitle"
@@ -10076,7 +10089,7 @@
   </Module>
        </artwork></figure>
        
-       <t>When the "settitle" feature is enabled for a gadget the
+       <t>When the "settitle" feature is enabled for an application the
        <spanx style="verb">gadgets.window.setTitle</spanx> method is 
        provided:</t>
        
@@ -10090,9 +10103,9 @@
      
      <section title="The &quot;dynamic-height&quot; Feature">
 
-       <t>The "dynamic-height" feature allows a gadget to request that the 
+       <t>The "dynamic-height" feature allows an application to request that the 
        container dynamically change the vertical display area allocated to
-       the gadget based on either the current content of the rendered View
+       the view based on either the current content of the rendered View
        or an optionally provided numeric value that specifies the preferred
        height in pixels.</t>
        
@@ -10118,7 +10131,7 @@
   </Module>
        </artwork></figure>
        
-       <t>When the "dynamic-height" feature is enabled for a gadget, both the
+       <t>When the "dynamic-height" feature is enabled for an application, both the
        <spanx style="verb">gadgets.window.getViewportDimensions</spanx> and 
        <spanx style="verb">gadgets.window.adjustHeight</spanx> methods are 
        provided:</t>
@@ -10128,19 +10141,19 @@
        </artwork></figure>
        
        <t>The method takes as input one optional numeric parameter that 
-       specifies the preferred height, in pixels, the gadget would like
-       the container to allocate for the gadget. The container is free
+       specifies the preferred height, in pixels, the application would like
+       the container to allocate for the view. The container is free
        to ignore the provided value. If not specified, the container will
-       calculate an appropriate height for the gadget based on the content 
+       calculate an appropriate height for the view based on the content 
        currently displayed within the rendered view.</t>
 
      </section>
 
      <section title="The &quot;dynamic-width&quot; Feature">
 
-       <t>The "dynamic-width" feature allows a gadget to request that the 
+       <t>The "dynamic-width" feature allows an application to request that the 
        container dynamically change the horizontal display area allocated to
-       the gadget based on either the current content of the rendered View
+       the view based on either the current content of the rendered View
        or an optionally provided numeric value that specifies the preferred
        width in pixels.</t>
        
@@ -10166,7 +10179,7 @@
   </Module>
        </artwork></figure>
        
-       <t>When the "dynamic-width" feature is enabled for a gadget, both the
+       <t>When the "dynamic-width" feature is enabled for an application, both the
        <spanx style="verb">gadgets.window.getViewportDimensions</spanx> and 
        <spanx style="verb">gadgets.window.adjustWidth</spanx> methods are 
        provided:</t>
@@ -10176,19 +10189,19 @@
        </artwork></figure>
        
        <t>The method takes as input one optional numeric parameter that 
-       specifies the preferred width, in pixels, the gadget would like
-       the container to allocate for the gadget. The container is free
+       specifies the preferred width, in pixels, the application would like
+       the container to allocate for the view. The container is free
        to ignore the provided value. If not specified, the container will
-       calculate an appropriate width for the gadget based on the content 
+       calculate an appropriate width for the view based on the content 
        currently displayed within the rendered view.</t>
 
      </section>
 
      <section title="The &quot;dynamic-size&quot; Feature">
 
-       <t>The "dynamic-size" feature allows a gadget to request that the 
+       <t>The "dynamic-size" feature allows an application to request that the 
        container dynamically change the vertical and horizontal display area 
-       allocated to the gadget based on either the current content of the 
+       allocated to the view based on either the current content of the 
        rendered View or optionally provided numeric values that specify the 
        preferred height and width in pixels.</t>
        
@@ -10214,7 +10227,7 @@
   </Module>
        </artwork></figure>
        
-       <t>When the "dynamic-size" feature is enabled for a gadget, both the
+       <t>When the "dynamic-size" feature is enabled for an application, both the
        <spanx style="verb">gadgets.window.getViewportDimensions</spanx> and 
        <spanx style="verb">gadgets.window.adjustSize</spanx> methods are 
        provided:</t>
@@ -10225,7 +10238,7 @@
        
        <t>The method takes as input two optional numeric parameters that 
        specifies, respectively, the preferred height and width, in pixels, 
-       the gadget would like the container to allocate for the gadget. The 
+       the application would like the container to allocate for the view. The 
        container is free to ignore the provided values. If not specified, 
        the container will calculate appropriate values based on the content 
        currently displayed within the rendered view.</t>
@@ -10236,7 +10249,7 @@
      
        <t>The <spanx style="verb">gadgets.window.getViewportDimensions</spanx>
        method detects and returns the height and width of area allocated by
-       the container for the renderable content of the gadget View.</t>
+       the container for the renderable content of the View.</t>
      
        <figure><artwork>
   &lt;static&gt; &lt;Object&gt; gadgets.window.getViewportDimensions()
