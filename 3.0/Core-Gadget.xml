@@ -8,6 +8,8 @@
   <!ENTITY rfc5234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5234.xml'>
   <!ENTITY rfc3986 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml'> 
   <!ENTITY rfc3987 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3987.xml'>
+  <!ENTITY rfc5849 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml'>
+  <!ENTITY oauth2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-25.xml'>
   <!ENTITY infoset PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xml-infoset-20040204.xml'> 
   <!ENTITY relaxng PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/relaxng.xml'>
   
@@ -16,7 +18,6 @@
   <!ENTITY socialapi PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/socialapi.xml'>
   <!ENTITY templating PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/opensocial-templating.xml'>
   
-  <!ENTITY oauth1 PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/oauth1.xml'>
   <!ENTITY jspel PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/jspel.xml'>
   <!ENTITY oahub PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/oahub.xml'>
   
@@ -1782,7 +1783,733 @@
     </section>
   
   <section title="Container-Provided Capabilities">
-  
+ 
+    <section title="Authentication" anchor="authentication">
+    
+      <t>Many applications require the ability to access content and 
+      resources that are external to the container currently hosting 
+      instances of the gadget. Such information and resources are often
+      sensitive in nature and requests need to include authentication
+      and authorization details.</t>
+      
+      <t>All containers are required to provide at least three basic mechanisms 
+      for authenticating requests to remote endpoints:
+        <list style="hanging">
+          <t hangText="OAuth 1.0a">Is a variation of the original OAuth 1.0
+          specification described by <xref target="RFC5849"/>. Within the OAuth 
+          model, the owner's of protected resources grant third parties 
+          (in this case the OpenSocial Container) authority to access 
+          the resource for a specific purpose and a limited period of time.</t>
+          <t hangText="OAuth 2.0">Is an as-yet unfinished update to the 
+          original OAuth protocol that simplifies the communication between the 
+          various parties but maintains the same fundamental authorization 
+          model.</t>
+          <t hangText="Signed Fetch">Is a simplified mechanism based on a subset of the 
+          OAuth 1.0a protocol that allows a container to "sign" requests sent
+          to a remote endpoint. Such signatures provide only a reasonable 
+          assurance that certain content contained within the request has not been
+          modified by a malicious party. Once the receiving endpoint determines that it
+          is able to trust the signed request, it can decide to provide 
+          limited access to certain protected resources without having to
+          walk through the entire typical OAuth protocol.</t>
+        </list>
+      </t>
+      
+      <t>These authentication mechanisms are available for use whenever 
+      access to a remote resource is required, including:
+        <list style="symbols">
+          <t>Processing &lt;Preload&gt; and &lt;Link&gt; elements within 
+          the gadget specifications &lt;ModulePrefs&gt;,</t>
+          <t>Processing Data Pipeline &ls;os:HttpRequest&gt; elements,</t>
+          <t>Processing proxy and redirect type &lt;Content&gt; elements,</t>
+          <t>All uses of the <spanx style="verb">osapi</spanx> JavaScript APIs, and </t>
+          <t>All uses of the <spanx style="verb">gadgets.io.makeRequest</spanx> JavaScript API</t>
+        </list>
+      </t>
+      
+      <t>It is important to note that for authentication and authorization 
+      purposes, regardless of whether the application is accessing remote content 
+      or social data provided by the container itself, every individual 
+      instance of an application MUST be considered a distinct entity for which 
+      authentication credentials and authorized permissions MUST be individually 
+      established. Containers MUST NOT assume that authorization given to one 
+      instance of an application applies to all instances of that same 
+      application. Nor MUST the container assume that authorization extends to any 
+      other applications provided by the same developer.</t>
+      
+      <t>Authentication and authorization for an application instance is further 
+      constrained by the viewer for whom an application is currently being rendered.
+      That is, for example, if a single application instance can be rendered
+      for more than one viewer, the container is required to authorize each 
+      individual viewer prior to displaying potentially sensitive content.
+      Such authorization MUST be obtained for each individual application instance
+      rendered for a particular viewer.</t>
+    
+      <t>Specific considerations for each of the three types of request
+      authorization mechanisms are discussed in the sections that follow.</t>
+
+      <section title="Signed Fetch" anchor="SignedFetch">
+      
+        <t>The "Signed Fetch" mechanism is a capability provided by all 
+        OpenSocial containers that provides a reasonable level of assurance
+        that an HTTP request sent from the container on behalf of an application
+        to a remote endpoint has not been inappropriately modified by a 
+        malicious third party.</t>
+        
+        <t>To illustrate the value and operation of Signed Fetch, assume that 
+        a developer uses the <spanx style="verb">gadgets.io.makeRequest</spanx> 
+        JavaScript API to access a third party service to retrieve private 
+        data belonging to the current viewer. By default, and if required by 
+        the remote endpoint, the application is responsible for providing the 
+        request with the current identity of the user for whom the request is 
+        being sent:</t>
+        
+        <figure><artwork>
+  gadgets.io.makeRequest(
+    "http://example.org/my/endpoint", 
+    function(result) {...}, 
+    {"opensocial_viewer_id": opensocial.data.getDataSet("Viewer").id});
+        </artwork></figure>
+      
+        <t>When the container sends the request to the specified endpoint,
+        it includes the exact value provided by the JavaScript code:</t>
+        
+        <figure><artwork>
+  GET /my/endpoint?opensocial_viewer_id=alice HTTP/1.1
+  Host: example.org   
+        </artwork></figure>
+        
+        <t>Assume, however, that the application is being accessed by a malicious 
+        viewer identified as "tom". Such a user can use a variety of techniques
+        to trick the application into using a different user's identity when using
+        the <spanx style="verb">gadgets.io.makeRequest</spanx> API. Because 
+        the default behavior is for the container to send the request to the 
+        remote endpoint exactly as requested, the container and the remote 
+        endpoint can be fooled into disclosing a legitimate user's private data 
+        to the malicious viewer.</t>
+        
+        <figure><artwork>
+  var user = opensocial.data.getDataSet("Viewer").id; // returns "tom"
+  // malicious user injects a different id ...
+  user = "alice";
+  // the gadget then executes as normal...
+  var params = {
+    "opensocial_viewer_id" : user};
+  gadgets.io.makeRequest(
+    "http://example.org/my/endpoint", 
+    callback, 
+    params);
+        </artwork></figure>
+        
+        <t>Signed Fetch defends against such attacks by allowing the container to:
+          <list style="numbers"> 
+            <t>Include it's own information about the current viewer's identity, and</t>
+            <t>Generate a cryptographic signature usable by the receiving 
+            endpoint to verify that the container-provided information has not been
+            tampered with.</t>
+          </list>
+        </t>
+        
+        <t>Containers are required to use the following process when signing 
+        HTTP requests:
+          <list style="numbers">
+            <t>The container MUST first remove all query string parameters passed
+            in with the request whose names begin with any case-insensitive
+            variation of "oauth", "xoauth", or "opensocial". This is done by 
+            examining both the input URI and any additional optional parameters
+            provided in the request and filtering out the unwanted items.</t>
+            <t>The container then MUST add the following query string 
+            parameters to the request URI:
+              <list type="hanging">
+                <t hangText="opensocial_owner_id">
+                  Identifies the current "owner" TODO: Owner of what?
+                </t>
+                <t hangText="opensocial_app_url">
+                  An IRI provided by the container that represents the 
+                  gadget for which the request is being sent. The 
+                  IRI provided is used to identify the application specification
+                  rather than individual instances.
+                </t>
+              </list>
+            </t>
+            <t>The container MAY also add the following query string 
+            parameters to the request URI:
+              <list type="hanging">
+                <t hangText="opensocial_viewer_id">
+                  Provides the ID of the current viewer for whom content
+                  is being displayed.
+                </t>
+                <t hangText="opensocial_instance_id">
+                  Provides an opaque identifier for the specific instance
+                  of the application for which the request is being sent. The 
+                  combination of the "opensocial_app_url" and "opensocial_instance_id"
+                  parameters uniquely identify each instance.
+                </t>
+                <t hangText="opensocial_app_id">
+                  An opaque identifier for the application specification, unique
+                  to the container. Implementations that wish to maintain
+                  backwards compatibility with version 0.7 of the OpenSocial
+                  specification can include this parameter.
+                </t>
+                <t hangText="xoauth_public_key">
+                  An opaque identifier for the public key used to sign the 
+                  request. This parameter can be omitted by containers that
+                  do not use public/private key pairs to sign requests, or 
+                  if the container arranges other means of negotiating or 
+                  distributing keys with the remote endpoint receiving the
+                  request.
+                </t>
+              </list>
+            </t>
+            <t>Finally, the container MUST follow the procedure outlined 
+            in Section 3.4 of the OAuth 1.0 specification 
+            <xref target="RFC5849"/> to generate and append the signature to 
+            the request with the exception that the <spanx style="verb">oauth_token</spanx>
+            parameter MUST be omitted.</t>
+          </list>
+        </t>
+     
+        <t>Note that upon generating the signature, the container will 
+        include a range of additional query string parameters required 
+        by the OAuth 1.0 specification, including information about the
+        signing algorithm used, the date and time at which the signature
+        was generated, as so forth.</t>
+       
+        <figure><preamble>The following example generally illustrates how
+        a typical signed fetch request will appear (note: line breaks are added
+        for readability):</preamble>
+        <artwork><![CDATA[
+  GET /foo?opensocial_owner_id=bob
+    &opensocial_viewer_id=alice
+    &opensocial_app_url=http://example.org/gadgets/foo
+    &opensocial_instance_id=1
+    &xoauth_public_key=org.example.key1
+    &oauth_timestamp=123456789
+    &oauth_signature_method=HMAC_SHA1
+    &oauth_consumer_key=...
+    &oauth_token=...
+    &oauth_nonce=...
+    &oauth_signature=...
+        ]]></artwork></figure>
+        
+        <t>It is important to stress that the Signed Fetch mechanism 
+        provides only a reasonable level of assurance that the information 
+        provided by certain parameters in the request URI have not been 
+        tampered with. Signed Fetch, by itself, is not adequate for identity 
+        authentication, nor does it protect against tampering with any other
+        part of the HTTP request such as the collection of request headers or
+        the request payload, if any.</t>
+             
+        <section title="Using Signed Fetch">
+        
+          <t>Application developers can make use of the Signed Fetched capability 
+          with all uses of the <spanx style="verb">osapi</spanx> and
+          <spanx style="verb">gadgets.io.makeRequest</spanx> APIs; and with
+          all &lt;Preload&gt;, &lt;Link&gt; and proxy or redirect type 
+          &lt;Content&gt; elements.</t>
+          
+          <figure><preamble>Using Signed Fetch with JavaScript APIs:</preamble>
+          <artwork><![CDATA[
+  <Module>
+    <Content type="html">
+      ...
+      <script>
+        var params = {};
+        params["href"] = 
+          "http://data.example.org/resource/foo";
+        params[gadgets.io.RequestParameters.AUTHORIZATION] = 
+          gadgets.io.AuthorizationType.SIGNED;
+      
+        function fetchData() {
+          osapi.http.get(params).execute(
+            function(result) { ... }
+          );
+        }
+
+        gadgets.util.registerOnLoadHandler(fetchData);
+      </script>
+      ...
+    </Content>
+  </Module>
+          ]]></artwork></figure>
+          
+          <t>To use Signed Fetch with the JavaScript APIs, the value of the
+          <spanx style="verb">AUTHORIZATION</spanx> parameter (represented in 
+          JavaScript by the constant gadgets.io.RequestParameter.AUTHORIZATION) 
+          MUST be <spanx style="verb">signed</spanx>. The following additional 
+          parameters that affect the signing of a request MAY also be specified:
+            <list style="hanging">
+              <t hangText="SIGN_OWNER">Represented in JavaScript by the constant
+              gadgets.io.RequestParameter.SIGN_OWNER, the value is a boolean 
+              that indicates whether the container SHOULD include the 
+              current owner ID when signing the request. If not specified, 
+              the container is required to assume a value of True.</t>
+              <t hangText="SIGN_VIEWER">Represented in JavaScript by the constant
+              gadgets.io.RequestParameter.SIGN_VIEWER, the value is a boolean
+              that indicates whether the container SHOULD include the
+              current viewer ID when signing the request. If not specified,
+              the container is required to assume a value of True.</t>
+            </list>
+          </t>
+          
+          <figure><preamble>Within &lt;Preload&gt;, &lt;Link&gt; and 
+          &lt;Content&gt; elements:</preamble><artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+      <Preload authz="signed" href="http://example.org/resources/bar" />
+      <Link authz="signed" href="http://example.org/images/foo.png" rel="icon" />
+      ...
+    </ModulePrefs>
+    <Content type="html" href="http://example.org/content" authz="signed" />
+  </Module>
+          ]]></artwork></figure>
+          
+          <t>To use Signed Fetch with the &lt;Preload&gt;, &lt;Link&gt; 
+          and &lt;Content&gt; elements, the <spanx style="verb">authz</spanx> 
+          attribute MUST be specified with a value of <spanx style="verb">signed</spanx>.
+          The following additional attributes that affect the signing of a 
+          request MAY also be specified:
+            <list style="hanging">
+              <t hangText="sign_owner">Equivalent to the SIGN_OWNER parameter
+              used in the JavaScript API, the value is a String matching either 
+              <spanx style="verb">true</spanx> or <spanx style="verb">false</spanx> 
+              indicating whether the container SHOULD include the current owner 
+              ID when signing the request.  If not specified, the container is 
+              required to assume a value of <spanx style="verb">true</spanx>.</t>
+              <t hangText="sign_viewer">Equivalent to the SIGN_VIEWER parameter
+              used in the JavaScript API, the value is a String matching either 
+              <spanx style="verb">true</spanx> or <spanx style="verb">false</spanx> 
+              indicating whether the container SHOULD include the
+              current viewer ID when signing the request.  If not specified, 
+              the container is required to assume a value of 
+              <spanx style="verb">true</spanx>.</t>
+            </list>
+          </t>
+        
+        </section>
+     
+      </section>
+      <!-- END SIGNED FETCH -->
+    
+      <section title="OAuth Support">
+    
+        <t>All container implementations are required to support the use of 
+        versions <xref target="RFC5849">1.0a</xref> and 
+        <xref target="I-D.ietf-oauth-v2">2.0</xref> of the OAuth protocol.</t>
+        
+        <t>OAuth provides the ability for the owner of a resource to grant 
+        limited permission to an application to perform some action on that 
+        resource on behalf of the owner. For instance, an application might
+        wish to display a listing of documents owned by the current viewer. 
+        Before displaying that list of files, the gadget works with the container
+        to request authorization from the viewer to access the service
+        used to manage documents and files. Such access can be limited by the
+        viewer, for example, to allow only simple read operations that occur
+        within a specific period of time.</t>
+        
+        <t>The data that a container can provide to an application originates in 
+        one of two places:
+          <list style="symbols">
+            <t>From third party services, or</t>
+            <t>From the container itself in the form of social data like profile
+            information, groups, Activity Streams, and so on.</t>
+          </list>
+        </t>
+        
+        <t>To support each of these cases, every container instance is required
+        to act as both a consumer and a provider of OAuth services. That is,
+        when communicating with third party services, applications can work 
+        with the container -- via either declarative properties defined within the
+        application specification or parameters on various JavaScript API calls --
+        to access the third party's OAuth Authorization Service and 
+        acquire proper authorization for the requests the application wishes to make.
+        Once authorization is granted, the container can further assist with 
+        management and storage of the authorization data provided by the third 
+        party service.</t>
+        
+        <t>When an application or some other party wishes to access social 
+        data provided by the container, they will work with the 
+        OAuth Authorization Service provided by the container to acquire
+        permission to do so.</t>
+        
+        <t>From the application developer's point of view, there are no differences
+        between working with OAuth-protected resources provided by the container 
+        or those provided by a third-party. The sections that follow detail 
+        the responsibilities, requirements and mechanisms gadget developers
+        need to work with the OAuth protocol. Additional requirements and 
+        considerations for OpenSocial Container implementations are discussed
+        within the OpenSocial Common Container specification [TODO: Ref CC spec].</t>
+        
+        <section title="Declaring and Using OAuth Services">
+        
+          <t>Before an application can make use of OAuth protected resources,
+          the specification document MUST tell the container about the OAuth 
+          services to use. This is done by using one or more &lt;OAuth&gt; or
+          &lt;OAuth2&gt; elements within the &lt;ModulePrefs&gt;.</t>
+          
+          <figure><preamble>In the partial specification below, the 
+          &lt;OAuth&gt; element is used to declare a dependency on a third 
+          party service providing OAuth 1.0a support:</preamble><artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+      <OAuth>
+        <Service>
+          <Request url="http://example.com/request" method="get" />
+          <Access url="http://example.com/access" method="get" />
+          <Authorization url="http://example.com/authorization" />
+        </Service>
+      </OAuth>
+      ...
+    </ModulePrefs>
+    ...
+  </Module>
+          ]]></artwork></figure>
+          
+          <figure><preamble>Similarly, dependencies on OAuth 2.0-based
+          services are declared using the &lt;OAuth2&gt; element:</preamble>
+          <artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+      <OAuth2>
+        <Service>
+          <Authorization url="http://example.com/authorization" method="get" />
+          <Token url="http://example.org/token" method="get" />
+        </Service>
+      </OAuth2>
+      ...
+    </ModulePrefs>
+    ...
+  </Module>         
+          ]]></artwork></figure>
+          
+          <t>Once declared, developers can use the specified OAuth services 
+          anywhere within the gadget's specification where remote resources 
+          are accessed, including uses of the <spanx style="verb">osapi</spanx> 
+          and <spanx style="verb">gadgets.io.makeRequest</spanx> JavaScript
+          APIs, &lt;Preload&gt; elements, &lt;Link&gt; elements, and
+          Redirect or Proxy type &lt;Content&Gt; elements.</t>
+          
+          <t>The examples that follow illustrate various uses of the OAuth
+          services.</t>
+          
+          <figure><preamble>Within uses of the <spanx style="verb">osapi.http</spanx> API:</preamble>
+          <artwork><![CDATA[
+  <Module>
+    ...
+    <Content type="html"> 
+      ...
+      <script>
+        var params = {};
+        params["href"] = 
+          "http://data.example.org/resource/foo";
+        params[gadgets.io.RequestParameters.AUTHORIZATION] = 
+          gadgets.io.AuthorizationType.OAUTH;
+      
+        function fetchData() {
+          osapi.http.get(params).execute(
+            function(result) { ... }
+          );
+        }
+        
+        gadgets.util.registerOnLoadHandler(fetchData);
+      </script>
+      ...
+    </Content>
+  </Module>
+          ]]></artwork></figure>
+          
+          <t>When using OAuth version 1.0a with the JavaScript APIs, the 
+          value of the <spanx style="verb">AUTHORIZATION</spanx> parameter, 
+          represented by the <spanx style="verb">constant gadgets.io.RequestParameters.AUTHORIZATION</spanx>,
+          MUST be <spanx style="verb">oauth</spanx> (represented in JavaScript 
+          using the constant <spanx style="verb">gadgets.io.RequestParameters.OAUTH</spanx>).</t>
+          
+          <t>When using OAuth version 2.0, the value of the 
+          <spanx style="verb">AUTHORIZATION</spanx> parameter MUST be 
+          <spanx style="verb">oauth2</spanx> (represented in JavaScript using 
+          the <spanx style="verb">constant gadgets.io.RequestParameters.OAUTH2</spanx>).</t>
+          
+          <t>The following additional parameters that affect the containers
+          application of the OAuth protocol MAY also be specified:
+            <texttable>
+              <ttcol>Name</ttcol>
+              <ttcol>Alias</ttcol>
+              <ttcol>Description</ttcol>
+              
+              <c>OAUTH_RECEIVED_CALLBACK</c>
+              <c>gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</c>
+              <c>Specifies the IRI to return after authorization.
+              TODO: Need for info on this</c>
+              
+              <c>OAUTH_REQUEST_TOKEN</c>
+              <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</c>
+              <c>In certain circumstances, instances of an application can be 
+              preauthorized to access particular resources and issued an 
+              OAuth Request Token in advance. The OAUTH_REQUEST_TOKEN parameter
+              allows the gadget to provide such preapproved request tokens to the 
+              container for use.</c>
+              
+              <c>OAUTH_REQUEST_TOKEN_SECRET</c>
+              <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</c>
+              <c>When using preapproed request tokens with the OAUTH_REQUEST_TOKEN
+              parameter, the OAUTH_REQUEST_TOKEN_SECRET parameter
+              can be used to provide the associated request token secret.</c>
+              
+              <c>OAUTH2_SCOPE</c>
+              <c>gadgets.io.RequestParameters.OAUTH2_SCOPE</c>
+              <c>When using OAuth version 2.0, the OAUTH2_SCOPE parameter is 
+              used to specify the scope to be used with this request. 
+              Access Token Scope is defined in Section 3.3 of 
+              <xref target="I-D.ietf-oauth-v2"/>.</c>
+              
+              <c>OAUTH_TOKEN_NAME</c>
+              <c>gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</c>
+              <c>Provides a simple label that gadget can use to refer to the 
+              OAuth Access Token granting access to particular resources.
+              If unspecified the value is assumed to be an empty string. 
+              Gadget instances can use multiple token names if they access
+              multiple resources from a single source. For example, a gadget
+              that access a contact list and a calendar might used the 
+              token name "contacts" to refer to the OAuth token providing 
+              access to the contact data and the name "calendar" to refer to
+              the token providing access to the calendar.</c>
+              
+              <c>OAUTH_USE_TOKEN</c>
+              <c>gadgets.io.RequestParameters.OAUTH_USE_TOKEN</c>
+              <c>For certain kinds of actions on certain resources, an OAuth
+              service provider might not require that the container and gadget
+              walk through the complete OAuth process to acquire an
+              Access Token. In such scenarios, the service providing access
+              to the resource will verify the OAuth Consumer Key provided 
+              within the request then allow the request to proceed. In other 
+              cases, a resource provider might grant limited access to a
+              requester if the resource owner has not provided explicit
+              authorization but offer additional functionality if an OAuth
+              Access Token has been issued. Typically, however, most resource
+              providers will only allow a requester to access protected resources
+              if an Access Token is included in the request. The OAUTH_USE_TOKEN
+              parameter can be used by the gadget as a hint to the container 
+              as to whether the acquisition and use of an Access Token is 
+              required or optional. The value MUST be one of:
+                <list style="hangText">
+                  <t hangText="never">
+                    Tells the container that the Access Token is never 
+                    required. Requests will be sent to the remote endpoint
+                    without an OAuth Access Token.
+                  </t>
+                  <t hangText="if_available">
+                    Tells the container that use of the Access Token is 
+                    optional. If an Access token has been acquired, it 
+                    will be included in the request sent to the remote 
+                    endpoint, otherwise the request will be sent 
+                    without an Access Token.
+                  </t>
+                  <t hangText="always">
+                    Tells the container that use of the Access Token 
+                    is required. If an appropriate Access Token has not
+                    yet been acquired, the container will work with the 
+                    gadget and the OAuth Service Provider to seek appropriate
+                    authorization and acquire an Access Token.
+                  </t>
+                </list>
+              If the OAUTH_USE_TOKEN parameter is not specified, the value
+              is assumed to be "always".</c>  
+            </texttable>
+          </t>
+                    
+          <figure><preamble>Within &lt;Preload&gt; and &lt;Link&gt; elements:</preamble>
+          <artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+      <OAuth>...</OAuth>
+      <Preload authz="oauth" href="http://example.org/resources/bar" />
+      <Link authz="oauth" href="http://example.org/images/foo.png" rel="icon" />
+      ...
+    </ModulePrefs>
+    <Content type="html"> 
+      ...
+    </Content>
+  </Module>
+          ]]></artwork></figure>
+          
+          <figure><preamble>Within proxy or redirect type &lt;Content&gt; elements:</preamble>
+          <artwork><![CDATA[
+  <Module>
+    ...
+    <Content authz="oauth" href="http://example.org/content/foo" />
+    ...
+  </Module>
+          ]]></artwork></figure>
+          
+          <t>When using OAuth 1.0a with the &lt;Preload&gt;, &lt;Link&gt; 
+          and &lt;Content&gt; elements, the <spanx style="verb">authz</spanx> 
+          attribute MUST be specified with a value of <spanx style="verb">oauth</spanx>.</t>
+          
+          <t>When using OAuth 2.0, the <spanx style="verb">authz</spanx> 
+          attribute MUST specify a value of <spanx style="verb">oauth2</spanx>.</t>
+          
+          <t>The following additional attributes that affect the containers
+          application of the OAuth protocol MAY also be specified. Each corresponds
+          to one of the optional parameters for the JavaScript API listed above
+          and specify identical values:
+            <list style="symbols">
+              <t><spanx style="verb">oauth_received_callback</spanx></t>
+              <t><spanx style="verb">oauth_request_token</spanx></t>
+              <t><spanx style="verb">oauth_request_token_secret</spanx></t>
+              <t><spanx style="verb">oauth2_scope</spanx></t>
+              <t><spanx style="verb">oauth_token_name</spanx></t>
+              <t><spanx style="verb">oauth_use_token</spanx></t>
+            </list>
+          </t>
+          
+          <t>If an application requires access to multiple OAuth service 
+          providers, then it MUST declare each provider and specify a unique 
+          label for each that identifies the specific provider to be used for 
+          each request. Each of the &lt;OAuth&gt; and &lt;OAuth2&gt;
+          elements can contain as many &lt;Service&gt; element instances
+          as is necessary.</t>
+          
+          <figure><preamble>For instance, in the example that follows, both 
+          the &lt;Preload&gt; element and the JavaScript API call use the 
+          OAuth service labeled as "other" within the &lt;ModulePrefs&gt;, 
+          while the &lt;Link&gt; element uses the "default" OAuth service
+          defined by the &lt;Service&gt; tag that omits the name attribute.</preamble>
+          <artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+      <OAuth>
+        <Service>
+          <Request url="http://example1.com/request" method="get" />
+          <Access url="http://example1.com/access" method="get" />
+          <Authorization url="http://example1.com/authorization" />      
+        </Service>
+        <Service name="other">
+          <Request url="http://example2.net/request" method="get" />
+          <Access url="http://example2.net/access" method="get" />
+          <Authorization url="http://example2.net/authorization" />      
+        </Service>
+        <Preload authz="oauth" oauth_service_name="other" 
+          href="http://example.org/resources/bar" />
+        <Link authz="oauth" href="http://example.org/images/foo.png" rel="icon" />
+      </OAuth>
+      <Content type="html">
+        ...
+        <script>
+          var params = {};
+          params["href"] = 
+            "http://data.example.org/resource/foo";
+          params[gadgets.io.RequestParameters.AUTHORIZATION] = 
+            gadgets.io.AuthorizationType.OAUTH;
+          params[gadgets.io.RequestParameters.OAUTH_SERVICE_NAME] =
+            "other";
+        
+          function fetchData() {
+            osapi.http.get(params).execute(
+              function(result) { ... }
+            );
+          }
+          
+          gadgets.util.registerOnLoadHandler(fetchData);
+        </script>
+        ...
+      </Content>
+    </ModulePrefs>
+  </Module>
+          ]]></artwork></figure>
+          
+          <t>When multiple OAuth services are used, the 
+          <spanx style="verb">OAUTH_SERVICE_NAME</spanx>
+          parameter and the <spanx style="verb">oauth_service_name</spanx> 
+          attribute are used within the JavaScript API and XML elements to 
+          indicate the appropriate OAuth service to use for the request.</t>
+        
+        </section>
+        
+        <section title="Processing Model">
+        
+          <t>When the container receives any request for which the OAuth
+          protocol is to be used, regardless of whether the request is 
+          submitted via the JavaScript API or via elements in the gadget
+          specification, it MUST adhere to the following requirements and 
+          processing model:</t>
+          
+          <list style="numbers">
+            <t>For any request for which an access token is not 
+            required (e.g. the value of the <spanx style="verb">OAUTH_USE_TOKEN</spanx> 
+            parameter equals <spanx style="verb">never</spanx>):
+              <list style="symbols">
+                <t>When OAuth 1.0a is used, the container will 
+                send a request to the remote endpoint as described in 
+                Section 3 of <xref target="RFC5849"/> with the exception
+                that the <spanx style="verb">oauth_token</spanx> will be omitted.</t>
+                <t>When OAuth version 2.0 is used... TODO: What to do here?</t>
+              </list>
+            </t>
+            <t>For any request for which an access token is considered
+            optional (e.g. the value of the OAUTH_USE_TOKEN parameter
+            is "if_available"):
+              <list style="symbols">
+                <t>When OAuth 1.0a is used and an Access Token 
+                appropriate to the current request is known to the 
+                container, a request that includes the token will be sent 
+                to the remote endpoint as described in Section 7 of 
+                <xref target="RFC5849"/>. When using OAuth 2.0, the container
+                will send a request using the access token as specified
+                in Section 7 of <xref target="I-D.ietf-oauth-v2"/>.</t>
+                <t>If an appropriate Access Token is not known to 
+                the container, TODO: What to do here?</t>
+              </list>
+            </t>
+            <t>For any request for which an access token is required
+            (e.g. the value of the OAUTH_USE_TOKEN parameter is 
+            "always" or the OAUTH_USE_TOKEN is unspecified):
+              <list style="symbols">
+                <t>If using OAuth 1.0a and an appropriate Access Token 
+                is known by the container, a request as defined in Section 
+                3 of <xref target="RFC5849"/> is sent to the remote endpoint. 
+                If using OAuth 2.0, a request as defined by Section 7
+                of <xref target="I-D.ietf-oauth-v2"/> is sent.</t>
+                <t>When an appropriate Access Token is not known to 
+                the container, the container MUST acquire an access
+                token using either of the processes described below
+                depending on the version of OAuth being used. Once
+                an Access Token is acquired, a request using the token
+                will be sent to the server. If a token cannot be 
+                acquired, the container will report an error back 
+                to the gadget.</t>
+              </list>
+            </t>
+          </list>
+    
+          <section title="Acquiring Access Tokens">
+          
+            <t>When using any version of OAuth, a container will first 
+            need to seek authorization from the owner of a resource
+            prior to attempting to access it. This is done first by 
+            the container interacting with the OAuth Authorization 
+            Provider to retrieve a "request token" which is then 
+            exchanged for an "access token". The details for how each 
+            of those steps are completed varies for each version of the 
+            OAuth protocol. </t>
+          
+            <!-- TODO: NEED TO COMPLETE THIS SECTION -->
+          
+          </section>
+          
+        </section>
+      
+      </section>
+      
+      <!--  AUTHENTICATION SECTION NEEDS TO BE COMPLETED STILL -->
+
+    </section> <!-- END AUTHENTICATION -->
+    <!--  END AUTHENTICATION -->
+ 
     <section title="Caching" anchor="caching">
     
       <t>Application developers are provided with a variety of mechanisms 
@@ -1896,7 +2623,531 @@
       </artwork></figure>
     
     </section>
+    <!--  END CACHING -->
   
+    <section title="Variable Substitution" anchor="VariableSubstitution">
+  
+      <t>The Variable Substitution capability provides the ability 
+      for gadget developers to use special "Expression Language" (EL) 
+      statements within their application specifications that the container 
+      will replace with appropriate values when a View is rendered.</t>
+  
+      <figure><preamble>For example, given the following partial application 
+      specification:</preamble><artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+    </ModulePrefs>
+    <Content type="html">
+      One plus one is equal to ${1+1}.
+    </Content>
+  </Module>
+      ]]></artwork></figure>
+      
+      <t>When the default view for this application is rendered, the expression
+      "${1+1}" will be evaluated and replaced with the value "2", resulting 
+      in the output:</t>
+      
+      <figure><artwork>
+  One plus one is equal to 2.
+      </artwork></figure>
+  
+      <t>Expression Language statements can be used to to access values 
+      provided by reserved variable keys, variables defined using data 
+      pipeline tags as defined by <xref target="DataPipeling"/>, or 
+      literal values as in the previous example.</t>
+      
+      <t>The syntax for expressions is based on a subset of the
+      <xref target="JSPEL">Java Server Pages Expression Language (JSPEL)</xref>.
+      All basic operations defined by the JSPEL specification,
+      such as string concatenation and matching, are supported. 
+      However, the definition of custom functions, as defined in 
+      <xref target="JSPEL" />, Section 1.15, is not supported at this time.</t>
+      
+      <t>Containers are required to support variable substitution using this
+      Expression Language syntax.</t>
+    
+      <section title="Using Literal Statements">
+      
+        <t>As is defined by the <xref target="JSPEL">JSPEL</xref> specification,
+        literal statements can be used. For instance, the "${1+1}" used in the 
+        previous example is a literal statement that outputs the results of 
+        adding the two numbers together. All forms of literal statement allowed
+        by JSPEL may be used within OpenSocial.</t>
+        
+        <t>It is also possible to combine the use of literal statements with 
+        other variables. For instance, the expression "${1 + count}" will 
+        be replaced by the numeric value of the variable "count" plus the number
+        one.</t>
+      
+      </section>
+    
+      <section title="Using Data Pipeline Variables">
+      
+        <t>For all application instances, there is a <spanx style="verb">DataContext</spanx>
+        object that stores and provides access to all of the data associated with
+        the Application's use of the <xref target="DataPipelining">Data Pipelining</xref>
+        capability. The information stored within the <spanx style="verb">DataContext</spanx>
+        can be accessed either via expression statements or using the 
+        <spanx style="verb">opensocial.data</spanx> API.</t>
+       
+        <figure><preamble>For instance, if we define a simple variable using the 
+        data pipelining tags, we can access the value of that variable by naming 
+        it within a substitution expression:</preamble><artwork><![CDATA[
+  <Module xmlns:os="http://ns.opensocial.org/2008/markup">
+    ...
+    <Data>
+      <os:Var key="myNumber" value="1" />
+    </Data>
+    <Content type="html">
+      The value of myNumber is: ${myNumber}
+    </Content>
+  </Module>
+        ]]></artwork></figure>
+        
+        <t>Additional information on the use of the <spanx style="verb">DataContext</spanx>
+        with variable substitution can be found in <xref target="DataPipelining" />
+        and <xref target="OpenSocial-Templating"/>.</t>
+      
+      </section>
+  
+      <section title="Using Reserved Variable Keys" anchor="ReservedVariableKeys">
+    
+        <t>Reserved Variable Keys are reserved variables names whose values are
+        provided by the container. The keys take the form <spanx style="verb">{Prefix}.{Var}</spanx>
+        where <spanx style="verb">{Prefix}</spanx> identifies one of the 
+        predefined scopes below, and <spanx style="verb">{Var}</spanx> specifies 
+        a specific variable within the identified scope. The applicability of 
+        each Prefix and Var combination will vary depending on where within the 
+        gadget specification the variable substitution is occurring.</t>
+        
+        <t>Container implementations and individual extensions to the core 
+        OpenSocial specification are free to introduce additional reserved 
+        variable key <spanx style="verb">{Prefix}</spanx> names in addition 
+        to those listed here.</t>
+        
+        <texttable align="left">
+          <ttcol>Prefix</ttcol>
+          <ttcol>Description</ttcol>
+          <ttcol>Applicability</ttcol>
+
+            <c>Msg</c>
+            <c>References all message bundle variables for the current locale.
+            The values of the <spanx style="verb">{Var}</spanx> component are 
+            selected from the applicable message bundle. For instance, if the 
+            bundle includes a key <spanx style="verb">FOO</spanx>, then the 
+            expression <spanx style="verb">${Msg.FOO}</spanx> will be replaced 
+            by the localized value associated with <spanx style="verb">FOO</spanx> 
+            in the bundle.</c>
+            <c><spanx style="verb">Msg.*</spanx> variables are available anywhere 
+            within the application, including ModulePrefs and root Module element. 
+            Message bundle values may reference other message bundle variables 
+            by making use of the <spanx style="verb">${Msg.*}</spanx> syntax 
+            within the value.</c>
+            
+            <c>Bidi</c>
+            <c>Used to reference information about the currently selected 
+            Locale's default text directionality as specified by the 
+            text_direction attribute on the &lt;Locale&gt; element. The 
+            BIDI variables are discussed in detail in <xref target="Localization"/>.</c>
+            <c><spanx style="verb">Bidi.*</spanx> variables are available anywhere
+            within the application, including ModulePrefs and root Module
+            element.</c>
+      
+            <c>ViewParams</c>
+            <c>References all values passed using the <spanx style="verb">viewParams</spanx> 
+            parameter when calling to <xref target="gadgets.views.requestNavigateTo">gadgets.views.requestNavigateTo</xref>.
+            The values of the <spanx style="verb">{Var}</spanx> component 
+            correlates to each view parameter. Expression statements using this 
+            prefix will resolve to the same values as calls made to the 
+            <spanx style="verb">gadgets.views.getParams</spanx>
+            API. For instance, the expression <spanx style="verb">${ViewParams.FOO}</spanx> 
+            will be replaced by the same value returned by the API call
+            <spanx style="verb">gadgets.views.getParams()["FOO"]</spanx>.</c>
+            <c><spanx style="verb">ViewParam.*</spanx> variables are available 
+            only within Content blocks and <xref target="DataPipelining">Data Pipeline</xref> 
+            tags.</c>
+            
+            <c>Prefs</c>
+            <c>References all named values defined by &lt;UserPref&gt; elements
+            contained in the application specification. The values of the 
+            <spanx style="verb">{Var}</spanx> component correlate to each 
+            defined user preference. Expression statements using this prefix 
+            will resolve to the same values as calls to the 
+            <spanx style="verb">gadgets.Prefs</spanx> API.
+            For instance, the expression <spanx style="verb">${Prefs.Lang}</spanx> 
+            will be replaced by the same value returned by the API call 
+            <spanx style="verb">gadgets.Prefs.getLang()</spanx>; The expression 
+            <spanx style="verb">${Prefs.FOO}</spanx> will be replaced by the 
+            same value returned by the API call 
+            <spanx style="verb">gadgets.Prefs.getString("FOO")</spanx></c>
+            <c>Available anywhere within the application .</c>
+
+            <c>Viewer</c>
+            <c>Reserved for future use.</c>
+            <c>N/A</c>
+
+            <c>Owner</c>
+            <c>Reserved for future use.</c>
+            <c>N/A</c>
+  
+            <c>Gadget</c>
+            <c>Reserved for future use.</c>
+            <c>N/A</c>
+        </texttable>
+        
+        <figure><preamble>The following example illustrates the use of 
+        Reserved Variables Names using the <spanx style="verb">Msg</spanx> 
+        prefix:</preamble>
+        <artwork><![CDATA[
+  <Module>
+    <ModulePrefs title="${Msg.TITLE}">
+      ...
+      <Locale lang="en" country="US">
+        <msg name="TITLE">My Gadget</msg>
+        <msg name="GREETING">Hello There!</msg>
+      </Locale>
+      ...
+    </ModulePrefs>
+    <Content type="html"><![CDATA[
+      <div>${Msg.GREETING}</div>
+    ]]></Content>
+  </Module>
+        ]]></artwork></figure>
+        
+      </section>
+  
+      <section title="Deprecated Expression Syntax">
+     
+        <t>Previous versions of this specification supported a 
+        -- now deprecated -- alternative expression syntax. Container
+        implementations are permitted to continue supporting the deprecated
+        syntax to provide backwards compatibility for older, 
+        existing gadget specifications, however, gadget developers creating 
+        new gadget specifications MUST NOT use the deprecated format.</t>
+        
+        <t>The legacy syntax takes the form <spanx style="verb">__{Prefix}_{Var}__</spanx> 
+        where <spanx style="verb">{Prefix}</spanx> identifies one of the 
+        predefined scopes below, and <spanx style="verb">{Var}</spanx> specifies 
+        a specific variable within the identified scope.</t>
+ 
+        <figure><preamble>For instance, in the partial gadget example that 
+        follows, the expression <spanx style="verb">__MSG_FOO__</spanx> is 
+        replaced for the localized value identified by the key 
+        <spanx style="verb">FOO</spanx> within the localized message bundle:</preamble>
+        <artwork><![CDATA[
+  <Module>
+    <ModulePrefs title="__MSG_FOO__">
+      ...
+      <Locale language="en" country="US">
+        <msg name="FOO">Hello World!</msg>
+      </Locale>
+      ...
+    </ModulePrefs>
+    <Content type="html">
+      ...
+    </Content>
+  </Module>
+        ]]></artwork></figure>
+
+        <t>The <spanx style="verb">{Prefix}</spanx> keys supported by the 
+        legacy syntax are:</t>  
+
+        <texttable align="left">
+          <ttcol>Prefix</ttcol>
+          <ttcol>Description</ttcol>   
+
+          <c>MSG</c>
+          <c>References all message bundle variables for the current locale.
+          The values of the <spanx style="verb">{Var}</spanx> component are 
+          selected from the applicable message bundle. For instance, if the 
+          bundle includes a key <spanx style="verb">FOO</spanx>, then the 
+          expression <spanx style="verb">__MSG_FOO__</spanx> will be replaced 
+          by the localized value associated with <spanx style="verb">FOO</spanx> 
+          in the bundle.</c>
+          
+          <c>BIDI</c>
+          <c>References BIDI substitution variables whose values will reflect
+          the default text direction as specified by the selected locale. 
+          The BIDI variables are discussed in detail in <xref target="Localization"/>.</c>
+          
+          <c>MODULE</c>
+          <c>Originally intended to provide a context for information about 
+          the gadget specification itself. Currently, <spanx style="verb">ID</spanx> 
+          is the only variable key supported (e.g. <spanx style="verb">__MODULE_ID__</spanx>). 
+          When used, the container SHOULD replace the <spanx style="verb">__MODULE_ID__</spanx> 
+          expression with a unique ID value for each instance of a gadget 
+          displayed simultaneously.</c>
+          
+          <c>UP</c>
+          <c>References all named values defined by &lt;UserPref&gt; elements
+          contained in the gadget specification. The values of the 
+          <spanx style="verb">{Var}</spanx> component correlate to each defined 
+          user preference. Expression statements using this prefix will resolve 
+          to the same values as calls to the <spanx style="verb">gadgets.Prefs</spanx> 
+          API. For instance, the expression <spanx style="verb">__UP_Lang__</spanx> 
+          will be replaced by the same value returned by the API call 
+          <spanx style="verb">gadgets.Prefs.getLang()</spanx>; The expression 
+          <spanx style="verb">__UP_FOO__</spanx> will be replaced by the same 
+          value returned by the API call <spanx style="verb">gadgets.Prefs.getString("FOO")</spanx></c>
+            
+        </texttable>
+      </section>
+      
+      <section title="Processing Requirements">
+      
+        <t>Containers perform Variable Substitution when application views
+        are rendered or when metadata about the gadget is displayed.
+        For instance, if the container includes an application specification 
+        within a listing of applicatioms available to install and use on a page, 
+        then the container will perform any substitution necessary on the 
+        displayed values (e.g. title, description, etc).</t>
+        
+        <t>Containers are required to perform substitution on all 
+        attributes or elements in the application specification document 
+        exception of &lt;Locale&gt;, &lt;msg&gt;, &lt;EnumValue&gt; elements, 
+        but only when the content of those elements and attributes is 
+        currently being rendered. If, for instance, a gadget contains 
+        multiple &lt;Content&gt; elements, each of which identify different
+        views, the container will only process substitutions that are 
+        included within the content for the view currently being rendered.
+        Further, containers are required to perform all substitutions 
+        that use either the Msg reserved variable key (i.e. 
+        <spanx style="verb">${Msg.FOO}</spanx>) or the MSG legacy syntax format 
+        (i.e. <spanx style="verb">__MSG_FOO__</spanx>) -- if supported -- before 
+        applying any other substitutions.</t>
+        
+        <t>Variable substitution MUST NOT be applied recursively and 
+        circular dependencies detected within variables MUST be ignored
+        and treated as literal values rather than expressions. For instance,
+        within the following partial gadget specification:</t>
+        
+        <figure><artwork><![CDATA[
+  <Module xmlns:os="http://ns.opensocial.org/2008/markup">
+    ...
+    <Data>
+      <os:Var key="key1" value="${key2}" />
+      <os:Var key="key2" value="${key1}" />
+    </Data>
+    <Content type="html">
+      ${key1}
+      ${key2}
+    </Content>
+  </Module>
+        ]]></artwork></figure>
+        
+        <t>The value of <spanx style="verb">key1</spanx> would be resolved as 
+        the literal value <spanx style="verb">${key1}</spanx>. The value of 
+        <spanx style="verb">key2</spanx> would be resolved as the literal value 
+        <spanx style="verb">${key2}</spanx>. The rendered output generated by 
+        the container would be:</t>
+        
+        <figure><artwork><![CDATA[
+  ${key1}
+  ${key2}
+        ]]></artwork></figure>
+      </section>   
+    </section>
+    <!--  END VARIABLE SUBSTITUTION -->
+  
+    <section title="Localization" anchor="Localization">
+    
+      <t>Localization of an application is achieved primarily through
+      <xref target="VariableSubstitution">Variable Substitution</xref>, using the
+      Msg reserved variable key and &lt;Locale&gt; elements.</t>
+
+      <t>To determine the appropriate keys and values to use for substitution,
+      containers will inspect the application specification document for a &lt;Locale&gt; 
+      element that matches the current view being rendered, as well as the 
+      language and country of the viewer.</t>
+      
+      <t>A &lt;Locale&gt; is considered a match if either:
+        <list style="symbols">
+          <t>The default unnamed view is being rendered and the &lt;Locale&gt;
+          elements view attribute is unspecified, or the specific view being 
+          rendered is named explicitly within the &lt;Locale&gt; element's view 
+          attribute, and </t>
+          <t>The language and country attributes on the &lt;Locale&gt; 
+          element exactly match those of the viewer, or</t>
+          <t>The language attribute is an exact match for the viewer 
+          and the country attribute specifies "all", or</t>
+          <t>Both the language and country attributes specify "all".</t>
+        </list>
+      </t>
+      
+      <t>How the container determines the current language and country 
+      of the viewer is not defined by this specification.</t>
+      
+      <t>If a matching &lt;Locale&gt; is not found within the gadget 
+      specification, the container is permitted to provide it's own
+      localization data.</t>
+
+      <t>Once an appropriate &lt;Locale&gt; has ben selected, containers
+      are required to replace all Msg expressions for which a replacement
+      value can be determined.</t>
+      
+      <t>For example, given the following partial gadget specification:</t>
+      
+      <figure><artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+      <Locale language="en" country="all">
+        <msg name="greeting">Hello World!</msg>
+      </Locale>
+      <Locale language="en" country="all" views="other">
+        <msg name="greeting">Howdy!</msg>
+      </Locale>
+      <Locale language="fr" country="all">
+        <msg name="greeting">Bonjour tout le monde!</msg>
+      </Locale>
+      ...
+    </ModulePrefs>
+    <Content type="html">
+      ${Msg.greeting}
+    </Content>
+  </Module>
+      ]]></artwork></figure>
+      
+      <t>When rendering the default view, the container will output 
+      "Hello World!" for English-speaking viewers and "Bonjour tout le monde!"
+      for French-speaking viewers.</t>
+      
+      <section title="Considerations for Bidirectional Text">
+      
+        <t>Gadget developers need to take care when working with languages 
+        that require a default Right-to-Left ordering when rendering text.
+        The <spanx style="verb">Bidi</spanx> reserved variable key can be used 
+        within Variable Substitution expression statements to access information 
+        about the default text directionality as specified by the currently 
+        selected locale.</t>
+        
+        <t>The variables supported by the <spanx style="verb">Bidi</spanx> 
+        reserved variable key are:
+          <list style="hanging">
+            <t hangText="START_EDGE">When the selected &lt;Locale&gt; element's
+            <spanx style="verb">text_direction</spanx> attribute specifies 
+            <spanx style="verb">rtl</spanx> (Right-to-Left"), the
+            value of the <spanx style="verb">Bidi.START_EDGE</spanx> reserved 
+            variable key will be <spanx style="verb">right</spanx>.
+            When the attribute is either <spanx style="verb">ltr</spanx> 
+            (Left-to-Right) or unspecified, the value will be 
+            <spanx style="verb">left</spanx>.</t>
+            <t hangText="END_EDGE">When the text direction is 
+            <spanx style="verb">rtl</spanx>, the value of <spanx style="verb">Bidi.END_EDGE</spanx>
+            will be <spanx style="verb">left</spanx>. When the attribute is either
+            <spanx style="verb">ltr</spanx> or unspecified, the value will be 
+            <spanx style="verb">right</spanx>.</t>
+            <t hangText="DIR">The reserved variable key 
+            <spanx style="verb">Bidi.DIR</spanx> returns the 
+            value of the &lt;Locale&gt; element's <spanx style="verb">text_direction</spanx> 
+            attribute or <spanx style="verb">ltr</spanx> if the attribute is 
+            unspecified.</t>
+            <t hangText="REVERSE_DIR">The reserved variable key 
+            <spanx style="verb">Bidi.REVERSE_DIR</spanx> returns the opposite 
+            of the &lt;Locale&gt; element's <spanx style="verb">text_direction</spanx>
+            attribute value. If <spanx style="verb">text_direction</spanx> is 
+            <spanx style="verb">ltr</spanx>,  <spanx style="verb">Bidi.REVERSE_DIR</spanx> 
+            will return <spanx style="verb">rtl</spanx>. If text_direction is 
+            <spanx style="verb">rtl</spanx>, <spanx style="verb">Bidi.REVERSE_DIR</spanx> 
+            will return <spanx style="verb">ltr</spanx>.</t>
+          </list>
+        </t>
+        
+        <figure><preamble>The Bidi variables can be used to establish the 
+        correct text directionality when rendering. For instance:</preamble><artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+      <Locale language="en" country="all">
+        <msg name="greeting">Hello World!</msg>
+      </Locale>
+      <Locale language="ar" country="all" text_direction="rtl">
+        <msg name="greeting">&#0645;&#0631;&#062D;&#0628;&#0627 &#0627;&#0644;&#0639;&#0627;&#0644;&#0645!</msg>
+      </Locale>
+      ...
+    </ModulePrefs>
+    <Content type="html">
+      <div dir="${Bidi.DIR}">${Msg.greeting}</div>
+    </Content>
+  </Module>        
+        ]]></artwork></figure>
+      
+      </section>
+
+      <section title="Message Bundle Documents" anchor="MessageBundles">
+      
+        <t>The &lt;Locale&gt; element can either directly contain &lt;msg&gt;
+        elements that define the keys and values used for localization or 
+        can reference "Message Bundle Documents" that provide the collection
+        of &lt;msg&gt; elements.</t>
+
+        <figure><preamble>For instance, the following &lt;Locale&gt; element:</preamble>
+        <artwork><![CDATA[
+  <Locale language="en" country="US">
+    <msg name="color">Color</msg>
+    <msg name="red">Red</msg>
+    <msg name="green">Green</msg>
+    <msg name="blue">Blue</msg>
+  </Locale>
+        ]]></artwork></figure>
+        
+        <figure><preamble>Can be replaced with a &lt;Locale&gt; that references
+        an external Message Bundle that includes the same &lt;msg&gt; elements:</preamble>
+        <artwork><![CDATA[
+  <Locale language="en" country="US" messages="http://example.com/en/messages.xml" />
+        ]]></artwork>
+        </figure>
+        
+        <figure><preamble>The Message Bundle at http://example.com/en/messages/xml:</preamble>
+        <artwork><![CDATA[
+  <messagebundle>
+    <msg name="color">Color</msg>
+    <msg name="red">Red</msg>
+    <msg name="green">Green</msg>
+    <msg name="blue">Blue</msg>
+  </messagebundle>
+        ]]></artwork></figure>
+        
+        <t>As illustrated, Message Bundles are XML documents whose root
+        element is a &lt;messagebundle&gt; that contains zero or more
+        &lt;msg&gt; elements that use the same format as the children 
+        of the &lt;Locale&gt; element. No XML Namespace is defined for
+        the &lt;messagebundle&gt; or &lt;mgs&gt; elements.</t>
+        
+        <figure><artwork>
+  messagebundle = element messagebundle {
+    undefinedAttribute*,
+    element msg {
+      attribute name { text },
+      text
+    }
+  }
+        </artwork></figure>
+        
+        <t>Variable substitution expressions MAY be used within Message 
+        Bundle Documents.</t>
+        
+        <t>Each Message Bundle Document provides &lt;msg&gt; elements 
+        for a single locale. By convention, Message Bundle documents are 
+        named as <spanx style="verb">{language}_{country}.xml</spanx>, where 
+        <spanx style="verb">{language}</spanx> is either an ISO-639-1 Language 
+        Code or <spanx style="verb">ALL</spanx> and <spanx style="verb">{country}</spanx> 
+        is an ISO-3166-1 Country Code or <spanx style="verb">ALL"</spanx>. For 
+        instance, a Message Bundle providing values for English-language 
+        speakers within the United States would be named <spanx style="verb">en_US.xml</spanx>, 
+        while a Message Bundle providing German-language values for 
+        German-language speakers regardless of country would be named 
+        <spanx style="verb">de_ALL.xml</spanx>. The Message Bundle named 
+        <spanx style="verb">ALL_ALL.xml</spanx> would apply to all languages 
+        in any country.</t>
+  
+      </section>
+  
+    </section>
+    <!-- END LOCALIZATION -->
+   
+    
     <section title="Gadget Lifecycle Events" anchor="gadget-lifecycle-events">
     
       <t>The Gadget Lifecycle Event capability allows an OpenSocial
@@ -2178,518 +3429,7 @@
       </section>
     </section>
     <!-- END GADGET LIFECYCLE EVENTS -->
-
-    <section title="Variable Substitution" anchor="VariableSubstitution">
-  
-      <t>The Variable Substitution capability provides the ability 
-      for gadget developers to use special "Expression Language" (EL) 
-      statements within their gadget specifications that the container 
-      will replace with appropriate values when the gadget is rendered.</t>
-  
-      <figure><preamble>For example, given the following partial gadget 
-      specification:</preamble><artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-    </ModulePrefs>
-    <Content type="html">
-      One plus one is equal to ${1+1}.
-    </Content>
-  </Module>
-      ]]></artwork></figure>
-      
-      <t>When the default view for this gadget is rendered, the expression
-      "${1+1}" will be evaluated and replaced with the value "2", resulting 
-      in the output:</t>
-      
-      <figure><artwork>
-  One plus one is equal to 2.
-      </artwork></figure>
-  
-      <t>Expression Language statements can be used to to access values 
-      provided by reserved variable keys, variables defined using data 
-      pipeline tags as defined by <xref target="DataPipeling"/>, or 
-      literal values as in the previous example.</t>
-      
-      <t>The syntax for expressions is based on a subset of the
-      <xref target="JSPEL">Java Server Pages Expression Language (JSPEL)</xref>.
-      All basic operations defined by the JSPEL specification,
-      such as string concatenation and matching, are supported. 
-      However, the definition of custom functions, as defined in 
-      <xref target="JSPEL" />, Section 1.15, is not supported at this time.</t>
-      
-      <t>Containers are required to support variable substitution using this
-      Expression Language syntax.</t>
-    
-      <section title="Using Literal Statements">
-      
-        <t>As is defined by the <xref target="JSPEL">JSPEL</xref> specification,
-        literal statements can be used. For instance, the "${1+1}" used in the 
-        previous example is a literal statement that outputs the results of 
-        adding the two numbers together. All forms of literal statement allowed
-        by JSPEL may be used within OpenSocial.</t>
-        
-        <t>It is also possible to combine the use of literal statements with 
-        other variables. For instance, the expression "${1 + count}" will 
-        be replaced by the numeric value of the variable "count" plus the number
-        one.</t>
-      
-      </section>
-    
-      <section title="Using Data Pipeline Variables">
-      
-        <t>For all gadget instances, there is a <spanx style="verb">DataContext</spanx>
-        object that stores and provides access to all of the data associated with
-        the Gadget's use of the <xref target="DataPipelining">Data Pipelining</xref>
-        capability. The information stored within the <spanx style="verb">DataContext</spanx>
-        can be accessed either via expression statements or using the 
-        <spanx style="verb">opensocial.data</spanx> API.</t>
-       
-        <figure><preamble>For instance, if we define a simple variable using the 
-        data pipelining tags, we can access the value of that variable by naming 
-        it within a substitution expression:</preamble><artwork><![CDATA[
-  <Module xmlns:os="http://ns.opensocial.org/2008/markup">
-    ...
-    <Data>
-      <os:Var key="myNumber" value="1" />
-    </Data>
-    <Content type="html">
-      The value of myNumber is: ${myNumber}
-    </Content>
-  </Module>
-        ]]></artwork></figure>
-        
-        <t>Additional information on the use of the <spanx style="verb">DataContext</spanx>
-        with variable substitution can be found in <xref target="DataPipelining" />
-        and <xref target="OpenSocial-Templating"/>.</t>
-      
-      </section>
-  
-      <section title="Using Reserved Variable Keys" anchor="ReservedVariableKeys">
-    
-        <t>Reserved Variable Keys are reserved variables names whose values are
-        provided by the container. The keys take the form "{Prefix}.{Var}" 
-        where "{Prefix}" identifies one of the predefined scopes below, and 
-        "{Var}" specifies a specific variable within the identified scope.
-        The applicability of each Prefix and Var combination will vary depending
-        on where within the gadget specification the variable substitution is
-        occurring.</t>
-        
-        <texttable align="left">
-          <ttcol>Prefix</ttcol>
-          <ttcol>Description</ttcol>
-          <ttcol>Applicability</ttcol>
-
-            <c>Msg</c>
-            <c>References all message bundle variables for the current locale.
-            The values of the {Var} component are selected from the applicable
-            message bundle. For instance, if the bundle includes a key "FOO",
-            then the expression ${Msg.FOO} will be replaced by the localized 
-            value associated with "FOO" in the bundle.</c>
-            <c>"Msg.*" variables are available anywhere within gadget, including 
-            ModulePrefs and root Module element. Message bundle values may 
-            reference other message bundle variables by making use of the 
-            ${Msg.*} syntax within the value.</c>
-            
-            <c>BIDI</c>
-            <c>Used to reference information about the currently selected 
-            Locale's default text directionality as specified by the 
-            text_direction attribute on the &lt;Locale&gt; element. The 
-            BIDI variables are discussed in detail in <xref target="Localization"/>.</c>
-      
-            <c>ViewParams</c>
-            <c>References all values passed as "viewParams" with a call to
-            <xref target="gadgets.views.requestNavigateTo">gadgets.views.requestNavigateTo</xref>.
-            The values of the {Var} component correlate to each view parameter.
-            Expression statements using this prefix will resolve to the same values 
-            as calls made to the <xref target="gadgets.views.getParams">gadgets.views.getParams</xref>
-            API. For instance, the expression "${ViewParams.FOO}" will be 
-            replaced by the same value returned by the API call
-            <spanx style="verb">gadgets.views.getParams()["FOO"]</spanx>.</c>
-            <c>"ViewParam.*" variables are available only within Content blocks, 
-            <xref target="DataPipelining">Data Pipeline</xref> tags, 
-            and OpenSocial Markup Language (OSML) tags. TODO: Provide Link</c>
-            
-            <c>Prefs</c>
-            <c>References all named values defined by &lt;UserPref&gt; elements
-            contained in the gadget specification. The values of the {Var} component 
-            correlate to each defined user preference. Expression statements using
-            this prefix will resolve to the same values as calls
-            to the <xref target="gadgets.Prefs">gadgets.Prefs</xref> API.
-            For instance, the expression "${Prefs.Lang}" will be replaced by 
-            the same value returned by the API call <spanx style="verb">gadgets.Prefs.getLang()</spanx>;
-            The expression "${Prefs.FOO}" will be replaced by the same value
-            returned by the API call <spanx style="verb">gadgets.Prefs.getString("FOO")</spanx></c>
-            <c>Available anywhere within gadget the gadget specification.</c>
-            
-            <c>Top</c>
-            <c>Reserved variable used by 
-            <xref target="OpenSocial-Templating">OpenSocial Templating</xref> 
-            to represent the top level variables registered with the 
-            <xref target="DataContext">DataContext</xref>.</c>
-            <c>Available only within Content elements and templates as defined
-            by <xref target="OpenSocial-Templating"/>.</c>
-            
-            <c>My</c>
-            <c>Reserved variable used by
-            <xref target="OpenSocial-Templating">OpenSocial Templating</xref> to
-            represent local variables passed to the template instance.</c>
-            <c>Available only within a template instance as defined by
-            <xref target="OpenSocial-Templating"/>.</c>
-            
-            <c>Cur</c>
-            <c>Reserved variable used by OpenSocial Markup Language (OSML) "repeaters" 
-            as defined in the <xref target="OpenSocial-Templating">OpenSocial Templating specification</xref>.
-            Represents the current value or object as a for-each loop would.</c>
-            <c>Available only within a "repeater loop" as defined by 
-            <xref target="OpenSocial-Templating"/>.</c>
-               
-            <c>Context</c>
-            <c>Reservied variable used by OSML and templates to hold additional 
-            variables generated while processing templates and loops as defined 
-            in the <xref target="OpenSocial-Templating">OpenSocial Templating 
-            specification</xref>.</c>
-            <c>Available only within a template or "repeater loop" as defined 
-            by <xref target="OpenSocial-Templating"/>.</c>
-
-            <c>Viewer</c>
-            <c>Reserved for future use.</c>
-            <c>N/A</c>
-
-            <c>Owner</c>
-            <c>Reserved for future use.</c>
-            <c>N/A</c>
-  
-            <c>Gadget</c>
-            <c>Reserved for future use.</c>
-            <c>N/A</c>
-        </texttable>
-        
-        <figure><preamble>The following example illustrates the use of 
-        Reserved Variables Names using the "Msg" prefix:</preamble>
-        <artwork><![CDATA[
-  <Module>
-    <ModulePrefs title="${Msg.TITLE}">
-      ...
-      <Locale lang="en" country="US">
-        <msg name="TITLE">My Gadget</msg>
-        <msg name="GREETING">Hello There!</msg>
-      </Locale>
-      ...
-    </ModulePrefs>
-    <Content type="html"><![CDATA[
-      <div>${Msg.GREETING}</div>
-    ]]></Content>
-  </Module>
-        ]]></artwork></figure>
-        
-      </section>
-  
-      <section title="Deprecated Expression Syntax">
-     
-        <t>Previous versions of this specification supported a 
-        -- now deprecated -- alternative expression syntax. Container
-        implementations are permitted to continue supporting the deprecated
-        syntax to provide backwards compatibility for older, 
-        existing gadget specifications, however, gadget developers creating 
-        new gadget specifications MUST NOT use the deprecated format.</t>
-        
-        <t>The legacy syntax takes the form "__{Prefix}_{Var}__" 
-        where "{Prefix}" identifies one of the predefined scopes below, and 
-        "{Var}" specifies a specific variable within the identified scope.</t>
  
-        <figure><preamble>For instance, in the partial gadget example that 
-        follows, the expression "__MSG_FOO__" is replaced for the localized
-        value identified by the key "FOO" within the localized message bundle:</preamble>
-        <artwork><![CDATA[
-  <Module>
-    <ModulePrefs title="__MSG_FOO__">
-      ...
-      <Locale language="en" country="US">
-        <msg name="FOO">Hello World!</msg>
-      </Locale>
-      ...
-    </ModulePrefs>
-    <Content type="html">
-      ...
-    </Content>
-  </Module>
-        ]]></artwork></figure>
-
-        <t>The {Prefix} keys supported by the legacy syntax are:</t>  
-
-        <texttable align="left">
-          <ttcol>Prefix</ttcol>
-          <ttcol>Description</ttcol>   
-
-          <c>MSG</c>
-          <c>References all message bundle variables for the current locale.
-          The values of the {Var} component are selected from the applicable
-          message bundle. For instance, if the bundle includes a key "FOO",
-          then the expression __MSG_FOO__ will be replaced by the localized 
-          value associated with "FOO" in the bundle.</c>
-          
-          <c>BIDI</c>
-          <c>References BIDI substitution variables whose values will reflect
-          the default text direction as specified by the selected locale. 
-          The BIDI variables are discussed in detail in <xref target="Localization"/>.</c>
-          
-          <c>MODULE</c>
-          <c>Originally intended to provide a context for information about 
-          the gadget specification itself. Currently, "ID" is the only 
-          variable key supported (e.g. __MODULE_ID__). When used, the container
-          SHOULD replace the "__MODULE_ID__" expression with a unique ID value
-          for each instance of a gadget displayed simultaneously.</c>
-          
-          <c>UP</c>
-          <c>References all named values defined by &lt;UserPref&gt; elements
-          contained in the gadget specification. The values of the {Var} component 
-          correlate to each defined user preference. Expression statements using
-          this prefix will resolve to the same values as calls
-          to the <xref target="gadgets.Prefs">gadgets.Prefs</xref> API.
-          For instance, the expression "__UP_Lang__" will be replaced by 
-          the same value returned by the API call <spanx style="verb">gadgets.Prefs.getLang()</spanx>;
-          The expression "__UP_FOO__" will be replaced by the same value
-          returned by the API call <spanx style="verb">gadgets.Prefs.getString("FOO")</spanx></c>
-            
-        </texttable>
-      </section>
-      
-      <section title="Processing Requirements">
-      
-        <t>Containers perform Variable Substitution when instances of a 
-        gadget are rendered or when metadata about the gadget is displayed.
-        For instance, if the container includes the gadget specification 
-        within a listing of gadgets available to install and use on a page, 
-        then the container will perform any substitution necessary on the 
-        displayed values.</t>
-        
-        <t>Containers are required to perform substitution on all 
-        attributes or elements in the gadget specification document 
-        exception of &lt;Locale&gt;, &lt;msg&gt;, &lt;EnumValue&gt; elements, 
-        but only when the content of those elements and attributes is 
-        currently being rendered. If, for instance, a gadget contains 
-        multiple &lt;Content&gt; elements, each of which identify different
-        views, the container will only process substitutions that are 
-        included within the content for the view currently being rendered.
-        Further, containers are required to perform all substitutions 
-        that use either the Msg reserved variable key (i.e. "${Msg.FOO}") or 
-        the MSG legacy syntax format (i.e. "__MSG_FOO__") before applying 
-        any other substitutions.</t>
-        
-        <t>Variable substitution MUST NOT be applied recursively and 
-        circular dependencies detected within variables MUST be ignored
-        and treated as literal values rather than expressions. For instance,
-        within the following partial gadget specification:</t>
-        
-        <figure><artwork><![CDATA[
-  <Module xmlns:os="http://ns.opensocial.org/2008/markup">
-    ...
-    <Data>
-      <os:Var key="key1" value="${key2}" />
-      <os:Var key="key2" value="${key1}" />
-    </Data>
-    <Content type="html">
-      ${key1}
-      ${key2}
-    </Content>
-  </Module>
-        ]]></artwork></figure>
-        
-        <t>The value of "key1" would be resolved as the literal value "${key1}".
-        The value of "key2" would be resolved as the literal value "${key2}".
-        The rendered output generated by the container would be:</t>
-        
-        <figure><artwork><![CDATA[
-  ${key1}
-  ${key2}
-        ]]></artwork></figure>
-      </section>   
-    </section>
-    <!--  END VARIABLE SUBSTITUTION -->
-  
-    <section title="Localization" anchor="Localization">
-    
-      <t>Localization of a gadget is achieved primarily through
-      <xref target="VariableSubstitution">Variable Substitution</xref>, using the
-      Msg reserved variable key and &lt;Locale&gt; elements.</t>
-
-      <t>To determine the appropriate keys and values to use for substitution,
-      containers will inspect the gadget specification for a &lt;Locale&gt; 
-      element that matches the current view being rendered, as well as the 
-      language and country of the viewer.</t>
-      
-      <t>A &lt;Locale&gt; is considered a match if either:
-        <list style="symbols">
-          <t>The default view is being rendered and the &lt;Locale&gt;
-          elements view attribute is either unspecified or includes 
-          "default" as one of it's supported views (e.g. views="default", or
-          views="myview,default", etc), or the specific view being rendered is 
-          named explicitly within the view attribute, and </t>
-          <t>The language and country attributes on the &lt;Locale&gt; 
-          element exactly match those of the viewer, or</t>
-          <t>The language attribute is an exact match for the viewer 
-          and the country attribute specifies "all", or</t>
-          <t>Both the language and country attributes specify "all".</t>
-        </list>
-      </t>
-      
-      <t>How the container determines the current language and country 
-      of the viewer is not defined by this specification.</t>
-      
-      <t>If a matching &lt;Locale&gt; is not found within the gadget 
-      specification, the container is permitted to provide it's own
-      localization data.</t>
-
-      <t>Once an appropriate &lt;Locale&gt; has ben selected, containers
-      are required to replace all Msg expressions for which a replacement
-      value can be determined.</t>
-      
-      <t>For example, given the following partial gadget specification:</t>
-      
-      <figure><artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-      <Locale language="en" country="all">
-        <msg name="greeting">Hello World!</msg>
-      </Locale>
-      <Locale language="en" country="all" views="other">
-        <msg name="greeting">Howdy!</msg>
-      </Locale>
-      <Locale language="fr" country="all">
-        <msg name="greeting">Bonjour tout le monde!</msg>
-      </Locale>
-      ...
-    </ModulePrefs>
-    <Content type="html">
-      ${Msg.greeting}
-    </Content>
-  </Module>
-      ]]></artwork></figure>
-      
-      <t>When rendering the default view, the container will output 
-      "Hello World!" for English-speaking viewers and "Bonjour tout le monde!"
-      for French-speaking viewers.</t>
-      
-      <section title="Considerations for Bidirectional Text">
-      
-        <t>Gadget developers need to take care when working with languages 
-        that require a default Right-to-Left ordering when rendering text.
-        The "Bidi" reserved variable key can be used within Variable 
-        Substitution expression statements to access information about the
-        default text directionality as specified by the currently selected
-        locale.</t>
-        
-        <t>The variables supported by the "Bidi" reserved variable key are:
-          <list style="hanging">
-            <t hangText="START_EDGE">When the selected &lt;Locale&gt; element's
-            text_direction attribute specifies "rtl" (Right-to-Left"), the
-            value of the Bidi.START_EDGE reserved variable key will be "right".
-            When the attribute is either "ltr" (Left-to-Right) or unspecified, 
-            the value will be "left".</t>
-            <t hangText="END_EDGE">When the text direction is "rtl", the 
-            value of Bidi.END_EDGE will be "left". When the attribute is either
-            "ltr" or unspecified, the value will be "right".</t>
-            <t hangText="DIR">The reserved variable key Bidi.DIR returns the 
-            value of the &lt;Locale&gt; element's text_direction attribute 
-            or "ltr" if the attribute is unspecified.</t>
-            <t hangText="REVERSE_DIR">The reserved variable key Bidi.REVERSE_DIR
-            returns the opposite of the &lt;Locale&gt; element's text_direction
-            attribute value. If text_direction is "ltr",  Bidi.REVERSE_DIR will 
-            return "rtl". If text_direction is "rtl", Bidi.REVERSE_DIR will
-            return "ltr".</t>
-          </list>
-        </t>
-        
-        <figure><preamble>The Bidi variables can be used to establish the 
-        correct text directionality when rendering. For instance:</preamble><artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-      <Locale language="en" country="all">
-        <msg name="greeting">Hello World!</msg>
-      </Locale>
-      <Locale language="ar" country="all" text_direction="rtl">
-        <msg name="greeting">&#0645;&#0631;&#062D;&#0628;&#0627 &#0627;&#0644;&#0639;&#0627;&#0644;&#0645!</msg>
-      </Locale>
-      ...
-    </ModulePrefs>
-    <Content type="html">
-      <div dir="${Bidi.DIR}">${Msg.greeting}</div>
-    </Content>
-  </Module>        
-        ]]></artwork></figure>
-      
-      </section>
-
-      <section title="Message Bundle Documents" anchor="MessageBundles">
-      
-        <t>The &lt;Locale&gt; element can either directly contain &lt;msg&gt;
-        elements that define the keys and values used for localization or 
-        can reference "Message Bundle Documents" that provide the collection
-        of &lt;msg&gt; elements.</t>
-
-        <figure><preamble>For instance, the following &lt;Locale&gt; element:</preamble>
-        <artwork><![CDATA[
-  <Locale language="en" country="US">
-    <msg name="color">Color</msg>
-    <msg name="red">Red</msg>
-    <msg name="green">Green</msg>
-    <msg name="blue">Blue</msg>
-  </Locale>
-        ]]></artwork></figure>
-        
-        <figure><preamble>Can be replaced with a &lt;Locale&gt; that references
-        an external Message Bundle that includes the same &lt;msg&gt; elements:</preamble>
-        <artwork><![CDATA[
-  <Locale language="en" country="US" messages="http://example.com/en/messages.xml" />
-        ]]></artwork>
-        </figure>
-        
-        <figure><preamble>The Message Bundle at http://example.com/en/messages/xml:</preamble>
-        <artwork><![CDATA[
-  <messagebundle>
-    <msg name="color">Color</msg>
-    <msg name="red">Red</msg>
-    <msg name="green">Green</msg>
-    <msg name="blue">Blue</msg>
-  </messagebundle>
-        ]]></artwork></figure>
-        
-        <t>As illustrated, Message Bundles are XML documents whose root
-        element is a &lt;messagebundle&gt; that contains zero or more
-        &lt;msg&gt; elements that use the same format as the children 
-        of the &lt;Locale&gt; element.</t>
-        
-        <figure><artwork>
-  messagebundle = element messagebundle {
-    undefinedAttribute*,
-    element msg {
-      attribute name { text },
-      text
-    }
-  }
-        </artwork></figure>
-        
-        <t>Variable substitution expressions MAY be used within Message 
-        Bundle Documents.</t>
-        
-        <t>Each Message Bundle Document provides &lt;msg&gt; elements 
-        for a single locale. By convention, Message Bundle documents are 
-        named as {language}_{country}.xml, where {language} is either 
-        an ISO-639-1 Language Code or "ALL" and {country} is an ISO-3166-1
-        Country Code or "ALL". For instance, a Message Bundle providing 
-        values for English-language speakers within the United States would
-        be named "en_US.xml", while a Message Bundle providing German-language
-        values for German-language speakers regardless of country would be 
-        named "de_ALL.xml". The Message Bundle named "ALL_ALL.xml" would 
-        apply to all languages in any country.</t>
-  
-      </section>
-  
-    </section>
-    <!-- END LOCALIZATION -->
   
     <section title="Data Pipelining" anchor="DataPipelining">
     
@@ -3381,734 +4121,6 @@
       </section>
     </section>
     <!--  END DATA PIPELINING -->
-  
-  
-    <section title="Authenticating Requests to Remote Endpoints" anchor="authentication">
-    
-      <t>In order to perform the functions their programmed for, many 
-      gadget specifications require the ability to access content and 
-      resources that are external to the container currently hosting 
-      instances of the gadget. Such information and resources are often
-      sensitive in nature and requests often need to include authentication
-      and authorization details.</t>
-      
-      <t>All containers are required to provide three basic mechanisms 
-      for authenticating requests to remote endpoints:
-        <list style="hanging">
-          <t hangText="OAuth 1.0a">Is a variation of the original OAuth 1.0
-          specification described by [TODO: RFC 5849]. Within the OAuth 
-          model, the owners of a given protected resource grant third parties 
-          (in this case the OpenSocial Container) authority to access 
-          the resource for a specific purpose and a limited period of time.</t>
-          <t hangText="OAuth 2.0">Is an as-yet unfinished update to the 
-          original OAuth protocol that simplifies communication between the 
-          various parties but maintains the same fundamental authorization 
-          model.</t>
-          <t hangText="Signed Fetch">Is a simplified mechanism based on a subset of the 
-          OAuth 1.0a protocol that allows a container to "sign" requests sent
-          to a remote endpoint. Such signatures only provide a reasonable 
-          assurance that the content contained within the request has not been
-          modified by a malicious party. Once the receiving endpoint determines that it
-          is able to trust the signed request, it can decide to provide 
-          limited access to certain protected resources without having to
-          walk through the entire typical OAuth protocol.</t>
-        </list>
-      </t>
-      
-      <t>These authentication mechanisms are available for use whenever 
-      access to a remote resource is required, including:
-        <list style="symbols">
-          <t>Processing &lt;Preload&gt; and &lt;Link&gt; elements within 
-          the gadget specifications &lt;ModulePrefs&gt;,</t>
-          <t>Processing Data Pipeline &ls;os:HttpRequest&gt; elements,</t>
-          <t>Processing proxy and redirect type &lt;Content&gt; elements,</t>
-          <t>All uses of the <spanx style="verb">osapi.http</spanx> JavaScript API, and </t>
-          <t>All uses of the <spanx style="verb">gadgets.io.makeRequest</spanx> JavaScript API</t>
-        </list>
-      </t>
-      
-      <t>It is important to note that for authentication and authorization 
-      purposes, regardless of whether the gadget is accessing remote content 
-      or social data provided by the container itself, every individual 
-      instance of a gadget MUST be considered a distinct entity for which 
-      authentication credentials and authorized permissions MUST be individually 
-      established. Containers MUST NOT assume that authorization given to one 
-      instance of a gadget specification applies to all instances of that same 
-      gadget. Nor MUST the container assume that authorization extends to any 
-      other gadgets provided by the same developer.</t>
-      
-      <t>Authentication and authorization for a gadget instance is further 
-      constrained by the viewer for whom a gadget is currently being rendered.
-      That is, for example, if a single gadget instance can be rendered
-      for more than one viewer, the container is required to authorize each 
-      individual viewer prior to displaying potentially sensitive content.
-      Such authorization MUST be obtained for each individual gadget instance
-      rendered for a particular viewer.</t>
-    
-      <t>Specific considerations for each of the three types of request
-      authorization mechanisms are discussed in the sections that follow.</t>
-
-      <section title="Signed Fetch" anchor="SignedFetch">
-      
-        <t>The "Signed Fetch" mechanism is a capability provided by all 
-        OpenSocial containers that provides a reasonable level of assurance
-        that an HTTP request sent from the container on behalf of a gadget
-        to a remote endpoint has not been inappropriately modified by a 
-        malicious third party.</t>
-        
-        <t>To illustrate the value and operation of Signed Fetch, assume that 
-        a gadget developer uses the <spanx style="verb">gadgets.io.makeRequest</spanx> 
-        JavaScript API to access a third party service to retrieve private 
-        data belonging to the current viewer. By default, the gadget is 
-        responsible for providing the request with the current identity of the 
-        user for whom the request is being sent:</t>
-        
-        <figure><artwork>
-  var user = opensocial.data.getDataSet("Viewer").id;
-  var params = {
-    "opensocial_viewer_id" : user};
-  gadgets.io.makeRequest(
-    "http://example.org/my/endpoint", 
-    callback, 
-    params);
-        </artwork></figure>
-      
-        <t>When the container sends the request to the specified endpoint,
-        it includes the exact value provided by the JavaScript code:</t>
-        
-        <figure><artwork>
-  GET /my/endpoint?opensocial_viewer_id=alice HTTP/1.1
-  Host: example.org   
-        </artwork></figure>
-        
-        <t>Upon receiving this request, the remote server would return 
-        the data belonging to user "alice" to the container, which would,
-        in turn, make that data available to the gadget.</t>
-        
-        <t>Assume, however, that the gadget is being accessed by a malicious 
-        viewer identified as "tom". Such a user can use a variety of techniques
-        to trick the gadget into using a different user's identity when using
-        the <spanx style="verb">gadgets.io.makeRequest</spanx> API. Because 
-        the default behavior is for the container to send the request to the 
-        remote endpoint exactly as requested by the gadget, the container and 
-        the remote endpoint can be tricked into disclosing the legitimate 
-        user's private data to the malicious viewer.</t>
-        
-        <figure><artwork>
-  var user = opensocial.data.getDataSet("Viewer").id; // returns "tom"
-  // malicious user injects a different id ...
-  user = "alice";
-  // the gadget then executes as normal...
-  var params = {
-    "opensocial_viewer_id" : user};
-  gadgets.io.makeRequest(
-    "http://example.org/my/endpoint", 
-    callback, 
-    params);
-        </artwork></figure>
-        
-        <t>Signed Fetch defends against such attacks by allowing the container to:
-          <list style="numbers"> 
-            <t>Include it's own information about the current viewer's identity, and</t>
-            <t>Generate a cryptographic signature usable by the receiving 
-            endpoint to verify the container-provided information has not been
-            tampered with.</t>
-          </list>
-        </t>
-        
-        <t>Containers are required to use the following process when signing 
-        requests:
-          <list style="numbers">
-            <t>The container MUST remove all query string parameters passed
-            to it in the request whose names begin with any case-insensitive
-            variation of "oauth", "xoauth", or "opensocial".</t>
-            <t>The container MUST then add the following query string 
-            parameters to the request:
-              <list type="hanging">
-                <t hangText="opensocial_owner_id">
-                  Identifies the current "owner" TODO: Owner of what?
-                </t>
-                <t hangText="opensocial_app_url">
-                  An IRI provided by the container that represents the 
-                  gadget for which the request is being sent. The 
-                  IRI provided is used to identify the gadget specification
-                  rather than individual instances of the gadget.
-                </t>
-              </list>
-            </t>
-            <t>The container MAY also add the following query string 
-            parameters to the request:
-              <list type="hanging">
-                <t hangText="opensocial_viewer_id">
-                  Provides the ID of the current viewer for whom content
-                  is being displayed.
-                </t>
-                <t hangText="opensocial_instance_id">
-                  Provides an opaque identifier for the specific instance
-                  of the gadget for which the request is being sent. The 
-                  combination of the "opensocial_app_url" and "opensocial_instance_id"
-                  parameters uniquely identify each gadget instance.
-                </t>
-                <t hangText="opensocial_app_id">
-                  An opaque identifier for the gadget specification, unique
-                  to the container. Implementations that wish to maintain
-                  backwards compatibility with version 0.7 of the OpenSocial
-                  specification can include this parameter.
-                </t>
-                <t hangText="xoauth_public_key">
-                  An opaque identifier for the public key used to sign the 
-                  request. This parameter can be omitted by containers that
-                  do not use public/private key pairs to sign requests, or 
-                  if the container arranges other means of negotiating or 
-                  distributing keys with the remote endpoint receiving the
-                  request.
-                </t>
-              </list>
-            </t>
-            <t>Finally, the container MUST follow the procedure outlined 
-            in Section 9 of the OAuth 1.0 specification [TODO: Ref] to 
-            generate and append the signature to the request.</t>
-          </list>
-        </t>
-     
-        <t>Note that upon generating the signature, the container will 
-        include a range of additional query string parameters required 
-        by the OAuth 1.0 specification, including information about the
-        signing algorithm used, the date and time at which the signature
-        was generated, as so forth.</t>
-       
-        <figure><preamble>The following example generally illustrates how
-        a typical signed fetch request will appear (note: line breaks are added
-        for readability):</preamble>
-        <artwork><![CDATA[
-  GET /foo?opensocial_owner_id=bob
-    &opensocial_viewer_id=alice
-    &opensocial_app_url=http://example.org/gadgets/foo
-    &opensocial_instance_id=1
-    &xoauth_public_key=org.example.key1
-    &oauth_timestamp=123456789
-    &oauth_signature_method=HMAC_SHA1
-    &oauth_consumer_key=...
-    &oauth_token=...
-    &oauth_nonce=...
-    &oauth_signature=...
-        ]]></artwork></figure>
-        
-        <t>It is important to stress that the Signed Fetch mechanism only 
-        provides a reasonable level of assurance that a request generated
-        by the container has not been tampered with. Signed Fetch, by itself,
-        is not adequate for identity authentication.</t>
-     
-        <t>Additional considerations for implementations of the Signed
-        Fetch capability are discussed in the OpenSocial Common Container 
-        Specification [TODO: Reference CC Spec].</t>
-        
-        <section title="Using Signed Fetch">
-        
-          <t>Gadget developers can make use of the Signed Fetched capability 
-          with all uses of the <spanx style="verb">osapi.http</spanx> and
-          <spanx style="verb">gadgets.io.makeRequest</spanx> APIs; and with
-          all &lt;Preload&gt;, &lt;Link&gt; and proxy or redirect type 
-          &lt;Content&gt; elements.</t>
-          
-          <figure><preable>Within Signed Fetch with JavaScript APIs:</preable>
-          <artwork><![CDATA[
-  <Module>
-    <Content type="html">
-      ...
-      <script>
-        var params = {};
-        params["href"] = 
-          "http://data.example.org/resource/foo";
-        params[gadgets.io.RequestParameters.AUTHORIZATION] = 
-          gadgets.io.AuthorizationType.SIGNED;
-      
-        function fetchData() {
-          osapi.http.get(params).execute(
-            function(result) { ... }
-          );
-        }
-
-        gadgets.util.registerOnLoadHandler(fetchData);
-      </script>
-      ...
-    </Content>
-  </Module>
-          ]]></artwork></figure>
-          
-          <t>When using Signed Fetch with the JavaScript APIs, the value of the
-          "AUTHORIZATION" parameter (represented in JavaScript by the constant
-          gadgets.io.RequestParameter.AUTHORIZATION) MUST be "signed". The 
-          following additional parameters that affect the signing of a request 
-          MAY also be specified:
-            <list style="hanging">
-              <t hangText="SIGN_OWNER">Represented in JavaScript by the constant
-              gadgets.io.RequestParameter.SIGN_OWNER, the value is a boolean 
-              that indicates whether the container SHOULD include the 
-              current owner ID when signing the request. If not specified, 
-              the container is required to assume a value of "true".</t>
-              <t hangText="SIGN_VIEWER">Represented in JavaScript by the constant
-              gadgets.io.RequestParameter.SIGN_VIEWER, the value is a boolean
-              that indicates whether the container SHOULD include the
-              current viewer ID when signing the request. If not specified,
-              the container is required to assume a value of "true".</t>
-            </list>
-          </t>
-          
-          <figure><preamble>Within &lt;Preload&gt;, &lt;Link&gt; and 
-          &lt;Content&gt; elements:</preamble><artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-      <Preload authz="signed" href="http://example.org/resources/bar" />
-      <Link authz="signed" href="http://example.org/images/foo.png" rel="icon" />
-      ...
-    </ModulePrefs>
-    <Content type="html" href="http://example.org/content" authz="signed" />
-  </Module>
-          ]]></artwork></figure>
-          
-          <t>When using Signed Fetch with the &lt;Preload&gt;, &lt;Link&gt; 
-          and &lt;Content&gt; elements, the "authz" attribute MUST be specified
-          with a value of "signed". The following additional attributes that 
-          affect the signing of a request MAY also be specified:
-            <list style="hanging">
-              <t hangText="sign_owner">Equivalent to the SIGN_OWNER parameter
-              used in the JavaScript API, the value is a String matching either "true"
-              or "false" indicating whether the container SHOULD include the 
-              current owner ID when signing the request.  If not specified, 
-              the container is required to assume a value of "true".</t>
-              <t hangText="sign_viewer">Equivalent to the SIGN_VIEWER parameter
-              used in the JavaScript API, the value is a String matching either "true"
-              or "false" indicating whether the container SHOULD include the
-              current viewer ID when signing the request.  If not specified, 
-              the container is required to assume a value of "true".</t>
-            </list>
-          </t>
-        
-        </section>
-     
-      </section>
-    
-      <section title="OAuth Support">
-    
-        <t>In addition to providing the framework necessary for managing 
-        and rendering instances of gadget specifications, the OpenSocial
-        container is responsible for providing gadget instances with the
-        data they need to operate. To fulfill that responsibility, 
-        containers require the ability to verify that individual gadget
-        instances, the entities responsible for those instances, and the 
-        current viewer for whom a gadget is being rendered, all have been 
-        granted proper authorization to access, view, and -- in some cases --,
-        modify the data. For that purpose, all container implementations
-        are required to support the use of both version 1.0a and 2.0 of the
-        OAuth protocol.</t>
-        
-        <t>OAuth provides the ability for the owner of a resource to grant 
-        limited permission to an application to perform some action on that 
-        resource on behalf of the owner. For instance, a gadget instance might
-        wish to display a listing of documents owned by the current viewer. 
-        Before displaying that list of files, the gadget works with the container
-        to request authorization from the viewer to access the service she
-        uses to manage documents and files. Such access can be limited by the
-        viewer, for example, to allow only simple read operations that occur
-        within a specific period of time.</t>
-        
-        <t>The data that a container can provide to a gadget originates in 
-        one of two places:
-          <list style="symbols">
-            <t>From third party services, and</t>
-            <t>From the container itself in the form of social data like profile
-            information, groups, Activity Streams, and so on.</t>
-          </list>
-        </t>
-        
-        <t>To support each of these cases, every container instance is required
-        to act as both a consumer and a provider of OAuth services. That is,
-        when communicating with third party services, gadget instances can work 
-        with the container -- via either declarative properties defined within the
-        gadget specification or parameters on various JavaScript API calls --
-        to access the third party's OAuth Authorization Service and 
-        acquire proper authorization for the requests the gadget wishes to make.
-        Once authorization is granted, the container can further assist the 
-        gadget with management and storage of the authorization data
-        provided by the third party service.</t>
-        
-        <t>When a gadget instance or a other party wishes to access social 
-        data provided by the container itself, they will work with the 
-        OAuth Authorization Service provided by the container to acquire
-        permission to do so.</t>
-        
-        <t>From the gadget developer's point of view, there are no differences
-        between working with OAuth-protected resources provided by the container 
-        or those provided by a third-party. The sections that follow detail 
-        the responsibilities, requirements and mechanisms gadget developers
-        need to work with the OAuth protocol. Additional requirements and 
-        considerations for OpenSocial Container implementations are discussed
-        within the OpenSocial Common Container specification [TODO: Ref CC spec].</t>
-        
-        <section title="Declaring and Using OAuth Services">
-        
-          <t>Before a gadget can make use of OAuth protected resources,
-          the gadget specification MUST tell the container about the OAuth 
-          services to use. This is done by using one or more &lt;OAuth&gt; or
-          &lt;OAuth2&gt; elements within the gadget's &lt;ModulePrefs&gt;.</t>
-          
-          <figure><preamble>In the partial gadget specification below, the 
-          &lt;OAuth&gt; element is used to declare a dependency on a third 
-          party service providing OAuth 1.0a support:</preamble><artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-      <OAuth>
-        <Service>
-          <Request url="http://example.com/request" method="get" />
-          <Access url="http://example.com/access" method="get" />
-          <Authorization url="http://example.com/authorization" />
-        </Service>
-      </OAuth>
-      ...
-    </ModulePrefs>
-    ...
-  </Module>
-          ]]></artwork></figure>
-          
-          <figure><preamble>Similarly, dependencies on OAuth 2.0-based
-          services are declared using the &lt;OAuth2&gt; element:</preamble>
-          <artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-      <OAuth2>
-        <Service>
-          <Authorization url="http://example.com/authorization" method="get" />
-          <Token url="http://example.org/token" method="get" />
-        </Service>
-      </OAuth2>
-      ...
-    </ModulePrefs>
-    ...
-  </Module>         
-          ]]></artwork></figure>
-          
-          <t>Once declared, gadget developers can use the specified 
-          OAuth services anywhere within the gadget's specification 
-          where remote resources are accessed, including uses of the
-          <spanx style="verb">osapi.http</spanx> and 
-          <spanx style="verb">gadgets.io.makeRequest</spanx> JavaScript
-          calls, &lt;Preload&gt; elements, &lt;Link&gt; elements, and
-          redirect or proxy type &lt;Content&Gt; elements.</t>
-          
-          <t>The examples that follow illustrate various uses of the OAuth
-          services.</t>
-          
-          <figure><preamble>Within uses of the <spanx style="verb">osapi.http</spanx> API:</preamble>
-          <artwork><![CDATA[
-  <Module>
-    ...
-    <Content type="html"> 
-      ...
-      <script>
-        var params = {};
-        params["href"] = 
-          "http://data.example.org/resource/foo";
-        params[gadgets.io.RequestParameters.AUTHORIZATION] = 
-          gadgets.io.AuthorizationType.OAUTH;
-      
-        function fetchData() {
-          osapi.http.get(params).execute(
-            function(result) { ... }
-          );
-        }
-        
-        gadgets.util.registerOnLoadHandler(fetchData);
-      </script>
-      ...
-    </Content>
-  </Module>
-          ]]></artwork></figure>
-          
-          <t>When using OAuth version 1.0a with the JavaScript APIs, the 
-          value of the "AUTHORIZATION" parameter, represented by the 
-          constant gadgets.io.RequestParameters.AUTHORIZATION, MUST be
-          "oauth" (represented in JavaScript using the constant
-          gadgets.io.RequestParameters.OAUTH).</t>
-          
-          <t>When using OAuth version 2.0, the value of the "AUTHORIZATION"
-          parameter MUST be "oauth2" (represented in JavaScript using the 
-          constant gadgets.io.RequestParameters.OAUTH2).</t>
-          
-          <t>The following additional parameters that affect the containers
-          application of the OAuth protocol MAY also be specified:
-            <list style="hanging">
-              <t hangText="OAUTH_RECEIVED_CALLBACK">
-                Specifies the IRI to return after authorization.
-                TODO: Need for info on this
-              </t>
-              <t hangText="OAUTH_REQUEST_TOKEN">
-                In certain circumstances, instances of a gadget might be 
-                preauthorized to access certain resources and issued a 
-                request token in advance. The OAUTH_REQUEST_TOKEN parameter
-                allows the gadget to provide such preapproved request tokens to the 
-                container for use.
-              </t>
-              <t hangText="OAUTH_REQUEST_TOKEN_SECRET">
-                When using preapproed request tokens with the OAUTH_REQUEST_TOKEN
-                parameter, the OAUTH_REQUEST_TOKEN_SECRET parameter
-                can be used to provide the associated request token secret.
-              </t>
-              <t hangText="OAUTH2_SCOPE">
-                When using OAuth version 2.0, the OAUTH2_SCOPE parameter is 
-                used to specify the scope to be used with this request. 
-                Access Token Scope is defined in Section 3.3 of the OAuth
-                specification. [TODO: OAuth2 Ref].
-              </t>
-              <t hangText="OAUTH_TOKEN_NAME">
-                Provides a simple label that gadget can use to refer to the 
-                OAuth Access Token granting access to particular resources.
-                If unspecified the value is assumed to be an empty string. 
-                Gadget instances can use multiple token names if they access
-                multiple resources from a single source. For example, a gadget
-                that access a contact list and a calendar might used the 
-                token name "contacts" to refer to the OAuth token providing 
-                access to the contact data and the name "calendar" to refer to
-                the token providing access to the calendar.
-              </t>
-              <t hangText="OAUTH_USE_TOKEN">
-                For certain kinds of actions on certain resources, an OAuth
-                service provider might not require that the container and gadget
-                walk through the complete OAuth process to acquire an
-                Access Token. In such scenarios, the service providing access
-                to the resource will verify the OAuth Consumer Key provided 
-                within the request then allow the request to proceed. In other 
-                cases, a resource provider might grant limited access to a
-                requester if the resource owner has not provided explicit
-                authorization but offer additional functionality if an OAuth
-                Access Token has been issued. Typically, however, most resource
-                providers will only allow a requester to access protected resources
-                if an Access Token is included in the request. The OAUTH_USE_TOKEN
-                parameter can be used by the gadget as a hint to the container 
-                as to whether the acquisition and use of an Access Token is 
-                required or optional. The value MUST be one of:
-                  <list style="hangText">
-                    <t hangText="never">
-                      Tells the container that the Access Token is never 
-                      required. Requests will be sent to the remote endpoint
-                      without an OAuth Access Token.
-                    </t>
-                    <t hangText="if_available">
-                      Tells the container that use of the Access Token is 
-                      optional. If an Access token has been acquired, it 
-                      will be included in the request sent to the remote 
-                      endpoint, otherwise the request will be sent 
-                      without an Access Token.
-                    </t>
-                    <t hangText="always">
-                      Tells the container that use of the Access Token 
-                      is required. If an appropriate Access Token has not
-                      yet been acquired, the container will work with the 
-                      gadget and the OAuth Service Provider to seek appropriate
-                      authorization and acquire an Access Token.
-                    </t>
-                  </list>
-                If the OAUTH_USE_TOKEN parameter is not specified, the value
-                is assumed to be "always".
-              </t>  
-            </list>
-          </t>
-          
-          <t>Each of these parameters is represented in JavaScript by a 
-          corresponding constant value using the form
-          "gadgets.io.RequestParameters.{Parameter Name}", e.g. 
-          gadgets.io.RequestParameters.OAUTH_USE_TOKEN.</t>
-          
-          <figure><preamble>Within &lt;Preload&gt; and &lt;Link&gt; elements:</preamble>
-          <artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-      <OAuth>...</OAuth>
-      <Preload authz="oauth" href="http://example.org/resources/bar" />
-      <Link authz="oauth" href="http://example.org/images/foo.png" rel="icon" />
-      ...
-    </ModulePrefs>
-    <Content type="html"> 
-      ...
-    </Content>
-  </Module>
-          ]]></artwork></figure>
-          
-          <figure><preamble>Within proxy or redirect type &lt;Content&gt; elements:</preamble>
-          <artwork><![CDATA[
-  <Module>
-    ...
-    <Content authz="oauth" href="http://example.org/content/foo" />
-    ...
-  </Module>
-          ]]></artwork></figure>
-          
-          <t>When using OAuth 1.0a with the &lt;Preload&gt;, &lt;Link&gt; 
-          and &lt;Content&gt; elements, the "authz" attribute MUST be specified
-          with a value of "oauth".</t>
-          
-          <t>When using OAuth 2.0, the "authz" attribute MUST specify
-          a value of "oauth2".</t>
-          
-          <t>The following additional attributes that affect the containers
-          application of the OAuth protocol MAY also be specified. Each corresponds
-          to one of the optional parameters for the JavaScript API listed above
-          and specify identical values:
-            <list style="symbols">
-              <t>oauth_received_callback</t>
-              <t>oauth_request_token</t>
-              <t>oauth_request_token_secret</t>
-              <t>oauth2_scope</t>
-              <t>oauth_token_name</t>
-              <t>oauth_use_token</t>
-            </list>
-          </t>
-          
-          <t>If a gadget requires access to multiple OAuth service providers, 
-          then it MUST declare each provider and specify a unique label for 
-          each that identifies the specific provider to be used for each 
-          type of request. Each of the &lt;OAuth&gt; and &lt;OAuth2&gt;
-          elements can contain as many &lt;Service&gt; element instances
-          as is necessary.</t>
-          
-          <figure><preamble>For instance, in the example that follows, both 
-          the &lt;Preload&gt; element and the JavaScript API call use the 
-          OAuth service labeled as "other" within the &ltModulePrefs&gt;, 
-          while the &lt;Link&gt; element uses the "default" OAuth service
-          defined by the &lt;Service&gt; tag that omits the name attribute.</preamble>
-          <artwork><![CDATA[
-  <Module>
-    <ModulePrefs>
-      ...
-      <OAuth>
-        <Service>
-          <Request url="http://example1.com/request" method="get" />
-          <Access url="http://example1.com/access" method="get" />
-          <Authorization url="http://example1.com/authorization" />      
-        </Service>
-        <Service name="other">
-          <Request url="http://example2.net/request" method="get" />
-          <Access url="http://example2.net/access" method="get" />
-          <Authorization url="http://example2.net/authorization" />      
-        </Service>
-        <Preload authz="oauth" oauth_service_name="other" 
-          href="http://example.org/resources/bar" />
-        <Link authz="oauth" href="http://example.org/images/foo.png" rel="icon" />
-      </OAuth>
-      <Content type="html">
-        ...
-        <script>
-          var params = {};
-          params["href"] = 
-            "http://data.example.org/resource/foo";
-          params[gadgets.io.RequestParameters.AUTHORIZATION] = 
-            gadgets.io.AuthorizationType.OAUTH;
-          params[gadgets.io.RequestParameters.OAUTH_SERVICE_NAME] =
-            "other";
-        
-          function fetchData() {
-            osapi.http.get(params).execute(
-              function(result) { ... }
-            );
-          }
-          
-          gadgets.util.registerOnLoadHandler(fetchData);
-        </script>
-        ...
-      </Content>
-    </ModulePrefs>
-  </Module>
-          ]]></artwork></figure>
-          
-          <t>When multiple OAuth services are used, the OAUTH_SERVICE_NAME 
-          parameter and the "oauth_service_name" attribute are used, 
-          respectively, within the JavaScript API and XML elements to 
-          indicate the appropriate OAuth service to use for the request.</t>
-        
-        </section>
-        
-        <section title="Processing Model">
-        
-          <t>When the container receives any request for which the OAuth
-          protocol is to be used, regardless of whether the request is 
-          submitted via the JavaScript API or via elements in the gadget
-          specification, it MUST adhere to the following requirements and 
-          processing model:</t>
-          
-          <list style="numbers">
-            <t>For any request for which an access token is not 
-            required (e.g. the value of the OAUTH_USE_TOKEN parameter 
-            is "never"):
-              <list style="symbols">
-                <t>When OAuth 1.0a is used, the container will 
-                send a request to the remote endpoint as described in 
-                Section 7 of [TODO: OAuth 1.0 ref] with the exception
-                that the "oauth_token" will be omitted.</t>
-                <t>When OAuth version 2.0 is used... TODO: What to do here?</t>
-              </list>
-            </t>
-            <t>For any request for which an access token is considered
-            optional (e.g. the value of the OAUTH_USE_TOKEN parameter
-            is "if_available"):
-              <list style="symbols">
-                <t>When OAuth 1.0a is used and an Access Token 
-                appropriate to the current request is known to the 
-                container, a request that includes the token will be sent 
-                to the remote endpoint as described in Section 7 of 
-                [TODO: OAuth 1.0]. When using OAuth 2.0, the container
-                will send a request using the access token as specified
-                in Section 7 of [TODO: OAuth 2 Ref].</t>
-                <t>If an appropriate Access Token is not known to 
-                the container, TODO: What to do here?</t>
-              </list>
-            </t>
-            <t>For any request for which an access token is required
-            (e.g. the value of the OAUTH_USE_TOKEN parameter is 
-            "always" or the OAUTH_USE_TOKEN is unspecified):
-              <list style="symbols">
-                <t>If using OAuth 1.0a and an appropriate Access Token 
-                is known by the container, a request as defined in Section 
-                7 of [TODO: OAuth 1.0] is sent to the remote endpoint. If 
-                using OAuth 2.0, a request as defined by Section 7
-                of [TODO: OAuth 2.0] is sent.</t>
-                <t>When an appropriate Access Token is not known to 
-                the container, the container MUST acquire an access
-                token using either of the processes described below
-                depending on the version of OAuth being used. Once
-                an Access Token is acquired, a request using the token
-                will be sent to the server. If a token cannot be 
-                acquired, the container will report an error back 
-                to the gadget.</t>
-              </list>
-            </t>
-          </list>
-    
-          <section title="Acquiring Access Tokens">
-          
-            <t>When using any version of OAuth, a container will first 
-            need to seek authorization from the owner of a resource
-            prior to attempting to access it. This is done first by 
-            the container interacting with the OAuth Authorization 
-            Provider to retrieve a "request token" which is then 
-            exchanged for an "access token". The details for how each 
-            of those steps are varies for each version of the OAuth 
-            protocol. </t>
-          
-            <!-- NEED TO COMPLETE THIS SECTION -->
-          
-          </section>
-          
-        </section>
-      
-      </section>
-      
-      <!--  AUTHENTICATION SECTION NEEDS TO BE COMPLETED STILL -->
-
-    </section> <!-- END AUTHENTICATION -->
    
   </section>
   <!-- END CAPABILITIES -->
@@ -10277,9 +10289,10 @@
     &rfc2616;
     &rfc3986;
     &rfc3987;
+    &rfc5849;
+    &oauth2;
     &infoset;
     &relaxng;
-    &oauth1;
     &jspel;
     &oahub;
     &opensocial;
