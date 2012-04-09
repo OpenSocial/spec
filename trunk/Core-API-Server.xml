@@ -1023,24 +1023,27 @@ GIF89....&lt;image data&gt;
      <t>Receiving an invalid HTTP Message Body</t>
     </list></c>
     <c>401 UNAUTHORIZED</c>
-    <c align="left">OpenSocial container servers MUST return 401 UNAUTHORIZED
-    when receiving a request for a protected resource and the request is either
+    <c align="left">
+    <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1201" note="Issue 1201: Allow a 403 FORBIDDEN response for insufficient privileges">
+    OpenSocial container servers MUST return 401 UNAUTHORIZED
+    when receiving an OAuth request for a protected resource and the request is either
     
     <list style="symbols">
      <t>Missing OAuth authorization credentials as described in 
      <xref target="OAuth-Consumer-Request-1.0-Draft-1" /> for OAuth 1.0a or in <xref target='draft-ietf-oauth-v2-22'/> for OAuth 2.0 requests.</t>
-     <t>OAuth authorization credentials are present, but the user identity is
-     not authorized to access the protected resource. If the request already
+     <t> If the request already
      included authorization credentials, the 401 response indicates that the
      request has been refused for those credentials. A 401 response MUST
      include a WWW-Authenticate header field indicating the request MAY present
      an OAuth token for the container server's realm. Example:
      WWW-Authenticate: OAuth realm="http://sp.example.com/"</t>
-    </list></c>
+    </list><xref target="Issue-1201">Discussion</xref></x:draft></c>
     <c>403 FORBIDDEN</c>
-    <c align="left">The server understood the request but is refusing to
+    <c align="left"><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1201" note="Issue 1201: Allow a 403 FORBIDDEN response for insufficient privileges">
+    The server understood the request but is refusing to
     fulfill it. Authorization will not help. The current authorization context
-    does not allow the request.</c>
+    does not allow the request.  Also used in case where OAuth authorization credentials are present, but the user identity is
+     not authorized to access the protected resource. <xref target="Issue-1201">Discussion</xref></x:draft></c>
     <c>404 NOT FOUND</c>
     <c align="left">The server has not found a resource (such as a feed or
     entry) that matches the request URI.</c>
@@ -1577,6 +1580,12 @@ Content-Type: application/json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1211">
     <front>
      <title>Content Upload spec consistency check/cleanup</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1201'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1201">
+    <front>
+     <title>Allow a 403 FORBIDDEN response for insufficient privileges</title>
     </front>
    </reference>
   </references>
