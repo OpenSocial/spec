@@ -1567,7 +1567,8 @@
               that define the payload of an HTTP POST request to fetch the 
               remote content.</t>
               
-              <t>TODO: Add section about Caching under capabilities.</t>
+              <t>Containers are permitted to cache proxied content following 
+              the requirements specified in <xref target="caching"/>.</t>
             
             </section>
           
@@ -3128,8 +3129,7 @@
   
     </section>
     <!-- END LOCALIZATION -->
-   
-    
+      
     <section title="Application Lifecycle Events" anchor="gadget-lifecycle-events">
     
       <t>The Application Lifecycle Event capability allows an OpenSocial
@@ -3375,7 +3375,6 @@
     &oauth_signature=N7mODAf9OJ1DXQRPisRqGK4DNMo= HTTP/1.1
   Host: example.org
   
-  // TODO: What is the payload?
         </artwork></figure>
       
         <figure><preamble>The notification sent to "http://example.org/event/registered"
@@ -4154,9 +4153,7 @@
         "Log" to which such messages are recorded is container specific. 
         Whether and how each container chooses to provide access to the 
         collection of recorded messages is considered beyond the scope 
-        of this specification.</t>
-         
-        <t>The Logging Feature is automatically enabled for all applications.</t>    
+        of this specification.</t>  
     
         <section title="JavaScript API">
         
@@ -4174,7 +4171,7 @@
            </artwork></figure>
            
            <t>The method takes a single input parameter that can be any valid
-           JavaScript object. No return value is specified.</t>
+           JSON-serializable Object. No return value is specified.</t>
            
            <figure><preamble>For example:</preamble><artwork>
   gadgets.log("This is a message");
@@ -4196,7 +4193,7 @@
            </artwork></figure>
            
            <t>The method takes a single input parameter that can be any valid
-           JavaScript object. No return value is specified.</t>
+           JSON-serializable Object. No return value is specified.</t>
            
            <figure><preamble>For example:</preamble><artwork>
   gadgets.warn("This is a warning!");
@@ -4218,7 +4215,7 @@
            </artwork></figure>
            
            <t>The method takes a single input parameter that can be any valid
-           JavaScript object. No return value is specified.</t>
+           JSON-serializable object. No return value is specified.</t>
            
            <figure><preamble>For example:</preamble><artwork>
   gadgets.error("This is an error");
@@ -4251,26 +4248,26 @@
                <ttcol>Alias</ttcol>
                <ttcol>Description</ttcol>
                
-               <c>1</c>
-               <c>gadgets.log.INFO</c>
+               <c><spanx style="verb">1</spanx></c>
+               <c><spanx style="verb">gadgets.log.INFO</spanx></c>
                <c>Specifies that the container provided Log 
                SHOULD record all informational, warning and 
                error messages.</c>
                
-               <c>2</c>
-               <c>gadgets.log.WARN</c>
+               <c><spanx style="verb">2</spanx></c>
+               <c><spanx style="verb">gadgets.log.WARN</spanx></c>
                <c>Specifies that the container provided Log
                SHOULD record all warning and error messages 
                but ignore informational messages.</c>
                
-               <c>3</c>
-               <c>gadgets.log.ERROR</c>
+               <c><spanx style="verb">3</spanx></c>
+               <c><spanx style="verb">gadgets.log.ERROR</spanx></c>
                <c>Specifies that the container provided Log
                SHOULD record all error messages but ignore 
                informational and error messages.</c>
                
-               <c>4</c>
-               <c>gadgets.log.NONE</c>
+               <c><spanx style="verb">4</spanx></c>
+               <c><spanx style="verb">gadgets.log.NONE</spanx></c>
                <c>Specifies that the container provided Log
                SHOULD ignore all messages.</c>
              </texttable>
@@ -4311,7 +4308,7 @@
            
              <t>The <spanx style="verb">gadgets.io.encodeValues</spanx> method
              converts an input JavaScript object into a URL-encoded string as 
-             defined by [TODO: Reference for URL-encoding].</t>
+             defined by Section 2.1 of <xref target="RFC3986"/>.</t>
            
              <figure><artwork>
   &lt;static&gt; &lt;String&gt; gadgets.io.encodeValues(object)
@@ -4338,8 +4335,30 @@
   foo=bar&abc=123&zyx=true&baz=a,b,c
              </artwork></figure>        
              
-             <t>TODO: Need to complete the description of this</t> 
+             <t>If the value of top-level property or member of an Array is 
+             any value other than a JavaScript primitive, it's value will be
+             encoded as a JSON-serialized String as returned by the 
+             <spanx style="verb">gadgets.json.stringify</spanx> method.</t>
+             
+             <figure><preamble>For instance, given the following input:</preamble>
+             <artwork>
+  var data = {
+    "foo" : {
+      "a" : "b",
+      "c" : "d"
+    },
+    "bar" : [
+      { "xyz" : "123" },
+      { "abc" : 321 }
+    ]
+  }
+             </artwork></figure>
       
+             <figure><preamble>Calling <spanx style="verb">gadgets.io.encodeValues(data)</spanx>
+             would generate the output:</preamble><artwork>
+  foo=%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D&bar=%7B%22xyz%22%3A%22123%22%7D,%7B%22abc%22%3A321%7D
+             </artwork></figure>
+             
            </section>
            
            <section title="gadgets.io.getProxyUrl" anchor="gadgets.io.getProxyUrl">
@@ -4426,7 +4445,7 @@
              specified for the method.</t>
       
              <figure><preamble>In the following example, a simple HTTP GET request is sent 
-             to a remote endpoint:</preamble><artwork>
+             to a remote endpoint with no additional request parameters:</preamble><artwork>
   gadgets.io.makeRequest(
     "http://example.org/foo",
     function(response) {
@@ -4444,194 +4463,240 @@
                  <ttcol>Alias</ttcol>
                  <ttcol>Description</ttcol>
                      
-                 <c>ALIAS</c>
-                 <c>gadgets.io.RequestParameters.ALIAS</c>
+                 <c><spanx style="verb">ALIAS</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.ALIAS</spanx></c>
                  <c>When a specification document uses the &lt;ExternalService&gt;
                  element to define an alias for a Container-managed external 
-                 service, the optional "ALIAS" parameter can be used in place 
-                 of the <spanx style="verb">gadgets.io.makeRequest</spanx> methods
-                 url parameter to identify the external service to which the 
-                 request is to be directed. If unspecified, the default value 
-                 for this parameter is assumed to be null.</c>
+                 service, the optional <spanx style="verb">ALIAS</spanx> parameter 
+                 can be used in place of the <spanx style="verb">gadgets.io.makeRequest</spanx> methods
+                 <spanx style="verb">url</spanx> parameter to identify the external 
+                 service to which the request is to be directed. If unspecified, 
+                 the default value for this parameter is assumed to be null.</c>
                      
-                 <c>AUTHORIZATION</c>
-                 <c>gadgets.io.RequestParameters.AUTHORIZATION</c>
+                 <c><spanx style="verb">AUTHORIZATION</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.AUTHORIZATION</spanx></c>
                  <c>Specifies the authorization method to use as defined by
-                 [TODO: Reference to Authorization Section]. Valid values are:
-                 "none", "signed", "oauth" and "oauth2". For convenience, 
-                 aliases for each of these values have been provided for 
+                 <xref target="authorization"/>. Valid values are:
+                 <spanx style="verb">none</spanx>, <spanx style="verb">signed</spanx>, 
+                 <spanx style="verb">oauth</spanx> and <spanx style="verb">oauth2</spanx>. 
+                 For convenience, aliases for each of these values have been provided for 
                  use in JavaScript code. These aliases are: 
-                 gadgets.io.AuthorizationType.NONE, gadgets.io.AuthorizationType.SIGNED,
-                 gadgets.io.AuthorizationType.OAUTH and gadgets.ioAuthorizationType.OAUTH2.
-                 If not specified, the default value for this parameter is assumed to be "none".</c>
+                   <list style="symbols">
+                     <t><spanx style="verb">gadgets.io.AuthorizationType.NONE</spanx>,</t>
+                     <t><spanx style="verb">gadgets.io.AuthorizationType.SIGNED</spanx>,</t>
+                     <t><spanx style="verb">gadgets.io.AuthorizationType.OAUTH</spanx> and</t> 
+                     <t><spanx style="verb">gadgets.ioAuthorizationType.OAUTH2</spanx>.</t>
+                   </list>
+                 If not specified, the default value for this parameter is assumed to be 
+                 <spanx style="verb">none</spanx>.</c>
                      
-                 <c>CONTENT_TYPE</c>
-                 <c>gadgets.io.RequestParameters.CONTENT_TYPE</c>
-                 <c>The value of the "CONTENT_TYPE" parameter serves as a hint to
-                 the container as to what kind of content the request is expected
-                 to return so that the container can perform any appropriate
-                 additional processing necessary on the response. Valid values are:
-                 "DOM", "FEED", "JSON" and "TEXT". For convenience, aliases for each
-                 of these values have been provided for use in JavaScript code.
-                 These aliases are: gadgets.io.ContentType.DOM, gadgets.io.ContentType.FEED,
-                 gadgets.io.ContentType.JSON and gadgets.io.ContentType.TEXT. If
-                 not specified, the default value for this parameter is assumed to be
-                 "TEXT", indicating that no specific content-type is to be assumed.</c>
+                 <c><spanx style="verb">CONTENT_TYPE</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.CONTENT_TYPE</spanx></c>
+                 <c>The value of the <spanx style="verb">CONTENT_TYPE</spanx> 
+                 parameter serves as a hint to the container as to what kind of 
+                 content the request is expected to return so that the container 
+                 can perform any appropriate additional processing necessary on 
+                 the response. Valid values are: <spanx style="verb">DOM</spanx>, 
+                 <spanx style="verb">FEED</spanx>, <spanx style="verb">JSON</spanx> 
+                 and <spanx style="verb">TEXT</spanx>. For convenience, aliases 
+                 for each of these values have been provided for use in 
+                 JavaScript code. These aliases are: 
+                   <list style="symbols">
+                     <t><spanx style="verb">gadgets.io.ContentType.DOM</spanx>, </t>
+                     <t><spanx style="verb">gadgets.io.ContentType.FEED</spanx>,</t>
+                     <t><spanx style="verb">gadgets.io.ContentType.JSON</spanx> and</t>
+                     <t><spanx style="verb">gadgets.io.ContentType.TEXT</spanx></t>
+                   </list>. If not specified, the default value for this 
+                   parameter is assumed to be <spanx style="verb">TEXT</spanx>, 
+                   indicating that no specific content-type is to be assumed.</c>
                  
-                 <c>GET_FULL_HEADERS</c>
-                 <c>gadgets.io.RequestParameters.GET_FULL_HEADERS</c>
-                 <c>The value of the "GET_FULL_HEADERS" parameter is a boolean.
-                 If true, the response object passed to the callback function will
-                 contain the complete collection of Headers and their associated
-                 values as returned in the HTTP response. If unspecified, the 
-                 default value is assumed to be False, in which case the container
-                 will determine which collection of headers to pass to the callback
-                 function.</c>
+                 <c><spanx style="verb">GET_FULL_HEADERS</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.GET_FULL_HEADERS</spanx></c>
+                 <c>The value of the <spanx style="verb">GET_FULL_HEADERS</spanx> 
+                 parameter is a boolean. If true, the response object passed to 
+                 the callback function will contain the complete collection of 
+                 Headers and their associated values as returned in the HTTP 
+                 response. If unspecified, the default value is assumed to be 
+                 False, in which case the container will determine which 
+                 collection of headers to pass to the callback function.</c>
                  
-                 <c>GET_SUMMARIES</c>
-                 <c>gadgets.io.RequestParameters.GET_SUMMARIES</c>
-                 <c>When the "CONTENT_TYPE" parmameter equals the value "feed", 
-                 the "GET_SUMMARIES" parameter specifies a boolean that when 
-                 set to True, instructs the container to pass only summarized 
-                 versions of the retrieved items in the feed to the callback
-                 function. It is the containers responsibility to determine 
-                 what constitutes a the summarized version of the item. If
-                 not specified, the default value for this parameter is assumed
-                 to be False.</c>
+                 <c><spanx style="verb">GET_SUMMARIES</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.GET_SUMMARIES</spanx></c>
+                 <c>When the <spanx style="verb">CONTENT_TYPE</spanx> parmameter 
+                 equals the value <spanx style="verb">feed</spanx>, 
+                 the <spanx style="verb">GET_SUMMARIES</spanx> parameter 
+                 specifies a boolean that when set to True, instructs the 
+                 container to pass only summarized versions of the retrieved 
+                 items in the feed to the callback function. It is the 
+                 containers responsibility to determine what constitutes a the 
+                 summarized version of the item. If not specified, the default 
+                 value for this parameter is assumed to be False.</c>
                  
-                 <c>HEADERS</c>
-                 <c>gadgets.io.RequestParameters.HEADERS</c>
+                 <c><spanx style="verb">HEADERS</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.HEADERS</spanx></c>
                  <c>Specifies the collection of HTTP Request Headers the container
                  SHOULD include in the request. The value is specifies as an 
                  associative map using the header names as a key and a literal 
-                 String value. For example, to include "Accept-Language" and 
-                 "X-Custom" headers in the request, the value of the "HEADERS" 
-                 property would be set to <spanx style="verb">{"Accept-Language":"de-DE", "X-Custom":"abc"}</spanx>.</c>
+                 String value. For example, to include <spanx style="verb">Accept-Language</spanx> 
+                 and <spanx style="verb">X-Custom</spanx> headers in the request, 
+                 the value of the <spanx style="verb">HEADERS</spanx> property 
+                 would be set to <spanx style="verb">{"Accept-Language":"de-DE", "X-Custom":"abc"}</spanx>.</c>
                  
-                 <c>METHOD</c>
-                 <c>gadgets.io.RequestParameters.METHOD</c>
-                 <c>Specifies the HTTP method that MUST be used for the request. Valid values
-                 are "DELETE", "GET", "HEAD", "PATCH", "POST" and "PUT". For
-                 convenience, aliases for each of these values have been provided
-                 for use in JavaScript code. The aliases are: gadgets.io.MethodType.DELETE,
-                 gadgets.io.MethodType.GET, gadgets.io.MethodType.HEAD, gadgets.io.MethodType.PATCH,
-                 gadgets.io.MethodType.POST and gadgets.io.MethodType.PUT. If not 
-                 specified, the default value for this parameter is assumed to be
-                 "GET".</c>
+                 <c><spanx style="verb">METHOD</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.METHOD</spanx></c>
+                 <c>Specifies the HTTP method that MUST be used for the request. 
+                 Valid values are <spanx style="verb">DELETE</spanx>, 
+                 <spanx style="verb">GET</spanx>, <spanx style="verb">HEAD</spanx>, 
+                 <spanx style="verb">PATCH</spanx>, <spanx style="verb">POST</spanx> 
+                 and <spanx style="verb">PUT</spanx>. For convenience, aliases 
+                 for each of these values have been provided for use in 
+                 JavaScript code. The aliases are: 
+                   <list style="symbols">
+                     <t><spanx style="verb">gadgets.io.MethodType.DELETE</spanx>,</t>
+                     <t><spanx style="verb">gadgets.io.MethodType.GET</spanx>, </t>
+                     <t><spanx style="verb">gadgets.io.MethodType.HEAD</spanx>,</t> 
+                     <t><spanx style="verb">gadgets.io.MethodType.PATCH</spanx>,</t>
+                     <t><spanx style="verb">gadgets.io.MethodType.POST</spanx> and</t> 
+                     <t><spanx style="verb">gadgets.io.MethodType.PUT</spanx>.</t>
+                   </list>
+                   If not specified, the default value for this parameter is 
+                   assumed to be <spanx style="verb">GET</spanx>.</c>
                  
-                 <c>NUM_ENTRIES</c>
-                 <c>gadgets.io.RequestParameters.NUM_ENTRIES</c>
-                 <c>When the "CONTENT_TYPE" parameter equals the value "feed",
-                 the "NUM_ENTRIES" parameter specifies the maximum number of 
-                 items from the feed to return to the callback function. If 
-                 not specified, the default value for this parameter is assumed
-                 to be 3.</c>
+                 <c><spanx style="verb">NUM_ENTRIES</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.NUM_ENTRIES</spanx></c>
+                 <c>When the <spanx style="verb">CONTENT_TYPE</spanx> parameter 
+                 equals the value <spanx style="verb">feed</spanx>, the 
+                 <spanx style="verb">NUM_ENTRIES</spanx> parameter specifies the 
+                 maximum number of items from the feed to return to the callback 
+                 function. If not specified, the default value for this 
+                 parameter is assumed to be <spanx style="verb">3</spanx>.</c>
                  
-                 <c>OAUTH_RECEIVED_CALLBACK</c>
-                 <c>gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</c>
+                 <c><spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</spanx></c>
                  <c>TODO: This is not clear: The URL to return after authorization</c>
                  
-                 <c>OAUTH_REQUEST_TOKEN</c>
-                 <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</c>
-                 <c>When the "AUTHORIZATION" parameter is equal to either "OAUTH"
-                 or "OAUTH2", the "OAUTH_REQUEST_TOKEN" parameter can be used 
-                 to specified a pre-authorized OAuth Request Token for use in the 
-                 request. If the container does not already have an OAuth Access
-                 Token suitable for use with the request, the container SHOULD
-                 use the supplied Request Token to request and acquire a new 
-                 Access Token. If not specified, the default value is assumed
-                 to be null.</c>
+                 <c><spanx style="verb">OAUTH_REQUEST_TOKEN</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</spanx></c>
+                 <c>When the <spanx style="verb">AUTHORIZATION</spanx> parameter 
+                 is equal to either <spanx style="verb">OAUTH</spanx> or
+                 <spanx style="verb">OAUTH2</spanx>, the <spanx style="verb">OAUTH_REQUEST_TOKEN</spanx> 
+                 parameter can be used to specified a pre-authorized OAuth 
+                 Request Token for use in the request. If the container does 
+                 not already have an OAuth Access Token suitable for use with 
+                 the request, the container SHOULD use the supplied Request 
+                 Token to request and acquire a new Access Token. If not 
+                 specified, the default value is assumed to be null.</c>
                  
-                 <c>OAUTH_REQUEST_TOKEN_SECRET</c>
-                 <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</c>
-                 <c>When the "OAUTH_REQUEST_TOKEN" parameter is specified,
-                 the "OAUTH_REQUEST_TOKEN_SECRET" parameter can be used to 
-                 supply an associated Request Token Secret. If not specified,
-                 the default value is assumed to be null.</c>
+                 <c><spanx style="verb">OAUTH_REQUEST_TOKEN_SECRET</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</spanx></c>
+                 <c>When the <spanx style="verb">OAUTH_REQUEST_TOKEN</spanx> 
+                 parameter is specified, the <spanx style="verb">OAUTH_REQUEST_TOKEN_SECRET</spanx> 
+                 parameter can be used to supply an associated Request Token 
+                 Secret. If not specified, the default value is assumed to be null.</c>
                  
-                 <c>OAUTH_SERVICE_NAME</c>
-                 <c>gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</c>
-                 <c>When the "AUTHORIZATION" parameter is equal to either "OAUTH"
-                 or "OAUTH2", and the specification document uses the 
-                 &lt;OAuth&gt; or &lt;OAuth2&gt; elements within the &lt;ModulePrefs&gt;
-                 to define associated OAuth services, the "OAUTH_SERVICE_NAME" 
+                 <c><spanx style="verb">OAUTH_SERVICE_NAME</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</spanx></c>
+                 <c>When the <spanx style="verb">AUTHORIZATION</spanx> parameter 
+                 is equal to either <spanx style="verb">OAUTH</spanx> or
+                 <spanx style="verb">OAUTH2</spanx>, and the specification 
+                 document uses the &lt;OAuth&gt; or &lt;OAuth2&gt; elements 
+                 within the &lt;ModulePrefs&gt; to define associated OAuth 
+                 services, the <spanx style="verb">OAUTH_SERVICE_NAME</spanx> 
                  parameter specifies the name of the &lt;Service&gt; element 
                  that provides the OAuth Service details to use for the request.
                  When not specified, the default value is assumed to be an 
                  empty string (e.g. "").</c>
                  
-                 <c>OAUTH2_SCOPE</c>
-                 <c>gadgets.io.RequestParameters.OAUTH2_SCOPE</c>
-                 <c>When the "AUTHORIZATION" parameter is equal to "OAUTH2",
-                 the "OAUTH2_SCOPE" parameter specifies the value of the 
-                 OAuth 2.0 scope parameter the container SHOULD use with 
-                 the request. The scope parameter is defined in [TODO: OAUTH 2 Ref].
-                 If not specified, the default value is assumed to be null, indicating
-                 that no scope parameter is to be provided.</c>
+                 <c><spanx style="verb">OAUTH2_SCOPE</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH2_SCOPE</spanx></c>
+                 <c>When the <spanx style="verb">AUTHORIZATION</spanx> parameter 
+                 is equal to <spanx style="verb">OAUTH2</spanx>, the
+                 <spanx style="verb">OAUTH2_SCOPE</spanx> parameter specifies 
+                 the value of the OAuth 2.0 scope parameter the container SHOULD 
+                 use with the request. The scope parameter is defined in 
+                 <xref target="I-D.ietf-oauth-v2"/>. If not specified, the 
+                 default value is assumed to be null, indicating that no scope 
+                 parameter is to be provided.</c>
                  
-                 <c>OAUTH_TOKEN_NAME</c>
-                 <c>gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</c>
-                 <c>When the "AUTHORIZATION" parameter is equal to either "OAUTH"
-                 or "OAUTH2", the application MAY use the "OAUTH_TOKEN_NAME" to specify
+                 <c><spanx style="verb">OAUTH_TOKEN_NAME</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</spanx></c>
+                 <c>When the <spanx style="verb">AUTHORIZATION</spanx> parameter 
+                 is equal to either <spanx style="verb">OAUTH</spanx> or
+                 <spanx style="verb">OAUTH2</spanx>, the application MAY use the 
+                 <spanx style="verb">OAUTH_TOKEN_NAME</spanx> to specify
                  an alias for the OAuth Access Token used for the request. If the 
                  container does not yet have an appropriate Access Token to use
                  with the request, it will follow the appropriate steps to acquire 
-                 one and cache it using the specified OAUTH_TOKEN_NAME value. On 
-                 subsequent requests, the specified OAUTH_TOKEN_NAME will be used
+                 one and cache it using the specified <spanx style="verb">OAUTH_TOKEN_NAME</spanx> 
+                 value. On subsequent requests, the specified 
+                 <spanx style="verb">OAUTH_TOKEN_NAME</spanx> will be used
                  to locate and use the cached Access Token. If not specified, the
                  default value is assumed to be an empty string (e.g. "").</c>
                  
-                 <c>OAUTH_USE_TOKEN</c>
-                 <c>gadgets.io.RequestParameters.OAUTH_USE_TOKEN</c>
-                 <c>When the "AUTHORIZATION" parameter is equal to either "OAUTH"
-                 or "OAUTH2", the container is typically required to acquire an
-                 appropriate OAuth Access Token prior to sending the request to
-                 the URL. The "OAUTH_USE_TOKEN" parameter can be used to modify
-                 this default behavior. Valid values are: "never", "if_available"
-                 and "always". If not specified, the default value is assumed to 
-                 be "always". When "OAUTH_USE_TOKEN" is equal to "never", the 
-                 container SHOULD NOT attempt to acquire an Access Token for the 
-                 request but SHOULD send the request to the URL just as it would 
-                 any other request using with OAuth 1.0a or OAuth 2.0 protocols. 
-                 When "OAUTH_USE_TOKEN" is equal to "if_available", the container 
-                 SHOULD include the Access Token in the request only if an appropriate 
-                 token is available. If an Access Token is not available, the request
-                 SHOULD be sent to the URL without the Access Token. When "OAUTH_USE_TOKEN"
-                 is equal to "always", the container is required to acquire an 
-                 Access Token prior to sending the request and MUST include that
-                 token in the request sent to the URL.</c>
+                 <c><spanx style="verb">OAUTH_USE_TOKEN</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_USE_TOKEN</spanx></c>
+                 <c>When the <spanx style="verb">AUTHORIZATION</spanx> parameter 
+                 is equal to either <spanx style="verb">OAUTH</spanx> or
+                 <spanx style="verb">OAUTH2</spanx>, the container is typically 
+                 required to acquire an appropriate OAuth Access Token prior to 
+                 sending the request to the URL. The <spanx style="verb">OAUTH_USE_TOKEN</spanx> 
+                 parameter can be used to modify this default behavior. Valid 
+                 values are: <spanx style="verb">never</spanx>, 
+                 <spanx style="verb">if_available</spanx> and <spanx style="verb">always</spanx>. 
+                 If not specified, the default value is assumed to be 
+                 <spanx style="verb">always</spanx>. When <spanx style="verb">OAUTH_USE_TOKEN</spanx> 
+                 is equal to <spanx style="verb">never</spanx>, the container 
+                 SHOULD NOT attempt to acquire an Access Token for the request 
+                 but SHOULD send the request to the URL just as it would any 
+                 other request using with OAuth 1.0a or OAuth 2.0 protocols. 
+                 When <spanx style="verb">OAUTH_USE_TOKEN</spanx> is equal to 
+                 <spanx style="verb">if_available</spanx>, the container 
+                 SHOULD include the Access Token in the request only if an 
+                 appropriate token is available. If an Access Token is not 
+                 available, the request SHOULD be sent to the URL without the 
+                 Access Token. When <spanx style="verb">OAUTH_USE_TOKEN</spanx>
+                 is equal to <spanx style="verb">always</spanx>, the container 
+                 is required to acquire an Access Token prior to sending the 
+                 request and MUST include that token in the request sent to 
+                 the URL.</c>
                  
-                 <c>POST_DATA</c>
-                 <c>gadgets.io.RequestParameters.POST_DATA</c>
-                 <c>When the "METHOD" parameter equals either "POST", "PATCH",
-                 or "PUT", the "POST_DATA" parameter specifies the data that 
-                 is to be included as the payload of the request. The value is 
-                 specified as a String. If not specified, the value defaults to 
-                 null, indicating that no payload is to be sent.</c>
+                 <c><spanx style="verb">POST_DATA</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.POST_DATA</spanx></c>
+                 <c>When the <spanx style="verb">METHOD</spanx> parameter equals 
+                 either <spanx style="verb">POST</spanx>, <spanx style="verb">PATCH</spanx>,
+                 or <spanx style="verb">PUT</spanx>, the <spanx style="verb">POST_DATA</spanx> 
+                 parameter specifies the data that is to be included as the 
+                 payload of the request. The value is specified as a String. If 
+                 not specified, the value defaults to null, indicating that no 
+                 payload is to be sent.</c>
                      
-                 <c>REFRESH_INTERVAL</c>
-                 <c>gadgets.io.RequestParameters.REFRESH_INTERVAL</c>
+                 <c><spanx style="verb">REFRESH_INTERVAL</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.REFRESH_INTERVAL</spanx></c>
                  <c>Explicitly sets the numer of seconds content will be cached 
                  by the container as specified by <xref target="caching"/>.</c>
                  
-                 <c>SIGN_OWNER</c>
-                 <c>gadgets.io.RequestParameters.SIGN_OWNER</c>
-                 <c>When the "AUTHORIZATION" parameter equals either "SIGNED" or 
-                 "OAUTH", the "SIGN_OWNER" parameter indicates whether the 
-                 container SHOULD include the value of the "Owner ID" when signing
-                 the request as described in [TODO: Ref Authorization]. The value
-                 is specified as a Boolean. When not specified, the default value
-                 is assumed to be False.</c>
+                 <c><spanx style="verb">SIGN_OWNER</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.SIGN_OWNER</spanx></c>
+                 <c>When the <spanx style="verb">AUTHORIZATION</spanx> parameter 
+                 equals either <spanx style="verb">SIGNED</spanx> or 
+                 <spanx style="verb">OAUTH</spanx>, the <spanx style="verb">SIGN_OWNER</spanx> 
+                 parameter indicates whether the container SHOULD include the 
+                 value of the "Owner ID" when signing the request as described 
+                 in <xref target="authentication"/>. The value is specified as 
+                 a Boolean. When not specified, the default value is assumed to 
+                 be False.</c>
                  
-                 <c>SIGN_VIEWER</c>
-                 <c>gadgets.io.RequestParameters.SIGN_VIEWER</c>
-                 <c>When the "AUTHORIZATION" parameter equals either "SIGNED" or
-                 "OAUTH", the "SIGN_VIEWER" parameter indicates whether the 
-                 container SHOULD include the value of the "Viewer ID" when
-                 signing the request as described in [TODO: Ref Authorization]. 
-                 The value is specified as a Boolean. When not specified, the 
-                 default value is assumed to be False.</c>
-                 
+                 <c><spanx style="verb">SIGN_VIEWER</spanx></c>
+                 <c><spanx style="verb">gadgets.io.RequestParameters.SIGN_VIEWER</spanx></c>
+                 <c>When the <spanx style="verb">AUTHORIZATION</spanx> parameter 
+                 equals either <spanx style="verb">SIGNED</spanx> or
+                 <spanx style="verb">OAUTH</spanx>, the <spanx style="verb">SIGN_VIEWER</spanx> 
+                 parameter indicates whether the container SHOULD include the 
+                 value of the "Viewer ID" when signing the request as described 
+                 in <xref target="authentication"/>. The value is specified as 
+                 a Boolean. When not specified, the default value is assumed to 
+                 be False.</c>
+
                </texttable>
              </t>
              
@@ -4652,74 +4717,77 @@
                    <ttcol>Type</ttcol>
                    <ttcol>Description</ttcol>
                    
-                   <c>data</c>
+                   <c><spanx style="verb">data</spanx></c>
                    <c>(varies)</c>
                    <c>Provides the parsed data of the response, if applicable. 
                    The value type will vary depending on the value of the 
-                   CONTENT_TYPE parameter specified for the request. If CONTENT_TYPE
-                   was not specified, then the value "TEXT" is assumed to have been
-                   used. When CONTENT_TYPE equals "DOM", the value is an HTML DOM
-                   object. When CONTENT_TYPE equals "FEED", the value is a JSON 
+                   <spanx style="verb">CONTENT_TYPE</spanx> parameter specified 
+                   for the request. If <spanx style="verb">CONTENT_TYPE</spanx>
+                   was not specified, then the value <spanx style="verb">TEXT</spanx> 
+                   is assumed to have been used. When <spanx style="verb">CONTENT_TYPE</spanx> 
+                   equals <spanx style="verb">DOM</spanx>, the value is an HTML DOM
+                   object. When <spanx style="verb">CONTENT_TYPE</spanx> equals 
+                   <spanx style="verb">FEED</spanx>, the value is a JSON 
                    representation of an RSS or or Atom Document as specified by 
-                   [TODO: Feed Object Reference]. When CONTENT_TYPE equals "JSON", 
-                   the value is a JSON Object. When CONTENT_TYPE is text, or if 
-                   the response could not be parsed by the container, the value is 
-                   a String containing the unparsed content of the response payload.</c>
+                   [TODO: Feed Object Reference]. When <spanx style="verb">CONTENT_TYPE</spanx> 
+                   equals <spanx style="verb">JSON</spanx>, the value is a 
+                   JSON Object. When <spanx style="verb">CONTENT_TYPE</spanx> 
+                   is text, or if the response could not be parsed by the 
+                   container, the value is a String containing the unparsed 
+                   content of the response payload.</c>
                    
-                   <c>errors</c>
+                   <c><spanx style="verb">errors</spanx></c>
                    <c>Array of Error Objects</c>
                    <c>Provides a listing of any errors that occurred during the 
                    processing of the request. TODO: Need more detail on this.</c>
                    
-                   <c>headers</c>
+                   <c><spanx style="verb">headers</spanx></c>
                    <c>Headers Object</c>
                    <c>An object containing the response headers. Header names are 
                    used as the keys for this object. TODO: Need more detail on this.</c>
                    
-                   <c>rc</c>
+                   <c><spanx style="verb">rc</spanx></c>
                    <c>Number</c>
                    <c>Provides a numeric value representing the HTTP status code
                    of the response.</c>
                    
-                   <c>text</c>
+                   <c><spanx style="verb">text</spanx></c>
                    <c>String</c>
                    <c>Provides a String containing the unparsed content of the 
                    response payload.</c>
                    
-                   <c>oauthApprovalUrl</c>
+                   <c><spanx style="verb">oauthApprovalUrl</spanx></c>
                    <c>String</c>
                    <c>When either the OAuth 1.0a or OAuth 2.0 protocols are used to 
                    secure a request and the container requires an appropriate 
                    Access Token to be acquired in order to continue, the container will 
                    abort the request and invoke the callback function, passing
-                   in a Response object with the "oauthApprovalUrl" property set. The 
-                   value is a String providing the URL of an external page provided
-                   by the OAuth Service Provider to allow the user to approve the 
-                   request. Use of the OAuth Popup Feature as defined by <xref target="oauthpopup"/>
+                   in a Response object with the <spanx style="verb">oauthApprovalUrl</spanx> 
+                   property set. The value is a String providing the URL of an 
+                   external page provided by the OAuth Service Provider to 
+                   allow the user to approve the request. Use of the OAuth 
+                   Popup Feature as defined by <xref target="oauthpopup"/>
                    is recommended. Once approval has been acquired, the call to 
                    <spanx style="verb">gadgets.io.makeRequest</spanx> needs to be 
-                   repeated in order to complete the request. For additional information
-                   on the use of the "oauthApprovalUrl" property and the 
-                   OAuth Popup Feature, see [TODO: Auth Reference].</c>
+                   repeated in order to complete the request.</c>
                    
-                   <c>oauthError</c>
+                   <c><spanx style="verb">oauthError</spanx></c>
                    <c>String</c>
                    <c>When either the OAuth 1.0a or OAuth 2.0 protocols are used to
                    secure a request and an OAuth related error occurs at anytime 
                    during the processing of the request, the container will abort
                    the request and invoke the callback function, passing in a 
-                   Response object with the "oauthError" property set. The 
-                   value will be one of a set of OAuth-specific String constants
-                   that identify the error that has occurred. TODO: What are the 
-                   constants?</c>
+                   Response object with the <spanx style="verb">oauthError</spanx> 
+                   property set. The value will be one of a set of OAuth-specific 
+                   String constants that identify the error that has occurred.</c>
                    
                    <c>oauthErrorText</c>
                    <c>String</c>
                    <c>When the Response Object is used to communicate information 
-                   about an OAuth-related error and the "oauthError" property is
-                   set, the "oauthErrorText" property MAY be used by the container
-                   to provide a human-readable description of the error for 
-                   debugging or informational purposes.</c>
+                   about an OAuth-related error and the <spanx style="verb">oauthError</spanx> 
+                   property is set, the <spanx style="verb">oauthErrorText</spanx> 
+                   property MAY be used by the container to provide a human-readable 
+                   description of the error for debugging or informational purposes.</c>
                    
                  </texttable>
                </t>
@@ -4734,8 +4802,6 @@
     
         <t>The JSON Feature provides operations for serializing objects to
         and from a JSON-formatted String.</t>
-        
-        <t>The JSON Feature is automatically enabled for all applications.</t>
     
         <section title="JavaScript API">
         
@@ -4812,9 +4878,8 @@
              for a specific application instance.</t>
              
              <t>Instances of the object are created using the JavaScript new 
-             keyword. The specific ID of the application instance MAY be passed in as
-             an optional parameter. If not specified, the value is assumed to be
-             the default ID. TODO: as defined by what?</t>
+             keyword. The specific identity of a specific application instance 
+             MAY be passed in as an optional parameter.</t>
              
              <figure><preamble>In the example below, a <spanx style="verb">gadgets.Prefs</spanx>
              object is created to access the current Viewer's preferred language 
@@ -4857,8 +4922,8 @@
                key as a JavaScript Boolean. If the stored value is either not
                current specified or cannot be interpreted as a Boolean, the value
                returned will be False. If the stored value is the literal String 
-               "true" or a non-zero number (positive or negative) the value returned
-               will be True.</t>
+               <spanx style="verb">true</spanx> or a non-zero number (positive 
+               or negative) the value returned will be True.</t>
                
                <figure><artwork>
   &lt;Boolean&gt; &lt;instance&gt;.getBool(key)
@@ -4914,7 +4979,8 @@
                returns the stored value associated with the specified user preference
                key as a JavaScript Number containing an integer value. 
                If the stored value is either not currently specified or cannot be 
-               interpreted as an integer number, the value returned will be 0.</t>
+               interpreted as an integer number, the value returned will be 
+               <spanx style="verb">0</spanx>.</t>
                
                <figure><artwork>
   &lt;Number&gt; &lt;instance&gt;.getInt(key)
@@ -4965,9 +5031,9 @@
                returns the localized String value associated with the specified
                key as provided by the Message Bundle selected by the container for
                the current Viewer's preferred language and country. Messages are
-               defined using &lt;Locale&gt; elements within the &lt;ModulePrefs&gt;
-               as defined by [TODO: Reference]. If the specified key has no 
-               associated message, an empty String will be returned.</t>
+               defined using &lt;Locale&gt; elements within the &lt;ModulePrefs&gt;. 
+               If the specified key has no associated message, an empty String 
+               will be returned.</t>
                
                <figure><artwork>
   &lt;String&gt; &lt;instance&gt;.getMsg(key)
@@ -5272,39 +5338,38 @@
       ID using either the &lt;Require&gt; or &lt;Optional&gt; element in
       the &lt;ModulePrefs&gt;</t>
    
-   <section title="The Action Contributions Feature" anchor="gadgets.actions">
+        <section title="The Action Contributions Feature" anchor="gadgets.actions">
 
-     <t>Some container implementations reserve portions of their user 
-     interface for providing links, menus, buttons, etc that are 
-     distinct from the applications they host. The "Action Contributions"
-     feature allows applications to contribute functionality to these reserved
-     areas.</t>
+          <t>Some container implementations reserve portions of their user 
+          interface for providing links, menus, buttons, etc that are 
+          distinct from the applications they host. The "Action Contributions"
+          feature allows applications to contribute functionality to these reserved
+          areas.</t>
 
-     <t>Additionally, applications can use the feature to associate actions with
-     specific types of OpenSocial objects. In traditional desktop applications,
-     such actions are often rendered as options on context menus when you 
-     click on an object such as a person or file. For instance, selecting 
-     a Person object might display options like "Start a Chat" or 
-     "View Contact Information". With the "Action Contributions" feature, 
-     an application can notify the container of which such actions it can provide 
-     so that when a user selects the action, the container can direct the 
-     appropriate application to carry it out.</t>
+          <t>Additionally, applications can use the feature to associate actions with
+          specific types of OpenSocial objects. In traditional desktop applications,
+          such actions are often rendered as options on context menus when you 
+          click on an object such as a person or file. For instance, selecting 
+          a Person object might display options like "Start a Chat" or 
+          "View Contact Information". With the "Action Contributions" feature, 
+          an application can notify the container of which such actions it can provide 
+          so that when a user selects the action, the container can direct the 
+          appropriate application to carry it out.</t>
+
+          <t>The "Action Contributions" feature is enabled by specifying the 
+          "actions" feature name with either an &lt;Optional&gt;
+          or &lt;Require&gt; element within the &lt;ModulePrefs&gt;. The 
+          actions contributed by the application are specified using a &lt;Param&gt;
+          element with the name <spanx style="verb">action-contributions</spanx> 
+          within the feature declaration.</t>
      
-     <t>Containers SHOULD support the "Action Contributions" feature.</t>
-
-     <t>The "Action Contributions" feature is enabled by specifying the 
-     "actions" feature name with either an &lt;Optional&gt;
-     or &lt;Require&gt; element within the &lt;ModulePrefs&gt;. The 
-     actions contributed by the application are specified using a &lt;Param&gt;
-     element with the name "action-contributions" within the feature declaration.</t>
-     
-     <figure><preamble>The following example defines an optional dependency
-     on the "Action Contributions" feature and contributes a single action
-     to the set of "Navigation Links" provided by the container. The "path"
-     property on the &lt;action&gt; element specifies where the action is 
-     being contributed. When the item is selected, the container will 
-     invoke the callback handler provided by the JavaScript in the
-     &lt;Content&gt; element.</preamble><artwork>
+          <figure><preamble>The following example defines an optional dependency
+          on the "Action Contributions" feature and contributes a single action
+          to the set of "Navigation Links" provided by the container. The 
+          <spanx style="verb">path</spanx> property on the &lt;action&gt; 
+          element specifies where the action is being contributed. When the 
+          item is selected, the container will invoke the callback handler 
+          provided by the JavaScript in the &lt;Content&gt; element.</preamble><artwork>
   &lt;Module>
     &lt;ModulePrefs title="Sample VOIP">
       &lt;Optional feature="actions">
@@ -5497,7 +5562,7 @@
            <t hangText="url">An IRI to use in place of a callback function.
            When used, the container will display the content of the URL 
            when the action is selected rather than invoking a JavaScript
-           callback to handle the action. TODO: Need more info</t>
+           callback to handle the action.</t>
          </list>
        </t>
      
