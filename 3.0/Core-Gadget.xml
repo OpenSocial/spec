@@ -9,6 +9,7 @@
   <!ENTITY rfc3986 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml'> 
   <!ENTITY rfc3987 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3987.xml'>
   <!ENTITY rfc5849 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml'>
+  <!ENTITY rfc5988 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml'>
   <!ENTITY oauth2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-25.xml'>
   <!ENTITY infoset PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xml-infoset-20040204.xml'> 
   <!ENTITY relaxng PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/relaxng.xml'>
@@ -602,8 +603,10 @@
           <t>The specific relationship between the specification document and the 
           referenced resource is specified by the value of the 
           <spanx style="verb">rel</spanx> attribute. The value of the 
-          <spanx style="verb">rel</spanx> attribute can be any string value. 
-          This specification defines a number of <spanx style="verb">rel</spanx> 
+          <spanx style="verb">rel</spanx> attribute MUST be a Link Relation
+          Type as defined by <xref target="RFC5988"/>.</t>
+           
+          <t>This specification defines a number of <spanx style="verb">rel</spanx> 
           attribute values that are significant. Implementations MUST NOT use 
           any <spanx style="verb">rel</spanx> attribute value prefixed with 
           the characters <spanx style="verb">opensocial</spanx>, 
@@ -627,6 +630,11 @@
           
           <t>Additional link relations specific to the Application Lifecycle
           Events capability are described in <xref target="gadget-lifecycle-events"/>.</t>
+          
+          <t>The &lt;ModulePrefs&gt; element can contain any number of &lt;Link&gt;
+          elements but MUST NOT contain more than one with the same combination
+          of <spanx style="verb">rel</spanx> and <spanx style="verb">href</spanx>
+          attribute values.</t>
           
         </section>
       
@@ -684,8 +692,9 @@
           attribute is used to specify the default text rendering direction. 
           Valid values are <spanx style="verb">ltr</spanx>, to indicate 
           "Left-to-Right" ordering, or <spanx style="verb">rtl</spanx> to 
-          indicate "Right-to-Left" ordering. Directional rendering of text is 
-          discussed in detail in <xref target="Localization"/>.</t>
+          indicate "Right-to-Left" ordering. If not specified, the default text
+          rendering direction is determined by the container. Directional 
+          rendering of text is discussed in detail in <xref target="Localization"/>.</t>
       
           <t>The optional <spanx style="verb">views</spanx> attribute specifies 
           a comma-separated list of <xref target="content-processing-model">views</xref>
@@ -1601,10 +1610,12 @@
                   <t hangText="country">The country of the user for which the 
                   content is being rendered, specified as an ISO-3166-1 
                   country code.</t>
-                  <t hangText="libs">A relative URL reference that points to 
+                  <t hangText="libs">An absolute URL reference that points to 
                   any JavaScript resources necessary to satisfy the optional 
                   or required features listed within the specification document's
-                  &lt;ModulePrefs&gt;. TODO: this needs more explanation</t>
+                  &lt;ModulePrefs&gt;. This URL MUST be suitable for setting as
+                  the value of an HTTP script tags src attribute and MUST return
+                  a JavaScript resource when dereferenced.</t>
                 </list>
               </t>
             
@@ -1612,7 +1623,7 @@
               the above Redirected Content element, a Web-browser based container 
               would generate the following:</preamble><artwork>
   ...
-  &gt;iframe src="http://example.org/hello.html?language=en&amp;country=US&amp;libs=????"
+  &gt;iframe src="http://example.org/hello.html?language=en&amp;country=US&amp;libs=http://container.example.com/js/core:rpc:blah.js"
   ...
               </artwork></figure>
               
@@ -8567,10 +8578,13 @@
     </t>
 
     <t>A "topic" is a String value that conforms to the OpenAjax Hub 2.0 
-    specification's <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Topic_Names">Topic Name Rules</eref>.
+    specification's <xref target="OAHub2.0">Topic Name Rules</eref>.
     All topic names prefixed with "org.opensocial." are reserved for use by
     the OpenSocial specification. Developers MUST NOT use the "org.opensocial."
     prefix when defining their own topics.</t>
+    
+    <t>Note that topic names are case-sensitive such that "org.example.foo" is 
+    not equivalent to "org.example.Foo".</t>
     
     <section title="Initializing the Hub within the Container" anchor="ContainerExample">
 
@@ -8987,9 +9001,9 @@
         
         <figure><preamble>For instance, it is possible -- albeit
         unlikely -- that code publishing data to a topic can include two 
-        entirely dissimilar JSON objects to the same topic:</preamble><artwork>
+        entirely dissimilar values to the same topic:</preamble><artwork>
   gadgets.Hub.publish("my.topic", {"foo":"bar"});
-  gadgets.Hub.publish("my.topic", {"count":2});
+  gadgets.Hub.publish("my.topic", "my data");
         </artwork></figure>
         
         <t>Subscribers to a topic need to be prepared to deal with such
@@ -9015,7 +9029,7 @@
         
         <figure><artwork>
   prefix = token *["." token] "."
-  type = [prefix] token
+  datatype = [prefix] token
         </artwork></figure>
         
         <t>Any type other than those listed in the table below MUST have 
@@ -9025,21 +9039,21 @@
 
         <texttable align="left">
           <ttcol>Type Name</ttcol>
-          <ttcol>Comments</ttcol>
+          <ttcol>Description</ttcol>
           <c>string</c>
-          <c>ECMAScipt string</c>
+          <c>A JavaScript string</c>
           <c>number</c>
-          <c>ECMAScipt number </c>
+          <c>A JavaScript number </c>
           <c>boolean</c>
-          <c>ECMAScipt boolean </c>
+          <c>A JavaScript boolean </c>
           <c>array</c>
-          <c>ECMAScipt array, e.g. [ 1, 1, 2, 3, 5, 8 ]. The element type/s 
+          <c>A JSON-serializable Array, e.g. [ 1, 1, 2, 3, 5, 8 ]. The element type/s 
           are not specified when the generic "array" type is used.</c>
           <c>object</c>
-          <c>ECMAScipt object, e.g. { foo: "bar", baz: "boo" }. The specifics 
+          <c>A JSON-serializable Object, e.g. { foo: "bar", baz: "boo" }. The specifics 
           of the object are not specified when the generic "object" type is used.</c>
           <c>null</c>
-          <c>ECMAScipt null</c>
+          <c>A JavaScript null</c>
           <c>length</c>
           <c>Any CSS length value (e.g. "3px")</c>
           <c>color</c>
@@ -10368,6 +10382,7 @@
     &rfc3986;
     &rfc3987;
     &rfc5849;
+    &rfc5988;
     &oauth2;
     &infoset;
     &relaxng;
