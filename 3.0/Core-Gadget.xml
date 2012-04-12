@@ -12,6 +12,8 @@
   <!ENTITY rfc5988 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml'>
   <!ENTITY oauth2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-25.xml'>
   <!ENTITY infoset PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xml-infoset-20040204.xml'> 
+  <!ENTITY xmlbase PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xmlbase-20090128.xml'>
+  
   <!ENTITY relaxng PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/relaxng.xml'>
   
   <!ENTITY opensocial PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/opensocial.xml'>
@@ -289,6 +291,13 @@
       
           <t>Text nodes included as children of the &lt;Module&gt; element 
           will be ignored by the container.</t>
+          
+          <t>The &lt;Module&gt; element MAY contain an <spanx style="verb">xml:base</spanx>
+          attribute as specified by <xref target="W3C.REC-xmlbase-20090128" /> 
+          whose value establishes a base for all relative IRI's and URI's
+          contained within the specification document. If specified, containers
+          are required to use the base to resolve all relative IRI and URI 
+          references.</t>
     
         </section>
        
@@ -613,19 +622,46 @@
           <spanx style="verb">gadgets</spanx>, or <spanx style="verb">events</spanx> 
           that are not defined by this specification.</t>
         
-          <t>The optional <spanx style="verb">method</spanx> attribute can be 
-          used with certain links to specify the HTTP method that is to be used 
-          when dereferencing the link's <spanx style="verb">href</spanx>.</t>
-        
           <t>The <spanx style="verb">rel</spanx> attribute values currently 
-          defined by this specification are:</t>
+          supported by this specification are:</t>
         
           <texttable>
             <ttcol align="left" width="15%">rel</ttcol>
             <ttcol align="left">Description</ttcol>
+            
             <c><spanx style="verb">icon</spanx></c>
             <c>Used to link an image resource to the specification document that 
             serves as a representative icon for the application.</c>
+            
+            <c><spanx style="verb">license</spanx></c>
+            <c>Used to reference the license under which the code and content
+            of an application specification document is being provided. For 
+            example, the JavaScript code contained within the specification
+            document can be considered to be "open source" and distributed 
+            using a common "open source license" such as the 
+            <eref target="http://www.apache.org/licenses/LICENSE-2.0.html">Apache Software License, v2</eref>
+            or a <eref target="http://creativecommons.org/">Creative Commons License</eref>, etc.
+            Multiple &lt;Link&gt; elements using the "license" link relation
+            MAY be used within a specification document with each representing 
+            an alternative distribution license.</c>
+            
+            <c><spanx style="verb">privacy-policy</spanx></c>
+            <c>Used to reference a document describing the privacy policy 
+            associated with the application. Such documents SHOULD disclose
+            what personal information is collected by the application and how
+            that information is stored, used, managed and disclosed to other
+            parties. A specification document SHOULD contain no more than one
+            &lt;Link&gt; element using the "privacy-policy" link relation.</c>
+            
+            <c><spanx style="verb">terms-of-service</spanx></c>
+            <c>Used to reference a document describing the the rules to which
+            a user of the application agree to follow when using the 
+            application. Note that such "Terms of Service" carry no legal 
+            weight and can be ignored with impunity in the absence of an
+            explicit, legally enforceable contract. A specification document 
+            SHOULD contain no more than one &lt;Link&gt; element using the 
+            "terms-of-service" link relation.</c>
+            
           </texttable>
           
           <t>Additional link relations specific to the Application Lifecycle
@@ -635,6 +671,10 @@
           elements but MUST NOT contain more than one with the same combination
           of <spanx style="verb">rel</spanx> and <spanx style="verb">href</spanx>
           attribute values.</t>
+          
+          <t>The optional <spanx style="verb">method</spanx> attribute can be 
+          used with certain links to specify the HTTP method that is to be used 
+          when dereferencing the link's <spanx style="verb">href</spanx>.</t>
           
         </section>
       
@@ -10385,6 +10425,7 @@
     &rfc5988;
     &oauth2;
     &infoset;
+    &xmlbase;
     &relaxng;
     &jspel;
     &oahub;
