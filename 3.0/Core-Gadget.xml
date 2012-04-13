@@ -6256,8 +6256,8 @@
         MUST NOT contain a property named "opensocial".</c>
   
         <c><spanx style="verb">gadget</spanx></c>
-        <c>A URL to an OpenSocial Application specification document that defines the 
-        application to be embedded.</c>
+        <c>An absolutely IRI to an OpenSocial Application specification 
+        document that defines the application to be embedded.</c>
         
         <c><spanx style="verb">imageData</spanx></c>
         <c>An optional string value that containing Base64-encoded binary data for an
@@ -6272,12 +6272,12 @@
         render the content.</c>
         
         <c><spanx style="verb">previewImage</spanx></c>
-        <c>An optional URI to an image that can be used as a preview for the 
+        <c>An optional absolute IRI of an image that can be used as a preview for the 
         embedded content.</c>
         
         <c><spanx style="verb">url</spanx></c>
-        <c>A URL to a web page that allows virtually any web-accessible 
-        resource to be used as an Embedded Experience.</c>
+        <c>An absolutely IRI of a web page to be used as an 
+        Embedded Experience.</c>
               
       </texttable>
       
