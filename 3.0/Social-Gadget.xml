@@ -3,128 +3,228 @@
 <?rfc toc="yes"?>
 <?rfc-ext allow-markup-in-artwork="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
-"http://xml.resource.org/authoring/rfc2629.dtd">
+        "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
      docName="opensocial-social-gadget-specification-2-5-0-draft"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
- <front>
-  <title abbrev="Social-Gadget">OpenSocial Social Gadget Specification 2.5.0 DRAFT</title>
-  <author fullname="OpenSocial and Gadgets Specification Group">
-   <address>
-    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
-   </address>
-  </author>
-  <date month="March" year="2012" />
-  <abstract>
-   <t>This document defines additional APIs to add social capabilities to a <xref target="Core-Gadget">Core Gadget container</xref>.</t>
-  </abstract>
-  <area>General</area>
-  <keyword>OpenSocial</keyword>
-  <keyword>social networking</keyword>
-  <keyword>REST</keyword>
-  <keyword>XML</keyword>
-  <keyword>Extensible Markup Language</keyword>
-  <keyword>JSON</keyword>
-  <keyword>JavaScript Object Notation</keyword>
-  <keyword>Atom</keyword>
- </front>
- <middle>
-  <section title="Notation and Conventions">
-   <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
-    <section title="Requirements">
-   <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in 
-   <xref target="RFC2119">RFC2119</xref>.</t>
- </section>
-  </section>
-  <section title="Overview">
-   <t>OpenSocial provides three ways for gadgets to access social data.  First, the JavaScript API contains methods in the osapi.* namespace which map to the services defined in the Social API Server Specification. Second, Data Pipelining is a declarative syntax for specifying the social data a gadget will need, allowing the container to prefetch data for faster gadget rendering. Third, Templating provides several tags to accomplish common tasks, like displaying the UI for selecting friends from a list.</t>
-  </section>
-  <section title="JavaScript API Reference"
-           anchor="JavaScriptAPIReference">
-      <t>For an overview of the patterns used in the following reference, see the introduction to the <eref target="Core-Gadget.xml#JavaScript-API-Reference">JavaScript API Reference</eref> in <xref target="Core-Gadget" /></t>
-      <section title="osapi.people"
-               anchor="osapi.people">
-       <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#People-Service">People service</eref>.</t>
-       <section title="Method Details">
-        <section title="get"
-                 anchor="osapi.people.get">
-         <list style="hanging">
-         <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.people.get(params)</t>
-         <t hangText="Description">Builds a request to retrieve information from the
-         People service. When no parameter is specified, the container MUST use the 
-         default values, returning the the viewer's information.</t>
-         <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>.</t>
-         <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service. Executing this request MUST return a <eref target="./Social-Data.xml#Person">Person</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Person">Person</eref> objects.</t>
-       </list>
+    <front>
+        <title abbrev="Core-Gadget">OpenSocial Social Application Specification 3.0</title>
+        <author fullname='OpenSocial and Gadgets Specification Group'>
+            <address>
+                <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+            </address>
+        </author>
+        <date month="August" year="2011"/>
+        <abstract>
+            <t>This document defines social additions to the <xref target="Core-Gadget">OpenSocial Application
+                Specification</xref> and <xref target="OpenSocial-Templating">OpenSocial Templating Specification</xref>
+            </t>
+        </abstract>
+        <area>General</area>
+        <keyword>OpenSocial</keyword>
+        <keyword>social applications</keyword>
+        <keyword>social networking</keyword>
+        <keyword>REST</keyword>
+        <keyword>XML</keyword>
+        <keyword>Extensible Markup Language</keyword>
+        <keyword>JSON</keyword>
+        <keyword>JavaScript Object Notation</keyword>
+    </front>
+    <middle>
+        <section title="Overview">
+            <t>TODO: Replace
+
+                OpenSocial provides three ways for gadgets to access social data. First, the JavaScript API contains
+                methods in the osapi.* namespace which map to the services defined in the Social API Server
+                Specification. Second, Data Pipelining is a declarative syntax for specifying the social data a gadget
+                will need, allowing the container to prefetch data for faster gadget rendering. Third, Templating
+                provides several tags to accomplish common tasks, like displaying the UI for selecting friends from a
+                list.
+            </t>
+            <section title="Notation and Conventions">
+                <t>
+                    This document extends the <xref target="Core-Gadget">OpenSocial Application Specification</xref> and
+                    the <xref target="OpenSocial-Templating">OpenSocial Templating Specification</xref>.  Therefore, all
+                    notations and conventions defined within each document is inherited by, and applicable to, this document.
+                    <t>
+                        Additional conventions for this document are defined as follows:
+                    </t>
+                    <t>
+                        TODO: Define any extensions
+                    </t>
+                </t>
+            </section>
         </section>
-        <section title="getViewer"
-                 anchor="osapi.people.getViewer">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> }
-         osapi.people.getViewer(params)</t>
-          <t hangText="Description">A convenience over osapi.people.get() that builds a
-         request to retrieve the viewer, as specified in the security token,
-         from the People service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>, except that the value for the userId parameter is set to '@viewer'.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service.  Executing this request MUST return a <eref target="./Social-Data.xml#Person">Person</eref> object representing the viewer.</t>
-         </list>
+        <section title="Container-Provided Social Capabilities" anchor="ContainerCapabilities">
+
         </section>
-        <section title="getViewerFriends"
-                 anchor="osapi.people.getViewerFriends">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; {
-         <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> }
-         osapi.people.getViewerFriends(params)</t>
-         <t hangText="Description">A convenience over osapi.people.get() that builds a
-         request to retrieve the viewer's friends, as specified in the security
-         token, from the People service.</t>
-         <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>, except that the value for the userId parameter is set to '@viewer' and the groupId parameter is set to "@friends".</t>
-         <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service. Executing this request MUST return a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Person">Person</eref> objects representing the viewer's friends.</t>
-        </list>
+        <section title="Container-Provided Social Features" anchor="ContainerFeatures">
+
         </section>
-        <section title="getOwner"
-                 anchor="osapi.people.getOwner">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> }
-         osapi.people.getOwner(params)</t>
-          <t hangText="Description">A convenience over osapi.people.get() that builds a
-         request to retrieve the owner, as specified in the security token,
-         from the People service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>, except that the value for the userId parameter is set to '@owner'.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service.  Executing this request MUST return a <eref target="./Social-Data.xml#Person">Person</eref> object representing the owner.</t>
-         </list>
-        </section>
-        <section title="getOwnerFriends"
-                 anchor="osapi.people.getOwnerFriends">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; {
-         <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> }
-         osapi.people.getOwnerFriends(params)</t>
-         <t hangText="Description">A convenience over osapi.people.get() that builds a
-         request to retrieve the owner's friends, as specified in the security
-         token, from the People service.</t>
-         <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>, except that the value for the userId parameter is set to '@owner' and the groupId parameter is set to "@friends".</t>
-         <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service. Executing this request MUST return a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Person">Person</eref> objects representing the owner's friends.</t>
-        </list>
-        </section>
-       </section>
-       <section title="Examples">
-        <figure>
-         <preamble>A Person request, the most basic example:</preamble>
-         <artwork xml:space="preserve">
+
+        <section title="JavaScript API Reference"
+                 anchor="JavaScriptAPIReference">
+            <t>For an overview of the patterns used in the following reference, see the introduction to the
+                <eref target="Core-Gadget.xml#JavaScript-API-Reference">JavaScript API Reference</eref>
+                in
+                <xref target="Core-Gadget"/>
+            </t>
+            <section title="osapi.people"
+                     anchor="osapi.people">
+                <t>Service object with functions that map to the
+                    <eref target="./Social-API-Server.xml#People-Service">People service</eref>.
+                </t>
+                <section title="Method Details">
+                    <section title="get"
+                             anchor="osapi.people.get">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.people.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to retrieve information from the
+                                People service. When no parameter is specified, the container MUST use the
+                                default values, returning the the viewer's information.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#People-Service-Get">People service's get
+                                    method</eref>.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the People service. Executing this request MUST return a
+                                <eref target="./Social-Data.xml#Person">Person</eref>
+                                object or a
+                                <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                of
+                                <eref target="./Social-Data.xml#Person">Person</eref>
+                                objects.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="getViewer"
+                             anchor="osapi.people.getViewer">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                }
+                                osapi.people.getViewer(params)
+                            </t>
+                            <t hangText="Description">A convenience over osapi.people.get() that builds a
+                                request to retrieve the viewer, as specified in the security token,
+                                from the People service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#People-Service-Get">People service's get
+                                    method</eref>, except that the value for the userId parameter is set to '@viewer'.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the People service. Executing this request MUST return a
+                                <eref target="./Social-Data.xml#Person">Person</eref>
+                                object representing the viewer.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="getViewerFriends"
+                             anchor="osapi.people.getViewerFriends">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                }
+                                osapi.people.getViewerFriends(params)
+                            </t>
+                            <t hangText="Description">A convenience over osapi.people.get() that builds a
+                                request to retrieve the viewer's friends, as specified in the security
+                                token, from the People service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#People-Service-Get">People service's get
+                                    method</eref>, except that the value for the userId parameter is set to '@viewer'
+                                and the groupId parameter is set to "@friends".
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the People service. Executing this request MUST return a
+                                <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                of
+                                <eref target="./Social-Data.xml#Person">Person</eref>
+                                objects representing the viewer's friends.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="getOwner"
+                             anchor="osapi.people.getOwner">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                }
+                                osapi.people.getOwner(params)
+                            </t>
+                            <t hangText="Description">A convenience over osapi.people.get() that builds a
+                                request to retrieve the owner, as specified in the security token,
+                                from the People service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#People-Service-Get">People service's get
+                                    method</eref>, except that the value for the userId parameter is set to '@owner'.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the People service. Executing this request MUST return a
+                                <eref target="./Social-Data.xml#Person">Person</eref>
+                                object representing the owner.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="getOwnerFriends"
+                             anchor="osapi.people.getOwnerFriends">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                }
+                                osapi.people.getOwnerFriends(params)
+                            </t>
+                            <t hangText="Description">A convenience over osapi.people.get() that builds a
+                                request to retrieve the owner's friends, as specified in the security
+                                token, from the People service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#People-Service-Get">People service's get
+                                    method</eref>, except that the value for the userId parameter is set to '@owner' and
+                                the groupId parameter is set to "@friends".
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the People service. Executing this request MUST return a
+                                <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                of
+                                <eref target="./Social-Data.xml#Person">Person</eref>
+                                objects representing the owner's friends.
+                            </t>
+                        </list>
+                    </section>
+                </section>
+                <section title="Examples">
+                    <figure>
+                        <preamble>A Person request, the most basic example:</preamble>
+                        <artwork xml:space="preserve">
 osapi.people.getViewer().execute(function(result) {
   if (!result.error) {
     alert('Your name is ' + result.displayName + '!');
   }
 });</artwork>
-        </figure>
-        <figure>
-         <preamble>A Person request with a JSON request parameter object
-       specifying which fields to retrieve:</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>A Person request with a JSON request parameter object
+                            specifying which fields to retrieve:
+                        </preamble>
+                        <artwork xml:space="preserve">
 osapi.people.getViewer({fields: ['displayName', 'birthday']}).execute(function(result) {
   if (!result.error) {
     alert('Your name is ' + result.displayName + '!');
@@ -132,21 +232,22 @@ osapi.people.getViewer({fields: ['displayName', 'birthday']}).execute(function(r
   }
 });
 </artwork>
-        </figure>
-        <figure>
-         <preamble>A simple example to request the owner's friends:</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>A simple example to request the owner's friends:</preamble>
+                        <artwork xml:space="preserve">
 osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(result) {
   if (!result.error) {
     alert('You have ' + result.totalResults + ' friends');
   }
 });
 </artwork>
-        </figure>
-        <figure>
-         <preamble>An example that illustrates all available request
-         parameters:</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>An example that illustrates all available request
+                            parameters:
+                        </preamble>
+                        <artwork xml:space="preserve">
 var params = {
     userId: "@owner", 
     groupId: "@friends",
@@ -161,48 +262,89 @@ osapi.people.get(params).execute(function(result) {
   }
 });
 </artwork>
-        </figure>
-       </section>
-      </section>
-<x:deprecated note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead." href="#osapi.activitystreams">
-      <section title="osapi.activities"
-               anchor="osapi.activities">
-       <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#Activities-Service">Activities service</eref>.</t>
-       <section title="Method Details">
-        <section title="get"
-                 anchor="osapi.activities.get">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activities.get(params)</t>
-          <t hangText="Description">Builds a request to retrieve information from the
-          Activities service. When no parameter is specified, the container MUST use the 
-          default values, returning the viewer's activities.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Activities-Service-Get">Activities service's get method</eref>, except that the 'appId' parameter can not be changed from "@app".</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Activities service. Executing this request MUST return a <eref target="./Social-Data.xml#Activity">Activity</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Activity">Activity</eref> objects.</t>
-         </list>
-        </section>
-        <section title="create"
-                 anchor="osapi.activities.create">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activities.get(params)</t>
-          <t hangText="Description">Builds a request to create a new activity using the Activities service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Activities-Service-Create">Activities service's create method</eref>, except that the 'appId' parameter can not be changed from "@app".  This parameter is REQUIRED and MUST contain the 'activity' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Activities service. Executing this request MUST attempt to create the specified Activity and return the newly-created <eref target="./Social-Data.xml#Activity">Activity</eref> object if successful.</t>
-         </list>
-        </section>
-       </section>
-       <section title="Examples">
-        <figure>
-         <preamble>A simple example to retrieve the activities of the viewer's
-         friends:</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                </section>
+            </section>
+            <x:deprecated
+                    note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead."
+                    href="#osapi.activitystreams">
+                <section title="osapi.activities"
+                         anchor="osapi.activities">
+                    <t>Service object with functions that map to the
+                        <eref target="./Social-API-Server.xml#Activities-Service">Activities service</eref>.
+                    </t>
+                    <section title="Method Details">
+                        <section title="get"
+                                 anchor="osapi.activities.get">
+                            <list style="hanging">
+                                <t hangText="Signature">&lt;static&gt; {
+                                    <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                    } osapi.activities.get(params)
+                                </t>
+                                <t hangText="Description">Builds a request to retrieve information from the
+                                    Activities service. When no parameter is specified, the container MUST use the
+                                    default values, returning the viewer's activities.
+                                </t>
+                                <t hangText="Parameters">This method takes a single parameter, which is a JavaScript
+                                    object representing the parameters defined by the<eref
+                                            target="Social-API-Server.xml#Activities-Service-Get">Activities service's
+                                        get method</eref>, except that the 'appId' parameter can not be changed from
+                                    "@app".
+                                </t>
+                                <t hangText="Returns">A
+                                    <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                    to retrieve information from the Activities service. Executing this request MUST
+                                    return a
+                                    <eref target="./Social-Data.xml#Activity">Activity</eref>
+                                    object or a
+                                    <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                    of
+                                    <eref target="./Social-Data.xml#Activity">Activity</eref>
+                                    objects.
+                                </t>
+                            </list>
+                        </section>
+                        <section title="create"
+                                 anchor="osapi.activities.create">
+                            <list style="hanging">
+                                <t hangText="Signature">&lt;static&gt; {
+                                    <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                    } osapi.activities.get(params)
+                                </t>
+                                <t hangText="Description">Builds a request to create a new activity using the Activities
+                                    service.
+                                </t>
+                                <t hangText="Parameters">This method takes a single parameter, which is a JavaScript
+                                    object representing the parameters defined by the<eref
+                                            target="Social-API-Server.xml#Activities-Service-Create">Activities
+                                        service's create method</eref>, except that the 'appId' parameter can not be
+                                    changed from "@app". This parameter is REQUIRED and MUST contain the 'activity'
+                                    property.
+                                </t>
+                                <t hangText="Returns">A
+                                    <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                    to retrieve information from the Activities service. Executing this request MUST
+                                    attempt to create the specified Activity and return the newly-created
+                                    <eref target="./Social-Data.xml#Activity">Activity</eref>
+                                    object if successful.
+                                </t>
+                            </list>
+                        </section>
+                    </section>
+                    <section title="Examples">
+                        <figure>
+                            <preamble>A simple example to retrieve the activities of the viewer's
+                                friends:
+                            </preamble>
+                            <artwork xml:space="preserve">
 osapi.activities.get({userId: '@viewer', groupId: '@friends', count: 20}).execute(myCallback);
 </artwork>
-        </figure>
-        <figure>
-         <preamble>An example illustrating all available request parameters for
-         osapi.activites.get():</preamble>
-         <artwork xml:space="preserve">
+                        </figure>
+                        <figure>
+                            <preamble>An example illustrating all available request parameters for
+                                osapi.activites.get():
+                            </preamble>
+                            <artwork xml:space="preserve">
 var params = {
     userId: "@me", 
     groupId: "@self",
@@ -214,18 +356,20 @@ var params = {
 };
 osapi.activities.get(params).execute(myCallback);
 </artwork>
-        </figure>
-        <figure>
-         <preamble>A simple example to create an activity for the
-         viewer:</preamble>
-         <artwork xml:space="preserve">
+                        </figure>
+                        <figure>
+                            <preamble>A simple example to create an activity for the
+                                viewer:
+                            </preamble>
+                            <artwork xml:space="preserve">
 osapi.activities.create({userId: '@viewer', activity: {title: 'Hello!', url: 'http://mysite.com'}}).execute(myCallback);
 </artwork>
-        </figure>
-        <figure>
-         <preamble>An example illustrating all available request parameters for
-         osapi.activites.create():</preamble>
-         <artwork xml:space="preserve">
+                        </figure>
+                        <figure>
+                            <preamble>An example illustrating all available request parameters for
+                                osapi.activites.create():
+                            </preamble>
+                            <artwork xml:space="preserve">
 var params = {
     userId: "@viewer", 
     groupId: "@self",
@@ -233,61 +377,127 @@ var params = {
 };
 osapi.activities.create(params).execute(myCallback);
 </artwork>
-        </figure>
-       </section>
-      </section>
-</x:deprecated>
-      <section title="osapi.activitystreams" anchor="osapi.activitystreams">
-       <xref target='Issue-1140'>Discussion</xref>
-       <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#ActivityStreams-Service">Activity Streams service</eref>.</t>
-       <section title="Method Details">
-        <section title="get" anchor="osapi.activitystreams.get">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.get(params)</t>
-          <t hangText="Description">Builds a request to retrieve information from the
-          Activity Streams service. When no parameter is specified, the container MUST use the 
-          default values, returning the viewer's <eref target="./Social-Data.xml#ActivityEntry">ActivityEntries</eref>.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#ActivityStreams-Service-Get">Activity Stream service's get method</eref>.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Activity Streams service. Executing this request MUST return an <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> objects.</t>
-         </list>
-        </section>
-        <section title="create" anchor="osapi.activitystreams.create">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.create(params)</t>
-          <t hangText="Description">Builds a request to create a new ActivityEntry using the Activity Streams service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#ActivityStreams-Service-Create">Activity Stream service's create method</eref>.  This parameter is REQUIRED and MUST contain the 'activityEntry' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Activity Streams service. Executing this request MUST attempt to create the specified ActivityEntry and return the newly-created <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> object if successful.</t>
-         </list>
-        </section>
-        <section title="update" anchor="osapi.activitystreams.update">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.update(params)</t>
-          <t hangText="Description">Builds a request to update information stored in the Activity Streams service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Activitystreams-Service-Update">Activity Stream service's update method</eref>.  This parameter is REQUIRED and MUST include the 'activity' property which includes the id of the ActivityEntry to update.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Activity Streams service. Executing this request MUST overwrite the existing activity entries on the server, but does not return any values.</t>
-         </list>
-        </section>
-        <section title="delete" anchor="osapi.activitystreams.delete">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.activitystreams.delete(params)</t>
-          <t hangText="Description">Builds a request to delete information stored in the Activity Streams service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Activity Streams-Service-Delete">Activity Stream service's delete method</eref>.  This parameter is REQUIRED and MUST include the 'activityId' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the MediaItems service. Executing this request MUST remove the specified MediaItems from the server and return them as a JavaScript object.</t>
-         </list>
-        </section>
-       </section>
-       <section title="Examples">
-         <figure>
-         <preamble>A simple example to retrieve the Activity Streams of the viewer's
-         friends:</preamble>
-         <artwork xml:space="preserve">
+                        </figure>
+                    </section>
+                </section>
+            </x:deprecated>
+            <section title="osapi.activitystreams" anchor="osapi.activitystreams">
+                <xref target='Issue-1140'>Discussion</xref>
+                <t>Service object with functions that map to the
+                    <eref target="./Social-API-Server.xml#ActivityStreams-Service">Activity Streams service</eref>.
+                </t>
+                <section title="Method Details">
+                    <section title="get" anchor="osapi.activitystreams.get">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.activitystreams.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to retrieve information from the
+                                Activity Streams service. When no parameter is specified, the container MUST use the
+                                default values, returning the viewer's<eref target="./Social-Data.xml#ActivityEntry">
+                                    ActivityEntries</eref>.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#ActivityStreams-Service-Get">Activity Stream
+                                    service's get method</eref>.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the Activity Streams service. Executing this request MUST
+                                return an
+                                <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref>
+                                object or a
+                                <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                of
+                                <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref>
+                                objects.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="create" anchor="osapi.activitystreams.create">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.activitystreams.create(params)
+                            </t>
+                            <t hangText="Description">Builds a request to create a new ActivityEntry using the Activity
+                                Streams service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#ActivityStreams-Service-Create">Activity Stream
+                                    service's create method</eref>. This parameter is REQUIRED and MUST contain the
+                                'activityEntry' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the Activity Streams service. Executing this request MUST
+                                attempt to create the specified ActivityEntry and return the newly-created
+                                <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref>
+                                object if successful.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="update" anchor="osapi.activitystreams.update">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.activitystreams.update(params)
+                            </t>
+                            <t hangText="Description">Builds a request to update information stored in the Activity
+                                Streams service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#Activitystreams-Service-Update">Activity Stream
+                                    service's update method</eref>. This parameter is REQUIRED and MUST include the
+                                'activity' property which includes the id of the ActivityEntry to update.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the Activity Streams service. Executing this request MUST
+                                overwrite the existing activity entries on the server, but does not return any values.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="delete" anchor="osapi.activitystreams.delete">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.activitystreams.delete(params)
+                            </t>
+                            <t hangText="Description">Builds a request to delete information stored in the Activity
+                                Streams service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#Activity Streams-Service-Delete">Activity Stream
+                                    service's delete method</eref>. This parameter is REQUIRED and MUST include the
+                                'activityId' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the MediaItems service. Executing this request MUST remove
+                                the specified MediaItems from the server and return them as a JavaScript object.
+                            </t>
+                        </list>
+                    </section>
+                </section>
+                <section title="Examples">
+                    <figure>
+                        <preamble>A simple example to retrieve the Activity Streams of the viewer's
+                            friends:
+                        </preamble>
+                        <artwork xml:space="preserve">
 osapi.activitystreams.get({userId: '@viewer', groupId: '@friends', count: 20}).execute(myCallback);</artwork>
-        </figure>
-         <figure>
-         <preamble>An example illustrating all available request parameters for
-         osapi.activitystreams.get():</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>An example illustrating all available request parameters for
+                            osapi.activitystreams.get():
+                        </preamble>
+                        <artwork xml:space="preserve">
 var params = {
     userId: "@me", 
     groupId: "@self",
@@ -298,10 +508,10 @@ var params = {
     startPage: 0
 };
 osapi.activitystreams.get(params).execute(myCallback);</artwork>
-        </figure>
-         <figure>
-         <preamble>An example to create an ActivityEntry:</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>An example to create an ActivityEntry:</preamble>
+                        <artwork xml:space="preserve">
 var params = {
   userId: '@viewer',
   groupId: '@self',
@@ -327,58 +537,102 @@ var params = {
   }
 };
 osapi.activitystreams.create(params).execute(callback);</artwork>
-        </figure>
-       </section>
-      </section>
-      <section title="osapi.appdata"
-               anchor="osapi.appdata">
-       <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#AppData-Service">AppData service</eref>.</t>
-       <section title="Method Details">
-        <section title="get"
-                 anchor="osapi.appdata.get">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.appdata.get(params)</t>
-          <t hangText="Description">Builds a request to retrieve information from the
-          AppData service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#AppData-Service-Get">AppData service's get method</eref>, except that the 'appId' parameter can not be changed from "@appId".  This parameter is REQUIRED, and MUST include the 'keys' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the AppData service. Executing this request MUST return a JavaScript object where each of the requested keys is a property, and each property is populated with the corresponding value that was persisted using the AppData service.</t>
-         </list>
-        </section>
-        <section title="update"
-                 anchor="osapi.appdata.update">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.appdata.update(params)</t>
-          <t hangText="Description">Builds a request to update information stored in the
-          AppData service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#AppData-Service-Update">AppData service's update method</eref>, except that the 'appId' parameter can not be changed from "@appId".  This parameter is REQUIRED and MUST include the 'data' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the AppData service. Executing this request MUST overwrite the existing AppData on the server, but does not return any values.</t>
-         </list>
-        </section>
-        <section title="delete"
-                 anchor="osapi.appdata.delete">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.appdata.delete(params)</t>
-          <t hangText="Description">Builds a request to delete information stored in the AppData service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#AppData-Service-Delete">AppData service's delete method</eref>, except that the 'appId' parameter can not be changed from "@appId".  This parameter is REQUIRED and MUST include the 'keys' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the AppData service. Executing this request MUST remove the specified key/value pairs from the server and return them as a JavaScript object.</t>
-         </list>
-        </section>
-       </section>
-       <section title="Examples">
-        <figure>
-         <preamble>A simple example to retrieve, update, and delete a piece of
-         app data:</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                </section>
+            </section>
+            <section title="osapi.appdata"
+                     anchor="osapi.appdata">
+                <t>Service object with functions that map to the
+                    <eref target="./Social-API-Server.xml#AppData-Service">AppData service</eref>.
+                </t>
+                <section title="Method Details">
+                    <section title="get"
+                             anchor="osapi.appdata.get">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.appdata.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to retrieve information from the
+                                AppData service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#AppData-Service-Get">AppData service's get
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@appId".
+                                This parameter is REQUIRED, and MUST include the 'keys' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the AppData service. Executing this request MUST return a
+                                JavaScript object where each of the requested keys is a property, and each property is
+                                populated with the corresponding value that was persisted using the AppData service.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="update"
+                             anchor="osapi.appdata.update">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.appdata.update(params)
+                            </t>
+                            <t hangText="Description">Builds a request to update information stored in the
+                                AppData service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#AppData-Service-Update">AppData service's update
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@appId".
+                                This parameter is REQUIRED and MUST include the 'data' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the AppData service. Executing this request MUST overwrite
+                                the existing AppData on the server, but does not return any values.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="delete"
+                             anchor="osapi.appdata.delete">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.appdata.delete(params)
+                            </t>
+                            <t hangText="Description">Builds a request to delete information stored in the AppData
+                                service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#AppData-Service-Delete">AppData service's delete
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@appId".
+                                This parameter is REQUIRED and MUST include the 'keys' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the AppData service. Executing this request MUST remove the
+                                specified key/value pairs from the server and return them as a JavaScript object.
+                            </t>
+                        </list>
+                    </section>
+                </section>
+                <section title="Examples">
+                    <figure>
+                        <preamble>A simple example to retrieve, update, and delete a piece of
+                            app data:
+                        </preamble>
+                        <artwork xml:space="preserve">
 osapi.appdata.get({userId: '@viewer', groupId: '@friends', keys: ['gifts']}).execute(myGetCallback);
 osapi.appdata.update({userId: '@viewer', data: {gifts: 'a crazed monkey'}}).execute(myUpdateCallback);
 osapi.appdata.delete({keys: ['gifts']}).execute(myDeleteCallback)
 </artwork>
-        </figure>
-        <figure>
-         <preamble>An example illustrating all available request parameters for
-         osapi.appdata.get():</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>An example illustrating all available request parameters for
+                            osapi.appdata.get():
+                        </preamble>
+                        <artwork xml:space="preserve">
 var getParams = {
     userId: "@viewer", 
     groupId: "@friends",
@@ -386,11 +640,12 @@ var getParams = {
 };
 osapi.appdata.get(getParams).execute(myGetCallback);
 </artwork>
-        </figure>
-        <figure>
-         <preamble>An example illustrating all available request parameters for
-         osapi.appdata.update():</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>An example illustrating all available request parameters for
+                            osapi.appdata.update():
+                        </preamble>
+                        <artwork xml:space="preserve">
 var updateParams = {
     auth: {"default" : null, "type" : "AuthToken"},
     userId: "@viewer", 
@@ -399,11 +654,12 @@ var updateParams = {
 };
 osapi.appdata.update(updateParams).execute(myUpdateCallback);
 </artwork>
-        </figure>
-        <figure>
-         <preamble>An example illustrating all available request parameters for
-         osapi.appdata.delete():</preamble>
-         <artwork xml:space="preserve">
+                    </figure>
+                    <figure>
+                        <preamble>An example illustrating all available request parameters for
+                            osapi.appdata.delete():
+                        </preamble>
+                        <artwork xml:space="preserve">
 var deleteParams = {
     userId: "@viewer", 
     groupId: "@friends",
@@ -411,79 +667,147 @@ var deleteParams = {
 };
 osapi.appdata.delete(deleteParams).execute(myDeleteCallback)
 </artwork>
-        </figure>
-       </section>
-      </section>
-<!-- ************************** -->
-      <section title="osapi.groups"
-               anchor="osapi.groups">
-       <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#Groups-Service">Groups service</eref>.</t>
-       <section title="Method Details">
+                    </figure>
+                </section>
+            </section>
+            <!-- ************************** -->
+            <section title="osapi.groups"
+                     anchor="osapi.groups">
+                <t>Service object with functions that map to the
+                    <eref target="./Social-API-Server.xml#Groups-Service">Groups service</eref>.
+                </t>
+                <section title="Method Details">
 
-        <section title="create"
-                 anchor="osapi.groups.create">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.create(params)</t>
-          <t hangText="Description">Builds a request to create a group via the Groups service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Create">Groups service's create method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'group' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to create a group via the Groups service. Executing this request MUST create a group and return the newly created group.</t>
-         </list>
-        </section>
+                    <section title="create"
+                             anchor="osapi.groups.create">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.groups.create(params)
+                            </t>
+                            <t hangText="Description">Builds a request to create a group via the Groups service.</t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="./Social-API-Server.xml#Groups-Service-Create">Groups service's create
+                                    method</eref>, except that the 'userId' property can not be changed from the default
+                                value of '@me'. This parameter is REQUIRED, and MUST include the 'group' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to create a group via the Groups service. Executing this request MUST create a group and
+                                return the newly created group.
+                            </t>
+                        </list>
+                    </section>
 
-        <section title="get"
-                 anchor="osapi.groups.get">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.get(params)</t>
-          <t hangText="Description">Builds a request to get a group or groups via the Groups service.</t>
-          <t hangText="Parameters">This method takes one parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Get">Groups service's get method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to get a group or groups via the Groups service. Executing this request MUST return a <eref target="./Social-Data.xml#Group">Group</eref> or a <eref target="./Core-Data.xml#Collection">Collection</eref> of Groups.</t>
- </list>
-</section>
+                    <section title="get"
+                             anchor="osapi.groups.get">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.groups.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to get a group or groups via the Groups
+                                service.
+                            </t>
+                            <t hangText="Parameters">This method takes one parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="./Social-API-Server.xml#Groups-Service-Get">Groups service's get
+                                    method</eref>, except that the 'userId' property can not be changed from the default
+                                value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to get a group or groups via the Groups service. Executing this request MUST return a
+                                <eref target="./Social-Data.xml#Group">Group</eref>
+                                or a
+                                <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                of Groups.
+                            </t>
+                        </list>
+                    </section>
 
-<section title="update"
-         anchor="osapi.groups.update">
- <list style="hanging">
-  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.update(params)</t>
-  <t hangText="Description">Builds a request to update a group via the Groups service.</t>
-  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Update">Groups service's update method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'group' property.</t>
-  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to update a group via the Groups service. Executing this request MUST update a group, but does not return any information.</t>
- </list>
-</section>
+                    <section title="update"
+                             anchor="osapi.groups.update">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.groups.update(params)
+                            </t>
+                            <t hangText="Description">Builds a request to update a group via the Groups service.</t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="./Social-API-Server.xml#Groups-Service-Update">Groups service's update
+                                    method</eref>, except that the 'userId' property can not be changed from the default
+                                value of '@me'. This parameter is REQUIRED, and MUST include the 'group' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to update a group via the Groups service. Executing this request MUST update a group,
+                                but does not return any information.
+                            </t>
+                        </list>
+                    </section>
 
-<section title="delete"
-         anchor="osapi.groups.delete">
- <list style="hanging">
-  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.groups.delete(params)</t>
-  <t hangText="Description">Builds a request to delete a group via the Groups service.</t>
-  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="./Social-API-Server.xml#Groups-Service-Delete">Groups service's delete method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.</t>
-  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to delete a group via the Groups service. Executing this request MUST delete a group, but does not return any information.</t>
- </list>
-</section>
+                    <section title="delete"
+                             anchor="osapi.groups.delete">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.groups.delete(params)
+                            </t>
+                            <t hangText="Description">Builds a request to delete a group via the Groups service.</t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="./Social-API-Server.xml#Groups-Service-Delete">Groups service's delete
+                                    method</eref>, except that the 'userId' property can not be changed from the default
+                                value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to delete a group via the Groups service. Executing this request MUST delete a group,
+                                but does not return any information.
+                            </t>
+                        </list>
+                    </section>
 
-</section>
-</section>
-<!-- ************************** -->
-<section title="osapi.messages"
-       anchor="osapi.messages">
-<t>Service object with functions that map to the 
-<eref target="./Social-API-Server.xml#Messages-Service">Messages service</eref>.</t>
-<section title="Method Details">
-<section title="send"
-         anchor="osapi.messages.send">
- <list style="hanging">
-  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.messages.send(params)</t>
-  <t hangText="Description">Builds a request to send a message via the Messages service.</t>
-  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Messages-Service-Send">Messages service's send method</eref>, except that the 'userId' property can not be changed from the default value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.</t>
-  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to send a message via the Messages service. Executing this request MUST send a message, but does not return any information.</t>
- </list>
-</section>
-</section>
-<section title="Examples">
-<figure>
- <preamble>An example illustrating how to send a message using
- osapi.messages.send():</preamble>
- <artwork xml:space="preserve">
+                </section>
+            </section>
+            <!-- ************************** -->
+            <section title="osapi.messages"
+                     anchor="osapi.messages">
+                <t>Service object with functions that map to the
+                    <eref target="./Social-API-Server.xml#Messages-Service">Messages service</eref>.
+                </t>
+                <section title="Method Details">
+                    <section title="send"
+                             anchor="osapi.messages.send">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.messages.send(params)
+                            </t>
+                            <t hangText="Description">Builds a request to send a message via the Messages service.</t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#Messages-Service-Send">Messages service's send
+                                    method</eref>, except that the 'userId' property can not be changed from the default
+                                value of '@me'. This parameter is REQUIRED, and MUST include the 'message' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to send a message via the Messages service. Executing this request MUST send a message,
+                                but does not return any information.
+                            </t>
+                        </list>
+                    </section>
+                </section>
+                <section title="Examples">
+                    <figure>
+                        <preamble>An example illustrating how to send a message using
+                            osapi.messages.send():
+                        </preamble>
+                        <artwork xml:space="preserve">
 var params = {
 message: {
 "recipients" : ["example.org:AD38B3886625AAF", "example.org:997638BAA6F25AD"],
@@ -494,656 +818,942 @@ message: {
 };
 osapi.messages.send(params).execute(messageSentCallback);
 </artwork>
-</figure>
-</section>
-</section>
-<section title="osapi.albums" anchor="osapi.albums">
-<t>Service object with functions that map to the 
-<eref target="./Social-API-Server.xml#Albums-Service">Albums service</eref>.</t>
-<section title="Method Details">
-<section title="get"
-         anchor="osapi.albums.get">
- <list style="hanging">
-  <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.albums.get(params)</t>
-  <t hangText="Description">Builds a request to retrieve information from the
-  Albums service.</t>
-  <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Albums-Service-Get">Albums service's get method</eref>, except that the 'appId' parameter can not be changed from "@appId".</t>
-  <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Albums service. Executing this request MUST return a <eref target="./Social-Data.xml#Album">Album</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Album">Album</eref> objects.</t>
- </list>
-</section>
-<section title="create"
-                 anchor="osapi.albums.create">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.albums.get(params)</t>
-          <t hangText="Description">Builds a request to create a new album using the Albums service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Albums-Service-Create">Albums service's create method</eref>, except that the 'appId' parameter can not be changed from "@app".  This parameter is REQUIRED and MUST contain the 'data' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Albums service. Executing this request MUST attempt to create the specified Album and return the newly-created <eref target="./Social-Data.xml#Album">Albums</eref> object if successful.</t>
-         </list>
-        </section>
-        <section title="update"
-                 anchor="osapi.albums.update">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.albums.update(params)</t>
-          <t hangText="Description">Builds a request to update information stored in the
-          Activities service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Albums-Service-Update">Albums service's update method</eref>, except that the 'appId' parameter can not be changed from "@appId".  This parameter is REQUIRED and MUST include the 'data' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Albums service. Executing this request MUST overwrite the existing Albums on the server, but does not return any values.</t>
-         </list>
-        </section>
-        <section title="delete"
-                 anchor="osapi.albums.delete">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.albums.delete(params)</t>
-          <t hangText="Description">Builds a request to delete information stored in the Albums service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#Albums-Service-Delete">Albums service's delete method</eref>, except that the 'appId' parameter can not be changed from "@appId".  This parameter is REQUIRED and MUST include the 'ids' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the Albums service. Executing this request MUST remove the specified Albums from the server and return them as a JavaScript object.</t>
-         </list>
-        </section>
-        </section>
-        <section title="Examples">
-        </section>
-      </section>
-      <section title="osapi.mediaitems" anchor="osapi.mediaitems">
-       <t>Service object with functions that map to the 
-       <eref target="./Social-API-Server.xml#MediaItems-Service">MediaItems service</eref>.</t>
-        <section title="Method Details">
-        <section title="get"
-                 anchor="osapi.mediaItems.get">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.mediaItems.get(params)</t>
-          <t hangText="Description">Builds a request to retrieve information from the
-          MediaItems service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#MediaItems-Service-Get">MediaItems service's get method</eref>, except that the 'appId' parameter can not be changed from "@appId".</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the MediaItems service. Executing this request MUST return a <eref target="./Social-Data.xml#MediaItem">MediaItems</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#MediaItem">MediaItems</eref> objects.</t>
-         </list>
-        </section>
-        <section title="create"
-                 anchor="osapi.mediaItems.create">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.mediaItems.get(params)</t>
-          <t hangText="Description">Builds a request to create a new media item using the MediaItems service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#MediaItems-Service-Create">MediaItems service's create method</eref>, except that the 'appId' parameter can not be changed from "@app".  This parameter is REQUIRED and MUST contain the 'data' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the MediaItems service. Executing this request MUST attempt to create the specified MediaItems and return the newly-created <eref target="./Social-Data.xml#MediaItem">MediaItem</eref> object if successful.</t>
-         </list>
-        </section>
-        <section title="update"
-                 anchor="osapi.mediaItems.update">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.mediaItems.update(params)</t>
-          <t hangText="Description">Builds a request to update information stored in the
-          MediaItems service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#MediaItems-Service-Update">MediaItems service's update method</eref>, except that the 'appId' parameter can not be changed from "@appId".  This parameter is REQUIRED and MUST include the 'data' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the MediaItems service. Executing this request MUST overwrite the existing MediaItems on the server, but does not return any values.</t>
-         </list>
-        </section>
-        <section title="delete"
-                 anchor="osapi.mediaItems.delete">
-         <list style="hanging">
-          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.mediaItems.delete(params)</t>
-          <t hangText="Description">Builds a request to delete information stored in the MediaItems service.</t>
-          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#MediaItems-Service-Delete">MediaItems service's delete method</eref>, except that the 'appId' parameter can not be changed from "@appId".  This parameter is REQUIRED and MUST include the 'ids' property.</t>
-          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the MediaItems service. Executing this request MUST remove the specified MediaItems from the server and return them as a JavaScript object.</t>
-         </list>
-        </section>
-        </section>
-        <section title="Examples">
-        </section>
-      </section> 
-    <section title="opensocial"
-             anchor="opensocial">
-     <t>Namespace for top-level people functions.</t>
-     <t>There are cases where a gadget may wish to perform an action that needs
-     approval by the user or mediation by the container. OpenSocial supports
-     "request" features that allow the container to decide how to handle the
-     interaction with the user. Functions like
-     opensocial.requestCreateActivity, and opensocial.requestPermission allow
-     the container to inject its own policy decisions into the gadget execution
-     flow and notify the gadget of the result. Under this specification, it is
-     equally valid for a container to defer to the user, always approve, always
-     deny, or use any other method to determine responses to request calls.
-     Additionally, this allows the container to enforce UI flows in a safe and
-     integrated way.</t>
-     <section title="Method Details">
-      <section title="getEnvironment"
-               anchor="opensocial.getEnvironment">
-       <list style="hanging">
-       <t hangText="Signature">&lt;static&gt; 
-       <x:ref>opensocial.Environment</x:ref>
-       opensocial.getEnvironment()</t>
-       <t hangText="Description">Gets the current environment for this gadget. You can
-       use the environment to make queries such as what profile fields and
-       surfaces are supported by this container, what parameters were passed to
-       the current gadget, and so on.</t>
-       <t hangText="Parameters">None.</t>
-       <t hangText="Returns">
-       <texttable align="left">
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>
-         <x:ref>opensocial.Environment</x:ref>
-        </c>
-        <c>The current environment.</c>
-       </texttable></t>
-       </list>
-      </section>
-      <section title="hasPermission"
-               anchor="opensocial.hasPermission">
-       <list style="hanging">
-       <t hangText="Signature">&lt;static&gt; <eref target="./Core-Data.xml#Boolean">Boolean</eref>
-       opensocial.hasPermission(permission)</t>
-       <t hangText="Description">Returns true if the current gadget has access to the
-       specified permission. If the gadget calls opensocial.requestPermission
-       and permissions are granted then this function must return true on all
-       subsequent calls.</t>
-       <t hangText="Parameters"> 
-       <texttable align="left">
-        <ttcol>Name</ttcol>
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>permission</c>
-        <c><x:ref>opensocial.Permission</x:ref></c>
-        <c>The permission.</c>
-       </texttable></t>
-       <t hangText="Returns">
-       <texttable align="left">
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
-        <c>True if the gadget has access for the permission; false if it
-        doesn't.</c>
-       </texttable></t>
-       </list>
-      </section>
-      <section title="newNavigationParameters"
-               anchor="opensocial.newNavigationParameters">
-       <list style="hanging">
-       <t hangText="Signature">&lt;static&gt; <x:ref>opensocial.NavigationParameters</x:ref>
-       opensocial.newNavigationParameters(parameters)</t>
-       <t hangText="Description">Creates a NavigationParameters object. See also: 
-       <xref target="opensocial.requestShareApp">
-       requestShareApp()</xref>.</t>
-       <t hangText="Parameters"> 
-       <texttable align="left">
-        <ttcol>Name</ttcol>
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>parameters</c>
-        <c>Map.&lt;<x:ref>opensocial.NavigationParameters.Field</x:ref>|Object&gt;</c>
-        <c>Parameters defining the navigation</c>
-       </texttable></t>
-       <t hangText="Returns">
-       <texttable align="left">
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c><x:ref>opensocial.NavigationParameters</x:ref></c>
-        <c>The new NavigationParameters object</c>
-       </texttable></t>
-       </list>
-      </section>
-      <section title="requestPermission"
-               anchor="opensocial.requestPermission">
-       <list style="hanging">
-       <t hangText="Signature">&lt;static&gt; void opensocial.requestPermission(permissions, reason,
-       opt_callback)</t>
-       <t hangText="Description">Requests the user to grant access to the specified
-       permissions. If the container does not support this method the callback
-       will be called with a opensocial.ResponseItem. The response item will
-       have its error code set to 'notImplemented'.</t>
-       <t hangText="Parameters">
-       <texttable align="left">
-        <ttcol>Name</ttcol>
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>permissions</c>
-        <c>Array.&lt;<x:ref>opensocial.Permission</x:ref>&gt;</c>
-        <c>The permissions to request from the viewer</c>
-        <c>reason</c>
-        <c>String</c>
-        <c>Displayed to the user as the reason why these permissions are
-        needed</c>
-        <c>opt_callback</c>
-        <c>Function</c>
-        <c>The function to call once the request has been processed; either
-        this callback will be called or the gadget will be reloaded from
-        scratch. This function will be passed one parameter, an
-        opensocial.ResponseItem. The error code will be set to reflect whether
-        there were any problems with the request. If there was no error, all
-        permissions were granted. If there was an error, you can use
-        opensocial.hasPermission to check which permissions are still denied.
-        The data on the response item will be set. It will be an array of the
-        opensocial.Permissions that were granted. The callback function will
-        not be called until after the existing callstack has completed
-        execution.</c>
-       </texttable></t>
-       <t hangText="Returns">None.</t>
-       </list>
-      </section>
-    
-      <section title="requestShareApp"
-               anchor="opensocial.requestShareApp">
-  <xref target="Issue-1149">Discussion</xref>        
-       <list style="hanging"> 
-       <t hangText="Signature">&lt;static&gt; void opensocial.requestShareApp(recipients, reason,
-       opt_callback, opt_params)</t>
-       <t hangText="Description">Requests that the container share this gadget with the
-       specified users. The callback function is passed one parameter, an
-       opensocial.ResponseItem. The error code will be set to reflect whether
-       there were any problems with the request. If there was no error, the
-       sharing request was sent. If there was an error, you can use the
-       response item's getErrorCode method to determine how to proceed. The
-       data on the response item will not be set. If the container does not support this method the callback will be called with a opensocial.ResponseItem. The response item will have its
-       error code set to 'notImplemented'.</t>
-       <t hangText="Parameters"> 
-       <texttable align="left">
-        <ttcol>Name</ttcol>
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>recipients</c>
-        <c><x:ref>Map &lt;String|String&gt;</x:ref></c>
-        <c>A parameter map used to represent the target(s) of the app sharing request, e.g. {"userId": "@owner", "groupId": "@friends"}. </c>
-        <c>reason</c>
-        <c><x:ref>opensocial.Message</x:ref></c>
-        <c>The reason the user wants the gadget to share itself. This reason
-        can be used by the container when prompting the user for permission to
-        share the app. It may also be ignored.</c>
-        <c>opt_callback</c>
-        <c>Function</c>
-        <c>The function to call once the request has been processed; either
-        this callback will be called or the gadget will be reloaded from
-        scratch. The callback function will not be called until after the
-        existing callstack has completed execution.</c>
-        <c>opt_params</c>
-        <c><x:ref>opensocial.NavigationParameters</x:ref></c>
-        <c>The optional parameters indicating where to send a user when a
-        request is made, or when a request is accepted; options are of type 
-        NavigationParameters.DestinationType.</c>
-       </texttable></t>
-       <t hangText="Returns">None.</t>
-       </list>
-      </section>
-     </section>
-    </section>
-    <section title="opensocial.Environment"
-             anchor="opensocial.Environment">
-     <t>Represents the current environment for a gadget. See also: 
-     <xref target="opensocial.getEnvironment">
-     opensocial.getEnvironment()</xref>.</t>
-     <section title="Method Details">
-      <section title="getDomain"
-               anchor="opensocial.Environment.getDomain">
-       <list style="hanging">
-       <t hangText="Signature">String getDomain()</t>
-       <t hangText="Description">Returns the current domain. for example, "orkut.com" or
-       "myspace.com".</t>
-       <t hangText="Parameters">None.</t>
-       <t hangText="Returns">
-       <texttable align="left">
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>String</c>
-        <c>The domain</c>
-       </texttable></t>
-       </list>
-      </section>
-      <section title="supportsField"
-               anchor="opensocial.Environment.supportsField">
-       <list style="hanging">
-       <t hangText="Signature"><eref target="./Core-Gadget.xml#Boolean">Boolean</eref> supportsField(objectType, fieldName)</t>
-       <t hangText="Description">Returns true if the specified field is supported in this
-       container on the given object type, and returns false otherwise.</t>
-       <t hangText="Parameters">
-       <texttable align="left">
-        <ttcol>Name</ttcol>
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>objectType</c>
-        <c><x:ref>opensocial.Environment.ObjectType</x:ref></c>
-        <c>The object type to check for the field</c>
-        <c>fieldName</c>
-        <c>String</c>
-        <c>The name of the field to check for</c>
-       </texttable></t>
-       <t hangText="Returns">
-       <texttable align="left">
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c><eref target="./Core-Gadget.xml#Boolean">Boolean</eref></c>
-        <c>True if the field is supported on the specified object type</c>
-       </texttable></t>
-       </list>
-      </section>
-     </section>
-    </section>
-    <section title="opensocial.Environment.ObjectType"
-             anchor="opensocial.Environment.ObjectType">
-     <t>The types of objects in this container. 
-     <t>See also: 
-     <xref target="opensocial.Environment.supportsField">
-     Environment.supportsField()</xref> </t></t>
-     <list style="hanging">
-     <x:deprecated note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead." href="#osapi.activitystreams">
-     <list style="hanging">
-      <t hangText="ACTIVITY">
-       <t>This field may be used interchangeably with the string
-       'activity'.</t>
-      </t>
-     </list>
-     </x:deprecated>
-      <t hangText="ACTIVITY_ENTRY">
-       <t>This field may be used interchangeably with the string
-       'activityEntry'.</t>
-      </t>
-      <t hangText="ADDRESS">
-       <t>This field may be used interchangeably with the string
-       'address'.</t>
-      </t>
-      <t hangText="BODY_TYPE">
-       <t>This field may be used interchangeably with the string
-       'bodyType'.</t>
-      </t>
-      <t hangText="EMAIL">
-       <t>This field may be used interchangeably with the string
-       'email'.</t>
-      </t>
-      <t hangText="FILTER_TYPE">
-       <t>This field may be used interchangeably with the string
-       'filterType'.</t>
-      </t>
-      <t hangText="MEDIA_ITEM">
-       <t>This field may be used interchangeably with the string
-       'mediaItem'.</t>
-      </t>
-      <t hangText="MESSAGE">
-       <t>This field may be used interchangeably with the string
-       'message'.</t>
-      </t>
-      <t hangText="MESSAGE_TYPE">
-       <t>This field may be used interchangeably with the string
-       'messageType'.</t>
-      </t>
-      <t hangText="NAME">
-       <t>This field may be used interchangeably with the string
-       'name'.</t>
-      </t>
-      <t hangText="ORGANIZATION">
-       <t>This field may be used interchangeably with the string
-       'organization'.</t>
-      </t>
-      <t hangText="PERSON">
-       <t>This field may be used interchangeably with the string
-       'person'.</t>
-      </t>
-      <t hangText="PHONE">
-       <t>This field may be used interchangeably with the string
-       'phone'.</t>
-      </t>
-      <t hangText="SORT_ORDER">
-       <t>This field may be used interchangeably with the string
-       'sortOrder'.</t>
-      </t>
-      <t hangText="URL">
-       <t>This field may be used interchangeably with the string
-       'url'.</t>
-      </t>
-     </list>
-    </section>
-    <section title="opensocial.NavigationParameters"
-             anchor="opensocial.NavigationParameters">
-     <t>Parameters used by RequestShareApp to instruct the container on where
-     to go after the request is made. It could be used, for example, to specify
-     where viewers get routed in one of two cases: 
-     <list style="numbers">
-      <t>After a user gets a shareApp invitation or receives a message a gadget
-      developer should be able to send that user to a context sensitive
-      place.</t>
-      <t>After a viewer actually shares an app with someone else the gadget
-      developer should be able to redirect the viewer to a context sensitive
-      place.</t>
-     </list></t>
-     <section title="Method Details">
-      <section title="getField"
-               anchor="opensocial.NavigationParameters.getField">
-       <list style="hanging">
-       <t hangText="Signature">String getField(key, opt_params)</t>
-       <t hangText="Description">Gets the data from the NavigationParameters that is associated
-       with the specified key.</t>
-       <t hangText="Parameters">
-       <texttable align="left">
-        <ttcol>Name</ttcol>
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>key</c>
-        <c>String</c>
-        <c>The key to get data for; see <x:ref>opensocial.NavigationParameters.Field</x:ref> class for supported values</c>
-        <c>opt_params</c>
-        <c>Map.&lt;<x:ref>opensocial.DataRequest.DataRequestFields</x:ref>|Object&gt;</c>
-        <c>Additional params to pass to the request.</c>
-       </texttable></t>
-       <t hangText="Returns">
-       <texttable align="left">
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>String</c>
-        <c>The data</c>
-       </texttable></t>
-       </list>
-      </section>
-      <section title="setField"
-               anchor="opensocial.NavigationParameters.setField">
-       <list style="hanging">
-       <t hangText="Signature">void setField(key, data)</t>
-       <t hangText="Description">Sets data for this NavigationParameters associated with
-       the given key.</t>
-       <t hangText="Parameters"> 
-       <texttable align="left">
-        <ttcol>Name</ttcol>
-        <ttcol>Type</ttcol>
-        <ttcol>Description</ttcol>
-        <c>key</c>
-        <c>String</c>
-        <c>The key to set data for</c>
-        <c>data</c>
-        <c>Object</c>
-        <c>The data to set</c>
-       </texttable></t>
-       <t hangText="Returns">None.</t>
-       </list>
-      </section>
-     </section>
-    </section>
-    <section title="opensocial.NavigationParameters.DestinationType"
-             anchor="opensocial.NavigationParameters.DestinationType">
-      <xref target="Issue-1149">Discussion</xref>                
-     <t>The destinations available for navigation in 
-     <xref target="opensocial.requestShareApp">requestShareApp</xref> and 
-     <xref target="osapi.messages.send">
-     osapi.message.send</xref>.</t>
-     <list style="hanging">
-      <t hangText="RECIPIENT_DESTINATION">
-       <t>This field may be used interchangeably with the string
-       'recipientDestination'.</t>
-      </t>
-      <t hangText="VIEWER_DESTINATION">
-       <t>This field may be used interchangeably with the string
-       'viewerDestination'.</t>
-      </t>
-     </list>
-    </section>
-    <section title="opensocial.NavigationParameters.Field"
-             anchor="opensocial.NavigationParameters.Field">
-     <t>All of the fields that NavigationParameters can have. 
-     <t>See also: 
-     <xref target="opensocial.NavigationParameters.getField">
-     opensocial.NavigationParameters.getField()</xref> </t></t>
-     <list style="hanging">
-      <t hangText="OWNER">
-       <t>A string representing the owner id. This field may be
-       used interchangeably with the string 'owner'.</t>
-      </t>
-      <t hangText="PARAMETERS">
-       <t>An optional list of parameters passed to the gadget once
-       the new view, with the new owner, has been loaded. This field may be
-       used interchangeably with the string 'parameters'.</t>
-      </t>
-      <t hangText="VIEW">
-       <t>The gadgets.views.View to navigate to. This field may be
-       used interchangeably with the string 'view'.</t>
-      </t>
-     </list>
-    </section>
-    <section title="opensocial.Permission"
-             anchor="opensocial.Permission">
-     <t>The permissions an app can ask for. 
-     <t>See also: 
-     <xref target="opensocial.hasPermission">opensocial.hasPermission()</xref>,
-     
-     <xref target="opensocial.requestPermission">
-     opensocial.requestPermission()</xref> </t></t>
-     <list style="hanging">
-      <t hangText="VIEWER">
+                    </figure>
+                </section>
+            </section>
+            <section title="osapi.albums" anchor="osapi.albums">
+                <t>Service object with functions that map to the
+                    <eref target="./Social-API-Server.xml#Albums-Service">Albums service</eref>.
+                </t>
+                <section title="Method Details">
+                    <section title="get"
+                             anchor="osapi.albums.get">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.albums.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to retrieve information from the
+                                Albums service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#Albums-Service-Get">Albums service's get
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@appId".
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the Albums service. Executing this request MUST return a
+                                <eref target="./Social-Data.xml#Album">Album</eref>
+                                object or a
+                                <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                of
+                                <eref target="./Social-Data.xml#Album">Album</eref>
+                                objects.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="create"
+                             anchor="osapi.albums.create">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.albums.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to create a new album using the Albums service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#Albums-Service-Create">Albums service's create
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@app".
+                                This parameter is REQUIRED and MUST contain the 'data' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the Albums service. Executing this request MUST attempt to
+                                create the specified Album and return the newly-created
+                                <eref target="./Social-Data.xml#Album">Albums</eref>
+                                object if successful.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="update"
+                             anchor="osapi.albums.update">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.albums.update(params)
+                            </t>
+                            <t hangText="Description">Builds a request to update information stored in the
+                                Activities service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#Albums-Service-Update">Albums service's update
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@appId".
+                                This parameter is REQUIRED and MUST include the 'data' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the Albums service. Executing this request MUST overwrite
+                                the existing Albums on the server, but does not return any values.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="delete"
+                             anchor="osapi.albums.delete">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.albums.delete(params)
+                            </t>
+                            <t hangText="Description">Builds a request to delete information stored in the Albums
+                                service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#Albums-Service-Delete">Albums service's delete
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@appId".
+                                This parameter is REQUIRED and MUST include the 'ids' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the Albums service. Executing this request MUST remove the
+                                specified Albums from the server and return them as a JavaScript object.
+                            </t>
+                        </list>
+                    </section>
+                </section>
+                <section title="Examples">
+                </section>
+            </section>
+            <section title="osapi.mediaitems" anchor="osapi.mediaitems">
+                <t>Service object with functions that map to the
+                    <eref target="./Social-API-Server.xml#MediaItems-Service">MediaItems service</eref>.
+                </t>
+                <section title="Method Details">
+                    <section title="get"
+                             anchor="osapi.mediaItems.get">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.mediaItems.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to retrieve information from the
+                                MediaItems service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#MediaItems-Service-Get">MediaItems service's get
+                                    method</eref>, except that the 'appId' parameter can not be changed from "@appId".
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the MediaItems service. Executing this request MUST return
+                                a
+                                <eref target="./Social-Data.xml#MediaItem">MediaItems</eref>
+                                object or a
+                                <eref target="./Core-Data.xml#Collection">Collection</eref>
+                                of
+                                <eref target="./Social-Data.xml#MediaItem">MediaItems</eref>
+                                objects.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="create"
+                             anchor="osapi.mediaItems.create">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.mediaItems.get(params)
+                            </t>
+                            <t hangText="Description">Builds a request to create a new media item using the MediaItems
+                                service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#MediaItems-Service-Create">MediaItems service's
+                                    create method</eref>, except that the 'appId' parameter can not be changed from
+                                "@app". This parameter is REQUIRED and MUST contain the 'data' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the MediaItems service. Executing this request MUST attempt
+                                to create the specified MediaItems and return the newly-created
+                                <eref target="./Social-Data.xml#MediaItem">MediaItem</eref>
+                                object if successful.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="update"
+                             anchor="osapi.mediaItems.update">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.mediaItems.update(params)
+                            </t>
+                            <t hangText="Description">Builds a request to update information stored in the
+                                MediaItems service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#MediaItems-Service-Update">MediaItems service's
+                                    update method</eref>, except that the 'appId' parameter can not be changed from
+                                "@appId". This parameter is REQUIRED and MUST include the 'data' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the MediaItems service. Executing this request MUST
+                                overwrite the existing MediaItems on the server, but does not return any values.
+                            </t>
+                        </list>
+                    </section>
+                    <section title="delete"
+                             anchor="osapi.mediaItems.delete">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; {
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                } osapi.mediaItems.delete(params)
+                            </t>
+                            <t hangText="Description">Builds a request to delete information stored in the MediaItems
+                                service.
+                            </t>
+                            <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object
+                                representing the parameters defined by the<eref
+                                        target="Social-API-Server.xml#MediaItems-Service-Delete">MediaItems service's
+                                    delete method</eref>, except that the 'appId' parameter can not be changed from
+                                "@appId". This parameter is REQUIRED and MUST include the 'ids' property.
+                            </t>
+                            <t hangText="Returns">A
+                                <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+                                to retrieve information from the MediaItems service. Executing this request MUST remove
+                                the specified MediaItems from the server and return them as a JavaScript object.
+                            </t>
+                        </list>
+                    </section>
+                </section>
+                <section title="Examples">
+                </section>
+            </section>
+            <section title="opensocial"
+                     anchor="opensocial">
+                <t>Namespace for top-level people functions.</t>
+                <t>There are cases where a gadget may wish to perform an action that needs
+                    approval by the user or mediation by the container. OpenSocial supports
+                    "request" features that allow the container to decide how to handle the
+                    interaction with the user. Functions like
+                    opensocial.requestCreateActivity, and opensocial.requestPermission allow
+                    the container to inject its own policy decisions into the gadget execution
+                    flow and notify the gadget of the result. Under this specification, it is
+                    equally valid for a container to defer to the user, always approve, always
+                    deny, or use any other method to determine responses to request calls.
+                    Additionally, this allows the container to enforce UI flows in a safe and
+                    integrated way.
+                </t>
+                <section title="Method Details">
+                    <section title="getEnvironment"
+                             anchor="opensocial.getEnvironment">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt;
+                                <x:ref>opensocial.Environment</x:ref>
+                                opensocial.getEnvironment()
+                            </t>
+                            <t hangText="Description">Gets the current environment for this gadget. You can
+                                use the environment to make queries such as what profile fields and
+                                surfaces are supported by this container, what parameters were passed to
+                                the current gadget, and so on.
+                            </t>
+                            <t hangText="Parameters">None.</t>
+                            <t hangText="Returns">
+                                <texttable align="left">
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>
+                                        <x:ref>opensocial.Environment</x:ref>
+                                    </c>
+                                    <c>The current environment.</c>
+                                </texttable>
+                            </t>
+                        </list>
+                    </section>
+                    <section title="hasPermission"
+                             anchor="opensocial.hasPermission">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt;
+                                <eref target="./Core-Data.xml#Boolean">Boolean</eref>
+                                opensocial.hasPermission(permission)
+                            </t>
+                            <t hangText="Description">Returns true if the current gadget has access to the
+                                specified permission. If the gadget calls opensocial.requestPermission
+                                and permissions are granted then this function must return true on all
+                                subsequent calls.
+                            </t>
+                            <t hangText="Parameters">
+                                <texttable align="left">
+                                    <ttcol>Name</ttcol>
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>permission</c>
+                                    <c>
+                                        <x:ref>opensocial.Permission</x:ref>
+                                    </c>
+                                    <c>The permission.</c>
+                                </texttable>
+                            </t>
+                            <t hangText="Returns">
+                                <texttable align="left">
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>
+                                        <eref target="./Core-Data.xml#Boolean">Boolean</eref>
+                                    </c>
+                                    <c>True if the gadget has access for the permission; false if it
+                                        doesn't.
+                                    </c>
+                                </texttable>
+                            </t>
+                        </list>
+                    </section>
+                    <section title="newNavigationParameters"
+                             anchor="opensocial.newNavigationParameters">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt;
+                                <x:ref>opensocial.NavigationParameters</x:ref>
+                                opensocial.newNavigationParameters(parameters)
+                            </t>
+                            <t hangText="Description">Creates a NavigationParameters object. See also:
+                                <xref target="opensocial.requestShareApp">
+                                    requestShareApp()</xref>.
+                            </t>
+                            <t hangText="Parameters">
+                                <texttable align="left">
+                                    <ttcol>Name</ttcol>
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>parameters</c>
+                                    <c>Map.&lt;<x:ref>opensocial.NavigationParameters.Field</x:ref>|Object&gt;
+                                    </c>
+                                    <c>Parameters defining the navigation</c>
+                                </texttable>
+                            </t>
+                            <t hangText="Returns">
+                                <texttable align="left">
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>
+                                        <x:ref>opensocial.NavigationParameters</x:ref>
+                                    </c>
+                                    <c>The new NavigationParameters object</c>
+                                </texttable>
+                            </t>
+                        </list>
+                    </section>
+                    <section title="requestPermission"
+                             anchor="opensocial.requestPermission">
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; void opensocial.requestPermission(permissions,
+                                reason,
+                                opt_callback)
+                            </t>
+                            <t hangText="Description">Requests the user to grant access to the specified
+                                permissions. If the container does not support this method the callback
+                                will be called with a opensocial.ResponseItem. The response item will
+                                have its error code set to 'notImplemented'.
+                            </t>
+                            <t hangText="Parameters">
+                                <texttable align="left">
+                                    <ttcol>Name</ttcol>
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>permissions</c>
+                                    <c>Array.&lt;<x:ref>opensocial.Permission</x:ref>&gt;
+                                    </c>
+                                    <c>The permissions to request from the viewer</c>
+                                    <c>reason</c>
+                                    <c>String</c>
+                                    <c>Displayed to the user as the reason why these permissions are
+                                        needed
+                                    </c>
+                                    <c>opt_callback</c>
+                                    <c>Function</c>
+                                    <c>The function to call once the request has been processed; either
+                                        this callback will be called or the gadget will be reloaded from
+                                        scratch. This function will be passed one parameter, an
+                                        opensocial.ResponseItem. The error code will be set to reflect whether
+                                        there were any problems with the request. If there was no error, all
+                                        permissions were granted. If there was an error, you can use
+                                        opensocial.hasPermission to check which permissions are still denied.
+                                        The data on the response item will be set. It will be an array of the
+                                        opensocial.Permissions that were granted. The callback function will
+                                        not be called until after the existing callstack has completed
+                                        execution.
+                                    </c>
+                                </texttable>
+                            </t>
+                            <t hangText="Returns">None.</t>
+                        </list>
+                    </section>
 
-       <t>Access to the viewer person object This field may be
-       used interchangeably with the string 'viewer'.</t>
-      </t>
-     </list>
-    </section>
-  </section>
-  <section title="Data Pipelining">
-    <t>The Social Gadget Specification extends the <eref target="./Core-Gadget.xml#Data-Pipelining">Data Pipelining</eref> capabilities of the Core Gadget Specification by adding support for the following tags:</t>
-  <section title="&lt;os:PeopleRequest&gt;"
-           anchor="PeopleRequest">
-   <list style="hanging">
-    <t hangText="Description">A request to get profile information for a group or list of people. This is
-    equivalent to using &lt;os:DataRequest&gt; with @method of "people.get".</t>
-    <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>.</t> 
-    <t hangText="Returns">A <eref target="./Social-Data.xml#Person">Person</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Person">Person</eref> objects.</t>
-   </list>
-   <figure>
-    <preamble>Example</preamble>
-    <artwork xml:space="preserve">
+                    <section title="requestShareApp"
+                             anchor="opensocial.requestShareApp">
+                        <xref target="Issue-1149">Discussion</xref>
+                        <list style="hanging">
+                            <t hangText="Signature">&lt;static&gt; void opensocial.requestShareApp(recipients, reason,
+                                opt_callback, opt_params)
+                            </t>
+                            <t hangText="Description">Requests that the container share this gadget with the
+                                specified users. The callback function is passed one parameter, an
+                                opensocial.ResponseItem. The error code will be set to reflect whether
+                                there were any problems with the request. If there was no error, the
+                                sharing request was sent. If there was an error, you can use the
+                                response item's getErrorCode method to determine how to proceed. The
+                                data on the response item will not be set. If the container does not support this method
+                                the callback will be called with a opensocial.ResponseItem. The response item will have
+                                its
+                                error code set to 'notImplemented'.
+                            </t>
+                            <t hangText="Parameters">
+                                <texttable align="left">
+                                    <ttcol>Name</ttcol>
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>recipients</c>
+                                    <c>
+                                        <x:ref>Map &lt;String|String&gt;</x:ref>
+                                    </c>
+                                    <c>A parameter map used to represent the target(s) of the app sharing request, e.g.
+                                        {"userId": "@owner", "groupId": "@friends"}.
+                                    </c>
+                                    <c>reason</c>
+                                    <c>
+                                        <x:ref>opensocial.Message</x:ref>
+                                    </c>
+                                    <c>The reason the user wants the gadget to share itself. This reason
+                                        can be used by the container when prompting the user for permission to
+                                        share the app. It may also be ignored.
+                                    </c>
+                                    <c>opt_callback</c>
+                                    <c>Function</c>
+                                    <c>The function to call once the request has been processed; either
+                                        this callback will be called or the gadget will be reloaded from
+                                        scratch. The callback function will not be called until after the
+                                        existing callstack has completed execution.
+                                    </c>
+                                    <c>opt_params</c>
+                                    <c>
+                                        <x:ref>opensocial.NavigationParameters</x:ref>
+                                    </c>
+                                    <c>The optional parameters indicating where to send a user when a
+                                        request is made, or when a request is accepted; options are of type
+                                        NavigationParameters.DestinationType.
+                                    </c>
+                                </texttable>
+                            </t>
+                            <t hangText="Returns">None.</t>
+                        </list>
+                    </section>
+                </section>
+            </section>
+            <section title="opensocial.Environment"
+                     anchor="opensocial.Environment">
+                <t>Represents the current environment for a gadget. See also:
+                    <xref target="opensocial.getEnvironment">
+                        opensocial.getEnvironment()</xref>.
+                </t>
+                <section title="Method Details">
+                    <section title="getDomain"
+                             anchor="opensocial.Environment.getDomain">
+                        <list style="hanging">
+                            <t hangText="Signature">String getDomain()</t>
+                            <t hangText="Description">Returns the current domain. for example, "orkut.com" or
+                                "myspace.com".
+                            </t>
+                            <t hangText="Parameters">None.</t>
+                            <t hangText="Returns">
+                                <texttable align="left">
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>String</c>
+                                    <c>The domain</c>
+                                </texttable>
+                            </t>
+                        </list>
+                    </section>
+                    <section title="supportsField"
+                             anchor="opensocial.Environment.supportsField">
+                        <list style="hanging">
+                            <t hangText="Signature">
+                                <eref target="./Core-Gadget.xml#Boolean">Boolean</eref>
+                                supportsField(objectType, fieldName)
+                            </t>
+                            <t hangText="Description">Returns true if the specified field is supported in this
+                                container on the given object type, and returns false otherwise.
+                            </t>
+                            <t hangText="Parameters">
+                                <texttable align="left">
+                                    <ttcol>Name</ttcol>
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>objectType</c>
+                                    <c>
+                                        <x:ref>opensocial.Environment.ObjectType</x:ref>
+                                    </c>
+                                    <c>The object type to check for the field</c>
+                                    <c>fieldName</c>
+                                    <c>String</c>
+                                    <c>The name of the field to check for</c>
+                                </texttable>
+                            </t>
+                            <t hangText="Returns">
+                                <texttable align="left">
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>
+                                        <eref target="./Core-Gadget.xml#Boolean">Boolean</eref>
+                                    </c>
+                                    <c>True if the field is supported on the specified object type</c>
+                                </texttable>
+                            </t>
+                        </list>
+                    </section>
+                </section>
+            </section>
+            <section title="opensocial.Environment.ObjectType"
+                     anchor="opensocial.Environment.ObjectType">
+                <t>The types of objects in this container.
+                    <t>See also:
+                        <xref target="opensocial.Environment.supportsField">
+                            Environment.supportsField()
+                        </xref>
+                    </t>
+                </t>
+                <list style="hanging">
+                    <x:deprecated
+                            note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead."
+                            href="#osapi.activitystreams">
+                        <list style="hanging">
+                            <t hangText="ACTIVITY">
+                                <t>This field may be used interchangeably with the string
+                                    'activity'.
+                                </t>
+                            </t>
+                        </list>
+                    </x:deprecated>
+                    <t hangText="ACTIVITY_ENTRY">
+                        <t>This field may be used interchangeably with the string
+                            'activityEntry'.
+                        </t>
+                    </t>
+                    <t hangText="ADDRESS">
+                        <t>This field may be used interchangeably with the string
+                            'address'.
+                        </t>
+                    </t>
+                    <t hangText="BODY_TYPE">
+                        <t>This field may be used interchangeably with the string
+                            'bodyType'.
+                        </t>
+                    </t>
+                    <t hangText="EMAIL">
+                        <t>This field may be used interchangeably with the string
+                            'email'.
+                        </t>
+                    </t>
+                    <t hangText="FILTER_TYPE">
+                        <t>This field may be used interchangeably with the string
+                            'filterType'.
+                        </t>
+                    </t>
+                    <t hangText="MEDIA_ITEM">
+                        <t>This field may be used interchangeably with the string
+                            'mediaItem'.
+                        </t>
+                    </t>
+                    <t hangText="MESSAGE">
+                        <t>This field may be used interchangeably with the string
+                            'message'.
+                        </t>
+                    </t>
+                    <t hangText="MESSAGE_TYPE">
+                        <t>This field may be used interchangeably with the string
+                            'messageType'.
+                        </t>
+                    </t>
+                    <t hangText="NAME">
+                        <t>This field may be used interchangeably with the string
+                            'name'.
+                        </t>
+                    </t>
+                    <t hangText="ORGANIZATION">
+                        <t>This field may be used interchangeably with the string
+                            'organization'.
+                        </t>
+                    </t>
+                    <t hangText="PERSON">
+                        <t>This field may be used interchangeably with the string
+                            'person'.
+                        </t>
+                    </t>
+                    <t hangText="PHONE">
+                        <t>This field may be used interchangeably with the string
+                            'phone'.
+                        </t>
+                    </t>
+                    <t hangText="SORT_ORDER">
+                        <t>This field may be used interchangeably with the string
+                            'sortOrder'.
+                        </t>
+                    </t>
+                    <t hangText="URL">
+                        <t>This field may be used interchangeably with the string
+                            'url'.
+                        </t>
+                    </t>
+                </list>
+            </section>
+            <section title="opensocial.NavigationParameters"
+                     anchor="opensocial.NavigationParameters">
+                <t>Parameters used by RequestShareApp to instruct the container on where
+                    to go after the request is made. It could be used, for example, to specify
+                    where viewers get routed in one of two cases:
+                    <list style="numbers">
+                        <t>After a user gets a shareApp invitation or receives a message a gadget
+                            developer should be able to send that user to a context sensitive
+                            place.
+                        </t>
+                        <t>After a viewer actually shares an app with someone else the gadget
+                            developer should be able to redirect the viewer to a context sensitive
+                            place.
+                        </t>
+                    </list>
+                </t>
+                <section title="Method Details">
+                    <section title="getField"
+                             anchor="opensocial.NavigationParameters.getField">
+                        <list style="hanging">
+                            <t hangText="Signature">String getField(key, opt_params)</t>
+                            <t hangText="Description">Gets the data from the NavigationParameters that is associated
+                                with the specified key.
+                            </t>
+                            <t hangText="Parameters">
+                                <texttable align="left">
+                                    <ttcol>Name</ttcol>
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>key</c>
+                                    <c>String</c>
+                                    <c>The key to get data for; see
+                                        <x:ref>opensocial.NavigationParameters.Field</x:ref>
+                                        class for supported values
+                                    </c>
+                                    <c>opt_params</c>
+                                    <c>Map.&lt;<x:ref>opensocial.DataRequest.DataRequestFields</x:ref>|Object&gt;
+                                    </c>
+                                    <c>Additional params to pass to the request.</c>
+                                </texttable>
+                            </t>
+                            <t hangText="Returns">
+                                <texttable align="left">
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>String</c>
+                                    <c>The data</c>
+                                </texttable>
+                            </t>
+                        </list>
+                    </section>
+                    <section title="setField"
+                             anchor="opensocial.NavigationParameters.setField">
+                        <list style="hanging">
+                            <t hangText="Signature">void setField(key, data)</t>
+                            <t hangText="Description">Sets data for this NavigationParameters associated with
+                                the given key.
+                            </t>
+                            <t hangText="Parameters">
+                                <texttable align="left">
+                                    <ttcol>Name</ttcol>
+                                    <ttcol>Type</ttcol>
+                                    <ttcol>Description</ttcol>
+                                    <c>key</c>
+                                    <c>String</c>
+                                    <c>The key to set data for</c>
+                                    <c>data</c>
+                                    <c>Object</c>
+                                    <c>The data to set</c>
+                                </texttable>
+                            </t>
+                            <t hangText="Returns">None.</t>
+                        </list>
+                    </section>
+                </section>
+            </section>
+            <section title="opensocial.NavigationParameters.DestinationType"
+                     anchor="opensocial.NavigationParameters.DestinationType">
+                <xref target="Issue-1149">Discussion</xref>
+                <t>The destinations available for navigation in
+                    <xref target="opensocial.requestShareApp">requestShareApp</xref>
+                    and
+                    <xref target="osapi.messages.send">
+                        osapi.message.send</xref>.
+                </t>
+                <list style="hanging">
+                    <t hangText="RECIPIENT_DESTINATION">
+                        <t>This field may be used interchangeably with the string
+                            'recipientDestination'.
+                        </t>
+                    </t>
+                    <t hangText="VIEWER_DESTINATION">
+                        <t>This field may be used interchangeably with the string
+                            'viewerDestination'.
+                        </t>
+                    </t>
+                </list>
+            </section>
+            <section title="opensocial.NavigationParameters.Field"
+                     anchor="opensocial.NavigationParameters.Field">
+                <t>All of the fields that NavigationParameters can have.
+                    <t>See also:
+                        <xref target="opensocial.NavigationParameters.getField">
+                            opensocial.NavigationParameters.getField()
+                        </xref>
+                    </t>
+                </t>
+                <list style="hanging">
+                    <t hangText="OWNER">
+                        <t>A string representing the owner id. This field may be
+                            used interchangeably with the string 'owner'.
+                        </t>
+                    </t>
+                    <t hangText="PARAMETERS">
+                        <t>An optional list of parameters passed to the gadget once
+                            the new view, with the new owner, has been loaded. This field may be
+                            used interchangeably with the string 'parameters'.
+                        </t>
+                    </t>
+                    <t hangText="VIEW">
+                        <t>The gadgets.views.View to navigate to. This field may be
+                            used interchangeably with the string 'view'.
+                        </t>
+                    </t>
+                </list>
+            </section>
+            <section title="opensocial.Permission"
+                     anchor="opensocial.Permission">
+                <t>The permissions an app can ask for.
+                    <t>See also:
+                        <xref target="opensocial.hasPermission">opensocial.hasPermission()</xref>,
+
+                        <xref target="opensocial.requestPermission">
+                            opensocial.requestPermission()
+                        </xref>
+                    </t>
+                </t>
+                <list style="hanging">
+                    <t hangText="VIEWER">
+
+                        <t>Access to the viewer person object This field may be
+                            used interchangeably with the string 'viewer'.
+                        </t>
+                    </t>
+                </list>
+            </section>
+        </section>
+        <section title="Data Pipelining">
+            <t>The Social Gadget Specification extends the
+                <eref target="./Core-Gadget.xml#Data-Pipelining">Data Pipelining</eref>
+                capabilities of the Core Gadget Specification by adding support for the following tags:
+            </t>
+            <section title="&lt;os:PeopleRequest&gt;"
+                     anchor="PeopleRequest">
+                <list style="hanging">
+                    <t hangText="Description">A request to get profile information for a group or list of people. This
+                        is
+                        equivalent to using &lt;os:DataRequest&gt; with @method of "people.get".
+                    </t>
+                    <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the
+                        <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>.
+                    </t>
+                    <t hangText="Returns">A
+                        <eref target="./Social-Data.xml#Person">Person</eref>
+                        object or a
+                        <eref target="./Core-Data.xml#Collection">Collection</eref>
+                        of
+                        <eref target="./Social-Data.xml#Person">Person</eref>
+                        objects.
+                    </t>
+                </list>
+                <figure>
+                    <preamble>Example</preamble>
+                    <artwork xml:space="preserve">
 &lt;os:PeopleRequest key="PagedFriends" userId="@owner" groupId="@friends" startIndex="40" count="20"/&gt;
 </artwork>
-   </figure>
-  </section>
-  <section title="&lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt;"
-           anchor="ViewerRequest">
-   <list style="hanging">
-    <t hangText="Description">A request to get the viewer's or owner's profile information. This is equivalent to
-   using &lt;os:DataRequest&gt; with @method of "people.get", with @userId of either "@viewer" or "@owner".</t>
-    <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>, except that the 'userId' parameter can not be changed from "@viewer" or "@owner".</t>
-    <t hangtext="Returns">A <eref target="./Social-Data.xml#Person">Person</eref> object.</t>
-   </list>
-   <figure>
-    <preamble>Example</preamble>
-    <artwork xml:space="preserve">
+                </figure>
+            </section>
+            <section title="&lt;os:ViewerRequest&gt;, &lt;os:OwnerRequest&gt;"
+                     anchor="ViewerRequest">
+                <list style="hanging">
+                    <t hangText="Description">A request to get the viewer's or owner's profile information. This is
+                        equivalent to
+                        using &lt;os:DataRequest&gt; with @method of "people.get", with @userId of either "@viewer" or
+                        "@owner".
+                    </t>
+                    <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the
+                        <eref target="Social-API-Server.xml#People-Service-Get">People service's get method</eref>,
+                        except that the 'userId' parameter can not be changed from "@viewer" or "@owner".
+                    </t>
+                    <t hangtext="Returns">A
+                        <eref target="./Social-Data.xml#Person">Person</eref>
+                        object.
+                    </t>
+                </list>
+                <figure>
+                    <preamble>Example</preamble>
+                    <artwork xml:space="preserve">
 &lt;os:ViewerRequest key="Viewer" fields="name, birthday"/&gt;
 </artwork>
-   </figure>
-  </section>
+                </figure>
+            </section>
 
-    <section title="&lt;os:ActivitiesRequest&gt;"
-             anchor="ActivitiesRequest">
-               <x:deprecated note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead.">
-     <list style="hanging">
-      <t hangText="Description">A request to get activities. This is equivalent to using
-     &lt;os:DataRequest&gt; with @method of "activities.get".</t>
-      <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the <eref target="Social-API-Server.xml#Activities-Service-Get">Activities service's get method</eref>, except the 'appId' parameter can not be changed from "@app".</t> 
-      <t hangtext="Returns">A <eref target="./Social-Data.xml#Activity">Activity</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Activity">Activity</eref> objects.</t>
-     </list>
-     <figure>
-      <preamble>Example:</preamble>
-      <artwork xml:space="preserve">
+            <section title="&lt;os:ActivitiesRequest&gt;"
+                     anchor="ActivitiesRequest">
+                <x:deprecated
+                        note="Deprecated in OpenSocial 2.0. Will be removed in future version; use Activity Streams instead.">
+                    <list style="hanging">
+                        <t hangText="Description">A request to get activities. This is equivalent to using
+                            &lt;os:DataRequest&gt; with @method of "activities.get".
+                        </t>
+                        <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by
+                            the<eref target="Social-API-Server.xml#Activities-Service-Get">Activities service's get
+                                method</eref>, except the 'appId' parameter can not be changed from "@app".
+                        </t>
+                        <t hangtext="Returns">A
+                            <eref target="./Social-Data.xml#Activity">Activity</eref>
+                            object or a
+                            <eref target="./Core-Data.xml#Collection">Collection</eref>
+                            of
+                            <eref target="./Social-Data.xml#Activity">Activity</eref>
+                            objects.
+                        </t>
+                    </list>
+                    <figure>
+                        <preamble>Example:</preamble>
+                        <artwork xml:space="preserve">
   &lt;os:ActivitiesRequest key="ViewerActivities" userid="@viewer" startIndex="40" count="20"/&gt;
   </artwork>
-     </figure>
-       </x:deprecated>
-    </section>
+                    </figure>
+                </x:deprecated>
+            </section>
 
-    <section title="&lt;os:ActivityStreamsRequest&gt;"
-             anchor="ActivityStreamsRequest">
-     <list style="hanging">
-      <t hangText="Description">A request to get activity entries. This is equivalent to using
-     &lt;os:DataRequest&gt; with @method of "activitystreams.get".</t>
-      <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the <eref target="Social-API-Server.xml#ActivityStreams-Service-GetActivityStreams">ActivityStreams service's get method</eref>, except the 'appId' parameter can not be changed from "@app".</t> 
-      <t hangtext="Returns">A <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> object or a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref> objects.</t>
-     </list>
-     <figure>
-      <preamble>Example:</preamble>
-      <artwork xml:space="preserve">
+            <section title="&lt;os:ActivityStreamsRequest&gt;"
+                     anchor="ActivityStreamsRequest">
+                <list style="hanging">
+                    <t hangText="Description">A request to get activity entries. This is equivalent to using
+                        &lt;os:DataRequest&gt; with @method of "activitystreams.get".
+                    </t>
+                    <t hangText="Attributes">The attributes of this tag are equivalent to the parameters defined by the
+                        <eref target="Social-API-Server.xml#ActivityStreams-Service-GetActivityStreams">ActivityStreams
+                            service's get method</eref>, except the 'appId' parameter can not be changed from "@app".
+                    </t>
+                    <t hangtext="Returns">A
+                        <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref>
+                        object or a
+                        <eref target="./Core-Data.xml#Collection">Collection</eref>
+                        of
+                        <eref target="./Social-Data.xml#ActivityEntry">ActivityEntry</eref>
+                        objects.
+                    </t>
+                </list>
+                <figure>
+                    <preamble>Example:</preamble>
+                    <artwork xml:space="preserve">
   &lt;os:ActivitiesRequest key="ViewerActivities" userid="@viewer" startIndex="40" count="20"/&gt;
   </artwork>
-     </figure>
-    </section>
-  </section>
-  <section title="Templating">
-  <t>This specification defines a set of tags, known as OpenSocial Markup Language (OSML) tags, that extend the templating capabilities of the Core Gadget Container specification.</t>
-  <section title="Gadget Feature Name">
-   <t>To use OSML tags, you need to add the "osml" feature to your gadget spec:   
-   <figure>
-    <artwork xml:space="preserve">
+                </figure>
+            </section>
+        </section>
+        <section title="Templating">
+            <t>This specification defines a set of tags, known as OpenSocial Markup Language (OSML) tags, that extend
+                the templating capabilities of the Core Gadget Container specification.
+            </t>
+            <section title="Gadget Feature Name">
+                <t>To use OSML tags, you need to add the "osml" feature to your gadget spec:
+                    <figure>
+                        <artwork xml:space="preserve">
 &lt;Require feature="osml"&gt;
 </artwork>
-   </figure>OSML tags are a strict subset of OpenSocial Templating, you can
-   also use tags if you use the "opensocial-templates" feature: 
-   <figure>
-    <artwork xml:space="preserve">
+                    </figure>
+                    OSML tags are a strict subset of OpenSocial Templating, you can
+                    also use tags if you use the "opensocial-templates" feature:
+                    <figure>
+                        <artwork xml:space="preserve">
 &lt;Require feature="opensocial-templates"&gt;
 </artwork>
-   </figure>The reason for separate require features is that templates may not
-   be supported on all views for all containers, due to processing and/or
-   latency costs. OSML tags must be supported in all views.</t>
-  </section>
-  <section title="Tag Invocation">
-   <t>An OSML tag is invoked much like an OpenSocial template. It needs to be
-   surrounded by a &lt;script&gt; tag with @type="text/os-template": 
-   <figure>
-    <artwork xml:space="preserve">
+                    </figure>
+                    The reason for separate require features is that templates may not
+                    be supported on all views for all containers, due to processing and/or
+                    latency costs. OSML tags must be supported in all views.
+                </t>
+            </section>
+            <section title="Tag Invocation">
+                <t>An OSML tag is invoked much like an OpenSocial template. It needs to be
+                    surrounded by a &lt;script&gt; tag with @type="text/os-template":
+                    <figure>
+                        <artwork xml:space="preserve">
 Welcome, &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;&lt;os:Name person="${Viewer}"/&gt;&lt;/script&gt;!                                     
 </artwork>
-   </figure></t>
-  </section>
-  <section title="Tags">
-   <t>An implementing Container MUST support at least the tags listed in this
-   section. A Container MAY support additional tags - an effort will be made to
-   make such support as consistent as possible across different Containers, and
-   tags that are deemed useful may be adopted into this specification in the
-   future.</t>
-   <section title="&lt;os:Name&gt;">
-    <t>Inline tag to show a person's name. If a profile URL is available it
-    will be linked to. The tag may display additional container bling (i.e.
-    more information on hover), but must do so without breaking up text
-    flow.</t>
-    <t>Attributes: 
-    <list style="symbols">
-     <t>@person {Object} The person object. (required)</t>
-    </list>
-    <figure>
-     <preamble>Example</preamble>
-     <artwork xml:space="preserve">
+                    </figure>
+                </t>
+            </section>
+            <section title="Tags">
+                <t>An implementing Container MUST support at least the tags listed in this
+                    section. A Container MAY support additional tags - an effort will be made to
+                    make such support as consistent as possible across different Containers, and
+                    tags that are deemed useful may be adopted into this specification in the
+                    future.
+                </t>
+                <section title="&lt;os:Name&gt;">
+                    <t>Inline tag to show a person's name. If a profile URL is available it
+                        will be linked to. The tag may display additional container bling (i.e.
+                        more information on hover), but must do so without breaking up text
+                        flow.
+                    </t>
+                    <t>Attributes:
+                        <list style="symbols">
+                            <t>@person {Object} The person object. (required)</t>
+                        </list>
+                        <figure>
+                            <preamble>Example</preamble>
+                            <artwork xml:space="preserve">
 &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;Welcome, &lt;os:Name person="${Viewer}"/&gt;&lt;/script&gt;
 </artwork>
-    </figure></t>
-   </section>
-   <section title="&lt;os:PeopleSelector&gt;">
-    <t>Tag to show a UI that chooses from a list of people, and set a form
-    field with the associated value.</t>
-    <t>Attributes: 
-    <list style="symbols">
-     <t>@group {Object} An array of person objects.</t>
-     <t>@inputName {string} Name of the form input element that will contain
-     selected id(s). Containers can provide a default here. (optional)</t>
-     <t>@multiple {boolean} Allow multiple selections? (optional)</t>
-     <t>@max {number} Maximum number of people that can be selected.
-     (optional)</t>
-     <t>@var{string} Name of the top level DataContext variable that is set
-     with the selected person object (or array of objects). (optional)</t>
-     <t>@onselect {string|function} Client side script function to invoke when
-     a selection is made. The function will get the selected person object (or
-     array of objects) as a parameter. (optional)</t>
-    </list>
-    <figure>
-     <preamble>Example</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                    </t>
+                </section>
+                <section title="&lt;os:PeopleSelector&gt;">
+                    <t>Tag to show a UI that chooses from a list of people, and set a form
+                        field with the associated value.
+                    </t>
+                    <t>Attributes:
+                        <list style="symbols">
+                            <t>@group {Object} An array of person objects.</t>
+                            <t>@inputName {string} Name of the form input element that will contain
+                                selected id(s). Containers can provide a default here. (optional)
+                            </t>
+                            <t>@multiple {boolean} Allow multiple selections? (optional)</t>
+                            <t>@max {number} Maximum number of people that can be selected.
+                                (optional)
+                            </t>
+                            <t>@var{string} Name of the top level DataContext variable that is set
+                                with the selected person object (or array of objects). (optional)
+                            </t>
+                            <t>@onselect {string|function} Client side script function to invoke when
+                                a selection is made. The function will get the selected person object (or
+                                array of objects) as a parameter. (optional)
+                            </t>
+                        </list>
+                        <figure>
+                            <preamble>Example</preamble>
+                            <artwork xml:space="preserve">
 &lt;form action="/top_friends.php" method="POST"&gt;
   Select your top 8 friends:
   &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
@@ -1151,46 +1761,52 @@ Welcome, &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2
   &lt;/script&gt;  
 &lt;/form&gt;
 </artwork>
-    </figure></t>
-   </section>
-   <section title="&lt;os:Badge&gt;">
-    <t>Block level tag to show information about a person in the style of the
-    container, usually with an image.</t>
-    <t>Attributes: 
-    <list style="symbols">
-     <t>@person {string|Object} The person object or DataContext key referring
-     to a person object. (required)</t>
-    </list>
-    <figure>
-     <preamble>Example</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                    </t>
+                </section>
+                <section title="&lt;os:Badge&gt;">
+                    <t>Block level tag to show information about a person in the style of the
+                        container, usually with an image.
+                    </t>
+                    <t>Attributes:
+                        <list style="symbols">
+                            <t>@person {string|Object} The person object or DataContext key referring
+                                to a person object. (required)
+                            </t>
+                        </list>
+                        <figure>
+                            <preamble>Example</preamble>
+                            <artwork xml:space="preserve">
 My best friend is:&lt;br/&gt;
 &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;&lt;os:Badge person="${TopFriend}"/&gt;&lt;/script&gt;
 </artwork>
-    </figure></t>
-   </section>
-  </section>
-  <section title="Interaction with Proxied Content">
-   <t>The combination of tags, templates, and proxied content leads to a number
-   of combinations for developer to use.</t>
-   <t>Here are a few common use cases and how developers might handle them.
-   This is for informational purposes only - it doesn't extend the proposal,
-   but hopefully clarifies a few use cases.</t>
-   <section title="Flow control and repeated elements">
-    <t>OpenSocial data will be posted on the developer server and flow control
-    will be handled on the developers own server, in PHP, JSP, ASP, or the
-    language of the developer's choice. 
-    <figure>
-     <preamble>Example Gadget XML</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                    </t>
+                </section>
+            </section>
+            <section title="Interaction with Proxied Content">
+                <t>The combination of tags, templates, and proxied content leads to a number
+                    of combinations for developer to use.
+                </t>
+                <t>Here are a few common use cases and how developers might handle them.
+                    This is for informational purposes only - it doesn't extend the proposal,
+                    but hopefully clarifies a few use cases.
+                </t>
+                <section title="Flow control and repeated elements">
+                    <t>OpenSocial data will be posted on the developer server and flow control
+                        will be handled on the developers own server, in PHP, JSP, ASP, or the
+                        language of the developer's choice.
+                        <figure>
+                            <preamble>Example Gadget XML</preamble>
+                            <artwork xml:space="preserve">
 &lt;Content href="http://developer.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
   &lt;os:PeopleRequest userId="@viewer" groupId="@friends" fields="name,birthday" key="ViewerFriends"&gt;
 &lt;/Content&gt;
 </artwork>
-    </figure>
-    <figure>
-     <preamble>Example PHP</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                        <figure>
+                            <preamble>Example PHP</preamble>
+                            <artwork xml:space="preserve">
 &lt;?php
 // Some code that pulls POST param into $ViewerFriends here
 foreach ($ViewerFriends as $friend) {
@@ -1200,22 +1816,23 @@ foreach ($ViewerFriends as $friend) {
 }
 ?&gt;
 </artwork>
-    </figure></t>
-   </section>
-   <section title="Tags">
-    <t>Tags can be inserted into the output and will be processed by the
-    container or JavaScript on the client side. 
-    <figure>
-     <preamble>Example Gadget XML</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                    </t>
+                </section>
+                <section title="Tags">
+                    <t>Tags can be inserted into the output and will be processed by the
+                        container or JavaScript on the client side.
+                        <figure>
+                            <preamble>Example Gadget XML</preamble>
+                            <artwork xml:space="preserve">
 &lt;Content href="http://developer.com/canvas" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
   &lt;os:PersonRequest userId="@owner" key="Owner"/&gt;
 &lt;/Content&gt;
 </artwork>
-    </figure>
-    <figure>
-     <preamble>Example PHP</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                        <figure>
+                            <preamble>Example PHP</preamble>
+                            <artwork xml:space="preserve">
 &lt;?php // Let the Container know that the Owner object is needed for post-processing ?&gt;      
 &lt;script type="text/os-data" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
   &lt;os:PersonRequest userId="@owner" key="Owner"/&gt;
@@ -1226,10 +1843,10 @@ echo "High score for &lt;script type=\"text/os-template\" xmlns:os=\"http://ns.o
   . "&lt;os:Name person=\"${Owner}\"&gt;&lt;/script&gt; is " . getHighScore($Owner['id']);
 ?&gt;
 </artwork>
-    </figure>
-    <figure>
-     <preamble>PHP Output</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                        <figure>
+                            <preamble>PHP Output</preamble>
+                            <artwork xml:space="preserve">
                                      
 &lt;script type="text/os-data" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;
   &lt;os:PersonRequest userId="@owner" key="Owner"/&gt;
@@ -1238,82 +1855,83 @@ High score for
 &lt;script type="text/os-template" xmlns:os="http://ns.opensocial.org/2008/markup"&gt;&lt;os:Name person="${Owner}"&gt;&lt;/script&gt;
 is 100
 </artwork>
-    </figure>
-    <figure>
-     <preamble>Final Container output after OSML is processed</preamble>
-     <artwork xml:space="preserve">
+                        </figure>
+                        <figure>
+                            <preamble>Final Container output after OSML is processed</preamble>
+                            <artwork xml:space="preserve">
 High score for John Doe is 100
 </artwork>
-    </figure></t>
-   </section>
-  </section>
-  </section>  
- </middle>
- <back>
- 
- <references title="Discussion">
-    <reference anchor='Issue-1179'
-              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1179">
-    <front>
-     <title>Remove "Non-Tags" section</title>
-    </front>
-   </reference>
-    <reference anchor='Issue-1149'
-              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">
-    <front>
-     <title>Remove Appendix A, Deprecated JavaScript API</title>
-    </front>
-   </reference>
-   <reference anchor='Issue-1140'
-              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
-    <front>
-     <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
-    </front>
-   </reference>
- </references>
-  <references>
-   <reference anchor='RFC2119'>
-    <front>
-     <title>Key words for use in RFCs to Indicate Requirement Levels</title>
-     <author initials='S.'
-             surname='Bradner'
-             fullname='Scott Bradner'>
-      <organization abbrev='HarvardU'>Harvard University</organization>
-     </author>
-     <date month='March'
-           year='1997' />
-    </front>
-    <seriesInfo name='RFC'
-                value='2119' />
-   </reference>
-   <reference anchor='RFC2606'>
-    <front>
-     <title>Reserved Top Level DNS Names</title>
-     <author initials='D.'
-             surname='Eastlake'
-             fullname='Donald E. Eastlake 3rd'>
-      <organization abbrev='IBM'>IBM</organization>
-     </author>
-     <author initials='A.'
-             surname='Panitz'
-             fullname='Aliza R. Panitz'></author>
-     <date month='June'
-           year='1999' />
-    </front>
-    <seriesInfo name='RFC'
-                value='2606' />
-   </reference>
-   <reference anchor="Core-Gadget"
-              target="./Core-Gadget.xml">
-    <front>
-     <title>OpenSocial Core Gadget Specification</title>
-     <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
-     </author>
-     <date month='August'
-           year='2011' />
-    </front>
-   </reference>
-  </references>
-  </back>
+                        </figure>
+                    </t>
+                </section>
+            </section>
+        </section>
+    </middle>
+    <back>
+
+        <references title="Discussion">
+            <reference anchor='Issue-1179'
+                       target="http://code.google.com/p/opensocial-resources/issues/detail?id=1179">
+                <front>
+                    <title>Remove "Non-Tags" section</title>
+                </front>
+            </reference>
+            <reference anchor='Issue-1149'
+                       target="http://code.google.com/p/opensocial-resources/issues/detail?id=1149">
+                <front>
+                    <title>Remove Appendix A, Deprecated JavaScript API</title>
+                </front>
+            </reference>
+            <reference anchor='Issue-1140'
+                       target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
+                <front>
+                    <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
+                </front>
+            </reference>
+        </references>
+        <references>
+            <reference anchor='RFC2119'>
+                <front>
+                    <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+                    <author initials='S.'
+                            surname='Bradner'
+                            fullname='Scott Bradner'>
+                        <organization abbrev='HarvardU'>Harvard University</organization>
+                    </author>
+                    <date month='March'
+                          year='1997'/>
+                </front>
+                <seriesInfo name='RFC'
+                            value='2119'/>
+            </reference>
+            <reference anchor='RFC2606'>
+                <front>
+                    <title>Reserved Top Level DNS Names</title>
+                    <author initials='D.'
+                            surname='Eastlake'
+                            fullname='Donald E. Eastlake 3rd'>
+                        <organization abbrev='IBM'>IBM</organization>
+                    </author>
+                    <author initials='A.'
+                            surname='Panitz'
+                            fullname='Aliza R. Panitz'></author>
+                    <date month='June'
+                          year='1999'/>
+                </front>
+                <seriesInfo name='RFC'
+                            value='2606'/>
+            </reference>
+            <reference anchor="Core-Gadget"
+                       target="./Core-Gadget.xml">
+                <front>
+                    <title>OpenSocial Core Gadget Specification</title>
+                    <author fullname='OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;'>
+                    </author>
+                    <date month='August'
+                          year='2011'/>
+                </front>
+            </reference>
+        </references>
+    </back>
 </rfc>
 
