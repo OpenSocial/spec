@@ -2568,7 +2568,9 @@
       optimize performance and reduce the overall number of HTTP requests that
       are actually sent, containers SHOULD provide caching of HTTP responses 
       as defined in <xref target="RFC2616" />. If the container provides caching,
-      it MUST honor all requirements as specified by <xref target="RFC2616"/>.</t>
+      it MUST honor all requirements as specified by <xref target="RFC2616"/>.
+      Containers MAY support caching for all requests or MAY determine whether 
+      to provide caching per request.</t>
       
       <figure><preamble>For example, given the following partial application
       specification document:</preamble><artwork>
