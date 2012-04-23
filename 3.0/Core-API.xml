@@ -633,6 +633,14 @@
       </section>
 
     </section>
+    <!-- END REST SERVICES -->
+    
+    <section title="The RPC Service" anchor="rpc-service">
+    
+      <t>TBD</t>
+    
+    </section>
+    <!-- END RPC SERVICE -->
     
     <section title="Data Objects" anchor="data-objects">
       
@@ -1067,6 +1075,7 @@
       </section>
     
     </section>
+    <!--  END SECURITY -->
  
     <section title="Versioning" anchor="versioning">
     
@@ -1177,6 +1186,7 @@
       </section>
    
     </section>
+    <!--  END VERSIONING -->
   
   </middle>
   <back>
