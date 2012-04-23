@@ -1,0 +1,1204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+  <!ENTITY rfc2616 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'> 
+  <!ENTITY rfc4918 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4918.xml'> 
+  <!ENTITY rfc2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'> 
+  <!ENTITY rfc3864 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3864.xml'>
+  <!ENTITY rfc5226 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml'>
+  <!ENTITY rfc2026 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2026.xml'>
+  <!ENTITY rfc5234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5234.xml'>
+  <!ENTITY rfc6570 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6570.xml'>
+  <!ENTITY rfc5789 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5789.xml'>
+  
+  <!ENTITY part1 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-17.xml'>
+  <!ENTITY part2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-17.xml'>
+  <!ENTITY part3 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p3-payload-17.xml'>
+  <!ENTITY part4 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p4-conditional-17.xml'>
+  <!ENTITY part5 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p5-range-17.xml'>
+  <!ENTITY part6 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p6-cache-17.xml'>
+  <!ENTITY part7 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-17.xml'>
+  <!ENTITY bearer PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-18.xml'>
+  <!ENTITY mac PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-01.xml'>
+  
+]>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
+<rfc ipr="full3978" docName="core.api.xml" >
+  <front>
+    <title abbrev="Core-API">OpenSocial Core API Specification 3.0</title>
+    <author fullname="OpenSocial and Gadgets Specification Group">
+      <address>
+        <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+      </address>
+    </author>
+    <date month="April" year="2012" />
+    <abstract>
+      <t>TBD</t>
+    </abstract>
+  </front>
+ 
+  <middle>
+  
+    <section title="Introduction">
+    
+      <t>TBD</t>
+    
+      <section title="Notation and Conventions">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in 
+        <xref target="RFC2119">RFC2119</xref>.</t>  
+        
+        <section title="Dates, Times and Timezone Offsets" anchor="datetimes">
+        
+          <t>When encoding a Date and Time together, the date-time construct 
+          from <xref target="RFC3339"/> MUST be used. In addition, an uppercase 
+          "T" character MUST be used to separate the date and time, and an 
+          uppercase "Z" character MUST be present in the absence of a numeric 
+          time zone offset.</t>
+          
+          <figure><preamble>For example:</preamble><artwork>
+    2012-11-09T12:32:34-08:00
+    2013-03-23T01:23:43Z
+          </artwork></figure>
+          
+          <t>When encoding a Date, the full-date construct from <xref target="RFC3339"/> 
+          MUST be used.</t>
+          
+          <figure><preamble>For example:</preamble><artwork>
+    2012-11-09
+          </artwork></figure>
+          
+          <t>When encoding a Time, either the partial-time or full-time
+          constructs from <xref target="RFC3339"/> MUST be used. When encoded as 
+          a full-time, an uppercase "Z" character MUST be present in the absence 
+          of a numeric time zone offset.</t>
+          
+          <figure><preamble>For example:</preamble><artwork>
+    12:32:34-08:00 // full-time
+    12:32:34       // partial-time
+          </artwork></figure>
+          
+          <t>When encoding a Timezone Offset, the time-offset construction 
+          from <xref target="RFC3339"/> MUST be used. Note that when denoting a 
+          Timezone Offset equal to the Coordinated Universal Time (UTC), an 
+          uppercase "Z" character MUST be used.</t>
+          
+          <figure><preamble>For example:</preamble><artwork>
+    -08:00
+          </artwork></figure>
+          
+          <t>When encoding a Duration, the duration construction from <xref target="RFC3339"/>
+          MUST be used.</t>
+          
+          <figure><preamble>For example:</preamble><artwork>
+    P3Y6M4DT12H30M5S
+          </artwork></figure>
+        
+          <t>When encoding a Period of time, the period constructions from 
+          <xref target="RFC3339"/> MUST be used. Note that when the period 
+          contains explicit date and time components, an uppercase "T" character
+          MUST be used to separate the date and time, and an uppercase "Z"
+          character MUST be used in the absence of a numeric time zone offset.</t>
+          
+          <figure><preamble>For example:</preamble><artwork>
+    P1Y2M10DT2H30M/2008-05-11T15:30:00Z
+          </artwork></figure>
+        
+        </section>
+        
+      </section>
+    
+    </section>
+    
+    <section title="REST Services">
+
+      <t>OpenSocial REST Services consist of collections of Web-accessible
+      resources that can be accessed and modified using the basic set of 
+      HTTP request methods as defined by <xref target="I-D.ietf-httpbis-p2-semantics"/>.</t>
+ 
+      <t>In general:
+      <list>
+        <t>the HTTP GET method is used to retrieve representations
+        of the current state of a any given resource,</t>
+        <t>PUT and PATCH are used to modify the current state,</t>
+        <t>DELETE is used to delete the resource,</t>
+        <t>and POST is used to either create new resources or to perform 
+        other types of operations that do not fit within the scope of the
+        other core HTTP methods.</t>
+      </list></t>
+      
+      <t>Implementations are free to implement support for additional 
+      HTTP methods but use of such methods is considered outside the scope 
+      of this specification.</t>
+      
+      <t>Resources made available via a REST Service may represent
+      individual objects (e.g. a person, a document, an activity) or a 
+      collection of objects (e.g. a friends list, a folder containing 
+      multiple files, a stream of activities). Every resource is identified 
+      by a distinct URI to which the various HTTP methods are to be sent.</t>
+ 
+      <figure><preamble>For example, to retrieve a user's current profile using
+      the OpenSocial Person Service, a client application would issue a 
+      GET request:</preamble><artwork type="example" xml:space="preserve">
+  GET /api/people/@me/@self HTTP/1.1
+  Host: api.example.org
+</artwork></figure>
+      
+      <t>When a client application is required to communicate with an 
+      OpenSocial server via an intermediary that restricts the use of certain 
+      standard and extension HTTP Methods (e.g. PUT, DELETE, PATCH),
+      the client SHOULD utilize the X-HTTP-Method-Override HTTP Request 
+      Header mechanism in a POST request. This type of request shall be 
+      referred to as a "POST Override Request".</t>
+      
+      <figure><preamble>For example, the HTTP PATCH request method is still 
+      relatively new and not yet fully supported by deployed HTTP infrastructure.
+      It is therefore possible that PATCH requests could be blocked by intervening 
+      intermediaries. To address such cases, the PATCH request may be modified 
+      by sending a POST request that includes the X-HTTP-Method-Override
+      HTTP header:</preamble><artwork>
+  POST /api/people/@me/@self HTTP/1.1
+  Host: api.example.org
+  Content-Type: application/json
+  X-HTTP-Method-Override: PATCH
+
+  {...}
+      </artwork></figure>
+      
+      <t>OpenSocial Servers MUST respond to POST Override Requests as if the 
+      method specified by the X-HTTP-Method-Override was the actual operation 
+      used by the request, as opposed to POST.</t>
+      
+      <t>POST Override Requests MUST NOT be used to send HTTP GET requests.</t>
+      
+      <t>Responses to all requests will specify an appropriate HTTP Status Code
+      indicating the status of the response.</t>
+            
+      <section title="Common URI Structure" anchor="uri-structure">
+      
+        <t>All REST Services share a common, basic URI Structure that MAY be 
+        extended on a case-by-case basis. This common structure helps to ensure 
+        that all interactions remain as consistent as possible across multiple 
+        REST Services while allowing individual service-specific and implementation
+        specific behaviors to be supported.</t>
+        
+        <figure><preamble>By convention, the Common URI Structure is described using a 
+        <xref target="RFC6570">URL Template</xref>:</preamble><artwork>
+  {protocol}://{+host}{/rootpath*}
+    {/service-identifier}
+    {/local-identifier}
+    {/aspect-identifier}
+    {/filters*}
+    {?parameters*}
+        </artwork></figure>
+      
+        <texttable>
+          <ttcol>Expression</ttcol>
+          <ttcol>Description</ttcol>
+          
+          <c>{protocol}</c>
+          <c>Indicates either "http" or "https" depending on whether or 
+          not SSL or TLS is to be used with the request.</c>
+          
+          <c>{+host}</c>
+          <c>Specifies the DNS Host Name and, if necessary, the TCP/IP 
+          port at which the REST service is available. For instance, 
+          "api.example.org" or "api.example.org:8080".</c>
+          
+          <c>{/rootpath*}</c>
+          <c>Specifies the root path of the REST Service. The value is 
+          specified as an Array of isegment-nz path segments as defined
+          by <xref target="RFC3987"/>. For example, ["services","api"],
+          which when expanded by the URL Template produces "/services/api".</c>
+          
+          <c>{/service-identifier}</c>
+          <c>The service identifier as defined by <xref target="service-identifiers"/>.</c>
+          
+          <c>{/local-identifier}</c>
+          <c>The local-identifier of the Data Object, as defined by 
+          <xref target="object-identifiers"/> that is the target of 
+          an HTTP request.</c>
+          
+          <c>{/aspect-identifier}</c>
+          <c>An aspect-identifier, as defined by <xref target="aspect-identifiers"/>,
+          that identifies the specific aspect of the identified Data Object
+          to which the HTTP request is being directed. For instance, if the 
+          intent of the request is to retrieve the list of other people 
+          connected to a particular user's profile, the local-identifier
+          specifies the target user's local-identifier and the aspect-identifier
+          would specify "@friends".</c>
+          
+          <c>{/filters*}</c>
+          <c>A set of zero or more service, resource and aspect specific path
+          segments that specify additional filters for the request. The value 
+          is specified as an Array, each member of which can either be an
+          isegment-nz path segment or an Array of isegment-nz path segments.
+          For instance, the value ["a","b","c"] would expand within the URL Template
+          to "/a/b/c"; whereas the value ["a",["b","c"]] would expand to 
+          "/a/b,c".</c>
+          
+          <c>{?parameters*}</c>
+          <c>Specifies a collection of query parameters associated with the
+          request, specified as a collection of name=value pairs. All REST
+          Services are required to support a common core collection of 
+          query parameters as defined in <xref target="standard-query-parameters"/>
+          and MAY introduce additional service, resource and aspect specific
+          parameters.</c>
+          
+        </texttable>
+        
+        <t>To illustrate how the common URI structure operates, consider the 
+        following example. For each of the URI Template variables, assume
+        the following values:
+          <texttable>
+            <ttcol>Variable</ttcol>
+            <ttcol>Value</ttcol>
+            <c>protocol</c>
+            <c>https</c>
+            <c>host</c>
+            <c>api.example.org</c>
+            <c>rootpath</c>
+            <c>["service","api"]</c>
+            <c>service-identifier</c>
+            <c>people</c>
+            <c>local-identifier</c>
+            <c>@me</c>
+            <c>aspect-identifier</c>
+            <c>@friends</c>
+            <c>filters</c>
+            <c>["@recent"]</c>
+            <c>parameters</c>
+            <c>{"count":"10", "updatedAfter":"2012-04-16T00:00:00Z"}</c>
+          </texttable>
+        </t>
+        
+        <t>When applied to the common URI Template, the Request URI Generated
+        becomes: "https://api.example.org/service/api/people/@me/@friends/@recent?count=10&amp;updatedAfter=2012-04-16T00:00:00Z".</t>
+      
+      </section>
+      
+      <section title="Service Identifiers" anchor="service-identifiers">
+        
+        <t>Service Identifiers are simple text labels that conform to the
+        isegment-nz construction defined in <xref target="RFC3987"/> that
+        are used to identify individual OpenSocial REST services.</t>
+          
+        <figure><artwork>
+  service-identifier = isegment-nz
+        </artwork></figure>
+        
+        <t>TODO: Need to flesh this out</t>
+          
+      </section>
+      
+      <section title="Local Identifiers" anchor="object-identifiers">
+
+        <t>Every individual data object managed and made available via 
+        a REST service is uniquely identified within that service's 
+        context by a local-identifier.</t>
+          
+        <t>The local identifier is an opaque String conforming to the 
+        isegment-nz construction of <xref target="RFC3987"/>. This string
+        unique identifies the object within the context of the service
+        with which the object is associated.</t>
+          
+        <figure><artwork>
+  local-identifier = isegment-nz
+        </artwork></figure>
+          
+        <section title="The &quot;@me&quot; Alias">
+          
+          <t>The literal string value "@me" MAY be used as an alias for the 
+          local-identifier of the currently authenticated entity.</t>
+            
+          <t>For instance, if a person uses the OpenSocial Person Service to 
+          request information about their own social data profile, the request 
+          URI can specify the "@me" alias as opposed to the requester's 
+          local-identifier. The server fullfilling the request would use the 
+          requests authentication details to determine the appropriate 
+          local-identifier.</t>
+
+        </section>
+        
+        <section title="The &quot;@public&quot; Alias">
+        
+          <t>The literal string value "@public" is provided as a local-identifier
+          identifying the total collection of "public" resources provided by 
+          a REST service. For instance, if a requesting application wishes to
+          use the OpenSocial Activity Service to retrieve a listing of all 
+          recent public Activities that have occurred independent of the specific
+          person or resource with which those activities are associated, the 
+          request URI can specify "@public" as the local-identifier.</t>
+          
+          <t>The &quot;@public&quot; MAY NOT be supported by all REST services.</t>
+        
+        </section>
+          
+        <section title="Legacy Global Identifiers">
+          
+          <t>Previous versions of this specification utilized an older 
+          form of "global identifier" that has since been deprecated.
+          Server implementations MAY continue to support the older 
+          format for backwards-compatibility purposes with existing 
+          applications but new applications SHOULD NOT make use of the 
+          deprecated syntax.</t>
+            
+          <t>The legacy syntax consisted of a combination of a DNS
+          domain name and an object's local identifier separated by 
+          a colon (":") character.</t>
+            
+          <figure><artwork>
+  domain-name = *( ALPHA / DIGIT / "_" / "." / "-" )
+  legacy-global-identifier   = domain-name ":" local-identifier
+          </artwork></figure>
+            
+        </section>      
+      </section>
+      
+      <section title="Standard Query Parameters" anchor="standard-query-parameters">
+        <t>All REST services MUST support a common set of URI Query
+        String parameters that can be used to modify the processing of the 
+        request and the information returned to the client.</t>
+        
+        <texttable>
+        
+          <ttcol>Name</ttcol>
+          <ttcol>Description</ttcol>
+          
+          <c>count</c>
+          <c>When the resource to which a request is directed represents a 
+          collection of items and the intention of the request is to retrieve
+          a listing of a subset of those items, the count value specifies the 
+          maximum number of items to return. The value is specified as a 
+          non-negiative integer. If unspecified, the server is free to determine
+          a reasonable default value.</c>
+          
+          <c>fields</c>
+          <c>The fields parameter allows a client application retrieving 
+          information about a resource to specify the individual
+          pieces of information it is interested in receiving as a simple, 
+          comma separated list. For instance, "fields=name,email". The server 
+          MAY choose to return a representation of the requested information 
+          containing only the requested fields along with any additional 
+          information the server determines is required. If the resource 
+          identified by the URI represents a collection of individual
+          objects, the fields parameter identifies the requested properties of 
+          those individual objects, rather than the properties of the collection.</c>
+        
+          <c>filterBy</c>
+          <c>When the resource to which a request is directed represents a
+          collection of items and the intention of the request is to retrieve
+          a subset of those items, the filterBy parameter specifies the name
+          of a field to be used as a selection filter to determine the subset
+          of items to return. The value of the parameter is the name of a
+          property of each of the objects in the collection. This property 
+          is intended to be used in conjunction with the filterOp and 
+          filterValue parameters.</c>
+        
+          <c>filterOp</c>
+          <c>When the filterBy parameter is used to specify the name of a field
+          to use as a selection filter, the filterOp parameter is used to specify
+          the specific type of selection filter operation to apply. Possible 
+          values are:
+            <list style="hanging">
+              <t hangText="contains">
+                Indicates that the value of the field identified by the filterBy
+                parameter MUST contain the exact value specified by the filterValue
+                parameter.
+              </t>
+              <t hangText="equals">
+                Indicates that the value of the field identified by the filterBy
+                parameter MUST equal the exact value specified by the filterValue
+                parameter.
+              </t>
+              <t hangText="startsWith">
+                Indicates that the value of the field identified by the filterBy
+                parameter MUST begin with the exact characters specified by the 
+                filterValue parameter.
+              </t>
+              <t hangText="present">
+                Indicates that items are only considered to match the selection
+                filter if the field identified by the filterBy parameter is present
+                within the item and specifies a non-null value. When filterOp
+                equals "present", the filterValue parameter is ignored.
+              </t>
+            </list>
+          </c>
+          
+          <c>filterValue</c>
+          <c>When using the filterBy and filterOp parameters, and filterOp 
+          equals "contains", "equals" or "startsWith", the filterValue parameter
+          specifies the value against which the value of the filterBy field 
+          is tested.</c>
+        
+          <c>format</c>
+          <c>By default, all REST services utilize the JSON-based serialization
+          defined in <xref target="data-representation"/>. Individual services A
+          MAY support additional data serializations on a case-by-case
+          basis. Client applications SHOULD use existing user agent or server
+          driven Content Negotiation mechanisms such as the Accept request header 
+          (e.g. "Accept: application/atom+xml") to identify specific
+          preferred data formats. However, as not all requesting applications are 
+          capable of directly accessing HTTP Headers, the "format" parameter 
+          MAY be used as an alternative. The value of the format parameter is 
+          a single MIME Media Type, e.g. "format=application/atom+xml". TODO: should we deprecate this?</c>
+          
+          <c>sortOrder</c>
+          <c>When the resource to which a request is directed represents a 
+          collection of items and the intention of the request is to retrieve
+          a listing of those items, the sortOrder parameter specifies the 
+          sorting order in which those items will be returned. The value is 
+          specified as one of either "ascending" or "descending". TODO: need a sort key</c>
+          
+          <c>startIndex</c>
+          <c>When the resource to which a request is directed represents a 
+          collection of items and the intention of the request is to retrieve
+          a subset of those items, the startIndex parameter specifies the 
+          relative position of the first item to return out of the total set 
+          of items that can be returned as determined by the server after any 
+          requested filtering and sorting of the set as been applied. The index 
+          is 0-based such that to return the first item of the set, the 
+          startIndex parameter value would be 0. </c>
+        
+        </texttable>
+        
+      </section>
+      
+      <section title="Conditional Requests">
+      
+        <t>All REST services MUST support the use of Conditional
+        Request mechanisms as defined in 
+        <xref target="I-D.ietf-httpbis-p4-conditional"/>.</t>
+          
+        <t>When returning the current representation of any resource, whether 
+        that representation is for a single object or a collection of objects,
+        the HTTP Response MUST include either a strong Entity Tag as defined
+        in Section 2.3 of <xref target="I-D.ietf-httpbis-p4-conditional"/>, a 
+        Last-Modified Timestamp as specified in Section 2.2, or both.</t>
+          
+        <figure><preamble>For example, the response to a request retrieving
+        the current representation of a person's profile might include both
+        an Entity Tag and a Last-Modified timestamp:</preamble><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef56"
+  Last-Modified: Tue, 15 Nov 2012 12:45:26 GMT
+        </artwork></figure>
+  
+        <t>Once a client has the Entity Tag or Last-Modified timestamp for 
+        a given resource representation, subsequent requests SHOULD utilize
+        one or the other within a conditional request to optimize communication 
+        and to ensure that multiple clients do not inadvertently overwrite each 
+        other's data.</t>
+        
+        <figure><preamble>For instance, given the Last-Modified Timestamp included in a 
+        response to a request to receive a user's profile, a client can 
+        request that the server return an updated view of the profile if, 
+        and only if the state of the profile has changed since the specified 
+        time:</preamble><artwork>
+  GET /api/people/@me/@self HTTP/1.1
+  If-Modified-Since: Tue, 15 Nov 1994 12:45:26 GMT
+        </artwork></figure>
+  
+        <t>If the profile has not been modified since the date specified, the 
+        server would respond with a "304 Not Modified" status.</t>
+      
+        <figure><preamble>Given the Entity Tag of a resource representation, a client wishing
+        to modify the resource can request that changes only be applied if the
+        resource has not been subsequently modified since the original representation
+        and Entity Tag were created:</preamble><artwork>
+  PUT /api/people/@me/@self HTTP/1.1
+  If-Match: "ab12cd34ef56"
+  Content-Type: application/json 
+  
+  {...}
+        </artwork></figure>
+      
+        <t>If the server is unable to determine that the specified Entity 
+        Tag applies to the current state of the resource, it will abort the 
+        change request and respond to the request using a "412 Precondition Failed" 
+        status.</t>
+  
+        <t>Note that the Entity Tag specified in the response is generally 
+        specific to the actual payload included in the response. If a REST 
+        service supports returning multiple representation formats for a single 
+        resource, such as offering multiple data format options or modified 
+        views of the resource tailored to the authentication credentials 
+        included in the request, the Entity Tag can vary for each specific 
+        response, regardless of whether the actual state of the resource on 
+        the server has changed. Therefore, for any single resource, multiple 
+        Entity Tags can potentially represent the current state of the 
+        resource.</t>
+        
+        <t>At a minimum, All OpenSocial REST Services MUST support the If-Match, 
+        If-None-Match, If-Modified-Since and If-Unmodified-Since HTTP request 
+        headers for conditional requests. All requests that result in the 
+        potential modification of the current state of a resource MUST include 
+        at least one of these request headers.</t>
+      
+      </section>
+      
+      <section title="Full vs. Partial Modification">
+      
+        <t>The current state of a resource may be modified in part or in full
+        using either the <xref target="RFC5789">PATCH</xref> or PUT HTTP 
+        methods, respectively.</t>
+      
+        <t>Given a URI that represents an resource, the current state of that
+        resource can be modified in full by sending an HTTP PUT request to 
+        the URI. The payload of the PUT request is considered to be a replacement
+        for the identified resource, although the server is free to determine 
+        exactly how the resource is to be modified.</t>
+      
+        <figure><preamble>For example, suppose an application wishes to modify 
+        an existing profile that contains nothing more than a name and en email 
+        address. First, the application needs to GET the existing state of the 
+        profile so it can know what it is working with and can get the Entity 
+        Tag necessary for the PUT operation:</preamble><artwork>
+  GET /api/people/@me/@self HTTP/1.1
+        </artwork></figure>
+
+        <figure><preamble>The server responds with the profile:</preamble><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef56"
+
+  {"name":{"displayName":"J. Doe"}, 
+   "emails":["john.doe@example.org"]}
+        </artwork></figure>
+      
+        <figure><preamble>The application wishes to modify this profile such that
+        the name is expanded from "J. Doe" to "John Doe" and the email address 
+        is dropped completely. The application can do so by sending the following 
+        PUT request:</preamble><artwork>
+  PUT /api/people/@me/@self HTTP/1.1
+  If-Match: "ab12cd34ef56"
+  Content-Type: application/json
+
+  {"name":{"displayName":"John Doe"}}
+        </artwork></figure>
+
+        <figure><preamble>Assuming the change is successful, the server would
+        respond with an appropriate 2xx status, and MAY include the updated 
+        representation of the resource:</preamble><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef57"
+
+  {"name":{"displayName":"John Doe"}}
+        </artwork></figure>
+
+        <figure><preamble>Alternatively, the application can use a PATCH 
+        request to perform a partial modification of the resource. For instance, 
+        suppose the application needs to add an email address to the previously 
+        modified profile:</preamble><artwork>
+  PATCH /api/people/@me/@self HTTP/1.1
+  If-Match: "ab12cd34ef57"
+  Content-Type: application/json-patch
+
+  {"add":"emails","value":"j.doe@example.com"}
+        </artwork></figure>
+      
+        <figure><preamble>Assuming the change is successful, the server would
+        respond with an appropriate 2xx status, and MAY include the updated
+        representation of the resource:</preamble><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef57"
+  
+  {"name":{"displayName":"John Doe"},
+   "emails":["j.doe@example.com"]}
+        </artwork></figure>
+      
+        <t>Support for the PATCH method to perform partial modifications of
+        resource is optional.</t>
+      
+        <t>Also note that, for illustrative purposes only, this example uses 
+        the JSON Patch format defined by [TODO: JSON Patch Reference]. 
+        Implementations are free, however, to use any format they choose as 
+        the payload of PATCH operations. TODO: Need to pick one basic format</t>
+      
+        <t>REST Services that support PATCH MUST advertise that support using 
+        the Accept-Patch HTTP Response header as defined by 
+        <xref target="RFC5789"/>, Section 3.1</t>
+      
+        <figure><preamble>For example,</preamble><artwork>
+  HTTP/1.1 200 OK
+  Allow: GET, PUT, POST, DELETE, HEAD, PATCH, OPTIONS
+  Accept-Patch: application/json-patch
+        </artwork></figure>
+      
+      </section>
+
+    </section>
+    
+    <section title="Data Objects" anchor="data-objects">
+      
+      <t>All Data Objects exposed via REST Services are serialized as 
+      JSON Objects as defined by <xref target="RFC4627"/>. Alternative 
+      serializations MAY be used but are considered outside the scope of
+      this specification. Previous versions of OpenSocial allowed for 
+      <xref target="RFC4287">Atom</xref> and simple XML serializations 
+      that have now been deprecated. Each of these are documented in the 
+      OpenSocial Deprecated Support Specification [TODO: Ref Doc].
+      Implementations MAY support the deprecated formats for backwards 
+      compatibility with existing applications.</t>   
+        
+      <t>Unless otherwise stated in the definition of a specific property, 
+      the following general serialization rules apply:
+        <list style="symbols">
+          <t>Absent properties MAY be represented either by an explicit 
+          declaration of the property whose value is null or by omitting the 
+          property declaration altogether at the option of the publisher; 
+          these two representations are semantically equivalent. If a property 
+          is having a value whose type is a JSON array, the absence of any 
+          items in that array SHOULD be represented by omitting the property 
+          entirely or publishing it with the value null, and SHOULD NOT 
+          be represented as an empty array.</t>
+          <t>Member values of an array value SHOULD be uniform in type. That is, 
+          Array values SHOULD NOT contain a mix of primitive, array and object
+          data types, for instance <spanx style="verb">"foo":["a","b","c"]</spanx>
+          is acceptable while <spanx style="verb">"bar":["a",{"b":"c"},["d","e"]]</spanx>
+          is not.</t>
+          <t>When a property is defined as a boolean and the value is false, 
+          the property MAY be omitted entirely from the JSON serialization.</t>
+          <t>When a property is defined as a "plural fiend", it's value MUST be 
+          serialized as an Array of Plural Objects as defined by <xref target="plural-objects"/>.</t>        
+          <t>All <xref target="RFC3987">IRI</xref> and <xref target="RFC3986">URI</xref>
+          references contained with the serialized JSON structure SHOULD be 
+          absolute. If relative URI and IRI references are used, and the serialized
+          JSON is included within either an HTTP request or returned in response 
+          to an HTTP request, the references are to be resolved relative to either 
+          the HTTP Request URI or the value of the Content-Location response 
+          header, if one is included within the HTTP response.</t>
+          <t>All dates, times, durations and periods of time are to be encoded as 
+          specified in <xref target="datetimes"/>.</t>
+          <t>When a Data Object is defined as a "collection", it's value MUST
+          be serialized as defined in <xref target="collection-objects"/>.</t>
+        </list>
+      </t>
+        
+      <section title="Collection Objects" anchor="collection-objects">
+        
+        <t>A "Collection Object" is a Data Object that represents a set of 
+        individual, related Data Objects. Collection Objects are serialized
+        as JSON Objects conforming to the JSON Activity Streams Collection
+        construct as defined in Section 3.5 of [TODO: Ref Activity Streams].</t>
+          
+        <t>Such serialized objects inherit all of the basic properties of 
+        the Activity Streams Collection object:
+          <texttable>
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>totalItems</c>
+            <c>JSON Integer</c>
+            <c>An optional, non-negative integer specifying the total number
+            of items within the collection. This number SHOULD reflect the 
+            actual total number of Data Objects that are considered to be 
+            members of the collection and not the number of items actually 
+            serialized as values in the <spanx style="verb">items</spanx>
+            property value.</c>
+            <c>items</c>
+            <c>JSON Array</c>
+            <c>An array containing a listing of Data Objects. This listing
+            MAY be a subset of the total number of objects considered to be
+            members of the collection.</c>
+            <c>url</c>
+            <c>JSON String</c>
+            <c>An optional IRI referencing a JSON Activity Streams document 
+            containing the full listing of objects within the collection.</c>
+          </texttable>
+        </t>
+          
+        <t>All other properties defined by the JSON Activity Streams 
+        specification for a Collection Object MAY be included in the 
+        serialization but their specific use and function is considered
+        out of scope of this specification.</t>
+          
+        <t>This specification defines the following additional properties 
+        that MAY be used:
+          <texttable>
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            
+            <c>startIndex</c>
+            <c>JSON Integer</c>
+            <c>A non-negative integer value that identifies the relative 
+            position within the collection of the first object contained in 
+            the items property. For instance, if there are 20 items that 
+            are considered to be members of a collection, but only the last
+            10 of those items are serialized within the value of the 
+            <spanx style="verb">items</spanx> property, the value of 
+            <spanx style="verb">startIndex</spanx> would be 10.</c>
+            
+            <c>itemsPerPage</c>
+            <c>JSON Integer</c>
+            <c>A non-negative integer that specifies the maximum number of 
+            Data Objects that will be serialized within the value of the 
+            <spanx style="verb">items</spanx> property. The actual number 
+            of items within the <spanx style="verb">items</spanx> array 
+            SHOULD be equal to or less than the value of the 
+            <spanx style="verb">itemsPerPage</spanx> value.</c>
+            
+            <c>filtered</c>
+            <c>JSON Boolean</c>
+            <c>TODO: Need to define this better or remove it</c>
+            
+            <c>sorted</c>
+            <c>JSON Boolean</c>
+            <c>TODO: Need to define this better or remove it</c>
+            
+            <c>updatedSince</c>
+            <c>JSON Boolean</c>
+            <c>TODO: Need to define this better or remove it</c>
+            
+          </texttable>
+        </t>
+          
+        <t>TODO: Need to handle paging</t>
+          
+        <figure><preamble>The following example shows a subset of a 
+        collection of OpenSocial Person objects:</preamble><artwork>
+  {
+    "totalItems": 10,
+    "startIndex": 0,
+    "itemsPerPage" : 2,
+    "items" : [
+      {"displayName":"Joe",
+       "name": {
+         "givenName":"Joe",
+         "familyName":"Smith"
+       }
+      },
+      {"displayName":"Sally",
+       "name": {
+         "givenName":"Sally",
+         "familyName":"Jones"
+       }
+      }
+    ]
+  }
+        </artwork></figure>
+        
+      </section>
+        
+      <section title="Plural Objects" anchor="plural-objects">
+        
+        <t>Within an OpenSocial Data Object, a "plural-field" is a property
+        whose value consists of zero or more alternative choices. Each choice
+        is serialized as a JSON Object with at least the following basic 
+        properties:
+          <texttable>
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            
+            <c>label</c>
+            <c>JSON String</c>
+            <c>Provides a human-readable, plain-text, and preferrably 
+            localized short description of the object value suitable 
+            for display to a user.</c>
+            
+            <c>primary</c>
+            <c>JSON Boolean</c>
+            <c>A boolean value indicating whether a particular plural object
+            value is considered to be the primary or preferred alternative
+            within the set. No more than one object in the array of of objects
+            specified as the value of a plural field can have a 
+            <spanx style="verb">primary</spanx> property of True.</c>
+            
+            <c>type</c>
+            <c>JSON String</c>
+            <c>Specifies a machine-processable label for this object value
+            that generally identifies it's preferred function. For 
+            instance, if the plural field represents a collection of phone
+            numbers, the <spanx style="verb">type</spanx> property value 
+            would specify values such as "work", "home" or "other", to
+            differentiate each phone number by purpose. Unlike the 
+            <spanx style="verb">label</spanx> property which is intended 
+            for human-readable display, the <spanx style="verb">type</spanx>
+            property is intended to be used programmatically and MUST NOT
+            utilize a localized value.</c>
+            
+            <c>value</c>
+            <c>JSON Primitive, Array or Object</c>
+            <c>Represents the actual value of the object.</c>
+            
+          </texttable>
+        </t>
+          
+        <figure><preamble>The example below shows a Data Object with a single
+        plural-field providing alternative contact phone numbers for an 
+        individual. Each is labeled, typed and a single number is marked 
+        as preferred:</preamble><artwork>
+  {
+    "phoneNumbers": [
+      {
+        "value": "555-123-1234",
+        "type": "home",
+        "label": "Home"
+      },
+      {
+        "value": "555-123-1235",
+        "type": "work",
+        "label": "Work",
+        "primary": true
+      },
+      {
+        "value": "555-123-1236",
+        "type": "mobile",
+        "label": "Mobile"
+      }
+    ]
+  }
+        </artwork></figure>
+        
+      </section>
+        
+      <section title="Data Object Extensions" anchor="extension-objects">
+        
+        <t>This specification defines a core set of common Data 
+        Objects and an associated set of properties for each. These properties
+        comprise the core vocabulary of the OpenSocial Data Model. Implementations
+        are free to introduce extensions to this vocabulary so long as such
+        extensions do not alter the semantics or requirements associated with
+        any part of the core vocabulary. Such extensions are referred to
+        generically as "foreign properties".</t>
+        
+        <t>Note that future versions of this specification could introduce 
+        new properties and Data Objects to the core vocabulary. Software 
+        written to conform to this version of the specification will not be
+        able to process such properties correctly and, in fact, will not be able
+        to distinguish it from other arbitrary types of extensions. For the
+        purpose of this discussion, unrecognized core vocabulary properties 
+        introduced by future versions of this specification will be 
+        considered to be "foreign properties".</t>
+        
+        <t>Implementations that encounter foreign properties within a
+        Data Object MUST NOT stop processing or signal an error. It might
+        be the case that the implementation is able to process foreign
+        properties correctly and does so. Otherwise such properties are
+        considered to be "unknown foreign properties".</t>
+
+        <t>Whenever unknown foreign properties are encountered, implementations
+        SHOULD ignore the properties and continue processing the Data Object
+        as if they were not present.</t>
+        
+        <t>The values of extension properties SHOULD be serialized following
+        the same rules specified for core vocabulary properties as defined 
+        in <xref target="data-objects" />.</t>
+          
+        <section title="Avoiding Naming Conflicts">
+        
+          <t>Because foreign properties can be added at any time to a Data
+          Object by multiple implementations, and because there is no centralized
+          coordination of such extensions, there is a risk of conflicts arising
+          when multiple implementations attempt to define foreign properties 
+          that share the same name.</t>
+          
+          <t>For example, imagine two separate vendor implementations that 
+          extend the basic OpenSocial Person Data Object to include data 
+          specific to each implementation. For the sake of illustration, we 
+          will label these implementations as "foo.example.org" and 
+          "bar.example.com". Each defines a foreign property named 
+          "account" that while similar in purpose specify different types 
+          of values.</t>
+          
+          <t>In order to avoid conflicts between the two properties, each 
+          implementation SHOULD wrap each of their respective foreign 
+          properties into a single root extension property whose name is 
+          unique to the implementation and whose value is a JSON Object containing
+          the set of foreign properties unique to that implementation.</t>
+          
+          <t>By convention, it is RECOMMENDED that the name of the root 
+          extension property follow the so-called "reverse-DNS" naming 
+          pattern.</t>
+          
+          <figure><preamble>For example, the extended Person Data Object 
+          described above could be serialized as:</preamble><artwork>
+  {
+    "displayName": "Joe",
+    "org.example.foo": {
+      "account": "joes-account"
+    },
+    "com.example.bar": {
+      "account": {
+        "id": "acct:joe@bar.example.com"
+      }
+    }
+  }
+          </artwork></figure>
+            
+          <t>The JSON objects associated with each root extension property
+          can contain any number of foreign properties, depending on the 
+          needs of the implementation, allowing all of the foreign 
+          properties specific to a particular implementation or serving 
+          a common purpose to be grouped together.</t>
+          
+          <t>By following this convention, implementations can protect 
+          themselves from conflicts with each other and with new properties
+          that may be added by future versions of this specification.</t>
+          
+        </section>
+      
+      </section>
+      
+    </section>
+    <!--  END DATA OBJECTS -->
+   
+    <section title="Security" anchor="Security"> 
+
+      <t>When a REST Service provides access to protected resources for which
+      authentication is required, the service MUST support the use of either 
+      OAuth version 1.0a, OAuth version 2.0 or both as the preferred authentication
+      mechanism. Specific implementations MAY support additional alternative 
+      autentication mechanisms but support for such is considered out of the 
+      scope of this specification.</t>
+      
+      <t>REST Services MAY accept requests with no authentication or 
+      authorization information for data considered to be public. The service 
+      MAY provide a limited "public representation" of a resource if no 
+      authorization information is provided in the request.</t>
+      
+      <t>In the case where no information is available due to lack of authorization,
+      an HTTP 401 Unauthorized response SHOULD be returned to the client. In the
+      case where at least some view of the information is available, it SHOULD be
+      returned using an appropriate 2xx status, with a standard WWW-Authenticate
+      response header indicating that additional information may be available 
+      when using a different authorization context.</t>
+      
+      <section title="OAuth 1.0a and 2.0 Support">
+        
+        <t>When utilizing the OAuth protocol, the overall flow is straightforward:</t>
+        
+        <t>
+          <list style="symbols">
+          <t>The REST Service provider is the "resource server", providing access
+          to one or more protected "resources" for which a "resource owner" MUST
+          grant permission to access.</t>
+          <t>Any application making use of a REST Service, is an OAuth "client" 
+          that MUST first acquire permission from the "resource owner" to access 
+          the resources provided by the server.</t>
+          <t>Typically, the "resource owner" is the individual that is using the
+          application and for which the application is attempting to access the 
+          resource.</t>
+          <t>Once the client determines that it must access a protected resource, 
+          it must first acquire initial authorization. How this is done depends 
+          entirely on what version and variation of the OAuth protocol is being 
+          used. Generally, this step results in the granting of an "authentication 
+          token" to the client.</t>
+          <t>Once the client has been authorized, it must ask the authorization 
+          server to exchange that authorization token for an access token. This 
+          access token, when granted, provides the client with permission -- 
+          limited in both time and scope -- to access the protected resource. 
+          Because the access token allows the client to operate on behalf of the 
+          resource owner, the resource owner has to approve the exchange before 
+          the access token can be issued. How the access token is issued depends 
+          entirely on what version and variation of the OAuth protocol is being
+          used.</t>
+          <t>Once the client has been granted an access token, it can use that 
+          token within it's requests to access the protected resource for a limited
+          period of time. Once the allotted time expires, the client must reacquire
+          permission to continued access to the resource by requesting a new 
+          access token.</t>
+          </list>
+        </t>
+        
+        <t>There are several valid ways in which the initial authorization token
+        may be acquired by the client. This specification does not prescribe or 
+        require any single acquisition mechanism.</t>
+        
+        <t>Likewise, there are several valid ways in which an authenticated 
+        request can be prepared using the access token once acquired: 
+          <list style="symbols">
+            <t>When using OAuth 2.0, the access token can be included 
+            directly within the request utilizing the so-called "bearer token" 
+            mechanism defined by <xref target="I-D.ietf-oauth-v2-bearer"/>
+            or the token can be combined with additional data to generate
+            a cryptographic hash used for authentication purposes as described by
+            <xref target="I-D.ietf-oauth-v2-http-mac"/>.</t>
+            <t>When using OAuth 1.0a, the access token is utilized as 
+            described in Section 3.0 of <xref target="RFC5849"/>.</t>
+          </list>
+        </t>
+        
+        <t>When utilizing OAuth version 2.0, all REST Services MUST, at a minimum, 
+        support the use of OAuth 2.0 Bearer Tokens as specified in
+        <xref target="I-D.ietf-oauth-v2-bearer"/>. Because such tokens are passed 
+        to the server as unencrypted, plain text, all requests containing an 
+        OAuth 2.0 Bearer Token MUST be exchanged using TLS 2.0 or SSL.</t>
+  
+        <t>All access tokens SHOULD be issued with limited scope and short 
+        expiration times to limit the risk of potential security breaches due 
+        to stolen access tokens. The "scope" of an "access token" identies the 
+        range of resources and the types of operations for which the token can 
+        be used. The "expiration time" specifies the length of time for which the 
+        access token is considered to be valid. The token expiration policy 
+        is left to the specific implementation and may vary depending on the 
+        client requesting the token. Expiration times of 1 hour or less, and 
+        tokens with limited scope may be used with less trusted clients while 
+        expiration times of several hours and tokens with increased scope may 
+        be used for more trusted clients.  Implementations SHOULD document 
+        (at least for administrators) how to configure token scopes and 
+        expiration times if these values are configurable.</t>
+      </section>
+      
+      <section title="Signed Fetch">
+      
+        <t>All REST Services SHOULD support the use of the so-called "Signed Fetch"
+        mechanism.</t> 
+        
+        <t>Signed Fetch is a simplified mechanism based on a subset of the 
+        OAuth 1.0a protocol that allows a container to "sign" requests sent
+        to a remote endpoint. Such signatures provide only a reasonable 
+        assurance that certain content contained within the request has not been
+        modified by a malicious party. Once a receiving endpoint determines that it
+        is able to trust the signed request, it can decide to provide 
+        limited access to certain protected resources without having to
+        walk through the entire typical OAuth protocol.</t>
+        
+        <t>Signed Fetch is described in detail in Section [TODO: Ref] of the
+        OpenSocial Core Gadget Specification.</t>
+      
+      </section>
+    
+    </section>
+ 
+    <section title="Versioning" anchor="versioning">
+    
+      <t>The ability for server and client implementions to clearly communicate
+      which version of the OpenSocial specification a particular Service API
+      and resource supports is critical.</t>
+      
+      <t>For the purpose of clearly identifying which version of the 
+      OpenSocial specification a particular application is implementing, a 
+      Web Link header referencing the base URI of the OpenSocial specification
+      and using a rel attribute value of "implements" SHOULD be included within
+      the HTTP request and response message.</t>
+      
+      <figure><preamble>For example, the Link would appear within the request:</preamble><artwork>
+  GET /api/people/@me/@self HTTP/1.1
+  Host: example.org
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+      </artwork></figure>
+      
+      <figure><preamble>And within the response:</preamble><artwork>
+  HTTP/1.1 200 OK
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+      </artwork></figure>
+    
+      <t>A server MAY choose to implement additional conventions for identifying
+      the current version, such as including a version indicator within the 
+      base URI of the Service API (e.g. http://example.org/v3/api/people). 
+      Such conventions are considered out of scope.</t>
+      
+      <section title="Upgrade Indication and Transition">
+      
+        <t>When a server implementation of an older version of the OpenSocial
+        specification upgrades to a newer version, it has the responsibility 
+        to provide a clear mechanism for either continuing to support client 
+        applications using the old version or help clients migrate to the new.
+        Whether a server chooses to continue to support the old and new 
+        versions of the OpenSocial specification simultaneously is an 
+        implementation and business decision that is out of the scope of this
+        specification. Accordingly, each of the options detailed below are 
+        informative in nature only.</t>
+        
+        <t>However, when a server wishes to indicate to a client application 
+        that the server has been upgraded and that the old version of the API is 
+        no longer available, it can do so using an Upgrade Required response.</t>
+        
+        <figure><preamble>An "Upgrade Required Response" is an HTTP response 
+        that uses the 426 Upgrade Required status along with an "implements" 
+        Web Link. For instance:</preamble><artwork>
+  HTTP/1.1 426 Upgrade Required
+  Upgrade: OpenSocial/3.0
+  Connection: upgrade 
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+        </artwork></figure>
+        
+        <t>Use of the 426 Upgrade Required response implies a complete cutover
+        from one version of the specification to another. While such a strategy 
+        might be appropriate in some cases, many applications will require a more
+        gradual approach in order to avoid breaking existing clients. Alternatively, 
+        a server can choose to migrate client applications incrementally, initially
+        deploying the new version of the application side-by-side with the old.</t>
+        
+        <t>For example, if a server currently exposes version 3.0 of the 
+        OpenSocial Person Service at the URI "http://example.org/api/people", 
+        and it wishes to upgrade clients to a hypothetical version 3.1 in the
+        future, without requiring clients to change the URIs used to access
+        the service, it can either continue to support the 3.0 clients transparently
+        or perform an "in place" upgrade.</t>
+        
+        <figure><preamble>An example 3.0 client request:</preamble><artwork>
+  GET /api/people/@me/@self HTTP/1.1
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+        </artwork></figure>
+        
+        <figure><preamble>A server implementing a hypothetical 3.1 version of
+        the OpenSocial spec can continue to respond as if it was a 3.0 implementation:</preamble>
+        <artwork>
+  HTTP/1.1 200 OK
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+  Content-Type: application/json
+  
+  {... OpenSocial 3.0 data ...}
+        </artwork></figure>
+     
+        <figure><preamble>Or, it can perform an "in-place" upgrade:</preamble>
+        <artwork>
+  HTTP/1.1 200 OK
+  Upgrade: OpenSocial/3.1
+  Connection: upgrade
+  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="implements"
+  Content-Type: application/json
+  
+  {... OpenSocial 3.1 data ...}
+        </artwork></figure>
+        
+        <t>Alternatively, the server MAY choose to deploy the new version 
+        with a new URI and redirect the down-level client to the new version 
+        of the application:</t>
+        
+        <figure><preamble>An upgrade redirection from the server:</preamble>
+        <artwork>
+  HTTP/1.1 301 Moved Permanently
+  Location: /v3.1/api/people/@me/@self HTTP/1.1
+  Upgrade: OpenSocial/3.1
+  Connection: upgrade
+  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="implements"
+        </artwork></figure>
+        
+      </section>
+   
+    </section>
+  
+  </middle>
+  <back>
+    <references title="Normative References"> 
+      &rfc2119;
+      &rfc3864;
+      &rfc5226;
+      &rfc2026;
+      &rfc5234;
+      &rfc6570;
+      &rfc5789;
+      &part1;
+      &part2;
+      &part3;
+      &part4;
+      &part5;
+      &part6;
+      &part7;
+      &bearer;
+      &mac;
+    </references>
+ </back>
+</rfc>
+
+  
