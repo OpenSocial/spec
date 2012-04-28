@@ -9,6 +9,10 @@
   <!ENTITY rfc5234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5234.xml'>
   <!ENTITY rfc6570 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.6570.xml'>
   <!ENTITY rfc5789 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5789.xml'>
+  <!ENTITY rfc5234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5234.xml'>
+  <!ENTITY rfc3987 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3987.xml'>
+  <!ENTITY rfc3986 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml'>
+  <!ENTITY rfc3339 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3339.xml'>
   
   <!ENTITY part1 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-17.xml'>
   <!ENTITY part2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-17.xml'>
@@ -19,6 +23,8 @@
   <!ENTITY part7 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-17.xml'>
   <!ENTITY bearer PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-18.xml'>
   <!ENTITY mac PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-01.xml'>
+  
+  <!ENTITY astreams PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/astreams.xml'>
   
 ]>
 <?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
@@ -50,64 +56,17 @@
         document are to be interpreted as described in 
         <xref target="RFC2119">RFC2119</xref>.</t>  
         
-        <section title="Dates, Times and Timezone Offsets" anchor="datetimes">
+        <t>Some sections of this specification are illustrated with fragments
+        of a <xref target="RFC5234">Augmented Backus-Naur Form</xref> (ABNF) grammar.
+        The rules specified are normative.</t>
         
-          <t>When encoding a Date and Time together, the date-time construct 
-          from <xref target="RFC3339"/> MUST be used. In addition, an uppercase 
-          "T" character MUST be used to separate the date and time, and an 
-          uppercase "Z" character MUST be present in the absence of a numeric 
-          time zone offset.</t>
-          
-          <figure><preamble>For example:</preamble><artwork>
-    2012-11-09T12:32:34-08:00
-    2013-03-23T01:23:43Z
-          </artwork></figure>
-          
-          <t>When encoding a Date, the full-date construct from <xref target="RFC3339"/> 
-          MUST be used.</t>
-          
-          <figure><preamble>For example:</preamble><artwork>
-    2012-11-09
-          </artwork></figure>
-          
-          <t>When encoding a Time, either the partial-time or full-time
-          constructs from <xref target="RFC3339"/> MUST be used. When encoded as 
-          a full-time, an uppercase "Z" character MUST be present in the absence 
-          of a numeric time zone offset.</t>
-          
-          <figure><preamble>For example:</preamble><artwork>
-    12:32:34-08:00 // full-time
-    12:32:34       // partial-time
-          </artwork></figure>
-          
-          <t>When encoding a Timezone Offset, the time-offset construction 
-          from <xref target="RFC3339"/> MUST be used. Note that when denoting a 
-          Timezone Offset equal to the Coordinated Universal Time (UTC), an 
-          uppercase "Z" character MUST be used.</t>
-          
-          <figure><preamble>For example:</preamble><artwork>
-    -08:00
-          </artwork></figure>
-          
-          <t>When encoding a Duration, the duration construction from <xref target="RFC3339"/>
-          MUST be used.</t>
-          
-          <figure><preamble>For example:</preamble><artwork>
-    P3Y6M4DT12H30M5S
-          </artwork></figure>
-        
-          <t>When encoding a Period of time, the period constructions from 
-          <xref target="RFC3339"/> MUST be used. Note that when the period 
-          contains explicit date and time components, an uppercase "T" character
-          MUST be used to separate the date and time, and an uppercase "Z"
-          character MUST be used in the absence of a numeric time zone offset.</t>
-          
-          <figure><preamble>For example:</preamble><artwork>
-    P1Y2M10DT2H30M/2008-05-11T15:30:00Z
-          </artwork></figure>
-        
-        </section>
-        
+        <t>This specification allows the use of <xref target="RFC3987">IRIs</xref>. 
+        Every <xref target="RFC3986">URI</xref> is also an IRI, so a URI may be 
+        used wherever an IRI is named. There are two special considerations: 
+        (1) when an IRI that is not also a URI is given for dereferencing, 
+        it MUST be mapped to a URI using the steps in Section 3.1 of RFC 3987.
+        and (2) when an IRI is serving as an identifier, it MUST NOT be 
+        so mapped.</t>       
       </section>
     
     </section>
@@ -133,7 +92,7 @@
       HTTP methods but use of such methods is considered outside the scope 
       of this specification.</t>
       
-      <t>Resources made available via a REST Service may represent
+      <t>Resources made available via a REST Service can represent
       individual objects (e.g. a person, a document, an activity) or a 
       collection of objects (e.g. a friends list, a folder containing 
       multiple files, a stream of activities). Every resource is identified 
@@ -155,7 +114,7 @@
       
       <figure><preamble>For example, the HTTP PATCH request method is still 
       relatively new and not yet fully supported by deployed HTTP infrastructure.
-      It is therefore possible that PATCH requests could be blocked by intervening 
+      It is therefore possible that PATCH requests could be blocked by 
       intermediaries. To address such cases, the PATCH request may be modified 
       by sending a POST request that includes the X-HTTP-Method-Override
       HTTP header:</preamble><artwork>
@@ -186,42 +145,37 @@
         
         <figure><preamble>By convention, the Common URI Structure is described using a 
         <xref target="RFC6570">URL Template</xref>:</preamble><artwork>
-  {protocol}://{+host}{/rootpath*}
-    {/service-identifier}
-    {/local-identifier}
-    {/aspect-identifier}
-    {/filters*}
-    {?parameters*}
+  {protocol}://{+host}{/rootpath*,service-identifier,local-identifier,aspect-identifier,filters*}{?parameters*}
         </artwork></figure>
       
         <texttable>
           <ttcol>Expression</ttcol>
           <ttcol>Description</ttcol>
           
-          <c>{protocol}</c>
+          <c>protocol</c>
           <c>Indicates either "http" or "https" depending on whether or 
           not SSL or TLS is to be used with the request.</c>
           
-          <c>{+host}</c>
+          <c>host</c>
           <c>Specifies the DNS Host Name and, if necessary, the TCP/IP 
           port at which the REST service is available. For instance, 
           "api.example.org" or "api.example.org:8080".</c>
           
-          <c>{/rootpath*}</c>
+          <c>rootpath</c>
           <c>Specifies the root path of the REST Service. The value is 
           specified as an Array of isegment-nz path segments as defined
           by <xref target="RFC3987"/>. For example, ["services","api"],
           which when expanded by the URL Template produces "/services/api".</c>
           
-          <c>{/service-identifier}</c>
+          <c>service-identifier</c>
           <c>The service identifier as defined by <xref target="service-identifiers"/>.</c>
           
-          <c>{/local-identifier}</c>
+          <c>local-identifier</c>
           <c>The local-identifier of the Data Object, as defined by 
           <xref target="object-identifiers"/> that is the target of 
           an HTTP request.</c>
           
-          <c>{/aspect-identifier}</c>
+          <c>aspect-identifier</c>
           <c>An aspect-identifier, as defined by <xref target="aspect-identifiers"/>,
           that identifies the specific aspect of the identified Data Object
           to which the HTTP request is being directed. For instance, if the 
@@ -230,16 +184,16 @@
           specifies the target user's local-identifier and the aspect-identifier
           would specify "@friends".</c>
           
-          <c>{/filters*}</c>
+          <c>filters</c>
           <c>A set of zero or more service, resource and aspect specific path
-          segments that specify additional filters for the request. The value 
-          is specified as an Array, each member of which can either be an
-          isegment-nz path segment or an Array of isegment-nz path segments.
-          For instance, the value ["a","b","c"] would expand within the URL Template
-          to "/a/b/c"; whereas the value ["a",["b","c"]] would expand to 
-          "/a/b,c".</c>
+          segments that specify additional filters for the request (see 
+          <xref target="filters"/>). The value is specified as an Array, each 
+          member of which can either be an isegment-nz path segment or an Array 
+          of isegment-nz path segments. For instance, the value ["a","b","c"] 
+          would expand within the URL Template to "/a/b/c"; whereas the value 
+          ["a",["b","c"]] would expand to "/a/b,c".</c>
           
-          <c>{?parameters*}</c>
+          <c>parameters</c>
           <c>Specifies a collection of query parameters associated with the
           request, specified as a collection of name=value pairs. All REST
           Services are required to support a common core collection of 
@@ -289,7 +243,31 @@
   service-identifier = isegment-nz
         </artwork></figure>
         
-        <t>TODO: Need to flesh this out</t>
+        <t>For instance, the OpenSocial Person Service is identified using
+        the label "people" while the Activity Stream Service is identified
+        using the label "activity".</t>
+        
+        <figure><preamble>An example request to retrieve a person's profile
+        using the Person Service:</preamble>
+        <artwork>
+  GET /service/api/people/@me/@self HTTP/1.1
+  Host: example.org
+        </artwork></figure>
+        
+        <figure><preamble>An example request to retrieve an Activity Stream
+        associated with a person using the Activity Stream Service:</preamble>
+        <artwork>
+  GET /service/api/activity/@me/@all HTTP/1.1
+  Host: example.org
+        </artwork></figure>
+        
+        <t>Please refer to the [TODO: Social Spec Ref] specification for 
+        complete details on the core set of Social Data Services defined by
+        this version of the OpenSocial specification. Implementations are 
+        free to implement additional services.</t>
+        
+        <t>If a particular implementation does not support a given specified
+        service, it SHOULD simply return a 404 Not Found response.</t>
           
       </section>
       
@@ -332,7 +310,8 @@
           person or resource with which those activities are associated, the 
           request URI can specify "@public" as the local-identifier.</t>
           
-          <t>The &quot;@public&quot; MAY NOT be supported by all REST services.</t>
+          <t>The &quot;@public&quot; alias might not be supported by all 
+          REST services or implementations.</t>
         
         </section>
           
@@ -357,6 +336,126 @@
         </section>      
       </section>
       
+      <section title="Aspect Identifiers" anchor="aspect-identifiers">
+      
+        <t>Every type of Data Object provided by a REST service can have
+        zero or more distinct aspects to which requests can be directed.
+        These aspects are always specific to the individual type of resource
+        and service. Aspects are identified within the URL structure using an 
+        aspect-identifier.</t>
+        
+        <figure><artwork>
+  aspect-identifier = "@" isegment-nz
+        </artwork></figure>
+        
+        <t>For example, Person Data Objects as defined by the [TODO: Ref Social Spec]
+        expose a number of Aspects that are specific to the social data that 
+        makes up a person's profile data. For instance:
+          <list style="symbols">
+            <t>There is the "@self" Aspect that references the person's own 
+            profile detail (i.e. their name, contact information, interests, etc);</t>
+            <t>The "@friends" Aspect that references the person's 
+            network of directly connected friends and associates;</t>
+            <t>The "@network" Aspect that references the person's
+            extended network (i.e. friends-of-friends, etc).</t>
+          </list>
+        </t>
+        
+        <figure><preamble>To retrieve information about specific aspects, the 
+        appropriate aspect-identifier would be included in the request URI.</preamble>
+        <artwork>
+  GET /service/api/people/@me/@self HTTP/1.1
+  Host: example.org
+  
+  GET /service/api/people/@me/@friends HTTP/1.1
+  Host: example.org
+  
+  GET /service/api/people/@me/@network HTTP/1.1
+  Host: example.org
+        </artwork></figure>
+        
+        <t>Please refer to the [TODO: Social Spec Ref] specification for 
+        complete details on the specific aspects associated with each of the 
+        core OpenSocial Social Data Objects and services. Implementations are 
+        free to define additional aspects for any of the core Social Data 
+        Objects and Services.</t>
+        
+        <t>To prevent against the likelihood of compatibility issues arising 
+        through the use and extension of aspects by implementations as well 
+        to promote the reuse and socialization of new aspect-identifiers, this 
+        document establishes a <xref target="aspect-identifier-registry">registry 
+        of common aspect identifiers.</xref> It is RECOMMENDED that all 
+        aspect-identifiers used within OpenSocial implementations be added to
+        the registry per the requirements detailed in 
+        <xref target="aspect-identifier-registry"/>.</t>
+        
+        <t>If a particular implementation does not support a given specified
+        aspect, it SHOULD simply return a 404 Not Found response.</t>
+      
+      </section>
+      
+      <section title="Filters" anchor="filters">
+      
+        <t>The Common URI Structure also supports the use of service, data object
+        and aspect specific filters that can be used to further define the scope
+        of a particular REST request. When expressed within the request URI,
+        such filters take the form of an arbitrary set of additional isegment-nz 
+        path segments. Implementations MAY choose to allow multiple filter 
+        identifiers separated by a comma (,) character within a single path 
+        segment.</t>
+        
+        <figure><artwork>
+  filter = isegment-nz
+        </artwork></figure>
+        
+        <t>For example, an application that is requesting a listing of 
+        Activity Objects provided by the OpenSocial Activity Stream service
+        may wish to limited the returned set of activities to only those 
+        generated by particular applications. To do so, the application 
+        would identify the applications using filter segments:</t>
+        
+        <figure><artwork>
+  GET /service/api/activity/@me/@all/app-1,app-2
+  Host: example.org
+        </artwork></figure>
+        
+        <t>Alternatively, an implementation can choose to allow applications
+        to limit the results returned by the request to only those that have
+        been "tagged" with a particular label. This is strictly an non-normative
+        example illustrating the basic function of filters as "tagging" of 
+        Data Objects is not defined by this specification:</t>
+        
+        <figure><artwork>
+  GET /service/api/activity/@me/@all/@tags/foo,bar
+        </artwork></figure>
+        
+        <t>When an implementation supports and applies filters, they MUST be 
+        interpreted as a hierarchy, with each subsequent path segment being 
+        interpreted relative to the previous segment. The exact application 
+        of the filters is left to the implementation, however.</t>
+        
+        <t>For example, given the hypothetical request:</t>
+        
+        <figure><artwork>
+  GET /service/api/activity/@me/@all/app-1,app-2/@tags/foo,bar
+        </artwork></figure>
+        
+        <t>The appropriate way to interpret this request is: Return the 
+        list of all activities for the authenticated user generated by 
+        either app-1 or app-2 that have been tagged with either "foo" or 
+        "bar".</t>
+        
+        <t>Please refere to the [TODO: Social Spec Ref] specification for
+        complete details on an specific filters associated with each of the 
+        core OpenSocial Social Data Objets and services. Implementations are
+        free to define additional filters for any of the core Social Data 
+        Objects and Services.</t>
+      
+        <t>If a particular implementation does not support a given specified
+        filter, it SHOULD simply return a 404 Not Found response.</t>
+      
+      </section>
+      
       <section title="Standard Query Parameters" anchor="standard-query-parameters">
         <t>All REST services MUST support a common set of URI Query
         String parameters that can be used to modify the processing of the 
@@ -372,20 +471,24 @@
           collection of items and the intention of the request is to retrieve
           a listing of a subset of those items, the count value specifies the 
           maximum number of items to return. The value is specified as a 
-          non-negiative integer. If unspecified, the server is free to determine
-          a reasonable default value.</c>
+          non-negative integer. If unspecified, the server is free to determine
+          a reasonable default value. No default value is assumed. If a value 
+          of zero (0) is specified then it is to be interpreted as a request 
+          for an empty collection. If any value other than a non-negative
+          integer value is specified, the parameter SHOULD be ignored as if the 
+          parameter were not present at all.</c>
           
           <c>fields</c>
           <c>The fields parameter allows a client application retrieving 
-          information about a resource to specify the individual
-          pieces of information it is interested in receiving as a simple, 
-          comma separated list. For instance, "fields=name,email". The server 
-          MAY choose to return a representation of the requested information 
-          containing only the requested fields along with any additional 
-          information the server determines is required. If the resource 
-          identified by the URI represents a collection of individual
-          objects, the fields parameter identifies the requested properties of 
-          those individual objects, rather than the properties of the collection.</c>
+          information about a resource to specify individual pieces of 
+          information it is interested in receiving as a simple, comma separated 
+          list. For instance, "fields=name,email". The server MAY choose to 
+          return a representation of the requested information containing only 
+          the requested fields along with any additional information the server 
+          determines is required. If the resource identified by the URI 
+          represents a collection of individual objects, the fields parameter 
+          identifies the requested properties of those individual objects, 
+          rather than the properties of the collection.</c>
         
           <c>filterBy</c>
           <c>When the resource to which a request is directed represents a
@@ -393,7 +496,7 @@
           a subset of those items, the filterBy parameter specifies the name
           of a field to be used as a selection filter to determine the subset
           of items to return. The value of the parameter is the name of a
-          property of each of the objects in the collection. This property 
+          field contained by each of the objects in the collection. This property 
           is intended to be used in conjunction with the filterOp and 
           filterValue parameters.</c>
         
@@ -433,6 +536,7 @@
           specifies the value against which the value of the filterBy field 
           is tested.</c>
         
+          <!-- 
           <c>format</c>
           <c>By default, all REST services utilize the JSON-based serialization
           defined in <xref target="data-representation"/>. Individual services A
@@ -443,7 +547,8 @@
           preferred data formats. However, as not all requesting applications are 
           capable of directly accessing HTTP Headers, the "format" parameter 
           MAY be used as an alternative. The value of the format parameter is 
-          a single MIME Media Type, e.g. "format=application/atom+xml". TODO: should we deprecate this?</c>
+          a single MIME Media Type, e.g. "format=application/atom+xml".</c>
+           -->
           
           <c>sortOrder</c>
           <c>When the resource to which a request is directed represents a 
@@ -493,11 +598,11 @@
         and to ensure that multiple clients do not inadvertently overwrite each 
         other's data.</t>
         
-        <figure><preamble>For instance, given the Last-Modified Timestamp included in a 
-        response to a request to receive a user's profile, a client can 
-        request that the server return an updated view of the profile if, 
-        and only if the state of the profile has changed since the specified 
-        time:</preamble><artwork>
+        <figure><preamble>For instance, given the Last-Modified Timestamp 
+        included in a response to a request to receive a user's profile, a 
+        client can request that the server return an updated view of the 
+        profile if, and only if the state of the profile has changed since 
+        the specified time:</preamble><artwork>
   GET /api/people/@me/@self HTTP/1.1
   If-Modified-Since: Tue, 15 Nov 1994 12:45:26 GMT
         </artwork></figure>
@@ -505,10 +610,10 @@
         <t>If the profile has not been modified since the date specified, the 
         server would respond with a "304 Not Modified" status.</t>
       
-        <figure><preamble>Given the Entity Tag of a resource representation, a client wishing
-        to modify the resource can request that changes only be applied if the
-        resource has not been subsequently modified since the original representation
-        and Entity Tag were created:</preamble><artwork>
+        <figure><preamble>Given the Entity Tag of a resource representation, 
+        a client wishing to modify the resource can request that changes only 
+        be applied if the resource has not been subsequently modified since 
+        the original representation and Entity Tag were created:</preamble><artwork>
   PUT /api/people/@me/@self HTTP/1.1
   If-Match: "ab12cd34ef56"
   Content-Type: application/json 
@@ -518,21 +623,20 @@
       
         <t>If the server is unable to determine that the specified Entity 
         Tag applies to the current state of the resource, it will abort the 
-        change request and respond to the request using a "412 Precondition Failed" 
-        status.</t>
+        change request and respond to the request using a "412 Precondition 
+        Failed" status.</t>
   
         <t>Note that the Entity Tag specified in the response is generally 
         specific to the actual payload included in the response. If a REST 
-        service supports returning multiple representation formats for a single 
-        resource, such as offering multiple data format options or modified 
-        views of the resource tailored to the authentication credentials 
-        included in the request, the Entity Tag can vary for each specific 
-        response, regardless of whether the actual state of the resource on 
-        the server has changed. Therefore, for any single resource, multiple 
-        Entity Tags can potentially represent the current state of the 
-        resource.</t>
+        service supports multiple representation formats for a single resource, 
+        such as offering multiple data format options or modified views of the 
+        resource tailored to the authentication credentials included in the 
+        request, the Entity Tag can vary for each specific response, regardless 
+        of whether the actual state of the resource on the server has changed. 
+        Therefore, for any single resource, multiple Entity Tags can potentially 
+        represent the current state of the resource.</t>
         
-        <t>At a minimum, All OpenSocial REST Services MUST support the If-Match, 
+        <t>At a minimum, all OpenSocial REST Services MUST support the If-Match, 
         If-None-Match, If-Modified-Since and If-Unmodified-Since HTTP request 
         headers for conditional requests. All requests that result in the 
         potential modification of the current state of a resource MUST include 
@@ -598,7 +702,7 @@
   If-Match: "ab12cd34ef57"
   Content-Type: application/json-patch
 
-  {"add":"emails","value":"j.doe@example.com"}
+  [{"add":"emails","value":"j.doe@example.com"}]
         </artwork></figure>
       
         <figure><preamble>Assuming the change is successful, the server would
@@ -615,33 +719,86 @@
         <t>Support for the PATCH method to perform partial modifications of
         resource is optional.</t>
       
-        <t>Also note that, for illustrative purposes only, this example uses 
-        the JSON Patch format defined by [TODO: JSON Patch Reference]. 
-        Implementations are free, however, to use any format they choose as 
-        the payload of PATCH operations. TODO: Need to pick one basic format</t>
+        <section title="PATCH Document Formats">
       
-        <t>REST Services that support PATCH MUST advertise that support using 
-        the Accept-Patch HTTP Response header as defined by 
-        <xref target="RFC5789"/>, Section 3.1</t>
-      
-        <figure><preamble>For example,</preamble><artwork>
+          <t>TODO: Fill in detail</t>
+        
+          <t>REST Services that support PATCH MUST advertise that support using 
+          the Accept-Patch HTTP Response header as defined by 
+          <xref target="RFC5789"/>, Section 3.1</t>
+        
+          <figure><preamble>For example,</preamble><artwork>
   HTTP/1.1 200 OK
   Allow: GET, PUT, POST, DELETE, HEAD, PATCH, OPTIONS
   Accept-Patch: application/json-patch
-        </artwork></figure>
-      
+          </artwork></figure>
+        </section>
       </section>
-
     </section>
     <!-- END REST SERVICES -->
+
+    <section title="Dates, Times and Timezone Offsets" anchor="datetimes">
+      
+      <t>Whenever date, time, timezone, duration or time period data is 
+      used anywhere within an OpenSocial implementation, the following 
+      rules MUST be applied.</t>
     
-    <section title="The RPC Service" anchor="rpc-service">
+      <t>When encoding a Date and Time together, the date-time construct 
+      from <xref target="RFC3339"/> MUST be used. In addition, an uppercase 
+      "T" character MUST be used to separate the date and time, and an 
+      uppercase "Z" character MUST be present in the absence of a numeric 
+      time zone offset.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  2012-11-09T12:32:34-08:00
+  2013-03-23T01:23:43Z
+      </artwork></figure>
+      
+      <t>When encoding a Date, the full-date construct from <xref target="RFC3339"/> 
+      MUST be used.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  2012-11-09
+      </artwork></figure>
+      
+      <t>When encoding a Time, either the partial-time or full-time
+      constructs from <xref target="RFC3339"/> MUST be used. When encoded as 
+      a full-time, an uppercase "Z" character MUST be present in the absence 
+      of a numeric time zone offset.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  12:32:34-08:00 // full-time
+  12:32:34       // partial-time
+      </artwork></figure>
+      
+      <t>When encoding a Timezone Offset, the time-offset construction 
+      from <xref target="RFC3339"/> MUST be used. Note that when denoting a 
+      Timezone Offset equal to the Coordinated Universal Time (UTC), an 
+      uppercase "Z" character MUST be used.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  -08:00
+      </artwork></figure>
+      
+      <t>When encoding a Duration, the duration construction from <xref target="RFC3339"/>
+      MUST be used.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  P3Y6M4DT12H30M5S
+      </artwork></figure>
     
-      <t>TBD</t>
+      <t>When encoding a period of time, the period constructions from 
+      <xref target="RFC3339"/> MUST be used. Note that when the period 
+      contains explicit date and time components, an uppercase "T" character
+      MUST be used to separate the date and time, and an uppercase "Z"
+      character MUST be used in the absence of a numeric time zone offset.</t>
+      
+      <figure><preamble>For example:</preamble><artwork>
+  P1Y2M10DT2H30M/2008-05-11T15:30:00Z
+      </artwork></figure>
     
     </section>
-    <!-- END RPC SERVICE -->
-    
+ 
     <section title="Data Objects" anchor="data-objects">
       
       <t>All Data Objects exposed via REST Services are serialized as 
@@ -693,7 +850,7 @@
         <t>A "Collection Object" is a Data Object that represents a set of 
         individual, related Data Objects. Collection Objects are serialized
         as JSON Objects conforming to the JSON Activity Streams Collection
-        construct as defined in Section 3.5 of [TODO: Ref Activity Streams].</t>
+        construct as defined in Section 3.5 of <xref target="json-activity-streams"/>.</t>
           
         <t>Such serialized objects inherit all of the basic properties of 
         the Activity Streams Collection object:
@@ -706,7 +863,8 @@
             <c>An optional, non-negative integer specifying the total number
             of items within the collection. This number SHOULD reflect the 
             actual total number of Data Objects that are considered to be 
-            members of the collection and not the number of items actually 
+            members of the set that can be returned after applying any 
+            requested filtering operations and not the number of items actually 
             serialized as values in the <spanx style="verb">items</spanx>
             property value.</c>
             <c>items</c>
@@ -1187,6 +1345,13 @@
    
     </section>
     <!--  END VERSIONING -->
+    
+    <section title="The Aspect Identifier Registry" anchor="aspect-identifier-registry">
+    
+      <t>TBD</t>
+    
+    </section>
+    <!-- END ASPECT REGISTRY -->
   
   </middle>
   <back>
@@ -1198,6 +1363,11 @@
       &rfc5234;
       &rfc6570;
       &rfc5789;
+      &rfc5234;
+      &rfc3986;
+      &rfc3987;
+      &rfc3339;
+      &astreams;
       &part1;
       &part2;
       &part3;
