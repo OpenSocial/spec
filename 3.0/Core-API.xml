@@ -195,7 +195,7 @@
           
           <c>parameters</c>
           <c>Specifies a collection of query parameters associated with the
-          request, specified as a collection of name=value pairs. All REST
+          request, specified as a collection of name and value pairs. All REST
           Services are required to support a common core collection of 
           query parameters as defined in <xref target="standard-query-parameters"/>
           and MAY introduce additional service, resource and aspect specific
@@ -235,9 +235,9 @@
       
       <section title="Service Identifiers" anchor="service-identifiers">
         
-        <t>Service Identifiers are simple text labels that conform to the
-        isegment-nz construction defined in <xref target="RFC3987"/> that
-        are used to identify individual OpenSocial REST services.</t>
+        <t>Service Identifiers are simple text labels, conforming to the
+        isegment-nz construction defined in <xref target="RFC3987"/>,
+        used to identify an individual OpenSocial REST service.</t>
           
         <figure><artwork>
   service-identifier = isegment-nz

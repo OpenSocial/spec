@@ -1,0 +1,7 @@
+<reference anchor="core-gadget" target="../Core-Gadget.xml">
+  <front>
+    <title>OpenSocial Core Gadget Specification v3.0</title>
+    <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>
+    <date month="April" year="2012"/>
+  </front>
+</reference>
