@@ -6812,349 +6812,784 @@ assertEquals(0.30, value);
   </section>
    <section title="Embedded Experiences" anchor="Embedded-Experiences">
   <xref target="Issue-1144">Discussion</xref>
-    <t>Embedded experiences provides a way for a container to display live
-    content from virtually any content host.  Embedded experiences delegates
-    to the content host in order to provide its representation of what the
-    content should look like.  It can do this by either using a URL or a gadget.
-    Embedded expereinces can be used in many different contexts.  Some
-    examples include, but are not limited to, activity streams, emails, and
-    ATOM feeds.</t>
+    <t>Embedded experiences provide a mechanism for embedding OpenSocial
+    gadgets and other web-accessible content sources directly into a 
+    variety of contexts such as Activity Streams, email messages and Atom feeds.
+    The mechanism works by inserting a small structure of data that includes
+    a reference to the embedded content along with contextual data an OpenSocial
+    container would need to render the content appropriately.</t>
+    
+    <t>This data structure can be serialized as either a JSON object or XML and
+    includes the following properties:</t>
+    
+    <texttable>
+      <ttcol align="left" width="15%">Property</ttcol>
+      <ttcol align="left">Description</ttcol>
+      
+      <c><spanx style="verb">context</spanx></c>
+      <c>If the Embedded Experience is used to embed an OpenSocial gadget,
+      the "context" field is used to pass data to the gadget so that it 
+      knows exactly which content to render. For instance, a gadget that 
+      displays a person's profile information will need to know which 
+      profile to display; a gadget that displays an album of recent photos
+      will need to know the identity of the album to display. The content
+      of the "context" field is undefined and specific to each individual 
+      gadget definition with one exception: the special property name 
+      "opensocial" is reserved for use by the container implementation.
+      The "context" properties JSON object value or XML element structure 
+      MUST NOT contain a property named "opensocial".</c>
 
-    <section title="Data Model" anchor="EEDataModel">
-      <t>A simple data model has been defined in order to represent an
-      embedded experience.  The data model may inclue the following fields.
-      </t>
-
-      <texttable align="left">
-         <ttcol>Field</ttcol>
-         <ttcol>Description</ttcol>
-         <c>url</c>
-         <c>A URL to a web page that should be used as an embedded experience.
-         </c>
-         <c>gadget</c>
-         <c>A URL to a gadget definition that should be used as an embedded
-         experience.</c>
-         <c>context</c>
-         <c>
-            Contextual data the gadget can use in order to know what content to
-            embed.  The format of this data is left up to the provider.  This
-            should only be included if a gadget is being used as the embedded
-            experience.
-         </c>
-         <c>previewImage</c>
-        <c>(Optional) An image that can act as a preview for the content.</c>
-      </texttable>
-
-      <t>*The data model must contain at least a URL or gadget.  A URL and
-      a gadget may be present in the same data model, in which case the
-      decision about which embedded experience to render is left up to the
-      container.</t>
-
-      <section title="url">
-        <t>A simple URL may be used as an embedded experience.  A URL provides
-        the easiest way to provide an  embedded experience as a provider would
-        only have to reference an existing page.</t>
-      </section>
-
-      <section title="gadget">
-        <t>A gadget may also be used to provide an embedded experience.
-        Gadgets provide a more advanced embedded experience because they have
-        access to all of the gadget and OpenSocial APIs.</t>
-      </section>
-
-      <section title="context">
-        <t>If a gadget is provided in the data model than a context must also
-        be included as well.  The context field can be used to pass data to the
-        gadget so it knows what content is being embedded.  This allows the
-        gadget to be built abstractly while leveraging the context to know the
-        specifics of what it is supposed to render.</t>
-      </section>
-
-      <section title="previewImage">
-        <t>This optional field may be provided in order to show a preview of
-        the embedded experience without incuring the overhead of rendering the
-        actual embedded experience itself.</t>
-      </section>
-
-      <section title="Example Data Models">
-        <section title="XML-URL">
-      <figure>
-        <artwork xml:space="preserve">
-&lt;embed&gt;
-  &lt;url&gt;http://www.example.com/embedded/123&lt;/url&gt;
-&lt;/embed&gt;
-        </artwork>
-      </figure>
-    </section>
-    <section title="XML-Gadget">
-      <figure>
-        <artwork xml:space="preserve">
-&lt;embed&gt;
-  &lt;gadget&gt;http://www.example.com/embedded/gadget.xml&lt;/gadget&gt;
-  &lt;context&gt;
-    &lt;title&gt;Hello World&lt;/title&gt;
-    &lt;id&gt;123&lt;/id&gt;
-  &lt;/context&gt;
-  &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
-&lt;/embed&gt;
-        </artwork>
-      </figure>
-    </section>
-        <section title="XML-Gadget and URL">
-      <figure>
-        <artwork xml:space="preserve">
-&lt;embed&gt;
-  &lt;url&gt;http://www.example.com/embedded/123&lt;/url&gt;
-  &lt;gadget&gt;http://www.example.com/embedded/gadget.xml&lt;/gadget&gt;
-  &lt;context&gt;
-    &lt;title&gt;Hello World&lt;/title&gt;
-    &lt;id&gt;123&lt;/id&gt;
-  &lt;/context&gt;
-  &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
-&lt;/embed&gt;
-        </artwork>
-      </figure>
-    </section>
-    <section title="JSON-URL">
-      <figure>
-        <artwork xml:space="preserve">
-...
-"embed" : {
-  "url" : "http://www.example.com/embedded/123"
-}
-...
-        </artwork>
-      </figure>
-    </section>
-    <section title="JSON-Gadget">
-      <figure>
-        <artwork xml:space="preserve">
-...
-"embed" : {
-  "gadget" : "http://www.example.com/embedded/gadget.xml",
-  "context" : {
-    "title" : "Hello World",
-    "id" : 123
-  },
-  "previewImage" : "http://www.example.com/embedded/123.png"
-}
-...
-        </artwork>
-      </figure>
-    </section>
-    <section title="JSON-Gadget and URL">
-      <figure>
-        <artwork xml:space="preserve">
-...
-"embed" : {
-    "url" : "http://www.example.com/embedded/123",
-  "gadget" : "http://www.example.com/embedded/gadget.xml",
-  "context" : {
-    "title" : "Hello World",
-    "id" : 123
-  },
-  "previewImage" : "http://www.example.com/embedded/123.png"
-}
-...
-        </artwork>
-      </figure>
-    </section>
-      </section>
-    </section>
-
-    <section title="Views">
-      <t>Gadgets may have a dedicated <xref target="gadgets.views.View">view
-      </xref> for when they are rendered as an embedded experience.  The view
-      name "embedded" has been reserved as the view the container will render
-      when it wants to render an embedded experience.  If this view is not
-      present the container should render the default view.</t>
-    </section>
-
-    <section title="Accessing The Context">
-      <t>An embedded experience gadget has the option of requiring some
-      contextual information in order to render itself.  By abstracting the
-      data from the gadget itself, it allows gadget developers to develop a
-      general gadget that can be used for all embedded expereinces of a
-      specific type.  For example, a gadget developer can develop an
-      embedded experiences gadget to embed videos.  A gadget does not need to
-      be built for each individual video, instead it should be built so that
-      when it gets the id of the video it knows how to display that video.
-      The id can be contained in the contextual data from the embedded
-      experience data model which comes from the service.  The gadget can
-      then retreive this data from the container so it can render the correct
-      video.</t>
-
-      <t>Embedded experience gadgets should require the embedded-experiences
-      feature in their gadget definition in order to access the context.  The
-      contextual data is stored in the <xref target="DataContext">data
-      context</xref> object for the gadget.  The key,
-      org.opensocial.ee.context, has been reserved for storing the context.
-      Gadgets can add a listener on the data context object for this key, or
-      it may retreive the key's value by using the data context APIs.</t>
-    </section>
-
-    <section title="Gadget Example">
-    <t>Below is an example gadget definition which leverages embedded
-    expereince.</t>
-    <figure>
-      <artwork xml:space="preserve">
-&lt;Module&gt;
-  &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
-    &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
-  &lt;/ModulePrefs&gt;
-  &lt;Content type="html" view="embedded"&gt;
-      &lt;![CDATA[
-        &lt;script type="text/javascript"&gt;
-            function myCallback(key){
-              var value = opensocial.data.getDataContext().getDataSet(key);
-            document.getElementById("contextData").innerHTML = "Context Information For This Gadget: " + value;
-          }
-          function initData() {
-            opensocial.data.getDataContext().registerListener('org.opensocial.ee.context', myCallback);
-          }
-          gadgets.util.registerOnLoadHandler(initData);
-      &lt;/script&gt;
-       &lt;div id="contextData"&gt;&lt;/div&gt;
-  ]]&gt;
-  &lt;/Content&gt;
-&lt;/Module&gt;
-        </artwork>
-    </figure>
-  </section>
-
-    <section title="Security">
-      <t>Embedded experiences allows content to rendered on the page that
-      user has not necessarily asked for, therefore it needs to be secured.
-      The container should only ever render content that the user has
-      previously approved.  This specification does not dictate how
-      containers should render embedded expereinces securley.  The
-      implementation of how to do this is left up to the individual
-      containers.</t>
-    </section>
-
-    <section title="Use Case Examples">
-      <section title="Activity Streams">
-        <t>One of the most common use cases of embedded experiences will be
-        in activity streams.  By using embedded experiences in activity
-        streams, it allows content providers to represent the content of
-        the activity entry in a more interactive fasion.  Not only can you
-        provide a text description of the activity, but embedded
-        experiences allows you to provide the actual representation of the
-        object the activity took place on.</t>
-
-        <figure>
-          <artwork xml:space="preserve">
-{
-  "postedTime": "2011-02-10T15:04:55Z",
-  "actor": {
-    "url": "http://example.org/martin",
-    "objectType" : "person",
-    "id": "tag:example.org,2011:martin",
-    "image": {
-      "url": "http://example.org/martin/image",
-      "width": 250,
-      "height": 250
+      <c><spanx style="verb">gadget</spanx></c>
+      <c>A URL to an OpenSocial Gadget definition document that defines the 
+      gadget to be embedded.</c>
+      
+      <c><spanx style="verb">previewImageData</spanx></c>
+      <c>An optional string value that containing Base64-encoded binary data for an
+      image resource that represents the embedded content. This can be 
+      the same image resource linked to by the previewImage property or 
+      a separate image. An embedded experience SHOULD NOT contain both 
+      the previewImageData and previewImage properties.</c>
+      
+      <c><spanx style="verb">preferredExperience</spanx></c>
+      <c>An optional collection of properties that describe the preferred 
+      way the creator of the embedded experience would like containers to
+      render the content.</c>
+      
+      <c><spanx style="verb">previewImage</spanx></c>
+      <c>An optional URI to an image that can be used as a preview for the 
+      embedded content.</c>
+      
+      <c><spanx style="verb">url</spanx></c>
+      <c>A URL to a web page that allows virtually any web-accessible 
+      resource to be used as an Embedded Experience.</c>
+            
+    </texttable>
+    
+    <t>The "url" and "gadget" properties each reference content that is to 
+    be embedded. At least one of these properties MUST be specified.
+    When both properties are used within the Embedded Experience, the decision about which 
+    to render is left to the container.</t>
+    
+    <t>When serialized as JSON, the embedded experience take the form of a 
+    single JSON Object with four distinct properties: "context", "gadget", 
+    "previewImage" and "url". Additional extension properties MAY be included
+    in the JSON object.</t>
+    
+    <figure><preamble>For instance, a simple JSON Embedded Experience
+    that references an OpenSocial gadget:</preamble>
+    <artwork>
+  {
+    "gadget" : "http://www.example.com/embedded/gadget.xml",
+    "context" : {
+      "title" : "Hello World",
+      "id" : 123
     },
-    "displayName": "Martin Smith"
+    "previewImage" : "http://www.example.com/embedded/123.png"
   }
-  "verb": "post",
-  "object" : {
-    "url": "http://example.org/blog/2011/02/entry",
-    "id": "tag:example.org,2011:abc123/xyz"
-  },
-  "target" : {
-    "url": "http://example.org/album/",
-    "objectType": "album",
-    "id": "tag:example.org,2011:abc123",
-    "displayName": "Martin's Album"
-  },
-  "opensocial" : {
-    "embed" : {
-      "gadget" : "http://example.org/AlbumViewer.xml",
-      "context" : {
-        "albumName": "Germany 2009",
-        "photoUrls": [
-          "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
-          "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+    </artwork></figure>
+    
+    <t>When serialized as XML, it is expressed in the form of a root element 
+    &lt;embed&gt; containing four child elements, the order of which is 
+    considered insignificant: &lt;context&gt;, 
+    &lt;gadget&gt;, &lt;previewImage&gt;, and &lt;url&gt;. Additional extension
+    elements and attributes MAY be included in the XML object.</t>
+    
+    <figure><preamble>For example,</preamble>
+    <artwork><![CDATA[
+  <embed>
+    <gadget>http://www.example.com/embedded/gadget.xml</gadget>
+    <context>
+      <title>Hello World</title>
+      <id>123</id>
+    </context>
+    <previewImage>http://www.example.com/embedded/123.png</previewImage>
+  </embed>
+    ]]></artwork></figure>
+    
+    <t>Note that no XML namespace is currently declared for the XML
+    serialization. This means that special care must be taken when 
+    including an XML embedded experience into another type of XML 
+    document. For example, the following shows an XML embedded experience
+    within a partial Atom Entry Document. Note the addition of
+    <spanx style="verb">xmlns=""</spanx> on the embed element in order
+    to "undeclare" the in-scope default XML namespace.</t>
+    
+    <figure><artwork><![CDATA[
+  <entry xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.org/entries/1</id>
+    ...
+    <embed xmlns="">
+      <gadget>http://www.example.com/embedded/gadget.xml</gadget>
+      <context>
+        <title>Hello World</title>
+        <id>123</id>
+      </context>
+      <previewImage>http://www.example.com/embedded/123.png</previewImage>
+    </embed>
+  </entry>
+    ]]></artwork></figure>
+    
+    <section title="Additional Examples">
+    
+      <figure><preamble>A simple URL embedded experience using the JSON 
+      serialization:</preamble><artwork>
+  {
+    "url" : "http://www.example.org/embed/123.html"
+  }
+      </artwork></figure>
+      
+      <figure><preamble>The same URL embedded experience using the XML
+      serialization:</preamble><artwork><![CDATA[
+  <embed>
+    <url>http://www.example.org/embed/123.html</url>
+  </embed>
+      ]]></artwork></figure>
+    
+      <figure><preamble>An embedded experience that specifies both a gadget 
+      and URL serialized as JSON:</preamble><artwork>
+  {
+    "gadget" : "http://www.example.com/embedded/gadget.xml",
+    "url" : "http://www.example.org/embed/123.html",
+    "context" : {
+      "title" : "Hello World",
+      "id" : 123
+    },
+    "previewImage" : "http://www.example.com/embedded/123.png"
+  }
+      </artwork></figure>
+      
+    <figure><preamble>The same embedded experience serialized as XML:</preamble>
+    <artwork><![CDATA[
+  <embed>
+    <gadget>http://www.example.com/embedded/gadget.xml</gadget>
+    <url>http://www.example.org/embed/123.html</url>
+    <context>
+      <title>Hello World</title>
+      <id>123</id>
+    </context>
+    <previewImage>http://www.example.com/embedded/123.png</previewImage>
+  </embed>
+    ]]></artwork></figure>
+    
+    </section>
+    
+    <section title="Considerations for Embedded Experience Gadgets">
+      <section title="Views For Embedded Experiences">
+      <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">
+        <t>When rendering a gadget as an embedded experience, the container
+        will look within the embedded experience data model and see if there 
+        is a <xref target="preferredExperience">"preferred experience"</xref> 
+        object containing a "target" property.  If the 
+        <xref target="eeTargetTypes">target object</xref> type is equal to 
+        "gadget" and there is a view property specified, the container will 
+        try and render the value of the "view" property.  If there is no "view" 
+        propoerty in the target object or there is no target object, or if 
+        there is no preferred experience in the data model, the container will 
+        render a view called "embedded".  If an "embedded" view or the view 
+        specified within the target object of the embedded experience data 
+        model is not found within the gadget definition, the container SHOULD 
+        render the gadget's default view.</t>
+        </x:draft>
+      </section>
+      
+      <section title="Accessing The Context">
+        <t>An embedded experience gadget has the option of requiring some
+        contextual information in order to render itself.  By abstracting the
+        data from the gadget itself, gadget developers can develop
+        generalized gadgets that can be used for all embedded expereinces of a
+        specific type.  For example, a gadget developed to display videos can 
+        be built so that the id of the video is contained and extracted from
+        the embedded experience's "context" property.</t>
+        
+        <figure><artwork>
+  {
+    "gadget" : "http://example.org/embedded/video.xml",
+    "context" : {
+      "video-id" : "abc123"
+    }
+  }
+        </artwork></figure>
+
+        <t>Gadgets that are written to support embedded experiences MUST require 
+        the "embedded-experiences" feature within their gadget definition in 
+        order to access the context.  The contextual data is stored within the 
+        <xref target="DataContext">data context</xref> object for the gadget.  
+        The key, "org.opensocial.ee.context", is used to access the context.
+        Gadgets can add a listener on the data context object for this key, or
+        it may retreive the key's value by using the data context APIs.</t>
+        
+        <figure><preamble>For instance, the Gadget below registers a listener
+        with the data context to retrieve any context data included with the 
+        embedded experience:</preamble>
+          <artwork xml:space="preserve">
+  &lt;Module&gt;
+    &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
+      &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html" view="embedded"&gt;
+        &lt;![CDATA[
+          &lt;script type="text/javascript"&gt;
+            function myCallback(key) {
+              var context = opensocial.data.getDataContext().getDataSet(key);
+              document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
+            }
+            function initData() {
+              opensocial.data.getDataContext().registerListener(
+                'org.opensocial.ee.context', myCallback);
+            }
+            gadgets.util.registerOnLoadHandler(initData);
+        &lt;/script&gt;
+         &lt;div id="contextData"&gt;&lt;/div&gt;
+    ]]&gt;
+    &lt;/Content&gt;
+  &lt;/Module&gt;</artwork>
+        </figure>
+        
+        <section title="Additional Container Specific Context" anchor="rootContext">
+		<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">  
+          <t>While the contextual data associated with the 
+          "org.opensocial.ee.context" key will generally originate 
+          from the information provided by the "context" property
+          within the Embedded Experience document, containers are 
+          free to insert additional, container specific contexual 
+          data into the object. For example, a container might wish to 
+          communicate information about the type of parent object 
+          within which the Embedded Experience information was 
+          received.  If the "context" property of the embedded
+          experience document is not an object than containers
+          SHOULD NOT add any additional information to the "context"
+          property.</t>
+          
+          <t>If such additional information is provided, the object 
+          associated with the "org.opensocial.ee.context" key MUST have an
+          additional "openSocial" property.</t>
+          
+          <t>Containers MAY use the "openSocial" property to communicate
+          additional information about the object containing the embedded
+          experience being rendered.  This information should be added to
+          the "associatedContext" property and MUST contain the following
+          properties:</t>
+          
+          <texttable>
+            <ttcol align="left" width="15%">Property</ttcol>
+            <ttcol align="left">Description</ttcol>
+            <c><spanx style="verb">id</spanx></c>
+            <c>The id of the <eref target="Social-Data.xml">OpenSocial Data object</eref> 
+            containing the embedded experience.  The type of id will depend on the 
+            type of OpenSocial Data object containing the embedded experience.</c>
+            <c><spanx style="verb">type</spanx></c>
+            <c>The type of OpenSocial Data object containing the embedded
+            experience.</c>
+          </texttable>
+          
+          <figure><preamble>The following is an example of what the 
+          embedded experience data model looks like if the container adds
+          the required fields of the "associatedContext" object.</preamble><artwork>
+  {
+    "gadget" : "http://example.org/AlbumViewer.xml",
+    "context" : {
+      "albumName": "Germany 2009",
+      "photoUrls": [
+        "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+        "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
         "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
         "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
         "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
-          "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+        "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
         "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
-        ]
+      ],
+      "openSocial" : {
+        "associatedContext" : {
+          "id" : "container.com:123abc",
+          "type" : "opensocial.ActivityEntry"
+        }
       }
     }
   }
-}
-          </artwork>
-        </figure>
-      </section>
-      <section title="Email">
-        <t>Numerous services send email notifications to your inbox in
-        order to let you know something took place that you may be
-        interested in.  Most of the time however these notifications don't
-        give you much useful information.  In order to do anything about
-        the notification you have to go back out to the actual services
-        website.  By leveraging embedded experiences, services can send an
-        actual representation of the object the notification is about, and
-        allow the user to take action on the notification strait from their
-        inbox.</t>
-
-        <t>The embedded experiences data model may be embedded into MIME
-        emails in order to allow email clients to render an embedded
-        experience.  To send an embedded experience in a MIME email the
-        agent sending the MIME email must conform to the following:
-
-          <list style="symbols">
-            <t>The MIME email must be a multipart/alternative MIME email.
-            The email needs to be multipart/alternative because the embedded
-            experiences part is just an alternate representation of the
-            content in the other parts.</t>
-            <t>The MIME email must have at least two MIME parts, one of type
-            text/html, and one of type application/embed+xml or
-            application/embed+json. Since the embedded experience relys on
-            remote content, the text/html part will be needed if the remote
-            content cannot be rendered.</t>
-            <t>The application/embed+xml or application/embed+json part
-            must contain either the XML or JSON version of the embedded
-            experiences data model.</t>
-          </list>
-        </t>
-
-        <figure>
-          <artwork xml:space="preserve">
-From: notifications@socialnetwork.com
-To: johndoe@example.com
-Subject: Social Network: Mary Has Commented On Your Status
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-        boundary="XXXXboundary text"
-
-Mary has commented on your status.
-
---XXXXboundary text
-Content-Type: text/plain
-
-Mary has commeneted on your status.
-
---XXXXboundary text
-Content-Type: text/html
-
-&lt;html&gt;
-&lt;!-- HTML representation here --&gt;
-&lt;/html&gt;
-
---XXXXboundary text
-Content-Type: application/embed+json
-{
-  "gadget" : "http://www.socialnetwork.com/embedded/commentgadget.xml",
-  "context" : 123
-}
-          </artwork>
-        </figure>
-      </section>
-    </section>
+          </artwork></figure>
+          
+          <t>Note: As stated above, everything inside the "openSocial" property 
+          of the above example was added by the container.</t>
+          
+          <t>In addition to the "id" and the "type" properties, containers MAY add 
+          an additional property to the associated context called "objectReference".
+          If present, the "objectReference" property will contain the JSON representation 
+          of the OpenSocial Data object containing the embedded experience.</t>
+          
+          <texttable>
+            <ttcol align="left" width="15%">Property</ttcol>
+            <ttcol align="left">Description</ttcol>
+            <c><spanx style="verb">objectReference</spanx></c>
+            <c>The JSON representation of the OpenSocial Data object 
+            containing the embedded experience.  This OpenSocial Data object
+            MUST contain the complete embedded experience data model.</c>
+          </texttable>
+          
+          <figure><preamble>The following is an example of what the 
+          embedded experience data model would look like if the container added
+          the required and optional fields of the "associatedContext" 
+          object.</preamble><artwork>
+  {
+    "gadget" : "http://example.org/AlbumViewer.xml",
+    "context" : {
+      "albumName": "Germany 2009",
+      "photoUrls": [
+        "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+        "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+        "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
+        "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
+        "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
+        "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+        "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
+      ],
+      "openSocial" : {
+        "associatedContext" : {
+          "id" : "container.com:123abc",
+          "type" : "opensocial.ActivityEntry",
+          "objectReference" : {
+            "postedTime": "2011-02-10T15:04:55Z",
+            "actor": {
+              "objectType" : "person",
+              "id": "tag:example.org,2011:martin",
+              "displayName": "Martin Smith"
+            },
+            "verb": "post",
+            "object" : {
+              "objectType":"collection",
+              "objectTypes":["image"]
+              "id": "http://example.org/albums/germany-2009",
+              "url": "http://example.org/albums/germany-2009",
+            },
+            "openSocial" : {
+              "embed" : {
+                "gadget" : "http://example.org/AlbumViewer.xml",
+                "context" : {
+                  "albumName": "Germany 2009",
+                  "photoUrls": [
+                    "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+                    "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+                    "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
+                    "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
+                    "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
+                    "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+                    "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+          </artwork></figure>
+          
+          <figure><preamble>The following example illustrates how this 
+          additional context information is accessed:</preamble><artwork>
+  function myCallback(key) {
+    var context = opensocial.data.getDataContext().getDataSet(key);
+    var video_id = context['albumName'];
+    
+    var associatedContext = context.openSocial.associatedContext;
+    var ac_id = associatedContext.id;
+    var ac_type = associatedContext.type;
+    
+    //The container MAY also add an object reference
+    var obj_ref = associatedContext.objectReference
+    if(typeof obj_ref !== 'undefined') {
+      //Do something with the object reference
+    }
+    // ...
+  }
+  function initData() {
+    opensocial.data.getDataContext().registerListener(
+      'org.opensocial.ee.context', myCallback);
+  }
+  gadgets.util.registerOnLoadHandler(initData);
+          </artwork></figure>
+          
+          <t>Specific container implementations are free to insert any additional
+          information they wish into the and "openSocial" object values. The 
+          interpretation and use of any such information is
+          considered out of the scope of this specification.</t>
+        </x:draft>
+        </section>
+      </section>  
   </section>
+  <section title="Preferred Experiences" anchor="preferredExperience">
+  <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">
+    <t>While the container retains control over deciding exactly how an
+    embedded experience is processed and rendered, there are situations 
+    where the creator of the embedded experience might wish to provide 
+    clues to the container as to how it would prefer the content to be
+    displayed. These clues are included within the Embedded Experience
+    using the "preferredExperience" property.</t>
+    
+    <figure><preamble>The following illustrates a basic example 
+    serialized as JSON:</preamble>
+    <artwork>
+  {
+    "gadget" : "http://www.example.com/embedded/gadget.xml",
+    "url" : "http://www.example.com/foo/bar.html",
+    "context" : {
+      "title" : "Hello World",
+      "id" : 123
+    },
+    "previewImage" : "http://www.example.com/embedded/123.png",
+    "preferredExperience" : {
+      "target" : {
+        "type" : "gadget",
+        "view" : "my-ee-view"
+      },
+      "display" : {
+        "type" : "link"
+      }
+  }
+    </artwork></figure>
+    
+    <figure><preamble>And the same example using the alternative 
+    XML serialization:</preamble>
+    <artwork><![CDATA[
+  <embed>
+    <gadget>http://www.example.com/embedded/gadget.xml</gadget>
+    <url>http://www.example.com/foo/bar.html</url>
+    <context>
+      <title>Hello World</title>
+      <id>123</id>
+    </context>
+    <previewImage>http://www.example.com/embedded/123.png</previewImage>
+    <preferredExperience>
+      <target>
+        <type>gadget</type>
+        <view>my-ee-view</view>
+      </target>
+      <display>
+        <type>link</type>
+      </display>
+    </preferredExperience>
+  </embed>
+    ]]></artwork></figure>
+
+    <t>In this example, we have an embedded experience serialized as JSON.
+    The structure defines both a "url" and a "gadget" property, both of w
+    which can be used by the container to display embedded content. Typically,
+    the decision of which to display when the embedded experience is rendered
+    is up to the container. The "preferredExperience.target" property allows the 
+    creator of the embedded experience to indicate that it would prefer the
+    container to use the "gadget" property for rendering, and specifically that
+    the "my-ee-view" view within that gadget be used. The "preferredExperience.display"
+    property indicates that rather than simply displaying the gadget automatically,
+    the embedded experience's creator would rather the container initially display a 
+    hyperlink that, when clicked, causes the gadget to be displayed.</t>
+    
+    <texttable>
+      <ttcol align="left" width="15%">Property</ttcol>
+      <ttcol align="left">Description</ttcol>
+      <c><spanx style="verb">display</spanx></c>
+      <c>Describes preferences for how the embedded experience should 
+      initially be displayed by the container. The value of the 
+      "display" property is an object that contains a 
+      required "type" property, the value of which determines 
+      what other properties might appear within the object.</c>
+      <c><spanx style="verb">target</spanx></c>
+      <c>Describes preferences for which type of embedded experience 
+      the container should render. For instance, if the embed includes
+      both a "url" and "gadget" property, the "target" is used to specify
+      which is preferred. The value of the "target" property is an 
+      object that contains a required "type" property, the value of which
+      determines what other properties might appear within the object.</c>
+    </texttable>
+
+    <section title="Display Types">
+
+      <t>This specification currently defines two possible values for the 
+      required "type" property on the display object: "link", "image".
+      Each of which are illustrated below.</t>
+      
+      <figure><preamble>Display using a hyperlink:</preamble><artwork>
+  {
+    "gadget" : "...",
+    ...,
+    "preferredExperience" : {
+      "target": {...},
+      "display": {
+        "type" : "link",
+        "text" : "Click on me!",
+        "title" : "Click on this link!"
+      }
+    }
+  }
+      </artwork></figure>
+      
+      <t>When "type" equals "link", the additional properties on the 
+      display object are:</t>
+      
+      <texttable>
+        <ttcol align="left" width="15%">Property</ttcol>
+        <ttcol align="left">Description</ttcol>
+        <c><spanx style="verb">text</spanx></c>
+        <c>A required String that provides the text to display with the hyperlink.</c>
+        <c><spanx style="verb">title</spanx></c>
+        <c>Optional text to display as the "popup help" or "tooltip" of 
+        the hyperlink.</c>
+      </texttable>
+      
+      <figure><preamble>Display using the previewImage:</preamble><artwork>
+  {
+    "gadget" : "...",
+    ...,
+    "previewImage" : "http://example.org/preview.png",
+    "preferredExperience" : {
+      "target": {...},
+      "display": {
+        "type" : "image",
+        "altText" : "The alt text",
+        "width" : 100,
+        "height" : 100
+      }
+    }
+  } 
+      </artwork></figure>
+      
+      <figure><preamble>Display using contained Base64-encoded binary data:</preamble><artwork>
+  {
+    "gadget" : "...",
+    ...,
+    "previewImageData" : "{Base64-encoded Image}",
+    "preferredExperience" : {
+      "target": {...},
+      "display": {
+        "type" : "image",
+        "altText" : "The alt text",
+        "width" : 100,
+        "height" : 100
+      }
+    }
+  } 
+      </artwork></figure>
+      
+      <t>When "type" equals "image", the additional properties on the 
+      display object are:</t>
+      
+      <texttable>
+        <ttcol align="left" width="15%">Property</ttcol>
+        <ttcol align="left">Description</ttcol>
+        <c><spanx style="verb">altText</spanx></c>
+        <c>Specifies optional, alternative text to display if the image cannot 
+        be displayed. Equivalent to the HTML image tags alt attribute.</c>
+        <c><spanx style="verb">height</spanx></c>
+        <c>Specifies the preferred display height of the image in pixels.</c>
+        <c><spanx style="verb">width</spanx></c>
+        <c>Specifies the preferred display width of the image in pixels.</c>
+      </texttable>
+     
+      <t>Implementations are free to define additional display types, 
+      each with their own properties. If a container encounters an 
+      embedded experience that uses an unknown or unsupported display 
+      type, the container MUST ignore the display preferences.</t>
+
+    </section>    
+    
+    <section title="Target Types" anchor="eeTargetTypes">
+    
+      <t>This specification currently defines two possible values for the 
+      type property on the target object: "gadget" and "url". Each of which 
+      are illustrated below.</t>
+    
+      <figure><preamble>Preferring the gadget target:</preamble><artwork>
+  {
+    "gadget" : "...",
+    "url" : "...",
+    ...,
+    "preferredExperience" : {
+      "target": {
+        "type" : "gadget",
+        "view" : "my-ee-view"
+      },
+      "display": {
+        ...
+      }
+    }
+  }
+      </artwork></figure>
+      
+      <t>Note that the preferred experience target's "type" property is only 
+      required if the preferred target is not obvious within the embedded 
+      experience. For instance, if the embedded experience only defines an 
+      IRI value for the "gadget" property, then the preferred target type
+      is "gadget". However, if both the "url" and "gadget" properties are
+      specified, as in the example above, the target type in the preferred
+      experience MUST be specified. Containers MUST ignore the preferred 
+      experience if the target type value does not match the options specified
+      within the Embedded Experience (e.g. target type specifies "url" but 
+      only a "gadget" IRI is provided, etc).</t>
+      
+      <t>When "type" equals "gadget", the additional properties on the 
+      target object are:</t>
+      
+      <texttable>
+        <ttcol align="left" width="15%">Property</ttcol>
+        <ttcol align="left">Description</ttcol>
+        <c><spanx style="verb">view</spanx></c>
+        <c>The preferred gadget view to render. If not specified, the value "embedded" is assumed.</c>
+        <c><spanx style="verb">viewTarget</spanx></c>
+        <c>Specifies where the container SHOULD render the view. Possible 
+        values are "TAB", "DIALOG", "MODALDIALOG", "FLOAT", and "SIDEBAR".</c>
+      </texttable>
+      
+      <figure><preamble>Preferring the url target:</preamble><artwork>
+  {
+    "gadget" : "...",
+    "url" : "...",
+    ...,
+    "preferredExperience" : {
+      "target": {
+        "type" : "url",
+        "viewTarget" : "_new"
+      },
+      "display": {
+        ...
+      }
+    }
+  }
+      </artwork></figure>
+      
+      <t>When "type" equals "url", the additional properties on the 
+      target object are:</t>
+      
+      <texttable>
+        <ttcol align="left" width="15%">Property</ttcol>
+        <ttcol align="left">Description</ttcol>
+        <c><spanx style="verb">viewTarget</spanx></c>
+        <c>When specifying a URL, rather than being forced to render in an 
+        embedded view, the developer may wish to indicate to the container 
+        that the page be opened in a new browser window. In this case, the 
+        target properties for a URL match those that are defined by the 
+        HTML spec, e.g. "_blank".</c>
+      </texttable>
+    
+      <t>Implementations are free to define additional target types, 
+      each with their own properties. If a container encounters an 
+      embedded experience that uses an unknown or unsupported target 
+      type, the container MUST ignore the target preferences.</t>
+    
+    </section>
+  </x:draft>	
+  </section>
+  
+  
+  <section title="Security">
+    <t>Embedded experiences allow content to be rendered on the page that
+    user has not necessarily requested, therefore it needs to be secured.
+    The container SHOULD only ever render content that the user has
+    previously approved.  This specification does not dictate how
+    secure rendering of embedded experiences is to be performed.</t>
+  </section>
+  <section title="Embedded Experiences within Activity Streams">
+  
+    <t>Embedded experiences can be used within an Activity Streams 
+    document in order to provide a more interactive experience. Whereas
+    the core properties of the Activity provide a textual description of
+    the event, an included embedded experience can provide a direct representation
+    of the object involved.</t>
+  
+    <figure><preamble>For instance, if a user uploads a collection of photos
+    and creates a new photo album, an embedded experience can be used within 
+    the activity to provide a representation of the album itself:</preamble>
+          <artwork xml:space="preserve">
+  {
+    "postedTime": "2011-02-10T15:04:55Z",
+    "actor": {
+      "objectType" : "person",
+      "id": "tag:example.org,2011:martin",
+      "displayName": "Martin Smith"
+    },
+    "verb": "post",
+    "object" : {
+      "objectType":"collection",
+      "objectTypes":["image"]
+      "id": "http://example.org/albums/germany-2009",
+      "url": "http://example.org/albums/germany-2009",
+    },
+    "openSocial" : {
+      "embed" : {
+        "gadget" : "http://example.org/AlbumViewer.xml",
+        "context" : {
+          "albumName": "Germany 2009",
+          "photoUrls": [
+            "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+            "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+            "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
+            "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
+            "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
+            "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+            "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
+          ]
+        }
+      }
+    }
+  }</artwork></figure>
+  
+    <t>As illustrated in the example, when included within an activity, 
+    the embedded experience MUST appear as the value of the "embed" property 
+    as a child of the "openSocial" property.</t>
+  
+  </section>
+  
+  <section title="Embedded Experiences within Email">
+
+    <t>Numerous services send email notifications to your inbox in
+    order to let you know something took place that you may be
+    interested in.  Most of the time however these notifications do not
+    provide much useful information beyond a link back to the service's 
+    website.  By leveraging embedded experiences, services can send an
+    embedded representation of the object the notification is about, and
+    allow the user to take action on the notification directly from within 
+    an embedded experiences enabled email client.</t>
+
+    <t>Embedded experiences serialized as either JSON or XML can be embedded 
+    Multipart MIME encoded email messages. Such email messages MUST utilize 
+    the "multipart/alternative" MIME variant and MUST contain at least two
+    MIME parts -- one containing regular content of the email message encoded
+    as text/html content, and another containing the embedded experience content 
+    using either the "application/embed+json" or "application/embed+xml" MIME media type, 
+    respectively representing the JSON and XML serializations. Additional
+    MIME parts MAY be included </t>
+
+    <figure>
+      <preamble>For instance,</preamble>
+      <artwork xml:space="preserve">
+  From: notifications@socialnetwork.com
+  To: johndoe@example.com
+  Subject: Social Network: Mary Has Commented On Your Status
+  MIME-Version: 1.0
+  Content-Type: multipart/alternative;
+          boundary="XXXXboundary text"
+
+  Mary has commented on your status.
+  
+  --XXXXboundary text
+  Content-Type: text/plain
+  
+  Mary has commeneted on your status. 
+  
+  --XXXXboundary text
+  Content-Type: text/html
+
+  &lt;html&gt;
+  &lt;!-- HTML representation here --&gt;
+  &lt;/html&gt;
+
+  --XXXXboundary text
+  Content-Type: application/embed+json
+  {
+    "gadget" : "http://www.socialnetwork.com/embedded/commentgadget.xml",
+    "context" : 123
+  }</artwork>
+    </figure>
+    
+  </section>
+  </section> <!-- End embedded experience section -->
   </section>
 
   <references title="Discussion">
