@@ -7044,6 +7044,32 @@ assertEquals(0.30, value);
     &lt;/Content&gt;
   &lt;/Module&gt;</artwork>
         </figure>
+        <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1249" note="Issue 1249:	You have to write a large amount of code to access the embedded experience context">
+        <figure><preamble>Instead of using the data context APIs to get the embedded experiences
+        context you may choose to use the <xref target="gadgets.ee.registerContextListener">
+        gadgets.ee.registerContextListener</xref> API in order to lessen the amount of code you 
+        need to write.  The above gadget example can be rewriten to use the 
+        registerContextListener API:</preamble>
+          <artwork xml:space="preserve">
+  &lt;Module&gt;
+    &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
+      &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html" view="embedded"&gt;
+        &lt;![CDATA[
+          &lt;script type="text/javascript"&gt;
+            gadgets.ee.registerOnLoadHandler(function() {
+              gadgets.ee.registerContextListener(function(context) {
+                document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
+              });
+            });
+        &lt;/script&gt;
+         &lt;div id="contextData"&gt;&lt;/div&gt;
+    ]]&gt;
+    &lt;/Content&gt;
+  &lt;/Module&gt;</artwork>
+        </figure>
+        </x:draft>      
         
         <section title="Additional Container Specific Context" anchor="rootContext">
 		<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">  
@@ -7588,6 +7614,42 @@ assertEquals(0.30, value);
   }</artwork>
     </figure>
     
+  </section>
+  <section title="Method Details" anchor="methoddetails">
+    <section title="registerContextListener" anchor="gadgets.ee.registerContextListener">
+    <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1249" note="Issue 1249:	You have to write a large amount of code to access the embedded experience context">
+      <t>&lt;static&gt; gadgets.registerContextListener(listener)</t>
+      <t>Description: Registers a function which will be called when the 
+      embedded experience gadget recieves its context.</t>
+      <t>Parameters:
+      <texttable align="left">
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>listener</c>
+       <c>Function</c>
+       <c>A function that will be called whenever the embedded experience context is 
+       set for this gadget.  The function should take one parameter which is a JSON 
+       object representing the embedded experience context from the gadget.  See the 
+       embedded experiences 
+       <xref target="Embedded-Experiences">data model description</xref> for more 
+       information on the context object.</c>
+      </texttable></t>
+      
+      <t>Example:</t>
+      <figure>
+      <artwork xml:space="preserve">
+         &lt;script type="text/javascript"&gt;
+            gadgets.ee.registerOnLoadHandler(function() {
+              gadgets.ee.registerContextListener(function(context) {
+                document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
+              });
+            });
+         &lt;/script&gt;
+       </artwork>
+       </figure>
+      </x:draft>
+    </section>
   </section>
   </section> <!-- End embedded experience section -->
   </section>
