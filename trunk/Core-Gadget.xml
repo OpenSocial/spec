@@ -2795,7 +2795,7 @@ var lang = prefs.getLang();
          <c>dataModel</c>
          <c>Object</c>
          <c>The embedded experiences data model.  
-         See appendix on <xref target="EEDataModel">the embedded experiences data model</xref></c>
+         See appendix on <xref target="Embedded-Experiences">the embedded experiences data model</xref></c>
          <c>opt_params </c>
          <c>Object</c>
          <c>These are optional parameters which can be used to open gadgets.
