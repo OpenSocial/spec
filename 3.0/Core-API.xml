@@ -26,6 +26,8 @@
   
   <!ENTITY astreams PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/astreams.xml'>
   
+  <!ENTITY socialapp PUBLIC 'bib/social-gadget.bibxml'>
+  <!ENTITY coregadget PUBLIC 'bib/core-gadget.bibxml'>
 ]>
 <?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
@@ -261,8 +263,8 @@
   Host: example.org
         </artwork></figure>
         
-        <t>Please refer to the [TODO: Social Spec Ref] specification for 
-        complete details on the core set of Social Data Services defined by
+        <t>Please refer to the <xref target="social-app"/> specification for 
+        complete details on the core set of Social Data Services [TODO: Naming] defined by
         this version of the OpenSocial specification. Implementations are 
         free to implement additional services.</t>
         
@@ -348,7 +350,7 @@
   aspect-identifier = "@" isegment-nz
         </artwork></figure>
         
-        <t>For example, Person Data Objects as defined by the [TODO: Ref Social Spec]
+        <t>For example, Person Data Objects as defined by the <xref target="social-app"/>
         expose a number of Aspects that are specific to the social data that 
         makes up a person's profile data. For instance:
           <list style="symbols">
@@ -374,11 +376,10 @@
   Host: example.org
         </artwork></figure>
         
-        <t>Please refer to the [TODO: Social Spec Ref] specification for 
-        complete details on the specific aspects associated with each of the 
-        core OpenSocial Social Data Objects and services. Implementations are 
-        free to define additional aspects for any of the core Social Data 
-        Objects and Services.</t>
+        <t>Please refer to <xref target="social-app"/> for complete details on 
+        the specific aspects associated with each of the core OpenSocial Social 
+        Data Objects and services. Implementations are free to define additional 
+        aspects for any of the core Social Data Objects and Services.</t>
         
         <t>To prevent against the likelihood of compatibility issues arising 
         through the use and extension of aspects by implementations as well 
@@ -445,11 +446,10 @@
         either app-1 or app-2 that have been tagged with either "foo" or 
         "bar".</t>
         
-        <t>Please refere to the [TODO: Social Spec Ref] specification for
-        complete details on an specific filters associated with each of the 
-        core OpenSocial Social Data Objets and services. Implementations are
-        free to define additional filters for any of the core Social Data 
-        Objects and Services.</t>
+        <t>Please refer to <xref target="social-app"/> for complete detail on 
+        specific filters associated with each of the core OpenSocial Social Data 
+        Objects and services. Implementations are free to define additional 
+        filters for any of the core Social Data Objects and Services.</t>
       
         <t>If a particular implementation does not support a given specified
         filter, it SHOULD simply return a 404 Not Found response.</t>
@@ -829,7 +829,7 @@
           is not.</t>
           <t>When a property is defined as a boolean and the value is false, 
           the property MAY be omitted entirely from the JSON serialization.</t>
-          <t>When a property is defined as a "plural fiend", it's value MUST be 
+          <t>When a property is defined as a "plural field", it's value MUST be 
           serialized as an Array of Plural Objects as defined by <xref target="plural-objects"/>.</t>        
           <t>All <xref target="RFC3987">IRI</xref> and <xref target="RFC3986">URI</xref>
           references contained with the serialized JSON structure SHOULD be 
@@ -925,8 +925,6 @@
           </texttable>
         </t>
           
-        <t>TODO: Need to handle paging</t>
-          
         <figure><preamble>The following example shows a subset of a 
         collection of OpenSocial Person objects:</preamble><artwork>
   {
@@ -934,13 +932,15 @@
     "startIndex": 0,
     "itemsPerPage" : 2,
     "items" : [
-      {"displayName":"Joe",
+      {
+       "displayName":"Joe",
        "name": {
          "givenName":"Joe",
          "familyName":"Smith"
        }
       },
-      {"displayName":"Sally",
+      {
+       "displayName":"Sally",
        "name": {
          "givenName":"Sally",
          "familyName":"Jones"
@@ -949,6 +949,12 @@
     ]
   }
         </artwork></figure>
+        
+        <section title="Multi-page Collections">
+        
+          <t>TODO: Paging</t>
+        
+        </section>
         
       </section>
         
@@ -1113,6 +1119,19 @@
       
       </section>
       
+      <section title="Data Object Type Identifiers" anchor="data.type.identifiers">
+      
+        <t>TODO: Object Type Identifiers</t>
+        
+        <figure><artwork>
+  segment = 1*( ALPHA / DIGIT )
+  prefix = segment "."
+  name = segment
+  datatype = prefix name
+        </artwork></figure>
+        
+      </section>
+      
     </section>
     <!--  END DATA OBJECTS -->
    
@@ -1227,8 +1246,8 @@
         limited access to certain protected resources without having to
         walk through the entire typical OAuth protocol.</t>
         
-        <t>Signed Fetch is described in detail in Section [TODO: Ref] of the
-        OpenSocial Core Gadget Specification.</t>
+        <t>Signed Fetch is described in detail in <xref target="core-gadget">The
+        OpenSocial Core Gadget Specification</xref>.</t>
       
       </section>
     
@@ -1375,6 +1394,8 @@
       &part5;
       &part6;
       &part7;
+      &socialapp;
+      &coregadget;
       &bearer;
       &mac;
     </references>

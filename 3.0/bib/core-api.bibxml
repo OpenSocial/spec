@@ -1,4 +1,4 @@
-<reference anchor="core-gadget" target="../Core-API.xml">
+<reference anchor="core-api" target="../Core-API.xml">
   <front>
     <title>OpenSocial Core API Specification 3.0</title>
     <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>

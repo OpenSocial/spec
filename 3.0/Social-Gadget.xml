@@ -4,76 +4,68 @@
 <?rfc-ext allow-markup-in-artwork="yes"?>
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
         "http://xml.resource.org/authoring/rfc2629.dtd">
-<rfc ipr="full3978"
-     docName="opensocial-social-gadget-specification-2-5-0-draft"
-     xmlns:x="http://purl.org/net/xml2rfc/ext">
-    <front>
-        <title abbrev="Core-Gadget">OpenSocial Social Application Specification 3.0</title>
-        <author fullname='OpenSocial and Gadgets Specification Group'>
-            <address>
-                <email>opensocial-and-gadgets-spec@googlegroups.com</email>
-            </address>
-        </author>
-        <date month="August" year="2011"/>
-        <abstract>
-            <t>This document defines social additions to the <xref target="Core-Gadget">OpenSocial Application
-                Specification</xref> and <xref target="OpenSocial-Templating">OpenSocial Templating Specification</xref>
-            </t>
-        </abstract>
-        <area>General</area>
-        <keyword>OpenSocial</keyword>
-        <keyword>social applications</keyword>
-        <keyword>social networking</keyword>
-        <keyword>REST</keyword>
-        <keyword>XML</keyword>
-        <keyword>Extensible Markup Language</keyword>
-        <keyword>JSON</keyword>
-        <keyword>JavaScript Object Notation</keyword>
-    </front>
-    <middle>
-        <section title="Overview">
-            <t>TODO: Replace
+<rfc ipr="full3978" docName="opensocial-social-gadget-specification-2-5-0-draft" xmlns:x="http://purl.org/net/xml2rfc/ext">
+  <front>
+    <title abbrev="Core-Gadget">OpenSocial Social Application Specification 3.0</title>
+    <author fullname='OpenSocial and Gadgets Specification Group'>
+      <address>
+        <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+      </address>
+    </author>
+    <date month="August" year="2011"/>
+    <abstract>
+      <t>This document defines social additions to the <xref target="core-gadget">
+      OpenSocial Application Specification</xref> and <xref target="OpenSocial-Templating">
+      OpenSocial Templating Specification</xref></t>
+    </abstract>
+    <area>General</area>
+    <keyword>OpenSocial</keyword>
+    <keyword>social applications</keyword>
+    <keyword>social networking</keyword>
+    <keyword>REST</keyword>
+    <keyword>XML</keyword>
+    <keyword>Extensible Markup Language</keyword>
+    <keyword>JSON</keyword>
+    <keyword>JavaScript Object Notation</keyword>
+  </front>
+  <middle>
+    <section title="Overview">
+      <t>TODO: Replace
+        OpenSocial provides three ways for gadgets to access social data. 
+        First, the JavaScript API contains methods in the osapi.* namespace 
+        which map to the services defined in the Social API Server Specification. 
+        Second, Data Pipelining is a declarative syntax for specifying the 
+        social data a gadget will need, allowing the container to prefetch data 
+        for faster gadget rendering. Third, Templating provides several tags to 
+        accomplish common tasks, like displaying the UI for selecting friends 
+        from a list.</t>
+        
+      <section title="Notation and Conventions">
+        <t>This document extends the <xref target="Core-Gadget">OpenSocial 
+        Application Specification</xref> and the <xref target="OpenSocial-Templating">
+        OpenSocial Templating Specification</xref>.  Therefore, all notations 
+        and conventions defined within each document is inherited by, and 
+        applicable to, this document.</t>
+      </section>
+    </section>
+    
+    <section title="Container-Provided Social Capabilities" anchor="ContainerCapabilities">
+    </section>
 
-                OpenSocial provides three ways for gadgets to access social data. First, the JavaScript API contains
-                methods in the osapi.* namespace which map to the services defined in the Social API Server
-                Specification. Second, Data Pipelining is a declarative syntax for specifying the social data a gadget
-                will need, allowing the container to prefetch data for faster gadget rendering. Third, Templating
-                provides several tags to accomplish common tasks, like displaying the UI for selecting friends from a
-                list.
-            </t>
-            <section title="Notation and Conventions">
-                <t>
-                    This document extends the <xref target="Core-Gadget">OpenSocial Application Specification</xref> and
-                    the <xref target="OpenSocial-Templating">OpenSocial Templating Specification</xref>.  Therefore, all
-                    notations and conventions defined within each document is inherited by, and applicable to, this document.
-                    <t>
-                        Additional conventions for this document are defined as follows:
-                    </t>
-                    <t>
-                        TODO: Define any extensions
-                    </t>
-                </t>
-            </section>
-        </section>
-        <section title="Container-Provided Social Capabilities" anchor="ContainerCapabilities">
+    <section title="Container-Provided Social Features" anchor="ContainerFeatures">
+    </section>
 
-        </section>
-        <section title="Container-Provided Social Features" anchor="ContainerFeatures">
+    <section title="JavaScript API Reference" anchor="JavaScriptAPIReference">
 
-        </section>
+      <t>For an overview of the patterns used in the following reference, see the 
+      introduction to the <eref target="Core-Gadget.xml#JavaScript-API-Reference">
+      JavaScript API Reference</eref> in <xref target="Core-Gadget"/></t>
 
-        <section title="JavaScript API Reference"
-                 anchor="JavaScriptAPIReference">
-            <t>For an overview of the patterns used in the following reference, see the introduction to the
-                <eref target="Core-Gadget.xml#JavaScript-API-Reference">JavaScript API Reference</eref>
-                in
-                <xref target="Core-Gadget"/>
-            </t>
-            <section title="osapi.people"
-                     anchor="osapi.people">
-                <t>Service object with functions that map to the
-                    <eref target="./Social-API-Server.xml#People-Service">People service</eref>.
-                </t>
+      <section title="osapi.people" anchor="osapi.people">
+      
+        <t>Service object with functions that map to the
+        <eref target="./Social-API-Server.xml#People-Service">People service</eref>.</t>
+        
                 <section title="Method Details">
                     <section title="get"
                              anchor="osapi.people.get">
