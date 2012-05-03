@@ -1490,9 +1490,78 @@
     </section>
     <!--  END VERSIONING -->
     
-    <section title="The Aspect Identifier Registry" anchor="aspect-identifier-registry">
+    <section title="Registry of Service Identifiers" anchor="service-identifier-registry">
     
-      <t>TBD</t>
+      <t>Every REST service is associated with a distinct service-identifier as
+      defined by <xref target="service-identifiers"/>. The OpenSocial Social
+      Applications Specification <xref target="social-app"/> defines the core 
+      set of services and their associated identifiers.</t>
+      
+      <t>Implementations are free to introduce additional services so long as 
+      each is identified by a unique service-identifier. To promote interoperability 
+      across implementations, this specification establishes a Registry of Service 
+      Identifiers to be hosted and managed by the OpenSocial Foundation. This 
+      registry shall contain known, commonly used service identifiers. Whenever 
+      an implementor defines and deploys support for new services, the 
+      associated identifier SHOULD be added to the registry.</t>
+      
+      <t>Registrations require review by the OpenSocial community and are 
+      subject to the following rules:</t>
+      
+      <list style="numbers">
+        <t>A service identifier, once registered, stays registered forever.</t>
+        <t>The registration MUST name a responsible party for the registration.</t>
+        <t>The registration MUST name a point of contact.</t>
+        <t>The registration MAY name a set of specifications associated with 
+        the identifier. Such specifications SHOULD be publicly available.</t>
+      </list>
+      
+      <t>The party responsible MUST submit the registration request via email 
+      to the mailing list for the OpenSocial Specification Community Group. 
+      After a period of 30-days following the date of the email request, if 
+      there are no expicit objections from members of the community in response
+      to the registration, the request will be assumed to be automatically
+      accepted.</t>
+    
+    </section>
+    <!-- END SERVICE REGISTRY -->
+    
+    <section title="Registry of Aspect Identifiers" anchor="aspect-identifier-registry">
+    
+      <t>For each distinctly-named REST Service (see <xref target="service-identifiers"/>),
+      every individual data object can have zero or more individually identifiable
+      aspects (see <xref target="aspect-identifiers"/>). The OpenSocial Social
+      Applications Specification <xref target="social-app"/> defines the core 
+      set of services and their associated aspect identifiers.</t>
+      
+      <t>Implementations are free to introduce additional aspects for any 
+      service so long as each is identified by a unique aspect identifier. 
+      To promote interoperability across implementations, this specification 
+      establishes a Registry of Aspect Identifiers to be hosted and managed 
+      by the OpenSocial Foundation. This registry shall contain known, commonly 
+      used aspect identifiers. Whenever an implementor defines and deploys 
+      support for new aspects, the associated identifier SHOULD be added to the
+      registry.</t>
+      
+      <t>Registrations require review by the OpenSocial community and are 
+      subject to the following rules:</t>
+      
+      <list style="numbers">
+        <t>An aspect identifier, once registered, stays registered forever.</t>
+        <t>The registration MUST name a responsible party for the registration.</t>
+        <t>The registration MUST name a point of contact.</t>
+        <t>The registration MAY name a set of specifications associated with 
+        the identifier. Such specifications SHOULD be publicly available.</t>
+        <t>The registration MUST name the service-identifier for which it is
+        associated.</t>
+      </list>
+      
+      <t>The party responsible MUST submit the registration request via email 
+      to the mailing list for the OpenSocial Specification Community Group. 
+      After a period of 30-days following the date of the email request, if 
+      there are no expicit objections from members of the community in response
+      to the registration, the request will be assumed to be automatically
+      accepted.</t>
     
     </section>
     <!-- END ASPECT REGISTRY -->
