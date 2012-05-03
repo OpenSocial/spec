@@ -927,6 +927,7 @@
             SHOULD be equal to or less than the value of the 
             <spanx style="verb">itemsPerPage</spanx> value.</c>
             
+            <!-- Move to deprecated I hope
             <c>filtered</c>
             <c>JSON Boolean</c>
             <c>TODO: Need to define this better or remove it</c>
@@ -938,6 +939,7 @@
             <c>updatedSince</c>
             <c>JSON Boolean</c>
             <c>TODO: Need to define this better or remove it</c>
+            -->
             
           </texttable>
         </t>
@@ -1009,11 +1011,22 @@
             <c>String</c>
             <c>A string value containing the absolute IRI reference of a 
             page containing the items that have been updated most recently.</c> 
-           
+            
           </texttable>
           
           <t>In order to be considered a paged collection, at least one 
           of these properties MUST be present within the Collection object.</t>
+          
+          <figure><preamble>For example,</preamble><artwork>
+  {
+    "$first": "http://example.org/activities/@me/@all?count=10",
+    "$next": "http://example.org/activities/@me/@all?count=10&updatedBefore=2012-12-12T12:12:12.123Z",
+    "totalItems": 100,
+    "items": [
+      // .. list of items
+    ]
+  }
+          </artwork></figure>
           
           <t>Note that consuming applications SHOULD treat the absolute IRI
           values as opaque identifiers and MUST NOT assume that the IRIs 
@@ -1046,8 +1059,9 @@
       <section title="Plural Objects" anchor="plural-objects">
         
         <t>Within an OpenSocial Data Object, a "plural-field" is a property
-        whose value consists of zero or more alternative choices. Each choice
-        is serialized as a JSON Object with at least the following basic 
+        whose value consists of zero or more alternative choices represented as
+        individual elements within a JavaScript Array. Each choice is serialized 
+        as a JSON Object with at least the following basic 
         properties:
           <texttable>
             <ttcol>Name</ttcol>
@@ -1206,14 +1220,40 @@
       
       <section title="Data Object Type Identifiers" anchor="data.type.identifiers">
       
-        <t>TODO: Object Type Identifiers</t>
+        <t>Every OpenSocial Data Object has an associated data type identifier
+        in the form of an absolute IRI reference that is used in a number of 
+        different places throughout OpenSocial applications. Such IRIs are 
+        used for identification purposes only and MUST be compared on a 
+        character-by-character basis in a case-insensitive fashion.</t>
         
-        <figure><artwork>
+        <t>All data type identifiers that begin with the prefix "http://opensocial.org/types/"
+        are reserved for use by this specification. Implementations MUST NOT 
+        use any data type identifier that begins with the prefix "http://opensocial.org/types/"
+        other than those defined by the OpenSocial specification. Please refer 
+        to <xref target="social-app"/> for details on the current set of data 
+        types defined by OpenSocial.</t>
+        
+        <section title="Legacy Data Type Identifiers" anchor="legacy.data.type.identifiers">
+        
+          <t>Older versions of this specification utilized an alternative, 
+          now-deprecated syntax for data type identifiers:</t>
+          
+          <figure><artwork>
   segment = 1*( ALPHA / DIGIT )
   prefix = segment "."
   name = segment
-  datatype = prefix name
-        </artwork></figure>
+  legacy-datatype = prefix name
+          </artwork></figure>
+          
+          <t>For example, the legacy data type identifier for the OpenSocial
+          Person datatype was "opensocial.Person".</t>
+          
+          <t>For backwards compatibility purposes with existing applications, 
+          implementations MAY continue to support the use of Legacy Data Types.
+          New applications for which backwards compatibility is not a concern, 
+          however, SHOULD NOT use legacy data type identifiers.</t>
+        
+        </section>
         
       </section>
       
