@@ -28,6 +28,7 @@
   
   <!ENTITY socialapp PUBLIC 'bib/social-gadget.bibxml'>
   <!ENTITY coregadget PUBLIC 'bib/core-gadget.bibxml'>
+  <!ENTITY astreamlinks PUBLIC 'bib/astream-links.bibxml'>
 ]>
 <?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
@@ -536,7 +537,7 @@
           specifies the value against which the value of the filterBy field 
           is tested.</c>
         
-          <!-- 
+          <!-- TODO: Move to deprecated document
           <c>format</c>
           <c>By default, all REST services utilize the JSON-based serialization
           defined in <xref target="data-representation"/>. Individual services A
@@ -566,6 +567,22 @@
           requested filtering and sorting of the set as been applied. The index 
           is 0-based such that to return the first item of the set, the 
           startIndex parameter value would be 0. </c>
+          
+          <c>updatedSince</c>
+          <c>When the resource to which a request is directed represents a 
+          collection of items and the intention of the request is to retrieve
+          a subset of those items, the updatedSince parameter specifies that
+          the server SHOULD only return items that have been updated after a
+          given date and time. The value is expressed as an RFC 3339 date-time
+          as described in <xref target="datetimes"/>.</c>
+          
+          <c>updatedBefore</c>
+          <c>When the resource to which a request is directed represents a 
+          collection of items and the intention of the request is to retrieve
+          a subset of those items, the updatedBefore parameter specifies that
+          the server SHOULD only return items updated before the given date 
+          and time. The value is expressed as an RFC 3339 date-time as described
+          in <xref target="datetimes"/>.</c>
         
         </texttable>
         
@@ -952,7 +969,75 @@
         
         <section title="Multi-page Collections">
         
-          <t>TODO: Paging</t>
+          <t>Collections that consist of a large number of items can often 
+          be split into multiple documents, or pages, where each page contains
+          a subset of the total number of items in the complete set as well as 
+          links to subsequent or preceding pages.</t>
+          
+          <t>Within a Collection object, links to pages are represented using
+          the generalized Activity Streams Links mechanism described in
+          <xref target="astream-links"/>. Specifically, the following table
+          lists the additional optional Collection Object properties used to
+          link multiple pages of a collection:</t>
+          
+          <texttable>
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            
+            <c>$first</c>
+            <c>String</c>
+            <c>A String value containing the absolute IRI reference of the 
+            furthest preceding page of the multi-page collection.</c>
+            
+            <c>$last</c>
+            <c>String</c>
+            <c>A String value containing the absolute IRI reference of the
+            furthest following page of the multi-page collection.</c>
+            
+            <c>$previous</c>
+            <c>String</c>
+            <c>A String value containing the absolute IRI reference of the 
+            immediately preceding page of the multi-page collection.</c>
+            
+            <c>$next</c>
+            <c>String</c>
+            <c>A String value containing the absolute IRI reference of the 
+            immediately following page of the multi-page collection.</c>
+            
+            <c>$current</c>
+            <c>String</c>
+            <c>A string value containing the absolute IRI reference of a 
+            page containing the items that have been updated most recently.</c> 
+           
+          </texttable>
+          
+          <t>In order to be considered a paged collection, at least one 
+          of these properties MUST be present within the Collection object.</t>
+          
+          <t>Note that consuming applications SHOULD treat the absolute IRI
+          values as opaque identifiers and MUST NOT assume that the IRIs 
+          given conform to any particular structure. That said, it is expected
+          that most server implementations will use various combinations of the 
+          standard query string parameters (e.g. count and startIndex, or 
+          count and updatedBefore) to construct paging links.</t>
+          
+          <t>When using a combination of the count and startIndex query 
+          parameters to facilitate paging of a collection whose items 
+          change or grow frequently over time, the process of splitting 
+          a collection into multiple pages can become "lossy". That is, 
+          it is not possible to guarantee that consuming applications
+          will be able to reconstruct the complete contents of the full
+          collection at a particular time because items can be added or 
+          changed as the pages are accessed without the consuming application
+          becoming aware of them.</t>
+          
+          <t>Such data loss can be avoided through the use of the updatedSince
+          and updatedBefore parameters as an alternative to startIndex. That 
+          is, rather than basing pages on the relative positioning of items 
+          within the overall collection, pages can be constructed to represent
+          distinct periods of time (e.g. the 30 entries updated before a given 
+          time; all entries updated within the last hour; etc).</t>
         
         </section>
         
@@ -1387,6 +1472,7 @@
       &rfc3987;
       &rfc3339;
       &astreams;
+      &astreamlinks;
       &part1;
       &part2;
       &part3;
