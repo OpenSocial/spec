@@ -3774,8 +3774,8 @@
         
         <t>When an application specification uses unrecognized Data Pipeline tags,
         the container is given the choice of either ignoring it or specifying
-        a 404 (Not Found) error within the JSON using the basic error structure
-        defined in [TODO: Reference to Core API spec].</t>
+        a 404 (Not Found) error within the JSON structure using an 
+        <xref target="core-api">Error Object</xref>.</t>
         
         <figure><preamble>In the example below, the application specification uses
         an undefined, hypothetical Data Pipeline extension:</preamble><artwork><![CDATA[
@@ -4027,9 +4027,10 @@
           <figure><preamble>If the server returns an error, or if the content 
           returned by the server is neither text-based or valid JSON, the value
           stored by the <spanx style="verb">DataContext</spanx> will specify an 
-          error with an appropriate value indicating the nature of the error.
-          Within the value of the "error" property, the "data" property contains
-          the content actually returned by the server, if any.</preamble>
+          <xref target="core-api">Error Object</xref> with an appropriate value 
+          indicating the nature of the error. Within the value of the "error" 
+          property, the "data" property contains the content actually returned 
+          by the server, if any.</preamble>
           <artwork><![CDATA[
   {
     "error" : {
@@ -4163,7 +4164,7 @@
               "userId", "groupId", "startIndex", and "count"),
               <t>The properties "totalResults", "count" and "startIndex" if 
               the value stored by referenced key is a Collection object 
-              as defined by [TODO: Reference Core Data]; the values of which
+              as defined by <xref target="core-api"/>; the values of which
               map to the corresponding values of the stored collection.</t>
             </list>
           </t>
@@ -5587,7 +5588,7 @@
        are discussed below. The "type" attribute specifies the OpenSocial
        data type for which an action is to be associated. The value
        MUST be a valid OpenSocial Data Type as specified by 
-       [TODO: New Core Data Reference].</t>
+       <xref target="core-api"/>.</t>
        
        <t>The following additional attributes MAY be specified:
          <list style="hanging">
@@ -8051,7 +8052,8 @@
               
               <figure><preamble>For example, if an error occurs during the 
               processing of the request, the response object passed to the 
-              callback function would have a structure resembling:</preamble>
+              callback function would contain an <spanx style="verb">error</spanx>
+              property whose value is an <xref target="core-api">Error Object</xref>:</preamble>
               <artwork>
   {
     "error": {
@@ -8111,7 +8113,7 @@
               </artwork></figure>
               
               <t>The first input parameter is a String serving as an identifier
-              for the request object provided by the second parameter. This 
+              for the request object provided by the second parameter. The 
               key value "error" MUST NOT be used. The method returns an 
               <spanx style="verb">osapi.BatchRequest</spanx> object containing 
               the just added <spanx style="verb">osapi.Request</spanx>
@@ -8173,48 +8175,7 @@
           
           </section>
         
-          <section title="The Error Object" anchor="osapi.error.handling">
-            
-            <t>Details about errors that occur during the processing of 
-            individual or batched requests are reported using Error objects.
-            an Error object is a simple JavaScript object with three
-            properties:
-              <texttable>
-                <ttcol>Name</ttcol>
-                <ttcol>Type</ttcol>
-                <ttcol>Description</ttcol>
-                <c>code</c>
-                <c>Number</c>
-                <c>A positive or negative integer value indicating the 
-                the specific error being reported. Please refer to 
-                [TODO: Reference to API Spec] for a listing of available
-                error codes.</c>
-                <c>data</c>
-                <c>Object or Primitive</c>
-                <c>Optionally provides additional, request-specific information
-                about the error being reported.</c>
-                <c>message</c>
-                <c>String</c>
-                <c>Provides a human-readable description of the error 
-                being reported.</c>
-              </texttable>
-            </t>
-            
-            <t>When processing a single <spanx style="verb">osapi.Request</spanx>
-            object using it's "execute" method and an error occurs, the provided
-            callback function will be invoked with a response object passed in
-            containing a single "error" property whose value is an Error object
-            describing the error that occurred.</t>
-            
-            <figure><preamble>For example:</preamble>
-            <artwork>
-  {
-    "error": {
-      "message": "Invalid Method Parameters",
-      "code": -32602
-    }
-  }
-              </artwork></figure>
+          <section title="Error Handling" anchor="osapi.error.handling">
             
             <t>When processing a batch of <spanx style="verb">osapi.Request</spanx>
             objects using the <spanx style="verb">osapi.BachRequest</spanx> object
@@ -8415,7 +8376,7 @@
                   <c>When the "authz" parameter is equal to "OAUTH",
                   the "oauth2_scope" parameter specifies the value of the 
                   OAuth 2.0 scope parameter the container SHOULD use with 
-                  the request. The scope parameter is defined in [TODO: OAUTH 2 Ref].
+                  the request. The scope parameter is defined in <xref target="I-D.draft-ietf-oauth-v2-25"/>.
                   If not specified, the default value is assumed to be null, indicating
                   that no scope parameter is to be provided.</c>
                  
@@ -8561,7 +8522,7 @@
               indicates an error condition (4xx or 5xx), the HTTP Response
               Object passed to the callback function will contain a single
               "error" property whose value is an 
-              <xref target="osapi.error.handling">Error Object</xref> describing
+              <xref target="core-api">Error Object</xref> describing
               the specific error that occurred.</t>
               
             </section>

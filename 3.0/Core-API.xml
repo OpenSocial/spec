@@ -877,6 +877,150 @@
           </artwork></figure>
         </section>
       </section>
+      <!--  END PARTIAL MODIFICATION -->
+      
+      <section title="Error Handling" anchor="reporting-errors">
+      
+        <t>When errors occur during the processing of a request sent to a 
+        REST service, the HTTP response will specify an appropriate error
+        status identifying the general nature of the failure that occurred
+        as well as any relevant specific detail.</t>
+        
+        <t>Errors in processing generally fall in to one of the following
+        three categories:
+          <list style="hanging">
+            <t hangText="Functional Errors">
+              Typically occur when unforseen and unexpected error conditions 
+              arise on the server. For instance, when there is no additional
+              storage space available; when when a required service is 
+              unavailable. 
+            </t>
+            <t hangText="Request Validation Errors">
+              Typically occur when a request sent to a service is malformed 
+              in any way and cannot be processed; or when the request has not 
+              been properly authenticated.
+            </t>
+            <t hangText="Business Rule Violations">
+              Typically occur when a request cannot be completed because doing
+              so would violate some underlying business rule. For instance, 
+              if a validly formed and properly authenticated request to change
+              a property values on a particular resource to an invalid value
+              type.
+            </t>
+          </list>
+        </t>
+        
+        <t>When a Functional Error occurs during the processing of a request,
+        server implementations MUST take cautions against inappropriately 
+        disclosing too much detail about the underlying implementation of the 
+        service. Unless the user-agent submitting the request is considered to
+        be a trusted entity by the server, error responses that represent 
+        Functional Errors SHOULD contain only a minimal amount of information 
+        about the error.</t>
+        
+        <t>Function Errors are typically reported using 5xx Server Error 
+        response codes as defined in Section 7.5 of 
+        <xref target="I-D.draft-ietf-httpbis-p2-semantics"/>.</t>
+        
+        <figure><preamble>The example response below communicates that the 
+        service is unavailable to process any requests and that the user agent
+        can retry the request in two minutes:</preamble><artwork>
+  HTTP/1.1 503 Service Unavailable
+  Retry-After: 120
+        </artwork></figure>
+        
+        <t>When a Request Validation Error occurs, the server MUST provide 
+        adequate detail in the response to indicate the nature of the validation 
+        failure. Such errors can occur for a variety of reasons and are generally
+        reported using 4xx Client Error response codes as defined in Section 7.4
+        of <xref target="I-D.draft-ietf-httpbis-p2-semantics"/>. If a payload is
+        included in the HTTP Response, then it SHOULD be a JSON document 
+        containing a single <xref target="error-object">Error Object</xref>
+        that describes the specific validation error that occurred. A payload
+        will not be required for all Request Validation Errors. The choice of 
+        whether to include a payload describing the error for any particular 
+        request is left up to the server.</t>
+       
+        <figure><preamble>The example response below indicates that the request
+        was not properly authenticated and indicates that the user-agent must
+        use OAuth 2.0 Bearer tokens to authenticate future requests.</preamble><artwork>
+  HTTP/1.1 403 Forbidden
+  WWW-Authentication: Bearer realm="example"
+        </artwork></figure>
+        
+        <t>When Business Rule Violations occur, the server MUST provide
+        adequate detail in the response to indicate the nature of the violation.
+        Such errors can occur for a variety of reasons are are generally reported
+        using specific HTTP response codes such as 409 Conflict, 403 Forbidden,
+        or 400 Bad Request. Such responses MUST contain a payload consisting
+        of a single <xref target="error-object"/> that describes the specific
+        violation.</t>
+        
+        <t>Business Rule Violations differ from other types of errors in that,
+        typically, the request is properly formed and understood by the service, 
+        but was rejected for some other reason. An example of such an error 
+        is when a particular user agent surpasses a preallocated number of 
+        requests within a given period of time.</t>
+        
+        <figure><preamble>For example:</preamble><artwork>
+  HTTP/1.1 403 Forbidden
+  Content-Type: application/json
+  
+  {
+    "code": -12345,
+    "message": "Exceeded request quota"
+  }
+        </artwork></figure>
+        
+        <section title="The Error Object" anchor="error-object">
+        
+          <t>The Error object is a simple JSON data structure intended to 
+          communicate basic information about an error condition that 
+          has occurred.</t>
+          
+          <t>Error objects conform to all the same rules as all other 
+          OpenSocial <xref target="data-objects">Data Objects</xref>, 
+          including extensibility characteristics. At a minimum, Error objects 
+          have the following properties:</t>
+          
+          <texttable>
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            
+            <c>code</c>
+            <c>Integer</c>
+            <c>A numeric code indicating the specific nature of the error 
+            that occurred. When an error object is included as the payload
+            of an HTTP response, this code MUST NOT be interpreted as a 
+            replacement for the HTTP response status code, which takes 
+            precedence and specifies the general status of the HTTP 
+            request. No standard error code values are defined by this
+            specification.</c>
+            
+            <c>data</c>
+            <c>Object</c>
+            <c>A JSON object containing arbitrary additional data about the 
+            error. The specific properties of the object are undefined.</c>
+            
+            <c>message</c>
+            <c>String</c>
+            <c>A human readable and localized description of the error that 
+            occurred. The value SHOULD NOT contain markup of any kind and 
+            SHOULD be interpreted as plain text.</c>
+            
+          </texttable>
+          
+          <t>When an error object is included as the payload of an HTTP
+          message, the Content-Type header field, if specified, MUST specify 
+          a value of "application/json".</t>
+        
+        </section>
+        <!--  END ERROR OBJECT -->
+      
+      </section>
+      <!--  END ERROR HANDLING -->
+      
     </section>
     <!-- END REST SERVICES -->
 
