@@ -267,7 +267,7 @@
         </artwork></figure>
         
         <t>Please refer to the <xref target="social-app"/> specification for 
-        complete details on the core set of Social Data Services [TODO: Naming] defined by
+        complete details on the core set of social data services defined by
         this version of the OpenSocial specification. Implementations are 
         free to implement additional services.</t>
         
