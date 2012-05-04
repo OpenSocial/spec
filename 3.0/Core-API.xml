@@ -23,6 +23,8 @@
   <!ENTITY part7 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-17.xml'>
   <!ENTITY bearer PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-18.xml'>
   <!ENTITY mac PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-01.xml'>
+  <!ENTITY jsonpatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-appsawg-json-patch-01.xml'>
+  <!ENTITY mergepatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-snell-merge-patch-00.xml'>
   
   <!ENTITY astreams PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/astreams.xml'>
   
@@ -551,12 +553,22 @@
           a single MIME Media Type, e.g. "format=application/atom+xml".</c>
            -->
           
+          <c>sort</c>
+          <c>When the resource to which a request is directed represents a 
+          collection of items and the intention of the request is to retrieve
+          a listing of those items, the sort parameter specifies one or more 
+          fields to be used as a sorting index and the order in which items
+          SHOULD be returned. The value is a comma separated list of sort-key
+          definitions as specified in <xref target="sort-parameter"/>.</c>
+          
+          <!-- Move to deprecated
           <c>sortOrder</c>
           <c>When the resource to which a request is directed represents a 
           collection of items and the intention of the request is to retrieve
           a listing of those items, the sortOrder parameter specifies the 
           sorting order in which those items will be returned. The value is 
           specified as one of either "ascending" or "descending". TODO: need a sort key</c>
+          -->
           
           <c>startIndex</c>
           <c>When the resource to which a request is directed represents a 
@@ -585,6 +597,44 @@
           in <xref target="datetimes"/>.</c>
         
         </texttable>
+        
+        <section title="The Sort Parameter" anchor="sort-parameter">
+        
+          <t>The value of the <spanx style="verb">sort</spanx> parameter 
+          is a comma-separated list of sort-keys as defined below.</t>
+          
+          <figure><artwork>
+  sort-default-order = field
+  sort-default-field = "+" / "-"
+  sort-order-field = ("+" / "-") field
+  sort-key = sort-default-order / sort-default-field / sort-order-field
+          </artwork></figure>
+          
+          <t>Each sort-key consists of an optional ASCII plus (+) or minus (-)
+          character that indicates the requested sorting order -- where plus 
+          indicates ascending and minus indicates descending -- and the name 
+          of a field to sort by.</t>
+          
+          <t>For instance, to request that the items of the collection be 
+          returned in reverse chronological order by the date and time they 
+          were last updated, assuming each item in the collection has an 
+          "updated" field, the value of the sort parameter would be: 
+          <spanx style="verb">sort=-updated</spanx>.</t>
+          
+          <t>Multiple sort-keys MAY be specified. For instance, to request
+          that the items of the collection be returned in reverse chronological
+          order by the date and time they were last updated, but in alphabetical
+          order by the title field, the value of the sort parameter would be:
+          <spanx style="verb">sort=-updated,+title</spanx>.</t>
+          
+          <t>If the optional plus or minus indicator is omitted, the server 
+          shall determine an appropriate default sorting order.</t>
+          
+          <t>If the sort parameter specifies a field that is unsupported for
+          the type of objects within the collection, the unsupported field
+          MUST be ignored.</t>
+        
+        </section>
         
       </section>
       
@@ -687,7 +737,7 @@
   ETag: "ab12cd34ef56"
 
   {"name":{"displayName":"J. Doe"}, 
-   "emails":["john.doe@example.org"]}
+   "emails":[{"value":"john.doe@example.org"}]}
         </artwork></figure>
       
         <figure><preamble>The application wishes to modify this profile such that
@@ -719,7 +769,7 @@
   If-Match: "ab12cd34ef57"
   Content-Type: application/json-patch
 
-  [{"add":"emails","value":"j.doe@example.com"}]
+  [{"add":"emails","value":{"value":"j.doe@example.com"}}]
         </artwork></figure>
       
         <figure><preamble>Assuming the change is successful, the server would
@@ -730,7 +780,8 @@
   ETag: "ab12cd34ef57"
   
   {"name":{"displayName":"John Doe"},
-   "emails":["j.doe@example.com"]}
+   "emails":[{"value":"j.doe@example.com"}]
+  }
         </artwork></figure>
       
         <t>Support for the PATCH method to perform partial modifications of
@@ -738,7 +789,82 @@
       
         <section title="PATCH Document Formats">
       
-          <t>TODO: Fill in detail</t>
+          <t>OpenSocial REST Services that implement support for the PATCH
+          operation MUST, at a minimum, support the use of the 
+          <xref target="I-D.draft-ietf-appsawg-json-patch">JSON Patch 
+          document format</xref> for describing partial modifications and 
+          MAY support the use of the JSON Merge Patch mechanism as defined by 
+          section 3 of <xref target="I-D.draft-snell-merge-patch"/>.</t>
+          
+          <t>With JSON Patch, the payload of the HTTP PATCH request uses a 
+          simple JSON data structure to explicitly describe the changes 
+          being requested to the data.</t>
+          
+          <figure><preamble>For example, when working with an OpenSocial
+          Person object, to change the value of a person's given name and 
+          add a new phone number, the request would be:</preamble>
+          <artwork>
+  PATCH /people/@me/@self HTTP/1.1
+  Content-Type: application/json-patch
+  
+  [{"replace":"name.givenName","value":"John"},
+   {"add":"phoneNumbers","value":{"label":"home","value":"123-123-1234"}]
+          </artwork></figure>
+          
+          <t>The advantage of using the JSON Patch format is that the 
+          requested changes are unamgibuous and clear, regardless of 
+          specific details of the implementation.</t> 
+          
+          <t>If the JSON Patch document specifies any change that cannot be
+          made, i.e. it references a field that does not exist, or attempts 
+          to make a change that would cause the resulting data to be invalid 
+          in any way, the server MUST reject the PATCH request without making
+          any changes to the target resource.</t>
+          
+          <t>As an alternative, the <xref target="I-D.draft-snell-merge-patch">
+          Merge Patch</xref> mechanism allows a client to requests partial 
+          modifications to be made by example. </t>
+          
+          <figure><preamble>For example, given the following data object:</preamble>
+          <artwork>
+  {
+    "displayName": "John Doe",
+    "name" : {
+      "givenName" : "John",
+      "familyName" : "Doe"
+    },
+    "tags":["example","sample"]
+  }
+          </artwork></figure>
+          
+          <t>If the intent is to change the value of the "displayName" property 
+          from "John Doe" to the value "J. Doe", add a new "phoneNumber" property,
+          remove the "familyName" property from the "name" object, and remove
+          the word sample from the "tags" Array, I would send the following
+          request:</t>
+
+          <figure><artwork>
+  PATCH /my/resource HTTP/1.1
+  Host: example.org
+  Content-Type: application/json+merge-patch; charset="UTF-8"
+
+  {
+    "displayName": "J. Doe",
+    "phoneNumber": "+01-123-456-7890",
+    "name": {
+      "familyName": null
+    }
+    "tags": ["example"]
+  }
+          </artwork></figure>
+        
+          <t>Servers that support the Merge Patch mechanism MUST adhere to the 
+          rules specified in Section 3 of <xref target="I-D.draft-snell-merge-patch"/>
+          to determine the specific set of changes that is being requested.</t>
+          
+          <t>As with JSON Patch, if the Merge Patch request specifies any 
+          change that cannot be made for any reason, the server MUST reject
+          the PATCH request without making any changes to the target resource.</t>
         
           <t>REST Services that support PATCH MUST advertise that support using 
           the Accept-Patch HTTP Response header as defined by 
@@ -747,7 +873,7 @@
           <figure><preamble>For example,</preamble><artwork>
   HTTP/1.1 200 OK
   Allow: GET, PUT, POST, DELETE, HEAD, PATCH, OPTIONS
-  Accept-Patch: application/json-patch
+  Accept-Patch: application/json-patch, application/json+merge-patch
           </artwork></figure>
         </section>
       </section>
@@ -1432,6 +1558,11 @@
   Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
         </artwork></figure>
         
+        <t>When using such responses, the Upgrade header MUST specify an
+        Upgrade Token value of "OpenSocial" and an Upgrade Version Token
+        consisting of the major and minor version identifier as specified
+        in Section 1.2 of <xref target="core-gadget"/>.</t>
+        
         <t>Use of the 426 Upgrade Required response implies a complete cutover
         from one version of the specification to another. While such a strategy 
         might be appropriate in some cases, many applications will require a more
@@ -1591,6 +1722,8 @@
       &part7;
       &socialapp;
       &coregadget;
+      &jsonpatch;
+      &mergepatch;
       &bearer;
       &mac;
     </references>
