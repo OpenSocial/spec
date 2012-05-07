@@ -176,7 +176,7 @@
           <c>The service identifier as defined by <xref target="service-identifiers"/>.</c>
           
           <c>local-identifier</c>
-          <c>The local-identifier of the Data Object, as defined by 
+          <c>The local-identifier of a data object, as defined by 
           <xref target="object-identifiers"/> that is the target of 
           an HTTP request.</c>
           
@@ -404,9 +404,13 @@
         and aspect specific filters that can be used to further define the scope
         of a particular REST request. When expressed within the request URI,
         such filters take the form of an arbitrary set of additional isegment-nz 
-        path segments. Implementations MAY choose to allow multiple filter 
+        path segments.</t> 
+        
+        <t>Implementations MAY choose to allow multiple filter 
         identifiers separated by a comma (,) character within a single path 
-        segment.</t>
+        segment. When multiple, comma-separated filter identifiers are specified,
+        they are to be interpreted as distinct alternatives (e.g. the filter 
+        segment "a,b" is to be interpreted as "a or b" as opposed to "a and b").</t>
         
         <figure><artwork>
   filter = isegment-nz
@@ -769,7 +773,7 @@
   If-Match: "ab12cd34ef57"
   Content-Type: application/json-patch
 
-  [{"add":"emails","value":{"value":"j.doe@example.com"}}]
+  [{"add":"/emails","value":{"value":"j.doe@example.com"}}]
         </artwork></figure>
       
         <figure><preamble>Assuming the change is successful, the server would
@@ -807,8 +811,8 @@
   PATCH /people/@me/@self HTTP/1.1
   Content-Type: application/json-patch
   
-  [{"replace":"name.givenName","value":"John"},
-   {"add":"phoneNumbers","value":{"label":"home","value":"123-123-1234"}]
+  [{"replace":"/name/givenName","value":"John"},
+   {"add":"/phoneNumbers","value":{"label":"home","value":"123-123-1234"}]
           </artwork></figure>
           
           <t>The advantage of using the JSON Patch format is that the 
@@ -876,6 +880,7 @@
   Accept-Patch: application/json-patch, application/json+merge-patch
           </artwork></figure>
         </section>
+
       </section>
       <!--  END PARTIAL MODIFICATION -->
       
@@ -1020,6 +1025,275 @@
       
       </section>
       <!--  END ERROR HANDLING -->
+      
+      <section title="Multiple resource and aspect operations" anchor="multiple-resources">
+      
+        <t>For the GET, HEAD and OPTIONS HTTP methods, a REST service MAY
+        support the ability for a user-agent to specify multiple 
+        local-identifiers and aspect-identifiers within a single request URI. 
+        There are, however, a number of important caveats and considerations 
+        that need to be taken into consideration when working with multiple 
+        resources and multiple aspects within a single operation.</t>
+        
+        <t>To illustrate how the support for multiple resources works, 
+        consider a profile service that provides access to information about
+        different users. A user-agent can access the profiles of individual 
+        users by issuing a GET request to their respective URIs:</t>
+        
+        <figure><artwork>
+  GET /api/people/user-1/@self HTTP/1.1
+  GET /api/people/user-2/@self HTTP/1.1
+  GET /api/people/user-3/@self HTTP/1.1
+        </artwork></figure>
+      
+        <t>Each of these requests would return a single profile representations:</t>
+        
+        <figure><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdef123456"
+  
+  {
+    "id": "acct:user-1@example.org",
+    "name": {"displayName": "John Doe"}
+  }
+        </artwork></figure>
+      
+        <t>Using the multiple-resource capability, these three distinct 
+        HTTP requests can be combined into a single request:</t>
+        
+        <figure><artwork>
+  GET /api/people/user-1,user-2,user-3/@self HTTP/1.1
+        </artwork></figure>
+        
+        <t>This combined request would return each of the requested profiles
+        within a single response consisting of a single top-level JSON object
+        containing one property for each requested object, where the property
+        key is the local-identifier of the resource:</t>
+        
+        <figure><artwork>
+  HTTP/1.1 200 Ok
+  Content-Type: application/json
+  ETag: "abcdefg123456"
+  
+  {
+    "user-1": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    },
+    "user-2": {
+      "id": "acct:user-2@example.org",
+      "name": {"displayName": "Jane Doe"}
+    },
+    "user-3": {
+      "id": "acct:user-3@example.org",
+      "name": {"displayName": "Sally Jones"}
+    }
+  }
+        </artwork></figure>
+        
+        <t>If one of the requested resources does not exist, the server MAY
+        choose to either reject the entire request with a 404 Not Found response
+        or simply omit the missing item from the response or optionally include
+        an explicit indicator that the specific item could not be found.</t>
+        
+        <figure><preamble>For instance, if "user-3" does not exist, the following:</preamble>
+        <artwork>
+  HTTP/1.1 200 Ok
+  Content-Type: application/json
+  ETag: "abcdefg123456"
+  
+  {
+    "user-1": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    },
+    "user-2": {
+      "id": "acct:user-2@example.org",
+      "name": {"displayName": "Jane Doe"}
+    },
+    "user-3": null
+  }
+        </artwork></figure>
+        
+        <figure><preamble>Is equivalent to omitting the "user-3" property
+        altogether:</preamble>
+        <artwork>
+  HTTP/1.1 200 Ok
+  Content-Type: application/json
+  ETag: "abcdefg123456"
+  
+  {
+    "user-1": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    },
+    "user-2": {
+      "id": "acct:user-2@example.org",
+      "name": {"displayName": "Jane Doe"}
+    }
+  }
+        </artwork></figure>
+        
+        <t>When the request specifies multiple aspect identifiers, the JSON 
+        object contained within the response will contain an additional layer
+        of property values representing each individual aspect.</t>
+        
+        <t>For instance, if the user-agent wishes to retrieve both the profile
+        and friends list for the current authenticated user, it could send a 
+        GET request to:</t>
+        
+        <figure><artwork>
+  GET /api/people/@me/@self,@friends
+        </artwork></figure>
+        
+        <t>The response to this request would include a single top-level JSON
+        object with properties for each of the requested aspects, whose values
+        will be equivalent to what would have been returned had each aspect
+        been requested by individual requests:</t>
+        
+        <figure><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdefg1234567"
+  
+  {
+    "@self": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    }, 
+    "@friends": {
+      "items": [
+        {
+          "id": "acct:user-2@example.org",
+          "name": {"displayName": "Jane Doe"}
+        },
+        {
+          "id": "acct:user-3@example.org",
+          "name": {"displayName": "Sally Jones"}
+        }
+      ]
+    }
+  }
+        </artwork></figure>
+        
+        <t>When multiple local-identifiers and aspect-identifiers are specified,
+        the construction of the returned JSON object is similarly nested:</t>
+        
+        <figure><artwork>
+  GET /api/people/user-1,user-2/@self,@friends
+        </artwork></figure>
+        
+        <figure><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdefg1234567"
+  
+  {
+    "user-1": {
+      "@self": {
+        "id": "acct:user-1@example.org",
+        "name": {"displayName": "John Doe"}
+      }, 
+      "@friends": {
+        "items": [
+          {
+            "id": "acct:user-2@example.org",
+            "name": {"displayName": "Jane Doe"}
+          },
+          {
+            "id": "acct:user-3@example.org",
+            "name": {"displayName": "Sally Jones"}
+          }
+        ]
+      }
+    },
+  "user-2": {
+      "@self": {
+        "id": "acct:user-2@example.org",
+        "name": {"displayName": "Jane Doe"}
+      }, 
+      "@friends": {
+        "items": [
+          {
+            "id": "acct:user-1@example.org",
+            "name": {"displayName": "John Doe"}
+          }
+        ]
+      }
+    }
+  }
+        </artwork></figure>
+        
+        <t>If the data that would normally be returned when requesting a 
+        particular local-identifier and aspect-identifier cannot be represented
+        as JSON -- for instance, when requesting a hypothetical 
+        <spanx style="verb">@avatar</spanx> aspect for a particular profile 
+        that could return a binary image resource-- the value for the given 
+        item within the JSON response MUST specify the IRI of the specific 
+        individual item within a field named "$self".</t>
+        
+        <figure><preamble>For instance:</preamble><artwork>
+  GET /people/api/@me/@self,@avatar HTTP/1.1
+  Host: example.org
+        </artwork></figure>
+        
+                <figure><artwork>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdefg1234567"
+  
+  {
+    "@self": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    }, 
+    "@avatar": {
+      "$self": "http://example.org/people/api/@me/@avatar"
+    }
+  }
+        </artwork></figure>
+        
+        <t>Filter segment and query string parameters included in the request 
+        URI apply to each of the individually requested resources just as if 
+        separate requests were sent to each resource.</t>
+        
+        <figure><preamble>For instance, the request:</preamble><artwork>
+  GET /api/activity/user-1,user-2/@all/app-1,app-2/@tags/foo,bar?fields=id,title
+        </artwork></figure>
+        
+        <t>Is to be interpreted as: for users "user-1" and "user-2", return the 
+        id and title fields for all activities generated by applications "app-1"
+        and "app-2" and tagged with "foo" or "bar".</t>
+        
+        <t>Authentication credentials included in the request MUST be valid
+        and authorized for each of the individually requested resources or the
+        entire request MUST be rejected using either a 401 Unauthorized or 
+        403 Forbidden response.</t>
+        
+        <t>Modification of multiple resources with a single operation, as well
+        as the use of any unsafe and non-idempotent HTTP method is not allowed.
+        Any method other than GET, HEAD and OPTIONS sent to a request URI 
+        specifying multiple resources MUST fail with a response of 405 Method 
+        Not Supported</t>
+
+        <t>When a request contains either a If-Modified-Since or If-Unmodified-Since
+        request header, the server MUST determine if all of the requested
+        resources or aspects adhere to the condition. If even just
+        one of the requested resources fails to meet the condition, the entire
+        request MUST be rejected using a 406 Not Acceptable response.</t>
+      
+        <t>Implementations SHOULD place strict limits on the number of distinct 
+        resources and aspects that may be included within a single request URI. 
+        When a user agent submits a request for too many resources or aspects,
+        the server SHOULD return a 414 Request-URI Too Long response.</t>
+        
+        <t>If an implementation does not support the specification of multiple
+        resources or aspects within a single request, a 404 Not Found response 
+        SHOULD be returned.</t>
+        
+      </section>
+      <!-- END BATCH GET -->
       
     </section>
     <!-- END REST SERVICES -->
