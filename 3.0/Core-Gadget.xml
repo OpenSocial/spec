@@ -231,8 +231,101 @@
       
       <section title="Application Roles" anchor="Application-Roles">
       
-        <t>TODO: Need to fill in detail</t>
-      
+        <t>Before developing OpenSocial applications it is important to understand
+        the roles and relationships between the various key elements.</t>
+        
+        <t>The basic elements of an OpenSocial application are:
+          <list style="hanging">
+            <t hangText="Application">A reusable software component, defined using
+            the syntax established by this document, that can be generally  
+            deployed and utilized across multiple OpenSocial implementations.</t>
+            
+            <t hangText="Source">The entity from which the application originated. 
+            This may be the author of the application or a company that publishes 
+            the application, etc.</t>
+            
+            <t hangText="Instance">A specific instance of an Application that has
+            been provisioned for use by one or more users within a given context
+            or for a specific purpose.</t>
+            
+            <t hangText="Context">The context within which an application instance
+            is being used. For instance, a website that represents a work project
+            might utilize an instance of an application that lists the names of 
+            everyone involved with the project. The "Context" within which the 
+            application instance is being used is the work project.</t>
+            
+            <t hangText="Container">Is the software component that is directly
+            responsible for hosting and managing instances of one or more applications
+            within their respective contexts.</t>
+            
+            <t hangText="Viewer">Is the entity that is currently interacting with
+            the instance of an application within a given context.</t>
+            
+            <t hangText="Instance Owner">Is the entity that is responsible for 
+            the application instance.</t>
+            
+            <t hangText="Context Owner">Is the entity that is responsible for 
+            the context within which an application instance is being used.</t>
+          </list>
+        </t>
+        
+        <t>To understand the relationships between each of these elements, 
+        consider the following example scenario:
+          <list style="symbols">
+            <t>A company deploys an internal project management system
+            that is to be used by multiple teams to manage individual projects.</t>
+            <t>Each project within this system is "owned" by a single individual 
+            project manager, and is worked on by any number of other people.</t>
+            <t>When a project is created, the project manager creates a webpage
+            representing the project and selects the members of the project.</t>
+            <t>On each project page, the application automatically creates an 
+            instance of two separate application components: one that lists the 
+            names of the current members of the project and another that lists the
+            current schedule and master task list for the entire project.</t>
+            <t>When each project member views the page, they are asked to login 
+            and are given the opportunity to customize the page by selecting 
+            from a list of available application components that will display 
+            information relevant to their participation in the project. Examples
+            include a component that lists only the current task items assigned
+            to them; or a component that shows the most recent tasks completed
+            by other users.</t>
+          </list>
+        </t>
+                
+        <t>Within this scenario:
+          <list style="symbols">
+            <t>The project management system is the Container;</t>
+            <t>Each individual project is a Context;</t>
+            <t>The project manager is the Context Owner;</t>
+            <t>Each of the components added to each project's page is an 
+            individual Instance of an Application;</t>
+            <t>For the components that list the project members and master 
+            task list, the project manager is the Instance Owner;</t>
+            <t>For each of the components added to the page by individual 
+            project members, the Instance Owner is the user that added it
+            to the page;</t>
+            <t>When a user logs in to view a project's page, they are the 
+            current Viewer.</t>
+          </list>
+        </t>
+        
+        <t>Each instance of an Application will be generally configurable 
+        only by the Instance or Context Owner. That is, while the instance
+        can store and access information about the current Viewer, the 
+        Viewer typically is not permitted to modify configuration options 
+        that affect the operation of the application unless the Viewer 
+        happens to also be the owner of the Instance or the Context.</t>
+        
+        <t>Further, when an Application requires access to secure or private
+        data hosted by the container or a third party, authentication 
+        and authorization might be required for not only the current viewer, 
+        but also for the Application Instance, Context and Application 
+        Source. That is, containers MUST NOT assume that simply because a 
+        particular Viewer has been authorized to access some secure piece 
+        of data within one Application Instance, that the same authorization 
+        applies to all instances of that same Application, or Instances of 
+        other Applications that happen to be used by the same Viewer.</t>
+        
       </section>
       
     </section>
@@ -1766,16 +1859,16 @@
               described by <xref target="SignedFetch"/> is to be used.</t>
           
               <t>The <spanx style="verb">sign_owner</spanx> attribute indicates 
-              whether the identity of the "OWNER" needs be included in 
-              the request sent to fetch the resource. If the value of this 
-              attribute is "true", the container MUST include the identity of 
-              the "OWNER".</t>
+              whether the identity of the <xref target="Application-Roles">Instance 
+              Owner</xref> needs to be included in the request sent to fetch the resource. 
+              If the value of this attribute is "true", the container MUST 
+              include the identity of the Instance Owner.</t>
               
               <t>The <spanx style="verb">sign_viewer</spanx> attribute indicates 
-              whether the identity of the current "VIEWER" needs to be 
-              included in the request sent to fetch the resource. If the value 
-              of this attribute is <spanx style="verb">true</spanx>, the
-              container MUST include the identity of the "VIEWER".</t>
+              whether the identity of the current <xref target="Application-Roles">Viewer</xref> 
+              needs to be included in the request sent to fetch the resource.
+              If the value of this attribute is <spanx style="verb">true</spanx>, 
+              the container MUST include the identity of the Viewer.</t>
 
             </section>
           
@@ -1872,12 +1965,12 @@
       other applications provided by the same developer.</t>
       
       <t>Authentication and authorization for an application instance is further 
-      constrained by the viewer for whom an application is currently being rendered.
+      constrained by the Viewer for whom an application is currently being rendered.
       That is, for example, if a single application instance can be rendered
-      for more than one viewer, the container is required to authorize each 
-      individual viewer prior to displaying potentially sensitive content.
+      for more than one Viewer, the container is required to authorize each 
+      individual Viewer prior to displaying potentially sensitive content.
       Such authorization MUST be obtained for each individual application instance
-      rendered for a particular viewer.</t>
+      rendered for a particular Viewer.</t>
     
       <t>Specific considerations for each of the three types of request
       authorization mechanisms are discussed in the sections that follow.</t>
@@ -1893,7 +1986,7 @@
         <t>To illustrate the value and operation of Signed Fetch, assume that 
         a developer uses the <spanx style="verb">gadgets.io.makeRequest</spanx> 
         JavaScript API to access a third party service to retrieve private 
-        data belonging to the current viewer. By default, and if required by 
+        data belonging to the current Viewer. By default, and if required by 
         the remote endpoint, the application is responsible for providing the 
         request with the current identity of the user for whom the request is 
         being sent:</t>
@@ -1914,13 +2007,13 @@
         </artwork></figure>
         
         <t>Assume, however, that the application is being accessed by a malicious 
-        viewer identified as "tom". Such a user can use a variety of techniques
+        Viewer identified as "tom". Such a user can use a variety of techniques
         to trick the application into using a different user's identity when using
         the <spanx style="verb">gadgets.io.makeRequest</spanx> API. Because 
         the default behavior is for the container to send the request to the 
         remote endpoint exactly as requested, the container and the remote 
         endpoint can be fooled into disclosing a legitimate user's private data 
-        to the malicious viewer.</t>
+        to the malicious Viewer.</t>
         
         <figure><artwork>
   var user = opensocial.data.getDataSet("Viewer").id; // returns "tom"
@@ -1937,7 +2030,7 @@
         
         <t>Signed Fetch defends against such attacks by allowing the container to:
           <list style="numbers"> 
-            <t>Include it's own information about the current viewer's identity, and</t>
+            <t>Include it's own information about the current Viewer's identity, and</t>
             <t>Generate a cryptographic signature usable by the receiving 
             endpoint to verify that the container-provided information has not been
             tampered with.</t>
@@ -1956,7 +2049,8 @@
             parameters to the request URI:
               <list type="hanging">
                 <t hangText="opensocial_owner_id">
-                  Identifies the current "owner" TODO: Owner of what?
+                  Identifies the "owner" the application instance for which
+                  the request is being sent.
                 </t>
                 <t hangText="opensocial_app_url">
                   An IRI provided by the container that represents the 
@@ -1970,7 +2064,7 @@
             parameters to the request URI:
               <list type="hanging">
                 <t hangText="opensocial_viewer_id">
-                  Provides the ID of the current viewer for whom content
+                  Provides the ID of the current Viewer for whom content
                   is being displayed.
                 </t>
                 <t hangText="opensocial_instance_id">
@@ -2076,12 +2170,13 @@
               <t hangText="SIGN_OWNER">Represented in JavaScript by the constant
               gadgets.io.RequestParameter.SIGN_OWNER, the value is a boolean 
               that indicates whether the container SHOULD include the 
-              current owner ID when signing the request. If not specified, 
-              the container is required to assume a value of True.</t>
+              identity of the <xref target="Application-Roles">Instance Owner</xref> 
+              when signing the request. If not specified, the container is 
+              required to assume a value of True.</t>
               <t hangText="SIGN_VIEWER">Represented in JavaScript by the constant
               gadgets.io.RequestParameter.SIGN_VIEWER, the value is a boolean
               that indicates whether the container SHOULD include the
-              current viewer ID when signing the request. If not specified,
+              identity of the current Viewer when signing the request. If not specified,
               the container is required to assume a value of True.</t>
             </list>
           </t>
@@ -2108,14 +2203,15 @@
               <t hangText="sign_owner">Equivalent to the SIGN_OWNER parameter
               used in the JavaScript API, the value is a String matching either 
               <spanx style="verb">true</spanx> or <spanx style="verb">false</spanx> 
-              indicating whether the container SHOULD include the current owner 
-              ID when signing the request.  If not specified, the container is 
+              indicating whether the container SHOULD include the identity of the
+              <xref target="Application-Roles">Instance Owner</xref> when 
+              signing the request.  If not specified, the container is 
               required to assume a value of <spanx style="verb">true</spanx>.</t>
               <t hangText="sign_viewer">Equivalent to the SIGN_VIEWER parameter
               used in the JavaScript API, the value is a String matching either 
               <spanx style="verb">true</spanx> or <spanx style="verb">false</spanx> 
               indicating whether the container SHOULD include the
-              current viewer ID when signing the request.  If not specified, 
+              identity of the current Viewer when signing the request.  If not specified, 
               the container is required to assume a value of 
               <spanx style="verb">true</spanx>.</t>
             </list>
@@ -2135,11 +2231,11 @@
         <t>OAuth provides the ability for the owner of a resource to grant 
         limited permission to an application to perform some action on that 
         resource on behalf of the owner. For instance, an application might
-        wish to display a listing of documents owned by the current viewer. 
+        wish to display a listing of documents owned by the current Viewer. 
         Before displaying that list of files, the application works with the container
-        to request authorization from the viewer to access the service
+        to request authorization from the Viewer to access the service
         used to manage documents and files. Such access can be limited by the
-        viewer, for example, to allow only simple read operations that occur
+        Viewer, for example, to allow only simple read operations that occur
         within a specific period of time.</t>
         
         <t>The data that a container can provide to an application originates in 
@@ -2995,7 +3091,7 @@
       <t>To determine the appropriate keys and values to use for substitution,
       containers will inspect the application specification document for a &lt;Locale&gt; 
       element that matches the current view being rendered, as well as the 
-      language and country of the viewer.</t>
+      language and country of the Viewer.</t>
       
       <t>A &lt;Locale&gt; is considered a match if either:
         <list style="symbols">
@@ -3004,15 +3100,15 @@
           rendered is named explicitly within the &lt;Locale&gt; element's view 
           attribute, and </t>
           <t>The language and country attributes on the &lt;Locale&gt; 
-          element exactly match those of the viewer, or</t>
-          <t>The language attribute is an exact match for the viewer 
+          element exactly match those of the Viewer, or</t>
+          <t>The language attribute is an exact match for the Viewer 
           and the country attribute specifies "all", or</t>
           <t>Both the language and country attributes specify "all".</t>
         </list>
       </t>
       
       <t>How the container determines the current language and country 
-      of the viewer is not defined by this specification.</t>
+      of the Viewer is not defined by this specification.</t>
       
       <t>If a matching &lt;Locale&gt; is not found within the 
       specification document, the container is permitted to provide it's own
@@ -3046,8 +3142,8 @@
       ]]></artwork></figure>
       
       <t>When rendering the default view, the container will output 
-      "Hello World!" for English-speaking viewers and "Bonjour tout le monde!"
-      for French-speaking viewers.</t>
+      "Hello World!" for English-speaking Viewers and "Bonjour tout le monde!"
+      for French-speaking Viewers.</t>
       
       <section title="Considerations for Bidirectional Text">
       
@@ -3858,7 +3954,7 @@
           <t>The &lt;os:DataRequest&gt;</t> element is used to access social
           data provided by the container. It is generally equivalent to the 
           JavaScript API methods provided to the application by the container to 
-          access information such as the identity of the current viewer, 
+          access information such as the identity of the current Viewer, 
           a particular users group of friends, an activity stream, and so forth.
           the &lt;os:DataRequest&gt; element can only be used to access content
           and cannot be used to modify social data stored by the container.</t>
@@ -3890,7 +3986,7 @@
           retrieve a listing of associated profiles (e.g. a "friends" list).</t>
           
           <figure><preamble>When invoked using the JavaScript API to retrieve 
-          the listing of profiles associated with the application's current viewer, 
+          the listing of profiles associated with the application's current Viewer, 
           the method is invoked as:</preamble><artwork>
   var params = {"userId": "@viewer", "groupId": "@friends"};
   osapi.people.get(params).execute(callback);
@@ -4735,10 +4831,10 @@
                  equals either <spanx style="verb">SIGNED</spanx> or 
                  <spanx style="verb">OAUTH</spanx>, the <spanx style="verb">SIGN_OWNER</spanx> 
                  parameter indicates whether the container SHOULD include the 
-                 value of the "Owner ID" when signing the request as described 
-                 in <xref target="authentication"/>. The value is specified as 
-                 a Boolean. When not specified, the default value is assumed to 
-                 be False.</c>
+                 identity of the <xref target="Application-Roles">Instance Owner</xref> 
+                 when signing the request as described in <xref target="authentication"/>. 
+                 The value is specified as a Boolean. When not specified, the 
+                 default value is assumed to be False.</c>
                  
                  <c><spanx style="verb">SIGN_VIEWER</spanx></c>
                  <c><spanx style="verb">gadgets.io.RequestParameters.SIGN_VIEWER</spanx></c>
@@ -4746,7 +4842,7 @@
                  equals either <spanx style="verb">SIGNED</spanx> or
                  <spanx style="verb">OAUTH</spanx>, the <spanx style="verb">SIGN_VIEWER</spanx> 
                  parameter indicates whether the container SHOULD include the 
-                 value of the "Viewer ID" when signing the request as described 
+                 identity of the current Viewer when signing the request as described 
                  in <xref target="authentication"/>. The value is specified as 
                  a Boolean. When not specified, the default value is assumed to 
                  be False.</c>
@@ -7983,7 +8079,7 @@
           and batched execution.</t>
           
           <figure><preamble>The example below, for instance, uses the OpenSocial 
-          Person Service to access a listing of the current viewers friends. 
+          Person Service to access a listing of the current Viewer's friends. 
           First, the Service Object for the "people" service is accessed. Then
           the "get()" method is called with input parameters specifying the 
           data we wish to retrieve. The method returns an <spanx style="verb">osapi.Request</spanx>
@@ -8436,19 +8532,18 @@
                   <c>Boolean</c>
                   <c>When the "authz" parameter equals either "SIGNED" or 
                   "OAUTH", the "sign_owner" parameter indicates whether the 
-                  container SHOULD include the value of the "Owner ID" when signing
-                  the request as described in [TODO: Ref Authorization]. The value
-                  is specified as a Boolean. When not specified, the default value
-                  is assumed to be False.</c>
+                  container SHOULD include the identity of the 
+                  <xref target="Application-Roles">Instance Owner</xref> when signing 
+                  the request. The value is specified as a Boolean. When not 
+                  specified, the default value is assumed to be False.</c>
                  
                   <c>sign_viewer</c>
                   <c>Boolean</c>
                   <c>When the "authz" parameter equals either "SIGNED" or
                   "OAUTH", the "sign_viewer" parameter indicates whether the 
-                  container SHOULD include the value of the "Viewer ID" when
-                  signing the request as described in [TODO: Ref Authorization]. 
-                  The value is specified as a Boolean. When not specified, the 
-                  default value is assumed to be False.</c>  
+                  container SHOULD include the identity of the current Viewer when
+                  signing the request. The value is specified as a Boolean. When 
+                  not specified, the default value is assumed to be False.</c>  
                 </texttable>
               </t>
 
@@ -9386,85 +9481,91 @@
             <section title="The gadgets.views.ViewType Constants" anchor="gadgets.views.ViewType">
             
               <t>For the convenience of Gadget developers, JavaScript aliases for
-              a handful of common View names have been defined.</t>
+              the handful of common View names defined in <xref target="content-processing-model"/>
+              have been defined.</t>
               
-              <t>TODO: Need a bit more info</t>
-              
-              <list style="hanging">
-                <t hangText="ABOUT" anchor="gadgets.views.ViewType.ABOUT">
-                  A view used to provide descriptive information regarding the 
-                  application. This view is typically rendered in a smaller area. 
-                  The viewer is not always the same as the owner. This field 
-                  may be used interchangeably with the string 'ABOUT'.</t>
-                <t hangText="CANVAS" anchor="gadgets.views.ViewType.CANVAS">
-                  A view where the application is displayed in a very large
-                  mode. It is typically the main content on the page. The 
-                  viewer is not always the same as the owner. This field may 
-                  be used interchangeably with the string 'CANVAS'.</t>
-                <t hangText="EMBEDDED" anchor="gadgets.views.ViewType.EMBEDDED">
-                  A view used when an application is to be rendered in the context 
-                  of some other content. For example, an activity stream entry 
-                  may include a diagram. Rather than requiring the user to 
-                  navigate to a dashboard, the container may render the application 
-                  "embedded" in the stream. The developer should anticipate 
-                  that there may be limited chrome surrounding the application. The 
-                  viewer is not always the same as the owner. This field may 
-                  be used interchangeably with the string 'EMBEDDED'.</t>
-                <t hangText="HOME" anchor="gadgets.views.ViewType.HOME">
-                  A view where the application is displayed in a small area usually 
-                  on a page with other applications. Typically the viewer is the 
-                  same as the owner. This field may be used interchangeably 
-                  with the string 'HOME'.</t>
-                <t hangText="PREFERENCES" anchor="gadgets.views.ViewType.PREFERENCES">
-                  A view used to allow the user to display and set the user 
-                  preferences defined by the application. For example, it is
-                  common for applications to present a form for visible user prefs. 
-                  Because the user preferences are specific to a user, owner 
-                  and viewer MUST be the same in this view. This field may be 
-                  used interchangeably with the string 'PREFERENCES'.</t>
-                <t hangText="PREVIEW" anchor="gadgets.views.ViewType.PREVIEW">
-                  A demo view of the application. In this view the owner and
-                  viewer are not known. This field may be used interchangeably 
-                  with the string 'PREVIEW'.</t>
-                <t hangText="PROFILE" anchor="gadgets.views.ViewType.PROFILE">
-                  A view where the application is displayed in a small area
-                  usually on a page with other applications. A typical use case 
-                  for this view is for the application to be placed on the profile 
-                  page of a user, for example, an application that allows you to 
-                  schedule a meeting with the person. The viewer is not always 
-                  the same as the owner. This field may be used interchangeably 
-                  with the string 'PROFILE'.</t>
-                <t hangText="SUPPORT" anchor="gadgets.views.ViewType.SUPPORT">
-                  A view used to communicate to the user where to get support 
-                  information for the application. Typically, the application is displayed 
-                  in a small area. The viewer MUST always the same as the owner. 
-                  This field may be used interchangeably with the string
-                  'SUPPORT'.</t>
-              </list>
+              <texttable>
+                <ttcol>View Name</ttcol>
+                <ttcol>Alias</ttcol>
+                
+                <c>about</c>
+                <c>gadgets.views.ViewType.ABOUT</c>
+                
+                <c>canvas</c>
+                <c>gadgets.views.ViewType.CANVAS</c>
+                
+                <c>embedded</c>
+                <c>gadgets.views.ViewType.EMBEDDED</c>
+                
+                <c>home</c>
+                <c>gadgets.views.ViewType.HOME</c>
+                
+                <c>preferences</c>
+                <c>gadgets.views.ViewType.PREFERENCES
+                
+                <c>preview</c>
+                <c>gadgets.views.ViewType.PREVIEW</c>
+                
+                <c>profile</c>
+                <c>gadgets.views.ViewType.PROFILE</c>
+                
+                <c>support</c>
+                <c>gadgets.views.ViewType.SUPPORT</c>
+              </texttable>
             </section>
             
-            <section title="View Target" anchor="gadgets.views.ViewType.ViewTarget">
-              <t>TODO: Need this explained</t>
-              <list style="hanging">
-                <t hangText="TAB" anchor="gadgets.views.ViewType.TAB">
-                  A view where the application is displayed inside a container tab.
-                  This field may be used interchangeably with the string 'TAB'.</t>
-                <t hangText="DIALOG" anchor="gadgets.views.ViewType.DIALOG">
-                  A view where the application is displayed in a pop up box. This 
-                  field may be used interchangeably with the string 'DIALOG'.</t>
-                <t hangText="MODALDIALOG" anchor="gadgets.views.ViewType.MODALDIALOG">
-                  A view where the application is displayed in a modal pop up box. 
-                  This field may be used interchangeably with the string
-                  'MODALDIALOG'.</t>
-                <t hangText="FLOAT" anchor="gadgets.views.ViewType.FLOAT">
-                  A view where the application is displayed in a floating box. It 
-                  is similar to the 'DIALOG' view type, but without chrome 
-                  around it. This field may be used interchangeably with the 
-                  string 'FLOAT'.</t>
-                <t hangText="SIDEBAR" anchor="gadgets.views.ViewType.SIDEBAR">
-                  A view where the application is displayed in a sidebar area. This
-                  field may be used interchangeably with the string 'SIDEBAR'.</t>
-              </list>
+            <section title="View Targets" anchor="gadgets.views.ViewType.ViewTarget">
+              
+              <t>View targets are specific areas defined by a container where
+              the views of an application can be rendered. The specific targets
+              supported are specific to each individual implementation. At a 
+              minimum, containers SHOULD support the following targets:</t>
+              
+              <texttable>
+                <ttcol>View Target</ttcol>
+                <ttcol>Alias</ttcol>
+                <ttcol>Description</ttcol>
+                
+                <c>TAB</c> 
+                <c>gadgets.views.ViewType.TAB</c>
+                <c>When containers support the ability to display content using
+                a tabbed interface (similar to those used by modern Web browser
+                user agents), the <spanx style="verb">TAG</spanx> View Target
+                is used to request that a particular Application View be displayed
+                within it's own separate tab.</c>
+                
+                <c>DIALOG</c>
+                <c>gadgets.views.ViewType.DIALOG</c>
+                <c>The <spanx style="verb">DIALOG</spanx> View Target is used
+                to request that a particular Application View be displayed within
+                a popup up box in a way that allows the Viewer to continue 
+                interacting with the rest of the container.</c>
+                
+                <c>MODALDIALOG</c>
+                <c>gadgets.views.ViewType.MODALDIALOG</c>
+                <c>The <spanx style="verb">MODALDIALOG</spanx> View Target is 
+                used to request that a particular Application View be displayed
+                within a popup box in a way that requires the Viewer to interact
+                with it prior to continuing any further interaction with the 
+                rest of the container.</t>
+                
+                <c>FLOAT</c>
+                <c>gadgets.views.ViewType.FLOAT</c>
+                <c>The <spanx style="verb">FLOAT</spanx> View Target is similar
+                to the <spanx style="verb">DIALOG</spanx> View Target with the 
+                exception that, when using <spanx style="verb">FLOAT</spanx>, 
+                the container SHOULD render the view without including any 
+                additional User Interface elements (also known as "chrome").</c>
+                
+                <c>SIDEBAR</c> 
+                <c>gadgets.views.ViewType.SIDEBAR</c>
+                <c>Some containers can reserve a portion of the visible user 
+                interface to the right or left of the primary content for the 
+                display of one or more application views. The <spanx style="verb">SIDEBAR</spanx>
+                View Target can be used to request that an application view be
+                rendered within this dedicated space.</t>
+              </texttable>
+
             </section>
              
             <section title="The gadgets.views.View Object" anchor="gadgets.views.View">
@@ -9727,8 +9828,8 @@
                   <c>Identifies where and how the container is to render the 
                   view, specified as a 
                   <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
-                  For example, specifying a viewTarget of "modalDialog" will
-                  cause the view to be rendered by the container in a modal
+                  For example, specifying a viewTarget of <spanx style="verb">MODALDIALOG</spanx> 
+                  will cause the view to be rendered by the container in a modal
                   popup dialog box; whereas specifying a viewTarget of "tab"
                   will cause the container to render the view within a new 
                   container tab.</c>  
