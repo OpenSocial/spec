@@ -372,7 +372,7 @@ Global-Id   = <x:ref>Domain-Name</x:ref> ":" <x:ref>Local-Id</x:ref>
       <c>Indicates if the current viewer's ID should be included in the request signature. Defaults to "true".</c>
      </texttable>
    </section>
-   <section title="HTTP-Response-Payload">
+   <section title="HTTP-Response-Payload" anchor="HTTP-Response-Payload">
      <t>When a container makes an HTTP request on behalf of a gadget (e.g. osapi.http.get(), or &lt;os:HttpRequest&gt;) the response will contain the following properties:</t>
      <texttable align="left">
       <ttcol>Name</ttcol>

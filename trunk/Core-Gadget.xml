@@ -3296,7 +3296,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
             <ttcol>Description</ttcol>
             <c>callback</c>
             <c>Function</c>
-            <c>A callback function to handle the response. The callback function will be invoked with a parameter which contains the response payload specified by the service method that is invoked.</c>
+            <c>A callback function to handle the response. The callback function will be invoked with a parameter which contains the response payload (<eref target="Core-Data.xml#HTTP-Response-Payload">Core HTTP-Response-Payload</eref>) specified by the service method that is invoked.</c>
            </texttable></t>
           <t hangText="Returns">None</t>
          </list>
