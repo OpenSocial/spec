@@ -1873,15 +1873,16 @@
               
               <t>When <spanx style="verb">authz</spanx> is either 
               <spanx style="verb">oauth</spanx> or <spanx style="verb">oauth2</spanx>, 
-              the following additional optional attributes MAY be included as 
-              defined by <xref target="OAuth"/>:
+              the following additional optional attributes MAY be included, each 
+              with identical semantics as the similarly named request parameters
+              discussed in <xref target="declaring-oauth"/>:
                 <list style="symbols">
-                  <t>oauth_received_callback</t>
-                  <t>oauth_received_callback</t>
-                  <t>oauth_request_token</t>
-                  <t>oauth_request_token_secret</t>
-                  <t>oauth_service_name</t>
-                  <t>oauth_token_name</t>
+                  <t>oauth_received_callback,</t>
+                  <t>oauth_request_token,</t>
+                  <t>oauth_request_token_secret,</t>
+                  <t>oauth_service_name,</t>
+                  <t>oauth_token_name,</t>
+                  <t>oauth_use_token</t>
                 </list>
               </t>
               
@@ -2301,7 +2302,7 @@
         considerations for OpenSocial Container implementations are discussed
         within the OpenSocial Common Container specification [TODO: Ref CC spec].</t>
         
-        <section title="Declaring and Using OAuth Services">
+        <section title="Declaring and Using OAuth Services" anchor="declaring-oauth">
         
           <t>Before an application can make use of OAuth protected resources,
           the specification document MUST tell the container about the OAuth 
@@ -2411,11 +2412,18 @@
               <ttcol>Name</ttcol>
               <ttcol>Alias</ttcol>
               <ttcol>Description</ttcol>
-              
+            
               <c><spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</c>
-              <c>Specifies the IRI to return after authorization.
-              TODO: Need for info on this</c>
+              <c>When the container sends a request to an OAuth service 
+              provider asking for permission to access a given resource, 
+              it will, by default, specify a default container-specific
+              callback URI that the OAuth service provider will use to 
+              redirect control back to the container and deliver the 
+              requested access token. In certain cases, a specific application
+              instance might need to override the default callback URI.
+              The <spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx> parameter
+              can be used to specify an alternative absolute URI reference.</c>
               
               <c><spanx style="verb">OAUTH_REQUEST_TOKEN</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</c>
@@ -4183,9 +4191,8 @@
           <t>In addition to the <spanx style="verb">key</spanx> attribute 
           required for all Data Pipeline elements, the &lt;os:DataRequest&gt; 
           element MUST contain a <spanx style="verb">method</spanx> attribute 
-          whose value identifies the data retrieval operation that is to be 
-          performed as defined by [TODO: Reference to new core data/api
-          spec]. All additional attributes contained by the &lt;os:DataRequest&gt;
+          whose value is an Operation Identifier as defined in <xref target="core-api"/>. 
+          All additional attributes contained by the &lt;os:DataRequest&gt;
           are to be mapped directly to the identically named input parameters 
           for the data retrieval operation specified by the 
           <spanx style="verb">method</spanx>.</t>
@@ -4193,11 +4200,12 @@
           <t>Child elements or any additional content provided within the 
           &lt;os:DataRequest&gt; element SHOULD be ignored.</t>
           
-          <t>For example, the <spanx style="verb">people.get</spanx> operation 
-          defined by [TODO: Core Data/API Spec] allows an application to retrieve 
-          information about people known to the container. It can, for instance, 
-          be used to retrieve basic profile details about an individual or 
-          retrieve a listing of associated profiles (e.g. a "friends" list).</t>
+          <t>For example, the <spanx style="verb">people.get</spanx> Operation 
+          Identifier defined within <xref target="social-app"/> allows an 
+          Application to retrieve information about people known to the container. 
+          It can, for instance, be used to retrieve basic profile details about 
+          an individual or retrieve a listing of associated profiles 
+          (e.g. a "friends" list).</t>
           
           <figure><preamble>When invoked using the JavaScript API to retrieve 
           the listing of profiles associated with the application's current Viewer, 
@@ -4213,7 +4221,7 @@
   <os:DataRequest key="friends" method="people.get" userId="@viewer" groupId="@friends" />
           ]]></artwork></figure>
           
-          <t>Assuming the method identified was processed successfully, the 
+          <t>Assuming the operation was processed successfully, the 
           <spanx style="verb">friends</spanx> variable will be added to the 
           <spanx style="verb">DataContext</spanx> with a value identical to that 
           provided as input to the callback function in the previous 
@@ -4937,7 +4945,15 @@
                  
                  <c><spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx></c>
                  <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</spanx></c>
-                 <c>TODO: This is not clear: The URL to return after authorization</c>
+                 <c>When the container sends a request to an OAuth service 
+                 provider asking for permission to access a given resource, 
+                 it will, by default, specify a default container-specific
+                 callback URI that the OAuth service provider will use to 
+                 redirect control back to the container and deliver the 
+                 requested access token. In certain cases, a specific application
+                 instance might need to override the default callback URI.
+                 The <spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx> parameter
+                 can be used to specify an alternative absolute URI reference.</c>
                  
                  <c><spanx style="verb">OAUTH_REQUEST_TOKEN</spanx></c>
                  <c><spanx style="verb">gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</spanx></c>
@@ -5840,7 +5856,8 @@
   &lt;/Module>
      </artwork>
      
-     <t>TODO: What happens is viewTarget is not specified and url is provided??</t>
+     <t>If a <spanx style="verb">viewTarget</spanx> is not specified, the container
+     will select an appropriate default view target.</t>
   
      <t>When registering actions, application developers need only provide basic
      information about the action such as a unique identifier, text label,
@@ -8230,7 +8247,7 @@
           individual Social Data Service.</t>
           
           <t>For example, a container can implement the OpenSocial Person
-          Service as defined by [TODO: Reference] and make that available 
+          Service as defined by <xref target="social-app"/> and make that available 
           to developers via the "osapi" Feature by using the property name
           "people" as specified in the Person Service definition.</t>
           
@@ -8255,7 +8272,7 @@
           </artwork></figure>
           
           <t>Likewise, the container can implement the OpenSocial 
-          Activity Stream Service as defined by [TODO: Reference]
+          Activity Stream Service as defined by <xref target="social-app"/>
           and make that available to developers using the property name
           "activities" as specified in the Activity Stream Service 
           definition.</t>
@@ -8315,7 +8332,7 @@
           
           <t>Containers are free to determine the set of Social Data Services
           they support and expose to applications. Definitions for a handful of 
-          common Social Data Services are provided in [TODO: Reference]. Gadget
+          common Social Data Services are provided in <xref target="social-app"/>. Gadget
           developers cannot assume that all containers will support the same 
           set of services and MUST therefore be prepared to gracefully handle
           cases where any given service is not available.</t>
@@ -8612,8 +8629,7 @@
                   
                   <c>authz</c>
                   <c>String</c>
-                  <c>Specifies the authorization method to use as defined by
-                  [TODO: Reference to Authorization Section]. Valid values are:
+                  <c>Specifies the authorization method to use. Valid values are:
                   "none", "signed", "oauth" and "oauth2". For convenience, 
                   aliases for each of these values have been provided for 
                   use in JavaScript code. These aliases are: 
@@ -8946,7 +8962,7 @@
       gadgets.Hub.connect( gadgets.HubSettings.onConnect );
   
     } catch(e) {
-      // TODO: error handling should be consistent with other OS application initialization error handling
+      // ... 
     }
   } );
           </artwork></figure>
@@ -9461,8 +9477,6 @@
       <t>Containers are free to define their own permissions for any purpose.
       TODO: should we have a registry of common permissions???</t>
        
-      <t>TODO: Move the definition of the el_escaping permission to the 
-      appropriate different location in the spec</t>
     </section>
     <!-- END SECURITY POLICY -->
    
@@ -9534,7 +9548,7 @@
             
             <c>type</c>
             <c>String</c>
-            <c>A required data type identifier as defined in [TODO: Ref to pubsub-2 datatypes]
+            <c>A required data type identifier as defined in <xref target="EventDataTypes"/>
             that specifies the kind of object that has been selected.</c>
             
             <c>dataObject</c>
@@ -9784,43 +9798,12 @@
              
             <section title="The gadgets.views.View Object" anchor="gadgets.views.View">
 
-              <t>TODO: Need more detail here</t>
-
               <t>The <spanx style="verb">gadgets.views.View</spanx> object 
               represents a View supported by an application. Instances of the 
               <spanx style="verb">gadgets.views.View</spanx> object are 
               provided by the container </t>
               
               <t>The methods exposed by the object are:</t>
-
-              <section title="gadgets.views.View.bind" anchor="gadgets.views.View.bind">
-              
-                <t>The <spanx style="verb">gadgets.views.View.bind</spanx> method
-                generates a URL string by combining the View's URL Template
-                with a collection of variables.</t>
-              
-                <t>TODO: Discuss URL Templates</t>
-            
-                <figure><artwork>
-  &lt;String&gt; &lt;instance&gt;.bind(environment)
-                </artwork></figure>
-              
-              <t>The method takes as input a a JavaScript object mapping named 
-              variables from the View's template with specific String values. 
-              These values are applied to the URL Template and a generated URL 
-              is returned.</t>
-              
-              <figure><preamble>For example:</preamble>
-              <artwork>
-  var view = gadgets.views.getCurrentView();
-  var env = {
-    "foo": "123",
-    "bar": "abc"
-  }
-  var url = view.bind(env);
-              </artwork></figure>
-                                     
-            </section>
             
               <section title="gadgets.views.View.getName"anchor="gadgets.views.View.getName">
               
@@ -9830,19 +9813,6 @@
                 
                 <figure><artwork>
   &lt;String&gt; &lt;instance&gt;.getName()
-                </artwork></figure>
-              
-              </section>
-              
-              <section title="gadgets.views.View.getUrlTemplate" anchor="gadgets.views.View.getUrlTemplate">
-              
-                <t>Returns the URL Template associated with the view. When 
-                expanded using the <spanx style="verb">gadgets.views.bind</spanx>
-                method, the URL Template can be used to generate a URL to 
-                navigate to the view. TODO: Nee more info.</t>
-                
-                <figure><artwork>
-  &lt;String&gt; &lt;instance&gt;.getUrlTemplate()
                 </artwork></figure>
               
               </section>
@@ -9860,41 +9830,7 @@
               </section>
 
             </section>
-      
-            <section title="gadgets.views.bind" anchor="gadgets.views.bind">
-            
-              <t>The <spanx style="verb">gadgets.views.bind</spanx> method
-              generates a URL string by combining a provided URL Template
-              with a collection of variables.</t>
-              
-              <t>TODO: Discuss URL Templates</t>
-            
-              <figure><artwork>
-  &lt;static&gt; &lt;String&gt; gadgets.views.bind(urlTemplate, environment)
-              </artwork></figure>
-              
-              <t>The method takes as input two parameters, the first of 
-              which is a String containing a URL Template as defined by
-              [TODO: URL Template Reference], and the second a JavaScript
-              object mapping named variables from the provided template with
-              specific String values. These values are applied to the 
-              URL Template and a generated URL is returned.</t>
-              
-              <figure><preamble>For example:</preamble>
-              <artwork>
-  var template = "http://example.org/{foo}/{bar}";
-  var env = {
-    "foo": "123",
-    "bar": "abc"
-  }
-  var url = gadgets.views.bind(template, env);
-              </artwork></figure>
-              
-              <t>The value set for the "url" property will be the generated
-              URL "http://example.org/123/abc".</t>
-             
-            </section>
-            
+                  
             <section title="gadgets.views.getCurrentView" anchor="gadgets.views.getCurrentView">
             
               <t>The <spanx style="verb">gadgets.views.getCurrentView</spanx>

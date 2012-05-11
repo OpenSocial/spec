@@ -1297,9 +1297,60 @@
       </section>
       <!-- END BATCH GET -->
       
+      <section title="Operation Identifiers" anchor="operation-identifiers">
+    
+        <t>For the purpose of simplifying an interaction with various REST 
+        services, an OpenSocial implementation that provides Application 
+        Container Services (see <xref target="core-gadget"/>) can provide a 
+        layer of code that abstracts the REST service request and provides a 
+        simplified interface.</t>
+        
+        <t>In order to better facilitate interoperability within that abstraction
+        layer, OpenSocial REST Services can specify a alias for each logical 
+        interaction the application can have with the service. Such aliases 
+        take the form:</t>
+        
+        <figure><artwork>
+  operation-identifier = service-identifier "." token
+        </artwork></figure>
+        
+        <t>For example, the OpenSocial Person Service provides operations that
+        allow a user-agent to request information about specific people. When
+        interacting directly with the REST Service, this request takes the 
+        form of an HTTP GET request:</t>
+        
+        <figure><artwork>
+  GET /api/people/@me/@self HTTP/1.1
+  Host: example.org
+        </artwork></figure>
+    
+        <t>Within an OpenSocial Application hosted within an OpenSocial 
+        container (see <xref target="core-gadget"/>), this same operation
+        can be referenced using the alias "people.get":</t>
+        
+        <figure><artwork><![CDATA[
+  <Module>
+    <ModulePrefs>
+      ...
+    </ModulePrefs>
+    <Data>
+      <os:DataRequest key="me" method="people.get" userId="@me" groupId="@self" />
+    </Data>
+    <Content type="html">
+      ...
+    </Content>
+  </Module>
+        ]]></artwork></figure>
+    
+        <t>Operation identifiers specific to each of the core OpenSocial REST 
+        Services are defined within the OpenSocial Social Applications 
+        Specifications <xref target="social-app"/>.</t>
+    
+      </section>
+      
     </section>
     <!-- END REST SERVICES -->
-
+    
     <section title="Dates, Times and Timezone Offsets" anchor="datetimes">
       
       <t>Whenever date, time, timezone, duration or time period data is 
