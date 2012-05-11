@@ -5860,7 +5860,7 @@
      will select an appropriate default view target.</t>
   
      <t>When registering actions, application developers need only provide basic
-     information about the action such as a unique identifier, text label,
+     information about the action such as an identifier, text label,
      icon and callback function. Containers are responsible for determining 
      how contributed actions are to be rendered.</t>
 
@@ -5872,10 +5872,12 @@
        elements to declaratively define the actions provided by an application. The
        "action-contributions" parameter value can have any number of 
        &lt;action&gt; elements, each of which MUST specify a unique "id" 
-       attribute. Each actions ID MUST be unique within the scope of the 
+       attribute. Each actions ID SHOULD be unique within the scope of the 
        container -- that is, if multiple application's are rendered by
        the container, all of the actions contributed by each of the applications 
-       MUST specify different IDs.</t>
+       SHOULD specify different IDs. If multiple actions are registered that
+       share the same ID, each will be registered and both will be invoked by
+       the container when either of the two actions is triggered.</t>
        
        <t>There is no XML namespace defined for the &lt;action&gt; element.</t>
      
@@ -6020,7 +6022,7 @@
            <ttcol>Attribute</ttcol>
            <ttcol>Description</ttcol>
            <c>id</c>
-           <c>Unique identifier</c>
+           <c>The action identifier.</c>
 
            <c>label</c>
            <c>Text string to display for this action</c>
@@ -6062,7 +6064,10 @@
        
        <section title="gadgets.actions.addAction" anchor="gadgets.actions.addAction">
        
-         <t>Programmatically registers an action with the container.</t>
+         <t>Programmatically registers an action with the container. Note that
+         if multiple actions are registered using the same identifier, each will
+         be registered separately by the container and both will be invoked when
+         either action is run.</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.addAction(action)
@@ -6099,8 +6104,9 @@
        
        <section title="gadgets.actions.updateAction" anchor="gadgets.actions.updateAction">
        
-         <t>Modifies the specified action contributed to the container.
-         TODO: Question: any action or just actions provided by this one application?</t>
+         <t>Modifies the specified action contributed to the container. Note 
+         that Applications are only permitted to modify it's own contributed
+         actions.</t>
        
          <figure><artwork>
   &lt;static&gt; gadgets.actions.updateAction(action)
@@ -6142,9 +6148,8 @@
        
        <section title="gadgets.actions.removeAction" anchor="gadgets.actions.removeAction">
        
-         <t>Removes the specified action from the container.
-         TODO: I assume a application can only remove it's own actions
-         </t>
+         <t>Removes the specified action from the container. Note that an 
+         Application is only permitted to remove it's own contributed actions.</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.removeAction
@@ -6168,10 +6173,12 @@
        
        <section title="gadgets.actions.getActionsByPath" anchor="gadgets.actions.getActionsByPath">
        
-         <t>Retrieves the collection of actions registered at the specified 
+         <t>Retrieves the collection of all actions registered at the specified 
          path and passes the result to the provided callback function as 
-         a JavaScript Array. TODO: is this all actions for the container, 
-         or just this application?? TODO: is this hierarchical</t>
+         a JavaScript Array. Note that paths are not considered to be hierarchical.
+         Passing in a path value of "container/navigationLinks" MUST NOT return any actions 
+         contributed to any path that can be considered subordinate to 
+         "container/navigationLinks" (e.g. "container/navigationLinks/File").</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.getActionsByPath(path, callback)
@@ -6201,10 +6208,9 @@
        
        <section title="gadgets.actions.getActionsByDataType" anchor="gadgets.actions.getActionsByDataType">
        
-         <t>Retrieves the collection of actions registered for the specified
+         <t>Retrieves the collection of all actions registered for the specified
          data type and passes the result to the provided callback function
-         a JavaScript Array. TODO: is this all actions for the container or
-         just this application??</t>
+         a JavaScript Array.</t>
        
          <figure><artwork>
   &lt;static&gt; gadgets.actions.getActionsByDataType(dataType, callback)
@@ -6260,6 +6266,21 @@
          <figure><preamble>For example,</preamble><artwork>
   gadgets.actions.runAction("com.acme.mycallaction");
          </artwork></figure>
+         
+         <t>Note that when an action is invoked, all registered actions
+         with the specified identifier will be invoked. If there are
+         multiple actions that use the same identifier value, each will
+         be invoked, typically in the order in which they were registered
+         with the container. This fact can cause a potential security and
+         privacy risk in that it allows a potentially malicious application
+         to snoop on actions originally directed at another application.
+         Because of this, care needs to be taken to avoid using the 
+         <spanx style="verb">gadgets.actions.runAction</spanx> API to pass
+         potentially secure or private data to an application.</t>
+         
+         <t>Also note that any action added to the container can be run by
+         any Application, not only the Application that contributed the 
+         action.</t>
        </section>
        
        <section title="gadgets.actions.registerShowActionsListener" anchor="gadgets.actions.registerShowActionsListener">
@@ -6331,11 +6352,18 @@
     
     <section title="The Content Rewriting Feature">
     
-      <t>The Content Rewriting Feature defines a set of content 
-      modification operations that a container can perform when 
-      processing HTML and Proxied Content and defines rules that
-      allow developers to control which content the rewriter can
-      operate on.</t>
+      <t>In many cases, when a container renders the content provided by an
+      Application Specification, it might wish to make a number of specific
+      modifications to the content intended, in part, to improve overall 
+      performance. Examples of such modifications can include changing the
+      URLs of external resources used by the Application such that those 
+      resources may possibly be cache and retrieved from a Content Distribution
+      Network (cdn); or optimizing CSS stylesheets and JavaScript code defined
+      by the Specificaiton document.</t>
+      
+      <t>The Content Rewriting Feature allows an Application developer the 
+      ability to control which types of modifications the container is permitted
+      to make within the content provided by the application.</t>
     
       <t>The Content Rewriting Feature is specified within the &lt;ModulePrefs&gt;
       with the feature name "content-rewrite" using either the &lt;Optional&gt;
@@ -6360,28 +6388,64 @@
        
        <t>The parameters supported by the "content-rewrite" feature are:
        
-       <list type="hanging">
-        <t hangText="expires">The duration in seconds to force as minimum HTTP 
-        cache time for content fetched through the proxy via a rewritten URL. 
-        The default is 86400 seconds.</t>
-        <t hangText="include-url">Any URL which contains this parameters value as a
-        case-insensitive substring is considered rewriteable. The literal string
-        "*" is a special case and implies all URLs. If not specified an entry
-        with the value "*" is assumed. This parameter MAY appear multiple times
-        within the &lt;Optional&gt; or &lt;Require&lt; tags.</t>
-        <t hangText="exclude-url">Any URL which contains this parameters value as a
+       <texttable>
+         <ttcol>Name</ttcol>
+         <ttcol>Value</ttcol>
+         <ttcol>Description</ttcol>
+         
+         <c>expires</c>
+         <c>Integer</c>
+         <c>The duration in seconds to force as maximum HTTP cache time for 
+         content cached by the container via a rewritten URL. The default is 
+         86400 seconds. Note that a container MUST NOT cache a resource for 
+         long that the time specified by standard Cache-Control mechanisms 
+         included in the HTTP Response returned when the original content is
+         fetched from the remote location.</c>
+         
+         <c>include-url</c>
+         <c>String</c>
+         <c>Any URL which contains this parameters value as a case-insensitive 
+         substring is considered rewriteable. That is, the container MAY choose
+         to redirect fetching of the URLs target resource via a container 
+         selected alternative URL or MAY choose to apply various optimization 
+         algorithms on the fetched respresentation of the resource. For instance,
+         if the resource returns JavaScript code and the <spanx style="verb">minify-js</spanx>
+         parameter is true, the container MAY choose to optimize the provided 
+         JavaScript code in some way. The literal string "*" is a special 
+         case and implies all URLs. If not specified an entry with the value "*" 
+         is assumed. This parameter MAY appear multiple times within the 
+         &lt;Optional&gt; or &lt;Require&lt; tags.</c>
+         
+         <c>exclude-url</c>
+         <c>String</c>
+         <c>Any URL which contains this parameters value as a
         case-insensitive substring is excluded from rewriting. The literal string
         "*" implies all URLs and effectively disables all rewriting. This parameter 
-        MAY appear multiple times within the &lt;Optional&gt; or &lt;Require&lt; tags.</t>
-        <t hangText="minify-css">Controls whether the container can attempt to 
-        minify css in style tags and referenced css files. Valid values are 
-        "true"|"false". Default is "true".</t>
-        <t hangText="minify-js">Controls whether the container can attempt to 
-        minify JS in script tags and referenced JS files. Valid values are "true"
-        and "false". Default is "true".</t>
-        <t hangText="minify-html">Controls whether the container can attempt to minify
-        HTML content. Valid values are "true" and "false". Default is "true".</t>
-       </list></t>
+        MAY appear multiple times within the &lt;Optional&gt; or &lt;Require&lt; tags.</c>
+         
+         <c>minify-css</c>
+         <c>Boolean</c>
+         <c>Specifies whether the container can attempt to optimize CSS in style 
+         tags and referenced CSS resources that have not been explicitly excluded
+         from rewriting using the <spanx style="verb">exclude-url</spanx> 
+         parameter. Valid values are "true" or "false". Default is "true"</c>
+         
+         <c>minify-js</c>
+         <c>Boolean</c>
+         <c>Specifies whether the container can attempt to optimize JavaScript 
+         contained in Script tags or in referenced JavaScript resources that have 
+         not been explicitly excluded from rewriting using the 
+         <spanx style="verb">exclude-url</spanx> parameter. Valid values are 
+         "true" or "false". Default is "true"</c>
+         
+         <c>minify-html</c>
+         <c>Boolean</c>
+         <c>Specifies whether the container can attempt to optimize HTML 
+         provided directly by the Application or in referenced resources that have 
+         not been explicitly excluded from rewriting using the 
+         <spanx style="verb">exclude-url</spanx> parameter. Valid values are 
+         "true" or "false". Default is "true"</c>
+       </texttable>
        
        <t>When values for both the "exclude-url" and "include-url" are specified,
        Matches for "exclude-url" take precedence over matches for "include-url".</t>
@@ -6389,8 +6453,10 @@
        <t>Note that the special use of "*" to denote all URLs should not be
        interpreted as support for GLOB or RegEx matching on strings.</t>
        
-       <t>Containers are free to perform additional optimizations when rewriting
-       links including but not limited to:
+       <t>For any resource that is not explicitly excluded from rewriting using 
+       the <spanx style="verb">exclude-url</spanx> parameter, containers are 
+       free to perform additional optimizations when rewriting links including 
+       but not limited to:
        <list type="symbols">
         <t>Extracting @import directives from style tags and converting them into 
         link tags in the head tag of the containing HTML content.</t>
@@ -6400,8 +6466,6 @@
         <t>Merging contiguous &lt;script src=xxx&gt; tags into one concatenating
         proxy fetch.</t>
        </list></t>
-  
-       <t>TODO: Need useful examples.. the ones currently in the spec aren't helpful.</t>
   
      </section>
      <!-- END CONTENT REWRITING -->
