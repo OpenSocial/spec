@@ -22,6 +22,8 @@
   <!ENTITY part6 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p6-cache-17.xml'>
   <!ENTITY part7 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-17.xml'>
   <!ENTITY bearer PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-18.xml'>
+  <!ENTITY profile PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-wilde-profile-link-01.xml'>
+  
   <!ENTITY mac PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-01.xml'>
   <!ENTITY jsonpatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-appsawg-json-patch-01.xml'>
   <!ENTITY mergepatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-snell-merge-patch-00.xml'>
@@ -1932,18 +1934,18 @@
       <t>For the purpose of clearly identifying which version of the 
       OpenSocial specification a particular application is implementing, a 
       Web Link header referencing the base URI of the OpenSocial specification
-      and using a rel attribute value of "implements" SHOULD be included within
+      and using a rel attribute value of <xref target="I-D.wilde-profile-link">"profile"</xref> SHOULD be included within
       the HTTP request and response message.</t>
       
       <figure><preamble>For example, the Link would appear within the request:</preamble><artwork>
   GET /api/people/@me/@self HTTP/1.1
   Host: example.org
-  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
       </artwork></figure>
       
       <figure><preamble>And within the response:</preamble><artwork>
   HTTP/1.1 200 OK
-  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
       </artwork></figure>
     
       <t>A server MAY choose to implement additional conventions for identifying
@@ -1968,12 +1970,12 @@
         no longer available, it can do so using an Upgrade Required response.</t>
         
         <figure><preamble>An "Upgrade Required Response" is an HTTP response 
-        that uses the 426 Upgrade Required status along with an "implements" 
+        that uses the 426 Upgrade Required status along with an "profile" 
         Web Link. For instance:</preamble><artwork>
   HTTP/1.1 426 Upgrade Required
   Upgrade: OpenSocial/3.0
   Connection: upgrade 
-  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
         </artwork></figure>
         
         <t>When using such responses, the Upgrade header MUST specify an
@@ -1997,14 +1999,14 @@
         
         <figure><preamble>An example 3.0 client request:</preamble><artwork>
   GET /api/people/@me/@self HTTP/1.1
-  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
         </artwork></figure>
         
         <figure><preamble>A server implementing a hypothetical 3.1 version of
         the OpenSocial spec can continue to respond as if it was a 3.0 implementation:</preamble>
         <artwork>
   HTTP/1.1 200 OK
-  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="implements"
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
   Content-Type: application/json
   
   {... OpenSocial 3.0 data ...}
@@ -2015,7 +2017,7 @@
   HTTP/1.1 200 OK
   Upgrade: OpenSocial/3.1
   Connection: upgrade
-  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="implements"
+  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="profile"
   Content-Type: application/json
   
   {... OpenSocial 3.1 data ...}
@@ -2031,7 +2033,7 @@
   Location: /v3.1/api/people/@me/@self HTTP/1.1
   Upgrade: OpenSocial/3.1
   Connection: upgrade
-  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="implements"
+  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="profile"
         </artwork></figure>
         
       </section>
@@ -2131,6 +2133,7 @@
       &rfc3339;
       &astreams;
       &astreamlinks;
+      &profile;
       &part1;
       &part2;
       &part3;

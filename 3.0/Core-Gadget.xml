@@ -10,6 +10,7 @@
   <!ENTITY rfc3987 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3987.xml'>
   <!ENTITY rfc5849 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml'>
   <!ENTITY rfc5988 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml'>
+  <!ENTITY rfc2617 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml'>
   <!ENTITY oauth2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-25.xml'>
   <!ENTITY infoset PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xml-infoset-20040204.xml'> 
   <!ENTITY xmlbase PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xmlbase-20090128.xml'>
@@ -20,6 +21,8 @@
   <!ENTITY coreapi PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/coreapi.xml'>
   <!ENTITY socialapi PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/socialapi.xml'>
   <!ENTITY templating PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/opensocial-templating.xml'>
+  <!ENTITY bearer PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-18.xml'>
+  <!ENTITY mac PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-01.xml'>
   
   <!ENTITY jspel PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/jspel.xml'>
   <!ENTITY oahub PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/oahub.xml'>
@@ -889,6 +892,8 @@
           <figure><artwork>        
   Service = element Service {
     attribute name { text }?,
+    attribute view { text }?,
+    attribute realm { text }?,
     undefinedAttribute*,
     element Request { OAuthResourceType }?,
     element Access { OAuthResourceType }?,
@@ -916,6 +921,20 @@
           wish to use by passing the service name, for example, as a parameter 
           to the <spanx style="verb">gadgets.io.makeRequest</spanx> and 
           <spanx style="verb">osapi.http</spanx> APIs.</t>
+          
+          <t>The optional <spanx style="verb">view</spanx> attribute on the 
+          &lt;Service&gt; element specifies the name of a View the container 
+          SHOULD display to the Viewer when the container determines that an 
+          OAuth Access Token needs to be acquired. If the specified view does
+          not exist within the Application specification document, the attribute
+          MUST be ignored.</t>
+          
+          <t>The optional <spanx style="verb">realm</spanx> attribute specifies
+          a realm-value as specified by <xref target="RFC2617" />. The given 
+          realm-value is used to select an appropriate &lt;Service&gt; element 
+          to use when authenticating a request for a remote resource should the 
+          container receive a 401 Unauthenticated response. See 
+          <xref target="401-unauthorized"/> for additional detail.</t>
         
           <t>The child elements of the &lt;Service&gt; element consist of the 
           &lt;Request&gt;, &lt;Access&gt; and &lt;Authorization&gt; elements,
@@ -969,6 +988,8 @@
           <figure><artwork>        
   Service = element Service {
     attribute name { text }?,
+    attribute view { text }?,
+    attribute realm { text }?,
     attribute scope { text }?,
     undefinedAttribute*,
     element Authorization {
@@ -993,6 +1014,20 @@
           wish to use by passing the service name as a parameter, for example,
           to the <spanx style="verb">gadgets.io.makeRequest</spanx> or 
           <spanx style="verb">osapi.http</spanx> APIs.</t>
+          
+          <t>The optional <spanx style="verb">view</spanx> attribute on the 
+          &lt;Service&gt; element specifies the name of a View the container 
+          SHOULD display to the Viewer when the container determines that an 
+          OAuth Access Token needs to be acquired. If the specified view does
+          not exist within the Application specification document, the attribute
+          MUST be ignored.</t>
+          
+          <t>The optional <spanx style="verb">realm</spanx> attribute specifies
+          a realm-value as specified by <xref target="RFC2617" />. The given 
+          realm-value is used to select an appropriate &lt;Service&gt; element 
+          to use when authenticating a request for a remote resource should the 
+          container receive a 401 Unauthenticated response. See 
+          <xref target="401-unauthorized"/> for additional detail.</t>
         
           <t>OAuth2 Service elements MAY also specify an optional 
           <spanx style="verb">scope</spanx> attribute providing the scope 
@@ -2223,47 +2258,42 @@
       <!-- END SIGNED FETCH -->
     
       <section title="OAuth Support">
-    
-        <t>All container implementations are required to support the use of 
-        versions <xref target="RFC5849">1.0a</xref> and 
-        <xref target="I-D.ietf-oauth-v2">2.0</xref> of the OAuth protocol.</t>
         
-        <t>OAuth provides the ability for the owner of a resource to grant 
-        limited permission to an application to perform some action on that 
-        resource on behalf of the owner. For instance, an application might
-        wish to display a listing of documents owned by the current Viewer. 
-        Before displaying that list of files, the application works with the container
-        to request authorization from the Viewer to access the service
-        used to manage documents and files. Such access can be limited by the
-        Viewer, for example, to allow only simple read operations that occur
-        within a specific period of time.</t>
+        <t>The OAuth protocol provides the ability for the owner of a resource 
+        to grant limited permission to an application to perform actions 
+        on behalf of the owner. For instance, an application might wish to 
+        display a listing of documents owned by the current Viewer. To do so, 
+        the application can work with the Container to request authorization 
+        from the Viewer to access the service the Viewer uses to manage 
+        documents and files. When granted, such access can be limited, 
+        for example, to allow only the most basic read operations occurring
+        within a specified period of time.</t>
         
-        <t>The data that a container can provide to an application originates in 
-        one of two places:
-          <list style="symbols">
-            <t>From third party services, or</t>
-            <t>From the container itself in the form of social data like profile
-            information, groups, Activity Streams, and so on.</t>
-          </list>
-        </t>
+        <t>Currently, OpenSocial Containers are required to implement support 
+        for versions <xref target="RFC5849">1.0a</xref> and 
+        <xref target="I-D.ietf-oauth-v2">2.0</xref> of the OAuth protocol.
+        Specifically, the container MUST be capable of acting as either an 
+        OAuth 1.0a or OAuth 2.0 client on behalf of application instances 
+        hosted by the container. That is, whenever an application requires 
+        access to protected external resources, the container MUST be capable of 
+        using either version of the OAuth Protocol to request appropriate 
+        permission to access the resource.</t>
         
-        <t>To support each of these cases, every container instance is required
-        to act as both a consumer and a provider of OAuth services. That is,
-        when communicating with third party services, applications can work 
-        with the container -- via either declarative properties defined within the
-        application specification or parameters on various JavaScript API calls --
-        to access the third party's OAuth Authorization Service and 
-        acquire proper authorization for the requests the application wishes to make.
-        Once authorization is granted, the container can further assist with 
-        management and storage of the authorization data provided by the third 
-        party service.</t>
+        <t>Likewise, when an application or some other third party wishes to 
+        access social data provided by the OpenSocial Container, the Container 
+        MUST be capable of providing an OAuth Authorization Service -- implementing 
+        either or both versions of the OAuth protocol -- that those applications 
+        can work with to acquire appropriate access permissions. If a container 
+        implementation chooses not to support the use of one of the required 
+        versions of the OAuth protocol, it SHOULD, at the very least, implement
+        the minimal level of functionality required to issue properly formed
+        negative responses to requests using that version. For instance, if a 
+        client application sends an OAuth 1.0a authorization token request to a
+        container that only supports OAuth 2.0, the container SHOULD be capable
+        of responding to that request with an appropriate OAuth 1.0a response
+        rejecting the request.</t>
         
-        <t>When an application or some other party wishes to access social 
-        data provided by the container, they will work with the 
-        OAuth Authorization Service provided by the container to acquire
-        permission to do so.</t>
-        
-        <t>From the application developer's point of view, there are no differences
+        <t>From the Application developer's point of view, there are no differences
         between working with OAuth-protected resources provided by the container 
         or those provided by a third-party. The sections that follow detail 
         the responsibilities, requirements and mechanisms application developers
@@ -2280,12 +2310,13 @@
           
           <figure><preamble>In the partial specification below, the 
           &lt;OAuth&gt; element is used to declare a dependency on a third 
-          party service providing OAuth 1.0a support:</preamble><artwork><![CDATA[
+          party service providing OAuth 1.0a support.</preamble>
+          <artwork><![CDATA[
   <Module>
     <ModulePrefs>
       ...
       <OAuth>
-        <Service>
+        <Service view="oauth">
           <Request url="http://example.com/request" method="get" />
           <Access url="http://example.com/access" method="get" />
           <Authorization url="http://example.com/authorization" />
@@ -2294,8 +2325,17 @@
       ...
     </ModulePrefs>
     ...
+    <Content type="html" view="oauth">
+      ...
+    </Content>
   </Module>
           ]]></artwork></figure>
+          
+          <t>The &lt;Service&gt; element provides the container with the 
+          locations of the various OAuth service components that are used
+          to acquire authorization as well as the name of an Application
+          View the container can use to interact with the Viewer whenever 
+          it determines that authorization must be acquired to continue.</t>
           
           <figure><preamble>Similarly, dependencies on OAuth 2.0-based
           services are declared using the &lt;OAuth2&gt; element:</preamble>
@@ -2304,12 +2344,15 @@
     <ModulePrefs>
       ...
       <OAuth2>
-        <Service>
+        <Service view="oauth">
           <Authorization url="http://example.com/authorization" method="get" />
           <Token url="http://example.org/token" method="get" />
         </Service>
       </OAuth2>
       ...
+      <Content type="html" view="oauth">
+        ...
+      </Content>
     </ModulePrefs>
     ...
   </Module>         
@@ -2353,14 +2396,14 @@
           
           <t>When using OAuth version 1.0a with the JavaScript APIs, the 
           value of the <spanx style="verb">AUTHORIZATION</spanx> parameter, 
-          represented by the <spanx style="verb">constant gadgets.io.RequestParameters.AUTHORIZATION</spanx>,
-          MUST be <spanx style="verb">oauth</spanx> (represented in JavaScript 
-          using the constant <spanx style="verb">gadgets.io.RequestParameters.OAUTH</spanx>).</t>
+          represented by the <spanx style="verb">constant gadgets.io.RequestParameters.AUTHORIZATION</spanx>
+          alias in JavaScript, MUST equal <spanx style="verb">oauth</spanx> (represented in JavaScript 
+          using the alias <spanx style="verb">gadgets.io.RequestParameters.OAUTH</spanx>).</t>
           
           <t>When using OAuth version 2.0, the value of the 
           <spanx style="verb">AUTHORIZATION</spanx> parameter MUST be 
           <spanx style="verb">oauth2</spanx> (represented in JavaScript using 
-          the <spanx style="verb">constant gadgets.io.RequestParameters.OAUTH2</spanx>).</t>
+          the alias <spanx style="verb">constant gadgets.io.RequestParameters.OAUTH2</spanx>).</t>
           
           <t>The following additional parameters that affect the containers
           application of the OAuth protocol MAY also be specified:
@@ -2369,12 +2412,12 @@
               <ttcol>Alias</ttcol>
               <ttcol>Description</ttcol>
               
-              <c>OAUTH_RECEIVED_CALLBACK</c>
+              <c><spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</c>
               <c>Specifies the IRI to return after authorization.
               TODO: Need for info on this</c>
               
-              <c>OAUTH_REQUEST_TOKEN</c>
+              <c><spanx style="verb">OAUTH_REQUEST_TOKEN</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</c>
               <c>In certain circumstances, instances of an application can be 
               preauthorized to access particular resources and issued an 
@@ -2382,20 +2425,27 @@
               allows the application to provide such preapproved request tokens to the 
               container for use.</c>
               
-              <c>OAUTH_REQUEST_TOKEN_SECRET</c>
+              <c><spanx style="verb">OAUTH_REQUEST_TOKEN_SECRET</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</c>
               <c>When using preapproed request tokens with the OAUTH_REQUEST_TOKEN
               parameter, the OAUTH_REQUEST_TOKEN_SECRET parameter
               can be used to provide the associated request token secret.</c>
               
-              <c>OAUTH2_SCOPE</c>
+              <c><spanx style="verb">OAUTH2_SCOPE</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH2_SCOPE</c>
               <c>When using OAuth version 2.0, the OAUTH2_SCOPE parameter is 
               used to specify the scope to be used with this request. 
               Access Token Scope is defined in Section 3.3 of 
               <xref target="I-D.ietf-oauth-v2"/>.</c>
               
-              <c>OAUTH_TOKEN_NAME</c>
+              <c><spanx style="verb">OAUTH_SERVICE_NAME</spanx></c>
+              <c>gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</c>
+              <c>When multiple OAuth services are declared within the 
+              &lt;ModulePrefs&gt; of an Application, the OAUTH_SERVICE_NAME
+              parameter can be used to specify which service to use for the
+              request.</c>
+              
+              <c><spanx style="verb">OAUTH_TOKEN_NAME</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</c>
               <c>Provides a simple label that application can use to refer to the 
               OAuth Access Token granting access to particular resources.
@@ -2407,7 +2457,7 @@
               access to the contact data and the name "calendar" to refer to
               the token providing access to the calendar.</c>
               
-              <c>OAUTH_USE_TOKEN</c>
+              <c><spanx style="verb">OAUTH_USE_TOKEN</spanx></c>
               <c>gadgets.io.RequestParameters.OAUTH_USE_TOKEN</c>
               <c>For certain kinds of actions on certain resources, an OAuth
               service provider might not require that the container and application
@@ -2491,6 +2541,7 @@
               <t><spanx style="verb">oauth_request_token</spanx></t>
               <t><spanx style="verb">oauth_request_token_secret</spanx></t>
               <t><spanx style="verb">oauth2_scope</spanx></t>
+              <t><spanx style="verb">oauth_service_name</spanx></t>
               <t><spanx style="verb">oauth_token_name</spanx></t>
               <t><spanx style="verb">oauth_use_token</spanx></t>
             </list>
@@ -2513,12 +2564,12 @@
     <ModulePrefs>
       ...
       <OAuth>
-        <Service>
+        <Service view="oauth">
           <Request url="http://example1.com/request" method="get" />
           <Access url="http://example1.com/access" method="get" />
           <Authorization url="http://example1.com/authorization" />      
         </Service>
-        <Service name="other">
+        <Service name="other" view="other.oauth">
           <Request url="http://example2.net/request" method="get" />
           <Access url="http://example2.net/access" method="get" />
           <Authorization url="http://example2.net/authorization" />      
@@ -2548,6 +2599,12 @@
         </script>
         ...
       </Content>
+      <Content type="html" view="oauth">
+        ...
+      </Content>
+      <Content type="html" view="other.oauth">
+        ...
+      </Content>
     </ModulePrefs>
   </Module>
           ]]></artwork></figure>
@@ -2560,7 +2617,7 @@
         
         </section>
         
-        <section title="Processing Model">
+        <section title="Processing Model" anchor="oauth-processing-model">
         
           <t>When the container receives any request for which the OAuth
           protocol is to be used, regardless of whether the request is 
@@ -2576,8 +2633,13 @@
                 <t>When OAuth 1.0a is used, the container will 
                 send a request to the remote endpoint as described in 
                 Section 3 of <xref target="RFC5849"/> with the exception
-                that the <spanx style="verb">oauth_token</spanx> will be omitted.</t>
-                <t>When OAuth version 2.0 is used... TODO: What to do here?</t>
+                that the <spanx style="verb">oauth_token</spanx> will be omitted.
+                Such requests are generally identical to those sent when using
+                the Signed Fetch mechanism.</t>
+                <t>When OAuth version 2.0 is used, requests are sent without
+                any authentication information included. This is the same as 
+                sending the request using an <spanx style="verb">AUTHORIZATION</spanx>
+                value of <spanx style="verb">NONE</spanx>.</t>
               </list>
             </t>
             <t>For any request for which an access token is considered
@@ -2589,10 +2651,16 @@
                 container, a request that includes the token will be sent 
                 to the remote endpoint as described in Section 7 of 
                 <xref target="RFC5849"/>. When using OAuth 2.0, the container
-                will send a request using the access token as specified
-                in Section 7 of <xref target="I-D.ietf-oauth-v2"/>.</t>
-                <t>If an appropriate Access Token is not known to 
-                the container, TODO: What to do here?</t>
+                will send a request using the access token as described 
+                in <xref target="oauth2-requests"/>.</t>
+                <t>If an appropriate Access Token, and OAuth 1.0a is used, 
+                the container will send a request to the remote endpoint as 
+                described in Section 3 of <xref target="RFC5849"/> with the 
+                exception that the <spanx style="verb">oauth_token</spanx> will
+                be omitted. Such requests are generally identical to those sent
+                when using the Signed Fetch mechanism. If OAuth 2.0 is used,
+                requests are sent without any authentication information 
+                included.</t>
               </list>
             </t>
             <t>For any request for which an access token is required
@@ -2602,13 +2670,12 @@
                 <t>If using OAuth 1.0a and an appropriate Access Token 
                 is known by the container, a request as defined in Section 
                 3 of <xref target="RFC5849"/> is sent to the remote endpoint. 
-                If using OAuth 2.0, a request as defined by Section 7
-                of <xref target="I-D.ietf-oauth-v2"/> is sent.</t>
+                If using OAuth 2.0, a request is sent as described in 
+                <xref target="oauth2-requests"/> is sent.</t>
                 <t>When an appropriate Access Token is not known to 
                 the container, the container MUST acquire an access
-                token using either of the processes described below
-                depending on the version of OAuth being used. Once
-                an Access Token is acquired, a request using the token
+                token using the processes described in <xref target="oauth-get-tokens"/>. 
+                Once an Access Token is acquired, a request using the token
                 will be sent to the server. If a token cannot be 
                 acquired, the container will report an error back 
                 to the application.</t>
@@ -2616,18 +2683,165 @@
             </t>
           </list>
     
-          <section title="Acquiring Access Tokens">
+          <section title="Acquiring Access Tokens" anchor="oauth-get-tokens">
           
             <t>When using any version of OAuth, a container will first 
             need to seek authorization from the owner of a resource
-            prior to attempting to access it. This is done first by 
+            prior to attempting to access it. Generally, this is done first by 
             the container interacting with the OAuth Authorization 
             Provider to retrieve a "request token" which is then 
             exchanged for an "access token". The details for how each 
             of those steps are completed varies for each version of the 
-            OAuth protocol. </t>
+            OAuth protocol.</t>
           
-            <!-- TODO: NEED TO COMPLETE THIS SECTION -->
+            <t>First, once the container determines that an access token
+            needs to be acquired prior to completing a request, it will 
+            examine the <spanx style="verb">view</spanx> attribute on the 
+            appropriate OAuth &lt;Service&gt; element to determine the name
+            of the Application View it will render to interact with the Viewer.</t>
+            
+            <t>If the view specified by the attribute does not exist, or if 
+            the <spanx style="verb">view</spanx> attribute is not specified:
+              <list style="symbols">
+                <t>And the request being processed is to retrieve content 
+                specified from either the &lt;Link&gt;, &lt;Preload&gt;, 
+                &lt;Content&gt; or &lt;os:HttpRequest&gt; elements, the 
+                container MUST abort the request and signal an error to the 
+                Viewer indicating that the OAuth authorization could not be 
+                completed; or</t>
+                <t>If the request being processed is the result of invoking 
+                either the <spanx style="verb">gadgets.io.makeRequest</spanx>,
+                <spanx style="verb">osapi.http</spanx> or any of the 
+                <spanx style="verb">osapi.*</spanx> service JavaScript APIs,
+                the container SHOULD abort the request and invoke the callback
+                function passed in to the JavaScript method with an indication
+                that OAuth Authorization is required. The Application can then
+                choose to handle the authentication on it's own, as described
+                in <xref target="oauthpopup"/>. However, the container MAY 
+                choose to abort the request and signal an error that the 
+                OAuth authorization could not be completed.</t>
+              </list>
+            </t>
+          
+            <t>If the view specified by the attribute does exist, the container
+            will render the view -- typically within a modal user interface 
+            element that blocks all other interactions with the container 
+            until the authorization is complete or canceled. The rendered view
+            MUST handle the Viewers interaction with the third party OAuth 
+            Authorization service as described in <xref target="oauthpopup"/> 
+            then return control back to the container once the authorization 
+            process has been completed and an access token has been issued. 
+            Once the view has been dismissed, the container will proceed with
+            the request using the acquired access token.</t>
+          
+          </section>
+          
+          <section title="Sending OAuth 2.0 Protected Requests" anchor="oauth2-requests">
+          
+            <t>When using OAuth 2.0 to premptively send authenticated requests, 
+            containers MUST support the use of OAuth 2.0 Bearer Tokens as 
+            described by <xref target="I-D.draft-ietf-oauth-v2-bearer"/> and 
+            Mac Tokens as described by <xref target="I-D.draft-ietf-oauth-v2-http-mac"/>.
+            Implementations MAY choose to support additional types of tokens.</t>
+            
+            <t>The determination of exactly how the OAuth 2.0 access token is 
+            conveyed within a request to a protected resource is determined 
+            entirely by the type of access token that was issued.</t>
+            
+            <t>If the access token issued to the container is a Bearer-type 
+            token, the request sent to the remote endpoint MUST contain an
+            Authorization header field using the "Bearer" scheme that includes
+            the access token:</t>
+            
+            <figure><preamble>For example:</preamble><artwork>
+  GET /some/remote/content HTTP/1.1
+  Host: example.org
+  Authorization: Bearer ABCDEF1234567FEDCBA
+            </artwork></figure>
+            
+            <t>Because access tokens sent using the Bearer scheme are sent 
+            in clear-text, all requests using the Bearer authentication 
+            scheme MUST be sent using SSL or TLS.</t>
+            
+            <t>If the access token issued to the container is a Mac-type
+            token, the request sent to the remote endpoint MUST contain 
+            an Authorization header field using the "Mac" scheme that includes
+            "id", "nonce" and "mac" fields as described by 
+            <xref target="I-D.draft-ietf-oauth-v2-http-mac"/>.</t>
+            
+            <figure><preamble>For example:</preamble><artwork>
+  GET /some/remote/content HTTP/1.1
+  Host: example.org
+  Authorization: MAC id="h480djs93hd8",
+                 nonce="274312:dj83hs9s",
+                 mac="kDZvddkndxvhGRXZhvuDjEWhGeE="
+            </artwork></figure>
+          
+          </section>
+          
+          <section title="401 Unauthorized Responses" anchor="401-unauthorized">
+          
+            <t>When attempting to interact with protected remote resources on behalf of 
+            an Application, and an authentication mechanism is not prespecified 
+            by the Application using either the <spanx style="verb">AUTHORIZATION</spanx>
+            request parameter or the <spanx style="verb">authz</spanx> attribute; 
+            or when the authentication mechanism specified by the Application does
+            not match the authentication scheme required by the remote resource,
+            the container might receive an error response from the remote endpoint
+            indicating that authentication is required. Such responses typically
+            take the form of 401 Unauthorized messages.</t>
+            
+            <t>When encountering such a response, the container will determine,
+            if possible, the authentication scheme required by the remote endpoint
+            by examining the WWW-Authentication header field included in the 
+            response.</t>
+            
+            <t>If the WWW-Authentication header specifies support for the 
+            "OAuth" scheme, the container MAY either choose to abort the 
+            request and signal to the Application that an error has occurred
+            and that the request cannot be completed or, it MAY attempt to 
+            reprocess the request as specified in <xref target="oauth-processing-model"/>
+            using the OAuth 1.0a protocol.</t>
+            
+            <t>If the WWW-Authentication header specifies support for either the
+            "Bearer" or "Mac" schemes, the container MAY either choose to 
+            abort the request and signal to the Application that an error has
+            occurred and that the request cannot be completed or, it MAY attempt
+            to reprocess the request as specified in <xref target="oauth-processing-model"/>
+            using the OAuth 2.0 protocol.</t>
+            
+            <t>If the WWW-Authentication header field specifies multiple 
+            supported authentication schemes, the container SHOULD evaluate 
+            each in the order they are encoded within the field value and 
+            use the first supported scheme it finds.</t>
+            
+            <t>When the selected authentication scheme is OAuth 1.0 or OAuth 2.0, 
+            the container will check the Application specification for an 
+            appropriate OAuth &lt;Service&gt; element it can use to acquire the 
+            necessary authorization. It will do so by first checking to see 
+            if any of the provided &lt;Service&gt; elements contain a "realm" 
+            attribute that is equal to the realm specified by the WWW-Authenticate
+            header field, if any. If a matching &lt;Service&gt; element is found, it 
+            is selected. If, however, the realm is not specified in the WWW-Authenticate
+            header field -- as will typically be the case when using the Mac 
+            authentication scheme -- or if a matching &lt;Service&gt; element cannot
+            be found, the container will look for an &lt;Service&gt; element that matches
+            the version of the OAuth protocol selected and that does not specify a 
+            name attribute.</Service>
+            
+            <t>If an appropriate OAuth &lt;Service&gt; element is not provided 
+            by the Application, the container MUST abort the request and 
+            signal an error to the Application indicating the request cannot
+            be completed.</t>
+            
+            <t>Containers MAY choose to support any other authentication schemes
+            that might be indicated by the WWW-Authentication header; however,
+            such support is undefined by this specification.</t>
+            
+            <t>If the container does not support any of the schemes specified
+            by the WWW-Authentication header, then it MUST abort the request 
+            and signal an error to the Application indicating the request 
+            cannot be completed.</t>
           
           </section>
           
@@ -10487,7 +10701,10 @@
     &rfc3987;
     &rfc5849;
     &rfc5988;
+    &rfc2617;
     &oauth2;
+    &bearer;
+    &mac;
     &infoset;
     &xmlbase;
     &relaxng;
