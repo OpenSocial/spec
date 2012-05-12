@@ -2,6 +2,7 @@
 <?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
 <?rfc-ext allow-markup-in-artwork="yes"?>
+<?rfc private="OpenSocial Foundation"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
   <!ENTITY rfc2616 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'> 
   <!ENTITY rfc4918 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4918.xml'> 
@@ -16,28 +17,26 @@
   <!ENTITY rfc3987 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3987.xml'>
   <!ENTITY rfc3986 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3986.xml'>
   <!ENTITY rfc3339 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3339.xml'>
-  
-  <!ENTITY part1 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-17.xml'>
-  <!ENTITY part2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-17.xml'>
-  <!ENTITY part3 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p3-payload-17.xml'>
-  <!ENTITY part4 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p4-conditional-17.xml'>
-  <!ENTITY part5 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p5-range-17.xml'>
-  <!ENTITY part6 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p6-cache-17.xml'>
-  <!ENTITY part7 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-17.xml'>
-  <!ENTITY bearer PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-18.xml'>
+  <!ENTITY rfc4287 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4287.xml'>
+  <!ENTITY rfc5849 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml'>
+  <!ENTITY rfc4627 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4627.xml'>
+  <!ENTITY part1 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p1-messaging-19.xml'>
+  <!ENTITY part2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p2-semantics-19.xml'>
+  <!ENTITY part3 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p3-payload-19.xml'>
+  <!ENTITY part4 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p4-conditional-19.xml'>
+  <!ENTITY part5 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p5-range-19.xml'>
+  <!ENTITY part6 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p6-cache-19.xml'>
+  <!ENTITY part7 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-httpbis-p7-auth-19.xml'>
+  <!ENTITY bearer PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-bearer-19.xml'>
   <!ENTITY profile PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-wilde-profile-link-01.xml'>
-  
   <!ENTITY mac PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-01.xml'>
   <!ENTITY jsonpatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-appsawg-json-patch-01.xml'>
   <!ENTITY mergepatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-snell-merge-patch-00.xml'>
   
   <!ENTITY astreams PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/astreams.xml'>
-  
-  <!ENTITY socialapp PUBLIC '' 'bib/social-gadget.bibxml'>
-  <!ENTITY coregadget PUBLIC '' 'bib/core-gadget.bibxml'>
-  <!ENTITY astreamlinks PUBLIC '' 'bib/astream-links.bibxml'>
+
 ]>
-<rfc ipr="full3978" docName="core.api.xml" >
+<rfc>
   <front>
     <title abbrev="Core-API">OpenSocial Core API Specification 3.0</title>
     <author fullname="OpenSocial and Gadgets Specification Group">
@@ -214,28 +213,28 @@
         
         <t>To illustrate how the common URI structure operates, consider the 
         following example. For each of the URI Template variables, assume
-        the following values:
-          <texttable>
-            <ttcol>Variable</ttcol>
-            <ttcol>Value</ttcol>
-            <c>protocol</c>
-            <c>https</c>
-            <c>host</c>
-            <c>api.example.org</c>
-            <c>rootpath</c>
-            <c>["service","api"]</c>
-            <c>service-identifier</c>
-            <c>people</c>
-            <c>local-identifier</c>
-            <c>@me</c>
-            <c>aspect-identifier</c>
-            <c>@friends</c>
-            <c>filters</c>
-            <c>["@recent"]</c>
-            <c>parameters</c>
-            <c>{"count":"10", "updatedAfter":"2012-04-16T00:00:00Z"}</c>
-          </texttable>
-        </t>
+        the following values:</t>
+
+        <texttable>
+          <ttcol>Variable</ttcol>
+          <ttcol>Value</ttcol>
+          <c>protocol</c>
+          <c>https</c>
+          <c>host</c>
+          <c>api.example.org</c>
+          <c>rootpath</c>
+          <c>["service","api"]</c>
+          <c>service-identifier</c>
+          <c>people</c>
+          <c>local-identifier</c>
+          <c>@me</c>
+          <c>aspect-identifier</c>
+          <c>@friends</c>
+          <c>filters</c>
+          <c>["@recent"]</c>
+          <c>parameters</c>
+          <c>{"count":"10", "updatedAfter":"2012-04-16T00:00:00Z"}</c>
+        </texttable>
         
         <t>When applied to the common URI Template, the Request URI Generated
         becomes: "https://api.example.org/service/api/people/@me/@friends/@recent?count=10&amp;updatedAfter=2012-04-16T00:00:00Z".</t>
@@ -528,31 +527,9 @@
           <c>filterOp</c>
           <c>When the filterBy parameter is used to specify the name of a field
           to use as a selection filter, the filterOp parameter is used to specify
-          the specific type of selection filter operation to apply. Possible 
-          values are:
-            <list style="hanging">
-              <t hangText="contains">
-                Indicates that the value of the field identified by the filterBy
-                parameter MUST contain the exact value specified by the filterValue
-                parameter.
-              </t>
-              <t hangText="equals">
-                Indicates that the value of the field identified by the filterBy
-                parameter MUST equal the exact value specified by the filterValue
-                parameter.
-              </t>
-              <t hangText="startsWith">
-                Indicates that the value of the field identified by the filterBy
-                parameter MUST begin with the exact characters specified by the 
-                filterValue parameter.
-              </t>
-              <t hangText="present">
-                Indicates that items are only considered to match the selection
-                filter if the field identified by the filterBy parameter is present
-                within the item and specifies a non-null value. When filterOp
-                equals "present", the filterValue parameter is ignored.
-              </t>
-            </list>
+          the specific type of selection filter operation to apply. See 
+          <xref target="filterOp-values"/> for details on the possible values 
+          for the <spanx style="verb">filterOp</spanx> parameter.
           </c>
           
           <c>filterValue</c>
@@ -620,7 +597,38 @@
         
         </texttable>
         
-        <section title="The Sort Parameter" anchor="sort-parameter">
+        <section title="The &quot;filterOp&quot; Parameter" anchor="filterOp-values">
+        
+          <t>The value of the <spanx style="verb">filterOp</spanx> parameter
+          is one of:
+             <list style="hanging">
+              <t hangText="contains">
+                Indicates that the value of the field identified by the filterBy
+                parameter MUST contain the exact value specified by the filterValue
+                parameter.
+              </t>
+              <t hangText="equals">
+                Indicates that the value of the field identified by the filterBy
+                parameter MUST equal the exact value specified by the filterValue
+                parameter.
+              </t>
+              <t hangText="startsWith">
+                Indicates that the value of the field identified by the filterBy
+                parameter MUST begin with the exact characters specified by the 
+                filterValue parameter.
+              </t>
+              <t hangText="present">
+                Indicates that items are only considered to match the selection
+                filter if the field identified by the filterBy parameter is present
+                within the item and specifies a non-null value. When filterOp
+                equals "present", the filterValue parameter is ignored.
+              </t>
+            </list>
+          </t>
+        
+        </section>
+        
+        <section title="The &quot;sort&quot; Parameter" anchor="sort-parameter">
         
           <t>The value of the <spanx style="verb">sort</spanx> parameter 
           is a comma-separated list of sort-keys as defined below.</t>
@@ -813,10 +821,10 @@
       
           <t>OpenSocial REST Services that implement support for the PATCH
           operation MUST, at a minimum, support the use of the 
-          <xref target="I-D.draft-ietf-appsawg-json-patch">JSON Patch 
+          <xref target="I-D.ietf-appsawg-json-patch">JSON Patch 
           document format</xref> for describing partial modifications and 
           MAY support the use of the JSON Merge Patch mechanism as defined by 
-          section 3 of <xref target="I-D.draft-snell-merge-patch"/>.</t>
+          section 3 of <xref target="I-D.snell-merge-patch"/>.</t>
           
           <t>With JSON Patch, the payload of the HTTP PATCH request uses a 
           simple JSON data structure to explicitly describe the changes 
@@ -843,7 +851,7 @@
           in any way, the server MUST reject the PATCH request without making
           any changes to the target resource.</t>
           
-          <t>As an alternative, the <xref target="I-D.draft-snell-merge-patch">
+          <t>As an alternative, the <xref target="I-D.snell-merge-patch">
           Merge Patch</xref> mechanism allows a client to requests partial 
           modifications to be made by example. </t>
           
@@ -881,7 +889,7 @@
           </artwork></figure>
         
           <t>Servers that support the Merge Patch mechanism MUST adhere to the 
-          rules specified in Section 3 of <xref target="I-D.draft-snell-merge-patch"/>
+          rules specified in Section 3 of <xref target="I-D.snell-merge-patch"/>
           to determine the specific set of changes that is being requested.</t>
           
           <t>As with JSON Patch, if the Merge Patch request specifies any 
@@ -943,7 +951,7 @@
         
         <t>Function Errors are typically reported using 5xx Server Error 
         response codes as defined in Section 7.5 of 
-        <xref target="I-D.draft-ietf-httpbis-p2-semantics"/>.</t>
+        <xref target="I-D.ietf-httpbis-p2-semantics"/>.</t>
         
         <figure><preamble>The example response below communicates that the 
         service is unavailable to process any requests and that the user agent
@@ -956,7 +964,7 @@
         adequate detail in the response to indicate the nature of the validation 
         failure. Such errors can occur for a variety of reasons and are generally
         reported using 4xx Client Error response codes as defined in Section 7.4
-        of <xref target="I-D.draft-ietf-httpbis-p2-semantics"/>. If a payload is
+        of <xref target="I-D.ietf-httpbis-p2-semantics"/>. If a payload is
         included in the HTTP Response, then it SHOULD be a JSON document 
         containing a single <xref target="error-object">Error Object</xref>
         that describes the specific validation error that occurred. A payload
@@ -1483,31 +1491,31 @@
         construct as defined in Section 3.5 of <xref target="json-activity-streams"/>.</t>
           
         <t>Such serialized objects inherit all of the basic properties of 
-        the Activity Streams Collection object:
-          <texttable>
-            <ttcol>Name</ttcol>
-            <ttcol>Type</ttcol>
-            <ttcol>Description</ttcol>
-            <c>totalItems</c>
-            <c>JSON Integer</c>
-            <c>An optional, non-negative integer specifying the total number
-            of items within the collection. This number SHOULD reflect the 
-            actual total number of Data Objects that are considered to be 
-            members of the set that can be returned after applying any 
-            requested filtering operations and not the number of items actually 
-            serialized as values in the <spanx style="verb">items</spanx>
-            property value.</c>
-            <c>items</c>
-            <c>JSON Array</c>
-            <c>An array containing a listing of Data Objects. This listing
-            MAY be a subset of the total number of objects considered to be
-            members of the collection.</c>
-            <c>url</c>
-            <c>JSON String</c>
-            <c>An optional IRI referencing a JSON Activity Streams document 
-            containing the full listing of objects within the collection.</c>
-          </texttable>
-        </t>
+        the Activity Streams Collection object:</t>
+
+        <texttable>
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>totalItems</c>
+          <c>JSON Integer</c>
+          <c>An optional, non-negative integer specifying the total number
+          of items within the collection. This number SHOULD reflect the 
+          actual total number of Data Objects that are considered to be 
+          members of the set that can be returned after applying any 
+          requested filtering operations and not the number of items actually 
+          serialized as values in the <spanx style="verb">items</spanx>
+          property value.</c>
+          <c>items</c>
+          <c>JSON Array</c>
+          <c>An array containing a listing of Data Objects. This listing
+          MAY be a subset of the total number of objects considered to be
+          members of the collection.</c>
+          <c>url</c>
+          <c>JSON String</c>
+          <c>An optional IRI referencing a JSON Activity Streams document 
+          containing the full listing of objects within the collection.</c>
+        </texttable>
           
         <t>All other properties defined by the JSON Activity Streams 
         specification for a Collection Object MAY be included in the 
@@ -1515,36 +1523,37 @@
         out of scope of this specification.</t>
           
         <t>This specification defines the following additional properties 
-        that MAY be used:
-          <texttable>
-            <ttcol>Name</ttcol>
-            <ttcol>Type</ttcol>
-            <ttcol>Description</ttcol>
+        that MAY be used:</t>
+
+        <texttable>
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
             
-            <c>startIndex</c>
-            <c>JSON Integer</c>
-            <c>A non-negative integer value that identifies the relative 
-            position within the collection of the first object contained in 
-            the items property. For instance, if there are 20 items that 
-            are considered to be members of a collection, but only the last
-            10 of those items are serialized within the value of the 
-            <spanx style="verb">items</spanx> property, the value of 
-            <spanx style="verb">startIndex</spanx> would be 10.</c>
-            
-            <c>itemsPerPage</c>
-            <c>JSON Integer</c>
-            <c>A non-negative integer that specifies the maximum number of 
-            Data Objects that will be serialized within the value of the 
-            <spanx style="verb">items</spanx> property. The actual number 
-            of items within the <spanx style="verb">items</spanx> array 
-            SHOULD be equal to or less than the value of the 
-            <spanx style="verb">itemsPerPage</spanx> value.</c>
-            
-            <!-- Move to deprecated I hope
-            <c>filtered</c>
-            <c>JSON Boolean</c>
-            <c>TODO: Need to define this better or remove it</c>
-            
+          <c>startIndex</c>
+          <c>JSON Integer</c>
+          <c>A non-negative integer value that identifies the relative 
+          position within the collection of the first object contained in 
+          the items property. For instance, if there are 20 items that 
+          are considered to be members of a collection, but only the last
+          10 of those items are serialized within the value of the 
+          <spanx style="verb">items</spanx> property, the value of 
+          <spanx style="verb">startIndex</spanx> would be 10.</c>
+          
+          <c>itemsPerPage</c>
+          <c>JSON Integer</c>
+          <c>A non-negative integer that specifies the maximum number of 
+          Data Objects that will be serialized within the value of the 
+          <spanx style="verb">items</spanx> property. The actual number 
+          of items within the <spanx style="verb">items</spanx> array 
+          SHOULD be equal to or less than the value of the 
+          <spanx style="verb">itemsPerPage</spanx> value.</c>
+          
+          <!-- Move to deprecated I hope
+          <c>filtered</c>
+          <c>JSON Boolean</c>
+          <c>TODO: Need to define this better or remove it</c>
+          
             <c>sorted</c>
             <c>JSON Boolean</c>
             <c>TODO: Need to define this better or remove it</c>
@@ -1554,8 +1563,7 @@
             <c>TODO: Need to define this better or remove it</c>
             -->
             
-          </texttable>
-        </t>
+        </texttable>
           
         <figure><preamble>The following example shows a subset of a 
         collection of OpenSocial Person objects:</preamble><artwork>
@@ -1675,45 +1683,45 @@
         whose value consists of zero or more alternative choices represented as
         individual elements within a JavaScript Array. Each choice is serialized 
         as a JSON Object with at least the following basic 
-        properties:
-          <texttable>
-            <ttcol>Name</ttcol>
-            <ttcol>Type</ttcol>
-            <ttcol>Description</ttcol>
+        properties:</t>
+   
+        <texttable>
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
             
-            <c>label</c>
-            <c>JSON String</c>
-            <c>Provides a human-readable, plain-text, and preferrably 
-            localized short description of the object value suitable 
-            for display to a user.</c>
+          <c>label</c>
+          <c>JSON String</c>
+          <c>Provides a human-readable, plain-text, and preferrably 
+          localized short description of the object value suitable 
+          for display to a user.</c>
             
-            <c>primary</c>
-            <c>JSON Boolean</c>
-            <c>A boolean value indicating whether a particular plural object
-            value is considered to be the primary or preferred alternative
-            within the set. No more than one object in the array of of objects
-            specified as the value of a plural field can have a 
-            <spanx style="verb">primary</spanx> property of True.</c>
+          <c>primary</c>
+          <c>JSON Boolean</c>
+          <c>A boolean value indicating whether a particular plural object
+          value is considered to be the primary or preferred alternative
+          within the set. No more than one object in the array of of objects
+          specified as the value of a plural field can have a 
+          <spanx style="verb">primary</spanx> property of True.</c>
             
-            <c>type</c>
-            <c>JSON String</c>
-            <c>Specifies a machine-processable label for this object value
-            that generally identifies it's preferred function. For 
-            instance, if the plural field represents a collection of phone
-            numbers, the <spanx style="verb">type</spanx> property value 
-            would specify values such as "work", "home" or "other", to
-            differentiate each phone number by purpose. Unlike the 
-            <spanx style="verb">label</spanx> property which is intended 
-            for human-readable display, the <spanx style="verb">type</spanx>
-            property is intended to be used programmatically and MUST NOT
-            utilize a localized value.</c>
+          <c>type</c>
+          <c>JSON String</c>
+          <c>Specifies a machine-processable label for this object value
+          that generally identifies it's preferred function. For 
+          instance, if the plural field represents a collection of phone
+          numbers, the <spanx style="verb">type</spanx> property value 
+          would specify values such as "work", "home" or "other", to
+          differentiate each phone number by purpose. Unlike the 
+          <spanx style="verb">label</spanx> property which is intended 
+          for human-readable display, the <spanx style="verb">type</spanx>
+          property is intended to be used programmatically and MUST NOT
+          utilize a localized value.</c>
+          
+          <c>value</c>
+          <c>JSON Primitive, Array or Object</c>
+          <c>Represents the actual value of the object.</c>
             
-            <c>value</c>
-            <c>JSON Primitive, Array or Object</c>
-            <c>Represents the actual value of the object.</c>
-            
-          </texttable>
-        </t>
+        </texttable>
           
         <figure><preamble>The example below shows a Data Object with a single
         plural-field providing alternative contact phone numbers for an 
@@ -2124,15 +2132,15 @@
       associated identifier SHOULD be added to the registry.</t>
       
       <t>Registrations require review by the OpenSocial community and are 
-      subject to the following rules:</t>
-      
-      <list style="numbers">
-        <t>A service identifier, once registered, stays registered forever.</t>
-        <t>The registration MUST name a responsible party for the registration.</t>
-        <t>The registration MUST name a point of contact.</t>
-        <t>The registration MAY name a set of specifications associated with 
-        the identifier. Such specifications SHOULD be publicly available.</t>
-      </list>
+      subject to the following rules:
+        <list style="numbers">
+          <t>A service identifier, once registered, stays registered forever.</t>
+          <t>The registration MUST name a responsible party for the registration.</t>
+          <t>The registration MUST name a point of contact.</t>
+          <t>The registration MAY name a set of specifications associated with 
+          the identifier. Such specifications SHOULD be publicly available.</t>
+        </list>
+      </t>
       
       <t>The party responsible MUST submit the registration request via email 
       to the mailing list for the OpenSocial Specification Community Group. 
@@ -2162,17 +2170,17 @@
       registry.</t>
       
       <t>Registrations require review by the OpenSocial community and are 
-      subject to the following rules:</t>
-      
-      <list style="numbers">
-        <t>An aspect identifier, once registered, stays registered forever.</t>
-        <t>The registration MUST name a responsible party for the registration.</t>
-        <t>The registration MUST name a point of contact.</t>
-        <t>The registration MAY name a set of specifications associated with 
-        the identifier. Such specifications SHOULD be publicly available.</t>
-        <t>The registration MUST name the service-identifier for which it is
-        associated.</t>
-      </list>
+      subject to the following rules:
+        <list style="numbers">
+          <t>An aspect identifier, once registered, stays registered forever.</t>
+          <t>The registration MUST name a responsible party for the registration.</t>
+          <t>The registration MUST name a point of contact.</t>
+          <t>The registration MAY name a set of specifications associated with 
+          the identifier. Such specifications SHOULD be publicly available.</t>
+          <t>The registration MUST name the service-identifier for which it is
+          associated.</t>
+        </list>
+      </t>
       
       <t>The party responsible MUST submit the registration request via email 
       to the mailing list for the OpenSocial Specification Community Group. 
@@ -2198,8 +2206,9 @@
       &rfc3986;
       &rfc3987;
       &rfc3339;
+      &rfc5849;
+      &rfc4627;
       &astreams;
-      &astreamlinks;
       &profile;
       &part1;
       &part2;
@@ -2208,12 +2217,37 @@
       &part5;
       &part6;
       &part7;
-      &socialapp;
-      &coregadget;
       &jsonpatch;
       &mergepatch;
       &bearer;
       &mac;
+<reference anchor="core-gadget" target="../Core-Gadget.xml">
+  <front>
+    <title>OpenSocial Core Gadget Specification v3.0</title>
+    <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>
+    <date month="April" year="2012"/>
+  </front>
+</reference>
+<reference anchor="social-app" target="../Core-API.xml">
+  <front>
+    <title>OpenSocial Social Application Specification 3.0</title>
+    <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>
+    <date month="April" year="2012"/>
+  </front>
+</reference>   
+      <reference anchor="astream-links" target="https://raw.github.com/activitystreams/json-activity-links/master/activity-streams-links.txt">
+        <front>
+          <title abbrev="ActivityStreams">Links for Activity Streams</title>
+          <author fullname="James M Snell" initials="J.M." surname="Snell">
+            <organization>IBM</organization>
+          </author>
+          <date month="April" year="2012" />
+        </front>
+      </reference>
+      
+    </references>
+    <references title="Informative References">
+      &rfc4287;
     </references>
  </back>
 </rfc>

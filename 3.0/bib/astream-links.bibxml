@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <reference anchor="astream-links" target="https://raw.github.com/activitystreams/json-activity-links/master/activity-streams-links.txt">
   <front>
     <title abbrev="ActivityStreams">Links for Activity Streams</title>

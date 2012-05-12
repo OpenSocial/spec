@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <reference anchor="core-api" target="../Core-API.xml">
   <front>
     <title>OpenSocial Core API Specification 3.0</title>

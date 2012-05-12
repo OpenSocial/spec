@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <reference anchor="core-gadget" target="../Core-Gadget.xml">
   <front>
     <title>OpenSocial Core Gadget Specification v3.0</title>
