@@ -6466,6 +6466,10 @@
         <t>Merging contiguous &lt;script src=xxx&gt; tags into one concatenating
         proxy fetch.</t>
        </list></t>
+       
+       <t>Implementations are free to support additional content-rewite 
+       parameters. The definition of such parameters, however, is out
+       of scope of this specification.</t>
   
      </section>
      <!-- END CONTENT REWRITING -->
