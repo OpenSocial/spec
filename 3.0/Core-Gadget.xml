@@ -404,7 +404,7 @@
           The children of the element consist of a variety of optional 
           attributes and elements.</t>
         
-          <figure><artwork>
+          <figure><artwork><![CDATA[
   ModulePrefs = element ModulePrefs {
     attribute title { text }?,
     attribute title_url { IRI }?,
@@ -427,7 +427,7 @@
      & OAuth2?,
      extensionElement*)
   }
-          </artwork></figure>
+         ]]></artwork></figure>
         
           <t>The &lt;ModulePrefs&gt; element MAY contain zero or more 
           &lt;Require&gt;, &lt;Optional&gt;, &lt;Preload&gt;, &lt;Icon&gt;, 
@@ -934,7 +934,7 @@
           realm-value is used to select an appropriate &lt;Service&gt; element 
           to use when authenticating a request for a remote resource should the 
           container receive a 401 Unauthenticated response. See 
-          <xref target="401-unauthorized"/> for additional detail.</t>
+          <xref target="responses.unauthorized"/> for additional detail.</t>
         
           <t>The child elements of the &lt;Service&gt; element consist of the 
           &lt;Request&gt;, &lt;Access&gt; and &lt;Authorization&gt; elements,
@@ -1027,7 +1027,7 @@
           realm-value is used to select an appropriate &lt;Service&gt; element 
           to use when authenticating a request for a remote resource should the 
           container receive a 401 Unauthenticated response. See 
-          <xref target="401-unauthorized"/> for additional detail.</t>
+          <xref target="responses.unauthorized"/> for additional detail.</t>
         
           <t>OAuth2 Service elements MAY also specify an optional 
           <spanx style="verb">scope</spanx> attribute providing the scope 
@@ -1424,7 +1424,7 @@
             attribute and MUST NOT contain child elements or text. Containers 
             SHOULD ignore any elements or text contained within the &lt;Content&gt;.
             The element MAY contain any combination of the "Signed Fetch" 
-            attributes defined by <xref taret="signed-fetch"/>.</t>
+            attributes defined by <xref target="signed-fetch"/>.</t>
             <t>Any &lt;Content&gt; element MAY contain <spanx style="verb">preferred_height</spanx> 
             and <spanx style="verb">preferred_width</spanx> attributes that 
             specify the preferred dimensions, in pixels, the container SHOULD 
@@ -1607,7 +1607,7 @@
           
               <figure><preamble>The simplest form of content provided by an application is HTML 
               associated with the unnamed default view:</preamble><artwork>
-  &lt;Content type="html">&lt![CDATA[
+  &lt;Content type="html">&lt;![CDATA[
     &lt;div>Hello World!&lt;/div>
   ]]&gt;&lt;/Content>
               </artwork></figure>
@@ -1619,22 +1619,22 @@
               <figure><preamble>An equivalent example can be provided by using the 
               "home" view in the element's <spanx style="verb">view</spanx> attribute:</preamble>
               <artwork>
-  &lt;Content type="html" view="home">&lt![CDATA[
+  &lt;Content type="html" view="home">&lt;![CDATA[
     &lt;div>Hello World!&lt;/div>
   ]]&gt;&lt;/Content>
               </artwork></figure>
             
-              <t>If an application provides multiple type "html" &ltContent&gt; elements that
+              <t>If an application provides multiple type "html" &lt;Content&gt; elements that
               specify the same view, the content is concatenated together when 
               rendered in the order those &lt;Content&gt; elements appear within
               the specification document:</t>
             
               <figure><preamble>For instance, given two "html" Content elements 
               for the "home" view:</preamble><artwork>
-  &lt;Content type="html" view="home">&lt![CDATA[
+  &lt;Content type="html" view="home">&lt;![CDATA[
     &lt;div>Hello World!&lt;/div>
   ]]&gt;&lt;/Content>
-  &lt;Content type="html" view="home,greeting">&lt![CDATA[
+  &lt;Content type="html" view="home,greeting">&lt;![CDATA[
     &lt;div>How are you?&lt;/div>
   ]]&gt;&lt;/Content>
               </artwork></figure>
@@ -1983,7 +1983,7 @@
         <list style="symbols">
           <t>Processing &lt;Preload&gt; and &lt;Link&gt; elements within 
           the specification document's &lt;ModulePrefs&gt;,</t>
-          <t>Processing Data Pipeline &ls;os:HttpRequest&gt; elements,</t>
+          <t>Processing Data Pipeline &lt;os:HttpRequest&gt; elements,</t>
           <t>Processing proxy and redirect type &lt;Content&gt; elements,</t>
           <t>All uses of the <spanx style="verb">osapi</spanx> JavaScript APIs, and </t>
           <t>All uses of the <spanx style="verb">gadgets.io.makeRequest</spanx> JavaScript API</t>
@@ -2364,7 +2364,7 @@
           are accessed, including uses of the <spanx style="verb">osapi</spanx> 
           and <spanx style="verb">gadgets.io.makeRequest</spanx> JavaScript
           APIs, &lt;Preload&gt; elements, &lt;Link&gt; elements, and
-          Redirect or Proxy type &lt;Content&Gt; elements.</t>
+          Redirect or Proxy type &lt;Content&gt; elements.</t>
           
           <t>The examples that follow illustrate various uses of the OAuth
           services.</t>
@@ -2787,7 +2787,7 @@
           
           </section>
           
-          <section title="401 Unauthorized Responses" anchor="401-unauthorized">
+          <section title="401 Unauthorized Responses" anchor="responses.unauthorized">
           
             <t>When attempting to interact with protected remote resources on behalf of 
             an Application, and an authentication mechanism is not prespecified 
@@ -2835,7 +2835,7 @@
             authentication scheme -- or if a matching &lt;Service&gt; element cannot
             be found, the container will look for an &lt;Service&gt; element that matches
             the version of the OAuth protocol selected and that does not specify a 
-            name attribute.</Service>
+            name attribute.</t>
             
             <t>If an appropriate OAuth &lt;Service&gt; element is not provided 
             by the Application, the container MUST abort the request and 
@@ -2912,7 +2912,7 @@
   Cache-Control: must-revalidate, max-age=3600
   ETag: "abc123zyx"
   
-  &lt;html&gt...&lt;/html&gt;
+  &lt;html&gt;...&lt;/html&gt;
       </artwork></figure>
     
       <t>The container is permitted to cache the response and use the cached
@@ -3153,21 +3153,21 @@
         <figure><preamble>The following example illustrates the use of 
         Reserved Variables Names using the <spanx style="verb">Msg</spanx> 
         prefix:</preamble>
-        <artwork><![CDATA[
-  <Module>
-    <ModulePrefs title="${Msg.TITLE}">
+        <artwork>
+  &lt;Module&gt;
+    &lt;ModulePrefs title="${Msg.TITLE}"&gt;
       ...
-      <Locale lang="en" country="US">
-        <msg name="TITLE">My Gadget</msg>
-        <msg name="GREETING">Hello There!</msg>
-      </Locale>
+      &lt;Locale lang="en" country="US"&gt;
+        &lt;msg name="TITLE"&gt;My Gadget&lt;/msg&gt;
+        &lt;msg name="GREETING"&gt;Hello There!&lt;/msg&gt;
+      &lt;/Locale&gt;
       ...
-    </ModulePrefs>
-    <Content type="html"><![CDATA[
-      <div>${Msg.GREETING}</div>
-    ]]></Content>
-  </Module>
-        ]]></artwork></figure>
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html"&gt;&lt;![CDATA[
+      &lt;div&gt;${Msg.GREETING}&lt;/div&gt;
+    ]]&gt;&lt;/Content&gt;
+  &lt;/Module&gt;
+        </artwork></figure>
         
       </section>
   
@@ -3734,7 +3734,7 @@
         <figure><preamble>In the example given, the notification sent to 
         "http://example.org/event" will utilize the HTTP POST method 
         (line breaks are added to the request URI for readability):</preamble>
-        <artwork>
+        <artwork><![CDATA[
   POST /event?eventtype=registered
     &oauth_consumer_key=myappkey
     &oauth_nonce=7sGE00xSfY4PBStICbXyPbIliNymOhu2
@@ -3745,13 +3745,13 @@
     &opensocial_app_url=
     &oauth_signature=N7mODAf9OJ1DXQRPisRqGK4DNMo= HTTP/1.1
   Host: example.org
-  
+        ]]>
         </artwork></figure>
       
         <figure><preamble>The notification sent to "http://example.org/event/registered"
         will utilize HTTP GET (line breaks are added to the request URI 
         for readability):</preamble>
-        <artwork>
+        <artwork><![CDATA[
   GET /event?eventtype=registered
     &oauth_consumer_key=myappkey
     &oauth_nonce=7sGE00xSfY4PBStICbXyPbIliNymOhu2
@@ -3761,7 +3761,7 @@
     &opensocial_app_id=myappid
     &opensocial_app_url=
     &oauth_signature=N7mODAf9OJ1DXQRPisRqGK4DNMo= HTTP/1.1
-  Host: example.org
+  Host: example.org]]>
         </artwork></figure>
       
         <t>Responses to event notification requests are considered to be 
@@ -3942,7 +3942,7 @@
         &lt;os:HttpRequest key="foo" href="http://example.com/api" />
         &lt;os:Var key="bar" value="abc123"/>
       &lt;/script>
-    ]]>&lt;/Content>
+    ]]&gt;&lt;/Content>
   &lt;/Module>
         </artwork></figure>
         
@@ -3981,7 +3981,7 @@
       &lt;script xmlns:os="http://ns.opensocial.org/2008/markup" type="text/os-data">
         &lt;os:Var key="foo" value="123"/>
       &lt;/script>
-    ]]>&lt;/Content>
+    ]]&gt;&lt;/Content>
   &lt;/Module>
         </artwork></figure>
 
@@ -4173,7 +4173,7 @@
       
         <section title="The &lt;os:DataRequest&gt; Element" anchor="DataRequest">
         
-          <t>The &lt;os:DataRequest&gt;</t> element is used to access social
+          <t>The &lt;os:DataRequest&gt; element is used to access social
           data provided by the container. It is generally equivalent to the 
           JavaScript API methods provided to the application by the container to 
           access information such as the identity of the current Viewer, 
@@ -4231,7 +4231,7 @@
         
         <section title="The &lt;os:HttpRequest&gt; Element" anchor="HttpRequest">
         
-          <t>The &lt;os:HttpRequest&gt;</t> element is used to access arbitrary
+          <t>The &lt;os:HttpRequest&gt; element is used to access arbitrary
           content from a remote HTTP endpoint. It is generally equivalent to the 
           <spanx style="verb">osapi.http</spanx> JavaScript API methods provided 
           to the application by the container. Currently, only HTTP GET and POST 
@@ -4370,7 +4370,7 @@
         
         <section title="The &lt;os:Var&gt; Element" anchor="Var">
         
-          <t>The &lt;os:Var&gt;</t> element is used to declare a string 
+          <t>The &lt;os:Var&gt; element is used to declare a string 
           JSON object, or JavaScript array as a literal value or associate 
           the results of evaluating an Expression Statement with a key.</t>
           
@@ -4480,7 +4480,7 @@
               <t>All of the attributes defined on the referenced Data Pipeline
               element (in the previous example, these would include "key", "method",
               "userId", "groupId", "startIndex", and "count"),
-              <t>The properties "totalResults", "count" and "startIndex" if 
+              </t><t>The properties "totalResults", "count" and "startIndex" if 
               the value stored by referenced key is a Collection object 
               as defined by <xref target="core-api"/>; the values of which
               map to the corresponding values of the stored collection.</t>
@@ -4532,7 +4532,7 @@
           <t>The Logging Feature provides the following JavaScript API methods
           and constants to developers:</t>
         
-         <section title="gadgets.log" anchor="gadgets.log">
+         <section title="gadgets.log">
          
            <t>The <spanx style="verb">gadgets.log</spanx> method is used
            to record an informational message to the container provided 
@@ -4703,9 +4703,9 @@
              </artwork></figure>
              
              <figure><preamble>Calling <spanx style="verb">gadgets.io.encodeValues(data)</spanx>
-             would generate the output:</preamble><artwork>
+             would generate the output:</preamble><artwork><![CDATA[
   foo=bar&abc=123&zyx=true&baz=a,b,c
-             </artwork></figure>        
+             ]]></artwork></figure>        
              
              <t>If the value of top-level property or member of an Array is 
              any value other than a JavaScript primitive, it's value will be
@@ -4727,9 +4727,9 @@
              </artwork></figure>
       
              <figure><preamble>Calling <spanx style="verb">gadgets.io.encodeValues(data)</spanx>
-             would generate the output:</preamble><artwork>
+             would generate the output:</preamble><artwork><![CDATA[
   foo=%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D&bar=%7B%22xyz%22%3A%22123%22%7D,%7B%22abc%22%3A321%7D
-             </artwork></figure>
+             ]]></artwork></figure>
              
            </section>
            
@@ -4824,7 +4824,7 @@
       // handle the response
     }
   );       
-             </artwork>
+             </artwork></figure>
              
              <t>The following table lists the additional properties currently 
              defined by this specification. For convenience, an alias is defined
@@ -5285,14 +5285,14 @@
   &lt;Array&gt; &lt;instance&gt;.getArray(key)
                </artwork></figure>
                
-               <figure><preamble>For example:</preamble><artwork>
+               <figure><preamble>For example:</preamble><artwork><![CDATA[
   var prefs = new gadget.Prefs();
   var array = prefs.getArray("foo");
   for (var n = 0; n < array.length; n++) {
     var item = array[n];
     // ...
   }
-               </artwork></figure>
+               ]]></artwork></figure>
              </section>
              
              <section title="gadgets.Prefs.getBool" anchor="gadgets.Prefs.getBool">      
@@ -5429,7 +5429,7 @@
       &lt;/Locale&gt;
       ...
     &lt;/ModulePrefs&gt;
-    &lt;Content type="html"&gt;&lt[CDATA[
+    &lt;Content type="html"&gt;&lt;[CDATA[
       ...
       &lt;script&gt;
         ...
@@ -5854,7 +5854,7 @@
     &lt;/ModulePrefs>
     ...
   &lt;/Module>
-     </artwork>
+     </artwork></figure>
      
      <t>If a <spanx style="verb">viewTarget</spanx> is not specified, the container
      will select an appropriate default view target.</t>
@@ -6166,7 +6166,7 @@
            </texttable>
          </t>
          
-         <figure><preable>For example,</preable><artwork>
+         <figure><preamble>For example,</preamble><artwork>
   gadgets.actions.removeAction("com.acme.mycallaction");     
          </artwork></figure>
        </section>
@@ -6456,7 +6456,7 @@
        <t>For any resource that is not explicitly excluded from rewriting using 
        the <spanx style="verb">exclude-url</spanx> parameter, containers are 
        free to perform additional optimizations when rewriting links including 
-       but not limited to:
+       but not limited to:</t>
        <list type="symbols">
         <t>Extracting @import directives from style tags and converting them into 
         link tags in the head tag of the containing HTML content.</t>
@@ -7304,7 +7304,7 @@
         );
         ...
       &lt;/script&gt;
-    ]]&gt;&lt/Content&gt;
+    ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
       </artwork></figure>
       
@@ -7590,7 +7590,7 @@
       <artwork xml:space="preserve">
   date = new Date(2006, 6, 27, 13, 10, 10, 250);
   assertEquals("13:10:10", gadgets.i18n.formatDateTime("HH:mm:ss", date));
-      </artwork></figure></t>
+      </artwork></figure>
       
       <t>Input Parameters:
         <texttable align="left">
@@ -7675,9 +7675,9 @@
       a subset of the characters is preferred. For that purpose, the 
       optional "start" and "date" parameters can be used.</t> 
       
-      <figure><preable>For example, suppose you want to parse a string like 
+      <figure><preamble>For example, suppose you want to parse a string like 
       "88/01, 99/03, 98/05, 97/02", and extract each pair of numbers
-      (e.g. 88/01) as a separate Date:</preable><artwork xml:space="preserve">
+      (e.g. 88/01) as a separate Date:</preamble><artwork xml:space="preserve">
   var date_array = [];
   var pos = 0;
   var text = "88/01, 99/03, 98/05, 97/02";
@@ -8407,13 +8407,13 @@
           
           <figure><preamble>One method developers can use to safely 
           prepare for such cases is to test for the existence of the service
-          and method, as in the following example:</preamble><artwork>
+          and method, as in the following example:</preamble><artwork><![CDATA[
   if (osapi.people && osapi.people.getViewer) {
     osapi.people.getViewer().execute(function(result) {
       // ...
     });
   }
-          </artwork></figure>
+          ]]></artwork></figure>
         
           <section title="The osapi.Request Object" anchor="osapi.Request">
           
@@ -8674,7 +8674,7 @@
             <xref target="http.request.params.object">HTTP Request Parameters Object</xref> 
             that provides general request options for the request.</t>
             
-            <section title="The HTTP Request Parameters Object" anchor="http.request.params.object"">
+            <section title="The HTTP Request Parameters Object" anchor="http.request.params.object">
             
               <t>The HTTP Request Parameters Object is a JavaScript object
               whose individual properties define parameters used during the 
@@ -8974,7 +8974,7 @@
     </t>
 
     <t>A "topic" is a String value that conforms to the OpenAjax Hub 2.0 
-    specification's <xref target="OAHub2.0">Topic Name Rules</eref>.
+    specification's <xref target="OAHub2.0">Topic Name Rules</xref>.
     All topic names prefixed with "org.opensocial." are reserved for use by
     the OpenSocial specification. Developers MUST NOT use the "org.opensocial."
     prefix when defining their own topics.</t>
@@ -9092,7 +9092,7 @@
         &lt;input type="button" value="Unsubscribe" onclick="unsubscribe()"/&gt;
       &lt;/div&gt;
       &lt;div id="output"&gt;&lt;/div&gt;
-    ]]>&lt;/Content&gt;
+    ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
    </artwork></figure>
 
@@ -9110,7 +9110,7 @@
               description="Publishes a random number." 
               type="number"
               publish="true" /&gt;
-        ]]>&lt;/Param&gt;
+        ]]&gt;&lt;/Param&gt;
       &lt;/Require&gt;
     &lt;/ModulePrefs&gt;
     &lt;Content type="html"&gt;&lt;![CDATA[
@@ -9125,7 +9125,7 @@
         &lt;input type="button" value="Publish a random number" onclick="publish()"/&gt;
       &lt;/div&gt;
       &lt;div id="output">&lt;/div&gt;
-    ]]>&lt;/Content&gt;
+    ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
      </artwork></figure>
 
@@ -9302,7 +9302,7 @@
               description="Publishes a random number." 
               type="number"
               publish="true" /&gt;
-        ]]>&lt;/Param&gt;
+        ]]&gt;&lt;/Param&gt;
       &lt;/Require&gt;
     &lt;/ModulePrefs&gt;
     ...
@@ -9797,7 +9797,7 @@
                 <c>gadgets.views.ViewType.HOME</c>
                 
                 <c>preferences</c>
-                <c>gadgets.views.ViewType.PREFERENCES
+                <c>gadgets.views.ViewType.PREFERENCES</c>
                 
                 <c>preview</c>
                 <c>gadgets.views.ViewType.PREVIEW</c>
@@ -9843,7 +9843,7 @@
                 used to request that a particular Application View be displayed
                 within a popup box in a way that requires the Viewer to interact
                 with it prior to continuing any further interaction with the 
-                rest of the container.</t>
+                rest of the container.</c>
                 
                 <c>FLOAT</c>
                 <c>gadgets.views.ViewType.FLOAT</c>
@@ -9859,7 +9859,7 @@
                 interface to the right or left of the primary content for the 
                 display of one or more application views. The <spanx style="verb">SIDEBAR</spanx>
                 View Target can be used to request that an application view be
-                rendered within this dedicated space.</t>
+                rendered within this dedicated space.</c>
               </texttable>
 
             </section>
@@ -9873,7 +9873,7 @@
               
               <t>The methods exposed by the object are:</t>
             
-              <section title="gadgets.views.View.getName"anchor="gadgets.views.View.getName">
+              <section title="gadgets.views.View.getName" anchor="gadgets.views.View.getName">
               
                 <t>The <spanx style="verb">gadgets.views.View.getName</spanx>
                 method returns the name of the View object. The method requires
@@ -10476,18 +10476,18 @@
        the &lt;ModulePrefs&gt;.</t>
        
        <figure><artwork>
-  <Module>
-    <ModulePrefs>
-      <Require feature="settitle" />
-    </ModulePrefs>
-    <Content type="html"><![CDATA[
+  &lt;Module>
+    &lt;ModulePrefs&gt;
+      &lt;Require feature="settitle" /&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html"&gt;&lt;![CDATA[
       gadgets.util.registerOnLoadHandler(
         function() {
           gadgets.window.setTitle("New Title");
         }
       );
-    ]]></Content>
-  </Module>
+    ]]&gt;&lt;/Content&gt;
+  &lt;/Module&gt;
        </artwork></figure>
        
        <t>When the "settitle" feature is enabled for an application the
@@ -10515,21 +10515,21 @@
        &lt;ModulePrefs&gt;.</t>
        
        <figure><artwork>
-  <Module>
-    <ModulePrefs>
-      <Require feature="dynamic-height" />
-    </ModulePrefs>
-    <Content type="html"><![CDATA[
+  &lt;Module&gt;
+    &lt;ModulePrefs&gt;
+      &lt;Require feature="dynamic-height" /&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html"&gt;&lt;![CDATA[
       gadgets.util.registerOnLoadHandler(
         function() {
-          for (var n = 0; n < 100; n++) {
-            document.write("foo " + n + "<br />");
+          for (var n = 0; n &lt; 100; n++) {
+            document.write("foo " + n + "&lt;br /&gt;");
           }
           gadgets.window.adjustWidth();
         }
       );
-    ]]></Content>
-  </Module>
+    ]]&gt;&lt;/Content&gt;
+  &lt;/Module&gt;
        </artwork></figure>
        
        <t>When the "dynamic-height" feature is enabled for an application, both the
@@ -10563,21 +10563,21 @@
        &lt;ModulePrefs&gt;</t>
        
        <figure><artwork>
-  <Module>
-    <ModulePrefs>
-      <Require feature="dynamic-width" />
-    </ModulePrefs>
-    <Content type="html"><![CDATA[
+  &lt;Module&gt;
+    &lt;ModulePrefs&gt;
+      &lt;Require feature="dynamic-width" /&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html"&gt;&lt;![CDATA[
       gadgets.util.registerOnLoadHandler(
         function() {
-          for (var n = 0; n < 100; n++) {
+          for (var n = 0; n &lt; 100; n++) {
             document.write("foo&nbsp;");
           }
           gadgets.window.adjustWidth();
         }
       );
-    ]]></Content>
-  </Module>
+    ]]&gt;&lt;/Content&gt;
+  &lt;/Module&gt;
        </artwork></figure>
        
        <t>When the "dynamic-width" feature is enabled for an application, both the
@@ -10611,21 +10611,21 @@
        &lt;ModulePrefs&gt;</t>
        
        <figure><artwork>
-  <Module>
-    <ModulePrefs>
-      <Require feature="dynamic-size" />
-    </ModulePrefs>
-    <Content type="html"><![CDATA[
+  &lt;Module&gt;
+    &lt;ModulePrefs&gt;
+      &lt;Require feature="dynamic-size" /&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html"&gt;&lt;![CDATA[
       gadgets.util.registerOnLoadHandler(
         function() {
-          for (var n = 0; n < 100; n++) {
+          for (var n = 0; n &lt; 100; n++) {
             document.write("foo&nbsp;");
           }
           gadgets.window.adjustSize();
         }
       );
-    ]]></Content>
-  </Module>
+    ]]&gt;&lt;/Content&gt;
+  &lt;/Module&gt;
        </artwork></figure>
        
        <t>When the "dynamic-size" feature is enabled for an application, both the
