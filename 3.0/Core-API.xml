@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
   <!ENTITY rfc2616 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2616.xml'> 
   <!ENTITY rfc4918 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4918.xml'> 
@@ -30,13 +33,10 @@
   
   <!ENTITY astreams PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/astreams.xml'>
   
-  <!ENTITY socialapp PUBLIC 'bib/social-gadget.bibxml'>
-  <!ENTITY coregadget PUBLIC 'bib/core-gadget.bibxml'>
-  <!ENTITY astreamlinks PUBLIC 'bib/astream-links.bibxml'>
+  <!ENTITY socialapp PUBLIC '' 'bib/social-gadget.bibxml'>
+  <!ENTITY coregadget PUBLIC '' 'bib/core-gadget.bibxml'>
+  <!ENTITY astreamlinks PUBLIC '' 'bib/astream-links.bibxml'>
 ]>
-<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
-<?rfc toc="yes"?>
-<?rfc-ext allow-markup-in-artwork="yes"?>
 <rfc ipr="full3978" docName="core.api.xml" >
   <front>
     <title abbrev="Core-API">OpenSocial Core API Specification 3.0</title>
@@ -1614,7 +1614,7 @@
           <t>In order to be considered a paged collection, at least one 
           of these properties MUST be present within the Collection object.</t>
           
-          <figure><preamble>For example,</preamble><artwork>
+          <figure><preamble>For example,</preamble><artwork><![CDATA[
   {
     "$first": "http://example.org/activities/@me/@all?count=10",
     "$next": "http://example.org/activities/@me/@all?count=10&updatedBefore=2012-12-12T12:12:12.123Z",
@@ -1623,7 +1623,7 @@
       // .. list of items
     ]
   }
-          </artwork></figure>
+          ]]></artwork></figure>
           
           <t>Note that consuming applications SHOULD treat the absolute IRI
           values as opaque identifiers and MUST NOT assume that the IRIs 
