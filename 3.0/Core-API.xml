@@ -82,9 +82,12 @@
 
       <t>OpenSocial REST Services consist of collections of Web-accessible
       resources that can be accessed and modified using the basic set of 
-      HTTP request methods as defined by <xref target="I-D.ietf-httpbis-p2-semantics"/>.</t>
+      HTTP request methods as defined by <xref target="I-D.ietf-httpbis-p2-semantics"/>.
+      Such services are intended to be used either by OpenSocial Applications
+      as defined by <xref target="core-gadget"/> or other third parties to
+      access social data hosted and managed by an OpenSocial-enabled server.</t>
  
-      <t>In general:
+      <t>In general, for all REST Services:
       <list>
         <t>the HTTP GET method is used to retrieve representations
         of the current state of a any given resource,</t>
@@ -95,14 +98,13 @@
         other core HTTP methods.</t>
       </list></t>
       
-      <t>Implementations are free to implement support for additional 
-      HTTP methods but use of such methods is considered outside the scope 
-      of this specification.</t>
+      <t>Implementations are free to support additional HTTP methods but 
+      their use is considered to be outside the scope of this specification.</t>
       
       <t>Resources made available via a REST Service can represent
-      individual objects (e.g. a person, a document, an activity) or a 
-      collection of objects (e.g. a friends list, a folder containing 
-      multiple files, a stream of activities). Every resource is identified 
+      individual objects (e.g. a person, a document, an activity) or 
+      collections of objects (e.g. a friends list, a folder containing 
+      multiple files, a listing of events). Every resource is identified 
       by a distinct URI to which the various HTTP methods are to be sent.</t>
  
       <figure><preamble>For example, to retrieve a user's current profile using
@@ -110,21 +112,20 @@
       GET request:</preamble><artwork type="example" xml:space="preserve">
   GET /api/people/@me/@self HTTP/1.1
   Host: api.example.org
-</artwork></figure>
+      </artwork></figure>
       
       <t>When a client application is required to communicate with an 
       OpenSocial server via an intermediary that restricts the use of certain 
       standard and extension HTTP Methods (e.g. PUT, DELETE, PATCH),
-      the client SHOULD utilize the X-HTTP-Method-Override HTTP Request 
-      Header mechanism in a POST request. This type of request shall be 
-      referred to as a "POST Override Request".</t>
+      the client SHOULD utilize the <spanx style="verb">X-HTTP-Method-Override</spanx> 
+      HTTP Request Header mechanism in a POST request.</t>
       
       <figure><preamble>For example, the HTTP PATCH request method is still 
-      relatively new and not yet fully supported by deployed HTTP infrastructure.
-      It is therefore possible that PATCH requests could be blocked by 
-      intermediaries. To address such cases, the PATCH request may be modified 
-      by sending a POST request that includes the X-HTTP-Method-Override
-      HTTP header:</preamble><artwork>
+      relatively new and is not yet fully supported by deployed HTTP infrastructure.
+      It is therefore possible that PATCH requests might be blocked by 
+      certain intermediaries. To address such cases, the PATCH request may be
+      modified by sending a POST request that includes the 
+      <spanx style="verb">X-HTTP-Method-Override</spanx> HTTP header:</preamble><artwork>
   POST /api/people/@me/@self HTTP/1.1
   Host: api.example.org
   Content-Type: application/json
@@ -133,11 +134,12 @@
   {...}
       </artwork></figure>
       
-      <t>OpenSocial Servers MUST respond to POST Override Requests as if the 
-      method specified by the X-HTTP-Method-Override was the actual operation 
-      used by the request, as opposed to POST.</t>
+      <t>OpenSocial Servers MUST respond to such requests as if the method 
+      specified by the <spanx style="verb">X-HTTP-Method-Override</spanx> was 
+      the actual operation used by the request, as opposed to POST.</t>
       
-      <t>POST Override Requests MUST NOT be used to send HTTP GET requests.</t>
+      <t>The <spanx style="verb">X-HTTP-Method-Override</spanx> header MUST NOT 
+      be used to send HTTP GET requests.</t>
       
       <t>Responses to all requests will specify an appropriate HTTP Status Code
       indicating the status of the response.</t>
@@ -302,8 +304,22 @@
           request information about their own social data profile, the request 
           URI can specify the "@me" alias as opposed to the requester's 
           local-identifier. The server fullfilling the request would use the 
-          requests authentication details to determine the appropriate 
+          requests authentication context to determine the appropriate 
           local-identifier.</t>
+
+        </section>
+        
+        <section title="The &quot;@anonymous&quot; Alias">
+        
+          <t>The literal string value "@anonymous" MAY be used as an alias 
+          for the local-identifier of any anonymous, non-authenticated entity.</t>
+
+          <t>Previous versions of this specification used the numeric integer
+          value -1 (negative one) to identify anonymous, non-authenticated users. 
+          The use of the numeric integer is considered to be deprecated and 
+          SHOULD NOT be used; however implementations MAY continue to support 
+          the use of -1 in order to maintain backwards compatibility with 
+          older applications.</t>
 
         </section>
         
@@ -1326,7 +1342,7 @@
     
         <t>Within an OpenSocial Application hosted within an OpenSocial 
         container (see <xref target="core-gadget"/>), this same operation
-        can be referenced using the alias "people.get":</t>
+        can be referenced using the operation identifier "people.get":</t>
         
         <figure><artwork><![CDATA[
   <Module>
@@ -1626,9 +1642,9 @@
           ]]></artwork></figure>
           
           <t>Note that consuming applications SHOULD treat the absolute IRI
-          values as opaque identifiers and MUST NOT assume that the IRIs 
-          given conform to any particular structure. That said, it is expected
-          that most server implementations will use various combinations of the 
+          values used for paging as opaque identifiers and MUST NOT assume 
+          that they conform to any particular structure. That said, it is expected
+          that most implementations will use various combinations of the 
           standard query string parameters (e.g. count and startIndex, or 
           count and updatedBefore) to construct paging links.</t>
           
