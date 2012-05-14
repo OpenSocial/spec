@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
+<?rfc private="OpenSocial Foundation"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
   <!ENTITY rfc2119 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'> 
   <!ENTITY rfc2606 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2606.xml'> 
@@ -11,7 +13,8 @@
   <!ENTITY rfc5849 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5849.xml'>
   <!ENTITY rfc5988 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5988.xml'>
   <!ENTITY rfc2617 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2617.xml'>
-  <!ENTITY oauth2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-25.xml'>
+  <!ENTITY rfc5234 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml/reference.RFC.5234.xml'>
+  <!ENTITY oauth2 PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-26.xml'>
   <!ENTITY infoset PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xml-infoset-20040204.xml'> 
   <!ENTITY xmlbase PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml4/reference.W3C.REC-xmlbase-20090128.xml'>
   
@@ -28,7 +31,7 @@
   <!ENTITY oahub PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/oahub.xml'>
   
 ]>
-<rfc ipr="full3978" docName="opensocial-core-gadget-specification-3-0" xmlns:x="http://purl.org/net/xml2rfc/ext">
+<rfc>
   <front>
     <title abbrev="Core-Gadget">OpenSocial Application Specification 3.0</title>
     <author fullname='OpenSocial and Gadgets Specification Group'>
@@ -840,7 +843,7 @@
         
           <t>The optional <spanx style="verb">messages</spanx> attribute 
           specifies the IRI of an XML document conforming to the 
-          <xref target="message-bundle-document"> Message Bundle Document</xref> 
+          <xref target="MessageBundles"> Message Bundle Document</xref> 
           format. The IRI specified MUST be suitable for dereferencing. The 
           container MUST fetch the referenced resource and treat all 
           child elements of the root XML element in the document as though
@@ -875,7 +878,7 @@
       
           <t>The &lt;OAuth&gt; element supplies the container with OAuth 1.0
           specific configuration details for the application. For details see
-          <xref target="OAuth"/>.</t>
+          <xref target="oauth-support"/>.</t>
         
           <figure><artwork>        
   OAuth = element OAuth {
@@ -952,7 +955,7 @@
           how OAuth parameters are to be passed in the request. Valid options 
           are either <spanx style="verb">uri-query</spanx>, <spanx style="verb">auth-header</spanx>,
           and <spanx style="verb">post-body</spanx>, corresponding to the options 
-          described in <xref target="OAuth-Core">Section 5.2 of the OAuth 
+          described in <xref target="RFC5849">Section 3.5 of the OAuth 
           specification</xref>. If not specified, the value is assumed to be 
           <spanx style="verb">auth-header</spanx>.</t>
         
@@ -960,10 +963,10 @@
           OAuth access tokens. The &lt;Access&gt; element shares the same 
           attribute definitions as the &lt;Request&gt; element.</t>
       
-          <t>The &lt;Authorization&gt; element is used to acquire authorization.
-          The <spanx style="verb">url</spanx> attribute specifies the IRI of the 
-          endpoint. This IRI MUST be suitable for dereferencing. For details, 
-          refer to <xref target="OAuth-Core">Section 6.2 of the OAuth specification.</xref></t>
+          <t>The &lt;Authorization&gt; element identifies the endpoint used 
+          to acquire authorization. The <spanx style="verb">url</spanx> 
+          attribute specifies the IRI of the endpoint. This IRI MUST be 
+          suitable for dereferencing.</t>
       
         </section>
       
@@ -971,7 +974,7 @@
       
           <t>The &lt;OAuth2&gt; element supplies the container with OAuth 2.0
           specific configuration details for the application. For details see
-          <xref target="OAuth"/>.</t>
+          <xref target="oauth-support"/>.</t>
         
           <figure><artwork>        
   OAuth2 = element OAuth2 {
@@ -1032,7 +1035,7 @@
           <t>OAuth2 Service elements MAY also specify an optional 
           <spanx style="verb">scope</spanx> attribute providing the scope 
           used by default in all requests. Access Token Scope
-          is defined in Section 3.3 of the <xref target="OAuth2-Core">OAuth 2.0
+          is defined in Section 3.3 of the <xref target="I-D.ietf-oauth-v2">OAuth 2.0
           specification.</xref></t>
         
           <t>The child elements of the &lt;Service&gt; element consist of the 
@@ -1052,7 +1055,7 @@
           <t>The &lt;Token&gt; element is used to acquire OAuth 2.0 access tokens.
           The <spanx style="verb">url</spanx> attribute specifies the IRI of the 
           endpoint. This IRI MUST be suitable for dereferencing. For details, 
-          refer to <xref target="OAuth2-Core">Section 3.2 of the OAuth 2.0 
+          refer to <xref target="I-D.ietf-oauth-v2">Section 3.2 of the OAuth 2.0 
           specification.</xref></t>
       
         </section>
@@ -1403,39 +1406,39 @@
           <spanx style="verb">url</spanx>. Containers MUST process the 
           &lt;Content&gt; element according to the specific rules for each type.</t>
 
-          <t>The &lt;Content&gt; element MUST conform to the following rules:</t>
-        
-          <list style="numbers">
-            <t>If the value of <spanx style="verb">type</spanx> is 
-            <spanx style="verb">html</spanx> and the <spanx style="verb">href</spanx> 
-            attribute is specified, the content of &lt;Content&gt; MAY contain 
-            one or more Data Pipeline elements as defined in <xref target="DataPipelining"/>.
-            The &lt;Content&gt; element MAY also contain any combination of the
-            "Signed Fetch" attributes defined by <xref target="signed-fetch" />.</t>
-            <t>If the value of <spanx style="verb">type</spanx> is <spanx style="verb">html</spanx>,
-            and the <spanx style="verb">href</spanx> attribute is not specified,
-            the content of &lt;Content&gt; MUST NOT contain child elements and 
-            SHOULD be suitable for handling as HTML markup.  The HTML markup 
-            SHOULD be wrapped within a CDATA tag otherwise it MUST be escaped 
-            in order to prevent the HTML from being interpreted by the XML parser; 
-            for example, <spanx style="verb">&lt;br></spanx> as <spanx style="verb">&amp;lt;br></spanx>.</t>
-            <t>If the value of <spanx style="verb">type</spanx> is <spanx style="verb">url</spanx>,
-            the &lt;Content&gt; element MUST contain the <spanx style="verb">href</spanx> 
-            attribute and MUST NOT contain child elements or text. Containers 
-            SHOULD ignore any elements or text contained within the &lt;Content&gt;.
-            The element MAY contain any combination of the "Signed Fetch" 
-            attributes defined by <xref target="signed-fetch"/>.</t>
-            <t>Any &lt;Content&gt; element MAY contain <spanx style="verb">preferred_height</spanx> 
-            and <spanx style="verb">preferred_width</spanx> attributes that 
-            specify the preferred dimensions, in pixels, the container SHOULD 
-            use when rendering the content.</t>
-            <t>Any &lt;Content&lt; element MAY contain a <spanx style="verb">view</spanx> 
-            attribute that specifies a comma-separated list of views. A single 
-            application can support multiple views. Each view is associated 
-            with at least one &lt;Content&gt; element. When the container 
-            renders an application with multiple &lt;Content&gt; elements, it will 
-            use the view name to select the appropriate content.</t>    
-          </list>
+          <t>The &lt;Content&gt; element MUST conform to the following rules:        
+            <list style="numbers">
+              <t>If the value of <spanx style="verb">type</spanx> is 
+              <spanx style="verb">html</spanx> and the <spanx style="verb">href</spanx> 
+              attribute is specified, the content of &lt;Content&gt; MAY contain 
+              one or more Data Pipeline elements as defined in <xref target="DataPipelining"/>.
+              The &lt;Content&gt; element MAY also contain any combination of the
+              "Signed Fetch" attributes defined by <xref target="signed-fetch" />.</t>
+              <t>If the value of <spanx style="verb">type</spanx> is <spanx style="verb">html</spanx>,
+              and the <spanx style="verb">href</spanx> attribute is not specified,
+              the content of &lt;Content&gt; MUST NOT contain child elements and 
+              SHOULD be suitable for handling as HTML markup.  The HTML markup 
+              SHOULD be wrapped within a CDATA tag otherwise it MUST be escaped 
+              in order to prevent the HTML from being interpreted by the XML parser; 
+              for example, <spanx style="verb">&lt;br></spanx> as <spanx style="verb">&amp;lt;br></spanx>.</t>
+              <t>If the value of <spanx style="verb">type</spanx> is <spanx style="verb">url</spanx>,
+              the &lt;Content&gt; element MUST contain the <spanx style="verb">href</spanx> 
+              attribute and MUST NOT contain child elements or text. Containers 
+              SHOULD ignore any elements or text contained within the &lt;Content&gt;.
+              The element MAY contain any combination of the "Signed Fetch" 
+              attributes defined by <xref target="signed-fetch"/>.</t>
+              <t>Any &lt;Content&gt; element MAY contain <spanx style="verb">preferred_height</spanx> 
+              and <spanx style="verb">preferred_width</spanx> attributes that 
+              specify the preferred dimensions, in pixels, the container SHOULD 
+              use when rendering the content.</t>
+              <t>Any &lt;Content&lt; element MAY contain a <spanx style="verb">view</spanx> 
+              attribute that specifies a comma-separated list of views. A single 
+              application can support multiple views. Each view is associated 
+              with at least one &lt;Content&gt; element. When the container 
+              renders an application with multiple &lt;Content&gt; elements, it will 
+              use the view name to select the appropriate content.</t>    
+            </list>
+          </t>
 
           <t>When a &lt;Content&gt; element uses the <spanx style="verb">href</spanx> 
           attribute, the view names listed in it's <spanx style="verb">view</spanx> attribute MUST NOT 
@@ -1475,59 +1478,59 @@
             
             <t>Containers MAY assign specific meaning to particular view names.
             In particular, this specification assigns the following special 
-            meanings to each of the given view names:
-              <texttable>
-                <ttcol>Name</ttcol>
-                <ttcol>Description</ttcol>
+            meanings to each of the given view names:</t>
+    
+            <texttable>
+              <ttcol>Name</ttcol>
+              <ttcol>Description</ttcol>
                 
-                <c>about</c>
-                <c>Identifies a View that provides descriptive information 
-                about the application.</c>
+              <c>about</c>
+              <c>Identifies a View that provides descriptive information 
+              about the application.</c>
                 
-                <c>canvas</c>
-                <c>Identifies a View that is typically rendered by the container
-                in a large area that is generally not shared with other 
-                application views.</c>
+              <c>canvas</c>
+              <c>Identifies a View that is typically rendered by the container
+              in a large area that is generally not shared with other 
+              application views.</c>
                 
-                <c>embedded</c>
-                <c>Identifies a View that is intended for use primarily with 
-                <xref target="EmbeddedExperiences">Embedded Experiences</xref>.
-                When a container displays an application View using the 
-                <spanx style="verb">gadgets.views.openEmbeddedExperience</spanx>
-                API, it will, by default, render the "embedded" View.</c>
+              <c>embedded</c>
+              <c>Identifies a View that is intended for use primarily with 
+              <xref target="Embedded-Experiences">Embedded Experiences</xref>.
+              When a container displays an application View using the 
+              <spanx style="verb">gadgets.views.openEmbeddedExperience</spanx>
+              API, it will, by default, render the "embedded" View.</c>
                 
-                <c>home</c>
-                <c>Identifies a View that is typically rendered by the container
-                on a page with other application views. These are typically 
-                assigned relatively small areas of the available display 
-                area for the page.</c>
+              <c>home</c>
+              <c>Identifies a View that is typically rendered by the container
+              on a page with other application views. These are typically 
+              assigned relatively small areas of the available display 
+              area for the page.</c>
                 
-                <c>preferences</c>
-                <c>Identifies a View that is typically used to allow the user
-                to view and modify user preferences for the application.</c>
+              <c>preferences</c>
+              <c>Identifies a View that is typically used to allow the user
+              to view and modify user preferences for the application.</c>
                 
-                <c>preview</c>
-                <c>Identifies a View that is typically used to provide a 
-                demonstration view of the application.</c>
+              <c>preview</c>
+              <c>Identifies a View that is typically used to provide a 
+              demonstration view of the application.</c>
                 
-                <c>profile</c>
-                <c>Identifies a View that, like "home", is typically rendered by
-                the container on a page with other application views. The 
-                difference with PROFILE, however, is that the page into which
-                the View is included will typically represent a "Profile" view
-                of an individual person or entity. For example, when displayed 
-                on the profile page for a person, an application View might 
-                provide an interface for scheduling a meeting with that person
-                or initiating a Voice-over-IP call, and so forth.</c>
+              <c>profile</c>
+              <c>Identifies a View that, like "home", is typically rendered by
+              the container on a page with other application views. The 
+              difference with PROFILE, however, is that the page into which
+              the View is included will typically represent a "Profile" view
+              of an individual person or entity. For example, when displayed 
+              on the profile page for a person, an application View might 
+              provide an interface for scheduling a meeting with that person
+              or initiating a Voice-over-IP call, and so forth.</c>
                 
-                <c>support</c>
-                <c>Identifies a View that provides details about where 
-                users can acquire support information for the application,
-                typically including contact information and links to 
-                product documentation, etc.</c>
-                
-              </texttable>
-            </t>
+              <c>support</c>
+              <c>Identifies a View that provides details about where 
+              users can acquire support information for the application,
+              typically including contact information and links to 
+              product documentation, etc.</c>
+              
+            </texttable>
             
             <t>Individual &lt;Content&gt; elements are associated with one 
             or more distinct views through the use of the <spanx style="verb">view</spanx>
@@ -1654,7 +1657,7 @@
               <t>Once the HTML content for a view has been assembled from the 
               appropriate &lt;Content&gt; elements, the container MUST perform
               Variable Substitution on the resulting content as defined by
-              <xref target="variable-substitution"/>.</t>
+              <xref target="VariableSubstitution"/>.</t>
               
               <t>Only type "html" &lt;Content&gt; elements can be concatenated
               together in this fashion.</t>
@@ -1864,12 +1867,12 @@
               <t>When <spanx style="verb">authz</spanx> is equal to 
               <spanx style="verb">oauth</spanx>, requests sent to the 
               remote service MUST be authenticated using the OAuth 1.0 
-              protocol as described in <xref target="auth.oauth1" />.</t>
+              protocol as described in <xref target="oauth-support" />.</t>
               
               <t>When <spanx style="verb">authz</spanx> is equal to 
               <spanx style="verb">oauth2</spanx>, requests sent to the 
               remote service MUST be authenticated using the OAuth 2.0 
-              protocol as described in <xref target="auth.oauth2" />.</t>
+              protocol as described in <xref target="oauth-support" />.</t>
               
               <t>When <spanx style="verb">authz</spanx> is either 
               <spanx style="verb">oauth</spanx> or <spanx style="verb">oauth2</spanx>, 
@@ -1888,7 +1891,7 @@
               
               <t>Further, when <spanx style="verb">authz</spanx> is equal to
               <spanx style="verb">oauth2</spanx>, the optional <spanx style="verb">oauth2_scope</spanx>
-              attribute MAY be included as defined by <xref target="OAuth"/>.</t>
+              attribute MAY be included.</t>
           
               <t>When <spanx style="verb">authz</spanx> is equal to 
               <spanx style="verb">signed</spanx>, the "Signed Fetch" mechanism
@@ -2083,7 +2086,7 @@
             provided in the request and filtering out the unwanted items.</t>
             <t>The container then MUST add the following query string 
             parameters to the request URI:
-              <list type="hanging">
+              <list style="hanging">
                 <t hangText="opensocial_owner_id">
                   Identifies the "owner" the application instance for which
                   the request is being sent.
@@ -2098,7 +2101,7 @@
             </t>
             <t>The container MAY also add the following query string 
             parameters to the request URI:
-              <list type="hanging">
+              <list style="hanging">
                 <t hangText="opensocial_viewer_id">
                   Provides the ID of the current Viewer for whom content
                   is being displayed.
@@ -2258,7 +2261,7 @@
       </section>
       <!-- END SIGNED FETCH -->
     
-      <section title="OAuth Support">
+      <section title="OAuth Support" anchor="oauth-support">
         
         <t>The OAuth protocol provides the ability for the owner of a resource 
         to grant limited permission to an application to perform actions 
@@ -2407,106 +2410,84 @@
           the alias <spanx style="verb">constant gadgets.io.RequestParameters.OAUTH2</spanx>).</t>
           
           <t>The following additional parameters that affect the containers
-          application of the OAuth protocol MAY also be specified:
-            <texttable>
-              <ttcol>Name</ttcol>
-              <ttcol>Alias</ttcol>
-              <ttcol>Description</ttcol>
+          application of the OAuth protocol MAY also be specified:</t>
+
+          <texttable>
+            <ttcol>Name</ttcol>
+            <ttcol>Alias</ttcol>
+            <ttcol>Description</ttcol>
             
-              <c><spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx></c>
-              <c>gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</c>
-              <c>When the container sends a request to an OAuth service 
-              provider asking for permission to access a given resource, 
-              it will, by default, specify a default container-specific
-              callback URI that the OAuth service provider will use to 
-              redirect control back to the container and deliver the 
-              requested access token. In certain cases, a specific application
-              instance might need to override the default callback URI.
-              The <spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx> parameter
-              can be used to specify an alternative absolute URI reference.</c>
+            <c><spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx></c>
+            <c>gadgets.io.RequestParameters.OAUTH_RECEIVED_CALLBACK</c>
+            <c>When the container sends a request to an OAuth service 
+            provider asking for permission to access a given resource, 
+            it will, by default, specify a default container-specific
+            callback URI that the OAuth service provider will use to 
+            redirect control back to the container and deliver the 
+            requested access token. In certain cases, a specific application
+            instance might need to override the default callback URI.
+            The <spanx style="verb">OAUTH_RECEIVED_CALLBACK</spanx> parameter
+            can be used to specify an alternative absolute URI reference.</c>
               
-              <c><spanx style="verb">OAUTH_REQUEST_TOKEN</spanx></c>
-              <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</c>
-              <c>In certain circumstances, instances of an application can be 
-              preauthorized to access particular resources and issued an 
-              OAuth Request Token in advance. The OAUTH_REQUEST_TOKEN parameter
-              allows the application to provide such preapproved request tokens to the 
-              container for use.</c>
+            <c><spanx style="verb">OAUTH_REQUEST_TOKEN</spanx></c>
+            <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN</c>
+            <c>In certain circumstances, instances of an application can be 
+            preauthorized to access particular resources and issued an 
+            OAuth Request Token in advance. The OAUTH_REQUEST_TOKEN parameter
+            allows the application to provide such preapproved request tokens to the 
+            container for use.</c>
               
-              <c><spanx style="verb">OAUTH_REQUEST_TOKEN_SECRET</spanx></c>
-              <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</c>
-              <c>When using preapproed request tokens with the OAUTH_REQUEST_TOKEN
-              parameter, the OAUTH_REQUEST_TOKEN_SECRET parameter
-              can be used to provide the associated request token secret.</c>
+            <c><spanx style="verb">OAUTH_REQUEST_TOKEN_SECRET</spanx></c>
+            <c>gadgets.io.RequestParameters.OAUTH_REQUEST_TOKEN_SECRET</c>
+            <c>When using preapproed request tokens with the OAUTH_REQUEST_TOKEN
+            parameter, the OAUTH_REQUEST_TOKEN_SECRET parameter
+            can be used to provide the associated request token secret.</c>
               
-              <c><spanx style="verb">OAUTH2_SCOPE</spanx></c>
-              <c>gadgets.io.RequestParameters.OAUTH2_SCOPE</c>
-              <c>When using OAuth version 2.0, the OAUTH2_SCOPE parameter is 
-              used to specify the scope to be used with this request. 
-              Access Token Scope is defined in Section 3.3 of 
-              <xref target="I-D.ietf-oauth-v2"/>.</c>
+            <c><spanx style="verb">OAUTH2_SCOPE</spanx></c>
+            <c>gadgets.io.RequestParameters.OAUTH2_SCOPE</c>
+            <c>When using OAuth version 2.0, the OAUTH2_SCOPE parameter is 
+            used to specify the scope to be used with this request. 
+            Access Token Scope is defined in Section 3.3 of 
+            <xref target="I-D.ietf-oauth-v2"/>.</c>
               
-              <c><spanx style="verb">OAUTH_SERVICE_NAME</spanx></c>
-              <c>gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</c>
-              <c>When multiple OAuth services are declared within the 
-              &lt;ModulePrefs&gt; of an Application, the OAUTH_SERVICE_NAME
-              parameter can be used to specify which service to use for the
-              request.</c>
+            <c><spanx style="verb">OAUTH_SERVICE_NAME</spanx></c>
+            <c>gadgets.io.RequestParameters.OAUTH_SERVICE_NAME</c>
+            <c>When multiple OAuth services are declared within the 
+            &lt;ModulePrefs&gt; of an Application, the OAUTH_SERVICE_NAME
+            parameter can be used to specify which service to use for the
+            request.</c>
               
-              <c><spanx style="verb">OAUTH_TOKEN_NAME</spanx></c>
-              <c>gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</c>
-              <c>Provides a simple label that application can use to refer to the 
-              OAuth Access Token granting access to particular resources.
-              If unspecified the value is assumed to be an empty string. 
-              Gadget instances can use multiple token names if they access
-              multiple resources from a single source. For example, an application
-              that accesses a contact list and a calendar might used the 
-              token name "contacts" to refer to the OAuth token providing 
-              access to the contact data and the name "calendar" to refer to
-              the token providing access to the calendar.</c>
+            <c><spanx style="verb">OAUTH_TOKEN_NAME</spanx></c>
+            <c>gadgets.io.RequestParameters.OAUTH_TOKEN_NAME</c>
+            <c>Provides a simple label that application can use to refer to the 
+            OAuth Access Token granting access to particular resources.
+            If unspecified the value is assumed to be an empty string. 
+            Gadget instances can use multiple token names if they access
+            multiple resources from a single source. For example, an application
+            that accesses a contact list and a calendar might used the 
+            token name "contacts" to refer to the OAuth token providing 
+            access to the contact data and the name "calendar" to refer to
+            the token providing access to the calendar.</c>
               
-              <c><spanx style="verb">OAUTH_USE_TOKEN</spanx></c>
-              <c>gadgets.io.RequestParameters.OAUTH_USE_TOKEN</c>
-              <c>For certain kinds of actions on certain resources, an OAuth
-              service provider might not require that the container and application
-              walk through the complete OAuth process to acquire an
-              Access Token. In such scenarios, the service providing access
-              to the resource will verify the OAuth Consumer Key provided 
-              within the request then allow the request to proceed. In other 
-              cases, a resource provider might grant limited access to a
-              requester if the resource owner has not provided explicit
-              authorization but offer additional functionality if an OAuth
-              Access Token has been issued. Typically, however, most resource
-              providers will only allow a requester to access protected resources
-              if an Access Token is included in the request. The OAUTH_USE_TOKEN
-              parameter can be used by the application as a hint to the container 
-              as to whether the acquisition and use of an Access Token is 
-              required or optional. The value MUST be one of:
-                <list style="hangText">
-                  <t hangText="never">
-                    Tells the container that the Access Token is never 
-                    required. Requests will be sent to the remote endpoint
-                    without an OAuth Access Token.
-                  </t>
-                  <t hangText="if_available">
-                    Tells the container that use of the Access Token is 
-                    optional. If an Access token has been acquired, it 
-                    will be included in the request sent to the remote 
-                    endpoint, otherwise the request will be sent 
-                    without an Access Token.
-                  </t>
-                  <t hangText="always">
-                    Tells the container that use of the Access Token 
-                    is required. If an appropriate Access Token has not
-                    yet been acquired, the container will work with the 
-                    application and the OAuth Service Provider to seek appropriate
-                    authorization and acquire an Access Token.
-                  </t>
-                </list>
-              If the OAUTH_USE_TOKEN parameter is not specified, the value
-              is assumed to be "always".</c>  
-            </texttable>
-          </t>
+            <c><spanx style="verb">OAUTH_USE_TOKEN</spanx></c>
+            <c>gadgets.io.RequestParameters.OAUTH_USE_TOKEN</c>
+            <c>For certain kinds of actions on certain resources, an OAuth
+            service provider might not require that the container and application
+            walk through the complete OAuth process to acquire an
+            Access Token. In such scenarios, the service providing access
+            to the resource will verify the OAuth Consumer Key provided 
+            within the request then allow the request to proceed. In other 
+            cases, a resource provider might grant limited access to a
+            requester if the resource owner has not provided explicit
+            authorization but offer additional functionality if an OAuth
+            Access Token has been issued. Typically, however, most resource
+            providers will only allow a requester to access protected resources
+            if an Access Token is included in the request. The OAUTH_USE_TOKEN
+            parameter can be used by the application as a hint to the container 
+            as to whether the acquisition and use of an Access Token is 
+            required or optional. The acceptable values for the OAUTH_USE_TOKEN
+            are defined in <xref target="oauth_use_token_value"/>.</c>  
+          </texttable>
                     
           <figure><preamble>Within &lt;Preload&gt; and &lt;Link&gt; elements:</preamble>
           <artwork><![CDATA[
@@ -2623,6 +2604,38 @@
           attribute are used within the JavaScript API and XML elements to 
           indicate the appropriate OAuth service to use for the request.</t>
         
+          <section title="The &quot;OAUTH_USE_TOKEN&quot; parameter" anchor="oauth_use_token_value">
+
+            <t>The value of the <spanx style="verb">OAUTH_USE_TOKEN</spanx> 
+            parameter MUST be one of:
+              <list style="hangText">
+                <t hangText="never">
+                  Tells the container that the Access Token is never 
+                  required. Requests will be sent to the remote endpoint
+                  without an OAuth Access Token.
+                </t>
+                <t hangText="if_available">
+                  Tells the container that use of the Access Token is 
+                  optional. If an Access token has been acquired, it 
+                  will be included in the request sent to the remote 
+                  endpoint, otherwise the request will be sent 
+                  without an Access Token.
+                </t>
+                <t hangText="always">
+                  Tells the container that use of the Access Token 
+                  is required. If an appropriate Access Token has not
+                  yet been acquired, the container will work with the 
+                  application and the OAuth Service Provider to seek appropriate
+                  authorization and acquire an Access Token.
+                </t>
+              </list>
+            </t>
+        
+            <t>If the OAUTH_USE_TOKEN parameter is not specified, the value
+            is assumed to be "always".</t>
+
+          </section>
+
         </section>
         
         <section title="Processing Model" anchor="oauth-processing-model">
@@ -2631,7 +2644,7 @@
           protocol is to be used, regardless of whether the request is 
           submitted via the JavaScript API or via elements in the
           specification document, it MUST adhere to the following requirements and 
-          processing model:</t>
+          processing model:
           
           <list style="numbers">
             <t>For any request for which an access token is not 
@@ -2690,6 +2703,7 @@
               </list>
             </t>
           </list>
+          </t>
     
           <section title="Acquiring Access Tokens" anchor="oauth-get-tokens">
           
@@ -2725,7 +2739,7 @@
                 function passed in to the JavaScript method with an indication
                 that OAuth Authorization is required. The Application can then
                 choose to handle the authentication on it's own, as described
-                in <xref target="oauthpopup"/>. However, the container MAY 
+                in <xref target="gadgets.oauth.Popup"/>. However, the container MAY 
                 choose to abort the request and signal an error that the 
                 OAuth authorization could not be completed.</t>
               </list>
@@ -2736,7 +2750,7 @@
             element that blocks all other interactions with the container 
             until the authorization is complete or canceled. The rendered view
             MUST handle the Viewers interaction with the third party OAuth 
-            Authorization service as described in <xref target="oauthpopup"/> 
+            Authorization service as described in <xref target="gadgets.oauth.Popup"/> 
             then return control back to the container once the authorization 
             process has been completed and an access token has been issued. 
             Once the view has been dismissed, the container will proceed with
@@ -2748,8 +2762,8 @@
           
             <t>When using OAuth 2.0 to premptively send authenticated requests, 
             containers MUST support the use of OAuth 2.0 Bearer Tokens as 
-            described by <xref target="I-D.draft-ietf-oauth-v2-bearer"/> and 
-            Mac Tokens as described by <xref target="I-D.draft-ietf-oauth-v2-http-mac"/>.
+            described by <xref target="I-D.ietf-oauth-v2-bearer"/> and 
+            Mac Tokens as described by <xref target="I-D.ietf-oauth-v2-http-mac"/>.
             Implementations MAY choose to support additional types of tokens.</t>
             
             <t>The determination of exactly how the OAuth 2.0 access token is 
@@ -2775,7 +2789,7 @@
             token, the request sent to the remote endpoint MUST contain 
             an Authorization header field using the "Mac" scheme that includes
             "id", "nonce" and "mac" fields as described by 
-            <xref target="I-D.draft-ietf-oauth-v2-http-mac"/>.</t>
+            <xref target="I-D.ietf-oauth-v2-http-mac"/>.</t>
             
             <figure><preamble>For example:</preamble><artwork>
   GET /some/remote/content HTTP/1.1
@@ -3008,7 +3022,7 @@
   
       <t>Expression Language statements can be used to to access values 
       provided by reserved variable keys, variables defined using data 
-      pipeline tags as defined by <xref target="DataPipeling"/>, or 
+      pipeline tags as defined by <xref target="DataPipelining"/>, or 
       literal values as in the previous example.</t>
       
       <t>The syntax for expressions is based on a subset of the
@@ -4007,14 +4021,14 @@
   <Content type="html" href="http://example.org/remote-server?id=${ViewParams.id}" />
         ]]></artwork></figure>
         
-        <figure><preamble>The <spanx style="verb">${ViewParams.id}</spanx> 
+        <figure><preamble>The <spanx style="verb">${ViewParams.id}</spanx>
         expression would be replaced with an appropriate value drawn from the 
         View Parameters passed into the application, and HTTP request sent to the 
-        remote endpoint by the container would use HTTP GET:</preamble><![CDATA[
+        remote endpoint by the container would use HTTP GET:</preamble><artwork><![CDATA[
   GET /remote-server?id=abc123 HTTP/1.1
   Host: example.org
   Accept: application/json
-        ]]></figure>
+        ]]></artwork></figure>
         
         <figure><preamble>However, when using Proxied Content with the 
         Data Pipeline elements, a developer can pass complex structured
@@ -4614,36 +4628,36 @@
          
            <t>The acceptable values for the logLevel input parameter are as 
            follows. For convenience, a corresponding alias for each value is 
-           also defined and MAY be used in place of the literal numeric value:
-             <texttable>
-               <ttcol>Value</ttcol>
-               <ttcol>Alias</ttcol>
-               <ttcol>Description</ttcol>
+           also defined and MAY be used in place of the literal numeric value:</t>
+  
+           <texttable>
+             <ttcol>Value</ttcol>
+              <ttcol>Alias</ttcol>
+             <ttcol>Description</ttcol>
                
-               <c><spanx style="verb">1</spanx></c>
-               <c><spanx style="verb">gadgets.log.INFO</spanx></c>
-               <c>Specifies that the container provided Log 
-               SHOULD record all informational, warning and 
-               error messages.</c>
+             <c><spanx style="verb">1</spanx></c>
+             <c><spanx style="verb">gadgets.log.INFO</spanx></c>
+             <c>Specifies that the container provided Log 
+             SHOULD record all informational, warning and 
+             error messages.</c>
                
-               <c><spanx style="verb">2</spanx></c>
-               <c><spanx style="verb">gadgets.log.WARN</spanx></c>
-               <c>Specifies that the container provided Log
-               SHOULD record all warning and error messages 
-               but ignore informational messages.</c>
+             <c><spanx style="verb">2</spanx></c>
+             <c><spanx style="verb">gadgets.log.WARN</spanx></c>
+             <c>Specifies that the container provided Log
+             SHOULD record all warning and error messages 
+             but ignore informational messages.</c>
                
-               <c><spanx style="verb">3</spanx></c>
-               <c><spanx style="verb">gadgets.log.ERROR</spanx></c>
-               <c>Specifies that the container provided Log
-               SHOULD record all error messages but ignore 
-               informational and error messages.</c>
+             <c><spanx style="verb">3</spanx></c>
+             <c><spanx style="verb">gadgets.log.ERROR</spanx></c>
+             <c>Specifies that the container provided Log
+             SHOULD record all error messages but ignore 
+             informational and error messages.</c>
                
-               <c><spanx style="verb">4</spanx></c>
-               <c><spanx style="verb">gadgets.log.NONE</spanx></c>
-               <c>Specifies that the container provided Log
-               SHOULD ignore all messages.</c>
-             </texttable>
-           </t>
+             <c><spanx style="verb">4</spanx></c>
+             <c><spanx style="verb">gadgets.log.NONE</spanx></c>
+             <c>Specifies that the container provided Log
+             SHOULD ignore all messages.</c>
+           </texttable>
            
            <figure><preamble>For example, to record all messages:</preamble><artwork>
   gadgets.setLogLevel(1);
@@ -4755,18 +4769,18 @@
              <t>The following table lists the additional properties currently 
              defined by this specification. For convenience, an alias is defined
              for each that MAY be used in place of the literal property name in 
-             JavaScript code:
-               <texttable>
-                 <ttcol>Name</ttcol>
-                 <ttcol>Alias</ttcol>
-                 <ttcol>Description</ttcol>
-                     
-                 <c>REFRESH_INTERVAL</c>
-                 <c>gadgets.io.ProxyUrlRequestParameters.REFRESH_INTERVAL</c>
-                 <c>Explicitly sets the numer of seconds content will be cached 
-                 by the container as described in <xref target="caching" />.</c>
-               </texttable>
-             </t>
+             JavaScript code:</t>
+
+             <texttable>
+               <ttcol>Name</ttcol>
+               <ttcol>Alias</ttcol>
+               <ttcol>Description</ttcol>
+                    
+               <c>REFRESH_INTERVAL</c>
+               <c>gadgets.io.ProxyUrlRequestParameters.REFRESH_INTERVAL</c>
+               <c>Explicitly sets the numer of seconds content will be cached 
+               by the container as described in <xref target="caching" />.</c>
+             </texttable>
              
              <t>Containers are free to accept additional optional parameters, 
              however the definition and use of such parameters are undefined 
@@ -4829,8 +4843,9 @@
              <t>The following table lists the additional properties currently 
              defined by this specification. For convenience, an alias is defined
              for each that MAY be used in place of the literal property name in 
-             JavaScript code:
-               <texttable>
+             JavaScript code:</t>
+   
+             <texttable>
                  <ttcol>Name</ttcol>
                  <ttcol>Alias</ttcol>
                  <ttcol>Description</ttcol>
@@ -4847,18 +4862,15 @@
                      
                  <c><spanx style="verb">AUTHORIZATION</spanx></c>
                  <c><spanx style="verb">gadgets.io.RequestParameters.AUTHORIZATION</spanx></c>
-                 <c>Specifies the authorization method to use as defined by
-                 <xref target="authorization"/>. Valid values are:
+                 <c>Specifies the authorization method to use. Valid values are:
                  <spanx style="verb">none</spanx>, <spanx style="verb">signed</spanx>, 
                  <spanx style="verb">oauth</spanx> and <spanx style="verb">oauth2</spanx>. 
                  For convenience, aliases for each of these values have been provided for 
                  use in JavaScript code. These aliases are: 
-                   <list style="symbols">
-                     <t><spanx style="verb">gadgets.io.AuthorizationType.NONE</spanx>,</t>
-                     <t><spanx style="verb">gadgets.io.AuthorizationType.SIGNED</spanx>,</t>
-                     <t><spanx style="verb">gadgets.io.AuthorizationType.OAUTH</spanx> and</t> 
-                     <t><spanx style="verb">gadgets.ioAuthorizationType.OAUTH2</spanx>.</t>
-                   </list>
+                 <spanx style="verb">gadgets.io.AuthorizationType.NONE</spanx>,
+                 <spanx style="verb">gadgets.io.AuthorizationType.SIGNED</spanx>,
+                 <spanx style="verb">gadgets.io.AuthorizationType.OAUTH</spanx> and 
+                 <spanx style="verb">gadgets.ioAuthorizationType.OAUTH2</spanx>.
                  If not specified, the default value for this parameter is assumed to be 
                  <spanx style="verb">none</spanx>.</c>
                      
@@ -4873,14 +4885,13 @@
                  and <spanx style="verb">TEXT</spanx>. For convenience, aliases 
                  for each of these values have been provided for use in 
                  JavaScript code. These aliases are: 
-                   <list style="symbols">
-                     <t><spanx style="verb">gadgets.io.ContentType.DOM</spanx>, </t>
-                     <t><spanx style="verb">gadgets.io.ContentType.FEED</spanx>,</t>
-                     <t><spanx style="verb">gadgets.io.ContentType.JSON</spanx> and</t>
-                     <t><spanx style="verb">gadgets.io.ContentType.TEXT</spanx></t>
-                   </list>. If not specified, the default value for this 
-                   parameter is assumed to be <spanx style="verb">TEXT</spanx>, 
-                   indicating that no specific content-type is to be assumed.</c>
+                 <spanx style="verb">gadgets.io.ContentType.DOM</spanx>,
+                 <spanx style="verb">gadgets.io.ContentType.FEED</spanx>,
+                 <spanx style="verb">gadgets.io.ContentType.JSON</spanx> and
+                 <spanx style="verb">gadgets.io.ContentType.TEXT</spanx>. 
+                 If not specified, the default value for this 
+                 is assumed to be <spanx style="verb">TEXT</spanx>, 
+                 indicating that no specific content-type is to be assumed.</c>
                  
                  <c><spanx style="verb">GET_FULL_HEADERS</spanx></c>
                  <c><spanx style="verb">gadgets.io.RequestParameters.GET_FULL_HEADERS</spanx></c>
@@ -4923,16 +4934,14 @@
                  and <spanx style="verb">PUT</spanx>. For convenience, aliases 
                  for each of these values have been provided for use in 
                  JavaScript code. The aliases are: 
-                   <list style="symbols">
-                     <t><spanx style="verb">gadgets.io.MethodType.DELETE</spanx>,</t>
-                     <t><spanx style="verb">gadgets.io.MethodType.GET</spanx>, </t>
-                     <t><spanx style="verb">gadgets.io.MethodType.HEAD</spanx>,</t> 
-                     <t><spanx style="verb">gadgets.io.MethodType.PATCH</spanx>,</t>
-                     <t><spanx style="verb">gadgets.io.MethodType.POST</spanx> and</t> 
-                     <t><spanx style="verb">gadgets.io.MethodType.PUT</spanx>.</t>
-                   </list>
-                   If not specified, the default value for this parameter is 
-                   assumed to be <spanx style="verb">GET</spanx>.</c>
+                 <spanx style="verb">gadgets.io.MethodType.DELETE</spanx>,
+                 <spanx style="verb">gadgets.io.MethodType.GET</spanx>, 
+                 <spanx style="verb">gadgets.io.MethodType.HEAD</spanx>,
+                 <spanx style="verb">gadgets.io.MethodType.PATCH</spanx>,
+                 <spanx style="verb">gadgets.io.MethodType.POST</spanx> and 
+                 <spanx style="verb">gadgets.io.MethodType.PUT</spanx>.
+                 If not specified, the default value is 
+                 assumed to be <spanx style="verb">GET</spanx>.</c>
                  
                  <c><spanx style="verb">NUM_ENTRIES</spanx></c>
                  <c><spanx style="verb">gadgets.io.RequestParameters.NUM_ENTRIES</spanx></c>
@@ -5077,9 +5086,8 @@
                  a Boolean. When not specified, the default value is assumed to 
                  be False.</c>
 
-               </texttable>
-             </t>
-             
+             </texttable>
+
              <t>Containers are free to accept additional optional parameters, 
              however the definition and use of such parameters are undefined 
              by this specification.</t>
@@ -5091,8 +5099,9 @@
                Object as a parameter to the provided callback function.</t>
              
                <t>The properties of the Response object passed to the callback
-               function are:
-                 <texttable>
+               function are:</t>
+               
+               <texttable>
                    <ttcol>Name</ttcol>
                    <ttcol>Type</ttcol>
                    <ttcol>Description</ttcol>
@@ -5146,7 +5155,7 @@
                    property set. The value is a String providing the URL of an 
                    external page provided by the OAuth Service Provider to 
                    allow the user to approve the request. Use of the OAuth 
-                   Popup Feature as defined by <xref target="oauthpopup"/>
+                   Popup Feature as defined by <xref target="gadgets.oauth.Popup"/>
                    is recommended. Once approval has been acquired, the call to 
                    <spanx style="verb">gadgets.io.makeRequest</spanx> needs to be 
                    repeated in order to complete the request.</c>
@@ -5169,8 +5178,8 @@
                    property MAY be used by the container to provide a human-readable 
                    description of the error for debugging or informational purposes.</c>
                    
-                 </texttable>
-               </t>
+               </texttable>
+
              </section>
            </section>
          </section>
@@ -5560,8 +5569,9 @@
   &lt;static&gt; &lt;String&gt; gadgets.util.escapeString(str)
             </artwork></figure>
           
-            <t>The following characters are affected:
-              <texttable>
+            <t>The following characters are affected:</t>
+            
+            <texttable>
                 <ttcol>Character</ttcol>
                 <ttcol>Unicode Codepoint</ttcol>
                 <ttcol>Replacement</ttcol>            
@@ -5595,8 +5605,8 @@
                 <c>paragraph separator</c>
                 <c>8233</c>
                 <c>&amp;#8233;</c>
-              </texttable>
-            </t>
+            </texttable>
+
           </section>
     
           <section title="gadgets.util.getFeatureParameters" anchor="gadgets.util.getFeatureParameters">
@@ -6073,16 +6083,15 @@
   &lt;static&gt; gadgets.actions.addAction(action)
          </artwork></figure>
          
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>action</c>
-             <c><xref target="gadgets.actions.actionobjects">Action Object</xref></c>
-             <c>The action to be added to the container</c>
-           </texttable>
-         </t>
+         <t>Input Parameters:</t>
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>action</c>
+           <c><xref target="gadgets.actions.actionobjects">Action Object</xref></c>
+           <c>The action to be added to the container</c>
+         </texttable>
          
          <figure><preamble>For example:</preamble><artwork type="code">
   var mycallback = function(){
@@ -6112,16 +6121,16 @@
   &lt;static&gt; gadgets.actions.updateAction(action)
          </artwork></figure>
 
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>action</c>
-             <c><xref target="gadgets.actions.actionobjects">Action Object</xref></c>
-             <c>A partial representation of the action to be updated within the container</c>
-           </texttable>
-         </t>
+         <t>Input Parameters:</t>
+         
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>action</c>
+           <c><xref target="gadgets.actions.actionobjects">Action Object</xref></c>
+           <c>A partial representation of the action to be updated within the container</c>
+         </texttable>
 
          <t>The Action object passed in to the <spanx style="verb">gadgets.actions.updateAction</spanx>
          method can be a partial representation of the action that contains 
@@ -6155,16 +6164,15 @@
   &lt;static&gt; gadgets.actions.removeAction
          </artwork></figure>
        
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>id</c>
-             <c>String</c>
-             <c>The ID of the action to be removed.</c>
-           </texttable>
-         </t>
+         <t>Input Parameters:</t>
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>id</c>
+           <c>String</c>
+           <c>The ID of the action to be removed.</c>
+         </texttable>
          
          <figure><preamble>For example,</preamble><artwork>
   gadgets.actions.removeAction("com.acme.mycallaction");     
@@ -6184,19 +6192,18 @@
   &lt;static&gt; gadgets.actions.getActionsByPath(path, callback)
          </artwork></figure>
        
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>path</c>
-             <c>String</c>
-             <c>The String representation of the path to the actions</c>
-             <c>callback</c>
-             <c>Function</c>
-             <c>A callback function to handle the returned actions array</c>
-           </texttable>
-         </t>
+         <t>Input Parameters:</t>
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>path</c>
+           <c>String</c>
+           <c>The String representation of the path to the actions</c>
+           <c>callback</c>
+           <c>Function</c>
+           <c>A callback function to handle the returned actions array</c>
+         </texttable>
          
          <figure><preamble>For example,</preamble><artwork>
   function listActions(actions) { ... }
@@ -6216,19 +6223,18 @@
   &lt;static&gt; gadgets.actions.getActionsByDataType(dataType, callback)
          </artwork></figure>
          
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>dataType</c>
-             <c>String</c>
-             <c>The String representation of the associated data type</c>
-             <c>callback</c>
-             <c>Function</c>
-             <c>A callback function to handle the returned actions array</c>
-           </texttable>
-         </t>
+         <t>Input Parameters:</t>
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>dataType</c>
+           <c>String</c>
+           <c>The String representation of the associated data type</c>
+           <c>callback</c>
+           <c>Function</c>
+           <c>A callback function to handle the returned actions array</c>
+         </texttable>
          
          <figure><preamble>For example,</preamble><artwork>
   function listActions(actions) { ... }
@@ -6248,20 +6254,19 @@
   &lt;static&gt; gadgets.actions.runAction (id, opt_selection)
          </artwork></figure>
 
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>id</c>
-             <c>String</c>
-             <c>The ID of the action to execute.</c>
-             <c>opt_selection</c>
-             <c><xref target="gadgets.selection">Selection Object</xref></c>
-             <c>An optional object that identifies the currently selected object as
-             defined by <xref target="gadgets.selection"/>.</c>
-           </texttable>
-         </t>
+         <t>Input Parameters:</t>
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>id</c>
+           <c>String</c>
+           <c>The ID of the action to execute.</c>
+           <c>opt_selection</c>
+           <c><xref target="gadgets.selection">Selection Object</xref></c>
+           <c>An optional object that identifies the currently selected object as
+           defined by <xref target="gadgets.selection"/>.</c>
+         </texttable>
          
          <figure><preamble>For example,</preamble><artwork>
   gadgets.actions.runAction("com.acme.mycallaction");
@@ -6294,19 +6299,19 @@
   &lt;static&gt; gadgets.actions.registerShowActionsListener (listener)
          </artwork></figure>
        
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>listener</c>
-             <c>Function</c>
-             <c>The application's function to render actions in its UI. The 
-             function will be invoked with one parameter which is an array 
-             of action objects to render.</c>
-           </texttable>           
-         </t>
-
+         <t>Input Parameters:</t>
+       
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>listener</c>
+           <c>Function</c>
+           <c>The application's function to render actions in its UI. The 
+           function will be invoked with one parameter which is an array 
+           of action objects to render.</c>
+         </texttable>           
+     
          <figure><preamble>For Example:</preamble><artwork type="code">
   var listener = function(actionObjs){
        // draw the UI, toolbars menus, etc
@@ -6326,18 +6331,17 @@
   &lt;static&gt; gadgets.actions.registerHideActionsListener (listener)
          </artwork></figure>
        
-         <t>Input Parameters:
-           <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>listener</c>
-             <c>Function</c>
-             <c>The application's function to render actions in its UI. The 
-             function will be invoked with one parameter which is an array 
-             of action objects to hide.</c>
-           </texttable>           
-         </t>
+         <t>Input Parameters:</t>
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>listener</c>
+           <c>Function</c>
+           <c>The application's function to render actions in its UI. The 
+           function will be invoked with one parameter which is an array 
+           of action objects to hide.</c>
+         </texttable>           
         
          <figure><preamble>For Example:</preamble><artwork type="code">
   var listener = function(actionObjs){
@@ -6386,7 +6390,7 @@
   </artwork>
        </figure>
        
-       <t>The parameters supported by the "content-rewrite" feature are:
+       <t>The parameters supported by the "content-rewrite" feature are:</t>
        
        <texttable>
          <ttcol>Name</ttcol>
@@ -6456,8 +6460,8 @@
        <t>For any resource that is not explicitly excluded from rewriting using 
        the <spanx style="verb">exclude-url</spanx> parameter, containers are 
        free to perform additional optimizations when rewriting links including 
-       but not limited to:</t>
-       <list type="symbols">
+       but not limited to:
+       <list style="symbols">
         <t>Extracting @import directives from style tags and converting them into 
         link tags in the head tag of the containing HTML content.</t>
         <t>Merging multiple CSS fetches from successive link tags into one link tag
@@ -6477,7 +6481,7 @@
   <section title="The DataContext Feature" anchor="opensocial.data">
    
     <t>The Data Context Feature allows an application utilizing the 
-    <xref target="DataPipeline">Data Pipeline</xref> capability 
+    <xref target="DataPipelining">Data Pipeline</xref> capability 
     provided by the container to access the <spanx style="verb">DataContext</spanx> 
     associated with the application instance.</t>
     
@@ -7322,36 +7326,35 @@
   &lt;static&gt; &lt;Boolean&gt; gadgets.flash.embedCachedFlash(url, container, version, options)
           </artwork></figure>
 
-          <t>Input Parameters:
-            <texttable align="left">
-              <ttcol>Name</ttcol>
-              <ttcol>Type</ttcol>
-              <ttcol>Description</ttcol>
+          <t>Input Parameters:</t>
+ 
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+             <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
               
-              <c>url</c>
-              <c>String</c>
-              <c>The IRI of the Flash resource to embed.</c>
+            <c>url</c>
+            <c>String</c>
+            <c>The IRI of the Flash resource to embed.</c>
               
-              <c>container</c>
-              <c>String | Object</c>
-              <c>Specifies either the DOM identifier or object reference for
-              the existing container object (e.g. a &lt;div&gt;) within which the 
-              Flash content will be embedded.</c>
+            <c>container</c>
+            <c>String | Object</c>
+            <c>Specifies either the DOM identifier or object reference for
+            the existing container object (e.g. a &lt;div&gt;) within which the 
+            Flash content will be embedded.</c>
               
-              <c>version</c>
-              <c>Number</c>
-              <c>Specifies the minimum Flash Player version required to 
-              support the embedded content.</c>
+            <c>version</c>
+            <c>Number</c>
+            <c>Specifies the minimum Flash Player version required to 
+            support the embedded content.</c>
               
-              <c>options</c>
-              <c>Object</c>
-              <c>An optional object that MAY contain any property that is 
-              valid for the HTML &lt;embed&gt; tag. These properties will be
-              passed directly through the &lt;embed&gt; tag generated by the
-              API call.</c>
-              
-            </texttable>
-          </t>
+            <c>options</c>
+            <c>Object</c>
+            <c>An optional object that MAY contain any property that is 
+            valid for the HTML &lt;embed&gt; tag. These properties will be
+            passed directly through the &lt;embed&gt; tag generated by the
+            API call.</c>        
+          </texttable>
  
           <t>The method will return either <spanx style="verb">True</spanx>
           or <spanx style="verb">False</spanx> to indicate whether the 
@@ -7366,37 +7369,37 @@
   &lt;static&gt; &lt;Boolean&gt; gadgets.flash.embedCachedFlash(url, container, version, options)
           </artwork></figure>
 
-          <t>Input Parameters:
-            <texttable align="left">
-              <ttcol>Name</ttcol>
-              <ttcol>Type</ttcol>
-              <ttcol>Description</ttcol>
+          <t>Input Parameters:</t>
+  
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            
+            <c>url</c>
+            <c>String</c>
+            <c>The IRI of the Flash resource to embed.</c>
               
-              <c>url</c>
-              <c>String</c>
-              <c>The IRI of the Flash resource to embed.</c>
+            <c>container</c>
+            <c>String | Object</c>
+            <c>Specifies either the DOM identifier or object reference for
+            the existing container object (e.g. a &lt;div&gt;) within which the 
+            Flash content will be embedded.</c>
               
-              <c>container</c>
-              <c>String | Object</c>
-              <c>Specifies either the DOM identifier or object reference for
-              the existing container object (e.g. a &lt;div&gt;) within which the 
-              Flash content will be embedded.</c>
-              
-              <c>version</c>
-              <c>Number</c>
-              <c>Specifies the minimum Flash Player version required to 
-              support the embedded content.</c>
-              
-              <c>options</c>
-              <c>Object</c>
-              <c>An optional object that MAY contain any property that is 
-              valid for the HTML &lt;embed&gt; tag. These properties will be
-              passed directly through the &lt;embed&gt; tag generated by the
-              API call.</c>
-              
-            </texttable>
-          </t>
- 
+            <c>version</c>
+            <c>Number</c>
+            <c>Specifies the minimum Flash Player version required to 
+            support the embedded content.</c>
+            
+            <c>options</c>
+            <c>Object</c>
+            <c>An optional object that MAY contain any property that is 
+            valid for the HTML &lt;embed&gt; tag. These properties will be
+            passed directly through the &lt;embed&gt; tag generated by the
+            API call.</c>
+            
+          </texttable>
+     
           <t>The method will return either <spanx style="verb">True</spanx>
           or <spanx style="verb">False</spanx> to indicate whether the 
           method completed successfully or not.</t>
@@ -7432,8 +7435,7 @@
     and language specified in the locale to load the appropriate formatter
     and parser for any given date, time, number or currency.</t>
     
-    <t>The i18n feature provides four distinct methods, defined 
-    <xref target="i18n.methods">here</xref>. These are formatDateTime,
+    <t>The i18n feature provides four distinct methods: formatDateTime,
     formatNumber, parseDateTime and parseNumber. At a minimum, each 
     method takes as input a format pattern that defines the structure 
     of the data being parsed or formatted and the value to which the 
@@ -7592,24 +7594,24 @@
   assertEquals("13:10:10", gadgets.i18n.formatDateTime("HH:mm:ss", date));
       </artwork></figure>
       
-      <t>Input Parameters:
-        <texttable align="left">
-          <ttcol>Name</ttcol>
-          <ttcol>Type</ttcol>
-          <ttcol>Description</ttcol>
-          <c>pattern</c>
-          <c>string/number</c>
-          <c>String to specify patterns or Number used to reference predefined
-          pattern that a date should be formatted into.</c>
-          <c>date</c>
-          <c>Date</c>
-          <c>Date object being formatted.</c>
-        </texttable>
-      </t>
+      <t>Input Parameters:</t>
+      <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>pattern</c>
+        <c>string/number</c>
+        <c>String to specify patterns or Number used to reference predefined
+        pattern that a date should be formatted into.</c>
+        <c>date</c>
+        <c>Date</c>
+        <c>Date object being formatted.</c>
+      </texttable>
+ 
       <t>The method returns a String representation of the provided date and time.</t>
-     </section>
+    </section>
      
-     <section title="gadgets.i18n.formatNumber" anchor="gadgets.i18n.formatNumber">
+    <section title="gadgets.i18n.formatNumber" anchor="gadgets.i18n.formatNumber">
 
       <t>The <spanx style="verb">gadgets.i18n.formatNumber</spanx> method
       formats number using the pattern specified. The pattern
@@ -7628,29 +7630,29 @@
   assertEquals("$1,234.58", str);
       </artwork></figure>
       
-      <t>Input Parameters:
-        <texttable align="left">
-          <ttcol>Name</ttcol>
-          <ttcol>Type</ttcol>
-          <ttcol>Description</ttcol>
-          <c>pattern</c>
-          <c>string/number</c>
-          <c>String to specify patterns or Number used to reference predefined
-          pattern that a number should be formatted into.</c>
-          <c>value</c>
-          <c>number</c>
-          <c>The number being formatted.</c>
-          <c>opt_currencyCode</c>
-          <c>string</c>
-          <c>optional international currency code, it determines the currency
-          code/symbol should be used in format/parse. If not given, the currency
-          code for current locale will be used.</c>
-        </texttable>
-      </t>
+      <t>Input Parameters:</t>
+  
+      <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>pattern</c>
+        <c>string/number</c>
+        <c>String to specify patterns or Number used to reference predefined
+        pattern that a number should be formatted into.</c>
+        <c>value</c>
+        <c>number</c>
+        <c>The number being formatted.</c>
+        <c>opt_currencyCode</c>
+        <c>string</c>
+        <c>optional international currency code, it determines the currency
+        code/symbol should be used in format/parse. If not given, the currency
+        code for current locale will be used.</c>
+      </texttable>
       <t>The method returns the formatted string.</t>
-     </section>
+    </section>
      
-     <section title="gadgets.i18n.parseDateTime" anchor="gadgets.i18n.parseDateTime">
+    <section title="gadgets.i18n.parseDateTime" anchor="gadgets.i18n.parseDateTime">
      
       <t>The <spanx style="verb">gadgets.i18n.parseDateTime</spanx> 
       method will parse the input string ("text"),
@@ -7703,31 +7705,31 @@
   assertEquals(date.getDate(), 24);
       </artwork></figure>
       
-      <t>Input Parameters:
-        <texttable align="left">
-          <ttcol>Name</ttcol>
-          <ttcol>Type</ttcol>
-          <ttcol>Description</ttcol>
-          <c>pattern</c>
-          <c>string/number</c>
-          <c>String to specify patterns or Number used to reference predefined
-          pattern that a date should be parsed from.</c>
-          <c>text</c>
-          <c>string</c>
-          <c>The string that need to be parsed.</c>
-          <c>start</c>
-          <c>number</c>
-          <c>The character position in "text" where parse begins.</c>
-          <c>date</c>
-          <c>Date</c>
-          <c>The date object that will hold parsed value.</c>
-        </texttable>
-      </t>
+      <t>Input Parameters:</t>
+  
+      <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>pattern</c>
+        <c>string/number</c>
+        <c>String to specify patterns or Number used to reference predefined
+        pattern that a date should be parsed from.</c>
+        <c>text</c>
+        <c>string</c>
+        <c>The string that need to be parsed.</c>
+        <c>start</c>
+        <c>number</c>
+        <c>The character position in "text" where parse begins.</c>
+        <c>date</c>
+        <c>Date</c>
+        <c>The date object that will hold parsed value.</c>
+      </texttable>
       <t>The method returns the number of characters parsed or 0 if the 
       attempt to parse failed.</t>
-     </section>
+    </section>
      
-     <section title="gadgets.i18n.parseNumber" anchor="gadgets.i18n.parseNumber">
+    <section title="gadgets.i18n.parseNumber" anchor="gadgets.i18n.parseNumber">
       <t>The <spanx style="verb">gadgets.i18n.parseNumber</spanx> method
       parses a String to get a number the pattern specified. The
       pattern can be a string pattern or one of the predefined patterns.</t>
@@ -7744,36 +7746,35 @@
   assertEquals(0.30, value);
       </artwork></figure>
       
-      <t>Input Parameters:
-        <texttable align="left">
-          <ttcol>Name</ttcol>
-          <ttcol>Type</ttcol>
-          <ttcol>Description</ttcol>
-          <c>pattern</c>
-          <c>string/number</c>
-          <c>String to specify patterns or Number used to reference predefined
-          pattern that a number should be parsed from.</c>
-          <c>text</c>
-          <c>string</c>
-          <c>input text being parsed.</c>
-          <c>opt_pos</c>
-          <c>Array</c>
-          <c>optional one element array that holds position information. It tells
-          from where parse should begin. Upon return, it holds parse stop
-          position.</c>
-          <c>opt_currencyCode</c>
-          <c>string</c>
-          <c>optional international currency code, it determines the currency
-          code/symbol should be used in format/parse. If not given, the currency
-          code for current locale will be used.</c>
-        </texttable>
-      </t>
+      <t>Input Parameters:</t>
+  
+      <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>pattern</c>
+        <c>string/number</c>
+        <c>String to specify patterns or Number used to reference predefined
+        pattern that a number should be parsed from.</c>
+        <c>text</c>
+        <c>string</c>
+        <c>input text being parsed.</c>
+        <c>opt_pos</c>
+        <c>Array</c>
+        <c>optional one element array that holds position information. It tells
+        from where parse should begin. Upon return, it holds parse stop
+        position.</c>
+        <c>opt_currencyCode</c>
+        <c>string</c>
+        <c>optional international currency code, it determines the currency
+        code/symbol should be used in format/parse. If not given, the currency
+        code for current locale will be used.</c>
+      </texttable>
       
       <t>The method returns the parsed number or a 0 if the attempt to parse failed.</t>
-     </section>
     </section>
-    
-   </section>
+  </section> 
+</section>
    <!-- END JAVASCRIPT i18n -->
   
     <section title="The MiniMessage Feature" anchor="gadgets.MiniMessage">
@@ -7894,24 +7895,24 @@
   var messages = new gadgets.MiniMessage(id, container);
           </artwork></figure>
           
-          <t>The object constructor takes two parameters, both of which are optional:
-            <texttable align="left">
-              <ttcol>Name</ttcol>
-              <ttcol>Type</ttcol>
-              <ttcol>Description</ttcol>
-              <c>id</c>
-              <c>String</c>
-              <c>The container provided unique identifier of the application 
-              instance. This value can be determined using the 
-              <spanx style="verb">gadgets.Prefs.getModuleId()</spanx>
-              method.</c>
-              <c>container</c>
-              <c>HTMLElement</c>
-              <c>An object reference to the HTML element, typically a &lt;div&gt;
-              that will serve as the container for all messages managed by this
-              MiniMessage instance.</c>
-            </texttable>           
-          </t>
+          <t>The object constructor takes two parameters, both of which are optional:</t>
+    
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>id</c>
+            <c>String</c>
+            <c>The container provided unique identifier of the application 
+            instance. This value can be determined using the 
+            <spanx style="verb">gadgets.Prefs.getModuleId()</spanx>
+            method.</c>
+            <c>container</c>
+            <c>HTMLElement</c>
+            <c>An object reference to the HTML element, typically a &lt;div&gt;
+            that will serve as the container for all messages managed by this
+            MiniMessage instance.</c>
+          </texttable>           
           
           <t>Once created, the <spanx style="verb">gadgets.MiniMessage</spanx>
           object provides four methods for working with messages.</t>
@@ -7926,21 +7927,20 @@
   &lt;HTMLElement&gt; gadgets.MiniMessage.createDismissibleMessage(message, callback)
             </artwork></figure>
                   
-            <t>Input Parameters:
-              <texttable align="left">
-                <ttcol>Name</ttcol>
-                <ttcol>Type</ttcol>
-                <ttcol>Description</ttcol>
-                <c>message</c>
-                <c>String | Object</c>
-                <c>The message as an HTML string or DOM element</c>
-                <c>callback</c>
-                <c>Function</c>
-                <c>Optional callback function to be called when the message is
-                dismissed. The callback function will not be called until after the
-                existing callstack has completed execution.</c>
-              </texttable>
-            </t>
+            <t>Input Parameters:</t>
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>message</c>
+              <c>String | Object</c>
+              <c>The message as an HTML string or DOM element</c>
+              <c>callback</c>
+              <c>Function</c>
+              <c>Optional callback function to be called when the message is
+              dismissed. The callback function will not be called until after the
+              existing callstack has completed execution.</c>
+            </texttable>
             
             <t>If creation of the message is successful, the method will 
             return a reference to the HTMLElement that contains the 
@@ -7957,16 +7957,15 @@
   &lt;HTMLElement&gt; gadgets.MiniMessage.createStatusMessage(message)
             </artwork></figure>
           
-            <t>Input Parameters:
-              <texttable align="left">
-                <ttcol>Name</ttcol>
-                <ttcol>Type</ttcol>
-                <ttcol>Description</ttcol>
-                <c>message</c>
-                <c>String | Object</c>
-                <c>The message as an HTML string or DOM element</c>
-              </texttable>
-            </t>
+            <t>Input Parameters:</t>
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>message</c>
+              <c>String | Object</c>
+              <c>The message as an HTML string or DOM element</c>
+            </texttable>
             
             <t>If creation of the message is successful, the method will 
             return a reference to the HTMLElement that contains the 
@@ -7982,26 +7981,25 @@
   &lt;HTMLElement&gt; gadgets.MiniMessage.createTimerMessage(message, seconds, callback)
             </artwork></figure>
           
-            <t>Input Parameters:
-              <texttable align="left">
-                <ttcol>Name</ttcol>
-                <ttcol>Type</ttcol>
-                <ttcol>Description</ttcol>
-                <c>message</c>
-                <c>String | Object</c>
-                <c>The message as an HTML string or DOM element</c>
-                
-                <c>seconds</c>
-                <c>Number</c>
-                <c>The number of seconds to wait before dismissing the message.</c>
-                
-                <c>callback</c>
-                <c>Function</c>
-                <c>Optional callback function to be called when the message is
-                dismissed. The callback function will not be called until after the
-                existing callstack has completed execution.</c>
-              </texttable>
-            </t>
+            <t>Input Parameters:</t>
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>message</c>
+              <c>String | Object</c>
+              <c>The message as an HTML string or DOM element</c>
+              
+              <c>seconds</c>
+              <c>Number</c>
+              <c>The number of seconds to wait before dismissing the message.</c>
+              
+              <c>callback</c>
+              <c>Function</c>
+              <c>Optional callback function to be called when the message is
+              dismissed. The callback function will not be called until after the
+              existing callstack has completed execution.</c>
+            </texttable>
             
             <t>If creation of the message is successful, the method will 
             return a reference to the HTMLElement that contains the 
@@ -8142,27 +8140,26 @@
     closeCallback);
          </artwork></figure>
        
-         <t>The constructor accepts the following input parameters:
-          <texttable align="left">
-          <ttcol>Name</ttcol>
-          <ttcol>Type</ttcol>
-          <ttcol>Description</ttcol>
-          <c>destination</c>
-          <c>String</c>
-          <c>Target URL to display when the window opens.</c>
-          <c>windowOptions</c>
-          <c>String</c>
-          <c>Options for window.open, used to specify look and feel of the
-          window.</c>
-          <c>openCallback</c>
-          <c>Function</c>
-          <c>Function to call when the window is opened.</c>
-          <c>closeCallback</c>
-          <c>Function</c>
-          <c>Function to call when the window is closed.</c>
-          </texttable>
-         </t>
-       
+         <t>The constructor accepts the following input parameters:</t>
+         <texttable align="left">
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>destination</c>
+           <c>String</c>
+           <c>Target URL to display when the window opens.</c>
+           <c>windowOptions</c>
+           <c>String</c>
+           <c>Options for window.open, used to specify look and feel of the
+           window.</c>
+           <c>openCallback</c>
+           <c>Function</c>
+           <c>Function to call when the window is opened.</c>
+           <c>closeCallback</c>
+           <c>Function</c>
+           <c>Function to call when the window is closed.</c>
+         </texttable>
+        
          <t>The <spanx style="verb">gadgets.oauth.Popup</spanx>
          object exposes two methods: <spanx style="verb">createOpenerOnClick</spanx>
          and createApprovedOnClick.</t>
@@ -8631,37 +8628,36 @@
             
             <t>The <spanx style="verb">osapi.http</spanx> object exposes 
             one method for each of the following HTTP methods, each returning
-            an appropriate <spanx style="verb">osapi.Request</spanx>:
-              <texttable>
-                <ttcol>HTTP Method</ttcol>
-                <ttcol><spanx style="verb">osapi.http</spanx> Method</ttcol>
-                <ttcol>Description</ttcol>
-                <c>DELETE</c>
-                <c><spanx style="verb">osapi.http.delete</spanx></c>
-                <c>Returns an <spanx style="verb">osapi.Request</spanx>
-                object encapsulating an HTTP DELETE request.</c>
-                <c>GET</c>
-                <c><spanx style="verb">osapi.http.get</spanx></c>
-                <c>Returns an <spanx style="verb">osapi.Request</spanx>
-                object encapsulating an HTTP GET request.</c>
-                <c>HEAD</c>
-                <c><spanx style="verb">osapi.http.head</spanx></c>
-                <c>Returns an <spanx style="verb">osapi.Request</spanx>
-                object encapsulating an HTTP HEAD request.</c>
-                <c>PATCH</c>
-                <c><spanx style="verb">osapi.http.patch</spanx></c>
-                <c>Returns an <spanx style="verb">osapi.Request</spanx>
-                object encapsulating an HTTP PATCH request.</c>
-                <c>POST</c>
-                <c><spanx style="verb">osapi.http.post</spanx></c>
-                <c>Returns an <spanx style="verb">osapi.Request</spanx>
-                object encapsulating an HTTP POST request.</c>
-                <c>PUT</c>
-                <c><spanx style="verb">osapi.http.put</spanx></c>
-                <c>Returns an <spanx style="verb">osapi.Request</spanx>
-                object encapsulating an HTTP PUT request.</c>
-              </texttable>
-            </t>
+            an appropriate <spanx style="verb">osapi.Request</spanx>:</t>
+            <texttable>
+              <ttcol>HTTP Method</ttcol>
+              <ttcol>osapi.http Method</ttcol>
+              <ttcol>Description</ttcol>
+              <c>DELETE</c>
+              <c><spanx style="verb">osapi.http.delete</spanx></c>
+              <c>Returns an <spanx style="verb">osapi.Request</spanx>
+              object encapsulating an HTTP DELETE request.</c>
+              <c>GET</c>
+              <c><spanx style="verb">osapi.http.get</spanx></c>
+              <c>Returns an <spanx style="verb">osapi.Request</spanx>
+              object encapsulating an HTTP GET request.</c>
+              <c>HEAD</c>
+              <c><spanx style="verb">osapi.http.head</spanx></c>
+              <c>Returns an <spanx style="verb">osapi.Request</spanx>
+              object encapsulating an HTTP HEAD request.</c>
+              <c>PATCH</c>
+              <c><spanx style="verb">osapi.http.patch</spanx></c>
+              <c>Returns an <spanx style="verb">osapi.Request</spanx>
+              object encapsulating an HTTP PATCH request.</c>
+              <c>POST</c>
+              <c><spanx style="verb">osapi.http.post</spanx></c>
+              <c>Returns an <spanx style="verb">osapi.Request</spanx>
+              object encapsulating an HTTP POST request.</c>
+              <c>PUT</c>
+              <c><spanx style="verb">osapi.http.put</spanx></c>
+              <c>Returns an <spanx style="verb">osapi.Request</spanx>
+              object encapsulating an HTTP PUT request.</c>
+            </texttable>
             
             <t>Implementations are free to provide additional methods for 
             other HTTP methods. It is RECOMMENDED that such additional 
@@ -8680,131 +8676,131 @@
               whose individual properties define parameters used during the 
               execution of an HTTP Request.</t>
               
-              <t>The properties of the HTTP Request Parameters Objects are:
-                <texttable>
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
+              <t>The properties of the HTTP Request Parameters Objects are:</t>
+              <texttable>
+                <ttcol>Name</ttcol>
+                 <ttcol>Type</ttcol>
+                 <ttcol>Description</ttcol>
+                
+                <c>alias</c>
+                <c>String</c>
+                <c>When a specification document uses the &lt;ExternalService&gt;
+                element to define an alias for a Container-managed external 
+                service, the optional "alias" parameter can be used in place 
+                of the "href" property to identify the external service to which the 
+                request is to be directed. If unspecified, the default value 
+                for this parameter is assumed to be null.</c>
                   
-                  <c>alias</c>
-                  <c>String</c>
-                  <c>When a specification document uses the &lt;ExternalService&gt;
-                  element to define an alias for a Container-managed external 
-                  service, the optional "alias" parameter can be used in place 
-                  of the "href" property to identify the external service to which the 
-                  request is to be directed. If unspecified, the default value 
-                  for this parameter is assumed to be null.</c>
-                  
-                  <c>authz</c>
-                  <c>String</c>
-                  <c>Specifies the authorization method to use. Valid values are:
-                  "none", "signed", "oauth" and "oauth2". For convenience, 
-                  aliases for each of these values have been provided for 
-                  use in JavaScript code. These aliases are: 
-                  gadgets.io.AuthorizationType.NONE, gadgets.io.AuthorizationType.SIGNED,
-                  gadgets.io.AuthorizationType.OAUTH and gadgets.ioAuthorizationType.OAUTH2.
-                  If not specified, the default value for this parameter is assumed to be "none".</c>
+                <c>authz</c>
+                <c>String</c>
+                <c>Specifies the authorization method to use. Valid values are:
+                "none", "signed", "oauth" and "oauth2". For convenience, 
+                aliases for each of these values have been provided for 
+                use in JavaScript code. These aliases are: 
+                gadgets.io.AuthorizationType.NONE, gadgets.io.AuthorizationType.SIGNED,
+                gadgets.io.AuthorizationType.OAUTH and gadgets.ioAuthorizationType.OAUTH2.
+                If not specified, the default value for this parameter is assumed to be "none".</c>
 
-                  <c>format</c>
-                  <c>String</c>
-                  <c>Optionally specifies the data format the requested wishes 
-                  the response to use. Valid values are either "json" or "text",
-                  respectively indicating that the data SHOULD be returned as 
-                  either "application/json" or "text/plain". If not specified,
-                  the default value is assumed to be "json". The value of this
-                  parameter is used by the container to process the results of
-                  the HTTP operation. If format is equal to JSON, the container
-                  will attempt to parse the returned content as JSON, handing 
-                  the parsed result back to the provided callback function. If 
-                  the format is "text" or otherwise cannot be successfully parsed
-                  as JSON, the "raw" unparsed and unprocessed data provided by 
-                  the request will be passed to the callback function.</c>
+                <c>format</c>
+                <c>String</c>
+                <c>Optionally specifies the data format the requested wishes 
+                the response to use. Valid values are either "json" or "text",
+                respectively indicating that the data SHOULD be returned as 
+                either "application/json" or "text/plain". If not specified,
+                the default value is assumed to be "json". The value of this
+                parameter is used by the container to process the results of
+                the HTTP operation. If format is equal to JSON, the container
+                will attempt to parse the returned content as JSON, handing 
+                the parsed result back to the provided callback function. If 
+                the format is "text" or otherwise cannot be successfully parsed
+                as JSON, the "raw" unparsed and unprocessed data provided by 
+                the request will be passed to the callback function.</c>
                  
-                  <c>headers</c>
-                  <c>Object</c>
-                  <c>Specifies the collection of HTTP Request Headers the container
-                  SHOULD include in the request. The value is specified as an 
-                  associative map using the header names as a key and either a
-                  literal String value or an Array of Strings. For example, to 
-                  include "Accept-Language" and two "X-Custom" headers in the request, 
-                  the value of the "HEADERS" property would be set to 
-                  <spanx style="verb">{"Accept-Language":"de-DE", "X-Custom":["abc","xyz"]}</spanx>.</c>
+                <c>headers</c>
+                <c>Object</c>
+                <c>Specifies the collection of HTTP Request Headers the container
+                SHOULD include in the request. The value is specified as an 
+                associative map using the header names as a key and either a
+                literal String value or an Array of Strings. For example, to 
+                 include "Accept-Language" and two "X-Custom" headers in the request, 
+                the value of the "HEADERS" property would be set to 
+                <spanx style="verb">{"Accept-Language":"de-DE", "X-Custom":["abc","xyz"]}</spanx>.</c>
                   
-                  <c>href</c>
-                  <c>String</c>
-                  <c>The IRI to which the request is to be sent. If a relative 
-                  URI is provided, the request will be resolved relative to a 
-                  Base URI established by the container.</c>
+                <c>href</c>
+                <c>String</c>
+                <c>The IRI to which the request is to be sent. If a relative 
+                URI is provided, the request will be resolved relative to a 
+                Base URI established by the container.</c>
 
-                  <c>oauth_service_name</c>
-                  <c>String</c>
-                  <c>When the "authz" parameter is equal to either "OAUTH"
-                  or "OAUTH2", and the specification document uses the 
-                  &lt;OAuth&gt; or &lt;OAuth2&gt; elements within the &lt;ModulePrefs&gt;
-                  to define associated OAuth services, the "oauth_service_name" 
-                  parameter specifies the name of the &lt;Service&gt; element 
-                  that provides the OAuth Service details to use for the request.
-                  When not specified, the default value is assumed to be an 
-                  empty string (e.g. "").</c>
+                <c>oauth_service_name</c>
+                <c>String</c>
+                <c>When the "authz" parameter is equal to either "OAUTH"
+                or "OAUTH2", and the specification document uses the 
+                &lt;OAuth&gt; or &lt;OAuth2&gt; elements within the &lt;ModulePrefs&gt;
+                to define associated OAuth services, the "oauth_service_name" 
+                parameter specifies the name of the &lt;Service&gt; element 
+                that provides the OAuth Service details to use for the request.
+                When not specified, the default value is assumed to be an 
+                empty string (e.g. "").</c>
        
-                  <c>oauth_request_token</c>
-                  <c>String</c>
-                  <c>When the "authz" parameter is equal to either "OAUTH"
-                  or "OAUTH2", the "oauth_request_token" parameter can be used 
-                  to specified a pre-authorized OAuth Request Token for use in the 
-                  request. If the container does not already have an OAuth Access
-                  Token suitable for use with the request, the container SHOULD
-                  use the supplied Request Token to request and acquire a new 
-                  Access Token. If not specified, the default value is assumed
-                  to be null.</c>
+                <c>oauth_request_token</c>
+                <c>String</c>
+                <c>When the "authz" parameter is equal to either "OAUTH"
+                or "OAUTH2", the "oauth_request_token" parameter can be used 
+                to specified a pre-authorized OAuth Request Token for use in the 
+                request. If the container does not already have an OAuth Access
+                Token suitable for use with the request, the container SHOULD
+                use the supplied Request Token to request and acquire a new 
+                Access Token. If not specified, the default value is assumed
+                to be null.</c>
                  
-                  <c>oauth_request_token_secret</c>
-                  <c>String</c>
-                  <c>When the "oauth_request_token" parameter is specified,
-                  the "oauth_request_token_secret" parameter can be used to 
-                  supply an associated Request Token Secret. If not specified,
-                  the default value is assumed to be null.</c>
+                <c>oauth_request_token_secret</c>
+                <c>String</c>
+                <c>When the "oauth_request_token" parameter is specified,
+                the "oauth_request_token_secret" parameter can be used to 
+                supply an associated Request Token Secret. If not specified,
+                the default value is assumed to be null.</c>
                  
-                  <c>oauth2_scope</c>
-                  <c>String</c>
-                  <c>When the "authz" parameter is equal to "OAUTH",
-                  the "oauth2_scope" parameter specifies the value of the 
-                  OAuth 2.0 scope parameter the container SHOULD use with 
-                  the request. The scope parameter is defined in <xref target="I-D.draft-ietf-oauth-v2-25"/>.
-                  If not specified, the default value is assumed to be null, indicating
-                  that no scope parameter is to be provided.</c>
+                <c>oauth2_scope</c>
+                <c>String</c>
+                <c>When the "authz" parameter is equal to "OAUTH",
+                the "oauth2_scope" parameter specifies the value of the 
+                OAuth 2.0 scope parameter the container SHOULD use with 
+                the request. The scope parameter is defined in <xref target="I-D.ietf-oauth-v2"/>.
+                If not specified, the default value is assumed to be null, indicating
+                that no scope parameter is to be provided.</c>
                  
-                  <c>oauth_token_name</c>
-                  <c>String</c>
-                  <c>When the "authz" parameter is equal to either "OAUTH"
-                  or "OAUTH2", the application MAY use the "oauth_token_name" to specify
-                  an alias for the OAuth Access Token used for the request. If the 
-                  container does not yet have an appropriate Access Token to use
-                  with the request, it will follow the appropriate steps to acquire 
-                  one and cache it using the specified oauth_token_name value. On 
-                  subsequent requests, the specified oauth_token_name will be used
-                  to locate and use the cached Access Token. If not specified, the
-                  default value is assumed to be an empty string (e.g. "").</c>
+                <c>oauth_token_name</c>
+                <c>String</c>
+                <c>When the "authz" parameter is equal to either "OAUTH"
+                or "OAUTH2", the application MAY use the "oauth_token_name" to specify
+                an alias for the OAuth Access Token used for the request. If the 
+                container does not yet have an appropriate Access Token to use
+                with the request, it will follow the appropriate steps to acquire 
+                one and cache it using the specified oauth_token_name value. On 
+                subsequent requests, the specified oauth_token_name will be used
+                to locate and use the cached Access Token. If not specified, the
+                default value is assumed to be an empty string (e.g. "").</c>
                  
-                  <c>oauth_use_token</c>
-                  <c>String</c>
-                  <c>When the "authz" parameter is equal to either "OAUTH"
-                  or "OAUTH2", the container is typically required to acquire an
-                  appropriate OAuth Access Token prior to sending the request to
-                  the URL. The "oauth_use_token" parameter can be used to modify
-                  this default behavior. Valid values are: "never", "if_available"
-                  and "always". If not specified, the default value is assumed to 
-                  be "always". When "oauth_use_token" is equal to "never", the 
-                  container SHOULD NOT attempt to acquire an Access Token for the 
-                  request but SHOULD send the request to the URL just as it would 
-                  any other request using with OAuth 1.0a or OAuth 2.0 protocols. 
-                  When "oauth_use_token" is equal to "if_available", the container 
-                  SHOULD include the Access Token in the request only if an appropriate 
-                  token is available. If an Access Token is not available, the request
-                  SHOULD be sent to the URL without the Access Token. When "oauth_use_token"
-                  is equal to "always", the container is required to acquire an 
-                  Access Token prior to sending the request and MUST include that
-                  token in the request sent to the URL.</c>
+                <c>oauth_use_token</c>
+                <c>String</c>
+                <c>When the "authz" parameter is equal to either "OAUTH"
+                or "OAUTH2", the container is typically required to acquire an
+                appropriate OAuth Access Token prior to sending the request to
+                the URL. The "oauth_use_token" parameter can be used to modify
+                this default behavior. Valid values are: "never", "if_available"
+                and "always". If not specified, the default value is assumed to 
+                be "always". When "oauth_use_token" is equal to "never", the 
+                container SHOULD NOT attempt to acquire an Access Token for the 
+                request but SHOULD send the request to the URL just as it would 
+                any other request using with OAuth 1.0a or OAuth 2.0 protocols. 
+                When "oauth_use_token" is equal to "if_available", the container 
+                SHOULD include the Access Token in the request only if an appropriate 
+                token is available. If an Access Token is not available, the request
+                SHOULD be sent to the URL without the Access Token. When "oauth_use_token"
+                is equal to "always", the container is required to acquire an 
+                Access Token prior to sending the request and MUST include that
+                token in the request sent to the URL.</c>
                  
                   <c>body</c>
                   <c>String or JSON Object</c>
@@ -8842,8 +8838,7 @@
                   container SHOULD include the identity of the current Viewer when
                   signing the request. The value is specified as a Boolean. When 
                   not specified, the default value is assumed to be False.</c>  
-                </texttable>
-              </t>
+              </texttable>
 
             </section>  
 
@@ -8984,12 +8979,12 @@
     
     <section title="Initializing the Hub within the Container" anchor="ContainerExample">
 
-      <t>The following example illustrates a non-normative example how a 
-      container could provide support for this feature.</t>
+      <t>The following non-normative example illustrates how a container can 
+      provide support for this feature.</t>
 
-      <list style="numbers">
-        <t>Set default values:
-          <figure><artwork type="code">
+      <t>First, establish default values:</t> 
+
+      <figure><artwork>
   // Create a pubsub settings object
   gadgets.HubSettings = {};
 
@@ -9005,21 +9000,21 @@
   
   // Set default onComplete function for HubClient.connect
   gadgets.HubSettings.onConnected = function( hub, suc, err ) { };
-            </artwork></figure>
-        </t>
-        <t>Register an onLoad handler
-          <t>An onLoad handler to actually create the HubClient and connect it
-          to the ManagedHub. Delaying the HubClient creation and
-          connection allows the application to override default values stored
-          in gadgets.HubSettings. For example, IframeHubClient
-          supports params properties such as seed, tokenLength and log,
-          which are not set by default; and an application might need to
-          override onSecurityAlert and/or scope, for which default values
-          are provided. More importantly, the onComplete function for
-          HubClient.connect usually sets up the application's subscriptions by
-          calling gadgets.Hub.subscribe, or if the connection fails
-          asynchronously, the onComplete function handles the error.</t>
-          <figure><artwork type="code">
+      </artwork></figure>
+
+      <t>Next, register an onLoad handler to create the HubClient and connect 
+      it to the ManagedHub. Delaying the HubClient creation and
+      connection allows the application to override default values stored
+      in gadgets.HubSettings. For example, IframeHubClient
+      supports params properties such as seed, tokenLength and log,
+      which are not set by default; and an application might need to
+      override onSecurityAlert and/or scope, for which default values
+      are provided. More importantly, the onComplete function for
+      HubClient.connect usually sets up the application's subscriptions by
+      calling gadgets.Hub.subscribe, or if the connection fails
+      asynchronously, the onComplete function handles the error.</t>
+
+      <figure><artwork>
   // Register an onLoad handler
   gadgets.util.registerOnLoadHandler( function() {
     try {
@@ -9033,9 +9028,7 @@
       // ... 
     }
   } );
-          </artwork></figure>
-        </t>
-      </list>
+      </artwork></figure>
     </section>
     
     <section title="Examples" anchor="GadgetExample">
@@ -9150,23 +9143,22 @@
   &lt;static&gt; &lt;Void&gt; gadgets.Hub.publish(topic, payload)
           </artwork></figure>
         
-          <t>Input Parameters:
-            <texttable align="left">
-              <ttcol>Name</ttcol>
-              <ttcol>Type</ttcol>
-              <ttcol>Description</ttcol>
-              <c>topic</c>
-              <c>String</c>
-              <c>A string identifying the topic, conforming to the OpenAjax Hub
-              Topic Naming Rules. Topic wildcard values (e.g. "*") are NOT permitted.</c>
-              <c>payload</c>
-              <c>JSON Object or Primitive</c>
-              <c>The data that is being published. This can be be any object
-              serializable as JSON or a JavaScript primitive such as a String,
-              number, boolean or null. Copies of this data will be delivered, 
-              by-value, to all subscribers to the named topic.</c>
-            </texttable>
-          </t>    
+          <t>Input Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>topic</c>
+            <c>String</c>
+            <c>A string identifying the topic, conforming to the OpenAjax Hub
+            Topic Naming Rules. Topic wildcard values (e.g. "*") are NOT permitted.</c>
+            <c>payload</c>
+            <c>JSON Object or Primitive</c>
+            <c>The data that is being published. This can be be any object
+            serializable as JSON or a JavaScript primitive such as a String,
+            number, boolean or null. Copies of this data will be delivered, 
+            by-value, to all subscribers to the named topic.</c>
+          </texttable>
         
           <t>The "publish" method is anonymous. That is, the method does not
           automatically include any information identifying the source of 
@@ -9197,8 +9189,8 @@
   &lt;static&gt; &lt;String&gt; gadgets.Hub.subscribe(topic, callback [,scope [,onCompleteCallback [,subscriberData]]])
           </artwork></figure>      
            
-          <t>Input Parameters:
-            <texttable align="left">
+          <t>Input Parameters:</t>
+          <texttable align="left">
               <ttcol>Name</ttcol>
               <ttcol>Type</ttcol>
               <ttcol>Description</ttcol>
@@ -9225,8 +9217,8 @@
               <c>Arbitrary, subscriber provided data that is returned back to the
               client application in the subscriberData parameter of the callback
               function.</c>
-            </texttable>
-          </t>
+          </texttable>
+         
           <t>The method returns an opaque subscription identifier. This identifier is 
           an arbitrary, unique ID string that is used to unsubscribe 
           from the topic.</t>
@@ -9239,7 +9231,7 @@
   subId = gadgets.Hub.subscribe("org.example.my.object", callback);
           </artwork></figure>  
             
-          <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe">OpenAjax Hub documentation</eref> for
+          <t>See� the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe">OpenAjax Hub documentation</eref>� for
           more information</t>
         </section>
         
@@ -9253,23 +9245,22 @@
   &lt;static&gt; &lt;Void&gt; gadgets.Hub.unsubscribe(subscriptionId)
           </artwork></figure>
 
-          <t>Input Parameters:
-            <texttable align="left">
-              <ttcol>Name</ttcol>
-              <ttcol>Type</ttcol>
-              <ttcol>Description</ttcol>
-              <c>subscriptionId</c>
-              <c>String</c>
-              <c>The subscriptionId is the opaque string that is returned from the
-                  subscribe(...) method.</c>
-            </texttable>
-          </t>
+          <t>Input Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>subscriptionId</c>
+            <c>String</c>
+            <c>The subscriptionId is the opaque string that is returned from the
+                subscribe(...) method.</c>
+          </texttable>
             
           <figure><preamble>For example,</preamble><artwork>
   gadgets.Hub.unsubscribe(subId);
           </artwork></figure>
             
-          <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe">OpenAjax Hub documentation</eref> for
+          <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.unsubscribe">OpenAjax Hub documentation</eref> for
           more information.</t>
         </section>
 
@@ -9607,24 +9598,23 @@
     
       <section title="The Selection Object">
       
-        <t>Selection Objects are simple JSON-serializable Objects that 
-        consist of two basic properties:
-          <texttable align="left">
-            <ttcol>Name</ttcol>
-            <ttcol>Type</ttcol>
-            <ttcol>Description</ttcol>
+        <t>Selection Objects are simple JSON-serializable Objects that
+        consist of two basic properties:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
             
-            <c>type</c>
-            <c>String</c>
-            <c>A required data type identifier as defined in <xref target="EventDataTypes"/>
-            that specifies the kind of object that has been selected.</c>
+          <c>type</c>
+          <c>String</c>
+          <c>A required data type identifier as defined in <xref target="EventDataTypes"/>
+          that specifies the kind of object that has been selected.</c>
             
-            <c>dataObject</c>
-            <c>Object or Primitive</c>
-            <c>Any valid JSON-serializable object or JavaScript primitive that
-            represents the selected data.</c>
-          </texttable>
-        </t>
+          <c>dataObject</c>
+          <c>Object or Primitive</c>
+          <c>Any valid JSON-serializable object or JavaScript primitive that
+          represents the selected data.</c>
+        </texttable>
         
         <t>The current selection for a container will consist of an array
         of zero or more individual Selection Objects, each of which MAY 
@@ -9650,16 +9640,15 @@
    &lt;Static&gt; &lt;Void&gt; gadgets.selection.setSelection (selection)
         </artwork></figure>
 
-        <t>Input Parameters:
+        <t>Input Parameters:</t>
         <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>selection</c>
-             <c>Selection Objects[]</c>
-             <c>An array of zero or more Selection objects.</c>
-            </texttable>
-        </t>
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
+           <ttcol>Description</ttcol>
+           <c>selection</c>
+           <c>Selection Objects[]</c>
+           <c>An array of zero or more Selection objects.</c>
+        </texttable>
         <t>No return value is specified.</t> 
         
         <t>Calling the <spanx style="verb">gadgets.selection.setSelection</spanx>
@@ -9690,21 +9679,21 @@
   &lt;static&gt; &lt;Void&gt; gadgets.selection.addListener(event, callback)
         </artwork></figure>
         
-        <t>Input Parameters:
-          <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>event</c>
-             <c>String</c>
-             <c>The type of selection event (currently unused). Valid values 
-             are "selection", "preselection", "postselection" or null.</c>
-             <c>callback</c>
-             <c>Function</c>
-             <c>The callback function that is called for the specified 
-             selection event.</c>
-          </texttable>
-        </t>
+        <t>Input Parameters:</t>
+
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>event</c>
+          <c>String</c>
+          <c>The type of selection event (currently unused). Valid values 
+          are "selection", "preselection", "postselection" or null.</c>
+          <c>callback</c>
+          <c>Function</c>
+          <c>The callback function that is called for the specified 
+          selection event.</c>
+        </texttable>
         
         <t>Note that, currently, the "event" parameter is unused.</t>
         
@@ -9721,20 +9710,20 @@
   &lt;static&gt; &lt;Void&gt; gadgets.selection.removeListener(event, callback)
         </artwork></figure>
         
-        <t>Input Parameters:
-          <texttable align="left">
-             <ttcol>Name</ttcol>
-             <ttcol>Type</ttcol>
-             <ttcol>Description</ttcol>
-             <c>event</c>
-             <c>String</c>
-             <c>The type of selection event (currently unused). Valid values 
-             are "selection", "preselection", "postselection" or null.</c>
-             <c>callback</c>
-             <c>Function</c>
-             <c>The callback function to be unregistered.</c>
-          </texttable>
-        </t>
+        <t>Input Parameters:</t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>event</c>
+          <c>String</c>
+          <c>The type of selection event (currently unused). Valid values 
+          are "selection", "preselection", "postselection" or null.</c>
+          <c>callback</c>
+          <c>Function</c>
+           <c>The callback function to be unregistered.</c>
+        </texttable>
+        
         <t>Note that, currently, the "event" parameter is unused.</t>
         
         <t>No return value is specified.</t>
@@ -9999,71 +9988,71 @@
   &lt;static&gt; &lt;Void&gt; gadgets.views.openGadget(resultCallback, navigateCallback, opt_params)
               </artwork></figure>
               
-              <t>The method accepts three parameters as input.
-                <texttable align="left">
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  <c>resultCallback</c>
-                  <c>Function</c>
-                  <c>Specifies a callback Function that will be invoked by the
-                  container when the requested application has been closed using the 
-                  <spanx style="verb">gadgets.views.close</spanx> method. If 
-                  the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
-                  was called within the opened view, then the value specified
-                  will be passed to the callback function as a parameter.</c>
-                  <c>navigateCallback</c>
-                  <c>Function</c>
-                  <c>Specifies a callback Function that will be invoked by the 
-                  container when the requested view has been rendered. The 
-                  identifier the container assigns to the rendered view, 
-                  along with any additional appropriate metadata will be passed
-                  to the function as parameters. The identifier can be used 
-                  with the <spanx style="verb">gadgets.views.close</spanx> method
-                  to subsequently close the opened view.</c>
-                  <c>opt_params</c>
-                  <c>Object</c>
-                  <c>Specifies optional parameters that affect how the
-                  view is to be rendered.</c>
-                </texttable>              
-              </t>
+              <t>The method accepts three parameters as input.</t>
+
+              <texttable align="left">
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>resultCallback</c>
+                <c>Function</c>
+                <c>Specifies a callback Function that will be invoked by the
+                container when the requested application has been closed using the 
+                <spanx style="verb">gadgets.views.close</spanx> method. If 
+                the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
+                was called within the opened view, then the value specified
+                will be passed to the callback function as a parameter.</c>
+                <c>navigateCallback</c>
+                <c>Function</c>
+                <c>Specifies a callback Function that will be invoked by the 
+                container when the requested view has been rendered. The 
+                identifier the container assigns to the rendered view, 
+                along with any additional appropriate metadata will be passed
+                to the function as parameters. The identifier can be used 
+                with the <spanx style="verb">gadgets.views.close</spanx> method
+                to subsequently close the opened view.</c>
+                <c>opt_params</c>
+                <c>Object</c>
+                <c>Specifies optional parameters that affect how the
+                view is to be rendered.</c>
+              </texttable>              
              
               <t>No return value is specified for the method.</t>
 
               <t>The following optional items MAY be specified as properties
-              on the "opt_params" parameter value:
-                <texttable align="left">
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  <c>view</c>
-                  <c>String </c>
-                  <c>Identifies the specific view the container is to 
-                  render. If not provided, the container will render the
-                  default unnamed view.</c>
-                  <c>viewTarget </c>
-                  <c>String </c>
-                  <c>Identifies where and how the container is to render the 
-                  view, specified as a 
-                  <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
-                  For example, specifying a viewTarget of <spanx style="verb">MODALDIALOG</spanx> 
-                  will cause the view to be rendered by the container in a modal
-                  popup dialog box; whereas specifying a viewTarget of "tab"
-                  will cause the container to render the view within a new 
-                  container tab.</c>  
-                  <c>viewParams </c>
-                  <c>Object</c>
-                  <c>An arbitrary collection of view parameters to pass along
-                  to the view being rendered.</c>
-                  <c>coordinates</c>
-                  <c><xref target="gadgets.views.coordinates">Coordinate Object</xref></c>
-                  <c>When viewTarget equals "FLOAT", the coordinates object
-                  MAY be used to provide suggested positioning information
-                  the container can use when deciding where, within the 
-                  container, the view is to be renderered relative to the 
-                  opening application.</c>
-                </texttable>
-              </t>
+              on the "opt_params" parameter value:</t>
+  
+              <texttable align="left">
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>view</c>
+                <c>String </c>
+                <c>Identifies the specific view the container is to 
+                render. If not provided, the container will render the
+                default unnamed view.</c>
+                <c>viewTarget </c>
+                <c>String </c>
+                <c>Identifies where and how the container is to render the 
+                view, specified as a 
+                <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
+                For example, specifying a viewTarget of <spanx style="verb">MODALDIALOG</spanx> 
+                will cause the view to be rendered by the container in a modal
+                popup dialog box; whereas specifying a viewTarget of "tab"
+                will cause the container to render the view within a new 
+                container tab.</c>  
+                <c>viewParams </c>
+                <c>Object</c>
+                <c>An arbitrary collection of view parameters to pass along
+                to the view being rendered.</c>
+                <c>coordinates</c>
+                <c><xref target="gadgets.views.coordinates">Coordinate Object</xref></c>
+                <c>When viewTarget equals "FLOAT", the coordinates object
+                MAY be used to provide suggested positioning information
+                the container can use when deciding where, within the 
+                container, the view is to be renderered relative to the 
+                opening application.</c>
+              </texttable>
               
               <figure><preamble>For example, in the following sample, code 
               running with the default view opens the view named "foo" in 
@@ -10111,77 +10100,76 @@
   &lt;static&gt; &lt;Void&gt; gadgets.views.openEmbeddedExperience(resultCallback, navigateCallback, dataModel, opt_params)
               </artwork></figure>
              
-              <t>The method accepts four parameters as input.
-                <texttable align="left">
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  <c>resultCallback</c>
-                  <c>Function</c>
-                  <c>Specifies a callback Function that will be invoked by the
-                  container when the specified view has been closed using the 
-                  <spanx style="verb">gadgets.views.close</spanx> method. If 
-                  the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
-                  was called within the opened view, then the value specified
-                  will be passed to the callback function as a parameter.</c>
-                  <c>navigateCallback</c>
-                  <c>Function</c>
-                  <c>Specifies a callback Function that will be invoked by the 
-                  container when the requested view has been rendered. The 
-                  identifier the container assigns to the rendered view, 
-                  along with any additional appropriate metadata will be passed
-                  to the function as parameters. The identifier can be used 
-                  with the <spanx style="verb">gadgets.views.close</spanx> method
-                  to subsequently close the opened view.</c>
-                  <c>dataModel</c>
-                  <c></c>
-                  <c>Specifies the Embedded Experiences Data model to use 
-                  when rendering. The model is passed in as a JavaScript 
-                  object conforming to the JSON embedded experiences format
-                  as defined in <xref target="Embedded-Experiences"/>.</c>
-                  <c>opt_params</c>
-                  <c>Object</c>
-                  <c>Specifies optional parameters that affect how the
-                  view is to be rendered.</c>
-                </texttable>              
-              </t>
+              <t>The method accepts four parameters as input.</t>
+              <texttable align="left">
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>resultCallback</c>
+                 <c>Function</c>
+                <c>Specifies a callback Function that will be invoked by the
+                container when the specified view has been closed using the 
+                <spanx style="verb">gadgets.views.close</spanx> method. If 
+                the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
+                was called within the opened view, then the value specified
+                will be passed to the callback function as a parameter.</c>
+                <c>navigateCallback</c>
+                <c>Function</c>
+                <c>Specifies a callback Function that will be invoked by the 
+                container when the requested view has been rendered. The 
+                identifier the container assigns to the rendered view, 
+                along with any additional appropriate metadata will be passed
+                to the function as parameters. The identifier can be used 
+                with the <spanx style="verb">gadgets.views.close</spanx> method
+                to subsequently close the opened view.</c>
+                <c>dataModel</c>
+                <c>TODO:</c>
+                <c>Specifies the Embedded Experiences Data model to use 
+                when rendering. The model is passed in as a JavaScript 
+                object conforming to the JSON embedded experiences format
+                as defined in <xref target="Embedded-Experiences"/>.</c>
+                <c>opt_params</c>
+                <c>Object</c>
+                <c>Specifies optional parameters that affect how the
+                view is to be rendered.</c>
+              </texttable>              
               
               <t>No return value is specified for the method.</t>
 
               <t>The following optional items MAY be specified as properties
-              on the "opt_params" parameter value:
-                <texttable align="left">
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  <c>view</c>
-                  <c>String </c>
-                  <c>Identifies the specific view the container is to 
-                  render. If not provided, the container will render the
-                  default unnamed view.</c>
-                  <c>viewTarget </c>
-                  <c>String </c>
-                  <c>Identifies where and how the container is to render the 
-                  view, specified as a 
-                  <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
-                  For example, specifying a viewTarget of "modalDialog" will
-                  cause the view to be rendered by the container in a modal
-                  popup dialog box; whereas specifying a viewTarget of "tab"
-                  will cause the container to render the view within a new 
-                  container tab.</c>  
-                  <c>viewParams</c>
-                  <c>Object</c>
-                  <c>An arbitrary collection of view parameters to pass along
-                  to the view being rendered.</c>
-                  <c>coordinates</c>
-                  <c><xref target="gadgets.views.coordinates">Coordinate Object</xref></c>
-                  <c>When viewTarget equals "FLOAT", the coordinates object
-                  MAY be used to provide suggested positioning information
-                  the container can use when deciding where, within the 
-                  container, the view is to be renderered relative to the 
-                  opening view.</c>
-                </texttable>
-              </t>
+              on the "opt_params" parameter value:</t>
+    
+              <texttable align="left">
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>view</c>
+                <c>String </c>
+                <c>Identifies the specific view the container is to 
+                render. If not provided, the container will render the
+                default unnamed view.</c>
+                <c>viewTarget </c>
+                <c>String </c>
+                <c>Identifies where and how the container is to render the 
+                view, specified as a 
+                <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
+                For example, specifying a viewTarget of "modalDialog" will
+                cause the view to be rendered by the container in a modal
+                popup dialog box; whereas specifying a viewTarget of "tab"
+                will cause the container to render the view within a new 
+                container tab.</c>  
+                <c>viewParams</c>
+                <c>Object</c>
+                <c>An arbitrary collection of view parameters to pass along
+                to the view being rendered.</c>
+                <c>coordinates</c>
+                <c><xref target="gadgets.views.coordinates">Coordinate Object</xref></c>
+                <c>When viewTarget equals "FLOAT", the coordinates object
+                MAY be used to provide suggested positioning information
+                the container can use when deciding where, within the 
+                container, the view is to be renderered relative to the 
+                opening view.</c>
+              </texttable>
               
               <figure><preamble>For example, in the following sample, code 
               running with the default view opens a URL as an embedded 
@@ -10224,34 +10212,33 @@
   &lt;static&gt; &lt;Void&gt; gadgets.views.openUrl(url, navigateCallback, opt_viewTarget)
               </artwork></figure>
              
-              <t>The method accepts three parameters as input:
-                <texttable align="left">
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  <c>url</c>
-                  <c>String</c>
-                  <c>The URL of the web page whose content will be displayed.</c>
-                  <c>navigateCallback</c>
-                  <c>Function</c>
-                  <c>Specifies a callback Function that will be invoked by the 
-                  container when the requested view has been rendered. The 
-                  identifier the container assigns to the rendered view, 
-                  along with any additional appropriate metadata will be passed
-                  to the function as parameters. The identifier can be used 
-                  with the <spanx style="verb">gadgets.views.close</spanx> method
-                  to subsequently close the opened view.</c>
-                  <c>opt_viewTarget </c>
-                  <c>String </c>
-                  <c>Optionally identifies where and how the container is to render the 
-                  view, specified as a <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
-                  For example, specifying a viewTarget of "modalDialog" will
-                  cause the URL to be rendered by the container within a modal
-                  popup dialog box; whereas specifying a viewTarget of "tab"
-                  will cause the container to render the URL within a new 
-                  container tab.</c>
-                </texttable>
-              </t>
+              <t>The method accepts three parameters as input:</t>
+              <texttable align="left">
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>url</c>
+                <c>String</c>
+                <c>The URL of the web page whose content will be displayed.</c>
+                <c>navigateCallback</c>
+                <c>Function</c>
+                <c>Specifies a callback Function that will be invoked by the 
+                container when the requested view has been rendered. The 
+                identifier the container assigns to the rendered view, 
+                along with any additional appropriate metadata will be passed
+                to the function as parameters. The identifier can be used 
+                with the <spanx style="verb">gadgets.views.close</spanx> method
+                to subsequently close the opened view.</c>
+                <c>opt_viewTarget </c>
+                <c>String </c>
+                <c>Optionally identifies where and how the container is to render the 
+                view, specified as a <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
+                For example, specifying a viewTarget of "modalDialog" will
+                cause the URL to be rendered by the container within a modal
+                popup dialog box; whereas specifying a viewTarget of "tab"
+                will cause the container to render the URL within a new 
+                container tab.</c>
+              </texttable>
               
               <figure><preamble>For example:</preamble><artwork>
   &lt;Module&gt;
@@ -10287,19 +10274,18 @@
   &lt;static&gt; &lt;Void&gt; gadgets.views.close(opt_site_handler)
               </artwork></figure>
                
-              <t>Parameters:
-                <texttable align="left">
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  <c>opt_site_handler</c>
-                  <c>Object</c>
-                  <c>Optional parameter which specifies handler to what site 
-                  to close. If null or unspecified, it will close the view 
-                  within which the call to <spanx style="verb">gadgets.views.close</spanx>
-                  was made.</c>
-                </texttable>
-              </t>
+              <t>Parameters:</t>
+              <texttable align="left">
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>opt_site_handler</c>
+                <c>Object</c>
+                <c>Optional parameter which specifies handler to what site 
+                to close. If null or unspecified, it will close the view 
+                within which the call to <spanx style="verb">gadgets.views.close</spanx>
+                was made.</c>
+              </texttable>
             </section>
             
             <section title="gadgets.views.setReturnValue" anchor="gadgets.views.setReturnValue">
@@ -10393,47 +10379,47 @@
               "coordinates" property can be specified to provide the specific
               preferred coordinates at which the floating content is to be 
               positioned. The value of the "coordinates" property is a JavaScript
-              object with the following four properties:
+              object with the following four properties:</t>
               
-                <texttable>
-                  <ttcol>Name</ttcol>
-                  <ttcol>Type</ttcol>
-                  <ttcol>Description</ttcol>
-                  
-                  <c>top</c>
-                  <c>Number</c>
-                  <c>Specifies the suggested absolute top position, in pixels,
-                  of the rendered content relative to the top position of the 
-                  opening view. If "top" is specified, the "bottom" property
-                  MUST NOT be specified.</c>
-                  
-                  <c>bottom</c>
-                  <c>Number</c>
-                  <c>Specifies the suggested absolute bottom position, in pixels,
-                  of the rendered content relative to the bottom position of the 
-                  opening view. If "bottom" is specified, the "top" property
-                  MUST NOT be specified.</c>
-                  
-                  <c>left</c>
-                  <c>Number</c>
-                  <c>Specifies the suggested absolute left position, in pixels,
-                  of the rendered content relative to the bottom position of the
-                  opening view. If "left" is specified, the "right" property
-                  MUST NOT be specified.</c>
-                  
-                  <c>right</c>
-                  <c>Number</c>
-                  <c>Specifies the suggested absolute right position, in pixels,
-                  of the rendered content relative to the right position of the
-                  opening view. If "right" is specified, the "left" property
-                  MUST NOT be specified.</c>
-                  
-                </texttable>
+              <texttable>
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
                 
-                <t>Support for the "coordinates" property is only defined when
-                the "viewTarget" property is equal to "FLOAT".</t>
+                <c>top</c>
+                <c>Number</c>
+                <c>Specifies the suggested absolute top position, in pixels,
+                of the rendered content relative to the top position of the 
+                opening view. If "top" is specified, the "bottom" property
+                MUST NOT be specified.</c>
+                
+                <c>bottom</c>
+                <c>Number</c>
+                <c>Specifies the suggested absolute bottom position, in pixels,
+                of the rendered content relative to the bottom position of the 
+                opening view. If "bottom" is specified, the "top" property
+                MUST NOT be specified.</c>
+                  
+                <c>left</c>
+                <c>Number</c>
+                <c>Specifies the suggested absolute left position, in pixels,
+                of the rendered content relative to the bottom position of the
+                opening view. If "left" is specified, the "right" property
+                MUST NOT be specified.</c>
+                
+                <c>right</c>
+                <c>Number</c>
+                <c>Specifies the suggested absolute right position, in pixels,
+                of the rendered content relative to the right position of the
+                opening view. If "right" is specified, the "left" property
+                MUST NOT be specified.</c>
+                  
+              </texttable>
+                
+              <t>Support for the "coordinates" property is only defined when
+              the "viewTarget" property is equal to "FLOAT".</t>
               
-                <figure><preamble>For example:</preamble><artwork>
+              <figure><preamble>For example:</preamble><artwork>
   gadgets.views.openGadget(
     function(response) {},
     function(id) {},
@@ -10446,10 +10432,8 @@
       }
     }
   );
-                </artwork></figure>
+              </artwork></figure>
               
-              </t>
-            
             </section>
       
           </section>
@@ -10706,6 +10690,7 @@
     &rfc5849;
     &rfc5988;
     &rfc2617;
+    &rfc5234;
     &oauth2;
     &bearer;
     &mac;
@@ -10715,9 +10700,21 @@
     &jspel;
     &oahub;
     &opensocial;
-    &coreapi;
-    &socialapi;
     &templating;
+<reference anchor="core-api" target="../Core-API.xml">
+  <front>
+    <title>OpenSocial Core API Specification v3.0</title>
+    <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>
+    <date month="April" year="2012"/>
+  </front>
+</reference>
+<reference anchor="social-app" target="../Core-API.xml">
+  <front>
+    <title>OpenSocial Social Application Specification 3.0</title>
+    <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>
+    <date month="April" year="2012"/>
+  </front>
+</reference>
   </references>
  </back>
 </rfc>

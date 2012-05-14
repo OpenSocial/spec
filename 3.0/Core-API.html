@@ -1,0 +1,1940 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard%20http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>OpenSocial Core API Specification 3.0</title>
+
+  <style type="text/css" title="Xml2Rfc (sans serif)">
+  /*<![CDATA[*/
+	  a {
+	  text-decoration: none;
+	  }
+	  a.smpl {
+	  color: black;
+	  }
+	  a:hover {
+	  text-decoration: underline;
+	  }
+	  a:active {
+	  text-decoration: underline;
+	  }
+	  address {
+	  margin-top: 1em;
+	  margin-left: 2em;
+	  font-style: normal;
+	  }
+	  body {
+	  color: black;
+	  font-family: verdana, helvetica, arial, sans-serif;
+	  font-size: 10pt;
+	  
+	  }
+	  cite {
+	  font-style: normal;
+	  }
+	  dd {
+	  margin-right: 2em;
+	  }
+	  dl {
+	  margin-left: 2em;
+	  }
+	
+	  ul.empty {
+	  list-style-type: none;
+	  }
+	  ul.empty li {
+	  margin-top: .5em;
+	  }
+	  dl p {
+	  margin-left: 0em;
+	  }
+	  dt {
+	  margin-top: .5em;
+	  }
+	  h1 {
+	  font-size: 14pt;
+	  line-height: 21pt;
+	  page-break-after: avoid;
+	  }
+	  h1.np {
+	  page-break-before: always;
+	  }
+	  h1 a {
+	  color: #333333;
+	  }
+	  h2 {
+	  font-size: 12pt;
+	  line-height: 15pt;
+	  page-break-after: avoid;
+	  }
+	  h3, h4, h5, h6 {
+	  font-size: 10pt;
+	  page-break-after: avoid;
+	  }
+	  h2 a, h3 a, h4 a, h5 a, h6 a {
+	  color: black;
+	  }
+	  img {
+	  margin-left: 3em;
+	  }
+	  li {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol p {
+	  margin-left: 0em;
+	  }
+	  p {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  pre {
+	  margin-left: 3em;
+	  background-color: lightyellow;
+	  padding: .25em;
+	  }
+	  pre.text2 {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f0f0f0;
+	  width: 69em;
+	  }
+	  pre.inline {
+	  background-color: white;
+	  padding: 0em;
+	  }
+	  pre.text {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  width: 69em;
+	  }
+	  pre.drawing {
+	  border-style: solid;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  padding: 2em;
+	  }
+	  table {
+	  margin-left: 2em;
+	  }
+	  table.tt {
+	  vertical-align: top;
+	  }
+	  table.full {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.headers {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.tt td {
+	  vertical-align: top;
+	  }
+	  table.full td {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.tt th {
+	  vertical-align: top;
+	  }
+	  table.full th {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.headers th {
+	  border-style: none none inset none;
+	  border-width: 1px;
+	  }
+	  table.left {
+	  margin-right: auto;
+	  }
+	  table.right {
+	  margin-left: auto;
+	  }
+	  table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	  }
+	  caption {
+	  caption-side: bottom;
+	  font-weight: bold;
+	  font-size: 9pt;
+	  margin-top: .5em;
+	  }
+	
+	  table.header {
+	  border-spacing: 1px;
+	  width: 95%;
+	  font-size: 10pt;
+	  color: white;
+	  }
+	  td.top {
+	  vertical-align: top;
+	  }
+	  td.topnowrap {
+	  vertical-align: top;
+	  white-space: nowrap; 
+	  }
+	  table.header td {
+	  background-color: gray;
+	  width: 50%;
+	  }
+	  table.header a {
+	  color: white;
+	  }
+	  td.reference {
+	  vertical-align: top;
+	  white-space: nowrap;
+	  padding-right: 1em;
+	  }
+	  thead {
+	  display:table-header-group;
+	  }
+	  ul.toc, ul.toc ul {
+	  list-style: none;
+	  margin-left: 1.5em;
+	  margin-right: 0em;
+	  padding-left: 0em;
+	  }
+	  ul.toc li {
+	  line-height: 150%;
+	  font-weight: bold;
+	  font-size: 10pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  ul.toc li li {
+	  line-height: normal;
+	  font-weight: normal;
+	  font-size: 9pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  li.excluded {
+	  font-size: 0pt;
+	  }
+	  ul p {
+	  margin-left: 0em;
+	  }
+	
+	  .comment {
+	  background-color: yellow;
+	  }
+	  .center {
+	  text-align: center;
+	  }
+	  .error {
+	  color: red;
+	  font-style: italic;
+	  font-weight: bold;
+	  }
+	  .figure {
+	  font-weight: bold;
+	  text-align: center;
+	  font-size: 9pt;
+	  }
+	  .filename {
+	  color: #333333;
+	  font-weight: bold;
+	  font-size: 12pt;
+	  line-height: 21pt;
+	  text-align: center;
+	  }
+	  .fn {
+	  font-weight: bold;
+	  }
+	  .hidden {
+	  display: none;
+	  }
+	  .left {
+	  text-align: left;
+	  }
+	  .right {
+	  text-align: right;
+	  }
+	  .title {
+	  color: #990000;
+	  font-size: 18pt;
+	  line-height: 18pt;
+	  font-weight: bold;
+	  text-align: center;
+	  margin-top: 36pt;
+	  }
+	  .vcardline {
+	  display: block;
+	  }
+	  .warning {
+	  font-size: 14pt;
+	  background-color: yellow;
+	  }
+	
+	
+	  @media print {
+	  .noprint {
+		display: none;
+	  }
+	
+	  a {
+		color: black;
+		text-decoration: none;
+	  }
+	
+	  table.header {
+		width: 90%;
+	  }
+	
+	  td.header {
+		width: 50%;
+		color: black;
+		background-color: white;
+		vertical-align: top;
+		font-size: 12pt;
+	  }
+	
+	  ul.toc a::after {
+		content: leader('.') target-counter(attr(href), page);
+	  }
+	
+	  ul.ind li li a {
+		content: target-counter(attr(href), page);
+	  }
+	
+	  .print2col {
+		column-count: 2;
+		-moz-column-count: 2;
+		column-fill: auto;
+	  }
+	  }
+	
+	  @page {
+	  @top-left {
+		   content: "Internet-Draft"; 
+	  } 
+	  @top-right {
+		   content: "December 2010"; 
+	  } 
+	  @top-center {
+		   content: "Abbreviated Title";3
+	  } 
+	  @bottom-left {
+		   content: "Doe"; 
+	  } 
+	  @bottom-center {
+		   content: "Expires June 2011"; 
+	  } 
+	  @bottom-right {
+		   content: "[Page " counter(page) "]"; 
+	  } 
+	  }
+	
+	  @page:first { 
+		@top-left {
+		  content: normal;
+		}
+		@top-right {
+		  content: normal;
+		}
+		@top-center {
+		  content: normal;
+		}
+	  }
+  /*]]>*/
+  </style>
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Notation and Conventions">
+<link href="#rfc.section.2" rel="Chapter" title="2 REST Services">
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 Common URI Structure">
+<link href="#rfc.section.2.2" rel="Chapter" title="2.2 Service Identifiers">
+<link href="#rfc.section.2.3" rel="Chapter" title="2.3 Local Identifiers">
+<link href="#rfc.section.2.3.1" rel="Chapter" title='2.3.1 The "@me" Alias'>
+<link href="#rfc.section.2.3.2" rel="Chapter" title='2.3.2 The "@anonymous" Alias'>
+<link href="#rfc.section.2.3.3" rel="Chapter" title='2.3.3 The "@public" Alias'>
+<link href="#rfc.section.2.3.4" rel="Chapter" title="2.3.4 Legacy Global Identifiers">
+<link href="#rfc.section.2.4" rel="Chapter" title="2.4 Aspect Identifiers">
+<link href="#rfc.section.2.5" rel="Chapter" title="2.5 Filters">
+<link href="#rfc.section.2.6" rel="Chapter" title="2.6 Standard Query Parameters">
+<link href="#rfc.section.2.6.1" rel="Chapter" title='2.6.1 The "filterOp" Parameter'>
+<link href="#rfc.section.2.6.2" rel="Chapter" title='2.6.2 The "sort" Parameter'>
+<link href="#rfc.section.2.7" rel="Chapter" title="2.7 Conditional Requests">
+<link href="#rfc.section.2.8" rel="Chapter" title="2.8 Full vs. Partial Modification">
+<link href="#rfc.section.2.8.1" rel="Chapter" title="2.8.1 PATCH Document Formats">
+<link href="#rfc.section.2.9" rel="Chapter" title="2.9 Error Handling">
+<link href="#rfc.section.2.9.1" rel="Chapter" title="2.9.1 The Error Object">
+<link href="#rfc.section.2.10" rel="Chapter" title="2.10 Multiple resource and aspect operations">
+<link href="#rfc.section.2.11" rel="Chapter" title="2.11 Operation Identifiers">
+<link href="#rfc.section.3" rel="Chapter" title="3 Dates, Times and Timezone Offsets">
+<link href="#rfc.section.4" rel="Chapter" title="4 Data Objects">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Collection Objects">
+<link href="#rfc.section.4.1.1" rel="Chapter" title="4.1.1 Multi-page Collections">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Plural Objects">
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Data Object Extensions">
+<link href="#rfc.section.4.3.1" rel="Chapter" title="4.3.1 Avoiding Naming Conflicts">
+<link href="#rfc.section.4.4" rel="Chapter" title="4.4 Data Object Type Identifiers">
+<link href="#rfc.section.4.4.1" rel="Chapter" title="4.4.1 Legacy Data Type Identifiers">
+<link href="#rfc.section.5" rel="Chapter" title="5 Security">
+<link href="#rfc.section.5.1" rel="Chapter" title="5.1 OAuth 1.0a and 2.0 Support">
+<link href="#rfc.section.5.2" rel="Chapter" title="5.2 Signed Fetch">
+<link href="#rfc.section.6" rel="Chapter" title="6 Versioning">
+<link href="#rfc.section.6.1" rel="Chapter" title="6.1 Upgrade Indication and Transition">
+<link href="#rfc.section.7" rel="Chapter" title="7 Registry of Service Identifiers">
+<link href="#rfc.section.8" rel="Chapter" title="8 Registry of Aspect Identifiers">
+<link href="#rfc.references" rel="Chapter" title="9 References">
+<link href="#rfc.references.1" rel="Chapter" title="9.1 Normative References">
+<link href="#rfc.references.2" rel="Chapter" title="9.2 Informative References">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content=
+  "http://greenbytes.de/tech/webdav/rfc2629.xslt, Revision 1.539, 2011-01-02 17:13:00, XSLT vendor: SAXON 6.5.5 from Michael Kay http://saxon.sf.net/" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+  <meta name="dct.creator" content="Doe, J." />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-sample-input-00" />
+  <meta name="dct.issued" scheme="ISO8601" content="2010-12" />
+  
+  <meta name="dct.abstract" content="TBD" />
+  <meta name="description" content="TBD" />
+  <meta name="keywords" content="" />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">Network Working Group</td>
+<td class="right"></td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">April 2012</td>
+</tr>
+<tr>
+<td class="left">Expires: October 01, 2012</td>
+<td class="right"></td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">OpenSocial Core API Specification 3.0<br />
+  <span class="filename"></span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>TBD</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of this Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet- Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on October 01, 2012.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2012 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<li>1.1.   <a href="#rfc.section.1.1">Notation and Conventions</a>
+</li>
+<li>2.   <a href="#rfc.section.2">REST Services</a>
+</li>
+<li>2.1.   <a href="#rfc.section.2.1">Common URI Structure</a>
+</li>
+<li>2.2.   <a href="#rfc.section.2.2">Service Identifiers</a>
+</li>
+<li>2.3.   <a href="#rfc.section.2.3">Local Identifiers</a>
+</li>
+<li>2.3.1.   <a href="#rfc.section.2.3.1">The "@me" Alias</a>
+</li>
+<li>2.3.2.   <a href="#rfc.section.2.3.2">The "@anonymous" Alias</a>
+</li>
+<li>2.3.3.   <a href="#rfc.section.2.3.3">The "@public" Alias</a>
+</li>
+<li>2.3.4.   <a href="#rfc.section.2.3.4">Legacy Global Identifiers</a>
+</li>
+<li>2.4.   <a href="#rfc.section.2.4">Aspect Identifiers</a>
+</li>
+<li>2.5.   <a href="#rfc.section.2.5">Filters</a>
+</li>
+<li>2.6.   <a href="#rfc.section.2.6">Standard Query Parameters</a>
+</li>
+<li>2.6.1.   <a href="#rfc.section.2.6.1">The "filterOp" Parameter</a>
+</li>
+<li>2.6.2.   <a href="#rfc.section.2.6.2">The "sort" Parameter</a>
+</li>
+<li>2.7.   <a href="#rfc.section.2.7">Conditional Requests</a>
+</li>
+<li>2.8.   <a href="#rfc.section.2.8">Full vs. Partial Modification</a>
+</li>
+<li>2.8.1.   <a href="#rfc.section.2.8.1">PATCH Document Formats</a>
+</li>
+<li>2.9.   <a href="#rfc.section.2.9">Error Handling</a>
+</li>
+<li>2.9.1.   <a href="#rfc.section.2.9.1">The Error Object</a>
+</li>
+<li>2.10.   <a href="#rfc.section.2.10">Multiple resource and aspect operations</a>
+</li>
+<li>2.11.   <a href="#rfc.section.2.11">Operation Identifiers</a>
+</li>
+<li>3.   <a href="#rfc.section.3">Dates, Times and Timezone Offsets</a>
+</li>
+<li>4.   <a href="#rfc.section.4">Data Objects</a>
+</li>
+<li>4.1.   <a href="#rfc.section.4.1">Collection Objects</a>
+</li>
+<li>4.1.1.   <a href="#rfc.section.4.1.1">Multi-page Collections</a>
+</li>
+<li>4.2.   <a href="#rfc.section.4.2">Plural Objects</a>
+</li>
+<li>4.3.   <a href="#rfc.section.4.3">Data Object Extensions</a>
+</li>
+<li>4.3.1.   <a href="#rfc.section.4.3.1">Avoiding Naming Conflicts</a>
+</li>
+<li>4.4.   <a href="#rfc.section.4.4">Data Object Type Identifiers</a>
+</li>
+<li>4.4.1.   <a href="#rfc.section.4.4.1">Legacy Data Type Identifiers</a>
+</li>
+<li>5.   <a href="#rfc.section.5">Security</a>
+</li>
+<li>5.1.   <a href="#rfc.section.5.1">OAuth 1.0a and 2.0 Support</a>
+</li>
+<li>5.2.   <a href="#rfc.section.5.2">Signed Fetch</a>
+</li>
+<li>6.   <a href="#rfc.section.6">Versioning</a>
+</li>
+<li>6.1.   <a href="#rfc.section.6.1">Upgrade Indication and Transition</a>
+</li>
+<li>7.   <a href="#rfc.section.7">Registry of Service Identifiers</a>
+</li>
+<li>8.   <a href="#rfc.section.8">Registry of Aspect Identifiers</a>
+</li>
+<li>9.   <a href="#rfc.references">References</a>
+</li>
+<li>9.1.   <a href="#rfc.references.1">Normative References</a>
+</li>
+<li>9.2.   <a href="#rfc.references.2">Informative References</a>
+</li>
+<li><a href="#rfc.authors">Author's Address</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> Introduction</h1>
+<p id="rfc.section.1.p.1">TBD</p>
+<h1 id="rfc.section.1.1">
+<a href="#rfc.section.1.1">1.1.</a> Notation and Conventions</h1>
+<p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="#RFC2119">RFC2119</a> <cite title="NONE">[RFC2119]</cite>.</p>
+<p id="rfc.section.1.1.p.2">Some sections of this specification are illustrated with fragments of a <a href="#RFC5234">Augmented Backus-Naur Form</a> <cite title="NONE">[RFC5234]</cite> (ABNF) grammar.  The rules specified are normative.</p>
+<p id="rfc.section.1.1.p.3">This specification allows the use of <a href="#RFC3987">IRIs</a> <cite title="NONE">[RFC3987]</cite>.  Every <a href="#RFC3986">URI</a> <cite title="NONE">[RFC3986]</cite> is also an IRI, so a URI may be used wherever an IRI is named. There are two special considerations: (1) when an IRI that is not also a URI is given for dereferencing, it MUST be mapped to a URI using the steps in Section 3.1 of RFC 3987.  and (2) when an IRI is serving as an identifier, it MUST NOT be so mapped.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> REST Services</h1>
+<p id="rfc.section.2.p.1">OpenSocial REST Services consist of collections of Web-accessible resources that can be accessed and modified using the basic set of HTTP request methods as defined by <a href="#I-D.ietf-httpbis-p2-semantics">[I-D.ietf-httpbis-p2-semantics]</a>.  Such services are intended to be used either by OpenSocial Applications as defined by <a href="#core-gadget">[core-gadget]</a> or other third parties to access social data hosted and managed by an OpenSocial-enabled server.</p>
+<p id="rfc.section.2.p.2">In general, for all REST Services: </p>
+
+<ul class="empty">
+<li>the HTTP GET method is used to retrieve representations of the current state of a any given resource,</li>
+<li>PUT and PATCH are used to modify the current state,</li>
+<li>DELETE is used to delete the resource,</li>
+<li>and POST is used to either create new resources or to perform other types of operations that do not fit within the scope of the other core HTTP methods.</li>
+</ul>
+<p id="rfc.section.2.p.3">Implementations are free to support additional HTTP methods but their use is considered to be outside the scope of this specification.</p>
+<p id="rfc.section.2.p.4">Resources made available via a REST Service can represent individual objects (e.g. a person, a document, an activity) or collections of objects (e.g. a friends list, a folder containing multiple files, a listing of events). Every resource is identified by a distinct URI to which the various HTTP methods are to be sent.</p>
+<div id="#rfc.figure.1"></div>
+<p>For example, to retrieve a user's current profile using the OpenSocial Person Service, a client application would issue a GET request:</p>
+<pre>
+  GET /api/people/@me/@self HTTP/1.1
+  Host: api.example.org
+      </pre>
+<p id="rfc.section.2.p.5">When a client application is required to communicate with an OpenSocial server via an intermediary that restricts the use of certain standard and extension HTTP Methods (e.g. PUT, DELETE, PATCH), the client SHOULD utilize the <samp>X-HTTP-Method-Override</samp> HTTP Request Header mechanism in a POST request.</p>
+<div id="#rfc.figure.2"></div>
+<p>For example, the HTTP PATCH request method is still relatively new and is not yet fully supported by deployed HTTP infrastructure.  It is therefore possible that PATCH requests might be blocked by certain intermediaries. To address such cases, the PATCH request may be modified by sending a POST request that includes the <samp>X-HTTP-Method-Override</samp> HTTP header:</p>
+<pre>
+  POST /api/people/@me/@self HTTP/1.1
+  Host: api.example.org
+  Content-Type: application/json
+  X-HTTP-Method-Override: PATCH
+
+  {...}
+      </pre>
+<p id="rfc.section.2.p.6">OpenSocial Servers MUST respond to such requests as if the method specified by the <samp>X-HTTP-Method-Override</samp> was the actual operation used by the request, as opposed to POST.</p>
+<p id="rfc.section.2.p.7">The <samp>X-HTTP-Method-Override</samp> header MUST NOT be used to send HTTP GET requests.</p>
+<p id="rfc.section.2.p.8">Responses to all requests will specify an appropriate HTTP Status Code indicating the status of the response.</p>
+<h1 id="rfc.section.2.1">
+<a href="#rfc.section.2.1">2.1.</a> <a href="#uri-structure" id="uri-structure">Common URI Structure</a>
+</h1>
+<p id="rfc.section.2.1.p.1">All REST Services share a common, basic URI Structure that MAY be extended on a case-by-case basis. This common structure helps to ensure that all interactions remain as consistent as possible across multiple REST Services while allowing individual service-specific and implementation specific behaviors to be supported.</p>
+<div id="#rfc.figure.3"></div>
+<p>By convention, the Common URI Structure is described using a <a href="#RFC6570">URL Template</a> <cite title="NONE">[RFC6570]</cite>:</p>
+<pre>
+  {protocol}://{+host}{/rootpath*,service-identifier,local-identifier,aspect-identifier,filters*}{?parameters*}
+        </pre>
+<div id="#rfc.table.1"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Expression</th>
+<th class="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">protocol</td>
+<td class="left">Indicates either "http" or "https" depending on whether or not SSL or TLS is to be used with the request.</td>
+</tr>
+<tr>
+<td class="left">host</td>
+<td class="left">Specifies the DNS Host Name and, if necessary, the TCP/IP port at which the REST service is available. For instance, "api.example.org" or "api.example.org:8080".</td>
+</tr>
+<tr>
+<td class="left">rootpath</td>
+<td class="left">Specifies the root path of the REST Service. The value is specified as an Array of isegment-nz path segments as defined by <a href="#RFC3987">[RFC3987]</a>. For example, ["services","api"], which when expanded by the URL Template produces "/services/api".</td>
+</tr>
+<tr>
+<td class="left">service-identifier</td>
+<td class="left">The service identifier as defined by <a href="#service-identifiers">Section 2.2</a>.</td>
+</tr>
+<tr>
+<td class="left">local-identifier</td>
+<td class="left">The local-identifier of a data object, as defined by <a href="#object-identifiers">Section 2.3</a> that is the target of an HTTP request.</td>
+</tr>
+<tr>
+<td class="left">aspect-identifier</td>
+<td class="left">An aspect-identifier, as defined by <a href="#aspect-identifiers">Section 2.4</a>, that identifies the specific aspect of the identified Data Object to which the HTTP request is being directed. For instance, if the intent of the request is to retrieve the list of other people connected to a particular user's profile, the local-identifier specifies the target user's local-identifier and the aspect-identifier would specify "@friends".</td>
+</tr>
+<tr>
+<td class="left">filters</td>
+<td class="left">A set of zero or more service, resource and aspect specific path segments that specify additional filters for the request (see <a href="#filters">Section 2.5</a>). The value is specified as an Array, each member of which can either be an isegment-nz path segment or an Array of isegment-nz path segments. For instance, the value ["a","b","c"] would expand within the URL Template to "/a/b/c"; whereas the value ["a",["b","c"]] would expand to "/a/b,c".</td>
+</tr>
+<tr>
+<td class="left">parameters</td>
+<td class="left">Specifies a collection of query parameters associated with the request, specified as a collection of name and value pairs. All REST Services are required to support a common core collection of query parameters as defined in <a href="#standard-query-parameters">Section 2.6</a> and MAY introduce additional service, resource and aspect specific parameters.</td>
+</tr>
+</tbody>
+</table>
+<p id="rfc.section.2.1.p.2">To illustrate how the common URI structure operates, consider the following example. For each of the URI Template variables, assume the following values:</p>
+<div id="#rfc.table.2"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Variable</th>
+<th class="left">Value</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">protocol</td>
+<td class="left">https</td>
+</tr>
+<tr>
+<td class="left">host</td>
+<td class="left">api.example.org</td>
+</tr>
+<tr>
+<td class="left">rootpath</td>
+<td class="left">["service","api"]</td>
+</tr>
+<tr>
+<td class="left">service-identifier</td>
+<td class="left">people</td>
+</tr>
+<tr>
+<td class="left">local-identifier</td>
+<td class="left">@me</td>
+</tr>
+<tr>
+<td class="left">aspect-identifier</td>
+<td class="left">@friends</td>
+</tr>
+<tr>
+<td class="left">filters</td>
+<td class="left">["@recent"]</td>
+</tr>
+<tr>
+<td class="left">parameters</td>
+<td class="left">{"count":"10", "updatedAfter":"2012-04-16T00:00:00Z"}</td>
+</tr>
+</tbody>
+</table>
+<p id="rfc.section.2.1.p.3">When applied to the common URI Template, the Request URI Generated becomes: "https://api.example.org/service/api/people/@me/@friends/@recent?count=10&amp;updatedAfter=2012-04-16T00:00:00Z".</p>
+<h1 id="rfc.section.2.2">
+<a href="#rfc.section.2.2">2.2.</a> <a href="#service-identifiers" id="service-identifiers">Service Identifiers</a>
+</h1>
+<p id="rfc.section.2.2.p.1">Service Identifiers are simple text labels, conforming to the isegment-nz construction defined in <a href="#RFC3987">[RFC3987]</a>, used to identify an individual OpenSocial REST service.</p>
+<div id="#rfc.figure.4"></div>
+<pre>
+  service-identifier = isegment-nz
+        </pre>
+<p id="rfc.section.2.2.p.2">For instance, the OpenSocial Person Service is identified using the label "people" while the Activity Stream Service is identified using the label "activity".</p>
+<div id="#rfc.figure.5"></div>
+<p>An example request to retrieve a person's profile using the Person Service:</p>
+<pre>
+  GET /service/api/people/@me/@self HTTP/1.1
+  Host: example.org
+        </pre>
+<div id="#rfc.figure.6"></div>
+<p>An example request to retrieve an Activity Stream associated with a person using the Activity Stream Service:</p>
+<pre>
+  GET /service/api/activity/@me/@all HTTP/1.1
+  Host: example.org
+        </pre>
+<p id="rfc.section.2.2.p.3">Please refer to the <a href="#social-app">[social-app]</a> specification for complete details on the core set of social data services defined by this version of the OpenSocial specification. Implementations are free to implement additional services.</p>
+<p id="rfc.section.2.2.p.4">If a particular implementation does not support a given specified service, it SHOULD simply return a 404 Not Found response.</p>
+<h1 id="rfc.section.2.3">
+<a href="#rfc.section.2.3">2.3.</a> <a href="#object-identifiers" id="object-identifiers">Local Identifiers</a>
+</h1>
+<p id="rfc.section.2.3.p.1">Every individual data object managed and made available via a REST service is uniquely identified within that service's context by a local-identifier.</p>
+<p id="rfc.section.2.3.p.2">The local identifier is an opaque String conforming to the isegment-nz construction of <a href="#RFC3987">[RFC3987]</a>. This string unique identifies the object within the context of the service with which the object is associated.</p>
+<div id="#rfc.figure.7"></div>
+<pre>
+  local-identifier = isegment-nz
+        </pre>
+<h1 id="rfc.section.2.3.1">
+<a href="#rfc.section.2.3.1">2.3.1.</a> The "@me" Alias</h1>
+<p id="rfc.section.2.3.1.p.1">The literal string value "@me" MAY be used as an alias for the local-identifier of the currently authenticated entity.</p>
+<p id="rfc.section.2.3.1.p.2">For instance, if a person uses the OpenSocial Person Service to request information about their own social data profile, the request URI can specify the "@me" alias as opposed to the requester's local-identifier. The server fullfilling the request would use the requests authentication context to determine the appropriate local-identifier.</p>
+<h1 id="rfc.section.2.3.2">
+<a href="#rfc.section.2.3.2">2.3.2.</a> The "@anonymous" Alias</h1>
+<p id="rfc.section.2.3.2.p.1">The literal string value "@anonymous" MAY be used as an alias for the local-identifier of any anonymous, non-authenticated entity.</p>
+<p id="rfc.section.2.3.2.p.2">Previous versions of this specification used the numeric integer value -1 (negative one) to identify anonymous, non-authenticated users.  The use of the numeric integer is considered to be deprecated and SHOULD NOT be used; however implementations MAY continue to support the use of -1 in order to maintain backwards compatibility with older applications.</p>
+<h1 id="rfc.section.2.3.3">
+<a href="#rfc.section.2.3.3">2.3.3.</a> The "@public" Alias</h1>
+<p id="rfc.section.2.3.3.p.1">The literal string value "@public" is provided as a local-identifier identifying the total collection of "public" resources provided by a REST service. For instance, if a requesting application wishes to use the OpenSocial Activity Service to retrieve a listing of all recent public Activities that have occurred independent of the specific person or resource with which those activities are associated, the request URI can specify "@public" as the local-identifier.</p>
+<p id="rfc.section.2.3.3.p.2">The "@public" alias might not be supported by all REST services or implementations.</p>
+<h1 id="rfc.section.2.3.4">
+<a href="#rfc.section.2.3.4">2.3.4.</a> Legacy Global Identifiers</h1>
+<p id="rfc.section.2.3.4.p.1">Previous versions of this specification utilized an older form of "global identifier" that has since been deprecated.  Server implementations MAY continue to support the older format for backwards-compatibility purposes with existing applications but new applications SHOULD NOT make use of the deprecated syntax.</p>
+<p id="rfc.section.2.3.4.p.2">The legacy syntax consisted of a combination of a DNS domain name and an object's local identifier separated by a colon (":") character.</p>
+<div id="#rfc.figure.8"></div>
+<pre>
+  domain-name = *( ALPHA / DIGIT / "_" / "." / "-" )
+  legacy-global-identifier   = domain-name ":" local-identifier
+          </pre>
+<h1 id="rfc.section.2.4">
+<a href="#rfc.section.2.4">2.4.</a> <a href="#aspect-identifiers" id="aspect-identifiers">Aspect Identifiers</a>
+</h1>
+<p id="rfc.section.2.4.p.1">Every type of Data Object provided by a REST service can have zero or more distinct aspects to which requests can be directed.  These aspects are always specific to the individual type of resource and service. Aspects are identified within the URL structure using an aspect-identifier.</p>
+<div id="#rfc.figure.9"></div>
+<pre>
+  aspect-identifier = "@" isegment-nz
+        </pre>
+<p id="rfc.section.2.4.p.2">For example, Person Data Objects as defined by the <a href="#social-app">[social-app]</a> expose a number of Aspects that are specific to the social data that makes up a person's profile data. For instance: </p>
+
+<ul>
+<li>There is the "@self" Aspect that references the person's own profile detail (i.e. their name, contact information, interests, etc);</li>
+<li>The "@friends" Aspect that references the person's network of directly connected friends and associates;</li>
+<li>The "@network" Aspect that references the person's extended network (i.e. friends-of-friends, etc).</li>
+</ul>
+
+<p> </p>
+<div id="#rfc.figure.10"></div>
+<p>To retrieve information about specific aspects, the appropriate aspect-identifier would be included in the request URI.</p>
+<pre>
+  GET /service/api/people/@me/@self HTTP/1.1
+  Host: example.org
+  
+  GET /service/api/people/@me/@friends HTTP/1.1
+  Host: example.org
+  
+  GET /service/api/people/@me/@network HTTP/1.1
+  Host: example.org
+        </pre>
+<p id="rfc.section.2.4.p.3">Please refer to <a href="#social-app">[social-app]</a> for complete details on the specific aspects associated with each of the core OpenSocial Social Data Objects and services. Implementations are free to define additional aspects for any of the core Social Data Objects and Services.</p>
+<p id="rfc.section.2.4.p.4">To prevent against the likelihood of compatibility issues arising through the use and extension of aspects by implementations as well to promote the reuse and socialization of new aspect-identifiers, this document establishes a <a href="#aspect-identifier-registry">registry of common aspect identifiers.</a> <cite title="NONE">[aspect-identifier-registry]</cite> It is RECOMMENDED that all aspect-identifiers used within OpenSocial implementations be added to the registry per the requirements detailed in <a href="#aspect-identifier-registry">Section 8</a>.</p>
+<p id="rfc.section.2.4.p.5">If a particular implementation does not support a given specified aspect, it SHOULD simply return a 404 Not Found response.</p>
+<h1 id="rfc.section.2.5">
+<a href="#rfc.section.2.5">2.5.</a> <a href="#filters" id="filters">Filters</a>
+</h1>
+<p id="rfc.section.2.5.p.1">The Common URI Structure also supports the use of service, data object and aspect specific filters that can be used to further define the scope of a particular REST request. When expressed within the request URI, such filters take the form of an arbitrary set of additional isegment-nz path segments.</p>
+<p id="rfc.section.2.5.p.2">Implementations MAY choose to allow multiple filter identifiers separated by a comma (,) character within a single path segment. When multiple, comma-separated filter identifiers are specified, they are to be interpreted as distinct alternatives (e.g. the filter segment "a,b" is to be interpreted as "a or b" as opposed to "a and b").</p>
+<div id="#rfc.figure.11"></div>
+<pre>
+  filter = isegment-nz
+        </pre>
+<p id="rfc.section.2.5.p.3">For example, an application that is requesting a listing of Activity Objects provided by the OpenSocial Activity Stream service may wish to limited the returned set of activities to only those generated by particular applications. To do so, the application would identify the applications using filter segments:</p>
+<div id="#rfc.figure.12"></div>
+<pre>
+  GET /service/api/activity/@me/@all/app-1,app-2
+  Host: example.org
+        </pre>
+<p id="rfc.section.2.5.p.4">Alternatively, an implementation can choose to allow applications to limit the results returned by the request to only those that have been "tagged" with a particular label. This is strictly an non-normative example illustrating the basic function of filters as "tagging" of Data Objects is not defined by this specification:</p>
+<div id="#rfc.figure.13"></div>
+<pre>
+  GET /service/api/activity/@me/@all/@tags/foo,bar
+        </pre>
+<p id="rfc.section.2.5.p.5">When an implementation supports and applies filters, they MUST be interpreted as a hierarchy, with each subsequent path segment being interpreted relative to the previous segment. The exact application of the filters is left to the implementation, however.</p>
+<p id="rfc.section.2.5.p.6">For example, given the hypothetical request:</p>
+<div id="#rfc.figure.14"></div>
+<pre>
+  GET /service/api/activity/@me/@all/app-1,app-2/@tags/foo,bar
+        </pre>
+<p id="rfc.section.2.5.p.7">The appropriate way to interpret this request is: Return the list of all activities for the authenticated user generated by either app-1 or app-2 that have been tagged with either "foo" or "bar".</p>
+<p id="rfc.section.2.5.p.8">Please refer to <a href="#social-app">[social-app]</a> for complete detail on specific filters associated with each of the core OpenSocial Social Data Objects and services. Implementations are free to define additional filters for any of the core Social Data Objects and Services.</p>
+<p id="rfc.section.2.5.p.9">If a particular implementation does not support a given specified filter, it SHOULD simply return a 404 Not Found response.</p>
+<h1 id="rfc.section.2.6">
+<a href="#rfc.section.2.6">2.6.</a> <a href="#standard-query-parameters" id="standard-query-parameters">Standard Query Parameters</a>
+</h1>
+<p id="rfc.section.2.6.p.1">All REST services MUST support a common set of URI Query String parameters that can be used to modify the processing of the request and the information returned to the client.</p>
+<div id="#rfc.table.3"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Name</th>
+<th class="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">count</td>
+<td class="left">When the resource to which a request is directed represents a collection of items and the intention of the request is to retrieve a listing of a subset of those items, the count value specifies the maximum number of items to return. The value is specified as a non-negative integer. If unspecified, the server is free to determine a reasonable default value. No default value is assumed. If a value of zero (0) is specified then it is to be interpreted as a request for an empty collection. If any value other than a non-negative integer value is specified, the parameter SHOULD be ignored as if the parameter were not present at all.</td>
+</tr>
+<tr>
+<td class="left">fields</td>
+<td class="left">The fields parameter allows a client application retrieving information about a resource to specify individual pieces of information it is interested in receiving as a simple, comma separated list. For instance, "fields=name,email". The server MAY choose to return a representation of the requested information containing only the requested fields along with any additional information the server determines is required. If the resource identified by the URI represents a collection of individual objects, the fields parameter identifies the requested properties of those individual objects, rather than the properties of the collection.</td>
+</tr>
+<tr>
+<td class="left">filterBy</td>
+<td class="left">When the resource to which a request is directed represents a collection of items and the intention of the request is to retrieve a subset of those items, the filterBy parameter specifies the name of a field to be used as a selection filter to determine the subset of items to return. The value of the parameter is the name of a field contained by each of the objects in the collection. This property is intended to be used in conjunction with the filterOp and filterValue parameters.</td>
+</tr>
+<tr>
+<td class="left">filterOp</td>
+<td class="left">When the filterBy parameter is used to specify the name of a field to use as a selection filter, the filterOp parameter is used to specify the specific type of selection filter operation to apply. See <a href="#filterOp-values">Section 2.6.1</a> for details on the possible values for the <samp>filterOp</samp> parameter.  </td>
+</tr>
+<tr>
+<td class="left">filterValue</td>
+<td class="left">When using the filterBy and filterOp parameters, and filterOp equals "contains", "equals" or "startsWith", the filterValue parameter specifies the value against which the value of the filterBy field is tested.</td>
+</tr>
+<tr>
+<td class="left">sort</td>
+<td class="left">When the resource to which a request is directed represents a collection of items and the intention of the request is to retrieve a listing of those items, the sort parameter specifies one or more fields to be used as a sorting index and the order in which items SHOULD be returned. The value is a comma separated list of sort-key definitions as specified in <a href="#sort-parameter">Section 2.6.2</a>.</td>
+</tr>
+<tr>
+<td class="left">startIndex</td>
+<td class="left">When the resource to which a request is directed represents a collection of items and the intention of the request is to retrieve a subset of those items, the startIndex parameter specifies the relative position of the first item to return out of the total set of items that can be returned as determined by the server after any requested filtering and sorting of the set as been applied. The index is 0-based such that to return the first item of the set, the startIndex parameter value would be 0. </td>
+</tr>
+<tr>
+<td class="left">updatedSince</td>
+<td class="left">When the resource to which a request is directed represents a collection of items and the intention of the request is to retrieve a subset of those items, the updatedSince parameter specifies that the server SHOULD only return items that have been updated after a given date and time. The value is expressed as an RFC 3339 date-time as described in <a href="#datetimes">Section 3</a>.</td>
+</tr>
+<tr>
+<td class="left">updatedBefore</td>
+<td class="left">When the resource to which a request is directed represents a collection of items and the intention of the request is to retrieve a subset of those items, the updatedBefore parameter specifies that the server SHOULD only return items updated before the given date and time. The value is expressed as an RFC 3339 date-time as described in <a href="#datetimes">Section 3</a>.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="rfc.section.2.6.1">
+<a href="#rfc.section.2.6.1">2.6.1.</a> <a href="#filterOp-values" id="filterOp-values">The "filterOp" Parameter</a>
+</h1>
+<p id="rfc.section.2.6.1.p.1">The value of the <samp>filterOp</samp> parameter is one of: </p>
+
+<dl>
+<dt>contains</dt>
+<dd style="margin-left: 8">Indicates that the value of the field identified by the filterBy parameter MUST contain the exact value specified by the filterValue parameter.  </dd>
+<dt>equals</dt>
+<dd style="margin-left: 8">Indicates that the value of the field identified by the filterBy parameter MUST equal the exact value specified by the filterValue parameter.  </dd>
+<dt>startsWith</dt>
+<dd style="margin-left: 8">Indicates that the value of the field identified by the filterBy parameter MUST begin with the exact characters specified by the filterValue parameter.  </dd>
+<dt>present</dt>
+<dd style="margin-left: 8">Indicates that items are only considered to match the selection filter if the field identified by the filterBy parameter is present within the item and specifies a non-null value. When filterOp equals "present", the filterValue parameter is ignored.  </dd>
+</dl>
+
+<p> </p>
+<h1 id="rfc.section.2.6.2">
+<a href="#rfc.section.2.6.2">2.6.2.</a> <a href="#sort-parameter" id="sort-parameter">The "sort" Parameter</a>
+</h1>
+<p id="rfc.section.2.6.2.p.1">The value of the <samp>sort</samp> parameter is a comma-separated list of sort-keys as defined below.</p>
+<div id="#rfc.figure.15"></div>
+<pre>
+  sort-default-order = field
+  sort-default-field = "+" / "-"
+  sort-order-field = ("+" / "-") field
+  sort-key = sort-default-order / sort-default-field / sort-order-field
+          </pre>
+<p id="rfc.section.2.6.2.p.2">Each sort-key consists of an optional ASCII plus (+) or minus (-) character that indicates the requested sorting order -- where plus indicates ascending and minus indicates descending -- and the name of a field to sort by.</p>
+<p id="rfc.section.2.6.2.p.3">For instance, to request that the items of the collection be returned in reverse chronological order by the date and time they were last updated, assuming each item in the collection has an "updated" field, the value of the sort parameter would be: <samp>sort=-updated</samp>.</p>
+<p id="rfc.section.2.6.2.p.4">Multiple sort-keys MAY be specified. For instance, to request that the items of the collection be returned in reverse chronological order by the date and time they were last updated, but in alphabetical order by the title field, the value of the sort parameter would be: <samp>sort=-updated,+title</samp>.</p>
+<p id="rfc.section.2.6.2.p.5">If the optional plus or minus indicator is omitted, the server shall determine an appropriate default sorting order.</p>
+<p id="rfc.section.2.6.2.p.6">If the sort parameter specifies a field that is unsupported for the type of objects within the collection, the unsupported field MUST be ignored.</p>
+<h1 id="rfc.section.2.7">
+<a href="#rfc.section.2.7">2.7.</a> Conditional Requests</h1>
+<p id="rfc.section.2.7.p.1">All REST services MUST support the use of Conditional Request mechanisms as defined in <a href="#I-D.ietf-httpbis-p4-conditional">[I-D.ietf-httpbis-p4-conditional]</a>.</p>
+<p id="rfc.section.2.7.p.2">When returning the current representation of any resource, whether that representation is for a single object or a collection of objects, the HTTP Response MUST include either a strong Entity Tag as defined in Section 2.3 of <a href="#I-D.ietf-httpbis-p4-conditional">[I-D.ietf-httpbis-p4-conditional]</a>, a Last-Modified Timestamp as specified in Section 2.2, or both.</p>
+<div id="#rfc.figure.16"></div>
+<p>For example, the response to a request retrieving the current representation of a person's profile might include both an Entity Tag and a Last-Modified timestamp:</p>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef56"
+  Last-Modified: Tue, 15 Nov 2012 12:45:26 GMT
+        </pre>
+<p id="rfc.section.2.7.p.3">Once a client has the Entity Tag or Last-Modified timestamp for a given resource representation, subsequent requests SHOULD utilize one or the other within a conditional request to optimize communication and to ensure that multiple clients do not inadvertently overwrite each other's data.</p>
+<div id="#rfc.figure.17"></div>
+<p>For instance, given the Last-Modified Timestamp included in a response to a request to receive a user's profile, a client can request that the server return an updated view of the profile if, and only if the state of the profile has changed since the specified time:</p>
+<pre>
+  GET /api/people/@me/@self HTTP/1.1
+  If-Modified-Since: Tue, 15 Nov 1994 12:45:26 GMT
+        </pre>
+<p id="rfc.section.2.7.p.4">If the profile has not been modified since the date specified, the server would respond with a "304 Not Modified" status.</p>
+<div id="#rfc.figure.18"></div>
+<p>Given the Entity Tag of a resource representation, a client wishing to modify the resource can request that changes only be applied if the resource has not been subsequently modified since the original representation and Entity Tag were created:</p>
+<pre>
+  PUT /api/people/@me/@self HTTP/1.1
+  If-Match: "ab12cd34ef56"
+  Content-Type: application/json 
+  
+  {...}
+        </pre>
+<p id="rfc.section.2.7.p.5">If the server is unable to determine that the specified Entity Tag applies to the current state of the resource, it will abort the change request and respond to the request using a "412 Precondition Failed" status.</p>
+<p id="rfc.section.2.7.p.6">Note that the Entity Tag specified in the response is generally specific to the actual payload included in the response. If a REST service supports multiple representation formats for a single resource, such as offering multiple data format options or modified views of the resource tailored to the authentication credentials included in the request, the Entity Tag can vary for each specific response, regardless of whether the actual state of the resource on the server has changed.  Therefore, for any single resource, multiple Entity Tags can potentially represent the current state of the resource.</p>
+<p id="rfc.section.2.7.p.7">At a minimum, all OpenSocial REST Services MUST support the If-Match, If-None-Match, If-Modified-Since and If-Unmodified-Since HTTP request headers for conditional requests. All requests that result in the potential modification of the current state of a resource MUST include at least one of these request headers.</p>
+<h1 id="rfc.section.2.8">
+<a href="#rfc.section.2.8">2.8.</a> Full vs. Partial Modification</h1>
+<p id="rfc.section.2.8.p.1">The current state of a resource may be modified in part or in full using either the <a href="#RFC5789">PATCH</a> <cite title="NONE">[RFC5789]</cite> or PUT HTTP methods, respectively.</p>
+<p id="rfc.section.2.8.p.2">Given a URI that represents an resource, the current state of that resource can be modified in full by sending an HTTP PUT request to the URI. The payload of the PUT request is considered to be a replacement for the identified resource, although the server is free to determine exactly how the resource is to be modified.</p>
+<div id="#rfc.figure.19"></div>
+<p>For example, suppose an application wishes to modify an existing profile that contains nothing more than a name and en email address. First, the application needs to GET the existing state of the profile so it can know what it is working with and can get the Entity Tag necessary for the PUT operation:</p>
+<pre>
+  GET /api/people/@me/@self HTTP/1.1
+        </pre>
+<div id="#rfc.figure.20"></div>
+<p>The server responds with the profile:</p>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef56"
+
+  {"name":{"displayName":"J. Doe"}, 
+   "emails":[{"value":"john.doe@example.org"}]}
+        </pre>
+<div id="#rfc.figure.21"></div>
+<p>The application wishes to modify this profile such that the name is expanded from "J. Doe" to "John Doe" and the email address is dropped completely. The application can do so by sending the following PUT request:</p>
+<pre>
+  PUT /api/people/@me/@self HTTP/1.1
+  If-Match: "ab12cd34ef56"
+  Content-Type: application/json
+
+  {"name":{"displayName":"John Doe"}}
+        </pre>
+<div id="#rfc.figure.22"></div>
+<p>Assuming the change is successful, the server would respond with an appropriate 2xx status, and MAY include the updated representation of the resource:</p>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef57"
+
+  {"name":{"displayName":"John Doe"}}
+        </pre>
+<div id="#rfc.figure.23"></div>
+<p>Alternatively, the application can use a PATCH request to perform a partial modification of the resource. For instance, suppose the application needs to add an email address to the previously modified profile:</p>
+<pre>
+  PATCH /api/people/@me/@self HTTP/1.1
+  If-Match: "ab12cd34ef57"
+  Content-Type: application/json-patch
+
+  [{"add":"/emails","value":{"value":"j.doe@example.com"}}]
+        </pre>
+<div id="#rfc.figure.24"></div>
+<p>Assuming the change is successful, the server would respond with an appropriate 2xx status, and MAY include the updated representation of the resource:</p>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "ab12cd34ef57"
+  
+  {"name":{"displayName":"John Doe"},
+   "emails":[{"value":"j.doe@example.com"}]
+  }
+        </pre>
+<p id="rfc.section.2.8.p.3">Support for the PATCH method to perform partial modifications of resource is optional.</p>
+<h1 id="rfc.section.2.8.1">
+<a href="#rfc.section.2.8.1">2.8.1.</a> PATCH Document Formats</h1>
+<p id="rfc.section.2.8.1.p.1">OpenSocial REST Services that implement support for the PATCH operation MUST, at a minimum, support the use of the <a href="#I-D.ietf-appsawg-json-patch">JSON Patch document format</a> <cite title="NONE">[I-D.ietf-appsawg-json-patch]</cite> for describing partial modifications and MAY support the use of the JSON Merge Patch mechanism as defined by section 3 of <a href="#I-D.snell-merge-patch">[I-D.snell-merge-patch]</a>.</p>
+<p id="rfc.section.2.8.1.p.2">With JSON Patch, the payload of the HTTP PATCH request uses a simple JSON data structure to explicitly describe the changes being requested to the data.</p>
+<div id="#rfc.figure.25"></div>
+<p>For example, when working with an OpenSocial Person object, to change the value of a person's given name and add a new phone number, the request would be:</p>
+<pre>
+  PATCH /people/@me/@self HTTP/1.1
+  Content-Type: application/json-patch
+  
+  [{"replace":"/name/givenName","value":"John"},
+   {"add":"/phoneNumbers","value":{"label":"home","value":"123-123-1234"}]
+          </pre>
+<p id="rfc.section.2.8.1.p.3">The advantage of using the JSON Patch format is that the requested changes are unamgibuous and clear, regardless of specific details of the implementation.</p>
+<p id="rfc.section.2.8.1.p.4">If the JSON Patch document specifies any change that cannot be made, i.e. it references a field that does not exist, or attempts to make a change that would cause the resulting data to be invalid in any way, the server MUST reject the PATCH request without making any changes to the target resource.</p>
+<p id="rfc.section.2.8.1.p.5">As an alternative, the <a href="#I-D.snell-merge-patch">Merge Patch</a> <cite title="NONE">[I-D.snell-merge-patch]</cite> mechanism allows a client to requests partial modifications to be made by example. </p>
+<div id="#rfc.figure.26"></div>
+<p>For example, given the following data object:</p>
+<pre>
+  {
+    "displayName": "John Doe",
+    "name" : {
+      "givenName" : "John",
+      "familyName" : "Doe"
+    },
+    "tags":["example","sample"]
+  }
+          </pre>
+<p id="rfc.section.2.8.1.p.6">If the intent is to change the value of the "displayName" property from "John Doe" to the value "J. Doe", add a new "phoneNumber" property, remove the "familyName" property from the "name" object, and remove the word sample from the "tags" Array, I would send the following request:</p>
+<div id="#rfc.figure.27"></div>
+<pre>
+  PATCH /my/resource HTTP/1.1
+  Host: example.org
+  Content-Type: application/json+merge-patch; charset="UTF-8"
+
+  {
+    "displayName": "J. Doe",
+    "phoneNumber": "+01-123-456-7890",
+    "name": {
+      "familyName": null
+    }
+    "tags": ["example"]
+  }
+          </pre>
+<p id="rfc.section.2.8.1.p.7">Servers that support the Merge Patch mechanism MUST adhere to the rules specified in Section 3 of <a href="#I-D.snell-merge-patch">[I-D.snell-merge-patch]</a> to determine the specific set of changes that is being requested.</p>
+<p id="rfc.section.2.8.1.p.8">As with JSON Patch, if the Merge Patch request specifies any change that cannot be made for any reason, the server MUST reject the PATCH request without making any changes to the target resource.</p>
+<p id="rfc.section.2.8.1.p.9">REST Services that support PATCH MUST advertise that support using the Accept-Patch HTTP Response header as defined by <a href="#RFC5789">[RFC5789]</a>, Section 3.1</p>
+<div id="#rfc.figure.28"></div>
+<p>For example,</p>
+<pre>
+  HTTP/1.1 200 OK
+  Allow: GET, PUT, POST, DELETE, HEAD, PATCH, OPTIONS
+  Accept-Patch: application/json-patch, application/json+merge-patch
+          </pre>
+<h1 id="rfc.section.2.9">
+<a href="#rfc.section.2.9">2.9.</a> <a href="#reporting-errors" id="reporting-errors">Error Handling</a>
+</h1>
+<p id="rfc.section.2.9.p.1">When errors occur during the processing of a request sent to a REST service, the HTTP response will specify an appropriate error status identifying the general nature of the failure that occurred as well as any relevant specific detail.</p>
+<p id="rfc.section.2.9.p.2">Errors in processing generally fall in to one of the following three categories: </p>
+
+<dl>
+<dt>Functional Errors</dt>
+<dd style="margin-left: 8">Typically occur when unforseen and unexpected error conditions arise on the server. For instance, when there is no additional storage space available; when when a required service is unavailable.  </dd>
+<dt>Request Validation Errors</dt>
+<dd style="margin-left: 8">Typically occur when a request sent to a service is malformed in any way and cannot be processed; or when the request has not been properly authenticated.  </dd>
+<dt>Business Rule Violations</dt>
+<dd style="margin-left: 8">Typically occur when a request cannot be completed because doing so would violate some underlying business rule. For instance, if a validly formed and properly authenticated request to change a property values on a particular resource to an invalid value type.  </dd>
+</dl>
+
+<p> </p>
+<p id="rfc.section.2.9.p.3">When a Functional Error occurs during the processing of a request, server implementations MUST take cautions against inappropriately disclosing too much detail about the underlying implementation of the service. Unless the user-agent submitting the request is considered to be a trusted entity by the server, error responses that represent Functional Errors SHOULD contain only a minimal amount of information about the error.</p>
+<p id="rfc.section.2.9.p.4">Function Errors are typically reported using 5xx Server Error response codes as defined in Section 7.5 of <a href="#I-D.ietf-httpbis-p2-semantics">[I-D.ietf-httpbis-p2-semantics]</a>.</p>
+<div id="#rfc.figure.29"></div>
+<p>The example response below communicates that the service is unavailable to process any requests and that the user agent can retry the request in two minutes:</p>
+<pre>
+  HTTP/1.1 503 Service Unavailable
+  Retry-After: 120
+        </pre>
+<p id="rfc.section.2.9.p.5">When a Request Validation Error occurs, the server MUST provide adequate detail in the response to indicate the nature of the validation failure. Such errors can occur for a variety of reasons and are generally reported using 4xx Client Error response codes as defined in Section 7.4 of <a href="#I-D.ietf-httpbis-p2-semantics">[I-D.ietf-httpbis-p2-semantics]</a>. If a payload is included in the HTTP Response, then it SHOULD be a JSON document containing a single <a href="#error-object">Error Object</a> <cite title="NONE">[error-object]</cite> that describes the specific validation error that occurred. A payload will not be required for all Request Validation Errors. The choice of whether to include a payload describing the error for any particular request is left up to the server.</p>
+<div id="#rfc.figure.30"></div>
+<p>The example response below indicates that the request was not properly authenticated and indicates that the user-agent must use OAuth 2.0 Bearer tokens to authenticate future requests.</p>
+<pre>
+  HTTP/1.1 403 Forbidden
+  WWW-Authentication: Bearer realm="example"
+        </pre>
+<p id="rfc.section.2.9.p.6">When Business Rule Violations occur, the server MUST provide adequate detail in the response to indicate the nature of the violation.  Such errors can occur for a variety of reasons are are generally reported using specific HTTP response codes such as 409 Conflict, 403 Forbidden, or 400 Bad Request. Such responses MUST contain a payload consisting of a single <a href="#error-object">Section 2.9.1</a> that describes the specific violation.</p>
+<p id="rfc.section.2.9.p.7">Business Rule Violations differ from other types of errors in that, typically, the request is properly formed and understood by the service, but was rejected for some other reason. An example of such an error is when a particular user agent surpasses a preallocated number of requests within a given period of time.</p>
+<div id="#rfc.figure.31"></div>
+<p>For example:</p>
+<pre>
+  HTTP/1.1 403 Forbidden
+  Content-Type: application/json
+  
+  {
+    "code": -12345,
+    "message": "Exceeded request quota"
+  }
+        </pre>
+<h1 id="rfc.section.2.9.1">
+<a href="#rfc.section.2.9.1">2.9.1.</a> <a href="#error-object" id="error-object">The Error Object</a>
+</h1>
+<p id="rfc.section.2.9.1.p.1">The Error object is a simple JSON data structure intended to communicate basic information about an error condition that has occurred.</p>
+<p id="rfc.section.2.9.1.p.2">Error objects conform to all the same rules as all other OpenSocial <a href="#data-objects">Data Objects</a> <cite title="NONE">[data-objects]</cite>, including extensibility characteristics. At a minimum, Error objects have the following properties:</p>
+<div id="#rfc.table.4"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Name</th>
+<th class="left">Type</th>
+<th class="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">code</td>
+<td class="left">Integer</td>
+<td class="left">A numeric code indicating the specific nature of the error that occurred. When an error object is included as the payload of an HTTP response, this code MUST NOT be interpreted as a replacement for the HTTP response status code, which takes precedence and specifies the general status of the HTTP request. No standard error code values are defined by this specification.</td>
+</tr>
+<tr>
+<td class="left">data</td>
+<td class="left">Object</td>
+<td class="left">A JSON object containing arbitrary additional data about the error. The specific properties of the object are undefined.</td>
+</tr>
+<tr>
+<td class="left">message</td>
+<td class="left">String</td>
+<td class="left">A human readable and localized description of the error that occurred. The value SHOULD NOT contain markup of any kind and SHOULD be interpreted as plain text.</td>
+</tr>
+</tbody>
+</table>
+<p id="rfc.section.2.9.1.p.3">When an error object is included as the payload of an HTTP message, the Content-Type header field, if specified, MUST specify a value of "application/json".</p>
+<h1 id="rfc.section.2.10">
+<a href="#rfc.section.2.10">2.10.</a> <a href="#multiple-resources" id="multiple-resources">Multiple resource and aspect operations</a>
+</h1>
+<p id="rfc.section.2.10.p.1">For the GET, HEAD and OPTIONS HTTP methods, a REST service MAY support the ability for a user-agent to specify multiple local-identifiers and aspect-identifiers within a single request URI.  There are, however, a number of important caveats and considerations that need to be taken into consideration when working with multiple resources and multiple aspects within a single operation.</p>
+<p id="rfc.section.2.10.p.2">To illustrate how the support for multiple resources works, consider a profile service that provides access to information about different users. A user-agent can access the profiles of individual users by issuing a GET request to their respective URIs:</p>
+<div id="#rfc.figure.32"></div>
+<pre>
+  GET /api/people/user-1/@self HTTP/1.1
+  GET /api/people/user-2/@self HTTP/1.1
+  GET /api/people/user-3/@self HTTP/1.1
+        </pre>
+<p id="rfc.section.2.10.p.3">Each of these requests would return a single profile representations:</p>
+<div id="#rfc.figure.33"></div>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdef123456"
+  
+  {
+    "id": "acct:user-1@example.org",
+    "name": {"displayName": "John Doe"}
+  }
+        </pre>
+<p id="rfc.section.2.10.p.4">Using the multiple-resource capability, these three distinct HTTP requests can be combined into a single request:</p>
+<div id="#rfc.figure.34"></div>
+<pre>
+  GET /api/people/user-1,user-2,user-3/@self HTTP/1.1
+        </pre>
+<p id="rfc.section.2.10.p.5">This combined request would return each of the requested profiles within a single response consisting of a single top-level JSON object containing one property for each requested object, where the property key is the local-identifier of the resource:</p>
+<div id="#rfc.figure.35"></div>
+<pre>
+  HTTP/1.1 200 Ok
+  Content-Type: application/json
+  ETag: "abcdefg123456"
+  
+  {
+    "user-1": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    },
+    "user-2": {
+      "id": "acct:user-2@example.org",
+      "name": {"displayName": "Jane Doe"}
+    },
+    "user-3": {
+      "id": "acct:user-3@example.org",
+      "name": {"displayName": "Sally Jones"}
+    }
+  }
+        </pre>
+<p id="rfc.section.2.10.p.6">If one of the requested resources does not exist, the server MAY choose to either reject the entire request with a 404 Not Found response or simply omit the missing item from the response or optionally include an explicit indicator that the specific item could not be found.</p>
+<div id="#rfc.figure.36"></div>
+<p>For instance, if "user-3" does not exist, the following:</p>
+<pre>
+  HTTP/1.1 200 Ok
+  Content-Type: application/json
+  ETag: "abcdefg123456"
+  
+  {
+    "user-1": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    },
+    "user-2": {
+      "id": "acct:user-2@example.org",
+      "name": {"displayName": "Jane Doe"}
+    },
+    "user-3": null
+  }
+        </pre>
+<div id="#rfc.figure.37"></div>
+<p>Is equivalent to omitting the "user-3" property altogether:</p>
+<pre>
+  HTTP/1.1 200 Ok
+  Content-Type: application/json
+  ETag: "abcdefg123456"
+  
+  {
+    "user-1": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    },
+    "user-2": {
+      "id": "acct:user-2@example.org",
+      "name": {"displayName": "Jane Doe"}
+    }
+  }
+        </pre>
+<p id="rfc.section.2.10.p.7">When the request specifies multiple aspect identifiers, the JSON object contained within the response will contain an additional layer of property values representing each individual aspect.</p>
+<p id="rfc.section.2.10.p.8">For instance, if the user-agent wishes to retrieve both the profile and friends list for the current authenticated user, it could send a GET request to:</p>
+<div id="#rfc.figure.38"></div>
+<pre>
+  GET /api/people/@me/@self,@friends
+        </pre>
+<p id="rfc.section.2.10.p.9">The response to this request would include a single top-level JSON object with properties for each of the requested aspects, whose values will be equivalent to what would have been returned had each aspect been requested by individual requests:</p>
+<div id="#rfc.figure.39"></div>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdefg1234567"
+  
+  {
+    "@self": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    }, 
+    "@friends": {
+      "items": [
+        {
+          "id": "acct:user-2@example.org",
+          "name": {"displayName": "Jane Doe"}
+        },
+        {
+          "id": "acct:user-3@example.org",
+          "name": {"displayName": "Sally Jones"}
+        }
+      ]
+    }
+  }
+        </pre>
+<p id="rfc.section.2.10.p.10">When multiple local-identifiers and aspect-identifiers are specified, the construction of the returned JSON object is similarly nested:</p>
+<div id="#rfc.figure.40"></div>
+<pre>
+  GET /api/people/user-1,user-2/@self,@friends
+        </pre>
+<div id="#rfc.figure.41"></div>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdefg1234567"
+  
+  {
+    "user-1": {
+      "@self": {
+        "id": "acct:user-1@example.org",
+        "name": {"displayName": "John Doe"}
+      }, 
+      "@friends": {
+        "items": [
+          {
+            "id": "acct:user-2@example.org",
+            "name": {"displayName": "Jane Doe"}
+          },
+          {
+            "id": "acct:user-3@example.org",
+            "name": {"displayName": "Sally Jones"}
+          }
+        ]
+      }
+    },
+  "user-2": {
+      "@self": {
+        "id": "acct:user-2@example.org",
+        "name": {"displayName": "Jane Doe"}
+      }, 
+      "@friends": {
+        "items": [
+          {
+            "id": "acct:user-1@example.org",
+            "name": {"displayName": "John Doe"}
+          }
+        ]
+      }
+    }
+  }
+        </pre>
+<p id="rfc.section.2.10.p.11">If the data that would normally be returned when requesting a particular local-identifier and aspect-identifier cannot be represented as JSON -- for instance, when requesting a hypothetical <samp>@avatar</samp> aspect for a particular profile that could return a binary image resource-- the value for the given item within the JSON response MUST specify the IRI of the specific individual item within a field named "$self".</p>
+<div id="#rfc.figure.42"></div>
+<p>For instance:</p>
+<pre>
+  GET /people/api/@me/@self,@avatar HTTP/1.1
+  Host: example.org
+        </pre>
+<div id="#rfc.figure.43"></div>
+<pre>
+  HTTP/1.1 200 OK
+  Content-Type: application/json
+  ETag: "abcdefg1234567"
+  
+  {
+    "@self": {
+      "id": "acct:user-1@example.org",
+      "name": {"displayName": "John Doe"}
+    }, 
+    "@avatar": {
+      "$self": "http://example.org/people/api/@me/@avatar"
+    }
+  }
+        </pre>
+<p id="rfc.section.2.10.p.12">Filter segment and query string parameters included in the request URI apply to each of the individually requested resources just as if separate requests were sent to each resource.</p>
+<div id="#rfc.figure.44"></div>
+<p>For instance, the request:</p>
+<pre>
+  GET /api/activity/user-1,user-2/@all/app-1,app-2/@tags/foo,bar?fields=id,title
+        </pre>
+<p id="rfc.section.2.10.p.13">Is to be interpreted as: for users "user-1" and "user-2", return the id and title fields for all activities generated by applications "app-1" and "app-2" and tagged with "foo" or "bar".</p>
+<p id="rfc.section.2.10.p.14">Authentication credentials included in the request MUST be valid and authorized for each of the individually requested resources or the entire request MUST be rejected using either a 401 Unauthorized or 403 Forbidden response.</p>
+<p id="rfc.section.2.10.p.15">Modification of multiple resources with a single operation, as well as the use of any unsafe and non-idempotent HTTP method is not allowed.  Any method other than GET, HEAD and OPTIONS sent to a request URI specifying multiple resources MUST fail with a response of 405 Method Not Supported</p>
+<p id="rfc.section.2.10.p.16">When a request contains either a If-Modified-Since or If-Unmodified-Since request header, the server MUST determine if all of the requested resources or aspects adhere to the condition. If even just one of the requested resources fails to meet the condition, the entire request MUST be rejected using a 406 Not Acceptable response.</p>
+<p id="rfc.section.2.10.p.17">Implementations SHOULD place strict limits on the number of distinct resources and aspects that may be included within a single request URI.  When a user agent submits a request for too many resources or aspects, the server SHOULD return a 414 Request-URI Too Long response.</p>
+<p id="rfc.section.2.10.p.18">If an implementation does not support the specification of multiple resources or aspects within a single request, a 404 Not Found response SHOULD be returned.</p>
+<h1 id="rfc.section.2.11">
+<a href="#rfc.section.2.11">2.11.</a> <a href="#operation-identifiers" id="operation-identifiers">Operation Identifiers</a>
+</h1>
+<p id="rfc.section.2.11.p.1">For the purpose of simplifying an interaction with various REST services, an OpenSocial implementation that provides Application Container Services (see <a href="#core-gadget">[core-gadget]</a>) can provide a layer of code that abstracts the REST service request and provides a simplified interface.</p>
+<p id="rfc.section.2.11.p.2">In order to better facilitate interoperability within that abstraction layer, OpenSocial REST Services can specify a alias for each logical interaction the application can have with the service. Such aliases take the form:</p>
+<div id="#rfc.figure.45"></div>
+<pre>
+  operation-identifier = service-identifier "." token
+        </pre>
+<p id="rfc.section.2.11.p.3">For example, the OpenSocial Person Service provides operations that allow a user-agent to request information about specific people. When interacting directly with the REST Service, this request takes the form of an HTTP GET request:</p>
+<div id="#rfc.figure.46"></div>
+<pre>
+  GET /api/people/@me/@self HTTP/1.1
+  Host: example.org
+        </pre>
+<p id="rfc.section.2.11.p.4">Within an OpenSocial Application hosted within an OpenSocial container (see <a href="#core-gadget">[core-gadget]</a>), this same operation can be referenced using the operation identifier "people.get":</p>
+<div id="#rfc.figure.47"></div>
+<pre>
+  &lt;Module&gt;
+    &lt;ModulePrefs&gt;
+      ...
+    &lt;/ModulePrefs&gt;
+    &lt;Data&gt;
+      &lt;os:DataRequest key="me" method="people.get" userId="@me" groupId="@self" /&gt;
+    &lt;/Data&gt;
+    &lt;Content type="html"&gt;
+      ...
+    &lt;/Content&gt;
+  &lt;/Module&gt;
+        </pre>
+<p id="rfc.section.2.11.p.5">Operation identifiers specific to each of the core OpenSocial REST Services are defined within the OpenSocial Social Applications Specifications <a href="#social-app">[social-app]</a>.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#datetimes" id="datetimes">Dates, Times and Timezone Offsets</a>
+</h1>
+<p id="rfc.section.3.p.1">Whenever date, time, timezone, duration or time period data is used anywhere within an OpenSocial implementation, the following rules MUST be applied.</p>
+<p id="rfc.section.3.p.2">When encoding a Date and Time together, the date-time construct from <a href="#RFC3339">[RFC3339]</a> MUST be used. In addition, an uppercase "T" character MUST be used to separate the date and time, and an uppercase "Z" character MUST be present in the absence of a numeric time zone offset.</p>
+<div id="#rfc.figure.48"></div>
+<p>For example:</p>
+<pre>
+  2012-11-09T12:32:34-08:00
+  2013-03-23T01:23:43Z
+      </pre>
+<p id="rfc.section.3.p.3">When encoding a Date, the full-date construct from <a href="#RFC3339">[RFC3339]</a> MUST be used.</p>
+<div id="#rfc.figure.49"></div>
+<p>For example:</p>
+<pre>
+  2012-11-09
+      </pre>
+<p id="rfc.section.3.p.4">When encoding a Time, either the partial-time or full-time constructs from <a href="#RFC3339">[RFC3339]</a> MUST be used. When encoded as a full-time, an uppercase "Z" character MUST be present in the absence of a numeric time zone offset.</p>
+<div id="#rfc.figure.50"></div>
+<p>For example:</p>
+<pre>
+  12:32:34-08:00 // full-time
+  12:32:34       // partial-time
+      </pre>
+<p id="rfc.section.3.p.5">When encoding a Timezone Offset, the time-offset construction from <a href="#RFC3339">[RFC3339]</a> MUST be used. Note that when denoting a Timezone Offset equal to the Coordinated Universal Time (UTC), an uppercase "Z" character MUST be used.</p>
+<div id="#rfc.figure.51"></div>
+<p>For example:</p>
+<pre>
+  -08:00
+      </pre>
+<p id="rfc.section.3.p.6">When encoding a Duration, the duration construction from <a href="#RFC3339">[RFC3339]</a> MUST be used.</p>
+<div id="#rfc.figure.52"></div>
+<p>For example:</p>
+<pre>
+  P3Y6M4DT12H30M5S
+      </pre>
+<p id="rfc.section.3.p.7">When encoding a period of time, the period constructions from <a href="#RFC3339">[RFC3339]</a> MUST be used. Note that when the period contains explicit date and time components, an uppercase "T" character MUST be used to separate the date and time, and an uppercase "Z" character MUST be used in the absence of a numeric time zone offset.</p>
+<div id="#rfc.figure.53"></div>
+<p>For example:</p>
+<pre>
+  P1Y2M10DT2H30M/2008-05-11T15:30:00Z
+      </pre>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#data-objects" id="data-objects">Data Objects</a>
+</h1>
+<p id="rfc.section.4.p.1">All Data Objects exposed via REST Services are serialized as JSON Objects as defined by <a href="#RFC4627">[RFC4627]</a>. Alternative serializations MAY be used but are considered outside the scope of this specification. Previous versions of OpenSocial allowed for <a href="#RFC4287">Atom</a> <cite title="NONE">[RFC4287]</cite> and simple XML serializations that have now been deprecated. Each of these are documented in the OpenSocial Deprecated Support Specification [TODO: Ref Doc].  Implementations MAY support the deprecated formats for backwards compatibility with existing applications.</p>
+<p id="rfc.section.4.p.2">Unless otherwise stated in the definition of a specific property, the following general serialization rules apply: </p>
+
+<ul>
+<li>Absent properties MAY be represented either by an explicit declaration of the property whose value is null or by omitting the property declaration altogether at the option of the publisher; these two representations are semantically equivalent. If a property is having a value whose type is a JSON array, the absence of any items in that array SHOULD be represented by omitting the property entirely or publishing it with the value null, and SHOULD NOT be represented as an empty array.</li>
+<li>Member values of an array value SHOULD be uniform in type. That is, Array values SHOULD NOT contain a mix of primitive, array and object data types, for instance <samp>"foo":["a","b","c"]</samp> is acceptable while <samp>"bar":["a",{"b":"c"},["d","e"]]</samp> is not.</li>
+<li>When a property is defined as a boolean and the value is false, the property MAY be omitted entirely from the JSON serialization.</li>
+<li>When a property is defined as a "plural field", it's value MUST be serialized as an Array of Plural Objects as defined by <a href="#plural-objects">Section 4.2</a>.</li>
+<li>All <a href="#RFC3987">IRI</a> <cite title="NONE">[RFC3987]</cite> and <a href="#RFC3986">URI</a> <cite title="NONE">[RFC3986]</cite> references contained with the serialized JSON structure SHOULD be absolute. If relative URI and IRI references are used, and the serialized JSON is included within either an HTTP request or returned in response to an HTTP request, the references are to be resolved relative to either the HTTP Request URI or the value of the Content-Location response header, if one is included within the HTTP response.</li>
+<li>All dates, times, durations and periods of time are to be encoded as specified in <a href="#datetimes">Section 3</a>.</li>
+<li>When a Data Object is defined as a "collection", it's value MUST be serialized as defined in <a href="#collection-objects">Section 4.1</a>.</li>
+</ul>
+
+<p> </p>
+<h1 id="rfc.section.4.1">
+<a href="#rfc.section.4.1">4.1.</a> <a href="#collection-objects" id="collection-objects">Collection Objects</a>
+</h1>
+<p id="rfc.section.4.1.p.1">A "Collection Object" is a Data Object that represents a set of individual, related Data Objects. Collection Objects are serialized as JSON Objects conforming to the JSON Activity Streams Collection construct as defined in Section 3.5 of <a href="#json-activity-streams">[json-activity-streams]</a>.</p>
+<p id="rfc.section.4.1.p.2">Such serialized objects inherit all of the basic properties of the Activity Streams Collection object:</p>
+<div id="#rfc.table.5"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Name</th>
+<th class="left">Type</th>
+<th class="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">totalItems</td>
+<td class="left">JSON Integer</td>
+<td class="left">An optional, non-negative integer specifying the total number of items within the collection. This number SHOULD reflect the actual total number of Data Objects that are considered to be members of the set that can be returned after applying any requested filtering operations and not the number of items actually serialized as values in the <samp>items</samp> property value.</td>
+</tr>
+<tr>
+<td class="left">items</td>
+<td class="left">JSON Array</td>
+<td class="left">An array containing a listing of Data Objects. This listing MAY be a subset of the total number of objects considered to be members of the collection.</td>
+</tr>
+<tr>
+<td class="left">url</td>
+<td class="left">JSON String</td>
+<td class="left">An optional IRI referencing a JSON Activity Streams document containing the full listing of objects within the collection.</td>
+</tr>
+</tbody>
+</table>
+<p id="rfc.section.4.1.p.3">All other properties defined by the JSON Activity Streams specification for a Collection Object MAY be included in the serialization but their specific use and function is considered out of scope of this specification.</p>
+<p id="rfc.section.4.1.p.4">This specification defines the following additional properties that MAY be used:</p>
+<div id="#rfc.table.6"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Name</th>
+<th class="left">Type</th>
+<th class="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">startIndex</td>
+<td class="left">JSON Integer</td>
+<td class="left">A non-negative integer value that identifies the relative position within the collection of the first object contained in the items property. For instance, if there are 20 items that are considered to be members of a collection, but only the last 10 of those items are serialized within the value of the <samp>items</samp> property, the value of <samp>startIndex</samp> would be 10.</td>
+</tr>
+<tr>
+<td class="left">itemsPerPage</td>
+<td class="left">JSON Integer</td>
+<td class="left">A non-negative integer that specifies the maximum number of Data Objects that will be serialized within the value of the <samp>items</samp> property. The actual number of items within the <samp>items</samp> array SHOULD be equal to or less than the value of the <samp>itemsPerPage</samp> value.</td>
+</tr>
+</tbody>
+</table>
+<div id="#rfc.figure.54"></div>
+<p>The following example shows a subset of a collection of OpenSocial Person objects:</p>
+<pre>
+  {
+    "totalItems": 10,
+    "startIndex": 0,
+    "itemsPerPage" : 2,
+    "items" : [
+      {
+       "displayName":"Joe",
+       "name": {
+         "givenName":"Joe",
+         "familyName":"Smith"
+       }
+      },
+      {
+       "displayName":"Sally",
+       "name": {
+         "givenName":"Sally",
+         "familyName":"Jones"
+       }
+      }
+    ]
+  }
+        </pre>
+<h1 id="rfc.section.4.1.1">
+<a href="#rfc.section.4.1.1">4.1.1.</a> Multi-page Collections</h1>
+<p id="rfc.section.4.1.1.p.1">Collections that consist of a large number of items can often be split into multiple documents, or pages, where each page contains a subset of the total number of items in the complete set as well as links to subsequent or preceding pages.</p>
+<p id="rfc.section.4.1.1.p.2">Within a Collection object, links to pages are represented using the generalized Activity Streams Links mechanism described in <a href="#astream-links">[astream-links]</a>. Specifically, the following table lists the additional optional Collection Object properties used to link multiple pages of a collection:</p>
+<div id="#rfc.table.7"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Name</th>
+<th class="left">Type</th>
+<th class="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">$first</td>
+<td class="left">String</td>
+<td class="left">A String value containing the absolute IRI reference of the furthest preceding page of the multi-page collection.</td>
+</tr>
+<tr>
+<td class="left">$last</td>
+<td class="left">String</td>
+<td class="left">A String value containing the absolute IRI reference of the furthest following page of the multi-page collection.</td>
+</tr>
+<tr>
+<td class="left">$previous</td>
+<td class="left">String</td>
+<td class="left">A String value containing the absolute IRI reference of the immediately preceding page of the multi-page collection.</td>
+</tr>
+<tr>
+<td class="left">$next</td>
+<td class="left">String</td>
+<td class="left">A String value containing the absolute IRI reference of the immediately following page of the multi-page collection.</td>
+</tr>
+<tr>
+<td class="left">$current</td>
+<td class="left">String</td>
+<td class="left">A string value containing the absolute IRI reference of a page containing the items that have been updated most recently.</td>
+</tr>
+</tbody>
+</table>
+<p id="rfc.section.4.1.1.p.3">In order to be considered a paged collection, at least one of these properties MUST be present within the Collection object.</p>
+<div id="#rfc.figure.55"></div>
+<p>For example,</p>
+<pre>
+  {
+    "$first": "http://example.org/activities/@me/@all?count=10",
+    "$next": "http://example.org/activities/@me/@all?count=10&amp;updatedBefore=2012-12-12T12:12:12.123Z",
+    "totalItems": 100,
+    "items": [
+      // .. list of items
+    ]
+  }
+          </pre>
+<p id="rfc.section.4.1.1.p.4">Note that consuming applications SHOULD treat the absolute IRI values used for paging as opaque identifiers and MUST NOT assume that they conform to any particular structure. That said, it is expected that most implementations will use various combinations of the standard query string parameters (e.g. count and startIndex, or count and updatedBefore) to construct paging links.</p>
+<p id="rfc.section.4.1.1.p.5">When using a combination of the count and startIndex query parameters to facilitate paging of a collection whose items change or grow frequently over time, the process of splitting a collection into multiple pages can become "lossy". That is, it is not possible to guarantee that consuming applications will be able to reconstruct the complete contents of the full collection at a particular time because items can be added or changed as the pages are accessed without the consuming application becoming aware of them.</p>
+<p id="rfc.section.4.1.1.p.6">Such data loss can be avoided through the use of the updatedSince and updatedBefore parameters as an alternative to startIndex. That is, rather than basing pages on the relative positioning of items within the overall collection, pages can be constructed to represent distinct periods of time (e.g. the 30 entries updated before a given time; all entries updated within the last hour; etc).</p>
+<h1 id="rfc.section.4.2">
+<a href="#rfc.section.4.2">4.2.</a> <a href="#plural-objects" id="plural-objects">Plural Objects</a>
+</h1>
+<p id="rfc.section.4.2.p.1">Within an OpenSocial Data Object, a "plural-field" is a property whose value consists of zero or more alternative choices represented as individual elements within a JavaScript Array. Each choice is serialized as a JSON Object with at least the following basic properties:</p>
+<div id="#rfc.table.8"></div>
+<table cellpadding="3" cellspacing="0" class="tt full center">
+<thead><tr>
+<th class="left">Name</th>
+<th class="left">Type</th>
+<th class="left">Description</th>
+</tr></thead>
+<tbody>
+<tr>
+<td class="left">label</td>
+<td class="left">JSON String</td>
+<td class="left">Provides a human-readable, plain-text, and preferrably localized short description of the object value suitable for display to a user.</td>
+</tr>
+<tr>
+<td class="left">primary</td>
+<td class="left">JSON Boolean</td>
+<td class="left">A boolean value indicating whether a particular plural object value is considered to be the primary or preferred alternative within the set. No more than one object in the array of of objects specified as the value of a plural field can have a <samp>primary</samp> property of True.</td>
+</tr>
+<tr>
+<td class="left">type</td>
+<td class="left">JSON String</td>
+<td class="left">Specifies a machine-processable label for this object value that generally identifies it's preferred function. For instance, if the plural field represents a collection of phone numbers, the <samp>type</samp> property value would specify values such as "work", "home" or "other", to differentiate each phone number by purpose. Unlike the <samp>label</samp> property which is intended for human-readable display, the <samp>type</samp> property is intended to be used programmatically and MUST NOT utilize a localized value.</td>
+</tr>
+<tr>
+<td class="left">value</td>
+<td class="left">JSON Primitive, Array or Object</td>
+<td class="left">Represents the actual value of the object.</td>
+</tr>
+</tbody>
+</table>
+<div id="#rfc.figure.56"></div>
+<p>The example below shows a Data Object with a single plural-field providing alternative contact phone numbers for an individual. Each is labeled, typed and a single number is marked as preferred:</p>
+<pre>
+  {
+    "phoneNumbers": [
+      {
+        "value": "555-123-1234",
+        "type": "home",
+        "label": "Home"
+      },
+      {
+        "value": "555-123-1235",
+        "type": "work",
+        "label": "Work",
+        "primary": true
+      },
+      {
+        "value": "555-123-1236",
+        "type": "mobile",
+        "label": "Mobile"
+      }
+    ]
+  }
+        </pre>
+<h1 id="rfc.section.4.3">
+<a href="#rfc.section.4.3">4.3.</a> <a href="#extension-objects" id="extension-objects">Data Object Extensions</a>
+</h1>
+<p id="rfc.section.4.3.p.1">This specification defines a core set of common Data Objects and an associated set of properties for each. These properties comprise the core vocabulary of the OpenSocial Data Model. Implementations are free to introduce extensions to this vocabulary so long as such extensions do not alter the semantics or requirements associated with any part of the core vocabulary. Such extensions are referred to generically as "foreign properties".</p>
+<p id="rfc.section.4.3.p.2">Note that future versions of this specification could introduce new properties and Data Objects to the core vocabulary. Software written to conform to this version of the specification will not be able to process such properties correctly and, in fact, will not be able to distinguish it from other arbitrary types of extensions. For the purpose of this discussion, unrecognized core vocabulary properties introduced by future versions of this specification will be considered to be "foreign properties".</p>
+<p id="rfc.section.4.3.p.3">Implementations that encounter foreign properties within a Data Object MUST NOT stop processing or signal an error. It might be the case that the implementation is able to process foreign properties correctly and does so. Otherwise such properties are considered to be "unknown foreign properties".</p>
+<p id="rfc.section.4.3.p.4">Whenever unknown foreign properties are encountered, implementations SHOULD ignore the properties and continue processing the Data Object as if they were not present.</p>
+<p id="rfc.section.4.3.p.5">The values of extension properties SHOULD be serialized following the same rules specified for core vocabulary properties as defined in <a href="#data-objects">Section 4</a>.</p>
+<h1 id="rfc.section.4.3.1">
+<a href="#rfc.section.4.3.1">4.3.1.</a> Avoiding Naming Conflicts</h1>
+<p id="rfc.section.4.3.1.p.1">Because foreign properties can be added at any time to a Data Object by multiple implementations, and because there is no centralized coordination of such extensions, there is a risk of conflicts arising when multiple implementations attempt to define foreign properties that share the same name.</p>
+<p id="rfc.section.4.3.1.p.2">For example, imagine two separate vendor implementations that extend the basic OpenSocial Person Data Object to include data specific to each implementation. For the sake of illustration, we will label these implementations as "foo.example.org" and "bar.example.com". Each defines a foreign property named "account" that while similar in purpose specify different types of values.</p>
+<p id="rfc.section.4.3.1.p.3">In order to avoid conflicts between the two properties, each implementation SHOULD wrap each of their respective foreign properties into a single root extension property whose name is unique to the implementation and whose value is a JSON Object containing the set of foreign properties unique to that implementation.</p>
+<p id="rfc.section.4.3.1.p.4">By convention, it is RECOMMENDED that the name of the root extension property follow the so-called "reverse-DNS" naming pattern.</p>
+<div id="#rfc.figure.57"></div>
+<p>For example, the extended Person Data Object described above could be serialized as:</p>
+<pre>
+  {
+    "displayName": "Joe",
+    "org.example.foo": {
+      "account": "joes-account"
+    },
+    "com.example.bar": {
+      "account": {
+        "id": "acct:joe@bar.example.com"
+      }
+    }
+  }
+          </pre>
+<p id="rfc.section.4.3.1.p.5">The JSON objects associated with each root extension property can contain any number of foreign properties, depending on the needs of the implementation, allowing all of the foreign properties specific to a particular implementation or serving a common purpose to be grouped together.</p>
+<p id="rfc.section.4.3.1.p.6">By following this convention, implementations can protect themselves from conflicts with each other and with new properties that may be added by future versions of this specification.</p>
+<h1 id="rfc.section.4.4">
+<a href="#rfc.section.4.4">4.4.</a> <a href="#data.type.identifiers" id="data.type.identifiers">Data Object Type Identifiers</a>
+</h1>
+<p id="rfc.section.4.4.p.1">Every OpenSocial Data Object has an associated data type identifier in the form of an absolute IRI reference that is used in a number of different places throughout OpenSocial applications. Such IRIs are used for identification purposes only and MUST be compared on a character-by-character basis in a case-insensitive fashion.</p>
+<p id="rfc.section.4.4.p.2">All data type identifiers that begin with the prefix "http://opensocial.org/types/" are reserved for use by this specification. Implementations MUST NOT use any data type identifier that begins with the prefix "http://opensocial.org/types/" other than those defined by the OpenSocial specification. Please refer to <a href="#social-app">[social-app]</a> for details on the current set of data types defined by OpenSocial.</p>
+<h1 id="rfc.section.4.4.1">
+<a href="#rfc.section.4.4.1">4.4.1.</a> <a href="#legacy.data.type.identifiers" id="legacy.data.type.identifiers">Legacy Data Type Identifiers</a>
+</h1>
+<p id="rfc.section.4.4.1.p.1">Older versions of this specification utilized an alternative, now-deprecated syntax for data type identifiers:</p>
+<div id="#rfc.figure.58"></div>
+<pre>
+  segment = 1*( ALPHA / DIGIT )
+  prefix = segment "."
+  name = segment
+  legacy-datatype = prefix name
+          </pre>
+<p id="rfc.section.4.4.1.p.2">For example, the legacy data type identifier for the OpenSocial Person datatype was "opensocial.Person".</p>
+<p id="rfc.section.4.4.1.p.3">For backwards compatibility purposes with existing applications, implementations MAY continue to support the use of Legacy Data Types.  New applications for which backwards compatibility is not a concern, however, SHOULD NOT use legacy data type identifiers.</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#Security" id="Security">Security</a>
+</h1>
+<p id="rfc.section.5.p.1">When a REST Service provides access to protected resources for which authentication is required, the service MUST support the use of either OAuth version 1.0a, OAuth version 2.0 or both as the preferred authentication mechanism. Specific implementations MAY support additional alternative autentication mechanisms but support for such is considered out of the scope of this specification.</p>
+<p id="rfc.section.5.p.2">REST Services MAY accept requests with no authentication or authorization information for data considered to be public. The service MAY provide a limited "public representation" of a resource if no authorization information is provided in the request.</p>
+<p id="rfc.section.5.p.3">In the case where no information is available due to lack of authorization, an HTTP 401 Unauthorized response SHOULD be returned to the client. In the case where at least some view of the information is available, it SHOULD be returned using an appropriate 2xx status, with a standard WWW-Authenticate response header indicating that additional information may be available when using a different authorization context.</p>
+<h1 id="rfc.section.5.1">
+<a href="#rfc.section.5.1">5.1.</a> OAuth 1.0a and 2.0 Support</h1>
+<p id="rfc.section.5.1.p.1">When utilizing the OAuth protocol, the overall flow is straightforward:</p>
+<p></p>
+
+<ul>
+<li>The REST Service provider is the "resource server", providing access to one or more protected "resources" for which a "resource owner" MUST grant permission to access.</li>
+<li>Any application making use of a REST Service, is an OAuth "client" that MUST first acquire permission from the "resource owner" to access the resources provided by the server.</li>
+<li>Typically, the "resource owner" is the individual that is using the application and for which the application is attempting to access the resource.</li>
+<li>Once the client determines that it must access a protected resource, it must first acquire initial authorization. How this is done depends entirely on what version and variation of the OAuth protocol is being used. Generally, this step results in the granting of an "authentication token" to the client.</li>
+<li>Once the client has been authorized, it must ask the authorization server to exchange that authorization token for an access token. This access token, when granted, provides the client with permission -- limited in both time and scope -- to access the protected resource.  Because the access token allows the client to operate on behalf of the resource owner, the resource owner has to approve the exchange before the access token can be issued. How the access token is issued depends entirely on what version and variation of the OAuth protocol is being used.</li>
+<li>Once the client has been granted an access token, it can use that token within it's requests to access the protected resource for a limited period of time. Once the allotted time expires, the client must reacquire permission to continued access to the resource by requesting a new access token.</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.5.1.p.3">There are several valid ways in which the initial authorization token may be acquired by the client. This specification does not prescribe or require any single acquisition mechanism.</p>
+<p id="rfc.section.5.1.p.4">Likewise, there are several valid ways in which an authenticated request can be prepared using the access token once acquired: </p>
+
+<ul>
+<li>When using OAuth 2.0, the access token can be included directly within the request utilizing the so-called "bearer token" mechanism defined by <a href="#I-D.ietf-oauth-v2-bearer">[I-D.ietf-oauth-v2-bearer]</a> or the token can be combined with additional data to generate a cryptographic hash used for authentication purposes as described by <a href="#I-D.ietf-oauth-v2-http-mac">[I-D.ietf-oauth-v2-http-mac]</a>.</li>
+<li>When using OAuth 1.0a, the access token is utilized as described in Section 3.0 of <a href="#RFC5849">[RFC5849]</a>.</li>
+</ul>
+
+<p> </p>
+<p id="rfc.section.5.1.p.5">When utilizing OAuth version 2.0, all REST Services MUST, at a minimum, support the use of OAuth 2.0 Bearer Tokens as specified in <a href="#I-D.ietf-oauth-v2-bearer">[I-D.ietf-oauth-v2-bearer]</a>. Because such tokens are passed to the server as unencrypted, plain text, all requests containing an OAuth 2.0 Bearer Token MUST be exchanged using TLS 2.0 or SSL.</p>
+<p id="rfc.section.5.1.p.6">All access tokens SHOULD be issued with limited scope and short expiration times to limit the risk of potential security breaches due to stolen access tokens. The "scope" of an "access token" identies the range of resources and the types of operations for which the token can be used. The "expiration time" specifies the length of time for which the access token is considered to be valid. The token expiration policy is left to the specific implementation and may vary depending on the client requesting the token. Expiration times of 1 hour or less, and tokens with limited scope may be used with less trusted clients while expiration times of several hours and tokens with increased scope may be used for more trusted clients.  Implementations SHOULD document (at least for administrators) how to configure token scopes and expiration times if these values are configurable.</p>
+<h1 id="rfc.section.5.2">
+<a href="#rfc.section.5.2">5.2.</a> Signed Fetch</h1>
+<p id="rfc.section.5.2.p.1">All REST Services SHOULD support the use of the so-called "Signed Fetch" mechanism.</p>
+<p id="rfc.section.5.2.p.2">Signed Fetch is a simplified mechanism based on a subset of the OAuth 1.0a protocol that allows a container to "sign" requests sent to a remote endpoint. Such signatures provide only a reasonable assurance that certain content contained within the request has not been modified by a malicious party. Once a receiving endpoint determines that it is able to trust the signed request, it can decide to provide limited access to certain protected resources without having to walk through the entire typical OAuth protocol.</p>
+<p id="rfc.section.5.2.p.3">Signed Fetch is described in detail in <a href="#core-gadget">The OpenSocial Core Gadget Specification</a> <cite title="NONE">[core-gadget]</cite>.</p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#versioning" id="versioning">Versioning</a>
+</h1>
+<p id="rfc.section.6.p.1">The ability for server and client implementions to clearly communicate which version of the OpenSocial specification a particular Service API and resource supports is critical.</p>
+<p id="rfc.section.6.p.2">For the purpose of clearly identifying which version of the OpenSocial specification a particular application is implementing, a Web Link header referencing the base URI of the OpenSocial specification and using a rel attribute value of <a href="#I-D.wilde-profile-link">"profile"</a> <cite title="NONE">[I-D.wilde-profile-link]</cite> SHOULD be included within the HTTP request and response message.</p>
+<div id="#rfc.figure.59"></div>
+<p>For example, the Link would appear within the request:</p>
+<pre>
+  GET /api/people/@me/@self HTTP/1.1
+  Host: example.org
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
+      </pre>
+<div id="#rfc.figure.60"></div>
+<p>And within the response:</p>
+<pre>
+  HTTP/1.1 200 OK
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
+      </pre>
+<p id="rfc.section.6.p.3">A server MAY choose to implement additional conventions for identifying the current version, such as including a version indicator within the base URI of the Service API (e.g. http://example.org/v3/api/people).  Such conventions are considered out of scope.</p>
+<h1 id="rfc.section.6.1">
+<a href="#rfc.section.6.1">6.1.</a> Upgrade Indication and Transition</h1>
+<p id="rfc.section.6.1.p.1">When a server implementation of an older version of the OpenSocial specification upgrades to a newer version, it has the responsibility to provide a clear mechanism for either continuing to support client applications using the old version or help clients migrate to the new.  Whether a server chooses to continue to support the old and new versions of the OpenSocial specification simultaneously is an implementation and business decision that is out of the scope of this specification. Accordingly, each of the options detailed below are informative in nature only.</p>
+<p id="rfc.section.6.1.p.2">However, when a server wishes to indicate to a client application that the server has been upgraded and that the old version of the API is no longer available, it can do so using an Upgrade Required response.</p>
+<div id="#rfc.figure.61"></div>
+<p>An "Upgrade Required Response" is an HTTP response that uses the 426 Upgrade Required status along with an "profile" Web Link. For instance:</p>
+<pre>
+  HTTP/1.1 426 Upgrade Required
+  Upgrade: OpenSocial/3.0
+  Connection: upgrade 
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
+        </pre>
+<p id="rfc.section.6.1.p.3">When using such responses, the Upgrade header MUST specify an Upgrade Token value of "OpenSocial" and an Upgrade Version Token consisting of the major and minor version identifier as specified in Section 1.2 of <a href="#core-gadget">[core-gadget]</a>.</p>
+<p id="rfc.section.6.1.p.4">Use of the 426 Upgrade Required response implies a complete cutover from one version of the specification to another. While such a strategy might be appropriate in some cases, many applications will require a more gradual approach in order to avoid breaking existing clients. Alternatively, a server can choose to migrate client applications incrementally, initially deploying the new version of the application side-by-side with the old.</p>
+<p id="rfc.section.6.1.p.5">For example, if a server currently exposes version 3.0 of the OpenSocial Person Service at the URI "http://example.org/api/people", and it wishes to upgrade clients to a hypothetical version 3.1 in the future, without requiring clients to change the URIs used to access the service, it can either continue to support the 3.0 clients transparently or perform an "in place" upgrade.</p>
+<div id="#rfc.figure.62"></div>
+<p>An example 3.0 client request:</p>
+<pre>
+  GET /api/people/@me/@self HTTP/1.1
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
+        </pre>
+<div id="#rfc.figure.63"></div>
+<p>A server implementing a hypothetical 3.1 version of the OpenSocial spec can continue to respond as if it was a 3.0 implementation:</p>
+<pre>
+  HTTP/1.1 200 OK
+  Link: &lt;http://opensocial.org/specs/3.0&gt;; rel="profile"
+  Content-Type: application/json
+  
+  {... OpenSocial 3.0 data ...}
+        </pre>
+<div id="#rfc.figure.64"></div>
+<p>Or, it can perform an "in-place" upgrade:</p>
+<pre>
+  HTTP/1.1 200 OK
+  Upgrade: OpenSocial/3.1
+  Connection: upgrade
+  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="profile"
+  Content-Type: application/json
+  
+  {... OpenSocial 3.1 data ...}
+        </pre>
+<p id="rfc.section.6.1.p.6">Alternatively, the server MAY choose to deploy the new version with a new URI and redirect the down-level client to the new version of the application:</p>
+<div id="#rfc.figure.65"></div>
+<p>An upgrade redirection from the server:</p>
+<pre>
+  HTTP/1.1 301 Moved Permanently
+  Location: /v3.1/api/people/@me/@self HTTP/1.1
+  Upgrade: OpenSocial/3.1
+  Connection: upgrade
+  Link: &lt;http://opensocial.org/specs/3.1&gt;; rel="profile"
+        </pre>
+<h1 id="rfc.section.7">
+<a href="#rfc.section.7">7.</a> <a href="#service-identifier-registry" id="service-identifier-registry">Registry of Service Identifiers</a>
+</h1>
+<p id="rfc.section.7.p.1">Every REST service is associated with a distinct service-identifier as defined by <a href="#service-identifiers">Section 2.2</a>. The OpenSocial Social Applications Specification <a href="#social-app">[social-app]</a> defines the core set of services and their associated identifiers.</p>
+<p id="rfc.section.7.p.2">Implementations are free to introduce additional services so long as each is identified by a unique service-identifier. To promote interoperability across implementations, this specification establishes a Registry of Service Identifiers to be hosted and managed by the OpenSocial Foundation. This registry shall contain known, commonly used service identifiers. Whenever an implementor defines and deploys support for new services, the associated identifier SHOULD be added to the registry.</p>
+<p id="rfc.section.7.p.3">Registrations require review by the OpenSocial community and are subject to the following rules: </p>
+
+<ol>
+<li>A service identifier, once registered, stays registered forever.</li>
+<li>The registration MUST name a responsible party for the registration.</li>
+<li>The registration MUST name a point of contact.</li>
+<li>The registration MAY name a set of specifications associated with the identifier. Such specifications SHOULD be publicly available.</li>
+</ol>
+
+<p> </p>
+<p id="rfc.section.7.p.4">The party responsible MUST submit the registration request via email to the mailing list for the OpenSocial Specification Community Group.  After a period of 30-days following the date of the email request, if there are no expicit objections from members of the community in response to the registration, the request will be assumed to be automatically accepted.</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> <a href="#aspect-identifier-registry" id="aspect-identifier-registry">Registry of Aspect Identifiers</a>
+</h1>
+<p id="rfc.section.8.p.1">For each distinctly-named REST Service (see <a href="#service-identifiers">Section 2.2</a>), every individual data object can have zero or more individually identifiable aspects (see <a href="#aspect-identifiers">Section 2.4</a>). The OpenSocial Social Applications Specification <a href="#social-app">[social-app]</a> defines the core set of services and their associated aspect identifiers.</p>
+<p id="rfc.section.8.p.2">Implementations are free to introduce additional aspects for any service so long as each is identified by a unique aspect identifier.  To promote interoperability across implementations, this specification establishes a Registry of Aspect Identifiers to be hosted and managed by the OpenSocial Foundation. This registry shall contain known, commonly used aspect identifiers. Whenever an implementor defines and deploys support for new aspects, the associated identifier SHOULD be added to the registry.</p>
+<p id="rfc.section.8.p.3">Registrations require review by the OpenSocial community and are subject to the following rules: </p>
+
+<ol>
+<li>An aspect identifier, once registered, stays registered forever.</li>
+<li>The registration MUST name a responsible party for the registration.</li>
+<li>The registration MUST name a point of contact.</li>
+<li>The registration MAY name a set of specifications associated with the identifier. Such specifications SHOULD be publicly available.</li>
+<li>The registration MUST name the service-identifier for which it is associated.</li>
+</ol>
+
+<p> </p>
+<p id="rfc.section.8.p.4">The party responsible MUST submit the registration request via email to the mailing list for the OpenSocial Specification Community Group.  After a period of 30-days following the date of the email request, if there are no expicit objections from members of the community in response to the registration, the request will be assumed to be automatically accepted.</p>
+<h1 id="rfc.references">
+<a href="#rfc.references">9.</a> References</h1>
+<h1 id="rfc.references.1">
+<a href="#rfc.references.1">9.1.</a> Normative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="RFC2119">[RFC2119]</b></td>
+<td class="top">
+<a href="mailto:sob@harvard.edu" title="Harvard University">Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, March 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3864">[RFC3864]</b></td>
+<td class="top">
+<a>Klyne, G.</a>, <a>Nottingham, M.</a> and <a>J. Mogul</a>, "<a href="http://tools.ietf.org/html/rfc3864">Registration Procedures for Message Header Fields</a>", BCP 90, RFC 3864, September 2004.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5226">[RFC5226]</b></td>
+<td class="top">
+<a>Narten, T.</a> and <a>H. Alvestrand</a>, "<a href="http://tools.ietf.org/html/rfc5226">Guidelines for Writing an IANA Considerations Section in RFCs</a>", BCP 26, RFC 5226, May 2008.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2026">[RFC2026]</b></td>
+<td class="top">
+<a href="mailto:sob@harvard.edu" title="Harvard University">Bradner, S.</a>, "<a href="http://tools.ietf.org/html/rfc2026">The Internet Standards Process -- Revision 3</a>", BCP 9, RFC 2026, October 1996.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5234">[RFC5234]</b></td>
+<td class="top">
+<a>Crocker, D.</a> and <a>P. Overell</a>, "<a href="http://tools.ietf.org/html/rfc5234">Augmented BNF for Syntax Specifications: ABNF</a>", STD 68, RFC 5234, January 2008.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6570">[RFC6570]</b></td>
+<td class="top">
+<a>Gregorio, J.</a>, <a>Fielding, R.</a>, <a>Hadley, M.</a>, <a>Nottingham, M.</a> and <a>D. Orchard</a>, "<a href="http://tools.ietf.org/html/rfc6570">URI Template</a>", RFC 6570, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5789">[RFC5789]</b></td>
+<td class="top">
+<a>Dusseault, L.</a> and <a>J. Snell</a>, "<a href="http://tools.ietf.org/html/rfc5789">PATCH Method for HTTP</a>", RFC 5789, March 2010.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5234">[RFC5234]</b></td>
+<td class="top">
+<a>Crocker, D.</a> and <a>P. Overell</a>, "<a href="http://tools.ietf.org/html/rfc5234">Augmented BNF for Syntax Specifications: ABNF</a>", STD 68, RFC 5234, January 2008.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3986">[RFC3986]</b></td>
+<td class="top">
+<a href="mailto:timbl@w3.org" title="World Wide Web Consortium">Berners-Lee, T.</a>, <a href="mailto:fielding@gbiv.com" title="Day Software">Fielding, R.</a> and <a href="mailto:LMM@acm.org" title="Adobe Systems Incorporated">L. Masinter</a>, "<a href="http://tools.ietf.org/html/rfc3986">Uniform Resource Identifier (URI): Generic Syntax</a>", STD 66, RFC 3986, January 2005.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3987">[RFC3987]</b></td>
+<td class="top">
+<a>Duerst, M.</a> and <a>M. Suignard</a>, "<a href="http://tools.ietf.org/html/rfc3987">Internationalized Resource Identifiers (IRIs)</a>", RFC 3987, January 2005.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3339">[RFC3339]</b></td>
+<td class="top">
+<a href="mailto:GK@ACM.ORG" title="Clearswift Corporation">Klyne, G.</a> and <a href="mailto:chris.newman@sun.com" title="Sun Microsystems">C. Newman</a>, "<a href="http://tools.ietf.org/html/rfc3339">Date and Time on the Internet: Timestamps</a>", RFC 3339, July 2002.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC5849">[RFC5849]</b></td>
+<td class="top">
+<a>Hammer-Lahav, E.</a>, "<a href="http://tools.ietf.org/html/rfc5849">The OAuth 1.0 Protocol</a>", RFC 5849, April 2010.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC4627">[RFC4627]</b></td>
+<td class="top">
+<a>Crockford, D.</a>, "<a href="http://tools.ietf.org/html/rfc4627">The application/json Media Type for JavaScript Object Notation (JSON)</a>", RFC 4627, July 2006.</td>
+</tr>
+<tr>
+<td class="reference"><b id="json-activity-streams">[json-activity-streams]</b></td>
+<td class="top">
+<a title="IBM Corporation">Snell, J.</a>, <a title="SAY Media">Atkins, M.</a>, <a title="Google">Norris, W.</a>, <a title="Citizen Agency">Messina, C.</a>, <a title="MySpace">Wilkinson, M.</a> and <a title="Microsoft">R. Dolin</a>, "<a>JSON Activity Streams 1.0</a>", May 2011.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.wilde-profile-link">[I-D.wilde-profile-link]</b></td>
+<td class="top">
+<a>Wilde, E</a>, "<a href="http://tools.ietf.org/html/draft-wilde-profile-link-01">The 'profile' Link Relation Type</a>", Internet-Draft draft-wilde-profile-link-01, April 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-httpbis-p1-messaging">[I-D.ietf-httpbis-p1-messaging]</b></td>
+<td class="top">
+<a>Fielding, R</a>, <a>Lafon, Y</a> and <a>J Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-19">HTTP/1.1, part 1: URIs, Connections, and Message Parsing</a>", Internet-Draft draft-ietf-httpbis-p1-messaging-19, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-httpbis-p2-semantics">[I-D.ietf-httpbis-p2-semantics]</b></td>
+<td class="top">
+<a>Fielding, R</a>, <a>Lafon, Y</a> and <a>J Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-p2-semantics-19">HTTP/1.1, part 2: Message Semantics</a>", Internet-Draft draft-ietf-httpbis-p2-semantics-19, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-httpbis-p3-payload">[I-D.ietf-httpbis-p3-payload]</b></td>
+<td class="top">
+<a>Fielding, R</a>, <a>Lafon, Y</a> and <a>J Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-p3-payload-19">HTTP/1.1, part 3: Message Payload and Content Negotiation</a>", Internet-Draft draft-ietf-httpbis-p3-payload-19, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-httpbis-p4-conditional">[I-D.ietf-httpbis-p4-conditional]</b></td>
+<td class="top">
+<a>Fielding, R</a>, <a>Lafon, Y</a> and <a>J Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-p4-conditional-19">HTTP/1.1, part 4: Conditional Requests</a>", Internet-Draft draft-ietf-httpbis-p4-conditional-19, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-httpbis-p5-range">[I-D.ietf-httpbis-p5-range]</b></td>
+<td class="top">
+<a>Fielding, R</a>, <a>Lafon, Y</a> and <a>J Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-p5-range-19">HTTP/1.1, part 5: Range Requests and Partial Responses</a>", Internet-Draft draft-ietf-httpbis-p5-range-19, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-httpbis-p6-cache">[I-D.ietf-httpbis-p6-cache]</b></td>
+<td class="top">
+<a>Fielding, R</a>, <a>Lafon, Y</a>, <a>Nottingham, M</a> and <a>J Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-p6-cache-19">HTTP/1.1, part 6: Caching</a>", Internet-Draft draft-ietf-httpbis-p6-cache-19, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-httpbis-p7-auth">[I-D.ietf-httpbis-p7-auth]</b></td>
+<td class="top">
+<a>Fielding, R</a>, <a>Lafon, Y</a> and <a>J Reschke</a>, "<a href="http://tools.ietf.org/html/draft-ietf-httpbis-p7-auth-19">HTTP/1.1, part 7: Authentication</a>", Internet-Draft draft-ietf-httpbis-p7-auth-19, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-appsawg-json-patch">[I-D.ietf-appsawg-json-patch]</b></td>
+<td class="top">
+<a>Bryan, P</a>, "<a href="http://tools.ietf.org/html/draft-ietf-appsawg-json-patch-01">JSON Patch</a>", Internet-Draft draft-ietf-appsawg-json-patch-01, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.snell-merge-patch">[I-D.snell-merge-patch]</b></td>
+<td class="top">
+<a>Snell, J</a>, "<a href="http://tools.ietf.org/html/draft-snell-merge-patch-00">The application/merge-patch Media Type</a>", Internet-Draft draft-snell-merge-patch-00, March 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-oauth-v2-bearer">[I-D.ietf-oauth-v2-bearer]</b></td>
+<td class="top">
+<a>Jones, M</a>, <a>Hardt, D</a> and <a>D Recordon</a>, "<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-19">The OAuth 2.0 Authorization Protocol: Bearer Tokens</a>", Internet-Draft draft-ietf-oauth-v2-bearer-19, April 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-oauth-v2-http-mac">[I-D.ietf-oauth-v2-http-mac]</b></td>
+<td class="top">
+<a>Hammer-Lahav, E</a>, "<a href="http://tools.ietf.org/html/draft-ietf-oauth-v2-http-mac-01">HTTP Authentication: MAC Access Authentication</a>", Internet-Draft draft-ietf-oauth-v2-http-mac-01, February 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="core-gadget">[core-gadget]</b></td>
+<td class="top">
+<a>OpenSocial Core Gadget Specification v3.0</a>", April 2012.</td>, "</tr>
+<tr>
+<td class="reference"><b id="social-app">[social-app]</b></td>
+<td class="top">
+<a>OpenSocial Social Application Specification 3.0</a>", April 2012.</td>, "</tr>
+<tr>
+<td class="reference"><b id="astream-links">[astream-links]</b></td>
+<td class="top">
+<a title="IBM">Snell, J.M.</a>, "<a>Links for Activity Streams</a>", April 2012.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.references.2">
+<a href="#rfc.references.2">9.2.</a> Informative References</h1>
+<table><tbody><tr>
+<td class="reference"><b id="RFC4287">[RFC4287]</b></td>
+<td class="top">
+<a href="mailto:mnot@pobox.com">Nottingham, M.</a> and <a href="mailto:rfsayre@boswijck.com">R. Sayre</a>, "<a href="http://tools.ietf.org/html/rfc4287">The Atom Syndication Format</a>", RFC 4287, December 2005.</td>
+</tr></tbody></table>
+<h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">OpenSocial and Gadgets Specification Group</span> 
+	  <span class="n hidden">
+		<span class="family-name"></span>
+	  </span>
+	</span>
+	<span class="org vcardline"></span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:opensocial-and-gadgets-spec@googlegroups.com">opensocial-and-gadgets-spec@googlegroups.com</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
