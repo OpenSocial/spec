@@ -588,7 +588,7 @@
   
   <meta name="dct.abstract" content="" />
   <meta name="description" content="" />
-  <meta name="keywords" content="OpenSocial, social networking, REST, XML, Extensible Markup Language, JSON, JavaScript Object Notation, Atom" />
+  <meta name="keywords" content="" />
 
 </head>
 
@@ -603,10 +603,10 @@
 </tr>
 <tr>
 <td class="left">Internet-Draft</td>
-<td class="right">August 2011</td>
+<td class="right">May 2012</td>
 </tr>
 <tr>
-<td class="left">Expires: January 31, 2012</td>
+<td class="left">Expires: October 31, 2012</td>
 <td class="right"></td>
 </tr>
 
@@ -621,9 +621,9 @@
 <p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
 <p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet- Drafts is at http://datatracker.ietf.org/drafts/current/.</p>
 <p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
-<p>This Internet-Draft will expire on January 31, 2012.</p>
+<p>This Internet-Draft will expire on October 31, 2012.</p>
 <h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
-<p>Copyright (c) 2011 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>Copyright (c) 2012 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
 <p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
 
   
@@ -1310,7 +1310,7 @@
   Require = element Require { dependency }   
           </pre>
 <p id="rfc.section.2.2.3.p.2">Features are collections of processing rules and JavaScript Library APIs that provide specific functionality to a application. A feature might also place various constraints and rules on the container and application when in use. Containers are required to honor the constraints and rules of any feature it claims to support.</p>
-<p id="rfc.section.2.2.3.p.3">The <samp>feature</samp> attribute on the &lt;Optiona&gt; and &lt;Require&gt; elements specifies the unique identifier of a Feature.</p>
+<p id="rfc.section.2.2.3.p.3">The <samp>feature</samp> attribute on the &lt;Optional&gt; and &lt;Require&gt; elements specifies the unique identifier of a Feature.</p>
 <p id="rfc.section.2.2.3.p.4">The <samp>version</samp> attribute specifies the specific version of the identified Feature, using the syntax described in <a href="#Versioning">Section 1.2</a>.</p>
 <p id="rfc.section.2.2.3.p.5">The <samp>views</samp> attribute specifies a comma separated list of <a href="#content-processing-model">views</a> <cite title="NONE">[content-processing-model]</cite> for which the Feature is either optional or required. Containers SHOULD only load features when an appropriate view is being rendered.</p>
 <p id="rfc.section.2.2.3.p.6">For every feature identified using a &lt;Require&gt; element, the container to required to provide an implementation that matches the version specified by the <samp>version</samp> attribute.  The container is required to display an error if it is incapable of providing an appropriate implementation for a required Feature.</p>
@@ -1321,14 +1321,12 @@
 <p id="rfc.section.2.2.3.p.11">It is possible for there to be feature version conflicts when two valid feature dependencies exist for the same feature.  This situation can occur when the same feature is declared at a global scope (no <samp>views</samp> attribute specified on the &lt;Require&gt; or &lt;Optional&gt; element) and at a view scope (<samp>views</samp> attribute specified) but with differing <samp>version</samp> values; for example, if we are rendering an Application's "home" view and the specification document contains both &lt;Require feature="myfeature" version="1"&gt; and &lt;Require feature="myfeature" version="2" views="home"&gt;.  In such cases, containers SHOULD use the Feature version from the element that explicitly matches the view being rendered over other feature references. Developers can easily correct such conflicts by always using the <samp>views</samp> attribute in applications that use mixed Feature versions.</p>
 <h1 id="rfc.section.2.2.3.1">
 <a href="#rfc.section.2.2.3.1">2.2.3.1.</a> The &lt;Param&gt; Element</h1>
-<p id="rfc.section.2.2.3.1.p.1">The &lt;Param&gt; element provides configuration details for a feature dependency. The element consists of a single <samp>name</samp> attribute and text content. The element MUST NOT contain un-escaped markup. If the value of the parameter being specified contains markup such as XML or HTML tags, the value MUST either be properly escaped using appropriate XML entity tags or wrapped within a CDATA section.</p>
+<p id="rfc.section.2.2.3.1.p.1">The &lt;Param&gt; element provides configuration details for a feature dependency. The element consists of a single <samp>name</samp> attribute and text content. The element MUST NOT contain un-escaped markup. If the value of the parameter being specified contains markup such as XML or HTML tags, the value MUST either be properly escaped or wrapped within a CDATA section.</p>
 <div id="#rfc.figure.9"></div>
 <p>For instance:</p>
 <pre>
   &lt;Require feature="my-feature" version="1.0"&gt;
-    &lt;Param name="foo"&gt;&lt;![CDATA[
-      &lt;a&gt;bar&lt;/a&gt;
-    ]]&gt;&lt;/Param&gt;
+    &lt;Param name="foo"&gt;&lt;![CDATA[&lt;a&gt;bar&lt;/a&gt;]]&gt;&lt;/Param&gt;
   &lt;/Require&gt;
             </pre>
 <div id="#rfc.figure.10"></div>
@@ -1343,7 +1341,7 @@
 <p id="rfc.section.2.2.3.1.p.4">When a feature dependency for a specific view has been defined, the container SHOULD make only the parameters from the view-specific dependency available to the application using the getFeatureParameters API.</p>
 <h1 id="rfc.section.2.2.4">
 <a href="#rfc.section.2.2.4">2.2.4.</a> The &lt;Preload&gt; Element</h1>
-<p id="rfc.section.2.2.4.p.1">The &lt;Preload&gt; element is used to identify resources that a container SHOULD load automatically an application view is processed and rendered.</p>
+<p id="rfc.section.2.2.4.p.1">The &lt;Preload&gt; element is used to identify resources that a container SHOULD load automatically when an application view is processed and rendered.</p>
 <div id="#rfc.figure.11"></div>
 <pre>
   Preload = element Preload {
@@ -2418,14 +2416,17 @@
 </h1>
 <p id="rfc.section.3.1.2.1.1.p.1">The value of the <samp>OAUTH_USE_TOKEN</samp> parameter MUST be one of: </p>
 
-<ul class="empty">
-<li>Tells the container that the Access Token is never required. Requests will be sent to the remote endpoint without an OAuth Access Token.  </li>
-<li>Tells the container that use of the Access Token is optional. If an Access token has been acquired, it will be included in the request sent to the remote endpoint, otherwise the request will be sent without an Access Token.  </li>
-<li>Tells the container that use of the Access Token is required. If an appropriate Access Token has not yet been acquired, the container will work with the application and the OAuth Service Provider to seek appropriate authorization and acquire an Access Token.  </li>
-</ul>
+<dl>
+<dt>never</dt>
+<dd style="margin-left: 8">Tells the container that the Access Token is never required. Requests will be sent to the remote endpoint without an OAuth Access Token.  </dd>
+<dt>if_available</dt>
+<dd style="margin-left: 8">Tells the container that use of the Access Token is optional. If an Access token has been acquired, it will be included in the request sent to the remote endpoint, otherwise the request will be sent without an Access Token.  </dd>
+<dt>always</dt>
+<dd style="margin-left: 8">Tells the container that use of the Access Token is required. If an appropriate Access Token has not yet been acquired, the container will work with the application and the OAuth Service Provider to seek appropriate authorization and acquire an Access Token.  </dd>
+</dl>
 
 <p> </p>
-<p id="rfc.section.3.1.2.1.1.p.2">If the OAUTH_USE_TOKEN parameter is not specified, the value is assumed to be "always".</p>
+<p id="rfc.section.3.1.2.1.1.p.2">If the OAUTH_USE_TOKEN parameter is not specified, the value is assumed to be <samp>always</samp>.</p>
 <h1 id="rfc.section.3.1.2.2">
 <a href="#rfc.section.3.1.2.2">3.1.2.2.</a> <a href="#oauth-processing-model" id="oauth-processing-model">Processing Model</a>
 </h1>

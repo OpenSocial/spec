@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
 <?rfc-ext allow-markup-in-artwork="yes"?>
 <?rfc private="OpenSocial Foundation"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
@@ -32,7 +41,6 @@
   <!ENTITY mac PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-oauth-v2-http-mac-01.xml'>
   <!ENTITY jsonpatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-ietf-appsawg-json-patch-01.xml'>
   <!ENTITY mergepatch PUBLIC '' 'http://xml.resource.org/public/rfc/bibxml3/reference.I-D.draft-snell-merge-patch-00.xml'>
-  
   <!ENTITY astreams PUBLIC '' 'http://docs.opensocial.org/download/attachments/4358254/astreams.xml'>
 
 ]>
@@ -44,7 +52,7 @@
         <email>opensocial-and-gadgets-spec@googlegroups.com</email>
       </address>
     </author>
-    <date month="April" year="2012" />
+    <date month="May" year="2012" />
     <abstract>
       <t>TBD</t>
     </abstract>

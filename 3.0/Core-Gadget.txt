@@ -2,8 +2,8 @@
 
 
 Network Working Group
-Internet-Draft                                               August 2011
-Expires: January 31, 2012
+Internet-Draft                                                  May 2012
+Expires: October 31, 2012
 
                 OpenSocial Application Specification 3.0
 
@@ -22,11 +22,11 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 31, 2012.
+   This Internet-Draft will expire on October 31, 2012.
 
 Copyright Notice
 
-   Copyright (c) 2011 IETF Trust and the persons identified as the
+   Copyright (c) 2012 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -54,11 +54,11 @@ Table of Contents
        2.2.4.  The <Preload> Element  . . . . . . . . . . . . . . . . 17
        2.2.5.  The <Link> Element . . . . . . . . . . . . . . . . . . 18
 
-(surname)               Expires January 31, 2012                [Page 1]
+(surname)               Expires October 31, 2012                [Page 1]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
-       2.2.6.  The <Locale> Element . . . . . . . . . . . . . . . . . 20
+       2.2.6.  The <Locale> Element . . . . . . . . . . . . . . . . . 19
        2.2.7.  The <OAuth> Element  . . . . . . . . . . . . . . . . . 21
        2.2.8.  The <OAuth2> Element . . . . . . . . . . . . . . . . . 23
        2.2.9.  The <UserPref> Element . . . . . . . . . . . . . . . . 25
@@ -90,41 +90,41 @@ Internet-Draft                Core-Gadget                    August 2011
        3.3.2.  Using Data Pipeline Variables  . . . . . . . . . . . . 64
        3.3.3.  Using Reserved Variable Keys . . . . . . . . . . . . . 65
        3.3.4.  Deprecated Expression Syntax . . . . . . . . . . . . . 67
-       3.3.5.  Processing Requirements  . . . . . . . . . . . . . . . 68
-     3.4.  Localization . . . . . . . . . . . . . . . . . . . . . . . 69
+       3.3.5.  Processing Requirements  . . . . . . . . . . . . . . . 69
+     3.4.  Localization . . . . . . . . . . . . . . . . . . . . . . . 70
        3.4.1.  Considerations for Bidirectional Text  . . . . . . . . 71
        3.4.2.  Message Bundle Documents . . . . . . . . . . . . . . . 72
      3.5.  Application Lifecycle Events . . . . . . . . . . . . . . . 73
        3.5.1.  Lifecycle Event Notifications  . . . . . . . . . . . . 80
-       3.5.2.  Legacy Support . . . . . . . . . . . . . . . . . . . . 82
+       3.5.2.  Legacy Support . . . . . . . . . . . . . . . . . . . . 81
      3.6.  Data Pipelining  . . . . . . . . . . . . . . . . . . . . . 82
        3.6.1.  The DataContext  . . . . . . . . . . . . . . . . . . . 83
-       3.6.2.  Data Pipeline Elements and the Data Block  . . . . . . 84
-       3.6.3.  Data Pipeline Elements within HTML Content . . . . . . 85
-       3.6.4.  Data Pipeline Elements and Proxied Content . . . . . . 86
-       3.6.5.  The Data Pipeline Elements . . . . . . . . . . . . . . 89
+       3.6.2.  Data Pipeline Elements and the Data Block  . . . . . . 83
+       3.6.3.  Data Pipeline Elements within HTML Content . . . . . . 84
+       3.6.4.  Data Pipeline Elements and Proxied Content . . . . . . 85
+       3.6.5.  The Data Pipeline Elements . . . . . . . . . . . . . . 88
          3.6.5.1.  The <os:DataRequest> Element . . . . . . . . . . . 89
          3.6.5.2.  The <os:HttpRequest> Element . . . . . . . . . . . 90
-         3.6.5.3.  The <os:Var> Element . . . . . . . . . . . . . . . 93
-         3.6.5.4.  Expression Statements within Data Pipeline Attribute 94
-   4.  Container-Provided Features  . . . . . . . . . . . . . . . . . 95
-     4.1.  Core Features  . . . . . . . . . . . . . . . . . . . . . . 95
+         3.6.5.3.  The <os:Var> Element . . . . . . . . . . . . . . . 92
+         3.6.5.4.  Expression Statements within Data Pipeline Attribute 93
+   4.  Container-Provided Features  . . . . . . . . . . . . . . . . . 94
+     4.1.  Core Features  . . . . . . . . . . . . . . . . . . . . . . 94
        4.1.1.  The Logging Feature  . . . . . . . . . . . . . . . . . 95
          4.1.1.1.  JavaScript API . . . . . . . . . . . . . . . . . . 95
            4.1.1.1.1.  gadgets.log  . . . . . . . . . . . . . . . . . 95
-           4.1.1.1.2.  gadgets.warn . . . . . . . . . . . . . . . . . 96
+           4.1.1.1.2.  gadgets.warn . . . . . . . . . . . . . . . . . 95
            4.1.1.1.3.  gadgets.error  . . . . . . . . . . . . . . . . 96
 
-(surname)               Expires January 31, 2012                [Page 2]
+(surname)               Expires October 31, 2012                [Page 2]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
            4.1.1.1.4.  gadgets.setLogLevel  . . . . . . . . . . . . . 96
        4.1.2.  The IO Feature . . . . . . . . . . . . . . . . . . . . 97
-         4.1.2.1.  JavaScript API . . . . . . . . . . . . . . . . . . 98
-           4.1.2.1.1.  gadgets.io.encodeValues  . . . . . . . . . . . 98
-           4.1.2.1.2.  gadgets.io.getProxyUrl . . . . . . . . . . . . 99
-           4.1.2.1.3.  gadgets.io.makeRequest . . . . . . . . . . .  100
+         4.1.2.1.  JavaScript API . . . . . . . . . . . . . . . . . . 97
+           4.1.2.1.1.  gadgets.io.encodeValues  . . . . . . . . . . . 97
+           4.1.2.1.2.  gadgets.io.getProxyUrl . . . . . . . . . . . . 98
+           4.1.2.1.3.  gadgets.io.makeRequest . . . . . . . . . . . . 99
              4.1.2.1.3.1.  The callback parameter and the Response
                            Object . . . . . . . . . . . . . . . . .  110
        4.1.3.  The JSON Feature . . . . . . . . . . . . . . . . . .  112
@@ -176,9 +176,9 @@ Internet-Draft                Core-Gadget                    August 2011
            4.2.3.1.2.  The DataContext Object . . . . . . . . . . .  134
              4.2.3.1.2.1.  opensocial.data.DataContext.getDataSet .  134
 
-(surname)               Expires January 31, 2012                [Page 3]
+(surname)               Expires October 31, 2012                [Page 3]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
              4.2.3.1.2.2.  opensocial.data.DataContext.putDataSet .  134
              4.2.3.1.2.3.  opensocial.data.DataContext.putDataSets   135
@@ -237,9 +237,9 @@ Internet-Draft                Core-Gadget                    August 2011
              4.2.10.1.4.3.  The HTTP Response Object  . . . . . . .  180
        4.2.11. The PubSub Feature . . . . . . . . . . . . . . . . .  180
 
-(surname)               Expires January 31, 2012                [Page 4]
+(surname)               Expires October 31, 2012                [Page 4]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
          4.2.11.1.  Initializing the Hub within the Container . . .  181
          4.2.11.2.  Examples  . . . . . . . . . . . . . . . . . . .  182
@@ -298,9 +298,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012                [Page 5]
+(surname)               Expires October 31, 2012                [Page 5]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    based on HTML, CSS and JavaScript.  Such applications can be used
    independently or composed together in a variety of ways.  For
@@ -357,9 +357,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012                [Page 6]
+(surname)               Expires October 31, 2012                [Page 6]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    abc = "a" "b" "c"
 
@@ -416,9 +416,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012                [Page 7]
+(surname)               Expires October 31, 2012                [Page 7]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Both the overall OpenSocial specification and individual features are
@@ -475,9 +475,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012                [Page 8]
+(surname)               Expires October 31, 2012                [Page 8]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Version identifiers are hierarchical and can either reference a
@@ -534,9 +534,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012                [Page 9]
+(surname)               Expires October 31, 2012                [Page 9]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Context The context within which an application instance is being
@@ -593,9 +593,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 10]
+(surname)               Expires October 31, 2012               [Page 10]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    o  The project management system is the Container;
 
@@ -652,9 +652,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 11]
+(surname)               Expires October 31, 2012               [Page 11]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    specific for Gadget Specification Documents.
 
@@ -711,9 +711,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 12]
+(surname)               Expires October 31, 2012               [Page 12]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    features and processing rules dealing with the application.  The
    children of the element consist of a variety of optional attributes
@@ -770,9 +770,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 13]
+(surname)               Expires October 31, 2012               [Page 13]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "screenshot" attribute provides an optional IRI of a visual
@@ -829,9 +829,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 14]
+(surname)               Expires October 31, 2012               [Page 14]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      Param = element Param {
@@ -857,7 +857,7 @@ Internet-Draft                Core-Gadget                    August 2011
    application when in use.  Containers are required to honor the
    constraints and rules of any feature it claims to support.
 
-   The "feature" attribute on the <Optiona> and <Require> elements
+   The "feature" attribute on the <Optional> and <Require> elements
    specifies the unique identifier of a Feature.
 
    The "version" attribute specifies the specific version of the
@@ -888,9 +888,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 15]
+(surname)               Expires October 31, 2012               [Page 15]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Containers are permitted to refuse to support features or specific
@@ -934,24 +934,22 @@ Internet-Draft                Core-Gadget                    August 2011
    dependency.  The element consists of a single "name" attribute and
    text content.  The element MUST NOT contain un-escaped markup.  If
    the value of the parameter being specified contains markup such as
-   XML or HTML tags, the value MUST either be properly escaped using
-   appropriate XML entity tags or wrapped within a CDATA section.
+   XML or HTML tags, the value MUST either be properly escaped or
+   wrapped within a CDATA section.
 
    For instance:
 
    <Require feature="my-feature" version="1.0">
-     <Param name="foo"><![CDATA[
-       <a>bar</a>
-     ]]></Param>
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 16]
-
-Internet-Draft                Core-Gadget                    August 2011
-
+     <Param name="foo"><![CDATA[<a>bar</a>]]></Param>
    </Require>
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 16]
+
+Internet-Draft                Core-Gadget                       May 2012
 
    Or, alternatively:
 
@@ -977,7 +975,7 @@ Internet-Draft                Core-Gadget                    August 2011
 2.2.4.  The <Preload> Element
 
    The <Preload> element is used to identify resources that a container
-   SHOULD load automatically an application view is processed and
+   SHOULD load automatically when an application view is processed and
    rendered.
 
    Preload = element Preload {
@@ -1006,9 +1004,11 @@ Internet-Draft                Core-Gadget                    August 2011
    as described in Section 3.2
 
 
-(surname)               Expires January 31, 2012               [Page 17]
+
+
+(surname)               Expires October 31, 2012               [Page 17]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    When an HTTP GET request for the same IRI is submitted using either
@@ -1065,9 +1065,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 18]
+(surname)               Expires October 31, 2012               [Page 18]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------------+----------------------------------------------+
@@ -1120,15 +1120,13 @@ Internet-Draft                Core-Gadget                    August 2011
 
    The optional "method" attribute can be used with certain links to
    specify the HTTP method that is to be used when dereferencing the
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 19]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    link's "href".
+
+
+
+(surname)               Expires October 31, 2012               [Page 19]
+
+Internet-Draft                Core-Gadget                       May 2012
 
 2.2.6.  The <Locale> Element
 
@@ -1179,16 +1177,16 @@ Internet-Draft                Core-Gadget                    August 2011
    default text rendering direction.  Valid values are "ltr", to
    indicate "Left-to-Right" ordering, or "rtl" to indicate "Right-to-
    Left" ordering.  If not specified, the default text rendering
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 20]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    direction is determined by the container.  Directional rendering of
    text is discussed in detail in Section 3.4.
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 20]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    The optional "views" attribute specifies a comma-separated list of
    views (Section 2.2.12.1) for which the Locale information applies.
@@ -1242,9 +1240,11 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 21]
+
+
+(surname)               Expires October 31, 2012               [Page 21]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      Service = element Service {
@@ -1291,21 +1291,20 @@ Internet-Draft                Core-Gadget                    August 2011
 
    The child elements of the <Service> element consist of the <Request>,
    <Access> and <Authorization> elements, each of which are optional but
-
-
-
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 22]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    MUST NOT appear more than once within a single <Service> element.
+
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 22]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    The <Request> element identifies the endpoint for acquiring OAuth
    request tokens.  The "url" attribute specifies the IRI of the
@@ -1360,9 +1359,10 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 23]
+
+(surname)               Expires October 31, 2012               [Page 23]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Service = element Service {
@@ -1419,9 +1419,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 24]
+(surname)               Expires October 31, 2012               [Page 24]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The <Authorization> element identifies the endpoint for acquiring
@@ -1478,9 +1478,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 25]
+(surname)               Expires October 31, 2012               [Page 25]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      BaseUserPref = {
@@ -1537,9 +1537,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 26]
+(surname)               Expires October 31, 2012               [Page 26]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "required" attribute specifies whether instances of the
@@ -1591,15 +1591,16 @@ Internet-Draft                Core-Gadget                    August 2011
    An example "list" preference:
 
    <UserPref name="foo" datatype="list" default_value="foo|bar|baz"
-             display_name="Foo" required="true" />
 
 
 
 
-(surname)               Expires January 31, 2012               [Page 27]
+
+(surname)               Expires October 31, 2012               [Page 27]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
+             display_name="Foo" required="true" />
 
    When datatype equals "hidden", the value of the "default_value"
    attribute and the stored value of the user preference MUST be a
@@ -1651,14 +1652,17 @@ Internet-Draft                Core-Gadget                    August 2011
 
 2.2.11.  The <ExternalServices> Element
 
+
+
+
+(surname)               Expires October 31, 2012               [Page 28]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    The <ExternalServices> element contains zero or more <ServiceTag>
    elements used to establish an "alias" for container-managed external
    services utilized by the application.
-
-(surname)               Expires January 31, 2012               [Page 28]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    ExternalServices = element ExternalServices {
      undefinedAttribute*,
@@ -1710,13 +1714,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 29]
+(surname)               Expires October 31, 2012               [Page 29]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -1773,9 +1773,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 30]
+(surname)               Expires October 31, 2012               [Page 30]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      CommonContent = {
@@ -1823,19 +1823,23 @@ Internet-Draft                Core-Gadget                    August 2011
 
    2.  If the value of "type" is "html", and the "href" attribute is not
        specified, the content of <Content> MUST NOT contain child
+
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 31]
+
+Internet-Draft                Core-Gadget                       May 2012
+
        elements and SHOULD be suitable for handling as HTML markup.  The
        HTML markup SHOULD be wrapped within a CDATA tag otherwise it
        MUST be escaped in order to prevent the HTML from being
        interpreted by the XML parser; for example, "<br>" as "&lt;br>".
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 31]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    3.  If the value of "type" is "url", the <Content> element MUST
        contain the "href" attribute and MUST NOT contain child elements
@@ -1886,15 +1890,15 @@ Internet-Draft                Core-Gadget                    August 2011
    viewname = name *["." name]
    viewnames = viewname *[ OWS "," OWS name]
 
+
+(surname)               Expires October 31, 2012               [Page 32]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    Containers MAY assign specific meaning to particular view names.  In
    particular, this specification assigns the following special meanings
    to each of the given view names:
-
-
-(surname)               Expires January 31, 2012               [Page 32]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    +--------------+----------------------------------------------------+
    | Name         | Description                                        |
@@ -1940,6 +1944,16 @@ Internet-Draft                Core-Gadget                    August 2011
    Individual <Content> elements are associated with one or more
    distinct views through the use of the "view" attribute.
 
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 33]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    For example, the following <Content> element is associated with two
    separate Views: "home" and "foo".  When the container receives a
    request to render either the "home" or "foo" Views, it will use the
@@ -1948,12 +1962,6 @@ Internet-Draft                Core-Gadget                    August 2011
    <Content type="html" view="home,foo">
      ABC
    </Content>
-
-
-(surname)               Expires January 31, 2012               [Page 33]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    When a <Content> element is used without a "view" attribute, it
    automatically becomes associated with the unnamed default view.
@@ -1999,6 +2007,13 @@ Internet-Draft                Core-Gadget                    August 2011
    However, a container rendering the following application will, by
    default, display the characters "CD":
 
+
+
+(surname)               Expires October 31, 2012               [Page 34]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    <Module>
      <ModulePrefs title="foo" />
      <Content type="html" view="foo">AB</Content>
@@ -2007,12 +2022,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
    The specific considerations for View construction relative to each
    type of <Content> is outlined in the sections that follow.
-
-
-(surname)               Expires January 31, 2012               [Page 34]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
 2.2.12.1.1.  HTML Content
 
@@ -2058,6 +2067,12 @@ Internet-Draft                Core-Gadget                    August 2011
    select the <Content> element that lists the "greeting" view,
    producing:
 
+
+(surname)               Expires October 31, 2012               [Page 35]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    <div>How are you?</div>
 
    Once the HTML content for a view has been assembled from the
@@ -2066,12 +2081,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
    Only type "html" <Content> elements can be concatenated together in
    this fashion.
-
-
-(surname)               Expires January 31, 2012               [Page 35]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
 2.2.12.1.2.  Proxied Content
 
@@ -2110,6 +2119,18 @@ Internet-Draft                Core-Gadget                    August 2011
    directly included within the application specification.
 
    Note that, whereas multiple HTML Content elements MAY share a common
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 36]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    view name, the view names associated with Proxied Content MUST be
    unique to that <Content> element, thereby making concatentation
    unnecessary.  The container MUST, however, still perform Variable
@@ -2123,14 +2144,6 @@ Internet-Draft                Core-Gadget                    August 2011
    that the proxied request was being processed for.  If an exact match
    can not be found, the special view name "default.error" should be
    used.  If content for the "default.error" is not present, the
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 36]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    container SHOULD display a generic message indicating that a problem
    occurred.
 
@@ -2163,6 +2176,21 @@ Internet-Draft                Core-Gadget                    August 2011
 
 2.2.12.1.3.  Redirected Content
 
+
+
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 37]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    When using Proxied Content, the container is responsible for sending
    the HTTP request to the remote server and processing the content
    while the view is being rendered.  Alternatively, by using
@@ -2184,12 +2212,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
    lang The preferred language of the user for which the content is
       being rendered, specified as an ISO-639-1 language code.
-
-
-(surname)               Expires January 31, 2012               [Page 37]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    country The country of the user for which the content is being
       rendered, specified as an ISO-3166-1 country code.
@@ -2221,34 +2243,15 @@ Internet-Draft                Core-Gadget                    August 2011
    described in Section 3.1.1 MAY be used to specify the type of
    authentication used in the request sent to the remote service.
 
+
+
+(surname)               Expires October 31, 2012               [Page 38]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    The Signed Fetch attributes defined below MAY be used on any Proxied
    and Redirected Content elements:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 38]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    
      NoAuth = {
@@ -2299,15 +2302,14 @@ Internet-Draft                Core-Gadget                    August 2011
    MUST be authenticated using the OAuth 1.0 protocol as described in
    Section 3.1.2.
 
-   When "authz" is equal to "oauth2", requests sent to the remote
 
 
-
-
-(surname)               Expires January 31, 2012               [Page 39]
+(surname)               Expires October 31, 2012               [Page 39]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
+
+   When "authz" is equal to "oauth2", requests sent to the remote
    service MUST be authenticated using the OAuth 2.0 protocol as
    described in Section 3.1.2.
 
@@ -2356,17 +2358,16 @@ Internet-Draft                Core-Gadget                    August 2011
    unable to process such markup correctly and will not be able to
    distinguish it from markup error.  For the purposes of this
    discussion, all unrecognized markup from the Application
-   Specification vocabulary will be considered to be "foreign markup".
 
 
 
 
 
-
-(surname)               Expires January 31, 2012               [Page 40]
+(surname)               Expires October 31, 2012               [Page 40]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
+   Specification vocabulary will be considered to be "foreign markup".
 
    This vocabulary allows foreign markup anywhere in an Application
    Specification document, except where it is explicitly forbidden.
@@ -2419,13 +2420,13 @@ Internet-Draft                Core-Gadget                    August 2011
    o  Processing <Preload> and <Link> elements within the specification
       document's <ModulePrefs>,
 
-   o  Processing Data Pipeline <os:HttpRequest> elements,
 
 
-(surname)               Expires January 31, 2012               [Page 41]
+(surname)               Expires October 31, 2012               [Page 41]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
+   o  Processing Data Pipeline <os:HttpRequest> elements,
 
    o  Processing proxy and redirect type <Content> elements,
 
@@ -2480,10 +2481,9 @@ Internet-Draft                Core-Gadget                    August 2011
    includes the exact value provided by the JavaScript code:
 
 
-
-(surname)               Expires January 31, 2012               [Page 42]
+(surname)               Expires October 31, 2012               [Page 42]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    GET /my/endpoint?opensocial_viewer_id=alice HTTP/1.1
@@ -2537,15 +2537,13 @@ Internet-Draft                Core-Gadget                    August 2011
 
        opensocial_app_url An IRI provided by the container that
           represents the application for which the request is being
-
-
-
-(surname)               Expires January 31, 2012               [Page 43]
-
-Internet-Draft                Core-Gadget                    August 2011
-
           sent.  The IRI provided is used to identify the application
           specification rather than individual instances.
+
+(surname)               Expires October 31, 2012               [Page 43]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    3.  The container MAY also add the following query string parameters
        to the request URI:
@@ -2599,9 +2597,11 @@ Internet-Draft                Core-Gadget                    August 2011
      &oauth_signature=...
 
 
-(surname)               Expires January 31, 2012               [Page 44]
+
+
+(surname)               Expires October 31, 2012               [Page 44]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    It is important to stress that the Signed Fetch mechanism provides
@@ -2651,19 +2651,17 @@ Internet-Draft                Core-Gadget                    August 2011
 
    SIGN_OWNER Represented in JavaScript by the constant
       gadgets.io.RequestParameter.SIGN_OWNER, the value is a boolean
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 45]
-
-Internet-Draft                Core-Gadget                    August 2011
-
       that indicates whether the container SHOULD include the identity
       of the Instance Owner (Section 1.3) when signing the request.  If
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 45]
+
+Internet-Draft                Core-Gadget                       May 2012
+
       not specified, the container is required to assume a value of
       True.
 
@@ -2717,9 +2715,11 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 46]
+
+
+(surname)               Expires October 31, 2012               [Page 46]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Currently, OpenSocial Containers are required to implement support
@@ -2776,9 +2776,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 47]
+(surname)               Expires October 31, 2012               [Page 47]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -2832,14 +2832,13 @@ Internet-Draft                Core-Gadget                    August 2011
    Proxy type <Content> elements.
 
    The examples that follow illustrate various uses of the OAuth
-
-
-
-(surname)               Expires January 31, 2012               [Page 48]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    services.
+
+
+(surname)               Expires October 31, 2012               [Page 48]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    Within uses of the "osapi.http" API:
 
@@ -2894,9 +2893,10 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 49]
+
+(surname)               Expires October 31, 2012               [Page 49]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +------------------+-------------------------------+----------------+
@@ -2949,14 +2949,17 @@ Internet-Draft                Core-Gadget                    August 2011
    |                  |                               | reference.     |
    | "OAUTH_REQUEST_T | gadgets.io.RequestParameters. | In certain     |
    | OKEN"            | OAUTH_REQUEST_TOKEN           | circumstances, |
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 50]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |                  |                               | instances of   |
    |                  |                               | an application |
    |                  |                               | can be         |
-
-(surname)               Expires January 31, 2012               [Page 50]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    |                  |                               | preauthorized  |
    |                  |                               | to access      |
    |                  |                               | particular     |
@@ -3005,17 +3008,16 @@ Internet-Draft                Core-Gadget                    August 2011
    |                  |                               | Section 3.3 of |
    |                  |                               | [I-D.ietf-     |
    |                  |                               | oauth-v2].     |
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 51]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    | "OAUTH_SERVICE_N | gadgets.io.RequestParameters. | When multiple  |
    | AME"             | OAUTH_SERVICE_NAME            | OAuth services |
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 51]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    |                  |                               | are declared   |
    |                  |                               | within the     |
    |                  |                               | <ModulePrefs>  |
@@ -3068,13 +3070,13 @@ Internet-Draft                Core-Gadget                    August 2011
    |                  |                               | access to the  |
    |                  |                               | contact data   |
    |                  |                               | and the name   |
+
+(surname)               Expires October 31, 2012               [Page 52]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |                  |                               | "calendar" to  |
    |                  |                               | refer to the   |
-
-(surname)               Expires January 31, 2012               [Page 52]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    |                  |                               | token          |
    |                  |                               | providing      |
    |                  |                               | access to the  |
@@ -3121,19 +3123,22 @@ Internet-Draft                Core-Gadget                    August 2011
    |                  |                               | explicit       |
    |                  |                               | authorization  |
    |                  |                               | but offer      |
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 53]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |                  |                               | additional     |
    |                  |                               | functionality  |
    |                  |                               | if an OAuth    |
    |                  |                               | Access Token   |
    |                  |                               | has been       |
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 53]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    |                  |                               | issued.        |
    |                  |                               | Typically,     |
    |                  |                               | however, most  |
@@ -3178,6 +3183,16 @@ Internet-Draft                Core-Gadget                    August 2011
        <Preload authz="oauth" href="http://example.org/resources/bar" />
        <Link authz="oauth" href="http://example.org/images/foo.png" rel="icon" />
        ...
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 54]
+
+Internet-Draft                Core-Gadget                       May 2012
+
      </ModulePrefs>
      <Content type="html">
        ...
@@ -3185,14 +3200,6 @@ Internet-Draft                Core-Gadget                    August 2011
    </Module>
 
    Within proxy or redirect type <Content> elements:
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 54]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    <Module>
      ...
@@ -3241,16 +3248,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 55]
+(surname)               Expires October 31, 2012               [Page 55]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      <Module>
@@ -3302,31 +3302,34 @@ Internet-Draft                Core-Gadget                    August 2011
      </Module>
 
    When multiple OAuth services are used, the "OAUTH_SERVICE_NAME"
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 56]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    parameter and the "oauth_service_name" attribute are used within the
    JavaScript API and XML elements to indicate the appropriate OAuth
    service to use for the request.
-
-
-(surname)               Expires January 31, 2012               [Page 56]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
 3.1.2.1.1.  The "OAUTH_USE_TOKEN" parameter
 
    The value of the "OAUTH_USE_TOKEN" parameter MUST be one of:
 
-      Tells the container that the Access Token is never required.
+   never Tells the container that the Access Token is never required.
       Requests will be sent to the remote endpoint without an OAuth
       Access Token.
 
-      Tells the container that use of the Access Token is optional.  If
-      an Access token has been acquired, it will be included in the
-      request sent to the remote endpoint, otherwise the request will be
-      sent without an Access Token.
+   if_available Tells the container that use of the Access Token is
+      optional.  If an Access token has been acquired, it will be
+      included in the request sent to the remote endpoint, otherwise the
+      request will be sent without an Access Token.
 
-      Tells the container that use of the Access Token is required.  If
-      an appropriate Access Token has not yet been acquired, the
+   always Tells the container that use of the Access Token is required.
+      If an appropriate Access Token has not yet been acquired, the
       container will work with the application and the OAuth Service
       Provider to seek appropriate authorization and acquire an Access
       Token.
@@ -3356,6 +3359,17 @@ Internet-Draft                Core-Gadget                    August 2011
 
    2.  For any request for which an access token is considered optional
        (e.g.  the value of the OAUTH_USE_TOKEN parameter is
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 57]
+
+Internet-Draft                Core-Gadget                       May 2012
+
        "if_available"):
 
        *  When OAuth 1.0a is used and an Access Token appropriate to the
@@ -3364,12 +3378,6 @@ Internet-Draft                Core-Gadget                    August 2011
           described in Section 7 of [RFC5849].  When using OAuth 2.0,
           the container will send a request using the access token as
           described in Section 3.1.2.2.2.
-
-
-(surname)               Expires January 31, 2012               [Page 57]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
        *  If an appropriate Access Token, and OAuth 1.0a is used, the
           container will send a request to the remote endpoint as
@@ -3414,21 +3422,19 @@ Internet-Draft                Core-Gadget                    August 2011
    If the view specified by the attribute does not exist, or if the
    "view" attribute is not specified:
 
+
+
+
+(surname)               Expires October 31, 2012               [Page 58]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    o  And the request being processed is to retrieve content specified
       from either the <Link>, <Preload>, <Content> or <os:HttpRequest>
       elements, the container MUST abort the request and signal an error
       to the Viewer indicating that the OAuth authorization could not be
       completed; or
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 58]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    o  If the request being processed is the result of invoking either
       the "gadgets.io.makeRequest", "osapi.http" or any of the "osapi.*"
@@ -3478,16 +3484,15 @@ Internet-Draft                Core-Gadget                    August 2011
    text, all requests using the Bearer authentication scheme MUST be
    sent using SSL or TLS.
 
+(surname)               Expires October 31, 2012               [Page 59]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    If the access token issued to the container is a Mac-type token, the
    request sent to the remote endpoint MUST contain an Authorization
    header field using the "Mac" scheme that includes "id", "nonce" and
    "mac" fields as described by [I-D.ietf-oauth-v2-http-mac].
-
-
-(surname)               Expires January 31, 2012               [Page 59]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    For example:
 
@@ -3538,14 +3543,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 60]
+(surname)               Expires October 31, 2012               [Page 60]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    When the selected authentication scheme is OAuth 1.0 or OAuth 2.0,
@@ -3602,9 +3602,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 61]
+(surname)               Expires October 31, 2012               [Page 61]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    In each of these cases, the container is responsible for sending the
@@ -3657,16 +3657,14 @@ Internet-Draft                Core-Gadget                    August 2011
 
    If the server returns a response indicating that the resource has
    been modified (i.e.  with a 412 Precondition Failed in this example),
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 62]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    the container is permitted to continue using the cached
    representation of the resource to fulfill the request.
+
+
+(surname)               Expires October 31, 2012               [Page 62]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    For all XML elements within the Application Specification Document
    that represent a request for an external resource (<Preload>, <Link>,
@@ -3720,9 +3718,11 @@ Internet-Draft                Core-Gadget                    August 2011
    For example, given the following partial application specification:
 
 
-(surname)               Expires January 31, 2012               [Page 63]
+
+
+(surname)               Expires October 31, 2012               [Page 63]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -3779,9 +3779,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 64]
+(surname)               Expires October 31, 2012               [Page 64]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    For instance, if we define a simple variable using the data
@@ -3838,9 +3838,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012               [Page 65]
+(surname)               Expires October 31, 2012               [Page 65]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +-------------+-------------------------------------+---------------+
@@ -3895,12 +3895,13 @@ Internet-Draft                Core-Gadget                    August 2011
    |             | replaced by the same value returned |               |
    |             | by the API call                     |               |
    |             | "gadgets.views.getParams()["FOO"]". |               |
-   | Prefs       | References all named values defined | Available     |
 
-(surname)               Expires January 31, 2012               [Page 66]
+
+(surname)               Expires October 31, 2012               [Page 66]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
+   | Prefs       | References all named values defined | Available     |
    |             | by <UserPref> elements contained in | anywhere      |
    |             | the application specification. The  | within the    |
    |             | values of the "{Var}" component     | application . |
@@ -3955,10 +3956,10 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-
-(surname)               Expires January 31, 2012               [Page 67]
+(surname)               Expires October 31, 2012               [Page 67]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
+
 
    For instance, in the partial example that follows, the expression
    "__MSG_FOO__" is replaced for the localized value identified by the
@@ -4007,18 +4008,23 @@ Internet-Draft                Core-Gadget                    August 2011
    |        | the "gadgets.Prefs" API. For instance, the expression    |
    |        | "__UP_Lang__" will be replaced by the same value         |
    |        | returned by the API call "gadgets.Prefs.getLang()"; The  |
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 68]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |        | expression "__UP_FOO__" will be replaced by the same     |
    |        | value returned by the API call                           |
    |        | "gadgets.Prefs.getString("FOO")"                         |
    +--------+----------------------------------------------------------+
 
 3.3.5.  Processing Requirements
-
-
-(surname)               Expires January 31, 2012               [Page 68]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    Containers perform Variable Substitution when application views are
    rendered or when metadata about the application is displayed.  For
@@ -4061,6 +4067,17 @@ Internet-Draft                Core-Gadget                    August 2011
    The value of "key2" would be resolved as the literal value "${key2}".
    The rendered output generated by the container would be:
 
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 69]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    ${key1}
    ${key2}
 
@@ -4069,15 +4086,6 @@ Internet-Draft                Core-Gadget                    August 2011
    Localization of an application is achieved primarily through Variable
    Substitution (Section 3.3), using the Msg reserved variable key and
    <Locale> elements.
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 69]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    To determine the appropriate keys and values to use for substitution,
    containers will inspect the application specification document for a
@@ -4112,6 +4120,24 @@ Internet-Draft                Core-Gadget                    August 2011
 
    For example, given the following partial specification:
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 70]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    <Module>
      <ModulePrefs>
        ...
@@ -4130,13 +4156,6 @@ Internet-Draft                Core-Gadget                    August 2011
        ${Msg.greeting}
      </Content>
    </Module>
-
-
-
-(surname)               Expires January 31, 2012               [Page 70]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    When rendering the default view, the container will output "Hello
    World!"  for English-speaking Viewers and "Bonjour tout le monde!"
@@ -4170,6 +4189,13 @@ Internet-Draft                Core-Gadget                    August 2011
       opposite of the <Locale> element's "text_direction" attribute
       value.  If "text_direction" is "ltr",  "Bidi.REVERSE_DIR" will
       return "rtl".  If text_direction is "rtl", "Bidi.REVERSE_DIR" will
+
+
+
+(surname)               Expires October 31, 2012               [Page 71]
+
+Internet-Draft                Core-Gadget                       May 2012
+
       return "ltr".
 
    The Bidi variables can be used to establish the correct text
@@ -4189,13 +4215,6 @@ Internet-Draft                Core-Gadget                    August 2011
      <Content type="html">
        <div dir="${Bidi.DIR}">${Msg.greeting}</div>
      </Content>
-
-
-
-(surname)               Expires January 31, 2012               [Page 71]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    </Module>
 
 3.4.2.  Message Bundle Documents
@@ -4228,6 +4247,15 @@ Internet-Draft                Core-Gadget                    August 2011
      <msg name="blue">Blue</msg>
    </messagebundle>
 
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 72]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    As illustrated, Message Bundles are XML documents whose root element
    is a <messagebundle> that contains zero or more <msg> elements that
    use the same format as the children of the <Locale> element.  No XML
@@ -4243,18 +4271,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
    Variable substitution expressions MAY be used within Message Bundle
    Documents.
-
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 72]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    Each Message Bundle Document provides <msg> elements for a single
    locale.  By convention, Message Bundle documents are named as
@@ -4294,25 +4310,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 73]
+(surname)               Expires October 31, 2012               [Page 73]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------+-----------------------------------+----------------+
@@ -4366,13 +4366,14 @@ Internet-Draft                Core-Gadget                    August 2011
    |              |                                   | considered to  |
    |              |                                   | be             |
    |              |                                   | "Registered".  |
-   | Rejected     | org.opensocial.event.rejected     | occurs when    |
 
 
-(surname)               Expires January 31, 2012               [Page 74]
+
+(surname)               Expires October 31, 2012               [Page 74]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
+   | Rejected     | org.opensocial.event.rejected     | occurs when    |
    |              |                                   | "Registration" |
    |              |                                   | of a "Pending" |
    |              |                                   | specification  |
@@ -4421,19 +4422,16 @@ Internet-Draft                Core-Gadget                    August 2011
    |              |                                   | use by the     |
    |              |                                   | container. In  |
    |              |                                   | order to be    |
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 75]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    |              |                                   | considered     |
    |              |                                   | "Available",   |
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 75]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |              |                                   | an application |
    |              |                                   | MUST have      |
    |              |                                   | first passed   |
@@ -4481,18 +4479,18 @@ Internet-Draft                Core-Gadget                    August 2011
    |              |                                   | been disabled  |
    |              |                                   | for some       |
    |              |                                   | reason.        |
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 76]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    | Updated      | org.opensocial.event.updated      | occurs         |
    |              |                                   | whenever the   |
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 76]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |              |                                   | application    |
    |              |                                   | specification  |
    |              |                                   | known to the   |
@@ -4542,16 +4540,16 @@ Internet-Draft                Core-Gadget                    August 2011
    |              |                                   | instance of    |
    |              |                                   | the            |
    |              |                                   | application    |
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 77]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    |              |                                   | has been       |
    |              |                                   | restricted in  |
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 77]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |              |                                   | some way. For  |
    |              |                                   | instance, if   |
    |              |                                   | the operation  |
@@ -4599,18 +4597,18 @@ Internet-Draft                Core-Gadget                    August 2011
    |              |                                   | closed by the  |
    |              |                                   | container.     |
    |              |                                   | Note that      |
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 78]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    |              |                                   | closing an     |
    |              |                                   | application is |
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 78]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    |              |                                   | not the same   |
    |              |                                   | as             |
    |              |                                   | uninstalling   |
@@ -4660,19 +4658,16 @@ Internet-Draft                Core-Gadget                    August 2011
    Implementations are free to define additional event type identifiers
    that use prefixes other than "org.opensocial.".
 
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 79]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    The optional "method" attribute can be specified on the <Link>
    element to indicate the HTTP request method to be used when sending
    the event notification.  Valid values are either "GET" or "POST".
    When not specified, the default is assumed to be "GET".
+
+
+(surname)               Expires October 31, 2012               [Page 79]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    <Module>
      <ModulePrefs>
@@ -4717,16 +4712,6 @@ Internet-Draft                Core-Gadget                    August 2011
    o  One to the endpoint "http://example.org/event" identified by the
       "org.opensocial.event" rel value, and
 
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 80]
-
-Internet-Draft                Core-Gadget                    August 2011
-
    o  One to the endpoint "http://example.org/event/registered"
       identified by the "org.opensocial.event.registered" rel value.
 
@@ -4734,6 +4719,14 @@ Internet-Draft                Core-Gadget                    August 2011
    method declared by the <Link> elements "method" attribute.  If the
    "method" attribute is not specified, then the HTTP GET method is
    used.
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 80]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    The container MUST add the additional "eventtype" query string
    parameter to the IRI specified by the <Link> element.  The value MUST
@@ -4772,21 +4765,6 @@ Internet-Draft                Core-Gadget                    August 2011
    utilize HTTP GET (line breaks are added to the request URI for
    readability):
 
-
-
-
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 81]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    GET /event?eventtype=registered
      &oauth_consumer_key=myappkey
      &oauth_nonce=7sGE00xSfY4PBStICbXyPbIliNymOhu2
@@ -4802,6 +4780,12 @@ Internet-Draft                Core-Gadget                    August 2011
    insignificant by this specification.
 
 3.5.2.  Legacy Support
+
+
+(surname)               Expires October 31, 2012               [Page 81]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    Previous version of this specification defined the following
    deprecated event identifiers that MAY continued to be supported by
@@ -4834,18 +4818,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
 3.6.  Data Pipelining
 
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 82]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    Data Pipelining is a declarative mechanism for defining the data an
    application requires from the container.  XML Elements are used to
    associate variable keys with specific kinds of data from a variety of
@@ -4861,6 +4833,18 @@ Internet-Draft                Core-Gadget                    August 2011
 
    The following illustrates a basic example of Data Pipelining in a
    partial application specification:
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 82]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
      <Module xmlns:os="http://ns.opensocial.org/2008/markup">
        ...
@@ -4893,18 +4877,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
 3.6.1.  The DataContext
 
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 83]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    For every application instance, a "DataContext" object is created
    that maintains all of the data associated with the instance's Data
    Pipeline elements.  The information contained within the
@@ -4926,6 +4898,12 @@ Internet-Draft                Core-Gadget                    August 2011
    which the element is associated.  Such elements will only be
    processed and added to the "DataContext" when the identified views
    are being rendered.
+
+
+(surname)               Expires October 31, 2012               [Page 83]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    In the following example, the <os:HttpRequest> element using key
    "foo" is registered globally and available within all views while the
@@ -4952,18 +4930,6 @@ Internet-Draft                Core-Gadget                    August 2011
    value "abc" when the default view is rendered and to "123" when the
    "example" view is rendered:
 
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 84]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    <Module>
      ...
      <Data>
@@ -4989,6 +4955,14 @@ Internet-Draft                Core-Gadget                    August 2011
 3.6.3.  Data Pipeline Elements within HTML Content
 
    When using HTML Content, Data Pipeline elements MAY appear within the
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 84]
+
+Internet-Draft                Core-Gadget                       May 2012
+
    HTML inside a special <script> tag.
 
    For instance,
@@ -5016,13 +4990,6 @@ Internet-Draft                Core-Gadget                    August 2011
    Pipeline elements to processed properly while the content is being
    rendered.
 
-
-
-(surname)               Expires January 31, 2012               [Page 85]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    Data Pipeline elements defined in this manner are scoped specifically
    to the <Content> element in which they are embedded, meaning that the
    data each provides to the "DataContext" will be available only for
@@ -5049,6 +5016,12 @@ Internet-Draft                Core-Gadget                    August 2011
      ]]></Content>
    </Module>
 
+
+
+(surname)               Expires October 31, 2012               [Page 85]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 3.6.4.  Data Pipeline Elements and Proxied Content
 
    When using Proxied Content to render a view for an application, the
@@ -5071,15 +5044,6 @@ Internet-Draft                Core-Gadget                    August 2011
    appropriate value drawn from the View Parameters passed into the
    application, and HTTP request sent to the remote endpoint by the
    container would use HTTP GET:
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 86]
-
-Internet-Draft                Core-Gadget                    August 2011
 
    GET /remote-server?id=abc123 HTTP/1.1
    Host: example.org
@@ -5111,6 +5075,12 @@ Internet-Draft                Core-Gadget                    August 2011
          "givenName": "John",
          "familyName": "Doe"
        }
+
+
+(surname)               Expires October 31, 2012               [Page 86]
+
+Internet-Draft                Core-Gadget                       May 2012
+
      }
 
    As illustrated by the example, each of the keys defined by the Data
@@ -5131,15 +5101,6 @@ Internet-Draft                Core-Gadget                    August 2011
    In the follow example, assume that the processing of the
    <os:DataRequest> element fails and error details are provided by the
    "DataContext":
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 87]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    <Content type="html" href="http://example.org">
      <os:Var key="key1" value="abc" />
@@ -5171,6 +5132,15 @@ Internet-Draft                Core-Gadget                    August 2011
    In the example below, the application specification uses an
    undefined, hypothetical Data Pipeline extension:
 
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 87]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    <Content type="html" href="http://example.org">
      <os:Var key="key1" value="abc" />
      <osx:MyExtension key="key2" attr="val" />
@@ -5188,17 +5158,6 @@ Internet-Draft                Core-Gadget                    August 2011
      }
 
    Or indicate that "key2" could not be resolved:
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 88]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
      POST / HTTP/1.1
      Host: example.org
@@ -5230,6 +5189,17 @@ Internet-Draft                Core-Gadget                    August 2011
    Note, however, that the choice of prefix is arbitrary and not
    semantically equivalent.
 
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 88]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    Implementations MAY define additional Data Pipeline elements that use
    an XML Namespace other than "http://ns.opensocial.org/2008/markup".
    Such extensions MUST contain a "key" attribute whose value specifies
@@ -5253,11 +5223,6 @@ Internet-Draft                Core-Gadget                    August 2011
    users group of friends, an activity stream, and so forth.  the
    <os:DataRequest> element can only be used to access content and
    cannot be used to modify social data stored by the container.
-
-(surname)               Expires January 31, 2012               [Page 89]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    DataRequest = element os:DataRequest {
      BaseDataPipeline,
@@ -5289,6 +5254,11 @@ Internet-Draft                Core-Gadget                    August 2011
    
      function callback(friends) { ... }
 
+(surname)               Expires October 31, 2012               [Page 89]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    The equivalent operation using the <os:DataRequest> element would be:
 
    <os:DataRequest key="friends" method="people.get" userId="@viewer" groupId="@friends" />
@@ -5312,11 +5282,6 @@ Internet-Draft                Core-Gadget                    August 2011
      attribute method { "get" | "post" },
      attribute href { IRI }
    }
-
-(surname)               Expires January 31, 2012               [Page 90]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    In addition to the "key" attribute required for all Data Pipeline
    elements, the <os:HttpRequest> element MUST contain a "method"
@@ -5345,6 +5310,14 @@ Internet-Draft                Core-Gadget                    August 2011
 
    The equivalent operation using the <os:HttpRequest> element would be:
 
+
+
+
+(surname)               Expires October 31, 2012               [Page 90]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    <os:HttpRequest key="results"
      href="http://example.org/foo"
      format="json" authz="signed" />
@@ -5369,14 +5342,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
    The value stored within the "DataContext" would be:
 
-
-
-
-(surname)               Expires January 31, 2012               [Page 91]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    {
      "result" : {
        "content" : {
@@ -5400,6 +5365,18 @@ Internet-Draft                Core-Gadget                    August 2011
 
    The value stored within the "DataContext" would be:
 
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 91]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    {
      "result" : {
        "content" : "<html><head>...</head><body>Hello World</body></html>",
@@ -5418,23 +5395,6 @@ Internet-Draft                Core-Gadget                    August 2011
    appropriate value indicating the nature of the error.  Within the
    value of the "error" property, the "data" property contains the
    content actually returned by the server, if any.
-
-
-
-
-
-
-
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 92]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    {
      "error" : {
@@ -5469,6 +5429,13 @@ Internet-Draft                Core-Gadget                    August 2011
    
      Var = SimpleVar | JsonVar
 
+
+
+(surname)               Expires October 31, 2012               [Page 92]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    In addition to the "key" attribute required for all Data Pipeline
    elements, the <os:Var> element can either contain a "value" attribute
    or contain textual content.
@@ -5484,16 +5451,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
    o  First apply Variable Substitution to replace all Expression
       Language statements appearing within the value,
-
-
-
-
-
-
-(surname)               Expires January 31, 2012               [Page 93]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    o  Then, attempt to parse the string as a JavaScript Array.  For
       instance, if the value is "[1,2,3,4,5]", then a JavaScript Array
@@ -5530,6 +5487,14 @@ Internet-Draft                Core-Gadget                    August 2011
    criteria including input parameters or the results returned by other
    Data Pipeline elements.
 
+
+
+
+(surname)               Expires October 31, 2012               [Page 93]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    For instance, when the application needs to display the next set of
    results from a paged-collection, the view parameters specifying the
    current page can be passed into the <os:HttpRequest> or
@@ -5546,13 +5511,6 @@ Internet-Draft                Core-Gadget                    August 2011
    previous example within an <os:HttpRequest>:
 
    <os:HttpRequest href="http://example.com/api?ids=${PagedFriends.ids}"/>
-
-
-
-(surname)               Expires January 31, 2012               [Page 94]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    When referencing the results of other Data Pipeline elements in this
    way, Expression Language statements can access the input parameters
@@ -5587,6 +5545,15 @@ Internet-Draft                Core-Gadget                    August 2011
 
 4.1.  Core Features
 
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 94]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    Core Features are provided automatically by the container for all
    application instances without requiring the application to declare
    them using either the <Require> or <Optional> element in the
@@ -5606,12 +5573,6 @@ Internet-Draft                Core-Gadget                    August 2011
    constants to developers:
 
 4.1.1.1.1.  gadgets.log
-
-
-(surname)               Expires January 31, 2012               [Page 95]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    The "gadgets.log" method is used to record an informational message
    to the container provided Log.
@@ -5647,6 +5608,11 @@ Internet-Draft                Core-Gadget                    August 2011
        {"code":123, "data": "This is a warning!"}
      );
 
+(surname)               Expires October 31, 2012               [Page 95]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
 4.1.1.1.3.  gadgets.error
 
    The "gadgets.error" method is used to record an error message to the
@@ -5666,11 +5632,6 @@ Internet-Draft                Core-Gadget                    August 2011
      );
 
 4.1.1.1.4.  gadgets.setLogLevel
-
-(surname)               Expires January 31, 2012               [Page 96]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
    The "gadgets.setLogLevel" method establishes the minimum log level
    threshold at which containers SHOULD record messages sent to the Log.
@@ -5706,6 +5667,11 @@ Internet-Draft                Core-Gadget                    August 2011
    |        |                       | messages.                        |
    +--------+-----------------------+----------------------------------+
 
+(surname)               Expires October 31, 2012               [Page 96]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    For example, to record all messages:
 
    gadgets.setLogLevel(1);
@@ -5724,12 +5690,6 @@ Internet-Draft                Core-Gadget                    August 2011
    provided either by the container or other remote endpoints.
 
    The IO Feature is automatically enabled for all applications.
-
-
-(surname)               Expires January 31, 2012               [Page 97]
-
-Internet-Draft                Core-Gadget                    August 2011
-
 
 4.1.2.1.  JavaScript API
 
@@ -5763,6 +5723,14 @@ Internet-Draft                Core-Gadget                    August 2011
 
    foo=bar&abc=123&zyx=true&baz=a,b,c
 
+
+
+
+(surname)               Expires October 31, 2012               [Page 97]
+
+Internet-Draft                Core-Gadget                       May 2012
+
+
    If the value of top-level property or member of an Array is any value
    other than a JavaScript primitive, it's value will be encoded as a
    JSON-serialized String as returned by the "gadgets.json.stringify"
@@ -5785,11 +5753,6 @@ Internet-Draft                Core-Gadget                    August 2011
 
    foo=%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D&bar=%7B%22xyz%22%3A%22123%22%7D,%7B%22abc%22%3A321%7D
 
-(surname)               Expires January 31, 2012               [Page 98]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
 4.1.2.1.2.  gadgets.io.getProxyUrl
 
    When an application needs to load data from an external source -- for
@@ -5810,6 +5773,22 @@ Internet-Draft                Core-Gadget                    August 2011
    by this specification.  For convenience, an alias is defined for each
    that MAY be used in place of the literal property name in JavaScript
    code:
+
+
+
+
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012               [Page 98]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    +--------------+-----------------------------------------+----------+
    | Name         | Alias                                   | Descript |
@@ -5842,13 +5821,6 @@ Internet-Draft                Core-Gadget                    August 2011
    container to fetch the image from the remote source and cache it
    locally.
 
-
-
-(surname)               Expires January 31, 2012               [Page 99]
-
-Internet-Draft                Core-Gadget                    August 2011
-
-
    <?xml version="1.0" encoding="UTF-8" ?>
    <Module>
      <ModulePrefs>
@@ -5869,6 +5841,13 @@ Internet-Draft                Core-Gadget                    August 2011
    </Module>
 
 4.1.2.1.3.  gadgets.io.makeRequest
+
+
+
+(surname)               Expires October 31, 2012               [Page 99]
+
+Internet-Draft                Core-Gadget                       May 2012
+
 
    The "gadgets.io.makeRequest" method is used to send HTTP requests to
    a provided URL and pass the returned content to a callback function.
@@ -5903,9 +5882,30 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 100]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(surname)               Expires October 31, 2012              [Page 100]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +----------------+-----------------------------+--------------------+
@@ -5962,9 +5962,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | specified, the     |
    |                |                             | default value for  |
 
-(surname)               Expires January 31, 2012              [Page 101]
+(surname)               Expires October 31, 2012              [Page 101]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | this parameter is  |
    |                |                             | assumed to be      |
@@ -6021,9 +6021,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | function will      |
    |                |                             | contain the        |
 
-(surname)               Expires January 31, 2012              [Page 102]
+(surname)               Expires October 31, 2012              [Page 102]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | complete           |
    |                |                             | collection of      |
@@ -6080,9 +6080,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | as an associative  |
    |                |                             | map using the      |
 
-(surname)               Expires January 31, 2012              [Page 103]
+(surname)               Expires October 31, 2012              [Page 103]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | header names as a  |
    |                |                             | key and a literal  |
@@ -6139,9 +6139,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | items from the     |
    |                |                             | feed to return to  |
 
-(surname)               Expires January 31, 2012              [Page 104]
+(surname)               Expires October 31, 2012              [Page 104]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | the callback       |
    |                |                             | function. If not   |
@@ -6198,9 +6198,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | already have an    |
    |                |                             | OAuth Access Token |
 
-(surname)               Expires January 31, 2012              [Page 105]
+(surname)               Expires October 31, 2012              [Page 105]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | suitable for use   |
    |                |                             | with the request,  |
@@ -6257,9 +6257,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | "").               |
    | "OAUTH2_SCOPE" | "gadgets.io.RequestParamete | When the           |
 
-(surname)               Expires January 31, 2012              [Page 106]
+(surname)               Expires October 31, 2012              [Page 106]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                | rs.OAUTH2_SCOPE"            | "AUTHORIZATION"    |
    |                |                             | parameter is equal |
@@ -6316,9 +6316,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | locate and use the |
    |                |                             | cached Access      |
 
-(surname)               Expires January 31, 2012              [Page 107]
+(surname)               Expires October 31, 2012              [Page 107]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | Token. If not      |
    |                |                             | specified, the     |
@@ -6375,9 +6375,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | Access Token in    |
    |                |                             | the request only   |
 
-(surname)               Expires January 31, 2012              [Page 108]
+(surname)               Expires October 31, 2012              [Page 108]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | if an appropriate  |
    |                |                             | token is           |
@@ -6434,9 +6434,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                |                             | parameter          |
    |                |                             | indicates whether  |
 
-(surname)               Expires January 31, 2012              [Page 109]
+(surname)               Expires October 31, 2012              [Page 109]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                |                             | the container      |
    |                |                             | SHOULD include the |
@@ -6493,9 +6493,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 110]
+(surname)               Expires October 31, 2012              [Page 110]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------------+-----------+----------------------------------+
@@ -6552,9 +6552,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                    |           | object with the                  |
    |                    |           | "oauthApprovalUrl" property set. |
 
-(surname)               Expires January 31, 2012              [Page 111]
+(surname)               Expires October 31, 2012              [Page 111]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                    |           | The value is a String providing  |
    |                    |           | the URL of an external page      |
@@ -6611,9 +6611,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
    <static> <Object> gadgets.json.parse(text)
 
-(surname)               Expires January 31, 2012              [Page 112]
+(surname)               Expires October 31, 2012              [Page 112]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
 4.1.3.1.2.  gadgets.json.stringify
@@ -6670,9 +6670,9 @@ Internet-Draft                Core-Gadget                    August 2011
    instance.
 
 
-(surname)               Expires January 31, 2012              [Page 113]
+(surname)               Expires October 31, 2012              [Page 113]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Instances of the object are created using the JavaScript new keyword.
@@ -6729,9 +6729,9 @@ Internet-Draft                Core-Gadget                    August 2011
    }
 
 
-(surname)               Expires January 31, 2012              [Page 114]
+(surname)               Expires October 31, 2012              [Page 114]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
 4.1.4.1.1.3.  gadgets.Prefs.getCountry
@@ -6788,9 +6788,9 @@ Internet-Draft                Core-Gadget                    August 2011
    For example:
 
 
-(surname)               Expires January 31, 2012              [Page 115]
+(surname)               Expires October 31, 2012              [Page 115]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    var prefs = new gadgets.Prefs();
@@ -6847,9 +6847,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 116]
+(surname)               Expires October 31, 2012              [Page 116]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "gadgets.Prefs.getString" method returns the stored value
@@ -6906,9 +6906,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 4.1.4.2.1.2.  gadgets.Prefs.setArray
 
-(surname)               Expires January 31, 2012              [Page 117]
+(surname)               Expires October 31, 2012              [Page 117]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "gadgets.Prefs.setArray" method stores the specified Array value
@@ -6965,9 +6965,9 @@ Internet-Draft                Core-Gadget                    August 2011
    <ModulePrefs>.
 
 
-(surname)               Expires January 31, 2012              [Page 118]
+(surname)               Expires October 31, 2012              [Page 118]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <static> <Object> gadgets.util.getFeatureParameters(feature)
@@ -7024,9 +7024,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 119]
+(surname)               Expires October 31, 2012              [Page 119]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "gadgets.util.sanitizeHtml" method processes a text String that
@@ -7083,9 +7083,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 120]
+(surname)               Expires October 31, 2012              [Page 120]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "Action Contributions" feature is enabled by specifying the
@@ -7142,9 +7142,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 121]
+(surname)               Expires October 31, 2012              [Page 121]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      <Module>
@@ -7201,9 +7201,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 122]
+(surname)               Expires October 31, 2012              [Page 122]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    In some simple cases, an action provided by an application might
@@ -7260,9 +7260,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 123]
+(surname)               Expires October 31, 2012              [Page 123]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      BaseAction = {
@@ -7319,9 +7319,9 @@ Internet-Draft                Core-Gadget                    August 2011
    view The name of the application view the container SHOULD render
       when the action is invoked.
 
-(surname)               Expires January 31, 2012              [Page 124]
+(surname)               Expires October 31, 2012              [Page 124]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    viewTarget Specifies where the specified view is to be rendered.
@@ -7378,9 +7378,9 @@ Internet-Draft                Core-Gadget                    August 2011
    by the forward slash (/) character.
 
 
-(surname)               Expires January 31, 2012              [Page 125]
+(surname)               Expires October 31, 2012              [Page 125]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
 4.2.1.3.  JavaScript API
@@ -7437,9 +7437,9 @@ Internet-Draft                Core-Gadget                    August 2011
    Input Parameters:
 
 
-(surname)               Expires January 31, 2012              [Page 126]
+(surname)               Expires October 31, 2012              [Page 126]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +----------+--------------------------+-----------------------------+
@@ -7496,9 +7496,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 127]
+(surname)               Expires October 31, 2012              [Page 127]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      var mycallback = function(){
@@ -7555,9 +7555,9 @@ Internet-Draft                Core-Gadget                    August 2011
    +--------------+-------------+--------------------------------------+
 
 
-(surname)               Expires January 31, 2012              [Page 128]
+(surname)               Expires October 31, 2012              [Page 128]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    For example,
@@ -7614,9 +7614,9 @@ Internet-Draft                Core-Gadget                    August 2011
    +-----------------+-----------------+-------------------------------+
 
 
-(surname)               Expires January 31, 2012              [Page 129]
+(surname)               Expires October 31, 2012              [Page 129]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    For example,
@@ -7673,9 +7673,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
    <static> gadgets.actions.registerHideActionsListener (listener)
 
-(surname)               Expires January 31, 2012              [Page 130]
+(surname)               Expires October 31, 2012              [Page 130]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Input Parameters:
@@ -7732,9 +7732,9 @@ Internet-Draft                Core-Gadget                    August 2011
    The parameters supported by the "content-rewrite" feature are:
 
 
-(surname)               Expires January 31, 2012              [Page 131]
+(surname)               Expires October 31, 2012              [Page 131]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +-------------+----------+------------------------------------------+
@@ -7791,9 +7791,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |             |          | the "exclude-url" parameter. Valid       |
    |             |          | values are "true" or "false". Default is |
 
-(surname)               Expires January 31, 2012              [Page 132]
+(surname)               Expires October 31, 2012              [Page 132]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |             |          | "true"                                   |
    | minify-html | Boolean  | Specifies whether the container can      |
@@ -7850,9 +7850,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 133]
+(surname)               Expires October 31, 2012              [Page 133]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -7909,9 +7909,9 @@ Internet-Draft                Core-Gadget                    August 2011
    <Void> <instance>.putDataSet(key, value)
 
 
-(surname)               Expires January 31, 2012              [Page 134]
+(surname)               Expires October 31, 2012              [Page 134]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The method takes as input a key and value pair to store within the
@@ -7968,9 +7968,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 135]
+(surname)               Expires October 31, 2012              [Page 135]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    var dataContext = opensocial.data.getContext();
@@ -8027,9 +8027,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 136]
+(surname)               Expires October 31, 2012              [Page 136]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +-----------------------+-------------------------------------------+
@@ -8086,9 +8086,9 @@ Internet-Draft                Core-Gadget                    August 2011
    "gadget", "previewImage" and "url".  Additional extension properties
    MAY be included in the JSON object.
 
-(surname)               Expires January 31, 2012              [Page 137]
+(surname)               Expires October 31, 2012              [Page 137]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    For instance, a simple JSON Embedded Experience that references an
@@ -8145,9 +8145,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
    A simple URL embedded experience using the JSON serialization:
 
-(surname)               Expires January 31, 2012              [Page 138]
+(surname)               Expires October 31, 2012              [Page 138]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
     {
@@ -8204,9 +8204,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 139]
+(surname)               Expires October 31, 2012              [Page 139]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    An embedded experience application has the option of requiring some
@@ -8263,9 +8263,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 140]
+(surname)               Expires October 31, 2012              [Page 140]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    While the contextual data associated with the
@@ -8322,9 +8322,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 141]
+(surname)               Expires October 31, 2012              [Page 141]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
     {
@@ -8381,9 +8381,9 @@ Internet-Draft                Core-Gadget                    August 2011
    hyperlink that, when clicked, causes the application to be displayed.
 
 
-(surname)               Expires January 31, 2012              [Page 142]
+(surname)               Expires October 31, 2012              [Page 142]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +-----------+-------------------------------------------------------+
@@ -8440,9 +8440,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
    Display using the previewImage:
 
-(surname)               Expires January 31, 2012              [Page 143]
+(surname)               Expires October 31, 2012              [Page 143]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
     {
@@ -8499,9 +8499,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 4.2.4.3.2.  Target Types
 
-(surname)               Expires January 31, 2012              [Page 144]
+(surname)               Expires October 31, 2012              [Page 144]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    This specification currently defines two possible values for the type
@@ -8558,9 +8558,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 145]
+(surname)               Expires October 31, 2012              [Page 145]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
     {
@@ -8617,9 +8617,9 @@ Internet-Draft                Core-Gadget                    August 2011
    new photo album, an embedded experience can be used within the
    activity to provide a representation of the album itself:
 
-(surname)               Expires January 31, 2012              [Page 146]
+(surname)               Expires October 31, 2012              [Page 146]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
     {
@@ -8676,9 +8676,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 147]
+(surname)               Expires October 31, 2012              [Page 147]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Embedded experiences serialized as either JSON or XML can be embedded
@@ -8735,9 +8735,9 @@ Internet-Draft                Core-Gadget                    August 2011
    "flash" feature is required and render a remote flash resource within
    the default view:
 
-(surname)               Expires January 31, 2012              [Page 148]
+(surname)               Expires October 31, 2012              [Page 148]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -8794,9 +8794,9 @@ Internet-Draft                Core-Gadget                    August 2011
    The method will return either "True" or "False" to indicate whether
    the method completed successfully or not.
 
-(surname)               Expires January 31, 2012              [Page 149]
+(surname)               Expires October 31, 2012              [Page 149]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
 4.2.5.1.2.  gadgets.flash.embedFlash
@@ -8853,9 +8853,9 @@ Internet-Draft                Core-Gadget                    August 2011
    language specified in the locale to load the appropriate formatter
    and parser for any given date, time, number or currency.
 
-(surname)               Expires January 31, 2012              [Page 150]
+(surname)               Expires October 31, 2012              [Page 150]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The i18n feature provides four distinct methods: formatDateTime,
@@ -8912,9 +8912,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 151]
+(surname)               Expires October 31, 2012              [Page 151]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    When formatting and parsing dates and times, the i18n feature
@@ -8971,9 +8971,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 152]
+(surname)               Expires October 31, 2012              [Page 152]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +-----------------------------------------+-------------------------+
@@ -9030,9 +9030,9 @@ Internet-Draft                Core-Gadget                    August 2011
    For example:
 
 
-(surname)               Expires January 31, 2012              [Page 153]
+(surname)               Expires October 31, 2012              [Page 153]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    date = new Date(2006, 6, 27, 13, 10, 10, 250);
@@ -9089,9 +9089,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 154]
+(surname)               Expires October 31, 2012              [Page 154]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------------+----------------+-----------------------------+
@@ -9148,9 +9148,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 155]
+(surname)               Expires October 31, 2012              [Page 155]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    var date_array = [];
@@ -9207,9 +9207,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 156]
+(surname)               Expires October 31, 2012              [Page 156]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    var value = gadgets.i18n.parseNumber("0E0", "1.2345E+4");
@@ -9266,9 +9266,9 @@ Internet-Draft                Core-Gadget                    August 2011
       to server, etc.
 
 
-(surname)               Expires January 31, 2012              [Page 157]
+(surname)               Expires October 31, 2012              [Page 157]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Containers SHOULD support the "MiniMessage" feature.
@@ -9325,9 +9325,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 158]
+(surname)               Expires October 31, 2012              [Page 158]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -9384,9 +9384,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 159]
+(surname)               Expires October 31, 2012              [Page 159]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "gadgets.MiniMessage" object is used to create and manage
@@ -9443,9 +9443,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 160]
+(surname)               Expires October 31, 2012              [Page 160]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    If creation of the message is successful, the method will return a
@@ -9502,9 +9502,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
    Dismisses the specified message.
 
-(surname)               Expires January 31, 2012              [Page 161]
+(surname)               Expires October 31, 2012              [Page 161]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Void> gadgets.MiniMessage.dismissMessage(message)
@@ -9561,9 +9561,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 162]
+(surname)               Expires October 31, 2012              [Page 162]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      <Module>
@@ -9620,9 +9620,9 @@ Internet-Draft                Core-Gadget                    August 2011
            }
    
 
-(surname)               Expires January 31, 2012              [Page 163]
+(surname)               Expires October 31, 2012              [Page 163]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
            gadgets.util.registerOnLoadHandler(fetchData);
          </script>
@@ -9679,9 +9679,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 164]
+(surname)               Expires October 31, 2012              [Page 164]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Generates a function that is intended to be assigned to either a
@@ -9738,9 +9738,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 165]
+(surname)               Expires October 31, 2012              [Page 165]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
     <?xml version="1.0" encoding="UTF-8" ?>
@@ -9797,9 +9797,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 166]
+(surname)               Expires October 31, 2012              [Page 166]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The OpenSocial API (osapi) Feature provides developers with an
@@ -9856,9 +9856,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 167]
+(surname)               Expires October 31, 2012              [Page 167]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <?xml version="1.0" encoding="UTF-8" ?>
@@ -9915,9 +9915,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 168]
+(surname)               Expires October 31, 2012              [Page 168]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The example below, for instance, uses the OpenSocial Person Service
@@ -9974,9 +9974,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 169]
+(surname)               Expires October 31, 2012              [Page 169]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The method takes as input a single Function object that will be
@@ -10033,9 +10033,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 4.2.10.1.2.1.  osapi.BatchRequest.add
 
-(surname)               Expires January 31, 2012              [Page 170]
+(surname)               Expires October 31, 2012              [Page 170]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "osapi.BatchRequest.add" method adds a "osapi.Request" object to
@@ -10092,9 +10092,9 @@ Internet-Draft                Core-Gadget                    August 2011
    }
 
 
-(surname)               Expires January 31, 2012              [Page 171]
+(surname)               Expires October 31, 2012              [Page 171]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Additional details covering error handling is provided in Section
@@ -10151,9 +10151,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 172]
+(surname)               Expires October 31, 2012              [Page 172]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "osapi.http" Object is a special Service Object that encapsulates
@@ -10210,9 +10210,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 173]
+(surname)               Expires October 31, 2012              [Page 173]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +----------------------+-------------+------------------------------+
@@ -10269,9 +10269,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                      |             | will attempt to parse the    |
    |                      |             | returned content as JSON,    |
 
-(surname)               Expires January 31, 2012              [Page 174]
+(surname)               Expires October 31, 2012              [Page 174]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                      |             | handing the parsed result    |
    |                      |             | back to the provided         |
@@ -10328,9 +10328,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                      |             | "oauth_request_token"        |
    |                      |             | parameter can be used to     |
 
-(surname)               Expires January 31, 2012              [Page 175]
+(surname)               Expires October 31, 2012              [Page 175]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                      |             | specified a pre-authorized   |
    |                      |             | OAuth Request Token for use  |
@@ -10387,9 +10387,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                      |             | will be used to locate and   |
    |                      |             | use the cached Access Token. |
 
-(surname)               Expires January 31, 2012              [Page 176]
+(surname)               Expires October 31, 2012              [Page 176]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                      |             | If not specified, the        |
    |                      |             | default value is assumed to  |
@@ -10446,9 +10446,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |                      |             | "body" parameter specifies   |
    |                      |             | the data that is to be       |
 
-(surname)               Expires January 31, 2012              [Page 177]
+(surname)               Expires October 31, 2012              [Page 177]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |                      |             | included as the payload of   |
    |                      |             | the request. The value is    |
@@ -10505,9 +10505,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 178]
+(surname)               Expires October 31, 2012              [Page 178]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    If the "authz" property on the HTTP Request Parameters Object passed
@@ -10564,9 +10564,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 179]
+(surname)               Expires October 31, 2012              [Page 179]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    When an error occurs during the processing of an HTTP request, or
@@ -10623,9 +10623,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 180]
+(surname)               Expires October 31, 2012              [Page 180]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    A "topic" is a String value that conforms to the OpenAjax Hub 2.0
@@ -10682,9 +10682,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 181]
+(surname)               Expires October 31, 2012              [Page 181]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      // Register an onLoad handler
@@ -10741,9 +10741,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 182]
+(surname)               Expires October 31, 2012              [Page 182]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
      <Module>
@@ -10800,9 +10800,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 183]
+(surname)               Expires October 31, 2012              [Page 183]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -10859,9 +10859,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 184]
+(surname)               Expires October 31, 2012              [Page 184]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +----------+-------------+------------------------------------------+
@@ -10918,9 +10918,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 185]
+(surname)               Expires October 31, 2012              [Page 185]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +----------------------+-----------+--------------------------------+
@@ -10977,9 +10977,9 @@ Internet-Draft                Core-Gadget                    August 2011
    thrown if the referenced subscription does not exist.
 
 
-(surname)               Expires January 31, 2012              [Page 186]
+(surname)               Expires October 31, 2012              [Page 186]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <static> <Void> gadgets.Hub.unsubscribe(subscriptionId)
@@ -11036,9 +11036,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 187]
+(surname)               Expires October 31, 2012              [Page 187]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    When applications use the <Topic> element, containers are able to
@@ -11095,9 +11095,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 188]
+(surname)               Expires October 31, 2012              [Page 188]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +-------------+----------+----------+-------------------------------+
@@ -11154,9 +11154,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |             |          |          | can be provided in the        |
    |             |          |          | description attribute.        |
 
-(surname)               Expires January 31, 2012              [Page 189]
+(surname)               Expires October 31, 2012              [Page 189]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    +-------------+----------+----------+-------------------------------+
 
@@ -11213,9 +11213,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 190]
+(surname)               Expires October 31, 2012              [Page 190]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +---------------+---------------------------------------------------+
@@ -11272,9 +11272,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |               | "P0003-000T01:56:22.000" means "3 years, 1 hour,  |
    |               | 56 minutes and 22.000 seconds." (Must use this    |
 
-(surname)               Expires January 31, 2012              [Page 191]
+(surname)               Expires October 31, 2012              [Page 191]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |               | one variant defined in the ISO 8601 standard).    |
    | *             | Asterisk, or missing type attribute, means "any   |
@@ -11331,9 +11331,9 @@ Internet-Draft                Core-Gadget                    August 2011
    needs to provide applications with a way of determining the currently
    selected object.
 
-(surname)               Expires January 31, 2012              [Page 192]
+(surname)               Expires October 31, 2012              [Page 192]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The Selection feature provides the ability to participate in the
@@ -11390,9 +11390,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 193]
+(surname)               Expires October 31, 2012              [Page 193]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------+--------------+-------------------------------------+
@@ -11449,9 +11449,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
    <static> <Selection Object[]> gadgets.selection.getSelection()
 
-(surname)               Expires January 31, 2012              [Page 194]
+(surname)               Expires October 31, 2012              [Page 194]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
 4.2.13.1.4.  gadgets.selection.addListener
@@ -11508,9 +11508,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 195]
+(surname)               Expires October 31, 2012              [Page 195]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The View Features provide operations for interacting with the
@@ -11567,9 +11567,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 196]
+(surname)               Expires October 31, 2012              [Page 196]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------+------------------------------------+---------------+
@@ -11626,9 +11626,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |              |                                    | Application   |
    |              |                                    | View be       |
 
-(surname)               Expires January 31, 2012              [Page 197]
+(surname)               Expires October 31, 2012              [Page 197]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |              |                                    | displayed     |
    |              |                                    | within a      |
@@ -11685,9 +11685,9 @@ Internet-Draft                Core-Gadget                    August 2011
    |              |                                    | View Target   |
    |              |                                    | can be used   |
 
-(surname)               Expires January 31, 2012              [Page 198]
+(surname)               Expires October 31, 2012              [Page 198]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
    |              |                                    | to request    |
    |              |                                    | that an       |
@@ -11744,9 +11744,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 199]
+(surname)               Expires October 31, 2012              [Page 199]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "gadgets.views.getSupportedViews" method returns a JavaScript
@@ -11803,9 +11803,9 @@ Internet-Draft                Core-Gadget                    August 2011
    The method accepts three parameters as input.
 
 
-(surname)               Expires January 31, 2012              [Page 200]
+(surname)               Expires October 31, 2012              [Page 200]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +------------------+-----------+------------------------------------+
@@ -11862,9 +11862,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 201]
+(surname)               Expires October 31, 2012              [Page 201]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------+-----------------+----------------------------------+
@@ -11921,9 +11921,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 202]
+(surname)               Expires October 31, 2012              [Page 202]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -11980,9 +11980,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 203]
+(surname)               Expires October 31, 2012              [Page 203]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +------------------+-----------+------------------------------------+
@@ -12039,9 +12039,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 204]
+(surname)               Expires October 31, 2012              [Page 204]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +--------------+-----------------+----------------------------------+
@@ -12098,9 +12098,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 205]
+(surname)               Expires October 31, 2012              [Page 205]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -12157,9 +12157,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 206]
+(surname)               Expires October 31, 2012              [Page 206]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    +------------------+----------+-------------------------------------+
@@ -12216,9 +12216,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 4.2.14.2.1.4.  gadgets.views.close
 
-(surname)               Expires January 31, 2012              [Page 207]
+(surname)               Expires October 31, 2012              [Page 207]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    The "gadgets.views.close" method requests that a given view be
@@ -12275,9 +12275,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 208]
+(surname)               Expires October 31, 2012              [Page 208]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -12334,9 +12334,9 @@ Internet-Draft                Core-Gadget                    August 2011
    gadget, Embedded Experience or URL content is to be rendered.
 
 
-(surname)               Expires January 31, 2012              [Page 209]
+(surname)               Expires October 31, 2012              [Page 209]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Within the "opt_params" object, when the "viewTarget" property is
@@ -12393,9 +12393,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 210]
+(surname)               Expires October 31, 2012              [Page 210]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    Window features are a range of additional capabilities that can be
@@ -12452,9 +12452,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 211]
+(surname)               Expires October 31, 2012              [Page 211]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -12511,9 +12511,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 212]
+(surname)               Expires October 31, 2012              [Page 212]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -12570,9 +12570,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 213]
+(surname)               Expires October 31, 2012              [Page 213]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    <Module>
@@ -12629,9 +12629,9 @@ Internet-Draft                Core-Gadget                    August 2011
               Masinter, L., Leach, P. and T. Berners-Lee, "Hypertext
               Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
 
-(surname)               Expires January 31, 2012              [Page 214]
+(surname)               Expires October 31, 2012              [Page 214]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    [RFC3986]  Berners-Lee, T., Fielding, R. and L. Masinter, "Uniform
@@ -12688,9 +12688,9 @@ Internet-Draft                Core-Gadget                    August 2011
 
 
 
-(surname)               Expires January 31, 2012              [Page 215]
+(surname)               Expires October 31, 2012              [Page 215]
 
-Internet-Draft                Core-Gadget                    August 2011
+Internet-Draft                Core-Gadget                       May 2012
 
 
    [JSPEL]    Chung, K., DeLisle, P. and M. Roth, "Java Server Pages
@@ -12746,4 +12746,4 @@ Author's Address
 
 
 
-(surname)               Expires January 31, 2012              [Page 216]
+(surname)               Expires October 31, 2012              [Page 216]

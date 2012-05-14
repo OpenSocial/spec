@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
 <?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
 <?rfc-ext allow-markup-in-artwork="yes"?>
 <?rfc private="OpenSocial Foundation"?>
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
@@ -39,16 +48,7 @@
         <email>opensocial-and-gadgets-spec@googlegroups.com</email>
       </address>
     </author>
-    <date month="August" year="2011" />
-    <area>General</area>
-    <keyword>OpenSocial</keyword>
-    <keyword>social networking</keyword>
-    <keyword>REST</keyword>
-    <keyword>XML</keyword>
-    <keyword>Extensible Markup Language</keyword>
-    <keyword>JSON</keyword>
-    <keyword>JavaScript Object Notation</keyword>
-    <keyword>Atom</keyword>
+    <date month="May" year="2012" />
   </front>
   <middle>
     <section title="Overview">
@@ -531,7 +531,7 @@
           the constraints and rules of any feature it claims to support.</t>
         
           <t>The <spanx style="verb">feature</spanx> attribute on the 
-          &lt;Optiona&gt; and &lt;Require&gt; elements specifies the unique 
+          &lt;Optional&gt; and &lt;Require&gt; elements specifies the unique 
           identifier of a Feature.</t>
         
           <t>The <spanx style="verb">version</spanx> attribute specifies the 
@@ -604,14 +604,12 @@
             <spanx style="verb">name</spanx> attribute and text content. The 
             element MUST NOT contain un-escaped markup. If the value of the 
             parameter being specified contains markup such as XML or HTML
-            tags, the value MUST either be properly escaped using appropriate
-            XML entity tags or wrapped within a CDATA section.</t>
+            tags, the value MUST either be properly escaped or wrapped within 
+            a CDATA section.</t>
             
             <figure><preamble>For instance:</preamble><artwork>
   &lt;Require feature="my-feature" version="1.0"&gt;
-    &lt;Param name="foo"&gt;&lt;![CDATA[
-      &lt;a&gt;bar&lt;/a&gt;
-    ]]&gt;&lt;/Param&gt;
+    &lt;Param name="foo"&gt;&lt;![CDATA[&lt;a&gt;bar&lt;/a&gt;]]&gt;&lt;/Param&gt;
   &lt;/Require&gt;
             </artwork></figure>
             
@@ -644,7 +642,7 @@
         <section title="The &lt;Preload&gt; Element">
       
           <t>The &lt;Preload&gt; element is used to identify resources that
-          a container SHOULD load automatically an application view is 
+          a container SHOULD load automatically when an application view is 
           processed and rendered.</t>
         
           <figure><artwork>
@@ -2608,7 +2606,7 @@
 
             <t>The value of the <spanx style="verb">OAUTH_USE_TOKEN</spanx> 
             parameter MUST be one of:
-              <list style="hangText">
+              <list style="hanging">
                 <t hangText="never">
                   Tells the container that the Access Token is never 
                   required. Requests will be sent to the remote endpoint
@@ -2632,7 +2630,7 @@
             </t>
         
             <t>If the OAUTH_USE_TOKEN parameter is not specified, the value
-            is assumed to be "always".</t>
+            is assumed to be <spanx style="verb">always</spanx>.</t>
 
           </section>
 
