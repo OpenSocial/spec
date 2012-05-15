@@ -3876,14 +3876,13 @@
         <t>By default, when Data Pipeline elements appear as children of the 
         &lt;Data&gt; element, the container will process the elements and 
         register the resulting data with the <spanx style="verb">DataContext</spanx>
-        for all views.</t>
+        for all views prior to rendering the View.</t>
         
-        <t>Individual Data Pipeline elements, however, MAY specify a 
-        <spanx style="verb">view</spanx> attribute whose value is a comma 
-        separated list of specific views for which the element is associated. 
-        Such elements will only be processed and added to the 
-        <spanx style="verb">DataContext</spanx> when the identified views are 
-        being rendered.</t>
+        <t>Individual Data Pipeline elements MAY specify a <spanx style="verb">view</spanx> 
+        attribute whose value is a comma separated list of specific views for 
+        which the element is associated. Such elements will only be processed 
+        and added to the <spanx style="verb">DataContext</spanx> when the 
+        identified views are being rendered.</t>
         
         <figure><preamble>In the following example, the &lt;os:HttpRequest&gt;
         element using key <spanx style="verb">foo</spanx> is registered globally 
@@ -3933,9 +3932,9 @@
         exactly when the container processes the collection of Data Pipeline
         elements, nor are containers required to process data elements in 
         any particular order. Containers that process Data Pipeline elements
-        to populate the <spanx style="verb">DataContext</spanx> will likely
-        do so regardless of whether the referenced key is ever actually 
-        used within an expression statement or API call.</t>
+        to populate the <spanx style="verb">DataContext</spanx> can do
+        do so regardless of whether the referenced data is ever actually 
+        used by the View.</t>
       
       </section>
       
@@ -3944,7 +3943,7 @@
         <t>When using HTML Content, Data Pipeline elements MAY appear
         within the HTML inside a special &lt;script&gt; tag.</t>
         
-        <figure><preamble>For instance,</preamble><artwork>
+        <figure><preamble>For instance:</preamble><artwork>
   &lt;Module>
     &lt;ModulePrefs&gt;
       &lt;Require feature="opensocial-data" />
@@ -3996,6 +3995,12 @@
     ]]&gt;&lt;/Content>
   &lt;/Module>
         </artwork></figure>
+        
+        <t>Note that containers will process embedded data pipeline elements 
+        while it is processing and rendering the content of the view and after 
+        any data pipeline elements contained in the &lt;Data&gt; element have
+        been processed but before any of the JavaScript or HTML content generated
+        for the view is processed.</t>
 
       </section>
       
@@ -4181,6 +4186,25 @@
     attribute key { text },
     undefinedAttribute*
   }
+        </artwork></figure>
+        
+        <t>It is possible, through the use of Expression Language statements,
+        for Data Pipeline Elements to cross-reference each other. An 
+        &lt;os:HttpRequest&gt; element can be constructed such that data 
+        returned by an &lt;os:DataRequest&gt; is passed to the remote endpoint
+        as input parameters. Such references will only work if the data referenced
+        by the data pipeline element is available within the <spanx style="verb">DataContext</spanx>
+        when the element is processed. Containers MAY attempt to optimize the 
+        processing of data elements in order to best handle referenced dependencies
+        between elements, however Application developers MUST take care against
+        creating circular dependencies between data elements. Also, developers
+        need to be mindful of the order in which data elements are likely to be
+        processed. For instance, elements appearing within the &lt;Data&gt;
+        element are going to be processed before elements appearing within
+        HTML script tags.</t>
+        
+        <figure><artwork>
+
         </artwork></figure>
       
         <section title="The &lt;os:DataRequest&gt; Element" anchor="DataRequest">
@@ -5126,7 +5150,8 @@
                    <c><spanx style="verb">errors</spanx></c>
                    <c>Array of Error Objects</c>
                    <c>Provides a listing of any errors that occurred during the 
-                   processing of the request. TODO: Need more detail on this.</c>
+                   processing of the request in the form on an array of 
+                   Error Objects as defined by <xref target="core-api" />.</c>
                    
                    <c><spanx style="verb">headers</spanx></c>
                    <c>Headers Object</c>
@@ -9527,9 +9552,8 @@
       </artwork></figure>  
       
       <t>If an application requests a security policy that is not supported, 
-      the container MUST log an error to the gadgets.log.  A container MAY 
-      render that application using a supported security policy, or display an 
-      appropriate error message. TODO: Clarify this</t>
+      A container MAY choose to render the application using a supported 
+      security policy, or display an appropriate error message.</t>
       
       <t>Containers are free to define their own permissions for any purpose.
       TODO: should we have a registry of common permissions???</t>
@@ -9942,7 +9966,11 @@
   &lt;static&gt; &lt;Void&gt; gadgets.views.requestNavigateTo(view, opt_params, opt_ownerId)
               </artwork></figure>
               
-              <t>TODO: Finish this</t>
+              <t>The method takes as input three parameters. The first of which
+              is the name of the View to render. The second is an Object containing
+              the set of optional "view parameters" to pass to the rendered View.
+              The third is the identity of the application Instance Owner. Both
+              the view parameters and owner identity are optional.</t>
 
             </section>
   
@@ -10121,7 +10149,7 @@
                 with the <spanx style="verb">gadgets.views.close</spanx> method
                 to subsequently close the opened view.</c>
                 <c>dataModel</c>
-                <c>TODO:</c>
+                <c>An <xref target="Embedded-Experiences"/> Object</c>
                 <c>Specifies the Embedded Experiences Data model to use 
                 when rendering. The model is passed in as a JavaScript 
                 object conforming to the JSON embedded experiences format
@@ -10196,8 +10224,13 @@
   &lt;/Module&gt;
               </artwork></figure>
               
-              <t>TODO: This only works when EE container has been 
-              properly initialized...</t>
+              <t>Note that not all containers are capable of supporting 
+              Embedded Experiences. Container implementations MUST specifically
+              initialize support for Embedded Experiences before the 
+              <spanx style="verb">gadgets.views.openEmbeddedExperience</spanx>
+              API will function correctly. Details on the requirements for 
+              supporting this API within the container are provided within 
+              the OpenSocial Common Container v3.0 specification [TODO: CC Ref].</t>
                             
             </section>
 
@@ -10703,14 +10736,14 @@
   <front>
     <title>OpenSocial Core API Specification v3.0</title>
     <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>
-    <date month="April" year="2012"/>
+    <date month="May" year="2012"/>
   </front>
 </reference>
 <reference anchor="social-app" target="../Core-API.xml">
   <front>
     <title>OpenSocial Social Application Specification 3.0</title>
     <author fullname="OpenSocial and Gadgets Specification Group &lt;opensocial-and-gadgets-spec@googlegroups.com&gt;"/>
-    <date month="April" year="2012"/>
+    <date month="May" year="2012"/>
   </front>
 </reference>
   </references>

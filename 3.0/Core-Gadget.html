@@ -3120,8 +3120,8 @@
 <p id="rfc.section.3.6.1.p.1">For every application instance, a <samp>DataContext</samp> object is created that maintains all of the data associated with the instance's Data Pipeline elements. The information contained within the <samp>DataContext</samp> is available for use with Variable Substitution via Expression Language statements or via the <samp>opensocial.data</samp> APIs; and while the data contained within the <samp>DataContext</samp> is generally populated through processing of the Data Pipeline elements, the <samp>opensocial.data</samp> APIs can be used to modify values or add additional keys.</p>
 <h1 id="rfc.section.3.6.2">
 <a href="#rfc.section.3.6.2">3.6.2.</a> Data Pipeline Elements and the Data Block</h1>
-<p id="rfc.section.3.6.2.p.1">By default, when Data Pipeline elements appear as children of the &lt;Data&gt; element, the container will process the elements and register the resulting data with the <samp>DataContext</samp> for all views.</p>
-<p id="rfc.section.3.6.2.p.2">Individual Data Pipeline elements, however, MAY specify a <samp>view</samp> attribute whose value is a comma separated list of specific views for which the element is associated.  Such elements will only be processed and added to the <samp>DataContext</samp> when the identified views are being rendered.</p>
+<p id="rfc.section.3.6.2.p.1">By default, when Data Pipeline elements appear as children of the &lt;Data&gt; element, the container will process the elements and register the resulting data with the <samp>DataContext</samp> for all views prior to rendering the View.</p>
+<p id="rfc.section.3.6.2.p.2">Individual Data Pipeline elements MAY specify a <samp>view</samp> attribute whose value is a comma separated list of specific views for which the element is associated. Such elements will only be processed and added to the <samp>DataContext</samp> when the identified views are being rendered.</p>
 <div id="#rfc.figure.85"></div>
 <p>In the following example, the &lt;os:HttpRequest&gt; element using key <samp>foo</samp> is registered globally and available within all views while the &lt;os:HttpRequest&gt; element using key <samp>bar</samp> is only processed and available when the <samp>example</samp> view is being rendered:</p>
 <pre>
@@ -3156,12 +3156,12 @@
     &lt;/Content&gt;
   &lt;/Module&gt;       
         </pre>
-<p id="rfc.section.3.6.2.p.4">Note that currently, this specification does not specify exactly when the container processes the collection of Data Pipeline elements, nor are containers required to process data elements in any particular order. Containers that process Data Pipeline elements to populate the <samp>DataContext</samp> will likely do so regardless of whether the referenced key is ever actually used within an expression statement or API call.</p>
+<p id="rfc.section.3.6.2.p.4">Note that currently, this specification does not specify exactly when the container processes the collection of Data Pipeline elements, nor are containers required to process data elements in any particular order. Containers that process Data Pipeline elements to populate the <samp>DataContext</samp> can do do so regardless of whether the referenced data is ever actually used by the View.</p>
 <h1 id="rfc.section.3.6.3">
 <a href="#rfc.section.3.6.3">3.6.3.</a> Data Pipeline Elements within HTML Content</h1>
 <p id="rfc.section.3.6.3.p.1">When using HTML Content, Data Pipeline elements MAY appear within the HTML inside a special &lt;script&gt; tag.</p>
 <div id="#rfc.figure.87"></div>
-<p>For instance,</p>
+<p>For instance:</p>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
@@ -3195,6 +3195,7 @@
     ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
         </pre>
+<p id="rfc.section.3.6.3.p.6">Note that containers will process embedded data pipeline elements while it is processing and rendering the content of the view and after any data pipeline elements contained in the &lt;Data&gt; element have been processed but before any of the JavaScript or HTML content generated for the view is processed.</p>
 <h1 id="rfc.section.3.6.4">
 <a href="#rfc.section.3.6.4">3.6.4.</a> <a href="#data-pipeline-proxy" id="data-pipeline-proxy">Data Pipeline Elements and Proxied Content</a>
 </h1>
@@ -3328,11 +3329,16 @@
     undefinedAttribute*
   }
         </pre>
+<p id="rfc.section.3.6.5.p.4">It is possible, through the use of Expression Language statements, for Data Pipeline Elements to cross-reference each other. An &lt;os:HttpRequest&gt; element can be constructed such that data returned by an &lt;os:DataRequest&gt; is passed to the remote endpoint as input parameters. Such references will only work if the data referenced by the data pipeline element is available within the <samp>DataContext</samp> when the element is processed. Containers MAY attempt to optimize the processing of data elements in order to best handle referenced dependencies between elements, however Application developers MUST take care against creating circular dependencies between data elements. Also, developers need to be mindful of the order in which data elements are likely to be processed. For instance, elements appearing within the &lt;Data&gt; element are going to be processed before elements appearing within HTML script tags.</p>
+<div id="#rfc.figure.99"></div>
+<pre>
+
+        </pre>
 <h1 id="rfc.section.3.6.5.1">
 <a href="#rfc.section.3.6.5.1">3.6.5.1.</a> <a href="#DataRequest" id="DataRequest">The &lt;os:DataRequest&gt; Element</a>
 </h1>
 <p id="rfc.section.3.6.5.1.p.1">The &lt;os:DataRequest&gt; element is used to access social data provided by the container. It is generally equivalent to the JavaScript API methods provided to the application by the container to access information such as the identity of the current Viewer, a particular users group of friends, an activity stream, and so forth.  the &lt;os:DataRequest&gt; element can only be used to access content and cannot be used to modify social data stored by the container.</p>
-<div id="#rfc.figure.99"></div>
+<div id="#rfc.figure.100"></div>
 <pre>
   DataRequest = element os:DataRequest {
     BaseDataPipeline,
@@ -3342,7 +3348,7 @@
 <p id="rfc.section.3.6.5.1.p.2">In addition to the <samp>key</samp> attribute required for all Data Pipeline elements, the &lt;os:DataRequest&gt; element MUST contain a <samp>method</samp> attribute whose value is an Operation Identifier as defined in <a href="#core-api">[core-api]</a>.  All additional attributes contained by the &lt;os:DataRequest&gt; are to be mapped directly to the identically named input parameters for the data retrieval operation specified by the <samp>method</samp>.</p>
 <p id="rfc.section.3.6.5.1.p.3">Child elements or any additional content provided within the &lt;os:DataRequest&gt; element SHOULD be ignored.</p>
 <p id="rfc.section.3.6.5.1.p.4">For example, the <samp>people.get</samp> Operation Identifier defined within <a href="#social-app">[social-app]</a> allows an Application to retrieve information about people known to the container.  It can, for instance, be used to retrieve basic profile details about an individual or retrieve a listing of associated profiles (e.g. a "friends" list).</p>
-<div id="#rfc.figure.100"></div>
+<div id="#rfc.figure.101"></div>
 <p>When invoked using the JavaScript API to retrieve the listing of profiles associated with the application's current Viewer, the method is invoked as:</p>
 <pre>
   var params = {"userId": "@viewer", "groupId": "@friends"};
@@ -3350,7 +3356,7 @@
   
   function callback(friends) { ... }
           </pre>
-<div id="#rfc.figure.101"></div>
+<div id="#rfc.figure.102"></div>
 <p>The equivalent operation using the &lt;os:DataRequest&gt; element would be:</p>
 <pre>
   &lt;os:DataRequest key="friends" method="people.get" userId="@viewer" groupId="@friends" /&gt;
@@ -3360,7 +3366,7 @@
 <a href="#rfc.section.3.6.5.2">3.6.5.2.</a> <a href="#HttpRequest" id="HttpRequest">The &lt;os:HttpRequest&gt; Element</a>
 </h1>
 <p id="rfc.section.3.6.5.2.p.1">The &lt;os:HttpRequest&gt; element is used to access arbitrary content from a remote HTTP endpoint. It is generally equivalent to the <samp>osapi.http</samp> JavaScript API methods provided to the application by the container. Currently, only HTTP GET and POST methods are supported.</p>
-<div id="#rfc.figure.102"></div>
+<div id="#rfc.figure.103"></div>
 <pre>
   HttpRequest = element os:HttpRequest {
     BaseDataPipeline,
@@ -3371,7 +3377,7 @@
           </pre>
 <p id="rfc.section.3.6.5.2.p.2">In addition to the <samp>key</samp> attribute required for all Data Pipeline elements, the &lt;os:HttpRequest&gt; element MUST contain a <samp>method</samp> attribute whose value is either <samp>get</samp> or <samp>post</samp> indicating the HTTP request method to use for the request, and an <samp>href</samp> attribute whose value specifies a dereferenceable IRI to which the request will be sent. If not specified, the value of the <samp>method</samp> attribute will be assumed to be <samp>get</samp>.  All additional attributes contained by the &lt;os:HttpRequest&gt; are to be mapped directly to the identically named input parameters defined for corresponding <samp>osapi.http.get</samp> or <samp>osapi.http.post</samp> JavaScript APIs.</p>
 <p id="rfc.section.3.6.5.2.p.3">Child elements or any additional content provided within the &lt;os:HttpRequest&gt; element SHOULD be ignored.</p>
-<div id="#rfc.figure.103"></div>
+<div id="#rfc.figure.104"></div>
 <p>For example, the <samp>osapi.http.get</samp> operation can be used to retrieve content from a remote endpoint located at "http://example.org/foo":</p>
 <pre>
   var params = {
@@ -3382,7 +3388,7 @@
   
   function callback(results) { ... }
           </pre>
-<div id="#rfc.figure.104"></div>
+<div id="#rfc.figure.105"></div>
 <p>The equivalent operation using the &lt;os:HttpRequest&gt; element would be:</p>
 <pre>
   &lt;os:HttpRequest key="results" 
@@ -3391,7 +3397,7 @@
           </pre>
 <p id="rfc.section.3.6.5.2.p.4">Assuming the method identified was processed successfully, the "results" variable will be added to the <samp>DataContext</samp> with a value identical to that provided as input to the callback function in the previous JavaScript API.</p>
 <p id="rfc.section.3.6.5.2.p.5">The exact structure of the value stored within the <samp>DataContext</samp> will depend on the type of response returned by the remote endpoint.  Currently, the only supported options are for the server to return JSON-formatted data, textual content (e.g. plain text or HTML) or an error response. Binary content is currently not supported.</p>
-<div id="#rfc.figure.105"></div>
+<div id="#rfc.figure.106"></div>
 <p>If the server returns a JSON formatted response such as:</p>
 <pre>
   HTTP/1.1 200 OK
@@ -3399,7 +3405,7 @@
   
   { "data" : "xyz" }
           </pre>
-<div id="#rfc.figure.106"></div>
+<div id="#rfc.figure.107"></div>
 <p>The value stored within the <samp>DataContext</samp> would be:</p>
 <pre>
   {
@@ -3416,7 +3422,7 @@
     }
   }
           </pre>
-<div id="#rfc.figure.107"></div>
+<div id="#rfc.figure.108"></div>
 <p>If the server turns textual content such as:</p>
 <pre>
   HTTP/1.1 200 OK
@@ -3424,7 +3430,7 @@
   
   &lt;html&gt;&lt;head&gt;...&lt;/head&gt;&lt;body&gt;Hello World&lt;/body&gt;&lt;/html&gt;
           </pre>
-<div id="#rfc.figure.108"></div>
+<div id="#rfc.figure.109"></div>
 <p>The value stored within the <samp>DataContext</samp> would be:</p>
 <pre>
   {
@@ -3439,7 +3445,7 @@
     }
   }
           </pre>
-<div id="#rfc.figure.109"></div>
+<div id="#rfc.figure.110"></div>
 <p>If the server returns an error, or if the content returned by the server is neither text-based or valid JSON, the value stored by the <samp>DataContext</samp> will specify an <a href="#core-api">Error Object</a> <cite title="NONE">[core-api]</cite> with an appropriate value indicating the nature of the error. Within the value of the "error" property, the "data" property contains the content actually returned by the server, if any.</p>
 <pre>
   {
@@ -3461,7 +3467,7 @@
 <a href="#rfc.section.3.6.5.3">3.6.5.3.</a> <a href="#Var" id="Var">The &lt;os:Var&gt; Element</a>
 </h1>
 <p id="rfc.section.3.6.5.3.p.1">The &lt;os:Var&gt; element is used to declare a string JSON object, or JavaScript array as a literal value or associate the results of evaluating an Expression Statement with a key.</p>
-<div id="#rfc.figure.110"></div>
+<div id="#rfc.figure.111"></div>
 <pre>
   SimpleVar = element os:Var {
     BaseDataPipeline,
@@ -3476,7 +3482,7 @@
   Var = SimpleVar | JsonVar
           </pre>
 <p id="rfc.section.3.6.5.3.p.2">In addition to the <samp>key</samp> attribute required for all Data Pipeline elements, the &lt;os:Var&gt; element can either contain a <samp>value</samp> attribute or contain textual content.</p>
-<div id="#rfc.figure.111"></div>
+<div id="#rfc.figure.112"></div>
 <p>The following &lt;os:Var&gt; examples are equivalent:</p>
 <pre>
   &lt;os:Var key="key1" value="ABC" /&gt;
@@ -3493,14 +3499,14 @@
 </ul>
 
 <p> </p>
-<div id="#rfc.figure.112"></div>
+<div id="#rfc.figure.113"></div>
 <p>Given the example,</p>
 <pre>
   &lt;os:Var key="key1"&gt;
     [{"data": ${1+1}}]
   &lt;os:Var&gt;
           </pre>
-<div id="#rfc.figure.113"></div>
+<div id="#rfc.figure.114"></div>
 <p>The value stored within the <samp>DataContext</samp> will be a JavaScript array containing a JSON object with a single property "data" whose value is the result of processing the Expression Language statement "${1+1}":</p>
 <pre>
   [
@@ -3511,7 +3517,7 @@
 <a href="#rfc.section.3.6.5.4">3.6.5.4.</a> Expression Statements within Data Pipeline Attributes</h1>
 <p id="rfc.section.3.6.5.4.p.1">The attributes used with the &lt;os:DataRequest&gt; and &lt;os:HttpRequest&gt; elements often require values that vary depending on a range of criteria including input parameters or the results returned by other Data Pipeline elements.</p>
 <p id="rfc.section.3.6.5.4.p.2">For instance, when the application needs to display the next set of results from a paged-collection, the view parameters specifying the current page can be passed into the &lt;os:HttpRequest&gt; or &lt;os:DataRequest&gt; using Expression Language statements:</p>
-<div id="#rfc.figure.114"></div>
+<div id="#rfc.figure.115"></div>
 <pre>
   &lt;os:DataRequest key="PagedFriends" method="people.get" 
     userId="@owner" groupId="@friends" 
@@ -3519,7 +3525,7 @@
     count="20"/&gt;
           </pre>
 <p id="rfc.section.3.6.5.4.p.3">Likewise, the results of one Data Pipeline element can be passed as attribute values in another. For instance, we can reference the stored value for the "PagedFriends" key generated by processing the previous example within an &lt;os:HttpRequest&gt;:</p>
-<div id="#rfc.figure.115"></div>
+<div id="#rfc.figure.116"></div>
 <pre>
   &lt;os:HttpRequest href="http://example.com/api?ids=${PagedFriends.ids}"/&gt;
           </pre>
@@ -3533,7 +3539,7 @@
 
 <p> </p>
 <p id="rfc.section.3.6.5.4.p.6">These properties are determined dynamically by the container and can be used within any Expression Language statement:</p>
-<div id="#rfc.figure.116"></div>
+<div id="#rfc.figure.117"></div>
 <pre>
   &lt;os:DataRequest key="Page1" method="people.get"
     userId="@owner" groupId="@friends"
@@ -3559,12 +3565,12 @@
 <h1 id="rfc.section.4.1.1.1.1">
 <a href="#rfc.section.4.1.1.1.1">4.1.1.1.1.</a> gadgets.log</h1>
 <p id="rfc.section.4.1.1.1.1.p.1">The <samp>gadgets.log</samp> method is used to record an informational message to the container provided Log.</p>
-<div id="#rfc.figure.117"></div>
+<div id="#rfc.figure.118"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.log(message)
            </pre>
 <p id="rfc.section.4.1.1.1.1.p.2">The method takes a single input parameter that can be any valid JSON-serializable Object. No return value is specified.</p>
-<div id="#rfc.figure.118"></div>
+<div id="#rfc.figure.119"></div>
 <p>For example:</p>
 <pre>
   gadgets.log("This is a message");
@@ -3577,12 +3583,12 @@
 <a href="#rfc.section.4.1.1.1.2">4.1.1.1.2.</a> <a href="#gadgets.warn" id="gadgets.warn">gadgets.warn</a>
 </h1>
 <p id="rfc.section.4.1.1.1.2.p.1">The <samp>gadgets.warn</samp> method is used to record a warning message to the container provided Log.</p>
-<div id="#rfc.figure.119"></div>
+<div id="#rfc.figure.120"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.warn(message)
            </pre>
 <p id="rfc.section.4.1.1.1.2.p.2">The method takes a single input parameter that can be any valid JSON-serializable Object. No return value is specified.</p>
-<div id="#rfc.figure.120"></div>
+<div id="#rfc.figure.121"></div>
 <p>For example:</p>
 <pre>
   gadgets.warn("This is a warning!");
@@ -3595,12 +3601,12 @@
 <a href="#rfc.section.4.1.1.1.3">4.1.1.1.3.</a> <a href="#gadgets.error" id="gadgets.error">gadgets.error</a>
 </h1>
 <p id="rfc.section.4.1.1.1.3.p.1">The <samp>gadgets.error</samp> method is used to record an error message to the container provided Log.</p>
-<div id="#rfc.figure.121"></div>
+<div id="#rfc.figure.122"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.error(message)
            </pre>
 <p id="rfc.section.4.1.1.1.3.p.2">The method takes a single input parameter that can be any valid JSON-serializable object. No return value is specified.</p>
-<div id="#rfc.figure.122"></div>
+<div id="#rfc.figure.123"></div>
 <p>For example:</p>
 <pre>
   gadgets.error("This is an error");
@@ -3613,7 +3619,7 @@
 <a href="#rfc.section.4.1.1.1.4">4.1.1.1.4.</a> <a href="#gadgets.setLogLevel" id="gadgets.setLogLevel">gadgets.setLogLevel</a>
 </h1>
 <p id="rfc.section.4.1.1.1.4.p.1">The <samp>gadgets.setLogLevel</samp> method establishes the minimum log level threshold at which containers SHOULD record messages sent to the Log.</p>
-<div id="#rfc.figure.123"></div>
+<div id="#rfc.figure.124"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.setLogLevel(logLevel)
            </pre>
@@ -3649,14 +3655,14 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.124"></div>
+<div id="#rfc.figure.125"></div>
 <p>For example, to record all messages:</p>
 <pre>
   gadgets.setLogLevel(1);
   // or
   gadgets.setLogLevel(gadgets.log.INFO);
            </pre>
-<div id="#rfc.figure.125"></div>
+<div id="#rfc.figure.126"></div>
 <p>Or to record only error messages:</p>
 <pre>
   gadgets.setLogLevel(3);
@@ -3674,12 +3680,12 @@
 <a href="#rfc.section.4.1.2.1.1">4.1.2.1.1.</a> <a href="#gadgets.io.encodeValues" id="gadgets.io.encodeValues">gadgets.io.encodeValues</a>
 </h1>
 <p id="rfc.section.4.1.2.1.1.p.1">The <samp>gadgets.io.encodeValues</samp> method converts an input JavaScript object into a URL-encoded string as defined by Section 2.1 of <a href="#RFC3986">[RFC3986]</a>.</p>
-<div id="#rfc.figure.126"></div>
+<div id="#rfc.figure.127"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.io.encodeValues(object)
              </pre>
 <p id="rfc.section.4.1.2.1.1.p.2">The method takes as input a single JavaScript object whose property names and values will be enumerated and converted into a proper URL-formatted String that is returned to the caller. The resulting String will be constructed such that each property and value pair is separated by an ampersand (&amp;) character.</p>
-<div id="#rfc.figure.127"></div>
+<div id="#rfc.figure.128"></div>
 <p>For example, given the following object:</p>
 <pre>
   var data = {
@@ -3689,13 +3695,13 @@
     "baz" : ["a","b","c"]
   }
              </pre>
-<div id="#rfc.figure.128"></div>
+<div id="#rfc.figure.129"></div>
 <p>Calling <samp>gadgets.io.encodeValues(data)</samp> would generate the output:</p>
 <pre>
   foo=bar&amp;abc=123&amp;zyx=true&amp;baz=a,b,c
              </pre>
 <p id="rfc.section.4.1.2.1.1.p.3">If the value of top-level property or member of an Array is any value other than a JavaScript primitive, it's value will be encoded as a JSON-serialized String as returned by the <samp>gadgets.json.stringify</samp> method.</p>
-<div id="#rfc.figure.129"></div>
+<div id="#rfc.figure.130"></div>
 <p>For instance, given the following input:</p>
 <pre>
   var data = {
@@ -3709,7 +3715,7 @@
     ]
   }
              </pre>
-<div id="#rfc.figure.130"></div>
+<div id="#rfc.figure.131"></div>
 <p>Calling <samp>gadgets.io.encodeValues(data)</samp> would generate the output:</p>
 <pre>
   foo=%7B%22a%22%3A%22b%22%2C%22c%22%3A%22d%22%7D&amp;bar=%7B%22xyz%22%3A%22123%22%7D,%7B%22abc%22%3A321%7D
@@ -3718,7 +3724,7 @@
 <a href="#rfc.section.4.1.2.1.2">4.1.2.1.2.</a> <a href="#gadgets.io.getProxyUrl" id="gadgets.io.getProxyUrl">gadgets.io.getProxyUrl</a>
 </h1>
 <p id="rfc.section.4.1.2.1.2.p.1">When an application needs to load data from an external source -- for instance, an image or script resource -- it can either choose to access that content directly or proxy the request for the content through the container. In the latter case, the <samp>gadgets.io.getProxyUrl</samp> can be used to ask the container to generate a "Proxy URL" for the remote resource that the application would use in place of the resource's own direct URL.</p>
-<div id="#rfc.figure.131"></div>
+<div id="#rfc.figure.132"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.io.getProxyUrl(url, opt_params)
              </pre>
@@ -3738,7 +3744,7 @@
 </tr></tbody>
 </table>
 <p id="rfc.section.4.1.2.1.2.p.4">Containers are free to accept additional optional parameters, however the definition and use of such parameters are undefined by this specification.</p>
-<div id="#rfc.figure.132"></div>
+<div id="#rfc.figure.133"></div>
 <p>The following example creates a Proxy URL for a remote image file and sets a cache timeout of one hour. The proxy URL is then used within the src attribute of an HTML image tag.  When the image tag is rendered, a request will be sent to the Proxy URL causing the container to fetch the image from the remote source and cache it locally.</p>
 <pre>
   &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
@@ -3764,12 +3770,12 @@
 <a href="#rfc.section.4.1.2.1.3">4.1.2.1.3.</a> <a href="#gadgets.io.makeRequest" id="gadgets.io.makeRequest">gadgets.io.makeRequest</a>
 </h1>
 <p id="rfc.section.4.1.2.1.3.p.1">The <samp>gadgets.io.makeRequest</samp> method is used to send HTTP requests to a provided URL and pass the returned content to a callback function.</p>
-<div id="#rfc.figure.133"></div>
+<div id="#rfc.figure.134"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.io.makeRequest(url, callback, opt_params)
              </pre>
 <p id="rfc.section.4.1.2.1.3.p.2">The method takes as input a single URL to which requests will be sent, a reference to a callback function that the container will invoke when the request has completed, and an object containing an optional collection of additional parameters. No return value is specified for the method.</p>
-<div id="#rfc.figure.134"></div>
+<div id="#rfc.figure.135"></div>
 <p>In the following example, a simple HTTP GET request is sent to a remote endpoint with no additional request parameters:</p>
 <pre>
   gadgets.io.makeRequest(
@@ -3906,7 +3912,7 @@
 <tr>
 <td class="left"><samp>errors</samp></td>
 <td class="left">Array of Error Objects</td>
-<td class="left">Provides a listing of any errors that occurred during the processing of the request. TODO: Need more detail on this.</td>
+<td class="left">Provides a listing of any errors that occurred during the processing of the request in the form on an array of Error Objects as defined by <a href="#core-api">[core-api]</a>.</td>
 </tr>
 <tr>
 <td class="left"><samp>headers</samp></td>
@@ -3951,7 +3957,7 @@
 <a href="#rfc.section.4.1.3.1.1">4.1.3.1.1.</a> <a href="#gadgets.json.parse" id="gadgets.json.parse">gadgets.json.parse</a>
 </h1>
 <p id="rfc.section.4.1.3.1.1.p.1">The <samp>gadgets.json.parse</samp> method parses a JSON-formatted String and returns the corresponding JavaScript object value.</p>
-<div id="#rfc.figure.135"></div>
+<div id="#rfc.figure.136"></div>
 <pre>
   &lt;static&gt; &lt;Object&gt; gadgets.json.parse(text)
             </pre>
@@ -3959,12 +3965,12 @@
 <a href="#rfc.section.4.1.3.1.2">4.1.3.1.2.</a> <a href="#gadgets.json.stringify" id="gadgets.json.stringify">gadgets.json.stringify</a>
 </h1>
 <p id="rfc.section.4.1.3.1.2.p.1">The <samp>gadgets.json.stringify</samp> method serializes a JavaScript value into a JSON-formatted string.</p>
-<div id="#rfc.figure.136"></div>
+<div id="#rfc.figure.137"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.json.stringify(object)
             </pre>
 <p id="rfc.section.4.1.3.1.2.p.2">The object takes as input any valid JavaScript object and returns an equivalent JSON object. If the value of a property is a reference to another object, the reference object will also be serialized.  Properties whose values are references to Function objects will be ignored and omitted from the resulting JSON-serialization.</p>
-<div id="#rfc.figure.137"></div>
+<div id="#rfc.figure.138"></div>
 <p>For instance, the following example:</p>
 <pre>
   var l = {"z":"y"};
@@ -3979,7 +3985,7 @@
   }
   var output = gadgets.json.stringify(data);
             </pre>
-<div id="#rfc.figure.138"></div>
+<div id="#rfc.figure.139"></div>
 <p>Would yield the following as the value for the output variable:</p>
 <pre>
   {"a":"a","b":[1,2,3],"c":{"z":"y"},"d":"2012-03-28T23:16:50.560Z","e":[],"f":{},"g":null}        
@@ -3997,7 +4003,7 @@
 </h1>
 <p id="rfc.section.4.1.4.1.1.p.1">Instances of the <samp>gadgets.Prefs</samp> Object provide access to the user preferences, preferred rendering dimensions and localized collection of messages selected by the container for a specific application instance.</p>
 <p id="rfc.section.4.1.4.1.1.p.2">Instances of the object are created using the JavaScript new keyword. The specific identity of a specific application instance MAY be passed in as an optional parameter.</p>
-<div id="#rfc.figure.139"></div>
+<div id="#rfc.figure.140"></div>
 <p>In the example below, a <samp>gadgets.Prefs</samp> object is created to access the current Viewer's preferred language and the stored value of the "name" user preference:</p>
 <pre>
   var prefs = new gadgets.Prefs();
@@ -4009,11 +4015,11 @@
 <a href="#rfc.section.4.1.4.1.1.1">4.1.4.1.1.1.</a> <a href="#gadgets.Prefs.getArray" id="gadgets.Prefs.getArray">gadgets.Prefs.getArray</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.1.p.1">The <samp>gadgets.Prefs.getArray</samp> method returns the stored value associated with the specified user preference key as a JavaScript array. If the value stored is not currently an array, the value will be returned as an an array with a single element. If no value is currently associated with the specified key, an empty array will be returned.</p>
-<div id="#rfc.figure.140"></div>
+<div id="#rfc.figure.141"></div>
 <pre>
   &lt;Array&gt; &lt;instance&gt;.getArray(key)
                </pre>
-<div id="#rfc.figure.141"></div>
+<div id="#rfc.figure.142"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadget.Prefs();
@@ -4027,11 +4033,11 @@
 <a href="#rfc.section.4.1.4.1.1.2">4.1.4.1.1.2.</a> <a href="#gadgets.Prefs.getBool" id="gadgets.Prefs.getBool">gadgets.Prefs.getBool</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.2.p.1">The <samp>gadgets.Prefs.getBool</samp> method returns the stored value associated with the specified user preference key as a JavaScript Boolean. If the stored value is either not current specified or cannot be interpreted as a Boolean, the value returned will be False. If the stored value is the literal String <samp>true</samp> or a non-zero number (positive or negative) the value returned will be True.</p>
-<div id="#rfc.figure.142"></div>
+<div id="#rfc.figure.143"></div>
 <pre>
   &lt;Boolean&gt; &lt;instance&gt;.getBool(key)
                </pre>
-<div id="#rfc.figure.143"></div>
+<div id="#rfc.figure.144"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadget.Prefs();
@@ -4043,11 +4049,11 @@
 <a href="#rfc.section.4.1.4.1.1.3">4.1.4.1.1.3.</a> <a href="#gadgets.Prefs.getCountry" id="gadgets.Prefs.getCountry">gadgets.Prefs.getCountry</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.3.p.1">The <samp>gadgets.Prefs.getCountry</samp> method returns the current Viewer's country as determined by the container.  The value will be an ISO 3166-1 Country Code.</p>
-<div id="#rfc.figure.144"></div>
+<div id="#rfc.figure.145"></div>
 <pre>
   &lt;String&gt; &lt;instance&gt;.getCountry()
                </pre>
-<div id="#rfc.figure.145"></div>
+<div id="#rfc.figure.146"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadgets.Prefs();
@@ -4057,11 +4063,11 @@
 <a href="#rfc.section.4.1.4.1.1.4">4.1.4.1.1.4.</a> <a href="#gadgets.Prefs.getFloat" id="gadgets.Prefs.getFloat">gadgets.Prefs.getFloat</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.4.p.1">The <samp>gadgets.Prefs.getFloat</samp> method returns the stored value associated with the specified user preference key as a JavaScript Number containing a floating-point value.  If the stored value is either not current specified or cannot be interpreted as a floating point number, the value returned will be 0.</p>
-<div id="#rfc.figure.146"></div>
+<div id="#rfc.figure.147"></div>
 <pre>
   &lt;Number&gt; &lt;instance&gt;.getFloat(key)
                </pre>
-<div id="#rfc.figure.147"></div>
+<div id="#rfc.figure.148"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadget.Prefs();
@@ -4071,11 +4077,11 @@
 <a href="#rfc.section.4.1.4.1.1.5">4.1.4.1.1.5.</a> <a href="#gadgets.Prefs.getInt" id="gadgets.Prefs.getInt">gadgets.Prefs.getInt</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.5.p.1">The <samp>gadgets.Prefs.getInt</samp> method returns the stored value associated with the specified user preference key as a JavaScript Number containing an integer value.  If the stored value is either not currently specified or cannot be interpreted as an integer number, the value returned will be <samp>0</samp>.</p>
-<div id="#rfc.figure.148"></div>
+<div id="#rfc.figure.149"></div>
 <pre>
   &lt;Number&gt; &lt;instance&gt;.getInt(key)
                </pre>
-<div id="#rfc.figure.149"></div>
+<div id="#rfc.figure.150"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadget.Prefs();
@@ -4085,11 +4091,11 @@
 <a href="#rfc.section.4.1.4.1.1.6">4.1.4.1.1.6.</a> <a href="#gadgets.Prefs.getLang" id="gadgets.Prefs.getLang">gadgets.Prefs.getLang</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.6.p.1">The <samp>gadgets.Prefs.getLang</samp> method returns the current Viewer's preferred language as determined by the container. The value will be an ISO 639-1 Language Code.</p>
-<div id="#rfc.figure.150"></div>
+<div id="#rfc.figure.151"></div>
 <pre>
   &lt;String&gt; &lt;instance&gt;.getLang()
                </pre>
-<div id="#rfc.figure.151"></div>
+<div id="#rfc.figure.152"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadgets.Prefs();
@@ -4099,11 +4105,11 @@
 <a href="#rfc.section.4.1.4.1.1.7">4.1.4.1.1.7.</a> <a href="#gadgets.Prefs.getModuleId" id="gadgets.Prefs.getModuleId">gadgets.Prefs.getModuleId</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.7.p.1">The <samp>gadgets.Prefs.getModuleId</samp> method returns the gadget instances unique ID as provided by the container.</p>
-<div id="#rfc.figure.152"></div>
+<div id="#rfc.figure.153"></div>
 <pre>
   &lt;String&gt; &lt;instance&gt;.getModuleId()
                </pre>
-<div id="#rfc.figure.153"></div>
+<div id="#rfc.figure.154"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadgets.Prefs();
@@ -4113,11 +4119,11 @@
 <a href="#rfc.section.4.1.4.1.1.8">4.1.4.1.1.8.</a> <a href="#gadgets.Prefs.getMsg" id="gadgets.Prefs.getMsg">gadgets.Prefs.getMsg</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.8.p.1">The <samp>gadgets.Prefs.getMsg</samp> method returns the localized String value associated with the specified key as provided by the Message Bundle selected by the container for the current Viewer's preferred language and country. Messages are defined using &lt;Locale&gt; elements within the &lt;ModulePrefs&gt;.  If the specified key has no associated message, an empty String will be returned.</p>
-<div id="#rfc.figure.154"></div>
+<div id="#rfc.figure.155"></div>
 <pre>
   &lt;String&gt; &lt;instance&gt;.getMsg(key)
                </pre>
-<div id="#rfc.figure.155"></div>
+<div id="#rfc.figure.156"></div>
 <p>For example:</p>
 <pre>
   &lt;Module&gt;
@@ -4146,11 +4152,11 @@
 <a href="#rfc.section.4.1.4.1.1.9">4.1.4.1.1.9.</a> <a href="#gadgets.Prefs.getString" id="gadgets.Prefs.getString">gadgets.Prefs.getString</a>
 </h1>
 <p id="rfc.section.4.1.4.1.1.9.p.1">The <samp>gadgets.Prefs.getString</samp> method returns the stored value associated with the specified user preference key as a JavaScript String. If the stored value is not currently specified, the value returned will be an empty String.</p>
-<div id="#rfc.figure.156"></div>
+<div id="#rfc.figure.157"></div>
 <pre>
   &lt;String&gt; &lt;instance&gt;.getString(key)
                </pre>
-<div id="#rfc.figure.157"></div>
+<div id="#rfc.figure.158"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadgets.Prefs();
@@ -4160,7 +4166,7 @@
 <a href="#rfc.section.4.1.4.2">4.1.4.2.</a> The "setprefs" Feature</h1>
 <p id="rfc.section.4.1.4.2.p.1">By default, the <samp>gadgets.Prefs</samp> object provides read-only access to the stored user preferences for particular application instance. In order to modify the user preference values, the "setprefs" feature MUST be specified using either the &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;.</p>
 <p id="rfc.section.4.1.4.2.p.2">Containers MUST provide the "setprefs" feature.</p>
-<div id="#rfc.figure.158"></div>
+<div id="#rfc.figure.159"></div>
 <p>For example:</p>
 <pre>
   &lt;Module&gt;
@@ -4179,11 +4185,11 @@
 <a href="#rfc.section.4.1.4.2.1.1">4.1.4.2.1.1.</a> <a href="#gadget.Prefs.set" id="gadget.Prefs.set">gadgets.Prefs.set</a>
 </h1>
 <p id="rfc.section.4.1.4.2.1.1.p.1">The <samp>gadgets.Prefs.set</samp> method stores the specified value and associates it with the given key. The value can be any JavaScript primitive. No return value is specified.</p>
-<div id="#rfc.figure.159"></div>
+<div id="#rfc.figure.160"></div>
 <pre>
   &lt;Void&gt; &lt;instance&gt;.set(key,value)
                </pre>
-<div id="#rfc.figure.160"></div>
+<div id="#rfc.figure.161"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadgets.Prefs();
@@ -4193,11 +4199,11 @@
 <a href="#rfc.section.4.1.4.2.1.2">4.1.4.2.1.2.</a> <a href="#gadget.Prefs.setArray" id="gadget.Prefs.setArray">gadgets.Prefs.setArray</a>
 </h1>
 <p id="rfc.section.4.1.4.2.1.2.p.1">The <samp>gadgets.Prefs.setArray</samp> method stores the specified Array value and associates it with the given key. The members of the Array can be any JavaScript primitive. No return value is specified.</p>
-<div id="#rfc.figure.161"></div>
+<div id="#rfc.figure.162"></div>
 <pre>
   &lt;Void&gt; &lt;instance&gt;.setArray(key,array)
                </pre>
-<div id="#rfc.figure.162"></div>
+<div id="#rfc.figure.163"></div>
 <p>For example:</p>
 <pre>
   var prefs = new gadgets.Prefs();
@@ -4214,7 +4220,7 @@
 <a href="#rfc.section.4.1.5.1.1">4.1.5.1.1.</a> <a href="#gadgets.util.escapeString" id="gadgets.util.escapeString">gadgets.util.escapeString</a>
 </h1>
 <p id="rfc.section.4.1.5.1.1.p.1">The <samp>gadgets.util.escapeString</samp> processes the characters of an input String and replaces specific potentially problematic characters with corresponding HTML entities.</p>
-<div id="#rfc.figure.163"></div>
+<div id="#rfc.figure.164"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.util.escapeString(str)
             </pre>
@@ -4283,12 +4289,12 @@
 <a href="#rfc.section.4.1.5.1.2">4.1.5.1.2.</a> <a href="#gadgets.util.getFeatureParameters" id="gadgets.util.getFeatureParameters">gadgets.util.getFeatureParameters</a>
 </h1>
 <p id="rfc.section.4.1.5.1.2.p.1">The <samp>gadgets.util.getFeatureParameters</samp> returns collection of parameters provided for the given feature as specified by &lt;Param&gt; elements within a &lt;Require&gt; or &lt;Optional&gt; element in the &lt;ModulePrefs&gt;.</p>
-<div id="#rfc.figure.164"></div>
+<div id="#rfc.figure.165"></div>
 <pre>
   &lt;static&gt; &lt;Object&gt; gadgets.util.getFeatureParameters(feature)
             </pre>
 <p id="rfc.section.4.1.5.1.2.p.2">The method accepts as input a String specifying the feature name and returns a JavaScript object. Each property of the returned object corresponds to one &lt;Param&gt; element contained by the &lt;Require&gt; or &lt;Optional&gt; element for the named feature. If the feature does not exist in the &lt;ModulePrefs&gt;, a null value is returned.</p>
-<div id="#rfc.figure.165"></div>
+<div id="#rfc.figure.166"></div>
 <p>For example:</p>
 <pre>
   &lt;Module&gt;
@@ -4313,7 +4319,7 @@
 <a href="#rfc.section.4.1.5.1.3">4.1.5.1.3.</a> <a href="#gadgets.util.hasFeature" id="gadgets.util.hasFeature">gadgets.util.hasFeature</a>
 </h1>
 <p id="rfc.section.4.1.5.1.3.p.1">The <samp>gadgets.util.hasFeature</samp> returns whether or not the specified feature has been enabled for this application instance.</p>
-<div id="#rfc.figure.166"></div>
+<div id="#rfc.figure.167"></div>
 <pre>
   &lt;static&gt; &lt;Boolean&gt; gadgets.util.hasFeature(feature)
             </pre>
@@ -4321,7 +4327,7 @@
 <a href="#rfc.section.4.1.5.1.4">4.1.5.1.4.</a> <a href="#gadgets.util.registerOnLoadHandler" id="gadgets.util.registerOnLoadHandler">gadgets.util.registerOnLoadHandler</a>
 </h1>
 <p id="rfc.section.4.1.5.1.4.p.1">The <samp>gadgets.util.registerOnLoadHandler</samp> method registers a Function that the container will execute immediately after loading the application. Multiple Functions can be registered; all will be invoked in the same order in which they were registered.</p>
-<div id="#rfc.figure.167"></div>
+<div id="#rfc.figure.168"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.util.registerOnLoadHandler(callback)
             </pre>
@@ -4330,7 +4336,7 @@
 <a href="#rfc.section.4.1.5.1.5">4.1.5.1.5.</a> <a href="#gadgets.util.sanitizeHtml" id="gadgets.util.sanitizeHtml">gadgets.util.sanitizeHtml</a>
 </h1>
 <p id="rfc.section.4.1.5.1.5.p.1">The <samp>gadgets.util.sanitizeHtml</samp> method processes a text String that potentially may contain unsafe and untrusted JavaScript code or Stylesheets and returns a modified version that is safe for rendering. The returned value MAY still include HTML markup. If plain text without markup is desired, the <samp>gadgets.util.escapeString</samp> method SHOULD be used instead. Exactly how the String is to be modified is up to each container implementation. </p>
-<div id="#rfc.figure.168"></div>
+<div id="#rfc.figure.169"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.util.sanitizeHtml(text)
             </pre>
@@ -4339,11 +4345,11 @@
 <a href="#rfc.section.4.1.5.1.6">4.1.5.1.6.</a> <a href="#gadgets.util.unescapeString" id="gadgets.util.unescapeString">gadgets.util.unescapeString</a>
 </h1>
 <p id="rfc.section.4.1.5.1.6.p.1">The <samp>gadgets.util.unescapeString</samp> reverses the processing of the <samp>gadgets.util.escapeString</samp> method by replacing HTML entities with their literal character equivalents</p>
-<div id="#rfc.figure.169"></div>
+<div id="#rfc.figure.170"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.util.unescapeString(str)
             </pre>
-<div id="#rfc.figure.170"></div>
+<div id="#rfc.figure.171"></div>
 <p>For example:</p>
 <pre>
   var m = "&amp;lt;p&amp;gt;&amp;quot;Hello&amp;quot;&amp;lt;/p&amp;gt;";
@@ -4359,7 +4365,7 @@
 <p id="rfc.section.4.2.1.p.1">Some container implementations reserve portions of their user interface for providing links, menus, buttons, etc that are distinct from the applications they host. The "Action Contributions" feature allows applications to contribute functionality to these reserved areas.</p>
 <p id="rfc.section.4.2.1.p.2">Additionally, applications can use the feature to associate actions with specific types of OpenSocial objects. In traditional desktop applications, such actions are often rendered as options on context menus when you click on an object such as a person or file. For instance, selecting a Person object might display options like "Start a Chat" or "View Contact Information". With the "Action Contributions" feature, an application can notify the container of which such actions it can provide so that when a user selects the action, the container can direct the appropriate application to carry it out.</p>
 <p id="rfc.section.4.2.1.p.3">The "Action Contributions" feature is enabled by specifying the "actions" feature name with either an &lt;Optional&gt; or &lt;Require&gt; element within the &lt;ModulePrefs&gt;. The actions contributed by the application are specified using a &lt;Param&gt; element with the name <samp>action-contributions</samp> within the feature declaration.</p>
-<div id="#rfc.figure.171"></div>
+<div id="#rfc.figure.172"></div>
 <p>The following example defines an optional dependency on the "Action Contributions" feature and contributes a single action to the set of "Navigation Links" provided by the container. The <samp>path</samp> property on the &lt;action&gt; element specifies where the action is being contributed. When the item is selected, the container will invoke the callback handler provided by the JavaScript in the &lt;Content&gt; element.</p>
 <pre>
   &lt;Module&gt;
@@ -4391,7 +4397,7 @@
     ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
      </pre>
-<div id="#rfc.figure.172"></div>
+<div id="#rfc.figure.173"></div>
 <p>Contributing actions to specific OpenSocial data types is similar. Rather than specifying the location to which the action is to be added, the &lt;action&gt; element specifies the data type. In either case, a callback function provided by the application is registered and invoked to handle the action:</p>
 <pre>
   &lt;Module&gt;
@@ -4423,7 +4429,7 @@
     ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
      </pre>
-<div id="#rfc.figure.173"></div>
+<div id="#rfc.figure.174"></div>
 <p>Actions can also be contributed programmatically by calling the <samp>gadgets.actions.addAction</samp> API and passing in an "action" object. For instance:</p>
 <pre>
   var mycallback = function(){
@@ -4441,7 +4447,7 @@
   
   gadgets.actions.addAction(myaction);      
      </pre>
-<div id="#rfc.figure.174"></div>
+<div id="#rfc.figure.175"></div>
 <p>In some simple cases, an action provided by an application might simply be handled by navigating to an IRI. It such cases, a callback function is not required and the application developer can simply provide the IRI in the action declaration. For instance, in the example below, the container will display the provided IRI in a new tab when the "Contact US" navigation action is selected:</p>
 <pre>
   &lt;Module&gt;
@@ -4465,7 +4471,7 @@
 <a href="#rfc.section.4.2.1.1">4.2.1.1.</a> The &lt;action&gt; Element</h1>
 <p id="rfc.section.4.2.1.1.p.1">The &lt;action&gt; element, as illustrated in the previous examples, is used within the value of &lt;Param name="action-contributions"&gt; elements to declaratively define the actions provided by an application. The "action-contributions" parameter value can have any number of &lt;action&gt; elements, each of which MUST specify a unique "id" attribute. Each actions ID SHOULD be unique within the scope of the container -- that is, if multiple application's are rendered by the container, all of the actions contributed by each of the applications SHOULD specify different IDs. If multiple actions are registered that share the same ID, each will be registered and both will be invoked by the container when either of the two actions is triggered.</p>
 <p id="rfc.section.4.2.1.1.p.2">There is no XML namespace defined for the &lt;action&gt; element.</p>
-<div id="#rfc.figure.175"></div>
+<div id="#rfc.figure.176"></div>
 <pre>
   BaseAction = {
     attribute id { text },
@@ -4598,7 +4604,7 @@
 <a href="#rfc.section.4.2.1.3.2">4.2.1.3.2.</a> <a href="#gadgets.actions.addAction" id="gadgets.actions.addAction">gadgets.actions.addAction</a>
 </h1>
 <p id="rfc.section.4.2.1.3.2.p.1">Programmatically registers an action with the container. Note that if multiple actions are registered using the same identifier, each will be registered separately by the container and both will be invoked when either action is run.</p>
-<div id="#rfc.figure.176"></div>
+<div id="#rfc.figure.177"></div>
 <pre>
   &lt;static&gt; gadgets.actions.addAction(action)
          </pre>
@@ -4618,7 +4624,7 @@
 <td class="left">The action to be added to the container</td>
 </tr></tbody>
 </table>
-<div id="#rfc.figure.177"></div>
+<div id="#rfc.figure.178"></div>
 <p>For example:</p>
 <pre>
   var mycallback = function(){
@@ -4640,7 +4646,7 @@
 <a href="#rfc.section.4.2.1.3.3">4.2.1.3.3.</a> <a href="#gadgets.actions.updateAction" id="gadgets.actions.updateAction">gadgets.actions.updateAction</a>
 </h1>
 <p id="rfc.section.4.2.1.3.3.p.1">Modifies the specified action contributed to the container. Note that Applications are only permitted to modify it's own contributed actions.</p>
-<div id="#rfc.figure.178"></div>
+<div id="#rfc.figure.179"></div>
 <pre>
   &lt;static&gt; gadgets.actions.updateAction(action)
          </pre>
@@ -4661,7 +4667,7 @@
 </tr></tbody>
 </table>
 <p id="rfc.section.4.2.1.3.3.p.3">The Action object passed in to the <samp>gadgets.actions.updateAction</samp> method can be a partial representation of the action that contains the "id" of the action being modified and only the properties that need to be updated.</p>
-<div id="#rfc.figure.179"></div>
+<div id="#rfc.figure.180"></div>
 <p>For instance, to specify the callback function for an action contributed using the &lt;action&gt; element, a developer would invoke <samp>gadgets.actions.updateAction</samp> with an object that specifies only the "id" and "callback" properties:</p>
 <pre>
   var mycallback = function(){
@@ -4679,7 +4685,7 @@
 <a href="#rfc.section.4.2.1.3.4">4.2.1.3.4.</a> <a href="#gadgets.actions.removeAction" id="gadgets.actions.removeAction">gadgets.actions.removeAction</a>
 </h1>
 <p id="rfc.section.4.2.1.3.4.p.1">Removes the specified action from the container. Note that an Application is only permitted to remove it's own contributed actions.</p>
-<div id="#rfc.figure.180"></div>
+<div id="#rfc.figure.181"></div>
 <pre>
   &lt;static&gt; gadgets.actions.removeAction
          </pre>
@@ -4697,7 +4703,7 @@
 <td class="left">The ID of the action to be removed.</td>
 </tr></tbody>
 </table>
-<div id="#rfc.figure.181"></div>
+<div id="#rfc.figure.182"></div>
 <p>For example,</p>
 <pre>
   gadgets.actions.removeAction("com.acme.mycallaction");     
@@ -4706,7 +4712,7 @@
 <a href="#rfc.section.4.2.1.3.5">4.2.1.3.5.</a> <a href="#gadgets.actions.getActionsByPath" id="gadgets.actions.getActionsByPath">gadgets.actions.getActionsByPath</a>
 </h1>
 <p id="rfc.section.4.2.1.3.5.p.1">Retrieves the collection of all actions registered at the specified path and passes the result to the provided callback function as a JavaScript Array. Note that paths are not considered to be hierarchical.  Passing in a path value of "container/navigationLinks" MUST NOT return any actions contributed to any path that can be considered subordinate to "container/navigationLinks" (e.g. "container/navigationLinks/File").</p>
-<div id="#rfc.figure.182"></div>
+<div id="#rfc.figure.183"></div>
 <pre>
   &lt;static&gt; gadgets.actions.getActionsByPath(path, callback)
          </pre>
@@ -4731,7 +4737,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.183"></div>
+<div id="#rfc.figure.184"></div>
 <p>For example,</p>
 <pre>
   function listActions(actions) { ... }
@@ -4742,7 +4748,7 @@
 <a href="#rfc.section.4.2.1.3.6">4.2.1.3.6.</a> <a href="#gadgets.actions.getActionsByDataType" id="gadgets.actions.getActionsByDataType">gadgets.actions.getActionsByDataType</a>
 </h1>
 <p id="rfc.section.4.2.1.3.6.p.1">Retrieves the collection of all actions registered for the specified data type and passes the result to the provided callback function a JavaScript Array.</p>
-<div id="#rfc.figure.184"></div>
+<div id="#rfc.figure.185"></div>
 <pre>
   &lt;static&gt; gadgets.actions.getActionsByDataType(dataType, callback)
          </pre>
@@ -4767,7 +4773,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.185"></div>
+<div id="#rfc.figure.186"></div>
 <p>For example,</p>
 <pre>
   function listActions(actions) { ... }
@@ -4778,7 +4784,7 @@
 <a href="#rfc.section.4.2.1.3.7">4.2.1.3.7.</a> <a href="#gadgets.actions.runAction" id="gadgets.actions.runAction">gadgets.actions.runAction</a>
 </h1>
 <p id="rfc.section.4.2.1.3.7.p.1">Invokes the specified actions callback function; or, if the "url" property is specified in place of a callback, causes the container to navigate to the specified IRI. Gadget's can use this method to programmatically invoke an action.</p>
-<div id="#rfc.figure.186"></div>
+<div id="#rfc.figure.187"></div>
 <pre>
   &lt;static&gt; gadgets.actions.runAction (id, opt_selection)
          </pre>
@@ -4805,7 +4811,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.187"></div>
+<div id="#rfc.figure.188"></div>
 <p>For example,</p>
 <pre>
   gadgets.actions.runAction("com.acme.mycallaction");
@@ -4816,7 +4822,7 @@
 <a href="#rfc.section.4.2.1.3.8">4.2.1.3.8.</a> <a href="#gadgets.actions.registerShowActionsListener" id="gadgets.actions.registerShowActionsListener">gadgets.actions.registerShowActionsListener</a>
 </h1>
 <p id="rfc.section.4.2.1.3.8.p.1">Registers a callback function that the container will call whenever new actions are added to the container. An application can use this listener to provide a rendering of any action contributed to the container by any other application.</p>
-<div id="#rfc.figure.188"></div>
+<div id="#rfc.figure.189"></div>
 <pre>
   &lt;static&gt; gadgets.actions.registerShowActionsListener (listener)
          </pre>
@@ -4834,7 +4840,7 @@
 <td class="left">The application's function to render actions in its UI. The function will be invoked with one parameter which is an array of action objects to render.</td>
 </tr></tbody>
 </table>
-<div id="#rfc.figure.189"></div>
+<div id="#rfc.figure.190"></div>
 <p>For Example:</p>
 <pre>
   var listener = function(actionObjs){
@@ -4848,7 +4854,7 @@
 <a href="#rfc.section.4.2.1.3.9">4.2.1.3.9.</a> <a href="#gadgets.actions.registerHideActionsListener" id="gadgets.actions.registerHideActionsListener">gadgets.actions.registerHideActionsListener</a>
 </h1>
 <p id="rfc.section.4.2.1.3.9.p.1">Registers a callback function that the container will call whenever the an application that contributes actions is removed from the container.</p>
-<div id="#rfc.figure.190"></div>
+<div id="#rfc.figure.191"></div>
 <pre>
   &lt;static&gt; gadgets.actions.registerHideActionsListener (listener)
          </pre>
@@ -4866,7 +4872,7 @@
 <td class="left">The application's function to render actions in its UI. The function will be invoked with one parameter which is an array of action objects to hide.</td>
 </tr></tbody>
 </table>
-<div id="#rfc.figure.191"></div>
+<div id="#rfc.figure.192"></div>
 <p>For Example:</p>
 <pre>
   var listener = function(actionObjs){
@@ -4879,7 +4885,7 @@
 <p id="rfc.section.4.2.2.p.1">In many cases, when a container renders the content provided by an Application Specification, it might wish to make a number of specific modifications to the content intended, in part, to improve overall performance. Examples of such modifications can include changing the URLs of external resources used by the Application such that those resources may possibly be cache and retrieved from a Content Distribution Network (cdn); or optimizing CSS stylesheets and JavaScript code defined by the Specificaiton document.</p>
 <p id="rfc.section.4.2.2.p.2">The Content Rewriting Feature allows an Application developer the ability to control which types of modifications the container is permitted to make within the content provided by the application.</p>
 <p id="rfc.section.4.2.2.p.3">The Content Rewriting Feature is specified within the &lt;ModulePrefs&gt; with the feature name "content-rewrite" using either the &lt;Optional&gt; or &lt;Require&gt; element. Multiple &lt;Param&gt; elements are used to specify specific configuration options for the feature.  Containers MAY support the Content Rewriting Feature.</p>
-<div id="#rfc.figure.192"></div>
+<div id="#rfc.figure.193"></div>
 <p>For example:</p>
 <pre>
   &lt;Optional feature="content-rewrite"&gt;
@@ -4949,7 +4955,7 @@
 <p id="rfc.section.4.2.3.p.1">The Data Context Feature allows an application utilizing the <a href="#DataPipelining">Data Pipeline</a> <cite title="NONE">[DataPipelining]</cite> capability provided by the container to access the <samp>DataContext</samp> associated with the application instance.</p>
 <p id="rfc.section.4.2.3.p.2">The DataContext feature is enabled for a application by specifying feature="opensocial.data" using either a &lt;Requires&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;.</p>
 <p id="rfc.section.4.2.3.p.3">If the container supports the Data Pipeline capability, the DataContext Feature MUST be supported by the container.</p>
-<div id="#rfc.figure.193"></div>
+<div id="#rfc.figure.194"></div>
 <p>For example:</p>
 <pre>
   &lt;Module&gt;
@@ -4970,7 +4976,7 @@
 <a href="#rfc.section.4.2.3.1.1">4.2.3.1.1.</a> <a href="#opensocial.data.getContext" id="opensocial.data.getContext">opensocial.data.getContext</a>
 </h1>
 <p id="rfc.section.4.2.3.1.1.p.1">The <samp>opensocial.data.getContext</samp> method returns the <samp>DataContext</samp> object associated with the application instance.</p>
-<div id="#rfc.figure.194"></div>
+<div id="#rfc.figure.195"></div>
 <pre>
   &lt;static&gt; &lt;DataContext&gt; opensocial.data.getContext()
         </pre>
@@ -4983,7 +4989,7 @@
 <a href="#rfc.section.4.2.3.1.2.1">4.2.3.1.2.1.</a> <a href="#opensocial.data.DataContext.getDataSet" id="opensocial.data.DataContext.getDataSet">opensocial.data.DataContext.getDataSet</a>
 </h1>
 <p id="rfc.section.4.2.3.1.2.1.p.1">The <samp>opensocial.data.DataContext.getDataSet</samp> method returns the object data currently mapped to the specified key or null if a value for the specified key does not exist.</p>
-<div id="#rfc.figure.195"></div>
+<div id="#rfc.figure.196"></div>
 <pre>
   &lt;Object&gt; &lt;instance&gt;.getDataSet(key)
           </pre>
@@ -4991,7 +4997,7 @@
 <a href="#rfc.section.4.2.3.1.2.2">4.2.3.1.2.2.</a> <a href="#opensocial.data.DataContext.putDataSet" id="opensocial.data.DataContext.putDataSet">opensocial.data.DataContext.putDataSet</a>
 </h1>
 <p id="rfc.section.4.2.3.1.2.2.p.1">The <samp>opensocial.data.DataContext.putDataSet</samp> method allows data to be stored into the DataContext programmatically as an alternative to using the Data Pipeline elements.</p>
-<div id="#rfc.figure.196"></div>
+<div id="#rfc.figure.197"></div>
 <pre>
   &lt;Void&gt; &lt;instance&gt;.putDataSet(key, value)
           </pre>
@@ -5000,12 +5006,12 @@
 <a href="#rfc.section.4.2.3.1.2.3">4.2.3.1.2.3.</a> <a href="#opensocial.data.DataContext.putDataSets" id="opensocial.data.DataContext.putDataSets">opensocial.data.DataContext.putDataSets</a>
 </h1>
 <p id="rfc.section.4.2.3.1.2.3.p.1">The <samp>opensocial.data.DataContext.putDataSet</samp> method allows multiple key and value pairs to be stored within the DataContext at once.</p>
-<div id="#rfc.figure.197"></div>
+<div id="#rfc.figure.198"></div>
 <pre>
   &lt;Void&gt; &lt;instance&gt;.putDataSets(dataSets)
           </pre>
 <p id="rfc.section.4.2.3.1.2.3.p.2">The key and value pairs are specified as properties on a JavaScript object.</p>
-<div id="#rfc.figure.198"></div>
+<div id="#rfc.figure.199"></div>
 <p>For instance, to store the two keys "foo" and "bar" with respective values of "123" and "abc", the putDataSets method would be called as:</p>
 <pre>
   var dataContext = opensocial.data.getContext();
@@ -5020,13 +5026,13 @@
 <a href="#rfc.section.4.2.3.1.2.4">4.2.3.1.2.4.</a> <a href="#opensocial.data.DataContext.registerListener" id="opensocial.data.DataContext.registerListener">opensocial.data.DataContext.registerListener</a>
 </h1>
 <p id="rfc.section.4.2.3.1.2.4.p.1">The <samp>opensocial.data.DataContext.registerListener</samp> method registers a callback Function that is invoked whenever the value associated with one or more specified keys is modified in the DataContext, either through processing of the Data Pipeline elements or calls to either of the <samp>opensocial.data.DataContext.putDataSet</samp> and <samp>opensocial.data.DataContext.putDataSets</samp> methods.</p>
-<div id="#rfc.figure.199"></div>
+<div id="#rfc.figure.200"></div>
 <pre>
   &lt;Void&gt; &lt;instance&gt;.registerListener(key, callback)
           </pre>
 <p id="rfc.section.4.2.3.1.2.4.p.2">The method takes as input either a single key or Array of keys for which the callback Function is to be registered and a single callback Function.</p>
 <p id="rfc.section.4.2.3.1.2.4.p.3">When the value of any of the specified keys changes, the DataContext will invoke all registered callback functions registered for the modified keys and pass in a single listing of the key names whose values have been modified.</p>
-<div id="#rfc.figure.200"></div>
+<div id="#rfc.figure.201"></div>
 <p>For example:</p>
 <pre>
   var dataContext = opensocial.data.getContext();
@@ -5080,7 +5086,7 @@
 </table>
 <p id="rfc.section.4.2.4.p.3">The "url" and "gadget" properties each reference content that is to be embedded. At least one of these properties MUST be specified.  When both properties are used within the Embedded Experience, the decision about which to render is left to the container.</p>
 <p id="rfc.section.4.2.4.p.4">When serialized as JSON, the embedded experience take the form of a single JSON Object with four distinct properties: "context", "gadget", "previewImage" and "url". Additional extension properties MAY be included in the JSON object.</p>
-<div id="#rfc.figure.201"></div>
+<div id="#rfc.figure.202"></div>
 <p>For instance, a simple JSON Embedded Experience that references an OpenSocial Application:</p>
 <pre>
     {
@@ -5093,7 +5099,7 @@
     }
       </pre>
 <p id="rfc.section.4.2.4.p.5">When serialized as XML, it is expressed in the form of a root element &lt;embed&gt; containing four child elements, the order of which is considered insignificant: &lt;context&gt;, &lt;gadget&gt;, &lt;previewImage&gt;, and &lt;url&gt;. Additional extension elements and attributes MAY be included in the JSON object.</p>
-<div id="#rfc.figure.202"></div>
+<div id="#rfc.figure.203"></div>
 <p>For example,</p>
 <pre>
     &lt;embed&gt;
@@ -5106,7 +5112,7 @@
     &lt;/embed&gt;
       </pre>
 <p id="rfc.section.4.2.4.p.6">Note that no XML namespace is currently declared for the XML serialization. This means that special care must be taken when including an XML embedded experience into another type of XML document. For example, the following shows an XML embedded experience within a partial Atom Entry Document. Note the addition of <samp>xmlns=""</samp> on the embed element in order to "undeclare" the in-scope default XML namespace.</p>
-<div id="#rfc.figure.203"></div>
+<div id="#rfc.figure.204"></div>
 <pre>
     &lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
       &lt;id&gt;http://example.org/entries/1&lt;/id&gt;
@@ -5123,21 +5129,21 @@
       </pre>
 <h1 id="rfc.section.4.2.4.1">
 <a href="#rfc.section.4.2.4.1">4.2.4.1.</a> Additional Examples</h1>
-<div id="#rfc.figure.204"></div>
+<div id="#rfc.figure.205"></div>
 <p>A simple URL embedded experience using the JSON serialization:</p>
 <pre>
     {
       "url" : "http://www.example.org/embed/123.html"
     }
         </pre>
-<div id="#rfc.figure.205"></div>
+<div id="#rfc.figure.206"></div>
 <p>The same URL embedded experience using the XML serialization:</p>
 <pre>
     &lt;embed&gt;
       &lt;url&gt;http://www.example.org/embed/123.html&lt;/url&gt;
     &lt;/embed&gt;
         </pre>
-<div id="#rfc.figure.206"></div>
+<div id="#rfc.figure.207"></div>
 <p>An embedded experience that specifies both a gadget and URL serialized as JSON:</p>
 <pre>
     {
@@ -5150,7 +5156,7 @@
       "previewImage" : "http://www.example.com/embedded/123.png"
     }
         </pre>
-<div id="#rfc.figure.207"></div>
+<div id="#rfc.figure.208"></div>
 <p>The same embedded experience serialized as XML:</p>
 <pre>
     &lt;embed&gt;
@@ -5171,7 +5177,7 @@
 <h1 id="rfc.section.4.2.4.2.2">
 <a href="#rfc.section.4.2.4.2.2">4.2.4.2.2.</a> Accessing The Context</h1>
 <p id="rfc.section.4.2.4.2.2.p.1">An embedded experience application has the option of requiring some contextual information in order to render itself.  By abstracting the data from the application itself, developers can develop generalized applications that can be used for all embedded experiences of a specific type.  For example, an application developed to display videos can be built so that the id of the video is contained and extracted from the embedded experience's "context" property.</p>
-<div id="#rfc.figure.208"></div>
+<div id="#rfc.figure.209"></div>
 <pre>
     {
       "gadget" : "http://example.org/embedded/video.xml",
@@ -5181,7 +5187,7 @@
     }
           </pre>
 <p id="rfc.section.4.2.4.2.2.p.2">Gadgets that are written to support embedded experiences MUST require the "embedded-experiences" feature within their specification document in order to access the context.  The contextual data is stored within the <a href="#DataContext">data context</a> <cite title="NONE">[DataContext]</cite> object for the application.  The key, "org.opensocial.ee.context", is used to access the context.  Gadgets can add a listener on the data context object for this key, or it may retreive the key's value by using the data context APIs.</p>
-<div id="#rfc.figure.209"></div>
+<div id="#rfc.figure.210"></div>
 <p>For instance, the Gadget below registers a listener with the data context to retrieve any context data included with the embedded experience:</p>
 <pre>
     &lt;Module&gt;
@@ -5210,7 +5216,7 @@
 </h1>
 <p id="rfc.section.4.2.4.2.2.1.p.1">While the contextual data associated with the "org.opensocial.ee.context" key will generally originate from the information provided by the "context" property within the Embedded Experience document, containers are free to insert additional, container specific contexual data into the object. For example, a container might wish to communicate information about the type of parent object within which the Embedded Experience information was received.</p>
 <p id="rfc.section.4.2.4.2.2.1.p.2">If such additional information is provided, the object associated with the "org.opensocial.ee.context" key will have an additional "opensocial" property, whose value is itself a object with at least one property named "associatedContext" whose value is an object whose properties are entirely defined by the specific container implementation.</p>
-<div id="#rfc.figure.210"></div>
+<div id="#rfc.figure.211"></div>
 <p>The following example illustrates how this additional context information is accessed:</p>
 <pre>
     function myCallback(key) {
@@ -5234,7 +5240,7 @@
 <a href="#rfc.section.4.2.4.3">4.2.4.3.</a> <a href="#preferredExperience" id="preferredExperience">Preferred Experiences</a>
 </h1>
 <p id="rfc.section.4.2.4.3.p.1">While the container retains control over deciding exactly how an embedded experience is processed and rendered, there are situations where the creator of the embedded experience might wish to provide clues to the container as to how it would prefer the content to be displayed. These clues are included within the Embedded Experience using the "preferredExperience" property.</p>
-<div id="#rfc.figure.211"></div>
+<div id="#rfc.figure.212"></div>
 <p>The following illustrates a basic example serialized as JSON:</p>
 <pre>
     {
@@ -5255,7 +5261,7 @@
         }
     }
       </pre>
-<div id="#rfc.figure.212"></div>
+<div id="#rfc.figure.213"></div>
 <p>And the same example using the alternative XML serialization:</p>
 <pre>
     &lt;embed&gt;
@@ -5298,7 +5304,7 @@
 <h1 id="rfc.section.4.2.4.3.1">
 <a href="#rfc.section.4.2.4.3.1">4.2.4.3.1.</a> Display Types</h1>
 <p id="rfc.section.4.2.4.3.1.p.1">This specification currently defines two possible values for the required "type" property on the display object: "link", "image".  Each of which are illustrated below.</p>
-<div id="#rfc.figure.213"></div>
+<div id="#rfc.figure.214"></div>
 <p>Display using a hyperlink:</p>
 <pre>
     {
@@ -5332,7 +5338,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.214"></div>
+<div id="#rfc.figure.215"></div>
 <p>Display using the previewImage:</p>
 <pre>
     {
@@ -5350,7 +5356,7 @@
       }
     } 
         </pre>
-<div id="#rfc.figure.215"></div>
+<div id="#rfc.figure.216"></div>
 <p>Display using contained Base64-encoded binary data:</p>
 <pre>
     {
@@ -5394,7 +5400,7 @@
 <h1 id="rfc.section.4.2.4.3.2">
 <a href="#rfc.section.4.2.4.3.2">4.2.4.3.2.</a> Target Types</h1>
 <p id="rfc.section.4.2.4.3.2.p.1">This specification currently defines two possible values for the type property on the target object: "gadget" and "url". Each of which are illustrated below.</p>
-<div id="#rfc.figure.216"></div>
+<div id="#rfc.figure.217"></div>
 <p>Preferring the gadget target:</p>
 <pre>
     {
@@ -5431,7 +5437,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.217"></div>
+<div id="#rfc.figure.218"></div>
 <p>Preferring the url target:</p>
 <pre>
     {
@@ -5468,7 +5474,7 @@
 <h1 id="rfc.section.4.2.4.5">
 <a href="#rfc.section.4.2.4.5">4.2.4.5.</a> Embedded Experiences within Activity Streams</h1>
 <p id="rfc.section.4.2.4.5.p.1">Embedded experiences can be used within an Activity Streams document in order to provide a more interactive experience. Whereas the core properties of the Activity provide a textual description of the event, an included embedded experience can provide a direct representation of the object involved.</p>
-<div id="#rfc.figure.218"></div>
+<div id="#rfc.figure.219"></div>
 <p>For instance, if a user uploads a collection of photos and creates a new photo album, an embedded experience can be used within the activity to provide a representation of the album itself:</p>
 <pre>
     {
@@ -5508,7 +5514,7 @@
 <a href="#rfc.section.4.2.4.6">4.2.4.6.</a> Embedded Experiences within Email</h1>
 <p id="rfc.section.4.2.4.6.p.1">Numerous services send email notifications to your inbox in order to let you know something took place that you may be interested in.  Most of the time however these notifications do not provide much useful information beyond a link back to the service's website.  By leveraging embedded experiences, services can send an embedded representation of the object the notification is about, and allow the user to take action on the notification directly from within an embedded experiences enabled email client.</p>
 <p id="rfc.section.4.2.4.6.p.2">Embedded experiences serialized as either JSON or XML can be embedded Multipart MIME encoded email messages. Such email messages MUST utilize the "multipart/alternative" MIME variant and MUST contain at least two MIME parts -- one containing regular content of the email message encoded as text/html content, and another containing the embedded experience content using either the "application/embed+json" or "application/embed+xml" MIME media type, respectively representing the JSON and XML serializations. Additional MIME parts MAY be included </p>
-<div id="#rfc.figure.219"></div>
+<div id="#rfc.figure.220"></div>
 <p>For instance,</p>
 <pre>
     From: notifications@socialnetwork.com
@@ -5543,7 +5549,7 @@
 </h1>
 <p id="rfc.section.4.2.5.p.1">The "Flash" feature provides three JavaScript methods that simplify the embedding of Flash-based content in applications.  The feature is enabled by specifying feature="flash" using either the &lt;Require&gt; or &lt;Optional&gt; elements in the &lt;ModulePrefs&gt;. The "Flash" feature defines no parameters.</p>
 <p id="rfc.section.4.2.5.p.2">Containers SHOULD support the "Flash" feature.</p>
-<div id="#rfc.figure.220"></div>
+<div id="#rfc.figure.221"></div>
 <p>In the partial application specification below, we declare that the "flash" feature is required and render a remote flash resource within the default view:</p>
 <pre>
   &lt;Module&gt;
@@ -5572,7 +5578,7 @@
 <a href="#rfc.section.4.2.5.1.1">4.2.5.1.1.</a> <a href="#gadgets.flash.embedCachedFlash" id="gadgets.flash.embedCachedFlash">gadgets.flash.embedCachedFlash</a>
 </h1>
 <p id="rfc.section.4.2.5.1.1.p.1">Embeds a cached Flash document into a container DOM object.</p>
-<div id="#rfc.figure.221"></div>
+<div id="#rfc.figure.222"></div>
 <pre>
   &lt;static&gt; &lt;Boolean&gt; gadgets.flash.embedCachedFlash(url, container, version, options)
           </pre>
@@ -5612,7 +5618,7 @@
 <a href="#rfc.section.4.2.5.1.2">4.2.5.1.2.</a> <a href="#gadgets.flash.embedFlash" id="gadgets.flash.embedFlash">gadgets.flash.embedFlash</a>
 </h1>
 <p id="rfc.section.4.2.5.1.2.p.1">Embeds a cached Flash document into a container DOM object.</p>
-<div id="#rfc.figure.222"></div>
+<div id="#rfc.figure.223"></div>
 <pre>
   &lt;static&gt; &lt;Boolean&gt; gadgets.flash.embedCachedFlash(url, container, version, options)
           </pre>
@@ -5652,7 +5658,7 @@
 <a href="#rfc.section.4.2.5.1.3">4.2.5.1.3.</a> <a href="#gadgets.flash.getMajorVersion" id="gadgets.flash.getMajorVersion">gadgets.flash.getMajorVersion</a>
 </h1>
 <p id="rfc.section.4.2.5.1.3.p.1">Returns the major version of the Flash player supported by the container.</p>
-<div id="#rfc.figure.223"></div>
+<div id="#rfc.figure.224"></div>
 <pre>
   &lt;static&gt; &gt;Number&gt; gadgets.flash.getMajorVersion()
           </pre>
@@ -5663,29 +5669,29 @@
 <p id="rfc.section.4.2.6.p.3">The locale used by an application is established by the container when the view is rendered. The i18n feature will use the country and language specified in the locale to load the appropriate formatter and parser for any given date, time, number or currency.</p>
 <p id="rfc.section.4.2.6.p.4">The i18n feature provides four distinct methods: formatDateTime, formatNumber, parseDateTime and parseNumber. At a minimum, each method takes as input a format pattern that defines the structure of the data being parsed or formatted and the value to which the pattern is to be applied.</p>
 <p id="rfc.section.4.2.6.p.5">For instance, to format an integer using a localized grouping separator (e.g. the number 1234567 formatted as "1,234,567" when the locale is "en-US"), the following can be used:</p>
-<div id="#rfc.figure.224"></div>
+<div id="#rfc.figure.225"></div>
 <pre>
   var str = gadgets.i18n.formatNumber("#,###", 1234567);
     </pre>
 <p id="rfc.section.4.2.6.p.6">The i18n feature includes a number of common, predefined format patterns that can be used. The specific definition of these formats are specific to the locale established by the container. For instance, using the predefined "gadgets.i18n.MEDIUM_DATE_FORMAT" pattern to format the date for August, 4th 2006 using the "de" (German) locale using the formatDateTime method would output "04.08.2006". Using the same predefined pattern using the "en-US" (United States) locale, however, would output "08-04-2006".</p>
-<div id="#rfc.figure.225"></div>
+<div id="#rfc.figure.226"></div>
 <pre>
   var date = new Date(2006,7,4);
   var str = gadgets.i18n.formatDateTime(gadgets.i18n.MEDIUM_DATE_FORMAT, date);
     </pre>
 <p id="rfc.section.4.2.6.p.7">When parsing and formatting currencies using the predefined patterns, there are several considerations that need to be taken into account.  For example, when the default locale is set to "fr-FR" (France), and the gadgets.i18n.CURRENCY_PATTERN is used to parse a string, the parser will assume that the input string is formatted according to the localized rules for the "fr-FR" locale:</p>
-<div id="#rfc.figure.226"></div>
+<div id="#rfc.figure.227"></div>
 <pre>
   var num = gadgets.i18n.parseNumber(gadgets.i18n.CURRENCY_PATTERN, "20 000 \u20AC");
       </pre>
 <p id="rfc.section.4.2.6.p.8">Here, "num" will equal 20000. </p>
 <p id="rfc.section.4.2.6.p.9">If a foreign currency is used, U.S. Dollars for instance, the input string MUST still be formatted in accordance to the rules specified for the established locale and an optional currency code can be specified:</p>
-<div id="#rfc.figure.227"></div>
+<div id="#rfc.figure.228"></div>
 <pre>
   var num = gadgets.i18n.parseNumber(gadgets.i18n.CURRENCY_PATTERN, "20 000 $", 0, "USD");
      </pre>
 <p id="rfc.section.4.2.6.p.10">If, however, the input string is not formatted in accordance to the localized rules for the established locale, the predefined pattern will not work and a custom pattern needs to be used:</p>
-<div id="#rfc.figure.228"></div>
+<div id="#rfc.figure.229"></div>
 <pre>
   var num = gadgets.i18n.parseNumber("#,###", "$20,000", 0, "USD");
      </pre>
@@ -5788,11 +5794,11 @@
 <a href="#rfc.section.4.2.6.2.2">4.2.6.2.2.</a> <a href="#gadgets.i18n.formatDateTime" id="gadgets.i18n.formatDateTime">gadgets.i18n.formatDateTime</a>
 </h1>
 <p id="rfc.section.4.2.6.2.2.p.1">The <samp>gadgets.i18n.formatDateTime</samp> method formats a "Date" object with provided pattern specification. The pattern could be a string using ICU notation or a predefined pattern. A string using ICU notation offers the most flexibility. Each field as specified in the pattern has locale specific behavior. The pattern string is allowed to contain string literals, and one type of pattern might not work for all locales. In those case, the pattern itself could also be locale specific, thus not good for sharing among locales.</p>
-<div id="#rfc.figure.229"></div>
+<div id="#rfc.figure.230"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.i18n.formatDateTime(pattern,date)
       </pre>
-<div id="#rfc.figure.230"></div>
+<div id="#rfc.figure.231"></div>
 <p>For example:</p>
 <pre>
   date = new Date(2006, 6, 27, 13, 10, 10, 250);
@@ -5824,11 +5830,11 @@
 <a href="#rfc.section.4.2.6.2.3">4.2.6.2.3.</a> <a href="#gadgets.i18n.formatNumber" id="gadgets.i18n.formatNumber">gadgets.i18n.formatNumber</a>
 </h1>
 <p id="rfc.section.4.2.6.2.3.p.1">The <samp>gadgets.i18n.formatNumber</samp> method formats number using the pattern specified. The pattern can be a string pattern or one of the predefined patterns. The formatted string is returned. If an error is encountered, zero will be returned.</p>
-<div id="#rfc.figure.231"></div>
+<div id="#rfc.figure.232"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.i18n.formatNumber(pattern, value, opt_currencyCode)
       </pre>
-<div id="#rfc.figure.232"></div>
+<div id="#rfc.figure.233"></div>
 <p>For example:</p>
 <pre>
   var str = gadgets.i18n.formatNumber("#,###", 1234567890);
@@ -5867,11 +5873,11 @@
 <a href="#rfc.section.4.2.6.2.4">4.2.6.2.4.</a> <a href="#gadgets.i18n.parseDateTime" id="gadgets.i18n.parseDateTime">gadgets.i18n.parseDateTime</a>
 </h1>
 <p id="rfc.section.4.2.6.2.4.p.1">The <samp>gadgets.i18n.parseDateTime</samp> method will parse the input string ("text"), interpretting it as specified by pattern. The parsed result will be saved into a Date object ("date"). "start" indicates from where in the string the parse should start. This method returns the number of characters consumed.</p>
-<div id="#rfc.figure.233"></div>
+<div id="#rfc.figure.234"></div>
 <pre>
   &lt;static&gt; &lt;Number&gt; gadgets.i18n.parseDateTime(pattern, text, start, date)
       </pre>
-<div id="#rfc.figure.234"></div>
+<div id="#rfc.figure.235"></div>
 <p>For example:</p>
 <pre>
   var date = gadgets.i18n.parseDateTime("yyMMdd", "991202", 0, date);
@@ -5880,7 +5886,7 @@
   var day = date.getDate();
       </pre>
 <p id="rfc.section.4.2.6.2.4.p.2">Typically, the complete collection of characters in a string are targeted for parsing. However, there are cases when parsing only a subset of the characters is preferred. For that purpose, the optional "start" and "date" parameters can be used.</p>
-<div id="#rfc.figure.235"></div>
+<div id="#rfc.figure.236"></div>
 <p>For example, suppose you want to parse a string like "88/01, 99/03, 98/05, 97/02", and extract each pair of numbers (e.g. 88/01) as a separate Date:</p>
 <pre>
   var date_array = [];
@@ -5896,7 +5902,7 @@
     if (pos &lt; text.length &amp;&amp; text[pos] == ' ') ++pos;
   }
       </pre>
-<div id="#rfc.figure.236"></div>
+<div id="#rfc.figure.237"></div>
 <p>As with the formatting functions, a predefined pattern can also be passed in as the first parameter:</p>
 <pre>
   //assume locale has already been set to zh_CN
@@ -5942,11 +5948,11 @@
 <a href="#rfc.section.4.2.6.2.5">4.2.6.2.5.</a> <a href="#gadgets.i18n.parseNumber" id="gadgets.i18n.parseNumber">gadgets.i18n.parseNumber</a>
 </h1>
 <p id="rfc.section.4.2.6.2.5.p.1">The <samp>gadgets.i18n.parseNumber</samp> method parses a String to get a number the pattern specified. The pattern can be a string pattern or one of the predefined patterns.</p>
-<div id="#rfc.figure.237"></div>
+<div id="#rfc.figure.238"></div>
 <pre>
   &lt;static&gt; &lt;Number&gt; gadgets.i18n.parseNumber(pattern, text, opt_pos, opt_currencyCode)
       </pre>
-<div id="#rfc.figure.238"></div>
+<div id="#rfc.figure.239"></div>
 <p>For example:</p>
 <pre>
   var value = gadgets.i18n.parseNumber("0E0", "1.2345E+4");
@@ -6001,7 +6007,7 @@
 <p> </p>
 <p id="rfc.section.4.2.7.p.2">Containers SHOULD support the "MiniMessage" feature.</p>
 <p id="rfc.section.4.2.7.p.3">The "MiniMessage" feature is enabled by specifying feature="minimessage" within either a &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;. JavaScript APIs are used to create and manipulate the messages. No parameters are specified for the MiniMessage feature.</p>
-<div id="#rfc.figure.239"></div>
+<div id="#rfc.figure.240"></div>
 <p>In the partial specification document below, the "MiniMessage" feature is required and a simple message that dismisses automatically after 10 seconds is created:</p>
 <pre>
   &lt;Module&gt;
@@ -6024,7 +6030,7 @@
       </pre>
 <p id="rfc.section.4.2.7.p.4">Typically, only a single <samp>gadgets.MiniMessage</samp> object needs to be created for each view. Multiple messages can be created and managed by a single instance.</p>
 <p id="rfc.section.4.2.7.p.5">By default, all messages will be displayed in a special reserved area provided by the container at the top of the area allocated to rendering the view. However, developers can select alternative locations either for all messages or specific individual messages by passing in additional parameters to the JavaScript API.</p>
-<div id="#rfc.figure.240"></div>
+<div id="#rfc.figure.241"></div>
 <p>In the following example, all messages are rendered in an area dedicated by the view for messages:</p>
 <pre>
   &lt;Module&gt;
@@ -6047,7 +6053,7 @@
     ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
       </pre>
-<div id="#rfc.figure.241"></div>
+<div id="#rfc.figure.242"></div>
 <p>Individual messages can be displayed anywhere within the application either by specifying the HTML markup directly within the application and referencing it when creating the message or by using DOM methods in JavaScript. For example, in the following example, a message is created and positioned individually:</p>
 <pre>
   &lt;Module&gt;
@@ -6076,7 +6082,7 @@
 <a href="#rfc.section.4.2.7.1.1">4.2.7.1.1.</a> <a href="#gadgets.MiniMessage.ctor" id="gadgets.MiniMessage.ctor">The gadgets.MiniMessage Object</a>
 </h1>
 <p id="rfc.section.4.2.7.1.1.p.1">The <samp>gadgets.MiniMessage</samp> object is used to create and manage messages for an application. Typically, only a single instance of the object needs to be created for all messages within a given view.</p>
-<div id="#rfc.figure.242"></div>
+<div id="#rfc.figure.243"></div>
 <p>Instances are created using the JavaScript "new" keyword:</p>
 <pre>
   var messages = new gadgets.MiniMessage(id, container);
@@ -6107,7 +6113,7 @@
 <a href="#rfc.section.4.2.7.1.1.1">4.2.7.1.1.1.</a> <a href="#gadgets.MiniMessage.createDismissibleMessage" id="gadgets.MiniMessage.createDismissibleMessage">gadgets.MiniMessage.createDismissibleMessage</a>
 </h1>
 <p id="rfc.section.4.2.7.1.1.1.p.1">Creates a "dismissible" message that includes a container defined icon that allows users to dismiss the message by clicking on it. When the message is, it is removed from the DOM and an optional callback function, if defined, is invoked.</p>
-<div id="#rfc.figure.243"></div>
+<div id="#rfc.figure.244"></div>
 <pre>
   &lt;HTMLElement&gt; gadgets.MiniMessage.createDismissibleMessage(message, callback)
             </pre>
@@ -6137,7 +6143,7 @@
 <a href="#rfc.section.4.2.7.1.1.2">4.2.7.1.1.2.</a> <a href="#gadgets.MiniMessage.createStaticMessage" id="gadgets.MiniMessage.createStaticMessage">gadgets.MiniMessage.createStaticMessage</a>
 </h1>
 <p id="rfc.section.4.2.7.1.1.2.p.1">Creates a "static" message that can only by dismissed programmatically by calling the <samp>gadgets.MiniMessage.dismissMessage</samp> method.</p>
-<div id="#rfc.figure.244"></div>
+<div id="#rfc.figure.245"></div>
 <pre>
   &lt;HTMLElement&gt; gadgets.MiniMessage.createStatusMessage(message)
             </pre>
@@ -6160,7 +6166,7 @@
 <a href="#rfc.section.4.2.7.1.1.3">4.2.7.1.1.3.</a> <a href="#gadgets.MiniMessage.createTimerMessage" id="gadgets.MiniMessage.createTimerMessage">gadgets.MiniMessage.createTimerMessage</a>
 </h1>
 <p id="rfc.section.4.2.7.1.1.3.p.1">Creates a message that displays for a specified number of seconds. When the timer expires, the message is dismissed automatically and an optional callback function, if provided, is invoked.</p>
-<div id="#rfc.figure.245"></div>
+<div id="#rfc.figure.246"></div>
 <pre>
   &lt;HTMLElement&gt; gadgets.MiniMessage.createTimerMessage(message, seconds, callback)
             </pre>
@@ -6195,7 +6201,7 @@
 <a href="#rfc.section.4.2.7.1.1.4">4.2.7.1.1.4.</a> <a href="#gadgets.MiniMessage.dismissMessage" id="gadgets.MiniMessage.dismissMessage">gadgets.MiniMessage.dismissMessage</a>
 </h1>
 <p id="rfc.section.4.2.7.1.1.4.p.1">Dismisses the specified message.</p>
-<div id="#rfc.figure.246"></div>
+<div id="#rfc.figure.247"></div>
 <pre>
   &lt;Void&gt; gadgets.MiniMessage.dismissMessage(message)
             </pre>
@@ -6207,7 +6213,7 @@
 <p id="rfc.section.4.2.8.p.2">With most scenarios, this is achieved by redirecting the user to the third party OAuth Authorization Service and asking them to approve access. While application developers are responsible for determining how such redirection occurs, they can use the OAuth Popup Feature to simplify the process and to promote consistent, familiar behavior.</p>
 <p id="rfc.section.4.2.8.p.3">The feature works by generating a hyperlink within the application's user interface that, when clicked, opens a window that displays the third party OAuth Authoriation Service's interface. When opened, the application is notified via a callback function that the window is open.  The user will either approve or deny the request and then dismiss the window, returning the user back to the application's user interface. The application can either then automatically proceed with processing the request or wait for the user to notify it when it continue.</p>
 <p id="rfc.section.4.2.8.p.4">Use of the OAuth Popup Feature is enabled within an application by using feature="oauthpopup" in either a &lt;Require&gt; or &lt;Optional&gt; element with the &lt;ModulePrefs&gt;. Once enabled, the <samp>gadgets.oauth.Popup</samp> object will become available for use within the JavaScript of a view.</p>
-<div id="#rfc.figure.247"></div>
+<div id="#rfc.figure.248"></div>
 <p>The example below illustrates the basic operation of the OAuth Popup Feature:</p>
 <pre>
   &lt;Module&gt;
@@ -6276,7 +6282,7 @@
 <a href="#rfc.section.4.2.8.1.1">4.2.8.1.1.</a> <a href="#gadgets.oauth.Popup.ctor" id="gadgets.oauth.Popup.ctor">The gadgets.oauth.Popup Object</a>
 </h1>
 <p id="rfc.section.4.2.8.1.1.p.1">The <samp>gadets.oauth.Popup</samp> object is used to manage a window that is displayed and used to acquire OAuth Authorization from a third party. Instances of the object are created using the JavaScript new keyword.</p>
-<div id="#rfc.figure.248"></div>
+<div id="#rfc.figure.249"></div>
 <p>For instance:</p>
 <pre>
   var popup = new gadgets.oauth.Popup(
@@ -6321,7 +6327,7 @@
 <a href="#rfc.section.4.2.8.1.1.1">4.2.8.1.1.1.</a> <a href="#gadgets.oauth.Popup.createOpenerOnClick" id="gadgets.oauth.Popup.createOpenerOnClick">gadgets.oauth.Popup.createOpenerOnClick</a>
 </h1>
 <p id="rfc.section.4.2.8.1.1.1.p.1">Generates a function that is intended to be assigned to either a hyperlink (e.g. the onclick event of the HTML anchor tag) or similar mechanism (e.g. an HTML button) that when invoked, will display the OAuth Authorization window. The method accepts no input parameters and returns a JavaScript Function object.</p>
-<div id="#rfc.figure.249"></div>
+<div id="#rfc.figure.250"></div>
 <pre>
   &lt;Function&gt; createOpenerOnClick()
            </pre>
@@ -6331,7 +6337,7 @@
 <p id="rfc.section.4.2.8.1.1.2.p.1">Generates a function that is intended to be assigned to either a hyperlink (e.g. the onclick event of the HTML anchor tag) or similar mechanism (e.g. an HTML button) that when invoked, will notify the container that OAuth authorization is complete.</p>
 <p id="rfc.section.4.2.8.1.1.2.p.2">Typically, when the OAuth Popup window closes, the container will be able to automatically detect that authorization is complete and it will attempt to continue with the original request that triggered the authorization step in the first place. However, some containers are unable to detect when the Popup is closed. For those cases, the <samp>createdApprovedOnClick</samp> method provides a alternative. In most typical scenarios, however, the "Approved" function returned by this method will never be invoked.</p>
 <p id="rfc.section.4.2.8.1.1.2.p.3">The method accepts no input parameters and returns a JavaScript Function object.</p>
-<div id="#rfc.figure.250"></div>
+<div id="#rfc.figure.251"></div>
 <pre>
   &lt;Function&gt; createApprovedOnClick()
            </pre>
@@ -6340,7 +6346,7 @@
 </h1>
 <p id="rfc.section.4.2.9.p.1">The "opensearch" feature allows applications to declare that searchable material is provided using an <a href="http://www.opensearch.org/Specifications/OpenSearch/1.1">OpenSearch 1.1</a> description. Containers can use the search descriptions provided by multiple applications to, for example, provide a single, integrated container-wide search capability that aggregates results from multiple sources.</p>
 <p id="rfc.section.4.2.9.p.2">The OpenSeach description can either be passed directly as a parameter of the feature or by reference using the URL of a description document.</p>
-<div id="#rfc.figure.251"></div>
+<div id="#rfc.figure.252"></div>
 <p>For example: </p>
 <pre>
     &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
@@ -6364,7 +6370,7 @@
       &lt;Content type="url" href="http://example.com/searchGadget.xml" /&gt;
     &lt;/Module&gt;
                 </pre>
-<div id="#rfc.figure.252"></div>
+<div id="#rfc.figure.253"></div>
 <p>Or, alternatively, using a URL to reference the description document:</p>
 <pre>
     &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
@@ -6392,7 +6398,7 @@
 <p id="rfc.section.4.2.10.p.1">The OpenSocial API (osapi) Feature provides developers with an interface for requesting and manipulating social data made available by the OpenSocial Container.</p>
 <p id="rfc.section.4.2.10.p.2">While it is possible to use the <samp>gadgets.io.makeRequest</samp> method and associated methods to interact with information provided by the container, the "osapi" feature provides a higher-level abstraction that is more specific to OpenSocial's specific data and API model.</p>
 <p id="rfc.section.4.2.10.p.3">The OpenSocial API Feature is enabled for an application instance by specifying feature="osapi" using either the &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;.</p>
-<div id="#rfc.figure.253"></div>
+<div id="#rfc.figure.254"></div>
 <p>For example:</p>
 <pre>
   &lt;Module&gt;
@@ -6408,7 +6414,7 @@
 <a href="#rfc.section.4.2.10.1">4.2.10.1.</a> JavaScript API</h1>
 <p id="rfc.section.4.2.10.1.p.1">When the "osapi" feature is enabled for an application instance, the container will generate and provide one Service object instance for each Social Data Service provided by the container.  Each Service object instance is accessible via a distinct property on the static <samp>osapi</samp> object. The property name is derived from and specific to each individual Social Data Service.</p>
 <p id="rfc.section.4.2.10.1.p.2">For example, a container can implement the OpenSocial Person Service as defined by <a href="#social-app">[social-app]</a> and make that available to developers via the "osapi" Feature by using the property name "people" as specified in the Person Service definition.</p>
-<div id="#rfc.figure.254"></div>
+<div id="#rfc.figure.255"></div>
 <pre>
   &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
   &lt;Module&gt;
@@ -6429,7 +6435,7 @@
   &lt;/Module&gt;
           </pre>
 <p id="rfc.section.4.2.10.1.p.3">Likewise, the container can implement the OpenSocial Activity Stream Service as defined by <a href="#social-app">[social-app]</a> and make that available to developers using the property name "activities" as specified in the Activity Stream Service definition.</p>
-<div id="#rfc.figure.255"></div>
+<div id="#rfc.figure.256"></div>
 <pre>
   &lt;?xml version="1.0" encoding="UTF-8" ?&gt;
   &lt;Module&gt;
@@ -6450,7 +6456,7 @@
   &lt;/Module&gt;
           </pre>
 <p id="rfc.section.4.2.10.1.p.4">The methods provided by the Service Objects returned by each service property are unique to the corresponding service and are defined by each individual service's specification.  Every method exposed by the Service Object SHOULD take, as input, a single parameter whose value is a JavaScript object providing that methods input parameters. This input parameter MAY be optional.  Each method MUST return an <samp>osapi.Request</samp> Object instance that encapsulates the request and may be used to either execute the request immediately or added to a <samp>osapi.BatchRequest</samp> object for deferred and batched execution.</p>
-<div id="#rfc.figure.256"></div>
+<div id="#rfc.figure.257"></div>
 <p>The example below, for instance, uses the OpenSocial Person Service to access a listing of the current Viewer's friends.  First, the Service Object for the "people" service is accessed. Then the "get()" method is called with input parameters specifying the data we wish to retrieve. The method returns an <samp>osapi.Request</samp> object that is then immediately executed to retrieve the data:</p>
 <pre>
   var people = osapi.people;
@@ -6467,7 +6473,7 @@
   );
           </pre>
 <p id="rfc.section.4.2.10.1.p.5">Containers are free to determine the set of Social Data Services they support and expose to applications. Definitions for a handful of common Social Data Services are provided in <a href="#social-app">[social-app]</a>. Gadget developers cannot assume that all containers will support the same set of services and MUST therefore be prepared to gracefully handle cases where any given service is not available.</p>
-<div id="#rfc.figure.257"></div>
+<div id="#rfc.figure.258"></div>
 <p>One method developers can use to safely prepare for such cases is to test for the existence of the service and method, as in the following example:</p>
 <pre>
   if (osapi.people &amp;&amp; osapi.people.getViewer) {
@@ -6484,13 +6490,13 @@
 <a href="#rfc.section.4.2.10.1.1.1">4.2.10.1.1.1.</a> <a href="#osapi.Request.execute" id="osapi.Request.execute">osapi.Request.execute</a>
 </h1>
 <p id="rfc.section.4.2.10.1.1.1.p.1">The <samp>osapi.Request.execute</samp> method invokes the encapsulated Service Object request and passes the result off to a specified callback function.</p>
-<div id="#rfc.figure.258"></div>
+<div id="#rfc.figure.259"></div>
 <pre>
   &lt;Void&gt; &lt;instance&gt;.execute(callback)
               </pre>
 <p id="rfc.section.4.2.10.1.1.1.p.2">The method takes as input a single Function object that will be invoked upon completion of the request with a single input parameter representing the request results as a JavaScript object.  The specific properties exposed by the result object depend entirely on the specific Service Object, the request that was executed and the status of the request.</p>
 <p id="rfc.section.4.2.10.1.1.1.p.3">If the execution of the request results in an error, the callback function provided will be invoked with details of the error being passed in as described in <a href="#osapi.error.handling">Section 4.2.10.1.3</a>.</p>
-<div id="#rfc.figure.259"></div>
+<div id="#rfc.figure.260"></div>
 <p>For example, if an error occurs during the processing of the request, the response object passed to the callback function would contain an <samp>error</samp> property whose value is an <a href="#core-api">Error Object</a> <cite title="NONE">[core-api]</cite>:</p>
 <pre>
   {
@@ -6506,13 +6512,13 @@
 </h1>
 <p id="rfc.section.4.2.10.1.2.p.1">The <samp>osapi.BatchRequest</samp> object allows multiple <samp>osapi.Request</samp> objects to be grouped together and executed as a single unit.</p>
 <p id="rfc.section.4.2.10.1.2.p.2">Instances of the <samp>osapi.BatchRequest</samp> object are created using the <samp>osapi.newBatch</samp> method.</p>
-<div id="#rfc.figure.260"></div>
+<div id="#rfc.figure.261"></div>
 <pre>
   &lt;static&gt; &lt;osapi.BatchRequest&gt; osapi.newBatch()
             </pre>
 <p id="rfc.section.4.2.10.1.2.p.3">The method takes no input parameters.</p>
 <p id="rfc.section.4.2.10.1.2.p.4">Once created, individual <samp>osapi.Request</samp> objects can be added to the <samp>osapi.BatchObject</samp> instance as executed at once using the "execute" method.</p>
-<div id="#rfc.figure.261"></div>
+<div id="#rfc.figure.262"></div>
 <p>The following illustrates two batched requests:</p>
 <pre>
   var batch = osapi.newBatch().
@@ -6529,7 +6535,7 @@
 <a href="#rfc.section.4.2.10.1.2.1">4.2.10.1.2.1.</a> <a href="#osapi.BatchRequest.add" id="osapi.BatchRequest.add">osapi.BatchRequest.add</a>
 </h1>
 <p id="rfc.section.4.2.10.1.2.1.p.1">The <samp>osapi.BatchRequest.add</samp> method adds a <samp>osapi.Request</samp> object to the batch and associates it with a given key.</p>
-<div id="#rfc.figure.262"></div>
+<div id="#rfc.figure.263"></div>
 <pre>
   &lt;osapi.BatchRequest&gt; &lt;instance&gt;.add(key, request)
               </pre>
@@ -6538,13 +6544,13 @@
 <a href="#rfc.section.4.2.10.1.2.2">4.2.10.1.2.2.</a> <a href="#osapi.BatchRequest.execute" id="osapi.BatchRequest.execute">osapi.BatchRequest.execute</a>
 </h1>
 <p id="rfc.section.4.2.10.1.2.2.p.1">The <samp>osapi.BatchRequest.execute</samp> method executes all of the requests contained within the batch.</p>
-<div id="#rfc.figure.263"></div>
+<div id="#rfc.figure.264"></div>
 <pre>
   &lt;Void&gt; &lt;instance&gt;.execute(callback)
               </pre>
 <p id="rfc.section.4.2.10.1.2.2.p.2">The method takes as input a single callback Function object that will be invoked when all of the batched requests have been processed. The callback Function will be passed a single JavaScript objects mapping each batched request key to a response object specific to the individual batched request.</p>
 <p id="rfc.section.4.2.10.1.2.2.p.3">When an error occurs during the processing of one or more batched requests, the container will attempt to continue processing of the remaining requests in the batch. The details of the specific error(s) that occur will be mapped to the appropriate batched request key within the response object and general error details will be included as top level properties of the batch response.</p>
-<div id="#rfc.figure.264"></div>
+<div id="#rfc.figure.265"></div>
 <p>For example, if a Batch Request containing two individual requests mapped to the keys "foo" and "bar" is processed and an error occurs when the "foo" request is being processed but the "bar" request succeeds, the callback function will be passed an object resembling the following structure:</p>
 <pre>
   {
@@ -6568,7 +6574,7 @@
 <a href="#rfc.section.4.2.10.1.3">4.2.10.1.3.</a> <a href="#osapi.error.handling" id="osapi.error.handling">Error Handling</a>
 </h1>
 <p id="rfc.section.4.2.10.1.3.p.1">When processing a batch of <samp>osapi.Request</samp> objects using the <samp>osapi.BachRequest</samp> object and an error occurs processing any of the individual requests, the provided callback function will be invoked with a response object passed in containing a single top-level "error" property whose value is an Error object generally describing that the batch response did not complete with errors. The object will also contain one property key for each request contained in the batch whose value will either be the results of the operation if successful or an object containing a single "error" property whose value is an Error object describing the specific error that occurred.</p>
-<div id="#rfc.figure.265"></div>
+<div id="#rfc.figure.266"></div>
 <p>For example:</p>
 <pre>
   {
@@ -6588,7 +6594,7 @@
   }
               </pre>
 <p id="rfc.section.4.2.10.1.3.p.2">When a general error occurs that causes the container to be unable to process either an individual or complete batch of requests, such as when the container is unable to communicate with the Social Data Services, the callback function provided will be invoked and passed a response object containing a single "error" property whose value is an Error object describing the specific nature of the error.</p>
-<div id="#rfc.figure.266"></div>
+<div id="#rfc.figure.267"></div>
 <p>For example:</p>
 <pre>
   {
@@ -6741,7 +6747,7 @@
 <p id="rfc.section.4.2.10.1.4.2.p.2">If the "authz" property on the HTTP Request Parameters Object passed in when the request object was created specifies any value other than "NONE", the container is required to apply the appropriate authentication mechanism to the request in exactly the same fashion described for the <samp>gadgets.io.makeRequest</samp> method.</p>
 <p id="rfc.section.4.2.10.1.4.2.p.3">Upon completion of the HTTP request, the container shall create an <a href="#http.response.object">HTTP Response Object</a> <cite title="NONE">[http.response.object]</cite> which with either be passed as a parameter to the callback function provided when invoking the request object's "execute" method, or added to the batch response object is the HTTP request object is being executed as part of a <samp>osapi.BatchRequest</samp>.</p>
 <p id="rfc.section.4.2.10.1.4.2.p.4">When preparing the HTTP Response Object, the container will check the valid of the "format" property provided in the HTTP Request Parameters Object. If the value is unspecified or equals the literal String "json", the container will attempt to parse any content returned within the HTTP Response as if it were an "application/json" response. If the the parse succeeds, the container will included the parsed JSON structure within the HTTP Response Object. If the parse fails, only the raw content of the HTTP Response message, encoded as character data, will be included in the HTTP Response Object.</p>
-<div id="#rfc.figure.267"></div>
+<div id="#rfc.figure.268"></div>
 <p>For example, suppose that an application wishes to retrieve a JSON document located at http://example.org/latest-photos.  For the sake of the example, the JSON document has the following structure:</p>
 <pre>
   {
@@ -6752,7 +6758,7 @@
     lastUpdate : "Mon, 13 Apr 2009 23:17:04 GMT"
   }
               </pre>
-<div id="#rfc.figure.268"></div>
+<div id="#rfc.figure.269"></div>
 <p>This document can be retrieved using the <samp>osapi.http.get</samp> method which, by default, will parse the returned JSON and make it available directly from the HTTP Response Object:</p>
 <pre>
   osapi.http.get({"href":"http://example.org/latest-photos"})
@@ -6800,7 +6806,7 @@
 </h1>
 <p id="rfc.section.4.2.11.1.p.1">The following non-normative example illustrates how a container can provide support for this feature.</p>
 <p id="rfc.section.4.2.11.1.p.2">First, establish default values:</p>
-<div id="#rfc.figure.269"></div>
+<div id="#rfc.figure.270"></div>
 <pre>
   // Create a pubsub settings object
   gadgets.HubSettings = {};
@@ -6819,7 +6825,7 @@
   gadgets.HubSettings.onConnected = function( hub, suc, err ) { };
       </pre>
 <p id="rfc.section.4.2.11.1.p.3">Next, register an onLoad handler to create the HubClient and connect it to the ManagedHub. Delaying the HubClient creation and connection allows the application to override default values stored in gadgets.HubSettings. For example, IframeHubClient supports params properties such as seed, tokenLength and log, which are not set by default; and an application might need to override onSecurityAlert and/or scope, for which default values are provided. More importantly, the onComplete function for HubClient.connect usually sets up the application's subscriptions by calling gadgets.Hub.subscribe, or if the connection fails asynchronously, the onComplete function handles the error.</p>
-<div id="#rfc.figure.270"></div>
+<div id="#rfc.figure.271"></div>
 <pre>
   // Register an onLoad handler
   gadgets.util.registerOnLoadHandler( function() {
@@ -6840,7 +6846,7 @@
 </h1>
 <p id="rfc.section.4.2.11.2.p.1">The following illustrates a non-normative example of an application that subscribes to a topic published by the Hub.</p>
 <p id="rfc.section.4.2.11.2.p.2">Note that, by default, all of the necessary defaults parameters on the underlying HubClient connected for the application were initialized when the application was loaded. If the developer wishes to override the default parameters to the HubClient constructor, it can do so by setting values on gadgets.HubSettings as illustrated in the example.</p>
-<div id="#rfc.figure.271"></div>
+<div id="#rfc.figure.272"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs title="Sample PubSub Subscriber" height="250"&gt;
@@ -6888,7 +6894,7 @@
   &lt;/Module&gt;
    </pre>
 <p id="rfc.section.4.2.11.2.p.3">Similarly, below is a non-normative example of an application that publishes events to the Hub:</p>
-<div id="#rfc.figure.272"></div>
+<div id="#rfc.figure.273"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs title="Sample PubSub Publisher" height="250"&gt;
@@ -6928,7 +6934,7 @@
 <a href="#rfc.section.4.2.11.3.1.1">4.2.11.3.1.1.</a> <a href="#publish" id="publish">gadgets.Hub.publish</a>
 </h1>
 <p id="rfc.section.4.2.11.3.1.1.p.1">The <samp>gadgets.Hub.publish</samp> method is used to publish a message to a specific topic managed by the Hub.</p>
-<div id="#rfc.figure.273"></div>
+<div id="#rfc.figure.274"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.Hub.publish(topic, payload)
           </pre>
@@ -6954,7 +6960,7 @@
 </tbody>
 </table>
 <p id="rfc.section.4.2.11.3.1.1.p.3">The "publish" method is anonymous. That is, the method does not automatically include any information identifying the source of the message.</p>
-<div id="#rfc.figure.274"></div>
+<div id="#rfc.figure.275"></div>
 <p>For example,</p>
 <pre>
   var message = {
@@ -6969,7 +6975,7 @@
 </h1>
 <p id="rfc.section.4.2.11.3.1.2.p.1">The <samp>gadgets.Hub.subscribe</samp> method is used to register interest in receiving messages published to a specific topic. When a message is published, the Hub will invoke all of the callback methods registered for the topic.</p>
 <p id="rfc.section.4.2.11.3.1.2.p.2">The subscribe method will return a unique subscription identifier that can be used to subsequently unsubscribe from the topic.</p>
-<div id="#rfc.figure.275"></div>
+<div id="#rfc.figure.276"></div>
 <pre>
   &lt;static&gt; &lt;String&gt; gadgets.Hub.subscribe(topic, callback [,scope [,onCompleteCallback [,subscriberData]]])
           </pre>
@@ -7010,7 +7016,7 @@
 </tbody>
 </table>
 <p id="rfc.section.4.2.11.3.1.2.p.4">The method returns an opaque subscription identifier. This identifier is an arbitrary, unique ID string that is used to unsubscribe from the topic.</p>
-<div id="#rfc.figure.276"></div>
+<div id="#rfc.figure.277"></div>
 <p>For example,</p>
 <pre>
   callback = new Function(topic, data, subscriberData) {
@@ -7024,7 +7030,7 @@
 <a href="#rfc.section.4.2.11.3.1.3">4.2.11.3.1.3.</a> <a href="#unsubscribe" id="unsubscribe">gadgets.Hub.unsubscribe</a>
 </h1>
 <p id="rfc.section.4.2.11.3.1.3.p.1">The <samp>gadgets.Hub.unsubscribe</samp> method is used to remove a subscription from the hub. The identifier returned by the subscribe method is used to identify the subscription to be removed. An exception is thrown if the referenced subscription does not exist.</p>
-<div id="#rfc.figure.277"></div>
+<div id="#rfc.figure.278"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.Hub.unsubscribe(subscriptionId)
           </pre>
@@ -7042,7 +7048,7 @@
 <td class="left">The subscriptionId is the opaque string that is returned from the subscribe(...) method.</td>
 </tr></tbody>
 </table>
-<div id="#rfc.figure.278"></div>
+<div id="#rfc.figure.279"></div>
 <p>For example,</p>
 <pre>
   gadgets.Hub.unsubscribe(subId);
@@ -7055,7 +7061,7 @@
 <h1 id="rfc.section.4.2.11.4">
 <a href="#rfc.section.4.2.11.4">4.2.11.4.</a> The &lt;Topic&gt; Element</h1>
 <p id="rfc.section.4.2.11.4.p.1">As illustrated by the previous example, the "pubsub-2" feature provides a means of allowing developers to declaratively describe the which topics an application utilizes directly within the feature declaration within the "ModulePrefs" element.</p>
-<div id="#rfc.figure.279"></div>
+<div id="#rfc.figure.280"></div>
 <p>For example:</p>
 <pre>
   &lt;Module&gt;
@@ -7076,7 +7082,7 @@
       </pre>
 <p id="rfc.section.4.2.11.4.p.2">When applications use the &lt;Topic&gt; element, containers are able to "wire" applications together either automatically or via a user interface that allows a user to connect applications that publish events to a given topic to applications that subscribe to those events.</p>
 <p id="rfc.section.4.2.11.4.p.3">No XML namespace is defined for the &lt;Topic&gt; element.</p>
-<div id="#rfc.figure.280"></div>
+<div id="#rfc.figure.281"></div>
 <pre>
   Topic = element Topic {
     attribute name { text },
@@ -7147,7 +7153,7 @@
 <a href="#rfc.section.4.2.11.4.1">4.2.11.4.1.</a> <a href="#EventDataTypes" id="EventDataTypes">Event Data Types</a>
 </h1>
 <p id="rfc.section.4.2.11.4.1.p.1">The OpenAjax Hub specification allows any data serializable as JSON to be published to any given topic. Such data is inherently "untyped" and unstructured.</p>
-<div id="#rfc.figure.281"></div>
+<div id="#rfc.figure.282"></div>
 <p>For instance, it is possible -- albeit unlikely -- that code publishing data to a topic can include two entirely dissimilar values to the same topic:</p>
 <pre>
   gadgets.Hub.publish("my.topic", {"foo":"bar"});
@@ -7157,7 +7163,7 @@
 <p id="rfc.section.4.2.11.4.1.p.3">Container implementations MAY allow type information to be associated with the payloads published to a given Topic. How such type information is specified when the data is published to a topic is undefined by this specification.</p>
 <p id="rfc.section.4.2.11.4.1.p.4">A developer can use the "type" attribute on the &lt;Topic&gt; element to indicate the specific type of data it publishes to a topic or is interested in receiving. Containers that support typing of payloads can use this information to more intelligently route data to interested subscribers.  For instance, one application might only be interested in receiving payloads of type "org.example.foo" from the topic "my.topic" while another might only want type "org.example.bar" payloads.</p>
 <p id="rfc.section.4.2.11.4.1.p.5">If data types are supported, they MUST be identified using the following dot-delimited syntax and SHOULD conform to the "reverse DNS" naming convention (e.g. "org.example.foo"):</p>
-<div id="#rfc.figure.282"></div>
+<div id="#rfc.figure.283"></div>
 <pre>
   prefix = token *["." token] "."
   datatype = [prefix] token
@@ -7274,7 +7280,7 @@
 <p id="rfc.section.4.2.12.p.1">Gadget's often require the ability to perform potentially dangerous or sensitive operations or work with sensitive information.  Such application's SHOULD only be allowed to perform those operations if explicitly granted permission to do so by the container or the user.</p>
 <p id="rfc.section.4.2.12.p.2">The Security Policy feature is used by an application to request permissions under which to run.  Specific permissions are requested with &lt;Param&gt; elements, with the "name" attribute on the Param element identifying the feature and the text content of the element providing any additional required feature-specific information.  The Security Policy feature is specified within the &lt;ModulePrefs&gt; with the feature name "security-policy" using either the &lt;Optional&gt; or &lt;Require&gt; element. A container MAY support the Security Policy feature.</p>
 <p id="rfc.section.4.2.12.p.3">Containers MAY override any requested permission with its own more restrictive security policy. The container SHOULD NOT grant permissions to any application that are less restrictive than those explicitly requested by the application.</p>
-<div id="#rfc.figure.283"></div>
+<div id="#rfc.figure.284"></div>
 <p>An application requesting optional permissions from the container:</p>
 <pre>
     &lt;ModulePrefs &gt;
@@ -7283,7 +7289,7 @@
       &lt;/Optional &gt;
     &lt;/ModulePrefs &gt;
       </pre>
-<p id="rfc.section.4.2.12.p.4">If an application requests a security policy that is not supported, the container MUST log an error to the gadgets.log.  A container MAY render that application using a supported security policy, or display an appropriate error message. TODO: Clarify this</p>
+<p id="rfc.section.4.2.12.p.4">If an application requests a security policy that is not supported, A container MAY choose to render the application using a supported security policy, or display an appropriate error message.</p>
 <p id="rfc.section.4.2.12.p.5">Containers are free to define their own permissions for any purpose.  TODO: should we have a registry of common permissions???</p>
 <h1 id="rfc.section.4.2.13">
 <a href="#rfc.section.4.2.13">4.2.13.</a> <a href="#gadgets.selection" id="gadgets.selection">The Selection Feature</a>
@@ -7291,7 +7297,7 @@
 <p id="rfc.section.4.2.13.p.1">It is common for an OpenSocial container to display multiple applications within a single display area. Often, when a user performs some action in one view, another other displayed application needs to respond in some appropriate manner. For instance, if the user selects a person in their contact list in one view, another view can be triggered to display the selected person's profile information, while another can display a listing of documents owned by that person. In order to enable such functionality, the container needs to provide applications with a way of determining the currently selected object.</p>
 <p id="rfc.section.4.2.13.p.2">The Selection feature provides the ability to participate in the container's selection eventing. It is enabled for an application by specifying feature="selection" within either a &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;.</p>
 <p id="rfc.section.4.2.13.p.3">Once the feature is enabled, the application can either get or set the current selection for the container.</p>
-<div id="#rfc.figure.284"></div>
+<div id="#rfc.figure.285"></div>
 <p>The example below illustrates how an application can set the current selection for the container:</p>
 <pre>
   &lt;Module&gt;
@@ -7344,7 +7350,7 @@
 </tbody>
 </table>
 <p id="rfc.section.4.2.13.1.1.p.2">The current selection for a container will consist of an array of zero or more individual Selection Objects, each of which MAY specify a different type value. For example:</p>
-<div id="#rfc.figure.285"></div>
+<div id="#rfc.figure.286"></div>
 <p>For example:</p>
 <pre>
   var selection = [
@@ -7357,7 +7363,7 @@
 <a href="#rfc.section.4.2.13.1.2">4.2.13.1.2.</a> <a href="#gadgets.selection.setSelection" id="gadgets.selection.setSelection">gadgets.selection.setSelection</a>
 </h1>
 <p id="rfc.section.4.2.13.1.2.p.1">The <samp>gadgets.selection.setSelection</samp> method sets the current selection for the container, replacing the current selection.</p>
-<div id="#rfc.figure.286"></div>
+<div id="#rfc.figure.287"></div>
 <pre>
    &lt;Static&gt; &lt;Void&gt; gadgets.selection.setSelection (selection)
         </pre>
@@ -7381,7 +7387,7 @@
 <a href="#rfc.section.4.2.13.1.3">4.2.13.1.3.</a> <a href="#gadgets.selection.getSelection" id="gadgets.selection.getSelection">gadgets.selection.getSelection</a>
 </h1>
 <p id="rfc.section.4.2.13.1.3.p.1">The <samp>gadgets.selection.getSelection</samp> method returns the current selection for the container. The method takes no input parameters and returns an array of Selection objects.</p>
-<div id="#rfc.figure.287"></div>
+<div id="#rfc.figure.288"></div>
 <pre>
   &lt;static&gt; &lt;Selection Object[]&gt; gadgets.selection.getSelection()
         </pre>
@@ -7389,7 +7395,7 @@
 <a href="#rfc.section.4.2.13.1.4">4.2.13.1.4.</a> <a href="#gadgets.selection.addListener" id="gadgets.selection.addListener">gadgets.selection.addListener</a>
 </h1>
 <p id="rfc.section.4.2.13.1.4.p.1">The <samp>gadgets.selection.addListener</samp> method registers a callback function that the container will use to notify the container of changes in the current selection.</p>
-<div id="#rfc.figure.288"></div>
+<div id="#rfc.figure.289"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.selection.addListener(event, callback)
         </pre>
@@ -7420,7 +7426,7 @@
 <a href="#rfc.section.4.2.13.1.5">4.2.13.1.5.</a> <a href="#gadgets.selection.removeListener" id="gadgets.selection.removeListener">removeListener</a>
 </h1>
 <p id="rfc.section.4.2.13.1.5.p.1">The <samp>gadgets.selection.removeListener</samp> method unregisters a selection callback function.</p>
-<div id="#rfc.figure.289"></div>
+<div id="#rfc.figure.290"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.selection.removeListener(event, callback)
         </pre>
@@ -7454,7 +7460,7 @@
 <h1 id="rfc.section.4.2.14.1">
 <a href="#rfc.section.4.2.14.1">4.2.14.1.</a> The "views" Feature</h1>
 <p id="rfc.section.4.2.14.1.p.1">The "views" feature provides the basic operations for accessing information about and changing the current View being rendered.</p>
-<div id="#rfc.figure.290"></div>
+<div id="#rfc.figure.291"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
@@ -7559,7 +7565,7 @@
 <a href="#rfc.section.4.2.14.1.1.3.1">4.2.14.1.1.3.1.</a> <a href="#gadgets.views.View.getName" id="gadgets.views.View.getName">gadgets.views.View.getName</a>
 </h1>
 <p id="rfc.section.4.2.14.1.1.3.1.p.1">The <samp>gadgets.views.View.getName</samp> method returns the name of the View object. The method requires no input parameters.</p>
-<div id="#rfc.figure.291"></div>
+<div id="#rfc.figure.292"></div>
 <pre>
   &lt;String&gt; &lt;instance&gt;.getName()
                 </pre>
@@ -7567,7 +7573,7 @@
 <a href="#rfc.section.4.2.14.1.1.3.2">4.2.14.1.1.3.2.</a> <a href="#gadgets.views.View.isOnlyVisibleGadget" id="gadgets.views.View.isOnlyVisibleGadget">gadgets.views.View.isOnlyVisibleGadget</a>
 </h1>
 <p id="rfc.section.4.2.14.1.1.3.2.p.1">The <samp>gadgets.views.View.isOnlyVisibleGadget</samp> returns True if the application instance is the only application currently visibly displayed by the container. No input parameters are specified.</p>
-<div id="#rfc.figure.292"></div>
+<div id="#rfc.figure.293"></div>
 <pre>
   &lt;Boolean&gt; &lt;instance&gt;.isOnlyVisibleGadget()
                 </pre>
@@ -7575,7 +7581,7 @@
 <a href="#rfc.section.4.2.14.1.1.4">4.2.14.1.1.4.</a> <a href="#gadgets.views.getCurrentView" id="gadgets.views.getCurrentView">gadgets.views.getCurrentView</a>
 </h1>
 <p id="rfc.section.4.2.14.1.1.4.p.1">The <samp>gadgets.views.getCurrentView</samp> returns a <samp>gadgets.views.View</samp> object representing the currently rendered View. The method takes no input parameters.</p>
-<div id="#rfc.figure.293"></div>
+<div id="#rfc.figure.294"></div>
 <pre>
   &lt;static&gt; &lt;gadgets.views.View&gt; gadgets.views.getCurrentView()
               </pre>
@@ -7583,7 +7589,7 @@
 <a href="#rfc.section.4.2.14.1.1.5">4.2.14.1.1.5.</a> <a href="#gadgets.views.getParams" id="gadgets.views.getParams">gadgets.views.getParams</a>
 </h1>
 <p id="rfc.section.4.2.14.1.1.5.p.1">The <samp>gadgets.views.getParams</samp> method returns the parameters provided when the request to render the current view was received.</p>
-<div id="#rfc.figure.294"></div>
+<div id="#rfc.figure.295"></div>
 <pre>
   &lt;static&gt; &lt;Object&gt; gadgets.views.getParams()
               </pre>
@@ -7592,7 +7598,7 @@
 <a href="#rfc.section.4.2.14.1.1.6">4.2.14.1.1.6.</a> <a href="#gadgets.views.getSupportedViews" id="gadgets.views.getSupportedViews">gadgets.views.getSupportedViews</a>
 </h1>
 <p id="rfc.section.4.2.14.1.1.6.p.1">The <samp>gadgets.views.getSupportedViews</samp> method returns a JavaScript object mapping all of the supported primary <samp>gadgets.views.View</samp> objects for an application to the view name. Note that only primary views will be included, for instance, if the specification document defines views named "Canvas.About", "Profile.About", "Home.About", "Canvas.Help", etc, the returned views will be: "Canvas", "Home" and "Profile".</p>
-<div id="#rfc.figure.295"></div>
+<div id="#rfc.figure.296"></div>
 <pre>
   &lt;static&gt; &lt;Object&gt; gadgets.views.getSupportedViews();
               </pre>
@@ -7600,15 +7606,15 @@
 <a href="#rfc.section.4.2.14.1.1.7">4.2.14.1.1.7.</a> <a href="#gadgets.views.requestNavigateTo" id="gadgets.views.requestNavigateTo">gadgets.views.requestNavigateTo</a>
 </h1>
 <p id="rfc.section.4.2.14.1.1.7.p.1">The <samp>gadgets.views.requestNavigateTo</samp> method is used to request that the container render a specific view. If the container supports parameter passing, it will pass the optional parameters when rendering the new view. </p>
-<div id="#rfc.figure.296"></div>
+<div id="#rfc.figure.297"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.views.requestNavigateTo(view, opt_params, opt_ownerId)
               </pre>
-<p id="rfc.section.4.2.14.1.1.7.p.2">TODO: Finish this</p>
+<p id="rfc.section.4.2.14.1.1.7.p.2">The method takes as input three parameters. The first of which is the name of the View to render. The second is an Object containing the set of optional "view parameters" to pass to the rendered View.  The third is the identity of the application Instance Owner. Both the view parameters and owner identity are optional.</p>
 <h1 id="rfc.section.4.2.14.2">
 <a href="#rfc.section.4.2.14.2">4.2.14.2.</a> The "open-views" Feature</h1>
 <p id="rfc.section.4.2.14.2.p.1">The "open-views" feature provides additional methods for opening and closing views within a container.</p>
-<div id="#rfc.figure.297"></div>
+<div id="#rfc.figure.298"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
@@ -7625,7 +7631,7 @@
 <a href="#rfc.section.4.2.14.2.1.1">4.2.14.2.1.1.</a> <a href="#gadgets.views.openGadget" id="gadgets.views.openGadget">gadgets.views.openGadget</a>
 </h1>
 <p id="rfc.section.4.2.14.2.1.1.p.1">The <samp>gadgets.views.openGadget</samp> method requests that a view be rendered by the container.</p>
-<div id="#rfc.figure.298"></div>
+<div id="#rfc.figure.299"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.views.openGadget(resultCallback, navigateCallback, opt_params)
               </pre>
@@ -7689,7 +7695,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.299"></div>
+<div id="#rfc.figure.300"></div>
 <p>For example, in the following sample, code running with the default view opens the view named "foo" in a modal dialog, passing along an arbitrary set of view parameters:</p>
 <pre>
   &lt;Module&gt;
@@ -7726,7 +7732,7 @@
 <a href="#rfc.section.4.2.14.2.1.2">4.2.14.2.1.2.</a> <a href="#gadgets.views.openEmbeddedExperience" id="gadgets.views.openEmbeddedExperience">gadgets.views.openEmbeddedExperience</a>
 </h1>
 <p id="rfc.section.4.2.14.2.1.2.p.1">The <samp>gadgets.views.openEmbeddedExperience</samp> method requests that an <a href="#Embedded-Experiences">embedded experience</a> <cite title="NONE">[Embedded-Experiences]</cite> by rendered by the container.</p>
-<div id="#rfc.figure.300"></div>
+<div id="#rfc.figure.301"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.views.openEmbeddedExperience(resultCallback, navigateCallback, dataModel, opt_params)
               </pre>
@@ -7751,7 +7757,7 @@
 </tr>
 <tr>
 <td class="left">dataModel</td>
-<td class="left">TODO:</td>
+<td class="left">An <a href="#Embedded-Experiences">Section 4.2.4</a> Object</td>
 <td class="left">Specifies the Embedded Experiences Data model to use when rendering. The model is passed in as a JavaScript object conforming to the JSON embedded experiences format as defined in <a href="#Embedded-Experiences">Section 4.2.4</a>.</td>
 </tr>
 <tr>
@@ -7795,7 +7801,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.301"></div>
+<div id="#rfc.figure.302"></div>
 <p>For example, in the following sample, code running with the default view opens a URL as an embedded experience:</p>
 <pre>
   &lt;Module&gt;
@@ -7820,12 +7826,12 @@
     ]]&gt;&lt;/Content&gt;
   &lt;/Module&gt;
               </pre>
-<p id="rfc.section.4.2.14.2.1.2.p.5">TODO: This only works when EE container has been properly initialized...</p>
+<p id="rfc.section.4.2.14.2.1.2.p.5">Note that not all containers are capable of supporting Embedded Experiences. Container implementations MUST specifically initialize support for Embedded Experiences before the <samp>gadgets.views.openEmbeddedExperience</samp> API will function correctly. Details on the requirements for supporting this API within the container are provided within the OpenSocial Common Container v3.0 specification [TODO: CC Ref].</p>
 <h1 id="rfc.section.4.2.14.2.1.3">
 <a href="#rfc.section.4.2.14.2.1.3">4.2.14.2.1.3.</a> <a href="#gadgets.views.openUrl" id="gadgets.views.openUrl">gadgets.views.openUrl</a>
 </h1>
 <p id="rfc.section.4.2.14.2.1.3.p.1">The <samp>gadgets.views.openUrl</samp> method requests that a URL be opened and rendered by the container.</p>
-<div id="#rfc.figure.302"></div>
+<div id="#rfc.figure.303"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.views.openUrl(url, navigateCallback, opt_viewTarget)
               </pre>
@@ -7855,7 +7861,7 @@
 </tr>
 </tbody>
 </table>
-<div id="#rfc.figure.303"></div>
+<div id="#rfc.figure.304"></div>
 <p>For example:</p>
 <pre>
   &lt;Module&gt;
@@ -7883,7 +7889,7 @@
 <a href="#rfc.section.4.2.14.2.1.4">4.2.14.2.1.4.</a> <a href="#gadgets.views.close" id="gadgets.views.close">gadgets.views.close</a>
 </h1>
 <p id="rfc.section.4.2.14.2.1.4.p.1">The <samp>gadgets.views.close</samp> method requests that a given view be closed.</p>
-<div id="#rfc.figure.304"></div>
+<div id="#rfc.figure.305"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.views.close(opt_site_handler)
               </pre>
@@ -7905,12 +7911,12 @@
 <a href="#rfc.section.4.2.14.2.1.5">4.2.14.2.1.5.</a> <a href="#gadgets.views.setReturnValue" id="gadgets.views.setReturnValue">gadgets.views.setReturnValue</a>
 </h1>
 <p id="rfc.section.4.2.14.2.1.5.p.1">Often, code running within one view will require the ability to programmatically open a second view for the purpose of collecting input from the user. In such cases, the <samp>gadgets.views.setReturnValue</samp> method can be used within the code of the second opened view to specify the data that is to be returned to the first.</p>
-<div id="#rfc.figure.305"></div>
+<div id="#rfc.figure.306"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.views.setReturnValue(returnValue)
               </pre>
 <p id="rfc.section.4.2.14.2.1.5.p.2">The method takes either a JavaScript primitive value, a JSON-serializable Object, or an Array of primitives or JSON-serializable Objects as an input parameter. No return value is specified for the method.</p>
-<div id="#rfc.figure.306"></div>
+<div id="#rfc.figure.307"></div>
 <p>For example, in the following instance, code running within the default view opens a view named "foo" within a modal dialog and awaits a response. The value set using the <samp>gadgets.views.setReturnValue</samp> method is passed to the calling view via a callback function provided to the <samp>gadgets.views.openGadget</samp> method:</p>
 <pre>
   &lt;Module&gt;
@@ -7949,7 +7955,7 @@
 <a href="#rfc.section.4.2.14.2.1.6">4.2.14.2.1.6.</a> <a href="#gadgets.window.getContainerDimensions" id="gadgets.window.getContainerDimensions">gadgets.window.getContainerDimensions</a>
 </h1>
 <p id="rfc.section.4.2.14.2.1.6.p.1">The <samp>gadgets.window.getContainerDimensions</samp> method detects the height and width of the container displaying the view and passes those to a provided callback function.</p>
-<div id="#rfc.figure.307"></div>
+<div id="#rfc.figure.308"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.window.getContainerDimensions(resultCallback)
               </pre>
@@ -7990,7 +7996,7 @@
 </tbody>
 </table>
 <p id="rfc.section.4.2.14.2.1.7.p.3">Support for the "coordinates" property is only defined when the "viewTarget" property is equal to "FLOAT".</p>
-<div id="#rfc.figure.308"></div>
+<div id="#rfc.figure.309"></div>
 <p>For example:</p>
 <pre>
   gadgets.views.openGadget(
@@ -8014,7 +8020,7 @@
 <a href="#rfc.section.4.2.15.1">4.2.15.1.</a> The "settitle" Feature</h1>
 <p id="rfc.section.4.2.15.1.p.1">The "settitle" feature allows an application to modify the displayed title the container uses for the application instance. Whether or not the title is displayed is up to the container.</p>
 <p id="rfc.section.4.2.15.1.p.2">The "settitle" feature is enabled by specifying feature="settitle" within either the &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;.</p>
-<div id="#rfc.figure.309"></div>
+<div id="#rfc.figure.310"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
@@ -8030,7 +8036,7 @@
   &lt;/Module&gt;
        </pre>
 <p id="rfc.section.4.2.15.1.p.3">When the "settitle" feature is enabled for an application the <samp>gadgets.window.setTitle</samp> method is provided:</p>
-<div id="#rfc.figure.310"></div>
+<div id="#rfc.figure.311"></div>
 <pre>
   &lt;static&gt; &gt;Void&gt; gadgets.window.setTitle(title)
        </pre>
@@ -8039,7 +8045,7 @@
 <a href="#rfc.section.4.2.15.2">4.2.15.2.</a> The "dynamic-height" Feature</h1>
 <p id="rfc.section.4.2.15.2.p.1">The "dynamic-height" feature allows an application to request that the container dynamically change the vertical display area allocated to the view based on either the current content of the rendered View or an optionally provided numeric value that specifies the preferred height in pixels.</p>
 <p id="rfc.section.4.2.15.2.p.2">The "dynamic-height" feature is enable by specifying feature="dynamic-height" within either the &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;.</p>
-<div id="#rfc.figure.311"></div>
+<div id="#rfc.figure.312"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
@@ -8058,7 +8064,7 @@
   &lt;/Module&gt;
        </pre>
 <p id="rfc.section.4.2.15.2.p.3">When the "dynamic-height" feature is enabled for an application, both the <samp>gadgets.window.getViewportDimensions</samp> and <samp>gadgets.window.adjustHeight</samp> methods are provided:</p>
-<div id="#rfc.figure.312"></div>
+<div id="#rfc.figure.313"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.window.adjustHeight(opt_height)
        </pre>
@@ -8067,7 +8073,7 @@
 <a href="#rfc.section.4.2.15.3">4.2.15.3.</a> The "dynamic-width" Feature</h1>
 <p id="rfc.section.4.2.15.3.p.1">The "dynamic-width" feature allows an application to request that the container dynamically change the horizontal display area allocated to the view based on either the current content of the rendered View or an optionally provided numeric value that specifies the preferred width in pixels.</p>
 <p id="rfc.section.4.2.15.3.p.2">The "dynamic-width" feature is enable by specifying feature="dynamic-width" within either the &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;</p>
-<div id="#rfc.figure.313"></div>
+<div id="#rfc.figure.314"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
@@ -8086,7 +8092,7 @@
   &lt;/Module&gt;
        </pre>
 <p id="rfc.section.4.2.15.3.p.3">When the "dynamic-width" feature is enabled for an application, both the <samp>gadgets.window.getViewportDimensions</samp> and <samp>gadgets.window.adjustWidth</samp> methods are provided:</p>
-<div id="#rfc.figure.314"></div>
+<div id="#rfc.figure.315"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.window.adjustWidth(opt_width)
        </pre>
@@ -8095,7 +8101,7 @@
 <a href="#rfc.section.4.2.15.4">4.2.15.4.</a> The "dynamic-size" Feature</h1>
 <p id="rfc.section.4.2.15.4.p.1">The "dynamic-size" feature allows an application to request that the container dynamically change the vertical and horizontal display area allocated to the view based on either the current content of the rendered View or optionally provided numeric values that specify the preferred height and width in pixels.</p>
 <p id="rfc.section.4.2.15.4.p.2">The "dynamic-size" feature is enable by specifying feature="dynamic-size" within either the &lt;Require&gt; or &lt;Optional&gt; element within the &lt;ModulePrefs&gt;</p>
-<div id="#rfc.figure.315"></div>
+<div id="#rfc.figure.316"></div>
 <pre>
   &lt;Module&gt;
     &lt;ModulePrefs&gt;
@@ -8114,7 +8120,7 @@
   &lt;/Module&gt;
        </pre>
 <p id="rfc.section.4.2.15.4.p.3">When the "dynamic-size" feature is enabled for an application, both the <samp>gadgets.window.getViewportDimensions</samp> and <samp>gadgets.window.adjustSize</samp> methods are provided:</p>
-<div id="#rfc.figure.316"></div>
+<div id="#rfc.figure.317"></div>
 <pre>
   &lt;static&gt; &lt;Void&gt; gadgets.window.adjustSize(opt_height, opt_width)
        </pre>
@@ -8123,7 +8129,7 @@
 <a href="#rfc.section.4.2.15.5">4.2.15.5.</a> <a href="#gadgets.window.getViewportDimensions" id="gadgets.window.getViewportDimensions">gadgets.window.getViewportDimensions</a>
 </h1>
 <p id="rfc.section.4.2.15.5.p.1">The <samp>gadgets.window.getViewportDimensions</samp> method detects and returns the height and width of area allocated by the container for the renderable content of the View.</p>
-<div id="#rfc.figure.317"></div>
+<div id="#rfc.figure.318"></div>
 <pre>
   &lt;static&gt; &lt;Object&gt; gadgets.window.getViewportDimensions()
        </pre>
@@ -8226,11 +8232,11 @@
 <tr>
 <td class="reference"><b id="core-api">[core-api]</b></td>
 <td class="top">
-<a>OpenSocial Core API Specification v3.0</a>", April 2012.</td>, "</tr>
+<a>OpenSocial Core API Specification v3.0</a>", May 2012.</td>, "</tr>
 <tr>
 <td class="reference"><b id="social-app">[social-app]</b></td>
 <td class="top">
-<a>OpenSocial Social Application Specification 3.0</a>", April 2012.</td>, "</tr>
+<a>OpenSocial Social Application Specification 3.0</a>", May 2012.</td>, "</tr>
 </tbody></table>
 <h1 id="rfc.authors"><a href="#rfc.authors">Author's Address</a></h1>
 <div class="avoidbreak">
