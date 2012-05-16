@@ -1482,47 +1482,48 @@
               <ttcol>Name</ttcol>
               <ttcol>Description</ttcol>
                 
-              <c>about</c>
+              <c><spanx style="verb">about</spanx></c>
               <c>Identifies a View that provides descriptive information 
               about the application.</c>
                 
-              <c>canvas</c>
+              <c><spanx style="verb">canvas</spanx></c>
               <c>Identifies a View that is typically rendered by the container
               in a large area that is generally not shared with other 
               application views.</c>
                 
-              <c>embedded</c>
+              <c><spanx style="verb">embedded</spanx></c>
               <c>Identifies a View that is intended for use primarily with 
               <xref target="Embedded-Experiences">Embedded Experiences</xref>.
               When a container displays an application View using the 
               <spanx style="verb">gadgets.views.openEmbeddedExperience</spanx>
               API, it will, by default, render the "embedded" View.</c>
                 
-              <c>home</c>
+              <c><spanx style="verb">home</spanx></c>
               <c>Identifies a View that is typically rendered by the container
               on a page with other application views. These are typically 
               assigned relatively small areas of the available display 
               area for the page.</c>
                 
-              <c>preferences</c>
+              <c><spanx style="verb">preferences</spanx></c>
               <c>Identifies a View that is typically used to allow the user
               to view and modify user preferences for the application.</c>
                 
-              <c>preview</c>
+              <c><spanx style="verb">preview</spanx></c>
               <c>Identifies a View that is typically used to provide a 
               demonstration view of the application.</c>
                 
-              <c>profile</c>
-              <c>Identifies a View that, like "home", is typically rendered by
-              the container on a page with other application views. The 
-              difference with PROFILE, however, is that the page into which
-              the View is included will typically represent a "Profile" view
-              of an individual person or entity. For example, when displayed 
-              on the profile page for a person, an application View might 
-              provide an interface for scheduling a meeting with that person
-              or initiating a Voice-over-IP call, and so forth.</c>
+              <c><spanx style="verb">profile</spanx></c>
+              <c>Identifies a View that, like <spanx style="verb">home</spanx>,
+              is typically rendered by the container on a page with other 
+              application views. The difference with <spanx style="verb">profile</spanx>, 
+              however, is that the page into which the View is included will 
+              typically represent a "Profile" view of an individual person or 
+              entity. For example, when displayed on the profile page for a 
+              person, an application View might provide an interface for 
+              scheduling a meeting with that person or initiating a 
+              Voice-over-IP call, and so forth.</c>
                 
-              <c>support</c>
+              <c><spanx style="verb">support</spanx></c>
               <c>Identifies a View that provides details about where 
               users can acquire support information for the application,
               typically including contact information and links to 
@@ -3097,7 +3098,7 @@
           <ttcol>Description</ttcol>
           <ttcol>Applicability</ttcol>
 
-            <c>Msg</c>
+            <c><spanx style="verb">Msg</spanx></c>
             <c>References all message bundle variables for the current locale.
             The values of the <spanx style="verb">{Var}</spanx> component are 
             selected from the applicable message bundle. For instance, if the 
@@ -3111,7 +3112,7 @@
             by making use of the <spanx style="verb">${Msg.*}</spanx> syntax 
             within the value.</c>
             
-            <c>Bidi</c>
+            <c><spanx style="verb">Bidi</spanx></c>
             <c>Used to reference information about the currently selected 
             Locale's default text directionality as specified by the 
             text_direction attribute on the &lt;Locale&gt; element. The 
@@ -3120,7 +3121,7 @@
             within the application, including ModulePrefs and root Module
             element.</c>
       
-            <c>ViewParams</c>
+            <c><spanx style="verb">ViewParams</spanx></c>
             <c>References all values passed using the <spanx style="verb">viewParams</spanx> 
             parameter when calling to <xref target="gadgets.views.requestNavigateTo">gadgets.views.requestNavigateTo</xref>.
             The values of the <spanx style="verb">{Var}</spanx> component 
@@ -3134,7 +3135,7 @@
             only within Content blocks and <xref target="DataPipelining">Data Pipeline</xref> 
             tags.</c>
             
-            <c>Prefs</c>
+            <c><spanx style="verb">Prefs</spanx></c>
             <c>References all named values defined by &lt;UserPref&gt; elements
             contained in the application specification. The values of the 
             <spanx style="verb">{Var}</spanx> component correlate to each 
@@ -3149,15 +3150,15 @@
             <spanx style="verb">gadgets.Prefs.getString("FOO")</spanx></c>
             <c>Available anywhere within the application .</c>
 
-            <c>Viewer</c>
+            <c><spanx style="verb">Viewer</spanx></c>
             <c>Reserved for future use.</c>
             <c>N/A</c>
 
-            <c>Owner</c>
+            <c><spanx style="verb">Owner</spanx></c>
             <c>Reserved for future use.</c>
             <c>N/A</c>
   
-            <c>Gadget</c>
+            <c><spanx style="verb">Gadget</spanx></c>
             <c>Reserved for future use.</c>
             <c>N/A</c>
         </texttable>
@@ -3223,7 +3224,7 @@
           <ttcol>Prefix</ttcol>
           <ttcol>Description</ttcol>   
 
-          <c>MSG</c>
+          <c><spanx style="verb">MSG</spanx></c>
           <c>References all message bundle variables for the current locale.
           The values of the <spanx style="verb">{Var}</spanx> component are 
           selected from the applicable message bundle. For instance, if the 
@@ -3232,12 +3233,12 @@
           by the localized value associated with <spanx style="verb">FOO</spanx> 
           in the bundle.</c>
           
-          <c>BIDI</c>
+          <c><spanx style="verb">BIDI</spanx></c>
           <c>References BIDI substitution variables whose values will reflect
           the default text direction as specified by the selected locale. 
           The BIDI variables are discussed in detail in <xref target="Localization"/>.</c>
           
-          <c>MODULE</c>
+          <c><spanx style="verb">MODULE</spanx></c>
           <c>Originally intended to provide a context for information about 
           the specification document itself. Currently, <spanx style="verb">ID</spanx> 
           is the only variable key supported (e.g. <spanx style="verb">__MODULE_ID__</spanx>). 
@@ -3245,7 +3246,7 @@
           expression with a unique ID value for each instance of an application 
           displayed simultaneously.</c>
           
-          <c>UP</c>
+          <c><spanx style="verb">UP</spanx></c>
           <c>References all named values defined by &lt;UserPref&gt; elements
           contained in the specification document. The values of the 
           <spanx style="verb">{Var}</spanx> component correlate to each defined 
@@ -3544,7 +3545,7 @@
         <ttcol>Description</ttcol>
         
         <c>Pending</c>
-        <c>org.opensocial.event.pending</c>
+        <c><spanx style="verb">org.opensocial.event.pending</spanx></c>
         <c>occurs prior to an application specification document
         being "Registered" with the container. This is an intermediate step in
         a application's lifecycle that occurs, for example, when a developer
@@ -3555,13 +3556,13 @@
         before the application can be considered to be "Registered".</c>
         
         <c>Rejected</c>
-        <c>org.opensocial.event.rejected</c>
+        <c><spanx style="verb">org.opensocial.event.rejected</spanx></c>
         <c>occurs when "Registration" of a "Pending" 
         specification document cannot be completed for any reason. For instance, 
         if the registration is rejected by an administrator.</c>
         
         <c>Registered</c>
-        <c>org.opensocial.event.registered</c>
+        <c><spanx style="verb">org.opensocial.event.registered</spanx></c>
         <c>occurs after the container first becomes
         aware of the Application Specification Document. For instance, when an 
         administrator adds an application to a catalog of available 
@@ -3570,7 +3571,7 @@
         by a container.</c>
         
         <c>Available</c>
-        <c>org.opensocial.event.available</c>
+        <c><spanx style="verb">org.opensocial.event.available</spanx></c>
         <c>occurs when the application becomes
         available for use by the container. In order to be considered 
         "Available", an application MUST have first passed through the 
@@ -3580,7 +3581,7 @@
         applications.</c>
         
         <c>Unavailable</c>
-        <c>org.opensocial.event.unavailable</c>
+        <c><spanx style="verb">org.opensocial.event.unavailable</spanx></c>
         <c>occurs when the application becomes
         unavailable for use by the container. Unavailable applications are known 
         to the container ("Registered") but cannot be used for some reason. 
@@ -3588,25 +3589,25 @@
         have otherwise been disabled for some reason.</c>
         
         <c>Updated</c>
-        <c>org.opensocial.event.updated</c>
+        <c><spanx style="verb">org.opensocial.event.updated</spanx></c>
         <c>occurs whenever the application specification known
         to the container has been updated. This can happen whenever a new 
         version of the application is provided to the container.</c>
         
         <c>Installed</c>
-        <c>org.opensocial.event.installed</c>
+        <c><spanx style="verb">org.opensocial.event.installed</spanx></c>
         <c>occurs when a specific instance of an application 
         is provisioned for use. For instance, when an instance is added to a 
         page. Only "Available" applications can be "Installed". Installing an
         application is not the same as "opening" or "rendering" the application.</c>
         
         <c>Configured</c>
-        <c>org.opensocial.event.configured</c>
+        <c><spanx style="verb">org.opensocial.event.configured</spanx></c>
         <c>occurs whenever the configuration details for 
         an installed application have been modified.</c>
         
         <c>Restriction</c>
-        <c>org.opensocial.event.restriction</c>
+        <c><spanx style="verb">org.opensocial.event.restriction</spanx></c>
         <c>occurs whenever the functionality of a particular
         instance of the application has been restricted in some way. For instance, 
         if the operation of the application has caused it to exceed request rate 
@@ -3616,25 +3617,25 @@
         underwhich the instance of the application is operating.</c>
         
         <c>Opened</c>
-        <c>org.opensocial.event.opened</c>
+        <c><spanx style="verb">org.opensocial.event.opened</spanx></c>
         <c>occurs whenever an "Installed" instance of an 
         application is opened or rendered by the container.</c>
         
         <c>Closed</c>
-        <c>org.opensocial.event.closed</c>
+        <c><spanx style="verb">org.opensocial.event.closed</spanx></c>
         <c>occurs whenever an "Installed" instance of an 
         application is closed by the container. Note that closing an 
         application is not the same as uninstalling it. A closed application 
         can be reopened later.</c>
         
         <c>Uninstalled</c>
-        <c>org.opensocial.event.uninstalled</c>
+        <c><spanx style="verb">org.opensocial.event.uninstalled</spanx></c>
         <c>occurs when a provisioned instance of an 
         application is destroyed. This lifecycle event implies that all resources
         associated with a specific application instance are to be deallocated.</c>
         
         <c>Unregistered</c>
-        <c>org.opensocial.event.unregistered</c>
+        <c><spanx style="verb">org.opensocial.event.unregistered</spanx></c>
         <c>occurs when a "Registered" application specification is removed 
         from the container.</c>
       </texttable>
@@ -4798,7 +4799,7 @@
                <ttcol>Alias</ttcol>
                <ttcol>Description</ttcol>
                     
-               <c>REFRESH_INTERVAL</c>
+               <c><spanx style="verb">REFRESH_INTERVAL</spanx></c>
                <c>gadgets.io.ProxyUrlRequestParameters.REFRESH_INTERVAL</c>
                <c>Explicitly sets the numer of seconds content will be cached 
                by the container as described in <xref target="caching" />.</c>
@@ -6164,7 +6165,7 @@
            <ttcol>Name</ttcol>
            <ttcol>Type</ttcol>
            <ttcol>Description</ttcol>
-           <c>action</c>
+           <c><spanx style="verb">action</spanx></c>
            <c><xref target="gadgets.actions.actionobjects">Action Object</xref></c>
            <c>The action to be added to the container</c>
          </texttable>
@@ -8106,7 +8107,7 @@
               <ttcol>Name</ttcol>
               <ttcol>Type</ttcol>
               <ttcol>Description</ttcol>
-              <c>message</c>
+              <c><spanx style="verb">message</spanx></c>
               <c>String | Object</c>
               <c>The message as an HTML string or DOM element</c>
             </texttable>
@@ -8289,17 +8290,17 @@
            <ttcol>Name</ttcol>
            <ttcol>Type</ttcol>
            <ttcol>Description</ttcol>
-           <c>destination</c>
+           <c><spanx style="verb">destination</spanx></c>
            <c>String</c>
            <c>Target URL to display when the window opens.</c>
-           <c>windowOptions</c>
+           <c><spanx style="verb">windowOptions</spanx></c>
            <c>String</c>
            <c>Options for window.open, used to specify look and feel of the
            window.</c>
-           <c>openCallback</c>
+           <c><spanx style="verb">openCallback</spanx></c>
            <c>Function</c>
            <c>Function to call when the window is opened.</c>
-           <c>closeCallback</c>
+           <c><spanx style="verb">closeCallback</spanx></c>
            <c>Function</c>
            <c>Function to call when the window is closed.</c>
          </texttable>
