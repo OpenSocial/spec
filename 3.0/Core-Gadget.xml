@@ -5990,9 +5990,7 @@
            the main area allocated to the application by the container. Examples 
            include rendering within a modal dialog box, or within a 
            "sidebar" area provided by the container. Acceptable values for
-           the viewTarget attribute are <spanx style="verb">TAB</spanx>, 
-           <spanx style="verb">DIALOG</spanx>, <spanx style="verb">MODALDIALOG</spanx>,
-           <spanx style="verb">FLOAT</spanx> and <spanx style="verb">SIDEBAR</spanx>. 
+           the viewTarget attribute are defined in <xref target="gadgets.views.ViewType.ViewTarget"/>. 
            If not specified, the view will be rendered within the area already 
            allocated to the application.</t>
            <t hangText="url">An IRI to use in place of a callback function.
@@ -6044,10 +6042,10 @@
        <t>Contribution paths are hierarchical and container specific. For 
        instance, if a container supports a top level menu system such 
        as those typically found in many traditional desktop applications,
-       an application might use path="container/menu/File" to add items to the 
-       containers "File" menu. The depth of the path hierarchy is entirely
-       determined by the container. Each segment of the path is separated
-       by the forward slash (/) character.</t>
+       an application might use <spanx style="verb">path="container/menu/File</spanx>
+       to add items to the containers "File" menu, if one exists. The depth of 
+       the path hierarchy is entirely determined by the container. Each segment 
+       of the path is separated by the forward slash (/) character.</t>
      
      </section>
 
@@ -6071,33 +6069,41 @@
          selected.</t>
          
          <texttable align="left">
-           <ttcol>Attribute</ttcol>
+           <ttcol>Name</ttcol>
+           <ttcol>Type</ttcol>
            <ttcol>Description</ttcol>
-           <c>id</c>
+           <c><spanx style="verb">id</spanx></c>
+           <c>String</c>
            <c>The action identifier.</c>
 
            <c><spanx style="verb">label</spanx></c>
+           <c>String</c>
            <c>A short human-readable label to display for this action that is 
            typically displayed as a component of the user-interface that 
            triggers the action.</c>
 
            <c><spanx style="verb">path</spanx></c>
+           <c>String</c>
            <c>The container-defined location for this action, as described 
            in <xref target="gadgets.actions.paths" />.</c>
 
            <c><spanx style="verb">dataType</spanx></c>
+           <c>String</c>
            <c>The Open Social Data type, as specified in Section 4.4 of 
            <xref target="core-api"/>, with which to associate the action.</c>
 
            <c><spanx style="verb">tooltip</spanx></c>
+           <c>String</c>
            <c>A short, human-readable description of the action that is 
            typically displayed when the Viewer hovers their mouse cursor
            over user-interface elements that trigger the action.</c>
 
            <c><spanx style="verb">icon</spanx></c>
+           <c>String</c>
            <c>An absolute URI to an image icon.</c>
 
            <c><spanx style="verb">iconSize</spanx></c>
+           <c>Object</c>
            <c>An object that contains two properties named <spanx style="verb">x</spanx>
            and <spanx style="verb">y</spanx> whose values are non-negative integer 
            values indicating the display height and width, in pixels, of the image resource
@@ -6110,6 +6116,7 @@
            within user-interface elements.</c>
 
            <c><spanx style="verb">iconOffset</spanx></c>
+           <c>Object</c>
            <c>If the image resource identified by the <spanx style="verb">icon</spanx>
            property represents a sprite, the <spanx style="verb">iconOffset</spanx>
            property specifies the x and y coordinates of the top-left corner of
@@ -6119,12 +6126,15 @@
            values non-negative integer values.</c>
 
            <c><spanx style="verb">view</spanx></c>
+           <c>String</c>
            <c>The view ID the application should navigate to when the action is invoked.</c>
 
            <c><spanx style="verb">viewTarget</spanx></c>
+           <c>String</c>
            <c>The target area to render the view.</c>
 
            <c><spanx style="verb">url</spanx></c>
+           <c>String</c>
            <c>Simple actions that are just links can specify a url instead of 
            a callback function.</c>
 
@@ -6329,9 +6339,8 @@
        <section title="gadgets.actions.registerShowActionsListener" anchor="gadgets.actions.registerShowActionsListener">
        
          <t>Registers a callback function that the container will call whenever 
-         new actions are added to the container. An application can use this listener
-         to provide a rendering of any action contributed to the container
-         by any other application.</t>
+         user-interface elements for one or more actions are to be created and
+         displayed.</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.registerShowActionsListener (listener)
@@ -6355,7 +6364,8 @@
       <section title="gadgets.actions.registerHideActionsListener" anchor="gadgets.actions.registerHideActionsListener">
       
         <t>Registers a callback function that the container will call whenever
-        the an application that contributes actions is removed from the container.</t>
+        the user-interface elements representing one or more actions are to 
+        be hidden and destroyed.</t>
         
          <figure><artwork>
   &lt;static&gt; gadgets.actions.registerHideActionsListener (listener)
@@ -6823,7 +6833,7 @@
       
       </section>    
   
-      <section title="Considerations for Embedded Gadgets">
+      <section title="Considerations for Embedded Applications">
   
         <section title="Views for Embedded Experiences">
         
@@ -7223,9 +7233,7 @@
           value <spanx style="verb">embedded</spanx> is assumed.</c>
           <c><spanx style="verb">viewTarget</spanx></c>
           <c>Specifies where the container SHOULD render the view. Possible 
-          values are <spanx style="verb">TAB</spanx>, <spanx style="verb">DIALOG</spanx>, 
-          <spanx style="verb">MODALDIALOG</spanx>, <spanx style="verb">FLOAT</spanx>, 
-          and <spanx style="verb">SIDEBAR</spanx>.</c>
+          values are defined in <xref target="gadgets.views.ViewType.ViewTarget"/>.</c>
         </texttable>
         
         <figure><preamble>Preferring the url target:</preamble><artwork>
@@ -9139,8 +9147,8 @@
         gadgets.util.registerOnLoadHandler API. </t>
         <t>Third, once the Hub is initialized by the container, individual applications
         that declare support for the "pubsub-2" feature using either the 
-        "Optional" or "Required" tag within the Gadget specifications 
-        "ModulePrefs" can use the provided JavaScript APIs to publish 
+        &lt;Optional&gt; or &lt;Required&gt; tag within the Gadget specifications 
+        &lt;ModulePrefs&gt; can use the provided JavaScript APIs to publish 
         events to the hub using "topics", or use the JavaScript APIs to
         subscribe to "topics" published by the Hub. When an application publishes
         an event to the Hub using a specific topic, all application's connected 
@@ -9149,11 +9157,11 @@
       </list>
     </t>
 
-    <t>A "topic" is a String value that conforms to the OpenAjax Hub 2.0 
+    <t>A topic is a String value that conforms to the OpenAjax Hub 2.0 
     specification's <xref target="OAHub2.0">Topic Name Rules</xref>.
     All topic names prefixed with "org.opensocial." are reserved for use by
-    the OpenSocial specification. Developers MUST NOT use the "org.opensocial."
-    prefix when defining their own topics.</t>
+    the OpenSocial specification. Developers MUST NOT use any case-insensitive
+    variation of the "org.opensocial." prefix when defining their own topics.</t>
     
     <t>Note that topic names are case-sensitive such that "org.example.foo" is 
     not equivalent to "org.example.Foo".</t>
@@ -9329,11 +9337,11 @@
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
-            <c>topic</c>
+            <c><spanx style="verb">topic</spanx></c>
             <c>String</c>
             <c>A string identifying the topic, conforming to the OpenAjax Hub
             Topic Naming Rules. Topic wildcard values (e.g. "*") are NOT permitted.</c>
-            <c>payload</c>
+            <c><spanx style="verb">payload</spanx></c>
             <c>JSON Object or Primitive</c>
             <c>The data that is being published. This can be be any object
             serializable as JSON or a JavaScript primitive such as a String,
@@ -9341,11 +9349,11 @@
             by-value, to all subscribers to the named topic.</c>
           </texttable>
         
-          <t>The "publish" method is anonymous. That is, the method does not
-          automatically include any information identifying the source of 
-          the message.</t>
+          <t>The <spanx style="verb">gadgets.Hub.publish</spanx> method is anonymous. 
+          That is, the method does not include any information identifying the 
+          source of the message.</t>
 
-          <figure><preamble>For example,</preamble><artwork>
+          <figure><preamble>For example:</preamble><artwork>
   var message = {
     "id":"http://example.org/foo/bar",
     "title": "My Example"
@@ -9375,25 +9383,25 @@
               <ttcol>Name</ttcol>
               <ttcol>Type</ttcol>
               <ttcol>Description</ttcol>
-              <c>topic</c>
+              <c><spanx style="verb">topic</spanx></c>
               <c>String</c>
               <c>A string identifying the topic, conforming to the OpenAjax Topic
               Naming Rules. Wildcards (e.g. "*") MAY be used in order to subscribe 
               to multiple topics in a single subscription request.</c>
-              <c>callback</c>
+              <c><spanx style="verb">callback</spanx></c>
               <c>Function</c>
               <c>A callback function that is invoked when a message is published
               to the topic.</c>
-              <c>scope</c>
+              <c><spanx style="verb">scope</spanx></c>
               <c>object</c>
               <c>When the callback or onCompleteCallback functions are invoked, the
               JavaScript "this" keyword refers to this scope object. If no scope is
               provided, default is window.</c>
-              <c>onCompleteCallback</c>
+              <c><spanx style="verb">onCompleteCallback</spanx></c>
               <c>Function</c>
               <c>A callback function that is invoked to tell the client 
               application whether the subscribe operation succeeded or failed.</c>
-              <c>subscriberData</c>
+              <c><spanx style="verb">subscriberData</spanx></c>
               <c>JSON Object</c>
               <c>Arbitrary, subscriber provided data that is returned back to the
               client application in the subscriberData parameter of the callback
@@ -9412,7 +9420,7 @@
   subId = gadgets.Hub.subscribe("org.example.my.object", callback);
           </artwork></figure>  
             
-          <t>See� the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe">OpenAjax Hub documentation</eref>� for
+          <t>See the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.Hub.prototype.subscribe">OpenAjax Hub documentation</eref>� for
           more information</t>
         </section>
         
@@ -9431,7 +9439,7 @@
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
-            <c>subscriptionId</c>
+            <c><spanx style="verb">subscriptionId</spanx></c>
             <c>String</c>
             <c>The subscriptionId is the opaque string that is returned from the
                 subscribe(...) method.</c>
@@ -9446,8 +9454,8 @@
         </section>
 
         <section  title="Additional Methods" anchor="OtherMethods">
-          <t>The 'gadgets.Hub' object is an instance of the IframeHubClient 
-          as defined by the OpenAjax Hub specification and supports the 
+          <t>The <spanx style="verb">gadgets.Hub</spanx> object is an instance 
+          of the IframeHubClient as defined by the OpenAjax Hub specification and supports the 
           additional methods defined for objects of that type. Please refer
           to the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Hub_2.0_Specification_Managed_Hub_APIs#OpenAjax.hub.IframeHubClient">OpenAjax Hub documentation</eref> 
           for more information.</t>
@@ -9460,7 +9468,7 @@
       <t>As illustrated by the previous example, the "pubsub-2" feature 
       provides a means of allowing developers to declaratively describe
       the which topics an application utilizes directly within the feature 
-      declaration within the "ModulePrefs" element.</t>
+      declaration within the &lt;ModulePrefs&gt; element.</t>
       
       <figure><preamble>For example:</preamble>
       <artwork>
@@ -9505,58 +9513,48 @@
       <texttable align="left">
           <ttcol>Attribute</ttcol>
           <ttcol>Type</ttcol>
-          <ttcol>Usage</ttcol>
           <ttcol>Description</ttcol>
-          <c>name</c>
+          <c><spanx style="verb">name</spanx></c>
           <c>String</c>
-          <c>Required</c>
           <c>
-          The dot-delimited topic name, e.g. "org.example.randomNumber". This
+          The dot-delimited topic name, e.g. <spanx style="verb">org.example.randomNumber</spanx>. This
           name follows the rules defined in the <eref target="http://www.openajax.org/member/wiki/OpenAjax_Metadata_1.0_Specification_Widget_Metadata#topic_element_name_attribute">OpenAjax Widget Metadata
-          specification</eref>. Expression Language statements MAY be used 
-          within the value so long as the resulting substitution results in a
-          properly formatted topic name.</c>
+          specification</eref>.</c>
 
-          <c>type</c>
+          <c><spanx style="verb">type</spanx></c>
           <c>String</c>
-          <c>Optional</c>
-          <c>Type name for the event's payload data. When not specificed, any
+          <c>Optional type name for the event's payload data. When not specificed, any
           type will be allowed. See <xref target="EventDataTypes">Event Data Types</xref>.</c>
 
-          <c>title</c>
+          <c><spanx style="verb">title</spanx></c>
           <c>String</c>
-          <c>Optional</c>
-          <c>A human-readable descriptive title for this topic. When 
+          <c>An optional, human-readable descriptive title for this topic. When 
           not specified, the value of the "name" attribute will be used.</c>
 
-          <c>publish</c>
-          <c>boolean</c>
-          <c>Optional</c>
-          <c>Indicates if the application publishes data to this topic. 
+          <c><spanx style="verb">publish</spanx></c>
+          <c>Boolean</c>
+          <c>Optionally indicates if the application publishes data to this topic. 
           The default value is "false".</c>
 
-          <c>subscribe</c>
-          <c>boolean</c>
-          <c>Optional</c>
-          <c>Indicates if the application subscribes to data published to this topic. 
-          The default value is "false".</c>
+          <c><spanx style="verb">subscribe</spanx></c>
+          <c>Boolean</c>
+          <c>Optionally indicates if the application subscribes to data 
+          published to this topic. The default value is "false".</c>
 
-          <c>description</c>
+          <c><spanx style="verb">description</spanx></c>
           <c>String</c>
-          <c>Optional</c>
           <c>
-          The textual description of the application's publish or subscribe
+          An optional, textual description of the application's publish or subscribe
           endpoint. This can be used as an indication of the application's behavior.
           Consider an application that subscribes to a topic "com.example.address".
           The description might read, "When this application receives an event on 
           the com.example.address topic, it displays mass transit options 
           within 10km of the address received as the event payload."</c>
 
-          <c>aboutUrl</c>
+          <c><spanx style="verb">aboutUrl</spanx></c>
           <c>String</c>
-          <c>Optional</c>
           <c>
-          A URL pointing to a resource that provides more extensive
+          An optional absolute URL pointing to a resource that provides more extensive
           descriptive information than can be provided in the description
           attribute.</c>
       </texttable>
@@ -9583,7 +9581,8 @@
         type information is specified when the data is published to a topic 
         is undefined by this specification.</t> 
         
-        <t>A developer can use the "type" attribute on the &lt;Topic&gt; element to indicate 
+        <t>A developer can use the <spanx style="verb">type</spanx> 
+        attribute on the &lt;Topic&gt; element to indicate 
         the specific type of data it publishes to a topic or is interested in 
         receiving. Containers that support typing of payloads can use this 
         information to more intelligently route data to interested subscribers.
@@ -9591,85 +9590,85 @@
         of type "org.example.foo" from the topic "my.topic" while another might
         only want type "org.example.bar" payloads.</t>
 
-        <t>If data types are supported, they MUST be identified using the 
-        following dot-delimited syntax and SHOULD conform to the "reverse DNS" 
-        naming convention (e.g. "org.example.foo"):</t>
+        <t>If data types are supported, they MUST be identified using either 
+        as absolute IRI's as defined in Section 4.4 of <xref target="core-api"/> or
+        as String conforming to datatype construction defined below:</t>
         
         <figure><artwork>
   prefix = token *["." token] "."
   datatype = [prefix] token
         </artwork></figure>
         
-        <t>Any type other than those listed in the table below MUST have 
-        a prefix consisting of at least one token. The prefix "org.opensocial." 
-        is reserved for types defined by the OpenSocial specification 
-        (e.g. "org.opensocial.Person").</t>
+        <t>Any type other than those listed in the table below MUST either be 
+        an absolute IRI or have a prefix consisting of at least one token. 
+        The prefix "org.opensocial." is reserved for types defined by the 
+        OpenSocial specification (e.g. "org.opensocial.Person").</t>
 
         <texttable align="left">
           <ttcol>Type Name</ttcol>
           <ttcol>Description</ttcol>
-          <c>string</c>
+          <c><spanx style="verb">string</spanx></c>
           <c>A JavaScript string</c>
-          <c>number</c>
+          <c><spanx style="verb">number</spanx></c>
           <c>A JavaScript number </c>
-          <c>boolean</c>
+          <c><spanx style="verb">boolean</spanx></c>
           <c>A JavaScript boolean </c>
-          <c>array</c>
+          <c><spanx style="verb">array</spanx></c>
           <c>A JSON-serializable Array, e.g. [ 1, 1, 2, 3, 5, 8 ]. The element type/s 
           are not specified when the generic "array" type is used.</c>
-          <c>object</c>
+          <c><spanx style="verb">object</spanx></c>
           <c>A JSON-serializable Object, e.g. { foo: "bar", baz: "boo" }. The specifics 
           of the object are not specified when the generic "object" type is used.</c>
-          <c>null</c>
+          <c><spanx style="verb">null</spanx></c>
           <c>A JavaScript null</c>
-          <c>length</c>
+          <c><spanx style="verb">length</spanx></c>
           <c>Any CSS length value (e.g. "3px")</c>
-          <c>color</c>
+          <c><spanx style="verb">color</spanx></c>
           <c>Any CSS color value (e.g. "#00ff00")</c>
-          <c>id</c>
+          <c><spanx style="verb">id</spanx></c>
           <c>A string value that is used as a unique identifier</c>
-          <c>class</c>
+          <c><spanx style="verb">class</spanx></c>
           <c>Zero or more CSS class names, separated by spaces</c>
-          <c>style</c>
+          <c><spanx style="verb">style</spanx></c>
           <c>A string that could be used as value for a CSS 'style' attribute</c>
-          <c>url</c>
+          <c><spanx style="verb">url</spanx></c>
           <c>An absolute URL value</c>
-          <c>html</c>
+          <c><spanx style="verb">html</spanx></c>
           <c>A fragment of HTML markup</c>
-          <c>countrycode</c>
+          <c><spanx style="verb">countrycode</spanx></c>
           <c>An ISO 3166 Country Code</c>
-          <c>languagecode</c>
+          <c><spanx style="verb">languagecode</spanx></c>
           <c>An ISO 639-2 Language Code</c>
-          <c>email</c>
+          <c><spanx style="verb">email</spanx></c>
           <c>A string that represents an e-mail address</c>
-          <c>person</c>
+          <c><spanx style="verb">person</spanx></c>
           <c>A string that holds a person's name</c>
-          <c>postalcode</c>
+          <c><spanx style="verb">postalcode</spanx></c>
           <c>A string that represents a postal code</c>
-          <c>phone</c>
+          <c><spanx style="verb">phone</spanx></c>
           <c>A string that represents a phone number</c>
-          <c>date</c>
+          <c><spanx style="verb">date</spanx></c>
           <c>A string that represents a date. MUST be expressed using the 
           "Date Time String Format" defined in the 
           [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification] 
           using one of the date-only forms. For example: "2009-12-15"</c>
-          <c>time</c>
+          <c><spanx style="verb">time</spanx></c>
           <c>A string that represents a time of day. MUST be expressed using 
           the "Date Time String Format" defined in the 
           [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification] 
           using one of the time-only forms. For example: "18:45:00Z" or "10:26:24-05:00"</c>
-          <c>timestamp</c>
+          <c><spanx style="verb">timestamp</spanx></c>
           <c>A string that represents a date and time of day. MUST be expressed 
           using the "Date Time String Format" defined in the 
           [http://www.ecmascript.org/docs/tc39-2009-043.pdf ECMAScript5 specification]. 
           For example: "2009-12-15:18:45.000Z"</c>
-          <c>duration</c>
+          <c><spanx style="verb">duration</spanx></c>
           <c>A string that represents a duration. MUST have format 
           "PYYYY-DDDThh:mm:ss.fff". For example, "P0400-152T20:45:33.123" means 
           "400 years, 152 days, 20 hours, 45 minutes, 33.123 seconds, while 
           "P0003-000T01:56:22.000" means "3 years, 1 hour, 56 minutes and 22.000 seconds." 
           (Must use this one variant defined in the ISO 8601 standard). </c>
-          <c>*</c>
+          <c><spanx style="verb">*</spanx></c>
           <c>Asterisk, or missing type attribute, means "any datatype"</c>
         </texttable>
       </section>
@@ -9785,12 +9784,12 @@
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
             
-          <c>type</c>
+          <c><spanx style="verb">type</spanx></c>
           <c>String</c>
           <c>A required data type identifier as defined in <xref target="EventDataTypes"/>
           that specifies the kind of object that has been selected.</c>
             
-          <c>dataObject</c>
+          <c><spanx style="verb">dataObject</spanx></c>
           <c>Object or Primitive</c>
           <c>Any valid JSON-serializable object or JavaScript primitive that
           represents the selected data.</c>
@@ -9825,7 +9824,7 @@
            <ttcol>Name</ttcol>
            <ttcol>Type</ttcol>
            <ttcol>Description</ttcol>
-           <c>selection</c>
+           <c><spanx style="verb">selection</spanx></c>
            <c>Selection Objects[]</c>
            <c>An array of zero or more Selection objects.</c>
         </texttable>
@@ -9865,17 +9864,20 @@
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>event</c>
+          <c><spanx style="verb">event</spanx></c>
           <c>String</c>
           <c>The type of selection event (currently unused). Valid values 
-          are "selection", "preselection", "postselection" or null.</c>
-          <c>callback</c>
+          are <spanx style="verb">selection</spanx>, 
+          <spanx style="verb">preselection</spanx>, 
+          <spanx style="verb">postselection</spanx> or null.</c>
+          <c><spanx style="verb">callback</spanx></c>
           <c>Function</c>
           <c>The callback function that is called for the specified 
           selection event.</c>
         </texttable>
         
-        <t>Note that, currently, the "event" parameter is unused.</t>
+        <t>Note that, currently, the <spanx style="verb">event</spanx> 
+        parameter is unused.</t>
         
         <t>No return value is specified.</t>
         
@@ -9895,16 +9897,19 @@
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
           <ttcol>Description</ttcol>
-          <c>event</c>
+          <c><spanx style="verb">event</spanx></c>
           <c>String</c>
           <c>The type of selection event (currently unused). Valid values 
-          are "selection", "preselection", "postselection" or null.</c>
-          <c>callback</c>
+          are <spanx style="verb">selection</spanx>, 
+          <spanx style="verb">preselection</spanx>, 
+          <spanx style="verb">postselection</spanx> or null.</c>
+          <c><spanx style="verb">callback</spanx></c>
           <c>Function</c>
            <c>The callback function to be unregistered.</c>
         </texttable>
         
-        <t>Note that, currently, the "event" parameter is unused.</t>
+        <t>Note that, currently, the <spanx style="verb">event</spanx> 
+        parameter is unused.</t>
         
         <t>No return value is specified.</t>
         
@@ -9953,29 +9958,29 @@
                 <ttcol>View Name</ttcol>
                 <ttcol>Alias</ttcol>
                 
-                <c>about</c>
-                <c>gadgets.views.ViewType.ABOUT</c>
+                <c><spanx style="verb">about</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.ABOUT</spanx></c>
                 
-                <c>canvas</c>
-                <c>gadgets.views.ViewType.CANVAS</c>
+                <c><spanx style="verb">canvas</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.CANVAS</spanx></c>
                 
-                <c>embedded</c>
-                <c>gadgets.views.ViewType.EMBEDDED</c>
+                <c><spanx style="verb">embedded</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.EMBEDDED</spanx></c>
                 
-                <c>home</c>
-                <c>gadgets.views.ViewType.HOME</c>
+                <c><spanx style="verb">home</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.HOME</spanx></c>
                 
-                <c>preferences</c>
-                <c>gadgets.views.ViewType.PREFERENCES</c>
+                <c><spanx style="verb">preferences</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.PREFERENCES</spanx></c>
                 
-                <c>preview</c>
-                <c>gadgets.views.ViewType.PREVIEW</c>
+                <c><spanx style="verb">preview</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.PREVIEW</spanx></c>
                 
-                <c>profile</c>
-                <c>gadgets.views.ViewType.PROFILE</c>
+                <c><spanx style="verb">profile</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.PROFILE</spanx></c>
                 
-                <c>support</c>
-                <c>gadgets.views.ViewType.SUPPORT</c>
+                <c><spanx style="verb">support</spanx></c>
+                <c><spanx style="verb">gadgets.views.ViewType.SUPPORT</spanx></c>
               </texttable>
             </section>
             
@@ -9991,7 +9996,7 @@
                 <ttcol>Alias</ttcol>
                 <ttcol>Description</ttcol>
                 
-                <c>TAB</c> 
+                <c><spanx style="verb">TAB</spanx></c> 
                 <c>gadgets.views.ViewType.TAB</c>
                 <c>When containers support the ability to display content using
                 a tabbed interface (similar to those used by modern Web browser
@@ -9999,14 +10004,14 @@
                 is used to request that a particular Application View be displayed
                 within it's own separate tab.</c>
                 
-                <c>DIALOG</c>
+                <c><spanx style="verb">DIALOG</spanx></c>
                 <c>gadgets.views.ViewType.DIALOG</c>
                 <c>The <spanx style="verb">DIALOG</spanx> View Target is used
                 to request that a particular Application View be displayed within
                 a popup up box in a way that allows the Viewer to continue 
                 interacting with the rest of the container.</c>
                 
-                <c>MODALDIALOG</c>
+                <c><spanx style="verb">MODALDIALOG</spanx></c>
                 <c>gadgets.views.ViewType.MODALDIALOG</c>
                 <c>The <spanx style="verb">MODALDIALOG</spanx> View Target is 
                 used to request that a particular Application View be displayed
@@ -10014,7 +10019,7 @@
                 with it prior to continuing any further interaction with the 
                 rest of the container.</c>
                 
-                <c>FLOAT</c>
+                <c><spanx style="verb">FLOAT</spanx></c>
                 <c>gadgets.views.ViewType.FLOAT</c>
                 <c>The <spanx style="verb">FLOAT</spanx> View Target is similar
                 to the <spanx style="verb">DIALOG</spanx> View Target with the 
@@ -10022,7 +10027,7 @@
                 the container SHOULD render the view without including any 
                 additional User Interface elements (also known as "chrome").</c>
                 
-                <c>SIDEBAR</c> 
+                <c><spanx style="verb">SIDEBAR</spanx></c> 
                 <c>gadgets.views.ViewType.SIDEBAR</c>
                 <c>Some containers can reserve a portion of the visible user 
                 interface to the right or left of the primary content for the 
@@ -10165,7 +10170,7 @@
             <section title="gadgets.views.openGadget" anchor="gadgets.views.openGadget">
             
               <t>The <spanx style="verb">gadgets.views.openGadget</spanx> 
-              method requests that a view be rendered by the 
+              method requests that an application view be rendered by the 
               container.</t>
             
               <figure><artwork>
@@ -10178,7 +10183,7 @@
                 <ttcol>Name</ttcol>
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
-                <c>resultCallback</c>
+                <c><spanx style="verb">resultCallback</spanx></c>
                 <c>Function</c>
                 <c>Specifies a callback Function that will be invoked by the
                 container when the requested application has been closed using the 
@@ -10186,7 +10191,7 @@
                 the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
                 was called within the opened view, then the value specified
                 will be passed to the callback function as a parameter.</c>
-                <c>navigateCallback</c>
+                <c><spanx style="verb">navigateCallback</spanx></c>
                 <c>Function</c>
                 <c>Specifies a callback Function that will be invoked by the 
                 container when the requested view has been rendered. The 
@@ -10195,7 +10200,7 @@
                 to the function as parameters. The identifier can be used 
                 with the <spanx style="verb">gadgets.views.close</spanx> method
                 to subsequently close the opened view.</c>
-                <c>opt_params</c>
+                <c><spanx style="verb">opt_params</spanx></c>
                 <c>Object</c>
                 <c>Specifies optional parameters that affect how the
                 view is to be rendered.</c>
@@ -10204,38 +10209,38 @@
               <t>No return value is specified for the method.</t>
 
               <t>The following optional items MAY be specified as properties
-              on the "opt_params" parameter value:</t>
+              on the <spanx style="verb">opt_params</spanx> parameter value:</t>
   
               <texttable align="left">
                 <ttcol>Name</ttcol>
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
-                <c>view</c>
+                <c><spanx style="verb">view</spanx></c>
                 <c>String </c>
                 <c>Identifies the specific view the container is to 
                 render. If not provided, the container will render the
                 default unnamed view.</c>
-                <c>viewTarget </c>
+                <c><spanx style="verb">viewTarget</spanx></c>
                 <c>String </c>
                 <c>Identifies where and how the container is to render the 
                 view, specified as a 
                 <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
                 For example, specifying a viewTarget of <spanx style="verb">MODALDIALOG</spanx> 
                 will cause the view to be rendered by the container in a modal
-                popup dialog box; whereas specifying a viewTarget of "tab"
+                popup dialog box; whereas specifying a viewTarget of <spanx style="verb">TAB</spanx>
                 will cause the container to render the view within a new 
                 container tab.</c>  
-                <c>viewParams </c>
+                <c><spanx style="verb">viewParams</spanx></c>
                 <c>Object</c>
                 <c>An arbitrary collection of view parameters to pass along
                 to the view being rendered.</c>
-                <c>coordinates</c>
+                <c><spanx style="verb">coordinates</spanx></c>
                 <c><xref target="gadgets.views.coordinates">Coordinate Object</xref></c>
-                <c>When viewTarget equals "FLOAT", the coordinates object
-                MAY be used to provide suggested positioning information
-                the container can use when deciding where, within the 
-                container, the view is to be renderered relative to the 
-                opening application.</c>
+                <c>When viewTarget equals <spanx style="verb">FLOAT</spanx>, 
+                the coordinates object MAY be used to provide suggested 
+                positioning information the container can use when deciding 
+                where, within the container, the view is to be renderered 
+                relative to the opening application.</c>
               </texttable>
               
               <figure><preamble>For example, in the following sample, code 
@@ -10289,15 +10294,15 @@
                 <ttcol>Name</ttcol>
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
-                <c>resultCallback</c>
-                 <c>Function</c>
+                <c><spanx style="verb">resultCallback</spanx></c>
+                <c>Function</c>
                 <c>Specifies a callback Function that will be invoked by the
                 container when the specified view has been closed using the 
                 <spanx style="verb">gadgets.views.close</spanx> method. If 
                 the <spanx style="verb">gadgets.views.setReturnValue</spanx> 
                 was called within the opened view, then the value specified
                 will be passed to the callback function as a parameter.</c>
-                <c>navigateCallback</c>
+                <c><spanx style="verb">navigateCallback</spanx></c>
                 <c>Function</c>
                 <c>Specifies a callback Function that will be invoked by the 
                 container when the requested view has been rendered. The 
@@ -10306,13 +10311,13 @@
                 to the function as parameters. The identifier can be used 
                 with the <spanx style="verb">gadgets.views.close</spanx> method
                 to subsequently close the opened view.</c>
-                <c>dataModel</c>
+                <c><spanx style="verb">dataModel</spanx></c>
                 <c>An <xref target="Embedded-Experiences"/> Object</c>
                 <c>Specifies the Embedded Experiences Data model to use 
                 when rendering. The model is passed in as a JavaScript 
                 object conforming to the JSON embedded experiences format
                 as defined in <xref target="Embedded-Experiences"/>.</c>
-                <c>opt_params</c>
+                <c><spanx style="verb">opt_params</spanx></c>
                 <c>Object</c>
                 <c>Specifies optional parameters that affect how the
                 view is to be rendered.</c>
@@ -10321,38 +10326,44 @@
               <t>No return value is specified for the method.</t>
 
               <t>The following optional items MAY be specified as properties
-              on the "opt_params" parameter value:</t>
+              on the <spanx style="verb">opt_params</spanx> parameter value:</t>
     
               <texttable align="left">
                 <ttcol>Name</ttcol>
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
-                <c>view</c>
+                <c><spanx style="verb">view</spanx></c>
                 <c>String </c>
                 <c>Identifies the specific view the container is to 
-                render. If not provided, the container will render the
-                default unnamed view.</c>
-                <c>viewTarget </c>
+                render. If not provided, and the embedded experience
+                contains a preferred experience that names a preferred
+                view to display, that view will be displayed. If a 
+                preferred experience is not specified, then the container
+                will attempt to render a view named <spanx style="verb">embedded</spanx>.</c>
+                <c><spanx style="verb">viewTarget</spanx></c>
                 <c>String </c>
                 <c>Identifies where and how the container is to render the 
                 view, specified as a 
                 <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
-                For example, specifying a viewTarget of "modalDialog" will
+                For example, specifying a viewTarget of 
+                <spanx style="verb">MODALDIALOG></spanx> will
                 cause the view to be rendered by the container in a modal
-                popup dialog box; whereas specifying a viewTarget of "tab"
-                will cause the container to render the view within a new 
-                container tab.</c>  
-                <c>viewParams</c>
+                popup dialog box. If not provided, and the embedded experience
+                contains a preferred experience that names a preferred
+                view target, that target will be used. If a view target is 
+                not specified, a container selected default target will be 
+                used.</c>  
+                <c><spanx style="verb">viewParams</spanx></c>
                 <c>Object</c>
                 <c>An arbitrary collection of view parameters to pass along
                 to the view being rendered.</c>
-                <c>coordinates</c>
+                <c><spanx style="verb">coordinates</spanx></c>
                 <c><xref target="gadgets.views.coordinates">Coordinate Object</xref></c>
-                <c>When viewTarget equals "FLOAT", the coordinates object
-                MAY be used to provide suggested positioning information
-                the container can use when deciding where, within the 
-                container, the view is to be renderered relative to the 
-                opening view.</c>
+                <c>When viewTarget equals <spanx style="verb">FLOAT</spanx>, 
+                the coordinates object MAY be used to provide suggested 
+                positioning information the container can use when deciding 
+                where, within the container, the view is to be renderered 
+                relative to the opening view.</c>
               </texttable>
               
               <figure><preamble>For example, in the following sample, code 
@@ -10406,10 +10417,10 @@
                 <ttcol>Name</ttcol>
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
-                <c>url</c>
+                <c><spanx style="verb">url</spanx></c>
                 <c>String</c>
                 <c>The URL of the web page whose content will be displayed.</c>
-                <c>navigateCallback</c>
+                <c><spanx style="verb">navigateCallback</spanx></c>
                 <c>Function</c>
                 <c>Specifies a callback Function that will be invoked by the 
                 container when the requested view has been rendered. The 
@@ -10418,13 +10429,13 @@
                 to the function as parameters. The identifier can be used 
                 with the <spanx style="verb">gadgets.views.close</spanx> method
                 to subsequently close the opened view.</c>
-                <c>opt_viewTarget </c>
+                <c><spanx style="verb">opt_viewTarget</spanx></c>
                 <c>String </c>
                 <c>Optionally identifies where and how the container is to render the 
                 view, specified as a <xref target="gadgets.views.ViewType.ViewTarget">View Target</xref>.
-                For example, specifying a viewTarget of "modalDialog" will
+                For example, specifying a viewTarget of <spanx style="verb">MODALDIALOG</spanx> will
                 cause the URL to be rendered by the container within a modal
-                popup dialog box; whereas specifying a viewTarget of "tab"
+                popup dialog box; whereas specifying a viewTarget of <spanx style="verb">TAB</spanx>
                 will cause the container to render the URL within a new 
                 container tab.</c>
               </texttable>
@@ -10468,7 +10479,7 @@
                 <ttcol>Name</ttcol>
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
-                <c>opt_site_handler</c>
+                <c><spanx style="verb">opt_site_handler</spanx></c>
                 <c>Object</c>
                 <c>Optional parameter which specifies handler to what site 
                 to close. If null or unspecified, it will close the view 
@@ -10575,38 +10586,42 @@
                 <ttcol>Type</ttcol>
                 <ttcol>Description</ttcol>
                 
-                <c>top</c>
+                <c><spanx style="verb">top</spanx></c>
                 <c>Number</c>
                 <c>Specifies the suggested absolute top position, in pixels,
                 of the rendered content relative to the top position of the 
-                opening view. If "top" is specified, the "bottom" property
-                MUST NOT be specified.</c>
+                opening view. If <spanx style="verb">top</spanx> is specified, 
+                the <spanx style="verb">bottom</spanx> property MUST NOT be specified.</c>
                 
-                <c>bottom</c>
+                <c><spanx style="verb">bottom</spanx></c>
                 <c>Number</c>
                 <c>Specifies the suggested absolute bottom position, in pixels,
                 of the rendered content relative to the bottom position of the 
-                opening view. If "bottom" is specified, the "top" property
+                opening view. If <spanx style="verb">bottom</spanx> 
+                is specified, the <spanx style="verb">top</spanx> property 
                 MUST NOT be specified.</c>
                   
-                <c>left</c>
+                <c><spanx style="verb">left</spanx></c>
                 <c>Number</c>
                 <c>Specifies the suggested absolute left position, in pixels,
                 of the rendered content relative to the bottom position of the
-                opening view. If "left" is specified, the "right" property
-                MUST NOT be specified.</c>
+                opening view. If <spanx style="verb">left</spanx> is specified, 
+                the <spanx style="verb">right</spanx> property MUST NOT be 
+                specified.</c>
                 
-                <c>right</c>
+                <c><spanx style="verb">right</spanx></c>
                 <c>Number</c>
                 <c>Specifies the suggested absolute right position, in pixels,
                 of the rendered content relative to the right position of the
-                opening view. If "right" is specified, the "left" property
-                MUST NOT be specified.</c>
+                opening view. If <spanx style="verb">right</spanx> is specified, 
+                the <spanx style="verb">left</spanx> property MUST NOT be 
+                specified.</c>
                   
               </texttable>
                 
-              <t>Support for the "coordinates" property is only defined when
-              the "viewTarget" property is equal to "FLOAT".</t>
+              <t>Support for the <spanx style="verb">coordinates</spanx> 
+              property is only defined when the <spanx style="verb">viewTarget</spanx> 
+              property is equal to <spanx style="verb">FLOAT</spanx>.</t>
               
               <figure><preamble>For example:</preamble><artwork>
   gadgets.views.openGadget(
