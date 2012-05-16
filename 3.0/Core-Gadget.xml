@@ -6384,7 +6384,7 @@
       performance. Examples of such modifications can include changing the
       URLs of external resources used by the Application such that those 
       resources may possibly be cache and retrieved from a Content Distribution
-      Network (cdn); or optimizing CSS stylesheets and JavaScript code defined
+      Network (CDN); or optimizing CSS stylesheets and JavaScript code defined
       by the Specificaiton document.</t>
       
       <t>The Content Rewriting Feature allows an Application developer the 
@@ -6419,7 +6419,7 @@
          <ttcol>Value</ttcol>
          <ttcol>Description</ttcol>
          
-         <c>expires</c>
+         <c><spanx style="verb">expires</spanx></c>
          <c>Integer</c>
          <c>The duration in seconds to force as maximum HTTP cache time for 
          content cached by the container via a rewritten URL. The default is 
@@ -6428,7 +6428,7 @@
          included in the HTTP Response returned when the original content is
          fetched from the remote location.</c>
          
-         <c>include-url</c>
+         <c><spanx style="verb">include-url</spanx></c>
          <c>String</c>
          <c>Any URL which contains this parameters value as a case-insensitive 
          substring is considered rewriteable. That is, the container MAY choose
@@ -6437,47 +6437,53 @@
          algorithms on the fetched respresentation of the resource. For instance,
          if the resource returns JavaScript code and the <spanx style="verb">minify-js</spanx>
          parameter is true, the container MAY choose to optimize the provided 
-         JavaScript code in some way. The literal string "*" is a special 
-         case and implies all URLs. If not specified an entry with the value "*" 
-         is assumed. This parameter MAY appear multiple times within the 
-         &lt;Optional&gt; or &lt;Require&lt; tags.</c>
+         JavaScript code in some way. The literal string <spanx style="verb">*</spanx> 
+         is a special case and implies all URLs. If not specified an entry with 
+         the value <spanx style="verb">*</spanx> is assumed. This parameter 
+         MAY appear multiple times.</c>
          
-         <c>exclude-url</c>
+         <c><spanx style="verb">exclude-url</spanx></c>
          <c>String</c>
          <c>Any URL which contains this parameters value as a
         case-insensitive substring is excluded from rewriting. The literal string
-        "*" implies all URLs and effectively disables all rewriting. This parameter 
-        MAY appear multiple times within the &lt;Optional&gt; or &lt;Require&lt; tags.</c>
+        <spanx style="verb">*</spanx> implies all URLs and effectively disables 
+        all rewriting. This parameter MAY appear multiple times.</c>
          
-         <c>minify-css</c>
+         <c><spanx style="verb">minify-css</spanx></c>
          <c>Boolean</c>
          <c>Specifies whether the container can attempt to optimize CSS in style 
          tags and referenced CSS resources that have not been explicitly excluded
          from rewriting using the <spanx style="verb">exclude-url</spanx> 
-         parameter. Valid values are "true" or "false". Default is "true"</c>
+         parameter. Valid values are <spanx style="verb">true</spanx> or 
+         <spanx style="verb">false</spanx>. Default is <spanx style="verb">true</spanx></c>
          
-         <c>minify-js</c>
+         <c><spanx style="verb">minify-js</spanx></c>
          <c>Boolean</c>
          <c>Specifies whether the container can attempt to optimize JavaScript 
          contained in Script tags or in referenced JavaScript resources that have 
          not been explicitly excluded from rewriting using the 
          <spanx style="verb">exclude-url</spanx> parameter. Valid values are 
-         "true" or "false". Default is "true"</c>
+         <spanx style="verb">true</spanx> or <spanx style="verb">false</spanx>. 
+         Default is <spanx style="verb">true</spanx></c>
          
-         <c>minify-html</c>
+         <c><spanx style="verb">minify-html</spanx></c>
          <c>Boolean</c>
          <c>Specifies whether the container can attempt to optimize HTML 
          provided directly by the Application or in referenced resources that have 
          not been explicitly excluded from rewriting using the 
          <spanx style="verb">exclude-url</spanx> parameter. Valid values are 
-         "true" or "false". Default is "true"</c>
+         <spanx style="verb">true</spanx> or <spanx style="verb">false</spanx>. 
+         Default is <spanx style="verb">true</spanx></c>
        </texttable>
        
-       <t>When values for both the "exclude-url" and "include-url" are specified,
-       Matches for "exclude-url" take precedence over matches for "include-url".</t>
+       <t>When values for both the <spanx style="verb">exclude-url</spanx> and 
+       <spanx style="verb">include-url</spanx> are specified, matches for 
+       <spanx style="verb">exclude-url</spanx> take precedence over matches for 
+       <spanx style="verb">include-url</spanx>.</t>
         
-       <t>Note that the special use of "*" to denote all URLs should not be
-       interpreted as support for GLOB or RegEx matching on strings.</t>
+       <t>Note that the special use of <spanx style="verb">*</spanx> to denote 
+       all URLs MUST NOT be interpreted as support for GLOB or RegEx matching 
+       on strings.</t>
        
        <t>For any resource that is not explicitly excluded from rewriting using 
        the <spanx style="verb">exclude-url</spanx> parameter, containers are 
@@ -6682,15 +6688,8 @@
         <spanx style="verb">openSocial</spanx>.</c>
   
         <c><spanx style="verb">gadget</spanx></c>
-        <c>An absolutely IRI to an OpenSocial Application specification 
+        <c>An absolute IRI to an OpenSocial Application specification 
         document that defines the application to be embedded.</c>
-        
-        <c><spanx style="verb">imageData</spanx></c>
-        <c>An optional string value that containing Base64-encoded binary data for an
-        image resource that represents the embedded content. This can be 
-        the same image resource linked to by the previewImage property or 
-        a separate image. An embedded experience SHOULD NOT contain both 
-        the imageData and previewImage properties.</c>
         
         <c><spanx style="verb">preferredExperience</spanx></c>
         <c>An optional collection of properties that describe the preferred 
@@ -6701,8 +6700,15 @@
         <c>An optional absolute IRI of an image that can be used as a preview for the 
         embedded content.</c>
         
+        <c><spanx style="verb">previewImageData</spanx></c>
+        <c>An optional string value containing Base64-encoded binary data for an
+        image resource that represents the embedded content. This can be 
+        the same image resource linked to by the previewImage property or 
+        a separate image. An embedded experience SHOULD NOT contain both 
+        the previewImageData and previewImage properties.</c>
+        
         <c><spanx style="verb">url</spanx></c>
-        <c>An absolutely IRI of a web page to be used as an 
+        <c>An absolute IRI of a web page to be used as an 
         Embedded Experience.</c>
               
       </texttable>
@@ -6713,14 +6719,13 @@
       the Embedded Experience, the decision about which to render is left to 
       the container.</t>
       
-      <t>When serialized as JSON, the embedded experience take the form of a 
-      single JSON Object with four distinct properties: <spanx style="verb">context</spanx>, 
-      <spanx style="verb">gadget</spanx>, <spanx style="verb">previewImage</spanx> 
-      and <spanx style="verb">url</spanx>. Additional extension properties MAY be included
-      in the JSON object.</t>
+      <t>The value of the <spanx style="verb">context</spanx> property MUST
+      be a JSON Object. Any other value other than a JSON object MUST be 
+      ignored as if no <spanx style="verb">context</spanx> were specified at 
+      all.</t>
       
-      <figure><preamble>For instance, a simple JSON Embedded Experience
-      that references an OpenSocial Application:</preamble>
+      <figure><preamble>When serialized as JSON the embedded experience takes
+      the form of a single JSON Object as illustrated in the following example:</preamble>
       <artwork>
     {
       "gadget" : "http://www.example.com/embedded/gadget.xml",
@@ -6732,11 +6737,12 @@
     }
       </artwork></figure>
     
-      <t>When serialized as XML, it is expressed in the form of a root element 
-      &lt;embed&gt; containing four child elements, the order of which is 
+      <t>When serialized as XML, the data is expressed in the form of a root element 
+      &lt;embed&gt; containing six child elements, the order of which is 
       considered insignificant: &lt;context&gt;, 
-      &lt;gadget&gt;, &lt;previewImage&gt;, and &lt;url&gt;. Additional extension
-      elements and attributes MAY be included in the JSON object.</t>
+      &lt;gadget&gt;, &lt;preferredExperience&gt;, &lt;previewImage&gt;, 
+      &lt;previewImageData&gt; and &lt;url&gt;. Additional extension elements 
+      and attributes MAY be included.</t>
       
       <figure><preamble>For example,</preamble>
       <artwork><![CDATA[
@@ -6819,24 +6825,33 @@
   
       <section title="Considerations for Embedded Gadgets">
   
-        <section title="The &quot;embedded&quot; View">
-          <t>When rendering an application as an embedded experience, the container
-          will look within the specification document for a view named 
-          <spanx style="verb">embedded</spanx>. Gadget developers can use this 
-          view to specify a customized view of the application that is specific 
-          to the embedded experience. If an <spanx style="verb">embedded</spanx> 
-          view is not found within the specification document, the contain 
+        <section title="Views for Embedded Experiences">
+        
+          <t>When rendering an application as an embedded experience, the 
+          container will look within the embedded experience data model to 
+          see if there is a <xref target="preferredExperience">"preferred experience"</xref> 
+          object containing a <spanx style="verb">target</spanx> property. If 
+          the target object type is equal to <spanx style="verb">gadget</spanx> 
+          and there is a view property specified, the container will attempt to 
+          render the specified view. If no <spanx style="verb">view</spanx> 
+          property is specified, or the specified view does not exist, or there 
+          is no target object, or there is no preferred experience, the 
+          container will attempt to render a view named <spanx style="verb">embedded</spanx>. 
+          If an <spanx style="verb">embedded</spanx> view or the view 
+          specified within the target object of the embedded experience data 
+          model is not found within the gadget definition, the container 
           SHOULD render the application's default unnamed view.</t>
         </section>
   
         <section title="Accessing The Context">
-          <t>An embedded experience application has the option of requiring some
-          contextual information in order to render itself.  By abstracting the
-          data from the application itself, developers can develop
-          generalized applications that can be used for all embedded experiences of a
-          specific type.  For example, an application developed to display videos can 
-          be built so that the id of the video is contained and extracted from
-          the embedded experience's <spanx style="verb">context</spanx> property.</t>
+          <t>An embedded experience has the option of requiring some
+          contextual information necessary for the application to operate 
+          correctly.  By abstracting the data from the application itself, 
+          developers can develop generalized applications that can be used for 
+          all embedded experiences of a specific type.  For example, an 
+          application developed to display videos can be built so that the id 
+          of the video is contained and extracted from the embedded experience's 
+          <spanx style="verb">context</spanx> property.</t>
           
           <figure><artwork>
     {
@@ -6847,10 +6862,10 @@
     }
           </artwork></figure>
   
-          <t>Gadgets that are written to support embedded experiences MUST require 
+          <t>Applications that are written to support embedded experiences MUST require 
           the "embedded-experiences" feature within their specification document in 
           order to access the context.  The contextual data is stored within the 
-          <xref target="DataContext">data context</xref> object for the application.  
+          <xref target="DataContext">DataContext</xref> object for the application.  
           The key, <spanx style="verb">org.opensocial.ee.context</spanx>, is 
           used to access the context. Gadgets can add a listener on the data 
           context object for this key, or it may retreive the key's value by 
@@ -6882,6 +6897,31 @@
       &lt;/Content&gt;
     &lt;/Module&gt;</artwork>
           </figure>
+          
+          <t>As a convenient alternative to using the DataContext API to 
+          access the embedded experiences context, developers MAY choose to 
+          utilize the <spanx style="verb">gadgets.ee.registerContextListener</spanx>
+          API. The previous example, for instance, can be rewriten as:</t>
+          
+          <figure><artwork>
+  &lt;Module&gt;
+    &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
+      &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html" view="embedded"&gt;
+        &lt;![CDATA[
+          &lt;script type="text/javascript"&gt;
+            gadgets.ee.registerOnLoadHandler(function() {
+              gadgets.ee.registerContextListener(function(context) {
+                document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
+              });
+            });
+        &lt;/script&gt;
+         &lt;div id="contextData"&gt;&lt;/div&gt;
+    ]]&gt;
+    &lt;/Content&gt;
+  &lt;/Module&gt;
+          </artwork></figure>
   
           <section title="Additional Container Specific Context" anchor="rootContext">
     
@@ -6901,17 +6941,42 @@
             key will have an additional <spanx style="verb">openSocial</spanx> property, 
             whose value is itself a object with at least one property named 
             <spanx style="verb">associatedContext</spanx> whose value is an 
-            object whose properties are entirely defined by the specific 
-            container implementation.</t>
+            object whose properties MAY include the following:</t>
             
-            <figure><preamble>The following example illustrates how this 
+            <texttable>
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              
+              <c><spanx style="verb">id</spanx></c>
+              <c>String</c>
+              <c>The identifier of the OpenSocial Data Object that 
+              contains the embedded experience. The type of identifier 
+              will largely depend on the type of containing Data Object.
+              For instance, if the embedded experience is included within
+              an Activity Stream object, the <spanx style="verb">id</spanx>
+              property will specify the identity of the Activity Stream 
+              object.</c>
+              
+              <c><spanx style="verb">objectReference</spanx></c>
+              <c>Object</c>
+              <c>Allows the container to optionally include a JSON representation
+              of the Data Object containing the embedded experience.</c>
+              
+              <c><spanx style="verb">type</spanx></c>
+              <c>String</c>
+              <c>The Data Object type, as specified in Section 4.4 of 
+              <xref target="core-api"/>, of the Data Object containing
+              the embedded experience.</c>
+            </texttable>
+
+            <figure><preamble>The following example illustrates how 
             additional context information is accessed:</preamble><artwork>
     function myCallback(key) {
       var context = opensocial.data.getDataContext().getDataSet(key);
       var video_id = context["video-id"];
       
-      var associatedContext = context.opensocial.associatedContext;
-      // the properties are container specific
+      var associatedContext = context.openSocial.associatedContext;
       var ac_id = associatedContext.id;
       var ac_type = associatedContext.type;
       // ...
@@ -7076,7 +7141,7 @@
     {
       "gadget" : "...",
       ...,
-      "imageData" : "{Base64-encoded Image}",
+      "previewImageData" : "{Base64-encoded Image}",
       "preferredExperience" : {
         "target": {...},
         "display": {
@@ -7317,6 +7382,37 @@
     }</artwork>
       </figure>
       
+    </section>
+  
+    <section title="JavaScript API">
+    
+      <t>When the "embedded-experiences" feature is provided to an application,
+      the following JavaScript methods are enabled.</t>
+      
+      <section title="gadgets.ee.registerContextListener" anchor="gadgets.ee.registerContextListener">
+        <t>The <spanx style="verb">gadgets.ee.registerContextListener</spanx>
+        method registers a callback function with the container that is invoked
+        when an instance of an embedded experience has been initialized and it's
+        context is available.</t>
+        
+        <figure><artwork>
+  &lt;static&gt; &lt;Void&gt; gadgets.ee.registerContextListener(listener)
+        </artwork></figure>
+        
+        <t>The method takes as input a single parameter whose value is a
+        Function. When invoked, the context for the embedded experience 
+        will be passed as the only parameter.</t>
+        
+        <figure><preamble>For example:</preamble><artwork><![CDATA[
+  gadgets.ee.registerOnLoadHandler(function() {
+    gadgets.ee.registerContextListener(function(context) {
+      // ...
+    });
+  });        
+        ]]></artwork></figure>
+        
+      </section>
+    
     </section>
   
     </section> 
