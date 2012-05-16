@@ -373,9 +373,11 @@
           <figure><artwork>
   Module = element Module {
     attribute specificationVersion { version }?,
+    attribute xml:base { URI }?,
     undefinedAttribute*,
     ModulePrefs?,
     UserPref*,
+    Data?,
     Content+,
     extensionElement*
   }
