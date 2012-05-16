@@ -5915,13 +5915,15 @@
        <t>There is no XML namespace defined for the &lt;action&gt; element.</t>
      
        <figure><artwork>
+  pixels = 1*DIGIT "," 1*DIGIT
+       
   BaseAction = {
     attribute id { text },
     attribute label { text },
     attribute tooltip { text }?,
     attribute icon { IRI }?,
-    attribute iconSize { text }?,
-    attribute iconOffset { text }?,
+    attribute iconSize { pixels }?,
+    attribute iconOffset { pixels }?,
     attribute view { text }?,
     attribute viewTarget { "TAB" | "DIALOG" | "MODALDIALOG" | "FLOAT" | "SIDEBAR" }?,
     attribute url { IRI }?,
@@ -5935,35 +5937,51 @@
   
   TypeAction = element action {
     BaseAction,
-    attribute type { text }
+    attribute dataType { text }
   }
   
   action = PathAction | TypeAction
        </artwork></figure>
        
-       <t>The &lt;action&gt; element MUST contain the "id" and "label" 
-       attributes and either the "path" or "type" attributes. The "label"
-       specifies the plain-text label that a container SHOULD display 
-       when rendering the action. The "path" attribute specifies a 
+       <t>The &lt;action&gt; element MUST contain the <spanx style="verb">id</spanx> 
+       and <spanx style="verb">label</spanx> attributes and either the 
+       <spanx style="verb">path</spanx> or <spanx style="verb">type</spanx> 
+       attributes. The <spanx style="verb">label</spanx> specifies the 
+       plain-text label that a container SHOULD display when rendering the 
+       action. The <spanx style="verb">path</spanx> attribute specifies a 
        location with the container's user interface where the action 
-       is to be rendered. Possible values for the "path" attribute 
-       are discussed below. The "type" attribute specifies the OpenSocial
-       data type for which an action is to be associated. The value
-       MUST be a valid OpenSocial Data Type as specified by 
-       <xref target="core-api"/>.</t>
+       is to be rendered. Possible values for the <spanx style="verb">path</spanx> 
+       attribute are discussed below. The <spanx style="verb">dataType</spanx> 
+       attribute specifies the OpenSocial data type, as defined in Section 4.4 of 
+       <xref target="core-api" /> for which the action is to be associated. </t>
        
        <t>The following additional attributes MAY be specified:
          <list style="hanging">
            <t hangText="tooltip">Additional text that provides additional
            information about the action. Such text is typically displayed
            when the user hovers their mouse cursor over the action item.</t>
-           <t hangText="icon">An IRI to an image resource that the container
+           <t hangText="icon">An absolute IRI to an image resource that the container
            can display when rendering the action item. For instance, when
            rendering the action as a menu item, the contain can display the 
            icon next to the label. If a relative path is provided, it MUST
            be resolved relative to the URL of the specification document.</t>
-           <t hangText="iconSize">TODO: Need more info</t>
-           <t hangText="iconOffset">TODO: Need more info</t>
+           <t hangText="iconSize">A String whose value consists of two non-negative integer 
+           values, separated by a single comma (,) character, whose values 
+           indicate the display height and width, in pixels, of the image resource
+           identified by the <spanx style="verb">icon</spanx> property.
+           For instance, "16,16" indicates a size of 16 pixels by 16 pixels. If
+           the resource identified by the <spanx style="verb">icon</spanx>
+           property represents a collection of individual images grouped together
+           (known commonly as a sprite) the <spanx style="verb">iconSize</spanx>
+           indicates the height and width of a subset of the sprite to display
+           within user-interface elements.</t>
+           <t hangText="iconOffset">If the image resource identified by the <spanx style="verb">icon</spanx>
+           property represents a sprite, the <spanx style="verb">iconOffset</spanx>
+           property specifies the x and y coordinates of the top-left corner of
+           the subset of the sprite to display within user-interface elements.
+           The value is specified as a String whose value consists of two
+           non-negative integer values separated by a single comma (,) 
+           character.</t>
            <t hangText="view">The name of the application view the container 
            SHOULD render when the action is invoked.</t>
            <t hangText="viewTarget">Specifies where the specified view is 
@@ -5972,16 +5990,17 @@
            the main area allocated to the application by the container. Examples 
            include rendering within a modal dialog box, or within a 
            "sidebar" area provided by the container. Acceptable values for
-           the viewTarget attribute are "TAB", "DIALOG", "MODALDIALOG",
-           "FLOAT" and "SIDEBAR". If not specified, the view will be rendered
-           within the area already allocated to the application.</t>
+           the viewTarget attribute are <spanx style="verb">TAB</spanx>, 
+           <spanx style="verb">DIALOG</spanx>, <spanx style="verb">MODALDIALOG</spanx>,
+           <spanx style="verb">FLOAT</spanx> and <spanx style="verb">SIDEBAR</spanx>. 
+           If not specified, the view will be rendered within the area already 
+           allocated to the application.</t>
            <t hangText="url">An IRI to use in place of a callback function.
            When used, the container will display the content of the URL 
            when the action is selected rather than invoking a JavaScript
            callback to handle the action.</t>
          </list>
-       </t>
-     
+       </t>     
      </section>
      
      <section title="Action Contribution Paths" anchor="gadgets.actions.paths">
@@ -6057,41 +6076,65 @@
            <c>id</c>
            <c>The action identifier.</c>
 
-           <c>label</c>
-           <c>Text string to display for this action</c>
+           <c><spanx style="verb">label</spanx></c>
+           <c>A short human-readable label to display for this action that is 
+           typically displayed as a component of the user-interface that 
+           triggers the action.</c>
 
-           <c>path</c>
-           <c>The container-defined location for this action, as described in <eref target="#gadgets.actions.paths">Action Paths</eref>.  Example: path=container/menus/Edit</c>
+           <c><spanx style="verb">path</spanx></c>
+           <c>The container-defined location for this action, as described 
+           in <xref target="gadgets.actions.paths" />.</c>
 
-           <c>dataType</c>
-           <c>The Open Social Data type with which to associate this action. Example: opensocial.Person</c>
+           <c><spanx style="verb">dataType</spanx></c>
+           <c>The Open Social Data type, as specified in Section 4.4 of 
+           <xref target="core-api"/>, with which to associate the action.</c>
 
-           <c>tooltip</c>
-           <c>Tooltip to display on hovering over an icon</c>
+           <c><spanx style="verb">tooltip</spanx></c>
+           <c>A short, human-readable description of the action that is 
+           typically displayed when the Viewer hovers their mouse cursor
+           over user-interface elements that trigger the action.</c>
 
-           <c>icon</c>
-           <c>Path to image icon.</c>
+           <c><spanx style="verb">icon</spanx></c>
+           <c>An absolute URI to an image icon.</c>
 
-           <c>iconSize</c>
-           <c>TODO: need more info</c>
+           <c><spanx style="verb">iconSize</spanx></c>
+           <c>An object that contains two properties named <spanx style="verb">x</spanx>
+           and <spanx style="verb">y</spanx> whose values are non-negative integer 
+           values indicating the display height and width, in pixels, of the image resource
+           identified by the <spanx style="verb">icon</spanx> property.
+           For instance, {"x":16,"y":16} indicates a size of 16 pixels by 16 pixels. If
+           the resource identified by the <spanx style="verb">icon</spanx>
+           property represents a collection of individual images grouped together
+           (known commonly as a sprite) the <spanx style="verb">iconSize</spanx>
+           indicates the height and width of a subset of the sprite to display
+           within user-interface elements.</c>
 
-           <c>iconOffset</c>
-           <c>TODO: need more info</c>
+           <c><spanx style="verb">iconOffset</spanx></c>
+           <c>If the image resource identified by the <spanx style="verb">icon</spanx>
+           property represents a sprite, the <spanx style="verb">iconOffset</spanx>
+           property specifies the x and y coordinates of the top-left corner of
+           the subset of the sprite to display within user-interface elements.
+           The value is specified as an object containing two properties named
+           <spanx style="verb">x</spanx> and <spanx style="verb">y</spanx> whose
+           values non-negative integer values.</c>
 
-           <c>view</c>
+           <c><spanx style="verb">view</spanx></c>
            <c>The view ID the application should navigate to when the action is invoked.</c>
 
-           <c>viewTarget</c>
+           <c><spanx style="verb">viewTarget</spanx></c>
            <c>The target area to render the view.</c>
 
-           <c>url</c>
-           <c>Simple actions that are just links can specify a url instead of a callback function.</c>
+           <c><spanx style="verb">url</spanx></c>
+           <c>Simple actions that are just links can specify a url instead of 
+           a callback function.</c>
 
          </texttable>
          
-         <t>As is the case with the &lt;action&gt; element, the "id" and "label"
-         properties are both required and values for either the "path" or "type" 
-         MUST be provided. All other properties are optional.</t>
+         <t>As is the case with the &lt;action&gt; element, the <spanx style="verb">id</spanx> 
+         and <spanx style="verb">label</spanx> properties are both required and 
+         values for either the <spanx style="verb">path</spanx> or 
+         <spanx style="verb">dataType</spanx> MUST be provided. All other 
+         properties are optional.</t>
          
        </section>
        
@@ -6099,8 +6142,8 @@
        
          <t>Programmatically registers an action with the container. Note that
          if multiple actions are registered using the same identifier, each will
-         be registered separately by the container and both will be invoked when
-         either action is run.</t>
+         be registered separately by the container and all will be invoked when
+         the action is run.</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.addAction(action)
@@ -6137,33 +6180,25 @@
        <section title="gadgets.actions.updateAction" anchor="gadgets.actions.updateAction">
        
          <t>Modifies the specified action contributed to the container. Note 
-         that Applications are only permitted to modify it's own contributed
-         actions.</t>
+         that Applications are only permitted to modify their own contributed
+         actions. The container MUST NOT permit any application from modifying
+         the actions registered by any other application.</t>
        
          <figure><artwork>
   &lt;static&gt; gadgets.actions.updateAction(action)
          </artwork></figure>
 
-         <t>Input Parameters:</t>
-         
-         <texttable align="left">
-           <ttcol>Name</ttcol>
-           <ttcol>Type</ttcol>
-           <ttcol>Description</ttcol>
-           <c>action</c>
-           <c><xref target="gadgets.actions.actionobjects">Action Object</xref></c>
-           <c>A partial representation of the action to be updated within the container</c>
-         </texttable>
-
-         <t>The Action object passed in to the <spanx style="verb">gadgets.actions.updateAction</spanx>
-         method can be a partial representation of the action that contains 
-         the "id" of the action being modified and only the properties that 
-         need to be updated.</t>
+         <t>The method takes as input a single partial
+         <xref target="gadgets.actions.actionobjects">Action Object</xref>
+         containing, at a minimum, an <spanx style="verb">id</spanx> 
+         property specifying the identity of the action being modified and 
+         the properties to be updated.</t>
          
          <figure><preamble>For instance, to specify the callback function 
          for an action contributed using the &lt;action&gt; element, a developer
          would invoke <spanx style="verb">gadgets.actions.updateAction</spanx>
-         with an object that specifies only the "id" and "callback" properties:</preamble>
+         with an object that specifies only the <spanx style="verb">id</spanx> and 
+         <spanx style="verb">callback</spanx> properties:</preamble>
          <artwork>
   var mycallback = function(){
     ...
@@ -6187,17 +6222,10 @@
   &lt;static&gt; gadgets.actions.removeAction
          </artwork></figure>
        
-         <t>Input Parameters:</t>
-         <texttable align="left">
-           <ttcol>Name</ttcol>
-           <ttcol>Type</ttcol>
-           <ttcol>Description</ttcol>
-           <c>id</c>
-           <c>String</c>
-           <c>The ID of the action to be removed.</c>
-         </texttable>
+         <t>The method takes as input a single String whose value is the 
+         identifier of the action to be removed.</t>
          
-         <figure><preamble>For example,</preamble><artwork>
+         <figure><preamble>For example:</preamble><artwork>
   gadgets.actions.removeAction("com.acme.mycallaction");     
          </artwork></figure>
        </section>
@@ -6207,29 +6235,26 @@
          <t>Retrieves the collection of all actions registered at the specified 
          path and passes the result to the provided callback function as 
          a JavaScript Array. Note that paths are not considered to be hierarchical.
-         Passing in a path value of "container/navigationLinks" MUST NOT return any actions 
-         contributed to any path that can be considered subordinate to 
+         Passing in a path value of "container/navigationLinks" MUST NOT return 
+         any actions contributed to any path that can be considered subordinate to 
          "container/navigationLinks" (e.g. "container/navigationLinks/File").</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.getActionsByPath(path, callback)
          </artwork></figure>
        
-         <t>Input Parameters:</t>
-         <texttable align="left">
-           <ttcol>Name</ttcol>
-           <ttcol>Type</ttcol>
-           <ttcol>Description</ttcol>
-           <c>path</c>
-           <c>String</c>
-           <c>The String representation of the path to the actions</c>
-           <c>callback</c>
-           <c>Function</c>
-           <c>A callback function to handle the returned actions array</c>
-         </texttable>
+         <t>The method takes as input two parameters. The first of which is a
+         String specifying the path for which actions are being requested. The
+         second is a callback function the container will invoke and pass the 
+         array of actions to.</t>
          
-         <figure><preamble>For example,</preamble><artwork>
-  function listActions(actions) { ... }
+         <figure><preamble>For example:</preamble><artwork>
+  function listActions(actions) { 
+    for (var n = 0; n < actions.length; n++) {
+      var action = actions[n];
+      // ...
+    }
+  }
   
   gadgets.actions.getActionsByPath("container/navigationLinks", callback);
          </artwork></figure>
@@ -6246,23 +6271,21 @@
   &lt;static&gt; gadgets.actions.getActionsByDataType(dataType, callback)
          </artwork></figure>
          
-         <t>Input Parameters:</t>
-         <texttable align="left">
-           <ttcol>Name</ttcol>
-           <ttcol>Type</ttcol>
-           <ttcol>Description</ttcol>
-           <c>dataType</c>
-           <c>String</c>
-           <c>The String representation of the associated data type</c>
-           <c>callback</c>
-           <c>Function</c>
-           <c>A callback function to handle the returned actions array</c>
-         </texttable>
+         <t>The method takes as input two parameters. The first of which is a
+         String specifying the data type, as specified by Section 4.4 of 
+         <xref target="core-api"/>, for which actions are being requested. The
+         second is a callback function the container will invoke and pass the 
+         array of actions to.</t>
          
-         <figure><preamble>For example,</preamble><artwork>
-  function listActions(actions) { ... }
+         <figure><preamble>For example:</preamble><artwork>
+  function listActions(actions) {
+    for (var n = 0; n < actions.length; n++) {
+      var action = actions[n];
+      // ...
+    }
+  }
   
-  gadgets.actions.getActionsByType("opensocial.Person", callback);
+  gadgets.actions.getActionsByType("opensocial.Person", callback); // TODO: Proper URI Data Type
          </artwork></figure>
        </section>
        
@@ -6270,28 +6293,20 @@
        
          <t>Invokes the specified actions callback function; or, if the 
          "url" property is specified in place of a callback, causes the 
-         container to navigate to the specified IRI. Gadget's can use
+         container to navigate to the specified IRI. Application's can use
          this method to programmatically invoke an action.</t>
          
          <figure><artwork>
   &lt;static&gt; gadgets.actions.runAction (id, opt_selection)
          </artwork></figure>
 
-         <t>Input Parameters:</t>
-         <texttable align="left">
-           <ttcol>Name</ttcol>
-           <ttcol>Type</ttcol>
-           <ttcol>Description</ttcol>
-           <c>id</c>
-           <c>String</c>
-           <c>The ID of the action to execute.</c>
-           <c>opt_selection</c>
-           <c><xref target="gadgets.selection">Selection Object</xref></c>
-           <c>An optional object that identifies the currently selected object as
-           defined by <xref target="gadgets.selection"/>.</c>
-         </texttable>
+         <t>The method takes as input two parameters. The first is a String
+         specifying the identifier of the action to invoke. The second is 
+         a <xref target="gadgets.selection">Selection Object</xref> identifying
+         the currently selected object that is to be associated with the 
+         action invocation, if any.</t>
          
-         <figure><preamble>For example,</preamble><artwork>
+         <figure><preamble>For example:</preamble><artwork>
   gadgets.actions.runAction("com.acme.mycallaction");
          </artwork></figure>
          
@@ -6322,19 +6337,11 @@
   &lt;static&gt; gadgets.actions.registerShowActionsListener (listener)
          </artwork></figure>
        
-         <t>Input Parameters:</t>
+         <t>The method takes as input a single callback function to 
+         which an array of action objects will be delivered when 
+         user interface for those actions are to be created and 
+         rendered.</t>
        
-         <texttable align="left">
-           <ttcol>Name</ttcol>
-           <ttcol>Type</ttcol>
-           <ttcol>Description</ttcol>
-           <c>listener</c>
-           <c>Function</c>
-           <c>The application's function to render actions in its UI. The 
-           function will be invoked with one parameter which is an array 
-           of action objects to render.</c>
-         </texttable>           
-     
          <figure><preamble>For Example:</preamble><artwork type="code">
   var listener = function(actionObjs){
        // draw the UI, toolbars menus, etc
@@ -6354,18 +6361,10 @@
   &lt;static&gt; gadgets.actions.registerHideActionsListener (listener)
          </artwork></figure>
        
-         <t>Input Parameters:</t>
-         <texttable align="left">
-           <ttcol>Name</ttcol>
-           <ttcol>Type</ttcol>
-           <ttcol>Description</ttcol>
-           <c>listener</c>
-           <c>Function</c>
-           <c>The application's function to render actions in its UI. The 
-           function will be invoked with one parameter which is an array 
-           of action objects to hide.</c>
-         </texttable>           
-        
+         <t>The method takes as input a single callback function to which
+         an array of action objects will be delivered when user interface
+         elements for those actions are to be hidden and destroyed.</t>
+                 
          <figure><preamble>For Example:</preamble><artwork type="code">
   var listener = function(actionObjs){
        // remove the UI elements associated with the listed actions
@@ -6669,16 +6668,18 @@
         
         <c><spanx style="verb">context</spanx></c>
         <c>If the Embedded Experience is used to embed an OpenSocial Application,
-        the "context" field is used to pass data to the application so that it 
-        knows exactly which content to render. For instance, an application that 
-        displays a person's profile information will need to know which 
-        profile to display; an application that displays an album of recent photos
-        will need to know the identity of the album to display. The content
-        of the "context" field is undefined and specific to each individual 
-        application definition with one exception: the special property name 
-        "opensocial" is reserved for use by the container implementation.
-        The "context" properties JSON object value or XML element structure 
-        MUST NOT contain a property named "opensocial".</c>
+        the <spanx style="verb">context</spanx> field is used to pass data to 
+        the application so that it knows exactly which content to render. For 
+        instance, an application that displays a person's profile information 
+        will need to know which profile to display; an application that displays 
+        an album of recent photos will need to know the identity of the album 
+        to display. The content of the <spanx style="verb">context</spanx> 
+        field is undefined and specific to each individual application definition 
+        with one exception: the special property name <spanx style="verb">openSocial</spanx> 
+        is reserved for use by the container implementation. The 
+        <spanx style="verb">context</spanx> properties JSON object value or 
+        XML element structure MUST NOT contain a property named 
+        <spanx style="verb">openSocial</spanx>.</c>
   
         <c><spanx style="verb">gadget</spanx></c>
         <c>An absolutely IRI to an OpenSocial Application specification 
@@ -6706,14 +6707,16 @@
               
       </texttable>
       
-      <t>The "url" and "gadget" properties each reference content that is to 
-      be embedded. At least one of these properties MUST be specified.
-      When both properties are used within the Embedded Experience, the decision about which 
-      to render is left to the container.</t>
+      <t>The <spanx style="verb">url</spanx> and <spanx style="verb">gadget</spanx> 
+      properties each reference content that is to be embedded. At least one of 
+      these properties MUST be specified. When both properties are used within 
+      the Embedded Experience, the decision about which to render is left to 
+      the container.</t>
       
       <t>When serialized as JSON, the embedded experience take the form of a 
-      single JSON Object with four distinct properties: "context", "gadget", 
-      "previewImage" and "url". Additional extension properties MAY be included
+      single JSON Object with four distinct properties: <spanx style="verb">context</spanx>, 
+      <spanx style="verb">gadget</spanx>, <spanx style="verb">previewImage</spanx> 
+      and <spanx style="verb">url</spanx>. Additional extension properties MAY be included
       in the JSON object.</t>
       
       <figure><preamble>For instance, a simple JSON Embedded Experience
@@ -6818,11 +6821,12 @@
   
         <section title="The &quot;embedded&quot; View">
           <t>When rendering an application as an embedded experience, the container
-          will look within the specification document for a view named "embedded". 
-          Gadget developers can use this view to specify a customized
-          view of the application that is specific to the embedded experience. If 
-          an "embedded" view is not found within the specification document, the 
-          contain SHOULD render the application's default unnamed view.</t>
+          will look within the specification document for a view named 
+          <spanx style="verb">embedded</spanx>. Gadget developers can use this 
+          view to specify a customized view of the application that is specific 
+          to the embedded experience. If an <spanx style="verb">embedded</spanx> 
+          view is not found within the specification document, the contain 
+          SHOULD render the application's default unnamed view.</t>
         </section>
   
         <section title="Accessing The Context">
@@ -6832,7 +6836,7 @@
           generalized applications that can be used for all embedded experiences of a
           specific type.  For example, an application developed to display videos can 
           be built so that the id of the video is contained and extracted from
-          the embedded experience's "context" property.</t>
+          the embedded experience's <spanx style="verb">context</spanx> property.</t>
           
           <figure><artwork>
     {
@@ -6847,9 +6851,10 @@
           the "embedded-experiences" feature within their specification document in 
           order to access the context.  The contextual data is stored within the 
           <xref target="DataContext">data context</xref> object for the application.  
-          The key, "org.opensocial.ee.context", is used to access the context.
-          Gadgets can add a listener on the data context object for this key, or
-          it may retreive the key's value by using the data context APIs.</t>
+          The key, <spanx style="verb">org.opensocial.ee.context</spanx>, is 
+          used to access the context. Gadgets can add a listener on the data 
+          context object for this key, or it may retreive the key's value by 
+          using the data context APIs.</t>
           
           <figure><preamble>For instance, the Gadget below registers a listener
           with the data context to retrieve any context data included with the 
@@ -6881,8 +6886,9 @@
           <section title="Additional Container Specific Context" anchor="rootContext">
     
             <t>While the contextual data associated with the 
-            "org.opensocial.ee.context" key will generally originate 
-            from the information provided by the "context" property
+            <spanx style="verb">org.opensocial.ee.context</spanx> key will 
+            generally originate from the information provided by the 
+            <spanx style="verb">context</spanx> property
             within the Embedded Experience document, containers are 
             free to insert additional, container specific contexual 
             data into the object. For example, a container might wish to 
@@ -6891,11 +6897,12 @@
             received.</t>
             
             <t>If such additional information is provided, the object 
-            associated with the "org.opensocial.ee.context" key will have an
-            additional "opensocial" property, whose value is itself a
-            object with at least one property named "associatedContext" whose 
-            value is an object whose properties are entirely defined by the 
-            specific container implementation.</t>
+            associated with the <spanx style="verb">org.opensocial.ee.context</spanx>
+            key will have an additional <spanx style="verb">openSocial</spanx> property, 
+            whose value is itself a object with at least one property named 
+            <spanx style="verb">associatedContext</spanx> whose value is an 
+            object whose properties are entirely defined by the specific 
+            container implementation.</t>
             
             <figure><preamble>The following example illustrates how this 
             additional context information is accessed:</preamble><artwork>
@@ -6917,9 +6924,10 @@
             </artwork></figure>
             
             <t>Specific container implementations are free to insert any additional
-            information they wish into both the "associatedContext" and "opensocial"
-            object values. The interpretation and use of any such information is
-            considered out of the scope of this specification.</t>
+            information they wish into both the <spanx style="verb">associatedContext</spanx> 
+            and <spanx style="verb">openSocial</spanx> object values. The 
+            interpretation and use of any such information is considered out 
+            of the scope of this specification.</t>
           </section>
         </section>  
     </section>
@@ -6931,7 +6939,7 @@
       where the creator of the embedded experience might wish to provide 
       clues to the container as to how it would prefer the content to be
       displayed. These clues are included within the Embedded Experience
-      using the "preferredExperience" property.</t>
+      using the <spanx style="verb">preferredExperience</spanx> property.</t>
       
       <figure><preamble>The following illustrates a basic example 
       serialized as JSON:</preamble>
@@ -6979,13 +6987,15 @@
       ]]></artwork></figure>
   
       <t>In this example, we have an embedded experience serialized as JSON.
-      The structure defines both a "url" and a "gadget" property, both of w
-      which can be used by the container to display embedded content. Typically,
-      the decision of which to display when the embedded experience is rendered
-      is up to the container. The "preferredExperience.target" property allows the 
+      The structure defines both a <spanx style="verb">url</spanx> and a 
+      <spanx style="verb">gadget</spanx> property, both of which can be used 
+      by the container to display embedded content. Typically, the decision of 
+      which to display when the embedded experience is rendered is up to the container. 
+      The <spanx style="verb">preferredExperience.target</spanx> property allows the 
       creator of the embedded experience to indicate that it would prefer the
-      container to use the "gadget" property for rendering, and specifically that
-      the "my-ee-view" view within that application be used. The "preferredExperience.display"
+      container to use the <spanx style="verb">gadget</spanx> property for 
+      rendering, and specifically that the <spanx style="verb">my-ee-view</spanx> 
+      view within that application be used. The <spanx style="verb">preferredExperience.display</spanx>
       property indicates that rather than simply displaying the application automatically,
       the embedded experience's creator would rather the container initially display a 
       hyperlink that, when clicked, causes the application to be displayed.</t>
@@ -6996,22 +7006,25 @@
         <c><spanx style="verb">display</spanx></c>
         <c>Describes preferences for how the embedded experience should 
         initially be displayed by the container. The value of the 
-        "display" property is an object that contains a 
-        required "type" property, the value of which determines 
+        <spanx style="verb">display</spanx> property is an object that contains a 
+        required <spanx style="verb">type</spanx> property, the value of which determines 
         what other properties might appear within the object.</c>
         <c><spanx style="verb">target</spanx></c>
         <c>Describes preferences for which type of embedded experience 
         the container should render. For instance, if the embed includes
-        both a "url" and "gadget" property, the "target" is used to specify
-        which is preferred. The value of the "target" property is an 
-        object that contains a required "type" property, the value of which
-        determines what other properties might appear within the object.</c>
+        both a <spanx style="verb">url</spanx> and <spanx style="verb">gadget</spanx> 
+        property, the <spanx style="verb">target</spanx> is used to specify
+        which is preferred. The value of the <spanx style="verb">target</spanx> 
+        property is an object that contains a required <spanx style="verb">type</spanx> 
+        property, the value of which determines what other properties might 
+        appear within the object.</c>
       </texttable>
   
       <section title="Display Types">
   
         <t>This specification currently defines two possible values for the 
-        required "type" property on the display object: "link", "image".
+        required <spanx style="verb">type</spanx> property on the display 
+        object: <spanx style="verb">link</spanx> and <spanx style="verb">image</spanx>. 
         Each of which are illustrated below.</t>
         
         <figure><preamble>Display using a hyperlink:</preamble><artwork>
@@ -7029,8 +7042,8 @@
     }
         </artwork></figure>
         
-        <t>When "type" equals "link", the additional properties on the 
-        display object are:</t>
+        <t>When <spanx style="verb">type</spanx> equals <spanx style="verb">link</spanx>, 
+        the additional properties on the display object are:</t>
         
         <texttable>
           <ttcol align="left" width="15%">Property</ttcol>
@@ -7076,8 +7089,8 @@
     } 
         </artwork></figure>
         
-        <t>When "type" equals "image", the additional properties on the 
-        display object are:</t>
+        <t>When <spanx style="verb">type</spanx> equals <spanx style="verb">image</spanx>, 
+        the additional properties on the display object are:</t>
         
         <texttable>
           <ttcol align="left" width="15%">Property</ttcol>
@@ -7101,8 +7114,8 @@
       <section title="Target Types">
       
         <t>This specification currently defines two possible values for the 
-        type property on the target object: "gadget" and "url". Each of which 
-        are illustrated below.</t>
+        type property on the target object: <spanx style="verb">gadget</spanx> 
+        and <spanx style="verb">url</spanx>. Each of which are illustrated below.</t>
       
         <figure><preamble>Preferring the gadget target:</preamble><artwork>
     {
@@ -7121,28 +7134,33 @@
     }
         </artwork></figure>
         
-        <t>Note that the preferred experience target's "type" property is only 
-        required if the preferred target is not obvious within the embedded 
-        experience. For instance, if the embedded experience only defines an 
-        IRI value for the "gadget" property, then the preferred target type
-        is "gadget". However, if both the "url" and "gadget" properties are
-        specified, as in the example above, the target type in the preferred
-        experience MUST be specified. Containers MUST ignore the preferred 
-        experience if the target type value does not match the options specified
-        within the Embedded Experience (e.g. target type specifies "url" but 
-        only a "gadget" IRI is provided, etc).</t>
+        <t>Note that the preferred experience target's <spanx style="verb">type</spanx> 
+        property is only required if the preferred target is not obvious within 
+        the embedded experience. For instance, if the embedded experience only 
+        defines an IRI value for the <spanx style="verb">gadget</spanx> property, 
+        then the preferred target type is <spanx style="verb">gadget</spanx>. 
+        However, if both the <spanx style="verb">url</spanx> and 
+        <spanx style="verb">gadget</spanx> properties are specified, as in the 
+        example above, the target type in the preferred experience MUST be 
+        specified. Containers MUST ignore the preferred experience if the 
+        target type value does not match the options specified within the 
+        Embedded Experience (e.g. target type specifies <spanx style="verb">url</spanx> 
+        but only a <spanx style="verb">gadget</spanx> IRI is provided, etc).</t>
         
-        <t>When "type" equals "gadget", the additional properties on the 
-        target object are:</t>
+        <t>When <spanx style="verb">type</spanx> equals <spanx style="verb">gadget</spanx>, 
+        the additional properties on the target object are:</t>
         
         <texttable>
           <ttcol align="left" width="15%">Property</ttcol>
           <ttcol align="left">Description</ttcol>
           <c><spanx style="verb">view</spanx></c>
-          <c>The preferred application view to render. If not specified, the value "embedded" is assumed.</c>
+          <c>The preferred application view to render. If not specified, the 
+          value <spanx style="verb">embedded</spanx> is assumed.</c>
           <c><spanx style="verb">viewTarget</spanx></c>
           <c>Specifies where the container SHOULD render the view. Possible 
-          values are "TAB", "DIALOG", "MODALDIALOG", "FLOAT", and "SIDEBAR".</c>
+          values are <spanx style="verb">TAB</spanx>, <spanx style="verb">DIALOG</spanx>, 
+          <spanx style="verb">MODALDIALOG</spanx>, <spanx style="verb">FLOAT</spanx>, 
+          and <spanx style="verb">SIDEBAR</spanx>.</c>
         </texttable>
         
         <figure><preamble>Preferring the url target:</preamble><artwork>
@@ -7162,8 +7180,8 @@
     }
         </artwork></figure>
         
-        <t>When "type" equals "url", the additional properties on the 
-        target object are:</t>
+        <t>When <spanx style="verb">type</spanx> equals <spanx style="verb">url</spanx>, 
+        the additional properties on the target object are:</t>
         
         <texttable>
           <ttcol align="left" width="15%">Property</ttcol>
@@ -7239,8 +7257,9 @@
     }</artwork></figure>
     
       <t>As illustrated in the example, when included within an activity, 
-      the embedded experience MUST appear as the value of the "embed" property 
-      as a child of the "openSocial" property.</t>
+      the embedded experience MUST appear as the value of the 
+      <spanx style="verb">embed</spanx> property as a child of the 
+      <spanx style="verb">openSocial</spanx> property.</t>
     
     </section>
     
@@ -7257,10 +7276,12 @@
   
       <t>Embedded experiences serialized as either JSON or XML can be embedded 
       Multipart MIME encoded email messages. Such email messages MUST utilize 
-      the "multipart/alternative" MIME variant and MUST contain at least two
-      MIME parts -- one containing regular content of the email message encoded
-      as text/html content, and another containing the embedded experience content 
-      using either the "application/embed+json" or "application/embed+xml" MIME media type, 
+      the <spanx style="verb">multipart/alternative</spanx> MIME variant and 
+      MUST contain at least two MIME parts -- one containing regular content of 
+      the email message encoded as <spanx style="verb">text/html</spanx> content, 
+      and another containing the embedded experience content using either 
+      the <spanx style="verb">application/embed+json</spanx> or 
+      <spanx style="verb">application/embed+xml</spanx> MIME media type, 
       respectively representing the JSON and XML serializations. Additional
       MIME parts MAY be included </t>
   
@@ -7356,22 +7377,22 @@
              <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
               
-            <c>url</c>
+            <c><spanx style="verb">url</spanx></c>
             <c>String</c>
             <c>The IRI of the Flash resource to embed.</c>
               
-            <c>container</c>
+            <c><spanx style="verb">container</spanx></c>
             <c>String | Object</c>
             <c>Specifies either the DOM identifier or object reference for
             the existing container object (e.g. a &lt;div&gt;) within which the 
             Flash content will be embedded.</c>
               
-            <c>version</c>
+            <c><spanx style="verb">version</spanx></c>
             <c>Number</c>
             <c>Specifies the minimum Flash Player version required to 
             support the embedded content.</c>
               
-            <c>options</c>
+            <c><spanx style="verb">options</spanx></c>
             <c>Object</c>
             <c>An optional object that MAY contain any property that is 
             valid for the HTML &lt;embed&gt; tag. These properties will be
@@ -7398,29 +7419,24 @@
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
-            
-            <c>url</c>
+            <c><spanx style="verb">url</spanx></c>
             <c>String</c>
             <c>The IRI of the Flash resource to embed.</c>
-              
-            <c>container</c>
+            <c><spanx style="verb">container</spanx></c>
             <c>String | Object</c>
             <c>Specifies either the DOM identifier or object reference for
             the existing container object (e.g. a &lt;div&gt;) within which the 
             Flash content will be embedded.</c>
-              
-            <c>version</c>
+            <c><spanx style="verb">version</spanx></c>
             <c>Number</c>
             <c>Specifies the minimum Flash Player version required to 
-            support the embedded content.</c>
-            
-            <c>options</c>
+            support the embedded content.</c>            
+            <c><spanx style="verb">options</spanx></c>
             <c>Object</c>
             <c>An optional object that MAY contain any property that is 
             valid for the HTML &lt;embed&gt; tag. These properties will be
             passed directly through the &lt;embed&gt; tag generated by the
-            API call.</c>
-            
+            API call.</c> 
           </texttable>
      
           <t>The method will return either <spanx style="verb">True</spanx>
@@ -7447,11 +7463,11 @@
     API for localized parsing and formatting of dates, times, numbers and 
     currency according to the rules for the application's locale as set
     by the container. The feature is specified by including either an 
-    "Optional" or "Required" element within the "ModulePrefs" The feature 
+    &lt;Optional&gt; or &lt;Required&gt; element within the &lt;ModulePrefs&gt; The feature 
     identifier is "opensocial-i18n".</t>
    
     <t>Once available, developer's can use the feature via the 
-    "gadgets.i18n" JavaScript class.</t>
+    <spanx style="verb">gadgets.i18n</spanx> JavaScript class.</t>
     
     <t>The locale used by an application is established by the container when 
     the view is rendered. The i18n feature will use the country 
@@ -7465,8 +7481,9 @@
     pattern is to be applied.</t>
     
     <t>For instance, to format an integer using a localized grouping 
-    separator (e.g. the number 1234567 formatted as "1,234,567" when 
-    the locale is "en-US"), the following can be used:</t>
+    separator (e.g. the number <spanx style="verb">1234567</spanx> formatted 
+    as <spanx style="verb">1,234,567</spanx> when the locale is 
+    <spanx style="verb">en-US</spanx>), the following can be used:</t>
     
     <figure><artwork>
   var str = gadgets.i18n.formatNumber("#,###", 1234567);
@@ -7475,11 +7492,12 @@
     <t>The i18n feature includes a number of common, predefined format 
     patterns that can be used. The specific definition of these formats
     are specific to the locale established by the container. For instance,
-    using the predefined "gadgets.i18n.MEDIUM_DATE_FORMAT" pattern to 
-    format the date for August, 4th 2006 using the "de" (German) locale 
-    using the formatDateTime method would output "04.08.2006". Using the
-    same predefined pattern using the "en-US" (United States) locale, 
-    however, would output "08-04-2006".</t>
+    using the predefined <spanx style="verb">gadgets.i18n.MEDIUM_DATE_FORMAT</spanx> 
+    pattern to format the date for August, 4th 2006 using the <spanx style="verb">de</spanx> 
+    (German) locale using the formatDateTime method would output 
+    <spanx style="verb">04.08.2006</spanx>. Using the same predefined pattern 
+    using the <spanx style="verb">en-US</spanx> (United States) locale, however, 
+    would output <spanx style="verb">08-04-2006</spanx>.</t>
     
     <figure><artwork>
   var date = new Date(2006,7,4);
@@ -7488,10 +7506,11 @@
     
     <t>When parsing and formatting currencies using the predefined patterns, 
     there are several considerations that need to be taken into account.
-    For example, when the default locale is set to "fr-FR" (France), and the
-    gadgets.i18n.CURRENCY_PATTERN is used to parse a string, the parser will
-    assume that the input string is formatted according to the localized rules
-    for the "fr-FR" locale:</t>
+    For example, when the default locale is set to <spanx style="verb">fr-FR</spanx> 
+    (France), and the <spanx style="verb">gadgets.i18n.CURRENCY_PATTERN</spanx> 
+    is used to parse a string, the parser will assume that the input string is 
+    formatted according to the localized rules for the 
+    <spanx style="verb">fr-FR</spanx> locale:</t>
     
     <figure>
       <artwork xml:space="preserve">
@@ -7516,8 +7535,6 @@
      <figure><artwork>
   var num = gadgets.i18n.parseNumber("#,###", "$20,000", 0, "USD");
      </artwork></figure>   
-    
-     <section title="Specifying Format and Parsing Patterns">
      
      <section title="Date/Time Pattern Specification">  
       <t>When formatting and parsing dates and times, the i18n feature 
@@ -7539,10 +7556,10 @@
       the same grammar used by the Java Standard Editon's
       as described <eref target="http://docs.oracle.com/javase/7/docs/api/java/text/NumberFormat.html">NumberFormat</eref> class.</t>
 
-      <t>For example, assuming a locale of "en-US", using the pattern 
-      "#,##0.00" to format the number 1234567.1234 using the formatNumber 
-      method would output "1,234,567.12".</t>
-     </section>
+      <t>For example, assuming a locale of <spanx style="verb">en-US</spanx>, using the pattern 
+      <spanx style="verb">#,##0.00</spanx> to format the number 
+      <spanx style="verb">1234567.1234</spanx> using the formatNumber 
+      method would output <spanx style="verb">1,234,567.12</spanx>.</t>
     </section>
         
     <section title="JavaScript API">
@@ -7622,11 +7639,11 @@
         <ttcol>Name</ttcol>
         <ttcol>Type</ttcol>
         <ttcol>Description</ttcol>
-        <c>pattern</c>
-        <c>string/number</c>
+        <c><spanx style="verb">pattern</spanx></c>
+        <c>String/Number</c>
         <c>String to specify patterns or Number used to reference predefined
         pattern that a date should be formatted into.</c>
-        <c>date</c>
+        <c><spanx style="verb">date</spanx></c>
         <c>Date</c>
         <c>Date object being formatted.</c>
       </texttable>
@@ -7659,16 +7676,16 @@
         <ttcol>Name</ttcol>
         <ttcol>Type</ttcol>
         <ttcol>Description</ttcol>
-        <c>pattern</c>
-        <c>string/number</c>
+        <c><spanx style="verb">pattern</spanx></c>
+        <c>String/Number</c>
         <c>String to specify patterns or Number used to reference predefined
         pattern that a number should be formatted into.</c>
-        <c>value</c>
-        <c>number</c>
+        <c><spanx style="verb">value</spanx></c>
+        <c>Number</c>
         <c>The number being formatted.</c>
-        <c>opt_currencyCode</c>
-        <c>string</c>
-        <c>optional international currency code, it determines the currency
+        <c><spanx style="verb">opt_currencyCode</spanx></c>
+        <c>String</c>
+        <c>Optional international currency code, it determines the currency
         code/symbol should be used in format/parse. If not given, the currency
         code for current locale will be used.</c>
       </texttable>
@@ -7734,17 +7751,17 @@
         <ttcol>Name</ttcol>
         <ttcol>Type</ttcol>
         <ttcol>Description</ttcol>
-        <c>pattern</c>
-        <c>string/number</c>
+        <c><spanx style="verb">pattern</spanx></c>
+        <c>String/Number</c>
         <c>String to specify patterns or Number used to reference predefined
         pattern that a date should be parsed from.</c>
-        <c>text</c>
+        <c><spanx style="verb">text</spanx></c>
         <c>string</c>
         <c>The string that need to be parsed.</c>
-        <c>start</c>
-        <c>number</c>
+        <c><spanx style="verb">start</spanx></c>
+        <c>Number</c>
         <c>The character position in "text" where parse begins.</c>
-        <c>date</c>
+        <c><spanx style="verb">date</spanx></c>
         <c>Date</c>
         <c>The date object that will hold parsed value.</c>
       </texttable>
@@ -7775,20 +7792,20 @@
         <ttcol>Name</ttcol>
         <ttcol>Type</ttcol>
         <ttcol>Description</ttcol>
-        <c>pattern</c>
-        <c>string/number</c>
+        <c><spanx style="verb">pattern</spanx></c>
+        <c>String/Number</c>
         <c>String to specify patterns or Number used to reference predefined
         pattern that a number should be parsed from.</c>
-        <c>text</c>
-        <c>string</c>
+        <c><spanx style="verb">text</spanx></c>
+        <c>String</c>
         <c>input text being parsed.</c>
-        <c>opt_pos</c>
+        <c><spanx style="verb">opt_pos</spanx></c>
         <c>Array</c>
         <c>optional one element array that holds position information. It tells
         from where parse should begin. Upon return, it holds parse stop
         position.</c>
-        <c>opt_currencyCode</c>
-        <c>string</c>
+        <c><spanx style="verb">opt_currencyCode</spanx></c>
+        <c>String</c>
         <c>optional international currency code, it determines the currency
         code/symbol should be used in format/parse. If not given, the currency
         code for current locale will be used.</c>
@@ -7924,13 +7941,13 @@
             <ttcol>Name</ttcol>
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
-            <c>id</c>
+            <c><spanx style="verb">id</spanx></c>
             <c>String</c>
             <c>The container provided unique identifier of the application 
             instance. This value can be determined using the 
             <spanx style="verb">gadgets.Prefs.getModuleId()</spanx>
             method.</c>
-            <c>container</c>
+            <c><spanx style="verb">container</spanx></c>
             <c>HTMLElement</c>
             <c>An object reference to the HTML element, typically a &lt;div&gt;
             that will serve as the container for all messages managed by this
@@ -7955,10 +7972,10 @@
               <ttcol>Name</ttcol>
               <ttcol>Type</ttcol>
               <ttcol>Description</ttcol>
-              <c>message</c>
+              <c><spanx style="verb">message</spanx></c>
               <c>String | Object</c>
               <c>The message as an HTML string or DOM element</c>
-              <c>callback</c>
+              <c><spanx style="verb">callback</spanx></c>
               <c>Function</c>
               <c>Optional callback function to be called when the message is
               dismissed. The callback function will not be called until after the
@@ -8009,15 +8026,15 @@
               <ttcol>Name</ttcol>
               <ttcol>Type</ttcol>
               <ttcol>Description</ttcol>
-              <c>message</c>
+              <c><spanx style="verb">message</spanx></c>
               <c>String | Object</c>
               <c>The message as an HTML string or DOM element</c>
               
-              <c>seconds</c>
+              <c><spanx style="verb">seconds</spanx></c>
               <c>Number</c>
               <c>The number of seconds to wait before dismissing the message.</c>
               
-              <c>callback</c>
+              <c><spanx style="verb">callback</spanx></c>
               <c>Function</c>
               <c>Optional callback function to be called when the message is
               dismissed. The callback function will not be called until after the
@@ -8278,9 +8295,9 @@
               </figure>
   
       <t>As illustrated, support for the "opensearch" feature is specified 
-      by including either an "Optional" or "Required" element within the 
-      "ModulePrefs" of the Gadget specification. The feature identifier is 
-      "opensearch". Developers SHOULD declare the feature as "Optional"
+      by including either an &lt;Optional&gt; or &lt;Required&gt; element within the 
+      &lt;ModulePrefs&gt; of the Gadget specification. The feature identifier is 
+      "opensearch". Developers SHOULD declare the feature as &lt;Optional&gt;
       to allow for maximum interoperability in all containers.</t>
       
       <t>The feature has two possible parameters: description and url:
@@ -8596,13 +8613,14 @@
             objects using the <spanx style="verb">osapi.BachRequest</spanx> object
             and an error occurs processing any of the individual requests, the 
             provided callback function will be invoked with a response object 
-            passed in containing a single top-level "error" property whose value
-            is an Error object generally describing that the batch response
-            did not complete with errors. The object will also contain one property 
-            key for each request contained in the batch whose value will either
-            be the results of the operation if successful or an object containing
-            a single "error" property whose value is an Error object describing
-            the specific error that occurred.</t>
+            passed in containing a single top-level <spanx style="verb">error</spanx> 
+            property whose valueis an Error object generally describing that the 
+            batch response did not complete with errors. The object will also 
+            contain one property key for each request contained in the batch 
+            whose value will either be the results of the operation if successful 
+            or an object containing a single <spanx style="verb">error</spanx> 
+            property whose value is an Error object describing the specific 
+            error that occurred.</t>
             
             <figure><preamble>For example:</preamble><artwork>
   {
@@ -8627,7 +8645,8 @@
               such as when the container is unable to communicate with the 
               Social Data Services, the callback function provided will be 
               invoked and passed a response object containing a single "error"
-              property whose value is an Error object describing the specific
+              property whose value is an Error object, as specified in 
+              <xref target="core-api" />, describing the specific
               nature of the error.</t>
               
               <figure><preamble>For example:</preamble><artwork>
@@ -8656,27 +8675,27 @@
               <ttcol>HTTP Method</ttcol>
               <ttcol>osapi.http Method</ttcol>
               <ttcol>Description</ttcol>
-              <c>DELETE</c>
+              <c><spanx style="verb">DELETE</spanx></c>
               <c><spanx style="verb">osapi.http.delete</spanx></c>
               <c>Returns an <spanx style="verb">osapi.Request</spanx>
               object encapsulating an HTTP DELETE request.</c>
-              <c>GET</c>
+              <c><spanx style="verb">GET</spanx></c>
               <c><spanx style="verb">osapi.http.get</spanx></c>
               <c>Returns an <spanx style="verb">osapi.Request</spanx>
               object encapsulating an HTTP GET request.</c>
-              <c>HEAD</c>
+              <c><spanx style="verb">HEAD</spanx></c>
               <c><spanx style="verb">osapi.http.head</spanx></c>
               <c>Returns an <spanx style="verb">osapi.Request</spanx>
               object encapsulating an HTTP HEAD request.</c>
-              <c>PATCH</c>
+              <c><spanx style="verb">PATCH</spanx></c>
               <c><spanx style="verb">osapi.http.patch</spanx></c>
               <c>Returns an <spanx style="verb">osapi.Request</spanx>
               object encapsulating an HTTP PATCH request.</c>
-              <c>POST</c>
+              <c><spanx style="verb">POST</spanx></c>
               <c><spanx style="verb">osapi.http.post</spanx></c>
               <c>Returns an <spanx style="verb">osapi.Request</spanx>
               object encapsulating an HTTP POST request.</c>
-              <c>PUT</c>
+              <c><spanx style="verb">PUT</spanx></c>
               <c><spanx style="verb">osapi.http.put</spanx></c>
               <c>Returns an <spanx style="verb">osapi.Request</spanx>
               object encapsulating an HTTP PUT request.</c>
@@ -8693,6 +8712,9 @@
             <xref target="http.request.params.object">HTTP Request Parameters Object</xref> 
             that provides general request options for the request.</t>
             
+            <t>The osapi.http Object is made available the the "osapi" feature
+            is provided by the container.</t>
+            
             <section title="The HTTP Request Parameters Object" anchor="http.request.params.object">
             
               <t>The HTTP Request Parameters Object is a JavaScript object
@@ -8702,101 +8724,115 @@
               <t>The properties of the HTTP Request Parameters Objects are:</t>
               <texttable>
                 <ttcol>Name</ttcol>
-                 <ttcol>Type</ttcol>
-                 <ttcol>Description</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
                 
-                <c>alias</c>
+                <c><spanx style="verb">alias</spanx></c>
                 <c>String</c>
                 <c>When a specification document uses the &lt;ExternalService&gt;
                 element to define an alias for a Container-managed external 
-                service, the optional "alias" parameter can be used in place 
-                of the "href" property to identify the external service to which the 
+                service, the optional <spanx style="verb">alias</spanx> 
+                parameter can be used in place of the <spanx style="verb">href</spanx> 
+                property to identify the external service to which the 
                 request is to be directed. If unspecified, the default value 
                 for this parameter is assumed to be null.</c>
                   
-                <c>authz</c>
+                <c><spanx style="verb">authz</spanx></c>
                 <c>String</c>
                 <c>Specifies the authorization method to use. Valid values are:
-                "none", "signed", "oauth" and "oauth2". For convenience, 
-                aliases for each of these values have been provided for 
+                <spanx style="verb">none</spanx>, <spanx style="verb">signed</spanx>, 
+                <spanx style="verb">oauth</spanx> and <spanx style="verb">oauth2</spanx>. 
+                For convenience, aliases for each of these values have been provided for 
                 use in JavaScript code. These aliases are: 
-                gadgets.io.AuthorizationType.NONE, gadgets.io.AuthorizationType.SIGNED,
-                gadgets.io.AuthorizationType.OAUTH and gadgets.ioAuthorizationType.OAUTH2.
-                If not specified, the default value for this parameter is assumed to be "none".</c>
+                <spanx style="verb">gadgets.io.AuthorizationType.NONE</spanx>, 
+                <spanx style="verb">gadgets.io.AuthorizationType.SIGNED</spanx>,
+                <spanx style="verb">gadgets.io.AuthorizationType.OAUTH</spanx> 
+                and <spanx style="verb">gadgets.ioAuthorizationType.OAUTH2</spanx>.
+                If not specified, the default value for this parameter is assumed 
+                to be <spanx style="verb">none</spanx>.</c>
 
-                <c>format</c>
+                <c><spanx style="verb">format</spanx></c>
                 <c>String</c>
                 <c>Optionally specifies the data format the requested wishes 
-                the response to use. Valid values are either "json" or "text",
-                respectively indicating that the data SHOULD be returned as 
-                either "application/json" or "text/plain". If not specified,
-                the default value is assumed to be "json". The value of this
-                parameter is used by the container to process the results of
-                the HTTP operation. If format is equal to JSON, the container
+                the response to use. Valid values are either <spanx style="verb">json</spanx> 
+                or <spanx style="verb">text</spanx>, respectively indicating that 
+                the data SHOULD be returned as either JSON or plain text. If 
+                not specified, the default value is assumed to be <spanx style="verb">json</spanx>. 
+                The value of this parameter is used by the container to process 
+                the results of the HTTP operation. If format is equal to 
+                <spanx style="verb">json</spanx>, the container
                 will attempt to parse the returned content as JSON, handing 
                 the parsed result back to the provided callback function. If 
-                the format is "text" or otherwise cannot be successfully parsed
-                as JSON, the "raw" unparsed and unprocessed data provided by 
-                the request will be passed to the callback function.</c>
+                the format is <spanx style="verb">text</spanx> or otherwise 
+                cannot be successfully parsed as JSON, the unparsed and 
+                unprocessed data provided by the response will be passed to 
+                the callback function.</c>
                  
-                <c>headers</c>
+                <c><spanx style="verb">headers</spanx></c>
                 <c>Object</c>
                 <c>Specifies the collection of HTTP Request Headers the container
                 SHOULD include in the request. The value is specified as an 
                 associative map using the header names as a key and either a
                 literal String value or an Array of Strings. For example, to 
-                 include "Accept-Language" and two "X-Custom" headers in the request, 
-                the value of the "HEADERS" property would be set to 
-                <spanx style="verb">{"Accept-Language":"de-DE", "X-Custom":["abc","xyz"]}</spanx>.</c>
+                include <spanx style="verb">Accept-Language</spanx> and two 
+                <spanx style="verb">X-Custom</spanx> headers in the request, 
+                the value of the <spanx style="verb">headers</spanx> property 
+                would be set to <spanx style="verb">{"Accept-Language":"de-DE", 
+                "X-Custom":["abc","xyz"]}</spanx>.</c>
                   
-                <c>href</c>
+                <c><spanx style="verb">href</spanx></c>
                 <c>String</c>
-                <c>The IRI to which the request is to be sent. If a relative 
+                <c>The URI to which the request is to be sent. If a relative 
                 URI is provided, the request will be resolved relative to a 
                 Base URI established by the container.</c>
 
-                <c>oauth_service_name</c>
+                <c><spanx style="verb">oauth_service_name</spanx></c>
                 <c>String</c>
-                <c>When the "authz" parameter is equal to either "OAUTH"
-                or "OAUTH2", and the specification document uses the 
+                <c>When the <spanx style="verb">authz</spanx> parameter is 
+                equal to either <spanx style="verb">OAUTH</spanx> or
+                <spanx style="verb">OAUTH2</spanx>, and the specification document uses the 
                 &lt;OAuth&gt; or &lt;OAuth2&gt; elements within the &lt;ModulePrefs&gt;
-                to define associated OAuth services, the "oauth_service_name" 
+                to define associated OAuth services, the <spanx style="verb">oauth_service_name</spanx>
                 parameter specifies the name of the &lt;Service&gt; element 
                 that provides the OAuth Service details to use for the request.
                 When not specified, the default value is assumed to be an 
                 empty string (e.g. "").</c>
        
-                <c>oauth_request_token</c>
+                <c><spanx style="verb">oauth_request_token</spanx></c>
                 <c>String</c>
-                <c>When the "authz" parameter is equal to either "OAUTH"
-                or "OAUTH2", the "oauth_request_token" parameter can be used 
-                to specified a pre-authorized OAuth Request Token for use in the 
-                request. If the container does not already have an OAuth Access
-                Token suitable for use with the request, the container SHOULD
-                use the supplied Request Token to request and acquire a new 
-                Access Token. If not specified, the default value is assumed
-                to be null.</c>
+                <c>When the <spanx style="verb">authz</spanx> parameter is 
+                equal to either <spanx style="verb">OAUTH</spanx> or
+                <spanx style="verb">OAUTH2</spanx>, the <spanx style="verb">oauth_request_token</spanx> 
+                parameter can be used to specify a pre-authorized OAuth Request 
+                Token for use in the request. If the container does not already 
+                have an OAuth Access Token suitable for use with the request, 
+                the container SHOULD use the supplied Request Token to request 
+                and acquire a new Access Token. If not specified, the default 
+                value is assumed to be null.</c>
                  
-                <c>oauth_request_token_secret</c>
+                <c><spanx style="verb">oauth_request_token_secret</spanx></c>
                 <c>String</c>
-                <c>When the "oauth_request_token" parameter is specified,
-                the "oauth_request_token_secret" parameter can be used to 
-                supply an associated Request Token Secret. If not specified,
-                the default value is assumed to be null.</c>
+                <c>When the <spanx style="verb">oauth_request_token</spanx> 
+                parameter is specified, the <spanx style="verb">oauth_request_token_secret</spanx> 
+                parameter can be used to supply an associated Request Token 
+                Secret. If not specified, the default value is assumed to be null.</c>
                  
-                <c>oauth2_scope</c>
+                <c><spanx style="verb">oauth2_scope</spanx></c>
                 <c>String</c>
-                <c>When the "authz" parameter is equal to "OAUTH",
-                the "oauth2_scope" parameter specifies the value of the 
-                OAuth 2.0 scope parameter the container SHOULD use with 
+                <c>When the <spanx style="verb">authz</spanx> parameter is 
+                equal to <spanx style="verb">OAUTH</spanx>, the
+                <spanx style="verb">oauth2_scope</spanx> parameter specifies 
+                the value of the OAuth 2.0 scope parameter the container SHOULD use with 
                 the request. The scope parameter is defined in <xref target="I-D.ietf-oauth-v2"/>.
                 If not specified, the default value is assumed to be null, indicating
                 that no scope parameter is to be provided.</c>
                  
-                <c>oauth_token_name</c>
+                <c><spanx style="verb">oauth_token_name</spanx></c>
                 <c>String</c>
-                <c>When the "authz" parameter is equal to either "OAUTH"
-                or "OAUTH2", the application MAY use the "oauth_token_name" to specify
+                <c>When the <spanx style="verb">authz</spanx> parameter is 
+                equal to either <spanx style="verb">OAUTH</spanx> or
+                <spanx style="verb">OAUTH2</spanx>, the application MAY use 
+                the <spanx style="verb">oauth_token_name</spanx> to specify
                 an alias for the OAuth Access Token used for the request. If the 
                 container does not yet have an appropriate Access Token to use
                 with the request, it will follow the appropriate steps to acquire 
@@ -8805,62 +8841,60 @@
                 to locate and use the cached Access Token. If not specified, the
                 default value is assumed to be an empty string (e.g. "").</c>
                  
-                <c>oauth_use_token</c>
+                <c><spanx style="verb">oauth_use_token</spanx></c>
                 <c>String</c>
-                <c>When the "authz" parameter is equal to either "OAUTH"
-                or "OAUTH2", the container is typically required to acquire an
-                appropriate OAuth Access Token prior to sending the request to
-                the URL. The "oauth_use_token" parameter can be used to modify
-                this default behavior. Valid values are: "never", "if_available"
-                and "always". If not specified, the default value is assumed to 
-                be "always". When "oauth_use_token" is equal to "never", the 
-                container SHOULD NOT attempt to acquire an Access Token for the 
-                request but SHOULD send the request to the URL just as it would 
-                any other request using with OAuth 1.0a or OAuth 2.0 protocols. 
-                When "oauth_use_token" is equal to "if_available", the container 
-                SHOULD include the Access Token in the request only if an appropriate 
-                token is available. If an Access Token is not available, the request
-                SHOULD be sent to the URL without the Access Token. When "oauth_use_token"
-                is equal to "always", the container is required to acquire an 
-                Access Token prior to sending the request and MUST include that
-                token in the request sent to the URL.</c>
+                <c>When the <spanx style="verb">authz</spanx> parameter is equal 
+                to either <spanx style="verb">OAUTH</spanx> or 
+                <spanx style="verb">OAUTH2</spanx>, the container is typically 
+                required to acquire an appropriate OAuth Access Token prior to 
+                sending the request to the URL. The <spanx style="verb">oauth_use_token</spanx> 
+                parameter can be used to modify this default behavior as 
+                specified in <xref target="oauth-processing-model" />. Valid 
+                values are: <spanx style="verb">never</spanx>, 
+                <spanx style="verb">if_available</spanx> and <spanx style="verb">always</spanx>. 
+                If not specified, the default value is assumed to 
+                be <spanx style="verb">always</spanx>.</c>
                  
-                  <c>body</c>
-                  <c>String or JSON Object</c>
-                  <c>When used with <spanx style="verb">osapi.http</spanx> method
-                  representing an HTTP Method for which a request payload is 
-                  expected (e.g. <spanx style="verb">osapi.http.patch</spanx>,
-                  <spanx style="verb">osapi.http.post</spanx> or 
-                  <spanx style="verb">osapi.http.put</spanx>), the "body" parameter 
-                  specifies the data that is to be included as the payload of the 
-                  request. The value is specified as either a String or a JSON 
-                  object. If a JSON Object is provided, the Content-Type of the 
-                  request payload will be "application/json" unless a specific 
-                  value for the Content-Type header is provided within the "headers" 
-                  property. If not specified, the value defaults to null, indicating 
-                  that no payload is to be sent.</c>
+                <c><spanx style="verb">body</spanx></c>
+                <c>String or JSON Object</c>
+                <c>When used with <spanx style="verb">osapi.http</spanx> method
+                representing an HTTP Method for which a request payload is 
+                expected (e.g. <spanx style="verb">osapi.http.patch</spanx>,
+                <spanx style="verb">osapi.http.post</spanx> or 
+                <spanx style="verb">osapi.http.put</spanx>), the <spanx style="verb">body</spanx> 
+                parameter specifies the data that is to be included as the payload of the 
+                request. The value is specified as either a String or a JSON 
+                object. If a JSON Object is provided, the Content-Type of the 
+                request payload will be <spanx style="verb">application/json</spanx> 
+                unless a specific value for the Content-Type header is provided 
+                within the <spanx style="verb">headers</spanx> property. If not 
+                specified, the value defaults to null, indicating 
+                that no payload is to be sent.</c>
                      
-                  <c>refresh_interval</c>
-                  <c>Number (non-negative integer)</c>
-                  <c>Explicitly sets the numer of seconds content will be cached 
-                  by the container as specified by <xref target="caching" />.</c>
-                 
-                  <c>sign_owner</c>
-                  <c>Boolean</c>
-                  <c>When the "authz" parameter equals either "SIGNED" or 
-                  "OAUTH", the "sign_owner" parameter indicates whether the 
-                  container SHOULD include the identity of the 
-                  <xref target="Application-Roles">Instance Owner</xref> when signing 
-                  the request. The value is specified as a Boolean. When not 
-                  specified, the default value is assumed to be False.</c>
-                 
-                  <c>sign_viewer</c>
-                  <c>Boolean</c>
-                  <c>When the "authz" parameter equals either "SIGNED" or
-                  "OAUTH", the "sign_viewer" parameter indicates whether the 
-                  container SHOULD include the identity of the current Viewer when
-                  signing the request. The value is specified as a Boolean. When 
-                  not specified, the default value is assumed to be False.</c>  
+                <c><spanx style="verb">refresh_interval</spanx></c>
+                <c>Number (non-negative integer)</c>
+                <c>Explicitly sets the numer of seconds content will be cached 
+                by the container as specified by <xref target="caching" />.</c>
+               
+                <c><spanx style="verb">sign_owner</spanx></c>
+                <c>Boolean</c>
+                <c>When the <spanx style="verb">authz</spanx> parameter equals 
+                either <spanx style="verb">SIGNED</spanx> or 
+                <spanx style="verb">OAUTH</spanx>, the <spanx style="verb">sign_owner</spanx> 
+                parameter indicates whether the container SHOULD include the 
+                identity of the <xref target="Application-Roles">Instance Owner</xref> 
+                when signing the request. The value is specified as a Boolean. 
+                When not specified, the default value is assumed to be False.</c>
+               
+                <c><spanx style="verb">sign_viewer</spanx></c>
+                <c>Boolean</c>
+                <c>When the <spanx style="verb">authz</spanx> parameter equals 
+                either <spanx style="verb">SIGNED</spanx> or <spanx style="verb">OAUTH</spanx>, 
+                the <spanx style="verb">sign_viewer</spanx> parameter indicates 
+                whether the container SHOULD include the identity of the current 
+                Viewer when signing the request. The value is specified as a 
+                Boolean. When not specified, the default value is assumed to be 
+                False.</c>  
               </texttable>
 
             </section>  
@@ -8888,13 +8922,14 @@
               <t>When preparing the HTTP Response Object, the container will
               check the valid of the "format" property provided in the 
               HTTP Request Parameters Object. If the value is unspecified or
-              equals the literal String "json", the container will attempt to 
-              parse any content returned within the HTTP Response as if it
-              were an "application/json" response. If the the parse succeeds, 
-              the container will included the parsed JSON structure within 
-              the HTTP Response Object. If the parse fails, only the raw 
-              content of the HTTP Response message, encoded as character 
-              data, will be included in the HTTP Response Object.</t>
+              equals the literal String <spanx style="verb">json</spanx>, 
+              the container will attempt to parse any content returned within 
+              the HTTP Response as if it were an <spanx style="verb">application/json</spanx> 
+              response. If the the parse succeeds, the container will included 
+              the parsed JSON structure within the HTTP Response Object. If 
+              the parse fails, only the raw content of the HTTP Response message, 
+              encoded as character data, will be included in the HTTP Response 
+              Object.</t>
             
               <figure><preamble>For example, suppose that an application wishes to 
               retrieve a JSON document located at http://example.org/latest-photos.
@@ -8932,7 +8967,7 @@
               request, or when the HTTP Response uses a status code that
               indicates an error condition (4xx or 5xx), the HTTP Response
               Object passed to the callback function will contain a single
-              "error" property whose value is an 
+              <spanx style="verb">error</spanx> property whose value is an 
               <xref target="core-api">Error Object</xref> describing
               the specific error that occurred.</t>
               
@@ -8945,7 +8980,34 @@
               when processing an <spanx style="verb">osapi.http</spanx> 
               request object.</t>
               
-              <t>TODO: Need to define the properties</t>
+              <t>The properties of the HTTP Response Object include:</t>
+              
+              <texttable>
+                <ttcol>Name</ttcol>
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+              
+                <c><spanx style="verb">status</spanx></c>
+                <c>Integer</c>
+                <c>The HTTP Status code returned by the response.</c>
+                
+                <c><spanx style="verb">headers</spanx></c>
+                <c>Object</c>
+                <c>A JSON Object containing the Header fields returned with
+                the response. Each property name in the object will represent one
+                header. Values are specified as an Array of Strings. For example, 
+                <spanx style="verb">{"Content-Type":["text/plain"], 
+                "Link": ["&lt;/foo/bar1&gt;; rel=\"foo\"", 
+                "&lt;/foo/bar2&gt;; rel=\"bar\""]</spanx></c>
+              
+                 <c><spanx style="verb">content</spanx></c>
+                 <c>(varies)</c>
+                 <c>The processed payload returned by the HTTP response. If
+                 the content can be parsed as a valid JSON Object or Array,
+                 the value of the <spanx style="verb">content</spanx>
+                 property will be the JSON Object or Array; otherwise the 
+                 value will be represented as a String.</c>  
+              </texttable>
             
             </section>
           </section>
