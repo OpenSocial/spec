@@ -7268,7 +7268,7 @@ assertEquals(0.30, value);
         "view" : "my-ee-view"
       },
       "display" : {
-        "type" : "link"
+        "type" : "text"
       }
   }
     </artwork></figure>
@@ -7290,14 +7290,14 @@ assertEquals(0.30, value);
         <view>my-ee-view</view>
       </target>
       <display>
-        <type>link</type>
+        <type>text</type>
       </display>
     </preferredExperience>
   </embed>
     ]]></artwork></figure>
 
     <t>In this example, we have an embedded experience serialized as JSON.
-    The structure defines both a "url" and a "gadget" property, both of w
+    The structure defines both a "url" and a "gadget" property, both of 
     which can be used by the container to display embedded content. Typically,
     the decision of which to display when the embedded experience is rendered
     is up to the container. The "preferredExperience.target" property allows the 
@@ -7313,9 +7313,10 @@ assertEquals(0.30, value);
       <ttcol align="left">Description</ttcol>
       <c><spanx style="verb">display</spanx></c>
       <c>Describes preferences for how the embedded experience should 
-      initially be displayed by the container. The value of the 
-      "display" property is an object that contains a 
-      required "type" property, the value of which determines 
+      initially be displayed by the container. The "display" property provides 
+      the preferred style to container on how it should render the hyperlink to open the 
+      embedded experience. The value of the "display" property is an object that  
+      contains a required "type" property, the value of which determines 
       what other properties might appear within the object.</c>
       <c><spanx style="verb">target</spanx></c>
       <c>Describes preferences for which type of embedded experience 
@@ -7329,7 +7330,7 @@ assertEquals(0.30, value);
     <section title="Display Types">
 
       <t>This specification currently defines two possible values for the 
-      required "type" property on the display object: "link", "image".
+      required "type" property on the display object: "text", "image".
       Each of which are illustrated below.</t>
       
       <figure><preamble>Display using a hyperlink:</preamble><artwork>
@@ -7339,21 +7340,21 @@ assertEquals(0.30, value);
     "preferredExperience" : {
       "target": {...},
       "display": {
-        "type" : "link",
-        "text" : "Click on me!",
+        "type" : "text",
+        "label" : "Click on me!",
         "title" : "Click on this link!"
       }
     }
   }
       </artwork></figure>
       
-      <t>When "type" equals "link", the additional properties on the 
+      <t>When "type" equals "text", the additional properties on the 
       display object are:</t>
       
       <texttable>
         <ttcol align="left" width="15%">Property</ttcol>
         <ttcol align="left">Description</ttcol>
-        <c><spanx style="verb">text</spanx></c>
+        <c><spanx style="verb">label</spanx></c>
         <c>A required String that provides the text to display with the hyperlink.</c>
         <c><spanx style="verb">title</spanx></c>
         <c>Optional text to display as the "popup help" or "tooltip" of 
