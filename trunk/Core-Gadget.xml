@@ -2595,6 +2595,7 @@ var lang = prefs.getLang();
     <t>See also:
     <xref target="gadgets.views.View">gadgets.views.View</xref> </t></t>
     <section title="Method Details">
+    <x:deprecated note="Deprecated in OpenSocial 2.5" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1309">
      <section title="bind"
               anchor="gadgets.views.bind">
       <t>&lt;static&gt; Type: {String} gadgets.views.bind(urlTemplate,
@@ -2625,6 +2626,7 @@ var lang = prefs.getLang();
        <c>A URL string</c>
       </texttable></t>
      </section>
+    </x:deprecated>
      <section title="getCurrentView"
               anchor="gadgets.views.getCurrentView">
       <t>&lt;static&gt; Type: {
@@ -2907,6 +2909,7 @@ var lang = prefs.getLang();
     <!-- ============================== class summary ========================== -->
     <t>Base interface for all view objects.</t>
     <section title="Method Details">
+    <x:deprecated href="http://code.google.com/p/opensocial-resources/issues/detail?id=1309" note="Deprecated in OpenSocial 2.5"> 
      <section title="bind"
               anchor="gadgets.views.View.bind">
       <t>Type: {String} bind(environment)</t>
@@ -2933,6 +2936,7 @@ var lang = prefs.getLang();
        <c>A URL string</c>
       </texttable></t>
      </section>
+   </x:deprecated>
      <section title="getName"
               anchor="gadgets.views.View.getName">
       <t>Type: {
@@ -2949,6 +2953,7 @@ var lang = prefs.getLang();
        <c>The view name, usually specified as a gadgets.views.ViewType</c>
       </texttable></t>
      </section>
+   <x:deprecated href="http://code.google.com/p/opensocial-resources/issues/detail?id=1309" note="Deprecated in OpenSocial 2.5">
      <section title="getUrlTemplate"
               anchor="gadgets.views.View.getUrlTemplate">
       <t>Type: {String} getUrlTemplate()</t>
@@ -2999,6 +3004,8 @@ http://container.com/apps/Wilma/Betty/dino/car?os_a=Barney&amp;os_b=Fred
        view</c>
       </texttable></t>
      </section>
+   </x:deprecated>
+     
      <section title="isOnlyVisibleGadget"
               anchor="gadgets.views.View.isOnlyVisibleGadget">
       <t>Type: {boolean} isOnlyVisibleGadget()</t>
