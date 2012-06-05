@@ -338,7 +338,7 @@
             <xref target="container.Container.closeGadget">closeGadget</xref> and 
             <xref target="container.Container.unloadGadgets">unloadGadgets</xref> container methods.  Containers may also
             choose to call some of the 
-            <eref target="../Core-Gadget.xml#LifeCycleEvents">gadget lifecycle events</eref> 
+            <eref target="./Core-Gadget.xml#LifeCycleEvents">gadget lifecycle events</eref> 
             in the core gadget spec in order to inform the gadget host
             that the gadget has been added/removed from the container.
           </c>
@@ -734,7 +734,7 @@ config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = function(result) {
               <c>The HTML DOM element in which to render the embedded experience.</c>
               <c>dataModel</c>
               <c>Object</c>
-              <c>The embedded experience <eref target="../Core-Gadget.xml#EEDataModel">data model</eref>.</c>
+              <c>The embedded experience <eref target="./Core-Gadget.xml#Embedded-Experiences">data model</eref>.</c>
               <c>renderParams</c>
               <c>Object</c>
               <c>The render params to use when rendering this embedded experience.</c>
@@ -940,7 +940,7 @@ config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = function(result) {
     </section>
     <section title="container.Container.actions" anchor="container.actions">
     <xref target="Issue-1161">Discussion</xref>
-      <t>The actions feature, as described in the <eref target="../Core-Gadget.xml#gadgets.actions.overview">gadgets.actions overview</eref>, 
+      <t>The actions feature, as described in the <eref target="./Core-Gadget.xml#gadgets.actions.overview">gadgets.actions overview</eref>, 
       allows gadgets to contribute actions to various parts of a container's user interface.  The container can then render the actions consistently 
       in context menus or action areas associated with particular data types, in global contribution areas (ie. navigation links at the top), 
       or as part of the action areas of each gadget's chrome (ie. gadget's dropdown menu). </t>
@@ -960,32 +960,32 @@ config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = function(result) {
         <section title="getAction" anchor="container.actions.getaction">
           <t>container.Container.actions.getAction(actionId)</t>
           <t>Description: Returns the action object (as described in the 
-            <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
+            <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
             associated with the specified id.</t>
           <t>Returns:</t>
           <texttable align="left">
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>Object</c>
-            <c>An <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">action object</eref> currently in the registry with the specified ID.</c>
+            <c>An <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">action object</eref> currently in the registry with the specified ID.</c>
           </texttable>
         </section>
         <section title="getAllActions" anchor="container.actions.getallactions">
           <t>container.Container.actions.getAllActions()</t>
           <t>Description: Returns an array of action objects (as described in the 
-              <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
+              <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
               currently in the registry.</t>
           <t>Returns:</t>
           <texttable align="left">
             <ttcol>Type</ttcol>
             <ttcol>Description</ttcol>
             <c>Object[]</c>
-            <c>An array of <eref target="../Core-Gadget.xml#gadgets.actions.actionobjects">action objects</eref> currently in the registry.</c>
+            <c>An array of <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">action objects</eref> currently in the registry.</c>
           </texttable>
         </section>
         <section title="getActionsByPath" anchor="container.actions.getactionsbypath">
           <t>container.Container.actions.getActionsByPath(path)</t>
-          <t>Description: Returns an array of action objects bound to a specific <eref target="../Core-Gadget.xml#gadgets.actions.paths">path</eref>.  For gadget-specific contributions 
+          <t>Description: Returns an array of action objects bound to a specific <eref target="./Core-Gadget.xml#gadgets.actions.paths">path</eref>.  For gadget-specific contributions 
             (ie. actions that are to be added to a gadget's chrome), this API returns actions with a global identifier for the path. 
             For example, if a gadget contributes an action to the path "gadget/menu/myaction1", this function would return 
             an action with path "&lt;gadgetID&gt;/gadget/menu/myaction1" where &lt;gadgetID&gt; represents the specific gadget site in the container's UI.</t>
@@ -1008,7 +1008,7 @@ config[osapi.container.ContainerConfig.GET_CONTAINER_TOKEN] = function(result) {
         </section>
         <section title="getActionsByDataType" anchor="container.actions.getactionsbytype">
           <t>container.Container.actions.getActionsByObject(dataType)</t>
-          <t>Description: Returns an array of action objects bound to a specific <eref target="../Core-Gadget.xml#gadgets.actions.datatypes">data type</eref>.</t>
+          <t>Description: Returns an array of action objects bound to a specific <eref target="./Core-Gadget.xml#gadgets.actions.datatypes">data type</eref>.</t>
           <t>Parameters:</t>
           <texttable align="left">
             <ttcol>Name</ttcol>
@@ -1218,7 +1218,7 @@ container.Container.actions.removeListener(listener);
   <xref target="Issue-1161">Discussion</xref>
    <t>The selection feature allows the container to support a singleton selected object, or array of objects,
    that can be set by the gadget or the container itself.  For more information, please see the 
-   <eref target="../Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref>.</t>
+   <eref target="./Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref>.</t>
    <section title="Method Details">
     <t>The below methods allow the container itself to interact with the selected object(s).</t>
     <section title="setSelection" anchor="container.selection.setSelection">
@@ -1241,7 +1241,7 @@ container.Container.actions.removeListener(listener);
        <ttcol>Description</ttcol>
        <c>type</c>
        <c>String</c>
-       <c>Open Social data type, as specified in the <eref target="../Social-Data.xml">Social Data Specification</eref></c>
+       <c>Open Social data type, as specified in the <eref target="./Social-Data.xml">Social Data Specification</eref></c>
      <c>dataObject</c>
        <c>Object</c>
        <c>Object representing the selection.</c>
@@ -1256,7 +1256,7 @@ container.Container.actions.removeListener(listener);
       <ttcol>Description</ttcol>
       <c>Object[]</c>
       <c>The array of currently selected objects, each with type and dataObject properties, as described
-      in the <eref target="../Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref></c>
+      in the <eref target="./Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref></c>
       </texttable>
     </section>
    </section>

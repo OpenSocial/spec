@@ -339,10 +339,6 @@ COMMA          = <US-ASCII comma (44)>
 	an an object, and a target. It tells the story of a person performing
 	an action on or with an object -- "Geraldine posted a photo to her
 	album" or "John shared a video". </t>
-   <t>OpenSocial adds an
-	additional field to the data model, "actionLinks".
-	Because these are extensions, they are contained in an enclosing
-	namespace, "openSocial".</t>
            <texttable>
                <ttcol align="left" width="15%">Field Name</ttcol>
                <ttcol align="left" width="21%">Field Type</ttcol>
@@ -440,12 +436,32 @@ COMMA          = <US-ASCII comma (44)>
                    production in RFC3339. Note that the use of a relative reference other than a simple name is not
                    allowed. If the verb is not specified, or if the value is null, the verb is assumed to be "post".
                </c>
+
+           </texttable>
+           
+           <section title="OpenSocial Extensions" anchor="ActivityStreamOpenSocialExtensions">
+             <x:draft note="Issue 1236 - Clarify how Activity Streams are extended with Embedded Experiences" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1236">
+   <t>OpenSocial adds an
+  additional fields to the data model, for example "actionLinks".
+  Because these are extensions, they are contained in an enclosing
+  namespace, "openSocial".  OpenSocial defined extensions to the 
+  Activity Streams data model are defined below.</t>
+
+               <texttable>
+               <ttcol align="left" width="15%">Field Name</ttcol>
+               <ttcol align="left" width="21%">Field Type</ttcol>
+               <ttcol align="left">Description</ttcol>
                <c>actionLinks</c>
                <c>Array&lt;<eref target="./Social-Data.xml#ActionLink">ActionLink</eref>&gt;
                </c>
                <c>An "openSocial" namespaced array of actionLinks associated with this Activity.</c>
-           </texttable>
-
+               <c>embed</c>
+               <c><eref target="./Core-Gadget.xml#Embedded-Experiences">Embedded Experience</eref>
+               </c>
+               <c>An "openSocial" namespaced <eref target="./Core-Gadget.xml#Embedded-Experiences">Embedded Experience data model</eref> associated with this Activity.</c>
+               </texttable>
+        </x:draft>
+           </section>
     A complete ActivityEntry example
     <figure>
      <preamble>application/json representation:</preamble>
