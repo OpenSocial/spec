@@ -412,6 +412,53 @@ Container.updateContainerSecurityToken(function() {
         </texttable>
       </t>
     </section>
+    <x:draft note="Issue 1235 - newGadgetSite and newUrlSite methods are not listed in the incubating spec for the CommonContainer" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1235">
+    <section title="newGadgetSite" anchor="container.Container.newGadgetSite">
+     <t>container.Container.newGadgetSite(element, opt_bufferElement)</t>
+      <t>
+       Creates a new GadgetSite and register it with the container.  The ID attribute
+       of element will be used as the siteId.  If no ID has been assigned to element
+       you pass in, a unique id will be assigned to the site by the container.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>element</c>
+          <c>Element</c>
+          <c>
+           The element to create a gadget site from. 
+          </c>
+          <c>opt_bufferElement</c>
+          <c>Element</c>
+          <c>
+           The element to use as a buffer when rendering the gadget site.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="newUrlSite" anchor="container.Container.newUrlSite">
+     <t>container.Container.newUrlSite(element)</t>
+      <t>
+       Creates a new UrlSite and register it with the container.  The ID attribute
+       of element will be used as the siteId.  If no ID has been assigned to element
+       you pass in, a unique id will be assigned to the site by the container.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>element</c>
+          <c>Element</c>
+          <c>
+           The element to create a url site from. 
+          </c>
+        </texttable>
+      </t>
+    </section>
+   </x:draft>
    </section>
    <section title="container.GadgetSite" anchor="container.GadgetSite">
     <t>
