@@ -2691,18 +2691,19 @@ var lang = prefs.getLang();
       to the SurfaceB surface and show the appropriate &lt;Content&gt; sections
       whose View is SurfaceB.[Secondary].  In no case must the .[Secondary] item be declared. <xref target="Issue-1169">Discussion</xref></t>
       <t>Parameters:
+      <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1300" note="Issue 1300 - The description of the opt_params parameter for requestNavigateTo appears to be wrong">
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
        <ttcol>Description</ttcol>
        <c>view</c>
        <c>gadgets.views.View</c>
-       <c>{string} view If set to a string, the name of the view to navigate
+       <c>If set to a string, the name of the view to navigate
        to. If set to a View, the View object to navigate to. Passing a View has
        been deprecated.</c>
        <c>opt_params</c>
-       <c>Map.&lt;String|String&gt;</c>
-       <c>{string} opt_params If the value is an object, it represents
+       <c>Map&lt;String|String&gt;</c>
+       <c>If the value is an object, it represents
        parameters to pass to the gadget after it has been navigated to on the
        surface. If the view navigated to contains an href and opt_params is a
        string, the value in opt_params is treated as a relative path that must
@@ -2714,7 +2715,7 @@ var lang = prefs.getLang();
        <c>String</c>
        <c>The ID of the owner of the page to navigate to; defaults to the
        current owner</c>
-      </texttable></t>
+      </texttable></x:draft></t>
      </section>
      <section title="openGadget"
               anchor="gadgets.views.openGadget">
