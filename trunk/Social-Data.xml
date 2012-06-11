@@ -1485,13 +1485,15 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="ActivityObject" anchor="ActivityObject">
     <xref target='Issue-1140'>Discussion</xref>
+    <x:draft note="Issue 1317 - Change the namespace for activityStrea.ms support from org.opensocial to openSocial" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1317">
     <t>An object is a thing, real or imaginary, which participates in an
 	activity. It may be the entity performing the activity, or the entity
 	on which the activity was performed. Because Activity Streams are often
 	used in the context of a social platform, OpenSocial adds an
 	additional field to the data model, "deliverTo:".
-	Because these are extensions, they are contained in an eclosing
-	"namespace", org.opensocial.</t>
+	Because these are extensions, they are contained in an enclosing
+	namespace "openSocial".</t>
+  </x:draft>
        <texttable>
            <ttcol align="left" width="15%">Field Name</ttcol>
            <ttcol align="left" width="21%">Field Type</ttcol>
@@ -1594,6 +1596,7 @@ COMMA          = <US-ASCII comma (44)>
        </texttable>
      
     <t>An example ActivityObject</t>
+    <x:draft note="Issue 1317 - Change the namespace for activityStrea.ms support from org.opensocial to openSocial" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1317">
     <figure>
      <preamble>application/json representation:</preamble>
      <artwork xml:space="preserve">
@@ -1625,11 +1628,12 @@ COMMA          = <US-ASCII comma (44)>
     }
   ],
   objectType: "photo",
-  org.opensocial:{
+    opensSocial:{
   	deliverTo:["1245:MySpace.com"]
   }
 }</artwork>
     </figure>
+    </x:draft>
     <figure>
      <preamble>application/xml representation:</preamble>
      <artwork xml:space="preserve">
