@@ -6851,21 +6851,16 @@ assertEquals(0.30, value);
       <c>A URL to an OpenSocial Gadget definition document that defines the 
       gadget to be embedded.</c>
       
-      <c><spanx style="verb">previewImageData</spanx></c>
-      <c>An optional string value that containing Base64-encoded binary data for an
-      image resource that represents the embedded content. This can be 
-      the same image resource linked to by the previewImage property or 
-      a separate image. An embedded experience SHOULD NOT contain both 
-      the previewImageData and previewImage properties.</c>
-      
       <c><spanx style="verb">preferredExperience</spanx></c>
       <c>An optional collection of properties that describe the preferred 
       way the creator of the embedded experience would like containers to
       render the content.</c>
       
       <c><spanx style="verb">previewImage</spanx></c>
-      <c>An optional URI to an image that can be used as a preview for the 
-      embedded content.</c>
+      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">An optional URI to an image that can be used as a preview for the 
+      embedded content. This property accepts uri data scheme 
+      (http://tools.ietf.org/html/rfc2397) to specify the image as Base64-encoded 
+      embedded data.</x:draft></c>
       
       <c><spanx style="verb">url</spanx></c>
       <c>A URL to a web page that allows virtually any web-accessible 
@@ -6991,7 +6986,7 @@ assertEquals(0.30, value);
         <xref target="eeTargetTypes">target object</xref> type is equal to 
         "gadget" and there is a view property specified, the container will 
         try and render the value of the "view" property.  If there is no "view" 
-        propoerty in the target object or there is no target object, or if 
+        property in the target object or there is no target object, or if 
         there is no preferred experience in the data model, the container will 
         render a view called "embedded".  If an "embedded" view or the view 
         specified within the target object of the embedded experience data 
@@ -7385,12 +7380,12 @@ assertEquals(0.30, value);
     }
   } 
       </artwork></figure>
-      
-      <figure><preamble>Display using contained Base64-encoded binary data:</preamble><artwork>
+      <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">
+      <figure><preamble>Display using Base64-encoded binary data in the url data scheme:</preamble><artwork>
   {
     "gadget" : "...",
     ...,
-    "previewImageData" : "{Base64-encoded Image}",
+    "previewImage" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA...",
     "preferredExperience" : {
       "target": {...},
       "display": {
@@ -7402,7 +7397,7 @@ assertEquals(0.30, value);
     }
   } 
       </artwork></figure>
-      
+      </x:draft>
       <t>When "type" equals "image", the additional properties on the 
       display object are:</t>
       
