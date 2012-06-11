@@ -372,11 +372,16 @@ Content-Type: application/json
     </section>
     </section>
     <section title="Create" anchor="People-Service-Create">
-     <section title="Create a relationship"
+      <section title="Create a Person/Relationship"
              anchor="People-Service-CreateRelationship">
-     <t>Containers MAY support request to create a new relationships between users. This is a generalization of many use cases including invitation, and contact creation. Containers MAY require a dual opt-in process before the friend record appears in the collection, and in this case SHOULD
+
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+     <t>Containers MAY support request to create a new Relationships between users or a new Person account. This is a generalization of many use cases including invitation, and contact creation. Containers MAY require a dual opt-in process before the friend record appears in the collection, and in this case SHOULD
     return a 202 Accepted response, indicating that the request is 'in flight'
-    and may or may not be ultimately successful.</t>
+    and may or may not be ultimately successful.
+  Note, that not all implementations support creation/deletion of a Person account through the API for security reasons.
+  </t>
+</x:draft>
     <t>Requests and responses for creating a relationship use the following values:</t>
      <artwork type="abnf"
          xml:space="preserve">
@@ -390,8 +395,9 @@ Content-Type: application/json
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
 </artwork>
-     <section title="Create Relationship Request Parameters" anchor="CreateRelationship-Request-Parameters">
+<section title="Create Person/Relationship Request Parameters" anchor="CreateRelationship-Request-Parameters">
         <t>A request to create a relationship MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
          <texttable align="left">
           <ttcol>Name</ttcol>
           <ttcol>Type</ttcol>
@@ -401,11 +407,12 @@ Content-Type: application/json
           <c>User ID of the person initiating the relationship request.  Defaults to "@me", which MUST return the currently logged in user.</c>
           <c>groupId</c>
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
-          <c>The Group Id specifying the type of relationship.  Defaults to "@friends".</c>
+          <c>Defaults to "@friends". When equals to "@self", deletes the user account itself. Otherwise a relationship with Group-Id to a Person object (specified in REST-Request-payload) is deleted.</c>
           <c>person</c>
           <c><eref target="Social-Data.xml#Person">Person</eref></c>
-          <c>The target of the relationship.</c>
+          <c>The target of the action.</c>
          </texttable>
+</x:draft>
      </section>
      <section title="Examples">
        <t>Here is an example of a request to create a friend relationship using the REST protocol.  In this example, the target user (specified in the post body) needs to accept the invitation before being added to the collection, as indicated by the 202 Accepted response.
@@ -459,10 +466,17 @@ Content-Type: application/json
     </section>
     </section>
     <section title="Update a Person" anchor="People-Service-Update">
-     <t>Containers MAY support updating the properties of a Person object.  If the request is successful, the container MUST return the updated Person object. Requests and responses for updating the fields of a Person use the following values:</t>
+
+      <t>Containers MAY support updating the properties of a Person object.  If the request is successful, the container MUST return the updated Person object.
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+  By default, a user can only update his own information, though some containers may extend this functionality by allowing other people (e.g., admins) to update person's data.
+</x:draft>
+  Requests and responses for updating the fields of a Person use the following values:</t>
      <artwork type="abnf"
          xml:space="preserve">
-<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "POST"
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
+</x:draft>
 <eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
@@ -490,23 +504,51 @@ Content-Type: application/json
          </texttable>
      </section>
     </section>
-    <section title="Delete a Person" anchor="People-Service-Delete">
-     <t>Containers MAY support requests to remove a Person. The default value for User-Id is "@me". Requests and responses to remove a Person use the following values:</t>
+    <section title="Delete a Person/Relationship" anchor="People-Service-Delete">
+      <t>
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+Containers MAY support requests to remove a Person or a Relationship. The default value for User-Id is "@me".
+  Note, that not all implementations support creation/deletion of a Person account through the API for security reasons.
+</x:draft>
+       Requests and responses to remove a Person use the following values:</t>
      <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
-<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
+</x:draft>
 
 <eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.delete"
-<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = "{"
-                             &lt;"&gt; "userId" &lt;"&gt; ":" &lt;"&gt; <eref target="Core-Data.xml#User-Id">User-Id</eref> &lt;"&gt;
-                         "}"
-                         
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteRelationship-Request-Parameters</x:ref>)
+</x:draft>
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
 </artwork>
     </section>
+
+<x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+  <section title="Delete Person/Relationship Request Parameters" anchor="DeleteRelationship-Request-Parameters">
+        <t>A request to delete a relationship MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
+         <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>userId</c>
+          <c><eref target="Core-Data.xml#User-Id">User-Id</eref></c>
+          <c>User ID of the person initiating the request.  Defaults to "@me", which MUST return the currently logged in user.</c>
+          <c>groupId</c>
+          <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
+          <c>Defaults to "@friends". When equals to "@self", deletes the user account itself. Otherwise a relationship with Group-Id to a Person object (specified in REST-Request-payload) is deleted.</c>
+          <c>person</c>
+          <c><eref target="Social-Data.xml#Person">Person</eref></c>
+          <c>The target Person of the action.</c>
+         </texttable>
+     </section>
+</x:draft>
    </section>
 
 <!-- *********************************************************************************** -->

@@ -110,6 +110,17 @@
          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service. Executing this request MUST return a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Person">Person</eref> objects representing the owner's friends.</t>
         </list>
         </section>
+      <x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+        <section title="update" anchor="osapi.people.update">
+         <list style="hanging">
+         <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.people.update(params)</t>
+         <t hangText="Description">Builds a request to update information stored in the
+         People service.</t>
+          <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Update">People service's update method</eref>.  This parameter is REQUIRED and MUST include the 'person' property which includes the id of the PersonEntry to update.</t>
+         <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service. Executing this request MUST overwrite the existing person entry on the server and MUST return a <eref target="./Social-Data.xml#Person">Person</eref> object.</t>
+       </list>
+        </section>
+      </x:draft>
        </section>
        <section title="Examples">
         <figure>
@@ -143,6 +154,26 @@ osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(resul
 });
 </artwork>
         </figure>
+
+      <x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+        <figure>
+         <preamble>An example to update the user's name:</preamble>
+         <artwork xml:space="preserve">
+var newName = {
+  "givenName": "Joe",
+  "familyName": "Doe"
+};
+
+osapi.people.update({person: {id: "15", name: newName}})
+            .execute(function(result) {
+  if (!result.error) {
+    alert('New name is ' + result.displayName);
+  }
+});
+</artwork>
+        </figure>
+
+      </x:draft>
         <figure>
          <preamble>An example that illustrates all available request
          parameters:</preamble>
