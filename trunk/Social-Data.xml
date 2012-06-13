@@ -1168,10 +1168,8 @@ COMMA          = <US-ASCII comma (44)>
       valid <eref target="./Core-Data.xml#Date">Date</eref>.</c>
       <c>relationships</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>A bi-directionally asserted relationship type that was established
-      between the user and this person by the Service Provider. The value
-      SHOULD conform to one of the XFN relationship values (e.g. kin, friend,
-      contact, etc.) if appropriate, but MAY be an alternative value if needed.
+      <c>A relationship type that was established
+      between the user and this person by the Service Provider.
       Note this field is a parallel set of category labels to the tags field,
       but relationships MUST have been bi-directionally confirmed, whereas tags
       are asserted by the user without acknowledgment by this Person. Note that
@@ -1848,16 +1846,71 @@ App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
 
    <xref target='Issue-1223'>Discussion</xref>
 </x:draft>
-   <section title="Group Id"
-            anchor="Group-Id">
-    <t>The group Id must only contain alphanumeric (A-Za-z0-9) characters,
-    underscore(_), dot(.) or dash(-), and must uniquely identify the group in a
-    container.</t>
-    <artwork type="abnf"
-         xml:space="preserve">
-Group-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@self" / "@friends" / "@all"
-</artwork>
-   </section>
+
+     <section anchor="Group-Id" title="Group Id">
+       <t>The group Id must only contain alphanumeric (A-Za-z0-9) characters,
+       underscore(_), dot(.) or dash(-), and must uniquely identify the group
+       in a container.</t>
+       <artwork type="abnf" xml:space="preserve"><![CDATA[
+Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[ / "@self" / "@friends" / "@all"
+]]></artwork>
+       <section title="Canonical Group Id Values">
+         <t>OpenSocial defines the following cannonical group
+         identifiers.</t>
+         <texttable>
+           <ttcol>Group ID</ttcol>
+           <ttcol>Definition</ttcol>
+           <c>@all</c>
+           <c>The inclusive set of information visible to a user. For
+           example, using @all when requesting activity streams would return
+           all of the entries that are visible to the user. </c>
+           <c>@followers</c>
+           <c>A uni-directional relationship that specifies the collection of
+           people (or a single person) that are interested in receiving
+           information, e.g. activity streams, about a specific person.</c>
+           <c>@following</c>
+           <c>A uni-directional relationship that specifies the collection of
+           people that the user is interested in receiving information about.
+           </c>
+           <c>@friends</c>
+           <c>A bi-directional relationship that indicates that both parties
+           have entered into. </c>
+           <c>@self</c>
+           <c>Represents the user who is issuing the request.</c>
+           <c>@summary</c>
+           <c>A container defined collection of fields that serves to provide
+           an abbreviated view of the requested object. For example, simply
+           requesting the information about a user would return their ID and
+           thumbnail. When @summary is requested, the container may provide
+           the public profile. Use of @summary avoids the need to specify a
+           subset of fields. </c>
+         </texttable>
+         <section title="Organization Chart">
+           <t>Increasingly, OpenSocial is being used in enterprise settings.
+           To enable easy retrieval of organization structure information,
+           the specification defines the following values to represent the
+           org chart.</t>
+           <texttable>
+             <ttcol>Group Id</ttcol>
+             <ttcol>Definition</ttcol>
+             <c>@colleagures</c>
+             <c>All the people that report to the same manager as identified
+             by the User Id.</c>
+             <c>@manager</c>
+             <c>The manager(s) of the person specified by the User Id.
+             Typicially, this will be a single person, however, it may be
+             possible that their be multiple managers of a person. This
+             should not be confused with using the network distance parameter
+             on the query, which may </c>
+             <c>@reports</c>
+             <c>The person or collection of people who are managed by the
+             &lt;userid&gt; of the request..</c>
+           </texttable>
+         </section>
+       </section>
+     </section>
+
+
    <section title="MediaItem"
             anchor="MediaItem">
      <t>Represents images, movies, and audio.
