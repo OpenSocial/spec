@@ -438,9 +438,9 @@ COMMA          = <US-ASCII comma (44)>
                </c>
 
            </texttable>
-           
+           <!-- Note: This also includes issue 1318 http://code.google.com/p/opensocial-resources/issues/detail?id=1318 -->
            <section title="OpenSocial Extensions" anchor="ActivityStreamOpenSocialExtensions">
-             <x:draft note="Issue 1236 - Clarify how Activity Streams are extended with Embedded Experiences" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1236">
+             <x:draft note="Issue 1236 - Clarify how Activity Streams are extended with Embedded Experiences. Note, this also includes issue 1318 but because of formatting, we can only include one link in the xml part of the spec." href="http://code.google.com/p/opensocial-resources/issues/detail?id=1236">
    <t>OpenSocial adds an
   additional fields to the data model, for example "actionLinks".
   Because these are extensions, they are contained in an enclosing
@@ -455,6 +455,15 @@ COMMA          = <US-ASCII comma (44)>
                <c>Array&lt;<eref target="./Social-Data.xml#ActionLink">ActionLink</eref>&gt;
                </c>
                <c>An "openSocial" namespaced array of actionLinks associated with this Activity.</c>
+               <c>deliverTo:</c>
+	           <c>
+	               <eref target="./Core-Data.xml#Array">Array&lt;</eref>
+	               <eref target="./Core-Data.xml#Global-Id">Global-Id&gt;</eref>
+	           </c>
+	           <c>Many social business systems incorporate the idea that an activity may not be public. By including the
+	               "deliverTo:" field, a specific user(s) will receive the activity. The Activity MUST be delivered to the
+	               recipients specified in the deliverTo: Array
+	           </c>    
                <c>embed</c>
                <c><eref target="./Core-Gadget.xml#Embedded-Experiences">Embedded Experience</eref>
                </c>
@@ -1583,15 +1592,6 @@ COMMA          = <US-ASCII comma (44)>
            <c>string</c>
            <c>An IRI [RFC3987] identifying a resource providing an HTML representation of the object. An object MAY
                contain a url property
-           </c>
-           <c>deliverTo:</c>
-           <c>
-               <eref target="./Core-Data.xml#Array">Array&lt;</eref>
-               <eref target="./Core-Data.xml#Global-Id">Global-Id&gt;</eref>
-           </c>
-           <c>Many social business systems incorporate the idea that an activity may not be public. By including the
-               "deliverTo:" field, a specific user(s) will receive the activity. The Activity MUST be delivered to the
-               recipients specified in the deliverTo: Array
            </c>
        </texttable>
      
