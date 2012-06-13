@@ -196,9 +196,20 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <t hangText="@author_email">An email address to use as a point of contact
       for the author of the gadget. Containers MAY display this value on any
       Directory.</t>
-      <t hangText="@screenshot">Optional. A string that gives the URL of a gadget screenshot. This must be an image on a public web site that is not blocked by robots.txt. PNG is the preferred format, though GIF and JPG are also acceptable. Gadget screenshots should be 280 pixels wide. The height of the screenshot should be the "natural" height of the gadget when it's in use. Containers SHOULD display this image on Directory pages to provide a preview of the gadget to Users.</t>
-      <t hangText="@thumbnail">Optional. A string that gives the URL of a gadget thumbnail. This must be an image on a public web site that is not blocked by robots.txt. PNG is the preferred format, though GIF and JPG are also acceptable. Gadget thumbnails should be 120x60 pixels. This
-      SHOULD be smaller than @screenshot and larger than any
+	<t hangText="@screenshot"> Deprecated. Use
+      <xref target="Screenshot">/ModulePrefs/Link/@rel="screenshot"</xref>instead. Optional. A string that gives the URL of a gadget
+		screenshot. This must be an image on a public web site that is not
+		blocked by robots.txt. PNG is the preferred format, though GIF and JPG
+		are also acceptable. Gadget screenshots should be 280 pixels wide. The
+		height of the screenshot should be the "natural" height of the gadget
+		when it's in use. Containers SHOULD display this image on Directory
+		pages to provide a preview of the gadget to Users.</t>
+	<t hangText="@thumbnail">
+		Optional. A string that gives the URL of a gadget thumbnail. This must
+		be an image on a public web site that is not blocked by robots.txt.
+		PNG is the preferred format, though GIF and JPG are also acceptable.
+		Gadget thumbnails should be 120x60 pixels. This
+		SHOULD be smaller than @screenshot and larger than any
       <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref>elements.</t>
       <t hangText="@height">The preferred default height of the gadget, in
       pixels. Containers SHOULD use this value to set an appropriate height for
@@ -514,15 +525,21 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <list style="hanging">
        <t hangText="@rel">The relationship between this link and the document.
        Valid values are specified in
-       <xref target="LifeCycleEvents">Life Cycle Events</xref> and
-       <xref target="Icons">Icons</xref>. Containers MAY support additional
+       <xref target="LifeCycleEvents">Life Cycle Events</xref>,
+       <xref target="Icons">Icons</xref>,  <xref target="License">License</xref>, 
+       <xref target="PrivacyPolicy">Privacy Policy</xref> and <xref target="Screenshots">Screenshots</xref>. Containers MAY support additional
        values, but they MUST be namespaced to avoid collisions.</t>
        <t hangText="@href">The URL of the link.</t>
        <t hangText="text()">Not used at this time.</t>
       </list>
    <section title="Icons"
             anchor="Icons">
-    <t>When the value for /ModulePrefs/Link/@rel is "icon", Containers
+    <t>
+	OpenSocial defines three icon sizes. The reason for keeping them
+	distinct is so that the container may choose to optimize downloading
+	only one. For example a mobile device may only need "icon", where an
+	application market listing may need all three. </t>
+    <t>When the value for /ModulePrefs/Link/@rel is "icon", "mediumIcon", or "largeIcon", Containers
     SHOULD treat the link as a reference to an image that represents an
     application icon for the Gadget. This is preferred over using
     <xref target="Icon">/ModulePrefs/Icon</xref>, which is deprecated.</t>
@@ -577,7 +594,39 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       are "enabled", "disabled", "approved", "submitted", "rejected", "new" and "banned". </c>
      </texttable></t>
    </section>
-     </section>
+	<section title="License" anchor="License">
+		<t>When the value for /ModulePrefs/Link/@rel is "license", Containers
+			SHOULD treat the link as a reference to an document that represents
+			is the license of the service that is provided by the application.
+		</t>
+	</section>
+	<section title="Privacy Policy" anchor="PrivacyPolicy">
+		<t>When the value for /ModulePrefs/Link/@rel is "privacyPolicy",
+			Containers
+			SHOULD treat the link as a reference to an document that represents is the
+			privacy policy of the service that is provided by the application.
+		</t>
+	</section>
+   <section title="Screenshots"
+            anchor="Screenshots">
+       <t>
+	It is RECOMMENDED that screenshots be available on a public Web site, however,
+	because of OpenSocial's groing use behing firewalls, it is not
+	necessary for this to be publicly addressible. PNG is the preferred
+	format, though GIF and JPG
+	are also acceptable. Gadget screenshots should be 280 pixels wide. The
+	height of the screenshot should be the "natural" height of the gadget
+	when it's in use. Containers SHOULD display this image on Directory
+	pages to provide a preview of the gadget to Users.</t>
+	<t>
+	When the value for /ModulePrefs/Link/@rel is "screenshot", Containers
+	SHOULD treat the link as a reference to an image that represents a
+	screenshot for the Gadget. Additional values of "screenshot1",
+	"screenshot2", "screenshot3","screenshot4", and "screenshot5" are also
+	valid. <xref target="Issue-1283">Discussion</xref></t>
+	</section> 
+   
+ </section>
 
 
      <section title="/ModulePrefs/OAuth"
@@ -4140,7 +4189,39 @@ dataset would contain content resembling:
                   &lt;xs:attribute name="views" type="xs:string" use="optional"/&gt;
                 &lt;/xs:complexType&gt;
               &lt;/xs:element&gt;
-              &lt;xs:element name="Icon"&gt;
+              &lt;xs:element name="icon"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:simpleContent&gt;
+                    &lt;xs:extension base="xs:string"&gt;
+                      &lt;xs:attribute name="mode"&gt;
+                        &lt;xs:simpleType&gt;
+                          &lt;xs:restriction base="xs:string"&gt;
+                            &lt;xs:enumeration value="base64"/&gt;
+                          &lt;/xs:restriction&gt;
+                        &lt;/xs:simpleType&gt;
+                      &lt;/xs:attribute&gt;
+                      &lt;xs:attribute name="type" type="xs:string"/&gt;
+                    &lt;/xs:extension&gt;
+                  &lt;/xs:simpleContent&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+              &lt;xs:element name="mediumIcon"&gt;
+                &lt;xs:complexType&gt;
+                  &lt;xs:simpleContent&gt;
+                    &lt;xs:extension base="xs:string"&gt;
+                      &lt;xs:attribute name="mode"&gt;
+                        &lt;xs:simpleType&gt;
+                          &lt;xs:restriction base="xs:string"&gt;
+                            &lt;xs:enumeration value="base64"/&gt;
+                          &lt;/xs:restriction&gt;
+                        &lt;/xs:simpleType&gt;
+                      &lt;/xs:attribute&gt;
+                      &lt;xs:attribute name="type" type="xs:string"/&gt;
+                    &lt;/xs:extension&gt;
+                  &lt;/xs:simpleContent&gt;
+                &lt;/xs:complexType&gt;
+              &lt;/xs:element&gt;
+              &lt;xs:element name="largeIcon"&gt;
                 &lt;xs:complexType&gt;
                   &lt;xs:simpleContent&gt;
                     &lt;xs:extension base="xs:string"&gt;
