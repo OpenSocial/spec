@@ -1847,6 +1847,44 @@ App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
    <xref target='Issue-1223'>Discussion</xref>
 </x:draft>
 
+
+   <section title="FieldMetadata" anchor="FieldMetadata">
+    <x:incubating note="Add new Metadta Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
+     <t>Each FieldMetadata instance represents a field that MAY be present in a particular entity of the containing object type</t>
+      <texttable align="left" >
+      <ttcol align="left" width="15%">Field</ttcol>
+      <ttcol align="left" width="25%">Type</ttcol>
+      <ttcol align="left" >Description</ttcol>
+      <c>availability</c>
+      <c>String</c>
+      <c>Description on when this field is available on a particular object.</c>
+      <c>description</c>
+      <c>String</c>
+      <c>The textual description of this field.</c>
+      <c>editable</c>
+      <c>Boolean</c>
+      <c>Flag indicating whether this field is modifiable on create and update operations.</c>
+      <c>name</c>
+      <c>String</c>
+      <c>Name of the key under which this field will be present.</c>
+      <c>required</c>
+      <c>Boolean</c>
+      <c>Flag indicating whether this field is required on create and update operations.</c>
+      <c>since</c>
+      <c>String</c>
+      <c>OpenSocial version in which this object is initially available.</c>
+      <c>type</c>
+      <c>String</c>
+      <c>Object type of this field.</c>
+     </texttable> 
+    </x:incubating>
+   </section>
+
+
+
+
+
+
      <section anchor="Group-Id" title="Group Id">
        <t>The group Id must only contain alphanumeric (A-Za-z0-9) characters,
        underscore(_), dot(.) or dash(-), and must uniquely identify the group
@@ -2166,6 +2204,36 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
      
      
    </section>
+   
+   <section title="ObjectMetadata" anchor="ObjectMetadata">
+    <x:incubating note="Add new Metadta Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
+     <t>Each ObjectMetadata instance represents all of the metadata associated with a particular object type.</t>
+      <texttable align="left" >
+      <ttcol align="left" width="15%">Field</ttcol>
+      <ttcol align="left" width="25%">Type</ttcol>
+      <ttcol align="left" >Description</ttcol>
+      <c>description</c>
+      <c>String</c>
+      <c>The textual description of this object.</c>
+      <c>fields</c>
+      <c>FieldMetadata[]</c>
+      <c>Description of all possible fields that may appear in this object represented as an Array of FieldMetadata.</c>
+      <c>name</c>
+      <c>String</c>
+      <c>Formal name of this object type.</c>
+      <c>resourceLinks</c>
+      <c>ResourceMetadata[]</c>
+      <c>Description of all possible resource links that may appear in this object.</c>
+      <c>since</c>
+      <c>String</c>
+      <c>OpenSocial version in which this object is initially available.</c>
+     </texttable> 
+    </x:incubating>
+   </section>
+   
+   
+   
+   
    <section title="Organization" anchor="Organization">
 <t>Describes a current or past organizational affiliation of this contact.
      Service Providers that support only a single Company Name and Job Title
@@ -2267,8 +2335,32 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
      </texttable>
      </t>
         </x:incubating>
-   </section>   
-
+   </section>
+   
+   <section title="PropertyMetadata" anchor="PropertyMetadata">
+    <x:incubating note="Add new Metadta Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
+     <t>Each PropertyMetadata instance represents a configuration value for this social container.</t>
+      <texttable align="left" >
+      <ttcol align="left" width="15%">Field</ttcol>
+      <ttcol align="left" width="25%">Type</ttcol>
+      <ttcol align="left" >Description</ttcol>
+      <c>description</c>
+      <c>String</c>
+      <c>A textual description of the property</c>
+      <c>name</c>
+      <c>String</c>
+      <c>The name of the metadta property</c>
+      <c>type</c>
+      <c>String</c>
+      <c>Object type of this property value</c>
+      <c>value</c>
+      <c>Object</c>
+      <c>The current value of this property</c>
+     </texttable> 
+    </x:incubating>
+   </section>
+   
+      
   </section>
  </middle>
  <back>

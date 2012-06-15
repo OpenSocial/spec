@@ -1648,7 +1648,136 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
       </section>
     </section>
    </section>
-  </section>
+
+
+ <section title="Metadata" anchor="Metadata-Service">
+  <x:incubating note="Add new Metadta Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
+	<t>
+		OpenSocial provides a rich collection of information contained in a
+		variety of data models. However, because of the increasingly diverse
+		usage of OpenSocial, containers often support only part of these
+		models
+		and often extend them with their own unique content. For example, in
+		professional settings, fields from the Person model, e.g. "smoker"
+		are
+		not really used. In addition, many of these same systems have
+		constructs like blogs, discussions, etc. that are often exposed via
+		OpenSocial's programming model.</t>
+	<t>
+	Because of this, application developers need a mechanism to fully
+	understand the available datatypes inside a social container. This is
+	the purpose of the metadata service. This is much more valuable than
+	the "getSupportedFields" because it returns the type of the field as
+	well. OpenSocial supports two paths for getting metadata, "objects"
+	and	"properties". The returned information is simply a list of what is available in the
+	container and is represented by a flat structure. That is, a developer would not
+	"navigate" metadata. Since metadata information is provided by the
+	container, is is, essentially read only. Therefore, only the GET method
+	is necessary.</t>
+
+
+	<t>Containers MAY add additional paths to the service. A request for
+	Metadata Objects MUST support the
+	<eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>
+	.
+</t>
+
+	<section title="Objects" anchor="MetadataObjects">
+		<t>Objects represents the complete collection of objects available
+			within the social container.</t>
+		<section title="Get" anchor="Metadata-Objects-Service-Get">
+			<t>The Get method returns an object that represents the enumerated
+				list of objects in the system. </t>
+			<artwork type="abnf" xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/metadata/objects/{name}/{field}"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetObjects-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "metadata.objects.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetObjects-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref> = <eref
+				target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Social-Data.xml#ObjectMetadata">ObjectMetadata</eref>&gt;
+				
+</artwork>
+			<t>
+				Optionally, a specific object,
+				specified
+				by {name}, may be requested. A specific {field} within an named
+				object
+				may also be requested.
+				</t>
+			<texttable align="left">
+				<ttcol>Name</ttcol>
+				<ttcol>Type</ttcol>
+				<ttcol>Description</ttcol>
+				<c>name</c>
+				<c>String</c>
+				<c>Optional. The name of the desired object to get metadata about,
+					e.g. Person</c>
+				<c>field</c>
+				<c>String</c>
+				<c>Optional. The name of the desired field to get metadata about,
+					e.g. displayName.</c>
+			</texttable>
+		</section>
+	</section>
+
+	<section title="Properties" anchor="MetadataProperties">
+		<t>OpenSocial containers, especially those used within an enterprise
+			setting, can be very configurable. While the developer can introspect
+			on the container through discovery, this only provides a very high
+			level understanding of if a service is available or not. It provides
+			no
+			information about the service. For example, in an enterprise
+			environment, it is common to reflect an organization chart through the
+			use of @groups, e.g. @manager, @colleagues, and @reports. However, it
+			is possible that some containers may choose to disable this feature.
+			Using properties metadata allows the developer a programmatic
+			mechanism
+			to discover this information and use it in their business logic.
+	</t>
+	</section>
+
+	<section title="Get" anchor="Metadata-Properties-Service-Get">
+		<t>The Get method returns an object that represents the enumerated
+			list of properties of the system. </t>
+		<artwork type="abnf" xml:space="preserve">
+<eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "GET"
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/metadata/properties/{name}"
+<eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = <x:ref>ENCODE-REST-PARAMETERS</x:ref>(<x:ref>GetObjects-Request-Parameters</x:ref>)
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
+
+<eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "metadata.objects.get"
+<eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>GetObjects-Request-Parameters</x:ref>)
+
+<eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref
+			target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Social-Data.xml#PropertyMetadata">PropertyMetadata</eref>&gt;
+</artwork>
+		<t>
+			Optionally, a specific object,
+			specified
+			by {name}, may be requested.
+				</t>
+		<texttable align="left">
+			<ttcol>Name</ttcol>
+			<ttcol>Type</ttcol>
+			<ttcol>Description</ttcol>
+			<c>name</c>
+			<c>String</c>
+			<c>Optional. The name of the desired property to get metadata about,
+				e.g. "orgchart.enabled"</c>
+		</texttable>
+	</section>
+   </x:incubating>
+  </section>  
+  
+ </section>
+  
+  
+  
+  
   <section title="Compatibility with Portable Contacts">
    <t>The OpenSocial RESTful protocol is
    wire-compatible with Portable Contacts version 1.0 where applicable. Specifically, any compliant OpenSocial API Server that supports the <xref target="People-Service">People service</xref>

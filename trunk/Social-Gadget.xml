@@ -619,7 +619,107 @@ osapi.messages.send(params).execute(messageSentCallback);
         </section>
         <section title="Examples">
         </section>
-      </section> 
+      </section>
+
+   <section title="osapi.metadata" anchor="osapi.metadata">
+<x:incubating note="Add new Metadta Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
+	<section title="osapi.metadata.objects" anchor="osapi.metadata.objects">
+		<t>
+			Service object with functions that map will allow the user to
+			retrieve the list of objects in the container.
+			<eref target="./Social-API-Server.xml#Metadata-Objects-Service">Metadata Objects service</eref>
+			.
+		</t>
+		<section title="osapi.metadta.objects" anchor="osapi.metadata.objects">
+			<section title="get" anchor="osapi.metadata.objects.get">
+				<list style="hanging">
+					<t hangText="Signature">
+						&lt;static&gt; {
+						<eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+						} osapi.groups.get(params)
+					</t>
+					<t hangText="Description">Builds a request to get the metadata objects via the
+						metadata service.</t>
+					<t hangText="Parameters">
+						This method takes one parameter, which is a JavaScript object
+						representing the parameters defined by the
+						<eref target="./Social-API-Server.xml#Metadata-Objects-Service-Get">Metadata Objects service's get method</eref>.
+					</t>
+					<t hangText="Returns">
+						A
+						<eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+						to get a group or groups via the Groups service. Executing this
+						request MUST return an <eref
+				target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Social-Data.xml#ObjectMetadata">ObjectMetadata</eref>&gt;
+					</t>
+				</list>
+			</section>
+		</section>
+	</section>
+    
+	<section title="osapi.metadata.properties" anchor="osapi.metadata.properties">
+		<t>
+			Service object with functions that map will allow the user to
+			retrieve the list of objects in the container.
+			<eref target="./Social-API-Server.xml#Metadata-Properties-Service">Metadata Properties service</eref>
+			.
+		</t>
+		<section title="osapi.metadta.objects" anchor="osapi.metadata.objects">
+			<section title="get" anchor="osapi.metadata.objects.get">
+				<list style="hanging">
+					<t hangText="Signature">
+						&lt;static&gt; {
+						<eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+						} osapi.metadata.objects.get(params)
+					</t>
+					<t hangText="Description">Builds a request to get the metadata objects via the
+						metadata service.</t>
+					<t hangText="Parameters">
+						This method takes one parameter, which is a JavaScript object
+						representing the parameters defined by the
+						<eref target="./Social-API-Server.xml#Metadata-Objects-Service-Get">Metadata Objects service's get method</eref>.
+					</t>
+					<t hangText="Returns">
+						A
+						<eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+						that when executed MUST return an <eref
+				target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Social-Data.xml#ObjectMetadata">ObjectMetadata</eref>&gt;
+					</t>
+				</list>
+			</section>
+			
+		<section title="osapi.metadta.properties" anchor="osapi.metadata.properties">
+			<section title="get" anchor="osapi.metadata.properties.get">
+				<list style="hanging">
+					<t hangText="Signature">
+						&lt;static&gt; {
+						<eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+						} osapi.metadata.properties.get(params)
+					</t>
+					<t hangText="Description">Builds a request to get the container properties via the
+						metadata service.</t>
+					<t hangText="Parameters">
+						This method takes one parameter, which is a JavaScript object
+						representing the parameters defined by the
+						<eref target="./Social-API-Server.xml#Metadata-Properties-Service-Get">Metadata Properties service's get method</eref>.
+					</t>
+					<t hangText="Returns">
+						A
+						<eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref>
+						 that when executed MUST return an <eref
+				target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Social-Data.xml#PropertyMetadata">PropertyMetadata</eref>&gt;
+					</t>
+				</list>
+		   </section>
+		</section>	
+			
+			
+			
+		</section>
+	</section>
+	</x:incubating>
+  </section>
+      
     <section title="opensocial"
              anchor="opensocial">
      <t>Namespace for top-level people functions.</t>
