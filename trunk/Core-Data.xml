@@ -437,6 +437,13 @@ Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
       not available. For efficiency, Service Providers SHOULD NOT mark all
       non-primary fields with primary="false", but should instead omit this
       sub-field for all non-primary instances.</c>
+      <c>label</c>
+      <c>String</c>
+      <c>In many cases, plural fields are used to display information to
+	the user. However, even with primary, it's difficult to know which
+	field a user may be updating. For example, if you have multiple business
+	phones, business addresses, et. Adding an optional label field is a hint to the
+	UI where this field belongs.</c>
      </texttable>
      <t>When returning Plural Fields, Service Providers SHOULD canonicalize the
      value returned, if appropriate (e.g. for e-mail addresses and URLs).
