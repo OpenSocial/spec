@@ -1088,9 +1088,12 @@ GIF89....&lt;image data&gt;
     </section>
 
     <section title="Format" anchor="Request-Parameter-Format-Value">
+    <x:deprecated note="ATOM Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1322">
+    <t>JSON is the standard format adopted by OpenSocial.</t>
       <artwork type="abnf"><x:highlight>Request-Parameter-Formet-Value</x:highlight> = "json" / "xml" / "atom"</artwork>
       <t>Specifies the desired return encoding of the request.
      Must be one of "json", "xml", or "atom".</t>
+    </x:deprecated> 
     </section>
 
    </section>
