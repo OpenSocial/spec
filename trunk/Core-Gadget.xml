@@ -2846,8 +2846,8 @@ var lang = prefs.getLang();
          The site handler can only be used as parameter in gadgets.views.close(opt_site_handler).</c>
          <c>dataModel</c>
          <c>Object</c>
-         <c>The embedded experiences data model.  
-         See appendix on <xref target="Embedded-Experiences">the embedded experiences data model</xref></c>
+         <c><x:draft note="Issue 1321 - gadgets.views.openEmbeddedExperience should take the data model as a String or an Object" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1321">The embedded experiences data model.  If a String is passed, it is assumed to be a parsable XML representation of the embedded experiences data model. 
+         See appendix on <xref target="Embedded-Experiences">the embedded experiences data model</xref></x:draft></c>
          <c>opt_params </c>
          <c>Object</c>
          <c>These are optional parameters which can be used to open gadgets.
