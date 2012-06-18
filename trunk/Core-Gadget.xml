@@ -13,7 +13,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-<date month="March" year="2012" />
+<date month="June" year="2012" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -197,7 +197,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       for the author of the gadget. Containers MAY display this value on any
       Directory.</t>
 	<t hangText="@screenshot"> Deprecated. Use
-      <xref target="Screenshot">/ModulePrefs/Link/@rel="screenshot"</xref>instead. Optional. A string that gives the URL of a gadget
+      <xref target="Screenshots">/ModulePrefs/Link/@rel="screenshot"</xref>instead. Optional. A string that gives the URL of a gadget
 		screenshot. This must be an image on a public web site that is not
 		blocked by robots.txt. PNG is the preferred format, though GIF and JPG
 		are also acceptable. Gadget screenshots should be 280 pixels wide. The
@@ -4496,7 +4496,7 @@ dataset would contain content resembling:
 		   <list style="numbers">
 			<t>Gadget contributes an action to container's Person object. Example, a gadget providing SMS capability can bind to a container's list of active contacts/buddy list.</t>
 			<t>Gadget contributes an action to a container's Message. Example, a new button or action is added to the forward, reply, delete list when displaying a message.</t>
-			<t>Same holds true for all Open Social defined data types Group, Activityâ€¦ etc.</t>
+			<t>Same holds true for all Open Social defined data types Group, Activity, etc.</t>
 			<t>Gadgets may bind to any container specific types that are defined.  Containers shall make all efforts to use types in shared namespace and to contribute back new types to the spec to maintain cross-container abilities of gadgets.</t>
 		   </list>
 	     </t>
@@ -5256,7 +5256,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
    <section title="gadgets.selection" anchor="gadgets.selection">
 <xref target="Issue-1161">Discussion</xref>
   	 <section title="Overview" anchor="gadgets.selection.overview">
-	  	 <t>The selection feature gives gadgets the ability to participate in the containerâ€™s selection eventing. The concept
+	  	 <t>The selection feature gives gadgets the ability to participate in the container's selection eventing. The concept
 	  		of selection is common among many containers. Examples include:
 	 		<list style="symbols">
 	  		 <t>selected person in a buddy or contacts list</t>
@@ -5266,7 +5266,7 @@ personalizeDoneButton.onclick = popup.createApprovedOnClick();
 	  	 </t>
 	  	 <t>Selection is a user-driven singleton belonging to the container. For example, when a user selects
 	  		a Person in their contact list before sending that Person a message, that Person becomes the selected object.  Typically, a
-	  		user gesture triggers a gadget to post selection to the containerâ€™s selection service.
+	  		user gesture triggers a gadget to post selection to the container's selection service.
 	  		Each time something is posted to the selection service, gadgets that are registered to listen for selection events are
 	  		notified. The current selection for the container represents what was posted last and can be queried at any time. The
 	  		selected object can represent a single object or a collection of objects.</t>
@@ -7877,6 +7877,14 @@ assertEquals(0.30, value);
      <title>Missing ExternalServices tag in the gadget schema</title>
     </front>
    </reference>
+   
+   <reference anchor='Issue-1283'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1283">
+    <front>
+     <title>Add additional fields to the module section to support use in market places</title>
+    </front>
+   </reference>
+   
   </references>
   <!-- Real references -->
   <references>
