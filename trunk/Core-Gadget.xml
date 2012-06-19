@@ -7416,7 +7416,7 @@ assertEquals(0.30, value);
       <t>This specification currently defines two possible values for the 
       required "type" property on the display object: "text", "image".
       Each of which are illustrated below.</t>
-      
+      <x:draft note="Issue 1314 - Add icon optional property to the preferred experience display of type text" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1314">
       <figure><preamble>Display using a hyperlink:</preamble><artwork>
   {
     "gadget" : "...",
@@ -7427,7 +7427,7 @@ assertEquals(0.30, value);
         "type" : "text",
         "label" : "Click on me!",
         "title" : "Click on this link!"
-        "icon" : "htp://mycontainer.com/app/openissue.jpg"
+        "icon" : "http://mycontainer.com/app/openissue.jpg"
       }
     }
   }
@@ -7453,7 +7453,7 @@ assertEquals(0.30, value);
 	different
 	icons for open issues than for those that are closed. Because
 	it is expected that embedded experiences flow between containers, the
-	URL MUST be abosolute. Developers providing embedded experiences SHOULD
+	URL MUST be absolute. Developers providing embedded experiences SHOULD
 	ensure that the URL is able to be resolved by any container that will
 	encounter the embedded experience. The container
 	makes no assumptions
@@ -7472,7 +7472,7 @@ assertEquals(0.30, value);
 	container to display the
 	link in front of the text, or as a tool tip. </c>
       </texttable>
-      
+      </x:draft>
       <figure><preamble>Display using the previewImage:</preamble><artwork>
   {
     "gadget" : "...",
