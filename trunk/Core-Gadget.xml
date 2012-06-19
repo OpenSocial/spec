@@ -7427,6 +7427,7 @@ assertEquals(0.30, value);
         "type" : "text",
         "label" : "Click on me!",
         "title" : "Click on this link!"
+        "icon" : "htp://mycontainer.com/app/openissue.jpg"
       }
     }
   }
@@ -7443,6 +7444,33 @@ assertEquals(0.30, value);
         <c><spanx style="verb">title</spanx></c>
         <c>Optional text to display as the "popup help" or "tooltip" of 
         the hyperlink.</c>
+        <c>icon</c>
+        <c>
+	The developer MAY provide a URL to an icon that can be used to
+	decorate
+	the text.
+	For example, an issue management application may provide
+	different
+	icons for open issues than for those that are closed. Because
+	it is expected that embedded experiences flow between containers, the
+	URL MUST be abosolute. Developers providing embedded experiences SHOULD
+	ensure that the URL is able to be resolved by any container that will
+	encounter the embedded experience. The container
+	makes no assumptions
+	about the size of the icon and MAY resize it to a
+	size appropriate for
+	the display needs. Use of the icon is optional.
+	Depending on how the
+	text is displayed, the container is not
+	required to
+	display the icon. The
+	container MAY choose to display the icon in a
+	manner appropriate to the
+	current rendering of the object that contains
+	the embedded experience.
+	For example, it would be acceptable for the
+	container to display the
+	link in front of the text, or as a tool tip. </c>
       </texttable>
       
       <figure><preamble>Display using the previewImage:</preamble><artwork>
