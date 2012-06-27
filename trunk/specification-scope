@@ -15,6 +15,7 @@ Remove the previewImageData for EE data model and add support for data URI (http
 Add @followers/@following/@colleagues/@reports/@manager (http://code.google.com/p/opensocial-resources/issues/detail?id=1281)
 Deprecate Tabs, Skins, and WAP extension in OpenSocial 2.5 (http://code.google.com/p/opensocial-resources/issues/detail?id=1275)
 API for container token refresh mechanism (http://code.google.com/p/opensocial-resources/issues/detail?id=1232)
+Add icon optional property to the preferred experience display of type text (http://code.google.com/p/opensocial-resources/issues/detail?id=1314)
 
 OpenSocial 2.5.0 Defects
 ------------------------
