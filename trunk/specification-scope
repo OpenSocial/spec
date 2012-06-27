@@ -20,8 +20,3 @@ Add label to plural fields (http://code.google.com/p/opensocial-resources/issues
 Object Metadata service (http://code.google.com/p/opensocial-resources/issues/detail?id=1261)
 Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations (http://code.google.com/p/opensocial-resources/issues/detail?id=1231)
 Add additional fields to the module section to support use in market places (http://code.google.com/p/opensocial-resources/issues/detail?id=1283)
-
-OpenSocial 2.5.0 Defects
-------------------------
-Update common container GET_PREFERENCES interface to be async (http://code.google.com/p/opensocial-resources/issues/detail?id=1203)
-You have to write a large amount of code to access the embedded experience context (http://code.google.com/p/opensocial-resources/issues/detail?id=1249)
