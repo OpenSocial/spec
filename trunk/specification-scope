@@ -12,6 +12,7 @@ Finalize and move the common container spec out of incubation (http://code.googl
 Preferred Experiences and other refinements to Embedded Experiences (http://code.google.com/p/opensocial-resources/issues/detail?id=1284)
 Revision of Embedded Experience preferred experience type proposal to change display type from link to text (http://code.google.com/p/opensocial-resources/issues/detail?id=1313)
 Remove the previewImageData for EE data model and add support for data URI (http://code.google.com/p/opensocial-resources/issues/detail?id=1316)
+Add @followers/@following/@colleagues/@reports/@manager (http://code.google.com/p/opensocial-resources/issues/detail?id=1281)
 
 OpenSocial 2.5.0 Defects
 ------------------------
