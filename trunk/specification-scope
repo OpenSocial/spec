@@ -17,6 +17,7 @@ Deprecate Tabs, Skins, and WAP extension in OpenSocial 2.5 (http://code.google.c
 API for container token refresh mechanism (http://code.google.com/p/opensocial-resources/issues/detail?id=1232)
 Add icon optional property to the preferred experience display of type text (http://code.google.com/p/opensocial-resources/issues/detail?id=1314)
 Add label to plural fields (http://code.google.com/p/opensocial-resources/issues/detail?id=1282)
+Object Metadata service (http://code.google.com/p/opensocial-resources/issues/detail?id=1261)
 
 OpenSocial 2.5.0 Defects
 ------------------------
