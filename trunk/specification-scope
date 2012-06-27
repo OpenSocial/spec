@@ -18,6 +18,7 @@ API for container token refresh mechanism (http://code.google.com/p/opensocial-r
 Add icon optional property to the preferred experience display of type text (http://code.google.com/p/opensocial-resources/issues/detail?id=1314)
 Add label to plural fields (http://code.google.com/p/opensocial-resources/issues/detail?id=1282)
 Object Metadata service (http://code.google.com/p/opensocial-resources/issues/detail?id=1261)
+Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations (http://code.google.com/p/opensocial-resources/issues/detail?id=1231)
 
 OpenSocial 2.5.0 Defects
 ------------------------
