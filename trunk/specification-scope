@@ -7,9 +7,12 @@ Please see http://docs.opensocial.org/display/OSD/Spec+Changes for more details
 
 OpenSocial 2.5.0 Proposals
 ------------------------
-Update common container GET_PREFERENCES interface to be async (http://code.google.com/p/opensocial-resources/issues/detail?id=1203)
 Extend actions feature to allow container to register listeners for when actions are run (http://code.google.com/p/opensocial-resources/issues/detail?id=1210)
 Finalize and move the common container spec out of incubation (http://code.google.com/p/opensocial-resources/issues/detail?id=1248)
 Preferred Experiences and other refinements to Embedded Experiences (http://code.google.com/p/opensocial-resources/issues/detail?id=1284)
-You have to write a large amount of code to access the embedded experience context (http://code.google.com/p/opensocial-resources/issues/detail?id=1249)
 Revision of Embedded Experience preferred experience type proposal to change display type from link to text (http://code.google.com/p/opensocial-resources/issues/detail?id=1313)
+
+OpenSocial 2.5.0 Defects
+------------------------
+Update common container GET_PREFERENCES interface to be async (http://code.google.com/p/opensocial-resources/issues/detail?id=1203)
+You have to write a large amount of code to access the embedded experience context (http://code.google.com/p/opensocial-resources/issues/detail?id=1249)
