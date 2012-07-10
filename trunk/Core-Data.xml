@@ -130,18 +130,10 @@ Boolean = "true" / "false"
     and "count" parameters which control what sublist of the full list is
     returned. The paging mechanisms described here are based on the OpenSearch
     standard with the additional requirement that all indexes are 0 based.</t>
-   </section>
-   <section title="Activity Streams Support" anchor="ActivityStreamsCollection"><xref target='Issue-1140'>Discussion</xref>
-           <t>OpenSocial 2.0 has incorporated support for the Activity Streams community specification. This specification
-           also defines a collection structure. In order to maintain compatibility with endpoints that expect an
-           Activity Streams collection definition, OpenSocial containers SHOULD append the additional fields onto
-           collection structures that are returned from the ActivityStreams service.</t>
-
-           <t>Note: The OpenSocial specification declares that extensions should be wrapped in "tags" that "namespace" the
-           extended fields. This is done primarily to avoid collisions. However, an endpoint that is configured to
-           receive an Activity Stream collection would not expect collection fields to be wrapped. Therefore, in order
-           to support interoperability, an exception has been made for OpenSocial Collection. Fields from Activity
-           Streams Collection SHOULD be appended directly to OpenSocial Collection.</t>
+	<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1323" note="Issue 1323 - Missing the specifications for metadata information for Collections data type for JSON-RPC and REST endpoints">
+	  <t>The Collection data type will have metadata information that provides information
+    about the data returned.</t> 
+      
     <artwork type="abnf"
          xml:space="preserve">
 Collection = "{"
@@ -153,10 +145,10 @@ Collection = "{"
                   [ "updatedSince : " ( "true" / "false" ) "," ]
                   [ "sorted : " ( "true" / "false" ) "," ]
                   [ "itemsPerPage : " number "," ]
-                  "entry :" Array&lt;Object&gt; 
+                  "list :" Array&lt;Object&gt; 
                 "}"
               "}"
-</artwork>
+     </artwork>
      <texttable>
       <ttcol align="left" width="10%">Field Name</ttcol>
       <ttcol align="left" width="15%">Field Type</ttcol>
@@ -170,28 +162,27 @@ Collection = "{"
       requested.</c>
       <c>itemsPerPage</c>
       <c>number</c>
-      <c>The number of results returned per page in this
-      response. In general, this will be equal to the count Query Parameter,
+      <c>The number of results returned per page in this response. 
+      In general, this will be equal to the count Query Parameter,
       but MAY be less if the Service Provider is unwilling to return as many
       results per page as requested, or if there are less than the requested
       number of results left to return when starting at the current startIndex.
-      This field MUST be present if and only if a value for count is specified
-      in the request.</c>
+      </c>
       <c>totalResults</c>
       <c>number</c>
-      <c>The total number of contacts that would be returned if
+      <c>The total number of data that would be returned if
       there were no startIndex or count specified. This value tells the
       Consumer how many total results to expect, regardless of the current
       pagination being used, but taking into account the current filtering
       options in the request.</c>
-      <c>entry</c>
+      <c>list</c>
       <c><x:ref>Array</x:ref>&lt;Object&gt;</c>
       <c>An array of objects, one for each item matching the request. 
       For consistency of parsing, if the
       request could possibly return multiple items (as is normally the case),
       this value MUST always be an array of results, even if there
       happens to be
-      0 or 1 matching results. (i.e. "entry": [ { /* first item */ },
+      0 or 1 matching results. (i.e. "list": [ { /* first item */ },
       { /* seond item */ } ]).</c>
       <c>filtered</c>
       <c><x:ref>Boolean</x:ref></c>
@@ -208,6 +199,19 @@ Collection = "{"
       the request. The default value is 'true' if the field does not
       exist.</c>
      </texttable>
+     </x:draft>
+   </section>
+   <section title="Activity Streams Support" anchor="ActivityStreamsCollection"><xref target='Issue-1140'>Discussion</xref>
+           <t>OpenSocial 2.0 has incorporated support for the Activity Streams community specification. This specification
+           also defines a collection structure. In order to maintain compatibility with endpoints that expect an
+           Activity Streams collection definition, OpenSocial containers SHOULD append the additional fields onto
+           collection structures that are returned from the ActivityStreams service.</t>
+
+           <t>Note: The OpenSocial specification declares that extensions should be wrapped in "tags" that "namespace" the
+           extended fields. This is done primarily to avoid collisions. However, an endpoint that is configured to
+           receive an Activity Stream collection would not expect collection fields to be wrapped. Therefore, in order
+           to support interoperability, an exception has been made for OpenSocial Collection. Fields from Activity
+           Streams Collection SHOULD be appended directly to OpenSocial Collection.</t>
    </section>
    <section title="Date" anchor="Date">
      <t>See: <xref target="XSdateTime">XML Schema dateTime format</xref></t>
