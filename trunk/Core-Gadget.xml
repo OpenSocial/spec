@@ -196,15 +196,15 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <t hangText="@author_email">An email address to use as a point of contact
       for the author of the gadget. Containers MAY display this value on any
       Directory.</t>
-      <x:deprecated href="#Previews" use='/ModulePrefs/Link/@rel="preview"'>
-	<t hangText="@Preview"> Optional. A string that gives the URL of a gadget
+      
+	<t hangText="@Preview"> <x:deprecated href="#Previews" use='/ModulePrefs/Link/@rel="preview"'> Optional. A string that gives the URL of a gadget
 		screenshot. This must be an image on a public web site that is not
 		blocked by robots.txt. PNG is the preferred format, though GIF and JPG
 		are also acceptable. Gadget screenshots should be 280 pixels wide. The
 		height of the screenshot should be the "natural" height of the gadget
 		when it's in use. Containers SHOULD display this image on Directory
-		pages to provide a preview of the gadget to Users.</t>
-    </x:deprecated>
+		pages to provide a preview of the gadget to Users. </x:deprecated></t>
+    
 	<t hangText="@thumbnail">
 		Optional. A string that gives the URL of a gadget thumbnail. This must
 		be an image on a public web site that is not blocked by robots.txt.
