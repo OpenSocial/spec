@@ -14,7 +14,6 @@ Revision of Embedded Experience preferred experience type proposal to change dis
 Remove the previewImageData for EE data model and add support for data URI (http://code.google.com/p/opensocial-resources/issues/detail?id=1316)
 Add @followers/@following/@colleagues/@reports/@manager (http://code.google.com/p/opensocial-resources/issues/detail?id=1281)
 Deprecate Tabs, Skins, and WAP extension in OpenSocial 2.5 (http://code.google.com/p/opensocial-resources/issues/detail?id=1275)
-API for container token refresh mechanism (http://code.google.com/p/opensocial-resources/issues/detail?id=1232)
 Add icon optional property to the preferred experience display of type text (http://code.google.com/p/opensocial-resources/issues/detail?id=1314)
 Add label to plural fields (http://code.google.com/p/opensocial-resources/issues/detail?id=1282)
 Object Metadata service (http://code.google.com/p/opensocial-resources/issues/detail?id=1261)
