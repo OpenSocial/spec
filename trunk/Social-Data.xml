@@ -1889,8 +1889,9 @@ App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
        <t>The group Id must only contain alphanumeric (A-Za-z0-9) characters,
        underscore(_), dot(.) or dash(-), and must uniquely identify the group
        in a container.</t>
+<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1281" note="Issue 1281: Add @followers/@following/@colleagues/@reports/@manager">
        <artwork type="abnf" xml:space="preserve"><![CDATA[
-Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[ / "@self" / "@friends" / "@all"
+Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[ / "@self" / "@friends" / "@all" / "@followers" / "@following" / "@colleagues" / "@reports" / "@manager"
 ]]></artwork>
        <section title="Canonical Group Id Values">
          <t>OpenSocial defines the following cannonical group
@@ -1931,7 +1932,7 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
            <texttable>
              <ttcol>Group Id</ttcol>
              <ttcol>Definition</ttcol>
-             <c>@colleagures</c>
+             <c>@colleagues</c>
              <c>All the people that report to the same manager as identified
              by the User Id.</c>
              <c>@manager</c>
@@ -1942,12 +1943,12 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
              on the query, which may </c>
              <c>@reports</c>
              <c>The person or collection of people who are managed by the
-             &lt;userid&gt; of the request..</c>
+             &lt;userid&gt; of the request.</c>
            </texttable>
          </section>
        </section>
+       </x:draft>
      </section>
-
 
    <section title="MediaItem"
             anchor="MediaItem">
