@@ -196,14 +196,15 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       <t hangText="@author_email">An email address to use as a point of contact
       for the author of the gadget. Containers MAY display this value on any
       Directory.</t>
-	<t hangText="@screenshot"> Deprecated. Use
-      <xref target="Screenshots">/ModulePrefs/Link/@rel="screenshot"</xref>instead. Optional. A string that gives the URL of a gadget
+      <x:deprecated href="#Previews" use='/ModulePrefs/Link/@rel="preview"'>
+	<t hangText="@Preview"> Optional. A string that gives the URL of a gadget
 		screenshot. This must be an image on a public web site that is not
 		blocked by robots.txt. PNG is the preferred format, though GIF and JPG
 		are also acceptable. Gadget screenshots should be 280 pixels wide. The
 		height of the screenshot should be the "natural" height of the gadget
 		when it's in use. Containers SHOULD display this image on Directory
 		pages to provide a preview of the gadget to Users.</t>
+    </x:deprecated>
 	<t hangText="@thumbnail">
 		Optional. A string that gives the URL of a gadget thumbnail. This must
 		be an image on a public web site that is not blocked by robots.txt.
@@ -526,8 +527,14 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        <t hangText="@rel">The relationship between this link and the document.
        Valid values are specified in
        <xref target="LifeCycleEvents">Life Cycle Events</xref>,
-       <xref target="Icons">Icons</xref>,  <xref target="License">License</xref>, 
-       <xref target="PrivacyPolicy">Privacy Policy</xref> and <xref target="Screenshots">Screenshots</xref>. Containers MAY support additional
+       <xref target="Icons">Icons</xref>,  
+       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1283" 
+                note="Issue 1283:  Add additional fields to the module section to support use in market places">
+       <xref target="License">License</xref>,
+       <xref target="TermsOfService">Terms of Service</xref>,  
+       <xref target="PrivacyPolicy">Privacy Policy</xref> and <xref target="Previews">Previews</xref>. 
+       </x:draft>
+       Containers MAY support additional
        values, but they MUST be namespaced to avoid collisions.</t>
        <t hangText="@href">The URL of the link.</t>
        <t hangText="text()">Not used at this time.</t>
@@ -594,38 +601,49 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       are "enabled", "disabled", "approved", "submitted", "rejected", "new" and "banned". </c>
      </texttable></t>
    </section>
+<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1283" 
+        note="Issue 1283:  Add additional fields to the module section to support use in market places">
 	<section title="License" anchor="License">
 		<t>When the value for /ModulePrefs/Link/@rel is "license", Containers
-			SHOULD treat the link as a reference to an document that represents
-			is the license of the service that is provided by the application.
+			SHOULD treat the link as a reference to a document that represents
+		  the license for the service that is provided by the application.
+      <xref target="Issue-1283">Discussion</xref>
 		</t>
 	</section>
 	<section title="Privacy Policy" anchor="PrivacyPolicy">
-		<t>When the value for /ModulePrefs/Link/@rel is "privacyPolicy",
+		<t>When the value for /ModulePrefs/Link/@rel is "privacy-policy",
 			Containers
-			SHOULD treat the link as a reference to an document that represents is the
-			privacy policy of the service that is provided by the application.
+			SHOULD treat the link as a reference to a document that represents the
+			privacy policy for the service that is provided by the application.
+      <xref target="Issue-1283">Discussion</xref>
 		</t>
 	</section>
-   <section title="Screenshots"
-            anchor="Screenshots">
+  <section title="Terms of Service" anchor="TermsOfService">
+    <t>When the value for /ModulePrefs/Link/@rel is "terms-of-service",
+      Containers
+      SHOULD treat the link as a reference to a document that represents is the
+      terms of service for the service that is provided by the application.
+      <xref target="Issue-1283">Discussion</xref>
+    </t>
+  </section>
+   <section title="Previews"
+            anchor="Previews">
        <t>
-	It is RECOMMENDED that screenshots be available on a public Web site, however,
-	because of OpenSocial's groing use behing firewalls, it is not
+	It is RECOMMENDED that previews be available on a public Web site.  However,
+	considering OpenSocial's growing use behing firewalls it is not
 	necessary for this to be publicly addressible. PNG is the preferred
 	format, though GIF and JPG
-	are also acceptable. Gadget screenshots should be 280 pixels wide. The
-	height of the screenshot should be the "natural" height of the gadget
-	when it's in use. Containers SHOULD display this image on Directory
+	are also acceptable. Gadget previews SHOULD be 280 pixels wide. The
+	height of the preview can vary so that a screenshot can be scaled appropriately. Containers SHOULD display this image on Directory
 	pages to provide a preview of the gadget to Users.</t>
 	<t>
-	When the value for /ModulePrefs/Link/@rel is "screenshot", Containers
+	When the value for /ModulePrefs/Link/@rel is "preview", Containers
 	SHOULD treat the link as a reference to an image that represents a
-	screenshot for the Gadget. Additional values of "screenshot1",
-	"screenshot2", "screenshot3","screenshot4", and "screenshot5" are also
+	screenshot for the Gadget. Additional values of "preview1",
+	"preview2", "preview3","preview4", and "preview5" are also
 	valid. <xref target="Issue-1283">Discussion</xref></t>
 	</section> 
-   
+</x:draft>
  </section>
 
 
