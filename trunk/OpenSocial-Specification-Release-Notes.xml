@@ -29,9 +29,9 @@
       <section title="Version 2.5.0" anchor="OpenSocial250">
         <section title="Major Changes" anchor="OpenSocial250MajorChanges">
           <section title="Common Container Finalized" anchor="CommonContainerFinal">
-           <t>The Common Container API that has been incubating since OpenSocial 2.0.0 is now been finalized.
+           <t>The Common Container which has been incubating since OpenSocial 2.0.0 is now finalized API.
            The Common Container provides a set of common services that Container developers can leverage 
-           for features like in-browser Gadget lifecycle event callbacks, embedded experiences, and selection and action handlers.
+           for features like in-browser Gadget lifecycle event callbacks, Embedded Experiences, selection handlers, and action handlers.
            </t>
           </section>
           <section title="Preferred Experiences" anchor="PreferredExperiences">
@@ -44,7 +44,7 @@
           <section title="Metadata Service" anchor="MetaDataService">
           <t>
            A more complete metadata service has been introduced into OpenSocial.  This additional Metadata API allows OpenSocial applications
-           to be created with more compelling user experience that can better adapt to the capabilities of different OpenSocial containers.
+           to have a more compelling user experience that can better adapt to the capabilities of different OpenSocial containers.
            </t>
           </section>
           <section title="Deprecate WAP Extension" anchor="WAPDeprecate">

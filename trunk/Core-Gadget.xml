@@ -6939,7 +6939,7 @@ assertEquals(0.30, value);
       
       <c><spanx style="verb">previewImage</spanx></c>
       <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">An optional URI to an image that can be used as a preview for the 
-      embedded content. This property accepts uri data scheme 
+      embedded content. This property accepts URL data scheme 
       (http://tools.ietf.org/html/rfc2397) to specify the image as Base64-encoded 
       embedded data.</x:draft></c>
       
@@ -7490,7 +7490,7 @@ assertEquals(0.30, value);
   } 
       </artwork></figure>
       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">
-      <figure><preamble>Display using Base64-encoded binary data in the url data scheme:</preamble><artwork>
+      <figure><preamble>Display using Base64-encoded binary data in the URL data scheme:</preamble><artwork>
   {
     "gadget" : "...",
     ...,
