@@ -1672,7 +1672,7 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
 	and	"properties". The returned information is simply a list of what is available in the
 	container and is represented by a flat structure. That is, a developer would not
 	"navigate" metadata. Since metadata information is provided by the
-	container, is is, essentially read only. Therefore, only the GET method
+	container, it is, essentially read only. Therefore, only the GET method
 	is necessary.</t>
 
 
