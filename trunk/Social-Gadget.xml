@@ -622,7 +622,7 @@ osapi.messages.send(params).execute(messageSentCallback);
       </section>
 
    <section title="osapi.metadata" anchor="osapi.metadata">
-<x:incubating note="Add new Metadta Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
+<x:incubating note="Issue 1261: Metadata Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
 	<section title="osapi.metadata.objects" anchor="osapi.metadata.objects">
 		<t>
 			Service object with functions that map will allow the user to
@@ -630,7 +630,7 @@ osapi.messages.send(params).execute(messageSentCallback);
 			<eref target="./Social-API-Server.xml#Metadata-Objects-Service">Metadata Objects service</eref>
 			.
 		</t>
-		<section title="osapi.metadta.objects" anchor="osapi.metadata.objects">
+		<section title="osapi.metadata.objects" anchor="osapi.metadata.objects">
 			<section title="get" anchor="osapi.metadata.objects.get">
 				<list style="hanging">
 					<t hangText="Signature">
@@ -664,7 +664,7 @@ osapi.messages.send(params).execute(messageSentCallback);
 			<eref target="./Social-API-Server.xml#Metadata-Properties-Service">Metadata Properties service</eref>
 			.
 		</t>
-		<section title="osapi.metadta.objects" anchor="osapi.metadata.objects">
+		<section title="osapi.metadata.objects" anchor="osapi.metadata.objects">
 			<section title="get" anchor="osapi.metadata.objects.get">
 				<list style="hanging">
 					<t hangText="Signature">
@@ -688,7 +688,7 @@ osapi.messages.send(params).execute(messageSentCallback);
 				</list>
 			</section>
 			
-		<section title="osapi.metadta.properties" anchor="osapi.metadata.properties">
+		<section title="osapi.metadata.properties" anchor="osapi.metadata.properties">
 			<section title="get" anchor="osapi.metadata.properties.get">
 				<list style="hanging">
 					<t hangText="Signature">

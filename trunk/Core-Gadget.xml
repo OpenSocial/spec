@@ -442,23 +442,23 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
      </section>
      <section title="/ModulePrefs/Icon"
               anchor="Icon">
-      <t>Deprecated. Use
-      <xref target="Icons">/ModulePrefs/Link/@rel="icon"</xref>instead.</t>
-      <t>A link or embedded image that serves as an icon for the gadget.</t>
-      <list style="hanging">
-       <t hangText="@mode">The encoding used for the icon when embedding an
-       image in the Icon element's child text node. Currently, only 'base64' is
-       the only supported value. Containers SHOULD treat child text nodes as a
-       base64 encoded image when this attribute is provided. Otherwise, child
-       text nodes should be interpreted as an image URL.</t>
-       <t hangText="@type">The MIME type of the embedded icon text. Containers
-       SHOULD interpret the encoded child text node using this MIME type.</t>
-       <t hangText="text()">Developers MUST provide a value for the child text
-       node appropriate to the @mode value. If @mode is "base64", the child
-       text node MUST be a base64-encoded image in the format specified by
-       @type. If @mode is missing, the child text node MUST be a valid URL
-       pointing to an image file.</t>
-      </list>
+      <x:deprecated href="#Icons" use='/ModulePrefs/Link/@rel="icon"'>
+        <t>A link or embedded image that serves as an icon for the gadget.</t>
+        <list style="hanging">
+         <t hangText="@mode">The encoding used for the icon when embedding an
+         image in the Icon element's child text node. Currently, only 'base64' is
+         the only supported value. Containers SHOULD treat child text nodes as a
+         base64 encoded image when this attribute is provided. Otherwise, child
+         text nodes should be interpreted as an image URL.</t>
+         <t hangText="@type">The MIME type of the embedded icon text. Containers
+         SHOULD interpret the encoded child text node using this MIME type.</t>
+         <t hangText="text()">Developers MUST provide a value for the child text
+         node appropriate to the @mode value. If @mode is "base64", the child
+         text node MUST be a base64-encoded image in the format specified by
+         @type. If @mode is missing, the child text node MUST be a valid URL
+         pointing to an image file.</t>
+        </list>
+      </x:deprecated>
      </section>
      <section title="/ModulePrefs/Locale" anchor="Locale">
       <t>Provides localization information. Containers MUST honor localization
@@ -7077,7 +7077,7 @@ assertEquals(0.30, value);
     
     <section title="Considerations for Embedded Experience Gadgets">
       <section title="Views For Embedded Experiences">
-      <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">
+      <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">
         <t>When rendering a gadget as an embedded experience, the container
         will look within the embedded experience data model and see if there 
         is a <xref target="preferredExperience">"preferred experience"</xref> 
@@ -7091,7 +7091,7 @@ assertEquals(0.30, value);
         specified within the target object of the embedded experience data 
         model is not found within the gadget definition, the container SHOULD 
         render the gadget's default view.</t>
-        </x:draft>
+        </x:incubating>
       </section>
       
       <section title="Accessing The Context">
@@ -7174,7 +7174,7 @@ assertEquals(0.30, value);
         </x:draft>      
         
         <section title="Additional Container Specific Context" anchor="rootContext">
-		<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">  
+		<x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">  
           <t>While the contextual data associated with the 
           "org.opensocial.ee.context" key will generally originate 
           from the information provided by the "context" property
@@ -7340,12 +7340,12 @@ assertEquals(0.30, value);
           information they wish into the and "openSocial" object values. The 
           interpretation and use of any such information is
           considered out of the scope of this specification.</t>
-        </x:draft>
+        </x:incubating>
         </section>
       </section>  
   </section>
   <section title="Preferred Experiences" anchor="preferredExperience">
-  <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">
+  <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">
     <t>While the container retains control over deciding exactly how an
     embedded experience is processed and rendered, there are situations 
     where the creator of the embedded experience might wish to provide 
@@ -7631,7 +7631,7 @@ assertEquals(0.30, value);
       type, the container MUST ignore the target preferences.</t>
     
     </section>
-  </x:draft>	
+  </x:incubating>	
   </section>
   
   

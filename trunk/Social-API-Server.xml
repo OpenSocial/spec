@@ -1651,7 +1651,7 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
 
 
  <section title="Metadata" anchor="Metadata-Service">
-  <x:incubating note="Add new Metadta Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
+  <x:incubating note="Issue 1261: Metadata Service" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1261">
 	<t>
 		OpenSocial provides a rich collection of information contained in a
 		variety of data models. However, because of the increasingly diverse
