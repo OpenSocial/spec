@@ -1889,7 +1889,7 @@ App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
        <t>The group Id must only contain alphanumeric (A-Za-z0-9) characters,
        underscore(_), dot(.) or dash(-), and must uniquely identify the group
        in a container.</t>
-<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1281" note="Issue 1281: Add @followers/@following/@colleagues/@reports/@manager">
+<x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1281" note="Issue 1281: Add @followers/@following/@colleagues/@reports/@manager">
        <artwork type="abnf" xml:space="preserve"><![CDATA[
 Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[ / "@self" / "@friends" / "@all" / "@followers" / "@following" / "@colleagues" / "@reports" / "@manager"
 ]]></artwork>
@@ -1947,7 +1947,7 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
            </texttable>
          </section>
        </section>
-       </x:draft>
+       </x:incubating>
      </section>
 
    <section title="MediaItem"

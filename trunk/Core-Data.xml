@@ -446,9 +446,9 @@ Object-Id = <x:ref>Local-Id</x:ref> / <x:ref>Global-Id</x:ref>
       </c>
       <c>String</c>
       <c>
-      <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1282" note="Issue 1282 - Add label to plural fields">
+      <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1282" note="Issue 1282 - Add label to plural fields">
       Provides a human-readable, plain-text, and preferrably localized short description of the object value suitable for display to a user.
-      </x:draft> 
+      </x:incubating> 
       </c>
      </texttable>
      <t>When returning Plural Fields, Service Providers SHOULD canonicalize the

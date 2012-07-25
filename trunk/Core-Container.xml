@@ -1516,6 +1516,7 @@ osapi.container.Container.actions.addListener(function(actionId, opt_selection) 
   // Possibly handle some ui positioning or other ui related operation when this interesting action is run.
 }, "some.interesting.gadget.action");
           </artwork>
+          <xref target="Issue-1210">Discussion</xref>
         </section>
         <section title="removeListener" anchor="ospai.container.actions.removelistener">
           <t>osapi.container.Container.actions.removeListener(listener)</t>
@@ -1538,6 +1539,7 @@ var listener = function() {
 osapi.container.Container.actions.addListener(listener, "some.interesting.gadget.action");
 osapi.container.Container.actions.removeListener(listener);
           </artwork>
+          <xref target="Issue-1210">Discussion</xref>
         </section>
         <section title="Handling the view and view_target Parameters " anchor="ActionsOptParams">
 		   <t>
@@ -1884,6 +1886,12 @@ osapi.container.Container.addMixin('foo', function() { ... });
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1231">
     <front>
      <title>Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1210'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1210">
+    <front>
+     <title>Extend actions feature to allow container to register listeners for when actions are run</title>
     </front>
    </reference>
   </references> 

@@ -528,12 +528,12 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
        Valid values are specified in
        <xref target="LifeCycleEvents">Life Cycle Events</xref>,
        <xref target="Icons">Icons</xref>,  
-       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1283" 
+       <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1283" 
                 note="Issue 1283:  Add additional fields to the module section to support use in market places">
        <xref target="License">License</xref>,
        <xref target="TermsOfService">Terms of Service</xref>,  
        <xref target="PrivacyPolicy">Privacy Policy</xref> and <xref target="Previews">Previews</xref>. 
-       </x:draft>
+       </x:incubating>
        Containers MAY support additional
        values, but they MUST be namespaced to avoid collisions.</t>
        <t hangText="@href">The URL of the link.</t>
@@ -601,7 +601,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
       are "enabled", "disabled", "approved", "submitted", "rejected", "new" and "banned". </c>
      </texttable></t>
    </section>
-<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1283" 
+<x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1283" 
         note="Issue 1283:  Add additional fields to the module section to support use in market places">
 	<section title="License" anchor="License">
 		<t>When the value for /ModulePrefs/Link/@rel is "license", Containers
@@ -643,7 +643,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
 	"preview2", "preview3","preview4", and "preview5" are also
 	valid. <xref target="Issue-1283">Discussion</xref></t>
 	</section> 
-</x:draft>
+</x:incubating>
  </section>
 
 
@@ -6956,10 +6956,10 @@ assertEquals(0.30, value);
       render the content.</c>
       
       <c><spanx style="verb">previewImage</spanx></c>
-      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">An optional URI to an image that can be used as a preview for the 
+      <c><x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">An optional URI to an image that can be used as a preview for the 
       embedded content. This property accepts URL data scheme 
       (http://tools.ietf.org/html/rfc2397) to specify the image as Base64-encoded 
-      embedded data.</x:draft></c>
+      embedded data.</x:incubating></c>
       
       <c><spanx style="verb">url</spanx></c>
       <c>A URL to a web page that allows virtually any web-accessible 
@@ -7434,7 +7434,7 @@ assertEquals(0.30, value);
       <t>This specification currently defines two possible values for the 
       required "type" property on the display object: "text", "image".
       Each of which are illustrated below.</t>
-      <x:draft note="Issue 1314 - Add icon optional property to the preferred experience display of type text" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1314">
+      <x:incubating note="Issue 1314 - Add icon optional property to the preferred experience display of type text" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1314">
       <figure><preamble>Display using a hyperlink:</preamble><artwork>
   {
     "gadget" : "...",
@@ -7490,7 +7490,7 @@ assertEquals(0.30, value);
 	container to display the
 	link in front of the text, or as a tool tip. </c>
       </texttable>
-      </x:draft>
+      </x:incubating>
       <figure><preamble>Display using the previewImage:</preamble><artwork>
   {
     "gadget" : "...",
