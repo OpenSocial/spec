@@ -345,6 +345,7 @@ Content-Type: application/json
    }
 }
 </artwork>
+<xref target="Issue-1230">Discussion</xref>
       </t>
      </section>
     </section>
@@ -1805,6 +1806,13 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
     <front>
      <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1230'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1230">
+    <front>
+     <title>Align the REST core and social API server spec to follow the core data spec for Collection type wrapped with "list" property</title>
     </front>
    </reference>
   </references>

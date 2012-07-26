@@ -1591,6 +1591,12 @@ Content-Type: application/json
      <title>Allow a 403 FORBIDDEN response for insufficient privileges</title>
     </front>
    </reference>
+   <reference anchor='Issue-1230'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1230">
+    <front>
+     <title>Align the REST core and social API server spec to follow the core data spec for Collection type wrapped with "list" property</title>
+    </front>
+   </reference>
   </references>
   <references>
    <reference anchor='RFC20'>
@@ -1875,7 +1881,7 @@ Content-Type: application/json
    </reference>
   </references>
   <section title="XML format XSD"
-           anchor="XML_format_XSD"><xref target="Issue-1142">Discussion</xref>
+           anchor="XML_format_XSD"><t><xref target="Issue-1142">Discussion</xref> <xref target="Issue-1230">Discussion</xref></t>
     <figure>
      <artwork xml:space="preserve">
 &lt;?xml version="1.0" encoding="utf-8"?&gt;
@@ -1917,6 +1923,7 @@ Content-Type: application/json
 &lt;/xs:schema&gt;
 </artwork>
     </figure>
+   
   </section>
  </back>
 </rfc>

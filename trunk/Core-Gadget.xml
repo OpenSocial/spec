@@ -4175,7 +4175,7 @@ dataset would contain content resembling:
            anchor="GadgetXmlSchema">
            
    <t> 
-   <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1224" note="Issue 1224: Missing ExternalServices tag in the gadget schema">
+
     <figure>
     
      <artwork xml:space="preserve">
@@ -4456,7 +4456,6 @@ dataset would contain content resembling:
 </artwork>
     </figure>
 <xref target="Issue-1224">Discussion</xref>
-</x:draft>
 <xref target="Issue-1142">Discussion</xref>
 <xref target="Issue-1209">Discussion</xref>
 <xref target="Issue-1212">Discussion</xref>

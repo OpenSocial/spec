@@ -438,9 +438,8 @@ COMMA          = <US-ASCII comma (44)>
                </c>
 
            </texttable>
-           <!-- Note: This also includes issue 1318 http://code.google.com/p/opensocial-resources/issues/detail?id=1318 -->
            <section title="OpenSocial Extensions" anchor="ActivityStreamOpenSocialExtensions">
-             <x:draft note="Issue 1236 - Clarify how Activity Streams are extended with Embedded Experiences. Note, this also includes issue 1318 but because of formatting, we can only include one link in the xml part of the spec." href="http://code.google.com/p/opensocial-resources/issues/detail?id=1236">
+             
    <t>OpenSocial adds an
   additional fields to the data model, for example "actionLinks".
   Because these are extensions, they are contained in an enclosing
@@ -469,7 +468,7 @@ COMMA          = <US-ASCII comma (44)>
                </c>
                <c>An "openSocial" namespaced <eref target="./Core-Gadget.xml#Embedded-Experiences">Embedded Experience data model</eref> associated with this Activity.</c>
                </texttable>
-        </x:draft>
+        <xref target="Issue-1319">Discussion</xref> <xref target="Issue-1236">Discussion</xref> <xref target="Issue-1318">Discussion</xref>
            </section>
     A complete ActivityEntry example
     <figure>
@@ -2395,6 +2394,24 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1223">
     <front>
      <title>App-Id &amp; @app definitions missing</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1236'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1236">
+    <front>
+     <title>Clarify how Activity Streams are extended with Embedded Experiences</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1319'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1319">
+    <front>
+     <title>Add embed as a field in the activityEntry</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1318'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1318">
+    <front>
+     <title>deliverTo: incorrectly specified on ActivityObject</title>
     </front>
    </reference> 
   </references>

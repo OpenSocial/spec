@@ -130,7 +130,7 @@ Boolean = "true" / "false"
     and "count" parameters which control what sublist of the full list is
     returned. The paging mechanisms described here are based on the OpenSearch
     standard with the additional requirement that all indexes are 0 based.</t>
-	<x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1323" note="Issue 1323 - Missing the specifications for metadata information for Collections data type for JSON-RPC and REST endpoints">
+	
 	  <t>The Collection data type will have metadata information that provides information
     about the data returned.</t> 
       
@@ -199,7 +199,7 @@ Collection = "{"
       the request. The default value is 'true' if the field does not
       exist.</c>
      </texttable>
-     </x:draft>
+     <xref target='Issue-1323'>Discussion</xref>
    </section>
    <section title="Activity Streams Support" anchor="ActivityStreamsCollection"><xref target='Issue-1140'>Discussion</xref>
            <t>OpenSocial 2.0 has incorporated support for the Activity Streams community specification. This specification
@@ -569,6 +569,12 @@ User-Id = <x:ref>Object-Id</x:ref> / "@owner" / "@viewer" / "@me"
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1138">
     <front>
      <title>OAuth 2.0 Support</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1323'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1323">
+    <front>
+     <title>Missing the specifications for metadata information for Collections data type for JSON-RPC and REST endpoints</title>
     </front>
    </reference>
  </references>
