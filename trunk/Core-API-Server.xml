@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-<date month="June" year="2012" />
+<date month="August" year="2012" />
   <abstract>
    <t>This document describes a method for making information
    and services programatically available on the internet.</t>
@@ -1024,7 +1024,7 @@ GIF89....&lt;image data&gt;
     </list></c>
     <c>401 UNAUTHORIZED</c>
     <c align="left">
-    <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1201" note="Issue 1201: Allow a 403 FORBIDDEN response for insufficient privileges">
+    
     OpenSocial container servers MUST return 401 UNAUTHORIZED
     when receiving an OAuth request for a protected resource and the request is either
     
@@ -1037,13 +1037,13 @@ GIF89....&lt;image data&gt;
      include a WWW-Authenticate header field indicating the request MAY present
      an OAuth token for the container server's realm. Example:
      WWW-Authenticate: OAuth realm="http://sp.example.com/"</t>
-    </list><xref target="Issue-1201">Discussion</xref></x:draft></c>
+    </list><xref target="Issue-1201">Discussion</xref></c>
     <c>403 FORBIDDEN</c>
-    <c align="left"><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1201" note="Issue 1201: Allow a 403 FORBIDDEN response for insufficient privileges">
+    <c align="left">
     The server understood the request but is refusing to
     fulfill it. Authorization will not help. The current authorization context
     does not allow the request.  Also used in case where OAuth authorization credentials are present, but the user identity is
-     not authorized to access the protected resource. <xref target="Issue-1201">Discussion</xref></x:draft></c>
+     not authorized to access the protected resource. <xref target="Issue-1201">Discussion</xref></c>
     <c>404 NOT FOUND</c>
     <c align="left">The server has not found a resource (such as a feed or
     entry) that matches the request URI.</c>
@@ -1088,7 +1088,7 @@ GIF89....&lt;image data&gt;
     </section>
 
     <section title="Format" anchor="Request-Parameter-Format-Value">
-    <x:deprecated note="ATOM Support" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1322">
+    <x:deprecated note="ATOM Support deprecated" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1322" use="JSON">
     <t>JSON is the standard format adopted by OpenSocial.</t>
       <artwork type="abnf"><x:highlight>Request-Parameter-Formet-Value</x:highlight> = "json" / "xml" / "atom"</artwork>
       <t>Specifies the desired return encoding of the request.

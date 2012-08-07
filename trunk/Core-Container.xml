@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="June" year="2012" />
+  <date month="August" year="2012" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>Core Container</keyword>
@@ -601,7 +601,7 @@ CommonContainer.navigateUrl(gadgetSite, 'http://example.com', {}, params);
         </texttable>
       </t>
     </section>
-    <x:draft note="Issue 1235 - newGadgetSite and newUrlSite methods are not listed in the incubating spec for the CommonContainer" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1235">
+    
     <section title="newGadgetSite" anchor="container.Container.newGadgetSite">
      <t>osapi.container.Container.newGadgetSite(element, opt_bufferElement)</t>
       <t>
@@ -666,8 +666,9 @@ CommonContainer.navigateUrl(gadgetSite, 'http://example.com', {}, params);
           </c>
         </texttable>
       </t>
+      <xref target="Issue-1235">Discussion</xref>
     </section>
-   </x:draft>
+   
    </section>
    <section title="osapi.container.Site" anchor="osapi.container.Site">
      <t>
@@ -880,7 +881,7 @@ CommonContainer.navigateUrl(gadgetSite, 'http://example.com', {}, params);
        <c>String</c>
        <c>Equivalent to the String GET_PREFERENCES.
        A function that will asynchronously fetch the preferences to use when asking the
-       server to render a gadget or when asking the server for gadget metadata. It will be 
+       server to render a gadget or when asking the server for gadget metadata. <xref target="Issue-1203">Discussion</xref> It will be 
        passed the following parameters:
        <texttable align="left">
         <ttcol>Name</ttcol>
@@ -897,7 +898,7 @@ CommonContainer.navigateUrl(gadgetSite, 'http://example.com', {}, params);
         <c>An asynchronous callback that will receive the value of the fetched 
          preferences, if any.  The GET_PREFERENCES function passed in the config
          should call this callback function with a Map that is constructed just like
-         the Map for <xref target="RenderConfiguration">USER_PREFS</xref></c>
+         the Map for <xref target="RenderConfiguration">USER_PREFS</xref> <xref target="Issue-1203">Discussion</xref></c>
        </texttable>
        </c>
        <c>osapi.container.ContainerConfig.SET_PREFERENCES</c>
@@ -1803,7 +1804,7 @@ osapi.container.Container.actions.removeListener(listener);
         Description: Method called when a gadget wants to close, or a gadget that used the open-views 
         feature to open a gadget view wants to close that gadget view.  This method MUST ultimately call
         osapi.container.Container.closeGadget(site) so that the gadget's lifecycle events are completed in addition to 
-        any DOM cleanup the container implementation may wish to do.
+        any DOM cleanup the container implementation may wish to do. <xref target="Issue-1245">Discussion</xref>
        </t>
        <t>Parameters:
         <texttable align="left">
@@ -1892,6 +1893,24 @@ osapi.container.Container.addMixin('foo', function() { ... });
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1210">
     <front>
      <title>Extend actions feature to allow container to register listeners for when actions are run</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1245'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1245">
+    <front>
+     <title>container.views.destroyElement need to be renamed and clarified</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1203'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1203">
+    <front>
+     <title>Update common container GET_PREFERENCES interface to be async</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1235'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1235">
+    <front>
+     <title>newGadgetSite and newUrlSite methods are not listed in the incubating spec for the CommonContainer</title>
     </front>
    </reference>
   </references> 

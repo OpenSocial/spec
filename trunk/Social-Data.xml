@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="June" year="2012" />
+  <date month="August" year="2012" />
   <abstract>
    <t>This document defines all the data objects used in the
    OpenSocial APIs. Objects defined here make use of the <xref
@@ -787,7 +787,7 @@ COMMA          = <US-ASCII comma (44)>
       <c>String</c>
       <c>Description of group <x:highlight>Optional</x:highlight>.</c>
      </texttable>
-
+<xref target="Issue-1239">Discussion</xref>
 <t> A Group example: </t>
     <figure>
      <preamble>application/json representation:</preamble>
@@ -1491,15 +1491,15 @@ COMMA          = <US-ASCII comma (44)>
    </section>
    <section title="ActivityObject" anchor="ActivityObject">
     <xref target='Issue-1140'>Discussion</xref>
-    <x:draft note="Issue 1317 - Change the namespace for activityStrea.ms support from org.opensocial to openSocial" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1317">
+    
     <t>An object is a thing, real or imaginary, which participates in an
 	activity. It may be the entity performing the activity, or the entity
 	on which the activity was performed. Because Activity Streams are often
 	used in the context of a social platform, OpenSocial adds an
 	additional field to the data model, "deliverTo:".
 	Because these are extensions, they are contained in an enclosing
-	namespace "openSocial".</t>
-  </x:draft>
+	namespace "openSocial". <xref target="Issue-1317">Discussion</xref></t>
+  
        <texttable>
            <ttcol align="left" width="15%">Field Name</ttcol>
            <ttcol align="left" width="21%">Field Type</ttcol>
@@ -1508,7 +1508,7 @@ COMMA          = <US-ASCII comma (44)>
            <c>Array&lt;<eref target="./Social-Data.xml#ActivityObject">ActivityObject</eref>&gt;
            </c>
            <c>A collection of one or more additional, associated objects, similar to the concept of attached files in an
-               email message. An object MAY have an attachments property whose value is a JSON Array of<eref
+               email message. An object MAY have an attachments property whose value is a JSON Array of <eref
                        target="./Social-Data.xml#ActivityObject">ActivityObjects</eref>.
            </c>
            <c>author</c>
@@ -1593,7 +1593,7 @@ COMMA          = <US-ASCII comma (44)>
        </texttable>
      
     <t>An example ActivityObject</t>
-    <x:draft note="Issue 1317 - Change the namespace for activityStrea.ms support from org.opensocial to openSocial" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1317">
+    
     <figure>
      <preamble>application/json representation:</preamble>
      <artwork xml:space="preserve">
@@ -1630,7 +1630,8 @@ COMMA          = <US-ASCII comma (44)>
   }
 }</artwork>
     </figure>
-    </x:draft>
+    <xref target="Issue-1317">Discussion</xref>
+    
     <figure>
      <preamble>application/xml representation:</preamble>
      <artwork xml:space="preserve">
@@ -1826,7 +1827,7 @@ COMMA          = <US-ASCII comma (44)>
 </artwork>
      </figure>
    </section>
-   <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1223" note="Issue 1223:  App-Id &amp; @app definitions missing">
+   
    <section title="App Id" anchor="App-Id">
     
      <t>The app Id is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the application.  There are reserved values for common cases.  <xref target='Issue-1140'>Discussion</xref></t>
@@ -1841,10 +1842,10 @@ App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
        <c>@app</c>
        <c>The application currently in use.</c>
      </texttable>
+     <xref target="Issue-1239">Discussion</xref>
+     <xref target='Issue-1223'>Discussion</xref>
    </section>
 
-   <xref target='Issue-1223'>Discussion</xref>
-</x:draft>
 
 
    <section title="FieldMetadata" anchor="FieldMetadata">
@@ -2302,7 +2303,7 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
    </section>
  
    <section title="File" anchor="File">
-      <x:draft note="Simple File Object" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1190">  
+      <x:incubating note="Simple File Object" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1190">  
      <t>Describes a generic file or document.
           <texttable>
       <ttcol align="left" width="15%">Field Name</ttcol>
@@ -2334,7 +2335,7 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
       <c>The permanent IRI of the file's HTML representation.</c>
      </texttable>
      </t>
-        </x:draft>
+        </x:incubating>
    </section>
    
    <section title="PropertyMetadata" anchor="PropertyMetadata">
@@ -2412,6 +2413,18 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1318">
     <front>
      <title>deliverTo: incorrectly specified on ActivityObject</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1317'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1317">
+    <front>
+     <title>Change the namespace for activityStrea.ms support from org.opensocial to openSocial</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1239'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1239">
+    <front>
+     <title>Broken links in spec for app id / group id</title>
     </front>
    </reference> 
   </references>

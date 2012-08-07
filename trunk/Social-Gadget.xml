@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="June" year="2012" />
+  <date month="August" year="2012" />
   <abstract>
    <t>This document defines additional APIs to add social capabilities to a <xref target="Core-Gadget">Core Gadget container</xref>.</t>
   </abstract>
@@ -110,7 +110,7 @@
          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service. Executing this request MUST return a <eref target="./Core-Data.xml#Collection">Collection</eref> of <eref target="./Social-Data.xml#Person">Person</eref> objects representing the owner's friends.</t>
         </list>
         </section>
-      <x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+      
         <section title="update" anchor="osapi.people.update">
          <list style="hanging">
          <t hangText="Signature">&lt;static&gt; { <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> } osapi.people.update(params)</t>
@@ -119,8 +119,9 @@
           <t hangText="Parameters">This method takes a single parameter, which is a JavaScript object representing the parameters defined by the <eref target="Social-API-Server.xml#People-Service-Update">People service's update method</eref>.  This parameter is REQUIRED and MUST include the 'person' property which includes the id of the PersonEntry to update.</t>
          <t hangText="Returns">A <eref target="Core-Gadget.xml#osapi.Request">osapi.Request</eref> to retrieve information from the People service. Executing this request MUST overwrite the existing person entry on the server and MUST return a <eref target="./Social-Data.xml#Person">Person</eref> object.</t>
        </list>
+       <xref target="Issue-1233">Discussion</xref>
         </section>
-      </x:draft>
+      
        </section>
        <section title="Examples">
         <figure>
@@ -155,7 +156,7 @@ osapi.people.get({userId: '@owner', groupId: '@friends'}).execute(function(resul
 </artwork>
         </figure>
 
-      <x:draft note="Person Service clarifications(Issue 1233)" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+      
         <figure>
          <preamble>An example to update the user's name:</preamble>
          <artwork xml:space="preserve">
@@ -172,8 +173,7 @@ osapi.people.update({person: {id: "15", name: newName}})
 });
 </artwork>
         </figure>
-
-      </x:draft>
+<xref target="Issue-1233">Discussion</xref>
         <figure>
          <preamble>An example that illustrates all available request
          parameters:</preamble>
@@ -1399,6 +1399,12 @@ High score for John Doe is 100
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1140">
     <front>
      <title>Incorporate ActivityStreams 1.0 into OpenSocial</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1233'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1233">
+    <front>
+     <title>  Person Service clarifications</title>
     </front>
    </reference>
  </references>

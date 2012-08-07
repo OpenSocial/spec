@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-<date month="June" year="2012" />
+<date month="August" year="2012" />
   <abstract>
    <t>This document defines all the data objects used in the <xref target="Core-Gadget"/> and <xref target="Core-API-Server"/> specifications.</t>
   </abstract>

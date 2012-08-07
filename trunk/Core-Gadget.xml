@@ -13,7 +13,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-<date month="June" year="2012" />
+<date month="August" year="2012" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -1248,7 +1248,7 @@ and uses the canonical format for templates and data pipeline blocks. <xref targ
    <xref target="RequireAndOptional">ModulePrefs</xref>. Extensions to the OpenSocial
    specification MUST define the version of any Features specified by the
    extension. Containers SHOULD document the version of any custom Features
-   they provide.</t>
+   they provide. <xref target="Issue-1207">Discussion</xref></t>
    <t>Versions are specified as a string of up to three non-negative integers,
    separated by the dot (.) character, for example "1.0.0", "1.2.1", or
    "1.3.12". The three components of a version each signify a guarantee about
@@ -2758,7 +2758,7 @@ var lang = prefs.getLang();
       to the SurfaceB surface and show the appropriate &lt;Content&gt; sections
       whose View is SurfaceB.[Secondary].  In no case must the .[Secondary] item be declared. <xref target="Issue-1169">Discussion</xref></t>
       <t>Parameters:
-      <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1300" note="Issue 1300 - The description of the opt_params parameter for requestNavigateTo appears to be wrong">
+      
       <texttable align="left">
        <ttcol>Name</ttcol>
        <ttcol>Type</ttcol>
@@ -2782,7 +2782,7 @@ var lang = prefs.getLang();
        <c>String</c>
        <c>The ID of the owner of the page to navigate to; defaults to the
        current owner</c>
-      </texttable></x:draft></t>
+      </texttable><xref target="Issue-1300">Discussion</xref></t>
      </section>
      <section title="openGadget"
               anchor="gadgets.views.openGadget">
@@ -2810,7 +2810,7 @@ var lang = prefs.getLang();
          The following parameters may be included in this object. </c>
         </texttable></t>
        <t>opt_params:
-       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
+       <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
         <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
@@ -2838,7 +2838,7 @@ var lang = prefs.getLang();
            coordinates for the FLOAT viewTarget. Containers MAY honor 
            coordinates for any other target they choose.
          </c>
-        </texttable><xref target="Issue-1231">Discussion</xref></x:draft></t>
+        </texttable><xref target="Issue-1231">Discussion</xref></x:incubating></t>
      </section>
      <section title="openEmbeddedExperience" 
      anchor="gadgets.views.openEmbeddedExperience">
@@ -2864,15 +2864,15 @@ var lang = prefs.getLang();
          The site handler can only be used as parameter in gadgets.views.close(opt_site_handler).</c>
          <c>dataModel</c>
          <c>Object</c>
-         <c><x:draft note="Issue 1321 - gadgets.views.openEmbeddedExperience should take the data model as a String or an Object" href="http://code.google.com/p/opensocial-resources/issues/detail?id=1321">The embedded experiences data model.  If a String is passed, it is assumed to be a parsable XML representation of the embedded experiences data model. 
-         See appendix on <xref target="Embedded-Experiences">the embedded experiences data model</xref></x:draft></c>
+         <c>The embedded experiences data model.  If a String is passed, it is assumed to be a parsable XML representation of the embedded experiences data model. 
+         See appendix on <xref target="Embedded-Experiences">the embedded experiences data model</xref> <xref target="Issue-1321">Discussion</xref></c>
          <c>opt_params </c>
          <c>Object</c>
          <c>These are optional parameters which can be used to open gadgets.
          The following parameters may be included in this object. </c>
         </texttable></t>
        <t>opt_params:
-       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
+       <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
         <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
@@ -2898,7 +2898,7 @@ var lang = prefs.getLang();
            coordinates for any other target they choose.
          </c>
         </texttable><xref target="Issue-1231">Discussion</xref>
-        </x:draft></t>
+        </x:incubating></t>
      </section>
      <section title="openUrl"
               anchor="gadgets.views.openUrl">
@@ -2907,7 +2907,7 @@ var lang = prefs.getLang();
        based on the target view. The container would open the view in a dialog,
        if opt_viewTarget=dialog or the gadgets view in a tab for opt_viewTarget=tab.   <xref target="Issue-1167">Discussion</xref></t>
        <t>Parameters:
-       <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
+       <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1231" note="Issue 1231:  Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations">
         <texttable align="left">
          <ttcol>Name</ttcol>
          <ttcol>Type</ttcol>
@@ -2935,7 +2935,7 @@ var lang = prefs.getLang();
            coordinates for the FLOAT viewTarget. Containers MAY honor 
            coordinates for any other target they choose.
          </c>
-        </texttable><xref target="Issue-1231">Discussion</xref></x:draft></t>
+        </texttable><xref target="Issue-1231">Discussion</xref></x:incubating></t>
      </section>
      <section title="close"
               anchor="gadgets.views.close">
@@ -3371,7 +3371,7 @@ opensocial.data.getDataContext().registerListener('Friends', function(key) {
             <ttcol>Description</ttcol>
             <c>callback</c>
             <c>Function</c>
-            <c>A callback function to handle the response. The callback function will be invoked with a parameter which contains the response payload (<eref target="Core-Data.xml#HTTP-Response-Payload">Core HTTP-Response-Payload</eref>) specified by the service method that is invoked.</c>
+            <c>A callback function to handle the response. The callback function will be invoked with a parameter which contains the response payload (<eref target="Core-Data.xml#HTTP-Response-Payload">Core HTTP-Response-Payload</eref>) specified by the service method that is invoked. <xref target="Issue-1215">Discussion</xref></c>
            </texttable></t>
           <t hangText="Returns">None</t>
          </list>
@@ -7145,7 +7145,7 @@ assertEquals(0.30, value);
     &lt;/Content&gt;
   &lt;/Module&gt;</artwork>
         </figure>
-        <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1249" note="Issue 1249:	You have to write a large amount of code to access the embedded experience context">
+        
         <figure><preamble>Instead of using the data context APIs to get the embedded experiences
         context you may choose to use the <xref target="gadgets.ee.registerContextListener">
         gadgets.ee.registerContextListener</xref> API in order to lessen the amount of code you 
@@ -7170,7 +7170,7 @@ assertEquals(0.30, value);
     &lt;/Content&gt;
   &lt;/Module&gt;</artwork>
         </figure>
-        </x:draft>      
+        <xref target="Issue-1249">Discussion</xref>
         
         <section title="Additional Container Specific Context" anchor="rootContext">
 		<x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284" note="Issue 1284:  Preferred Experiences and other refinements to Embedded Experiences">  
@@ -7506,7 +7506,7 @@ assertEquals(0.30, value);
     }
   } 
       </artwork></figure>
-      <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">
+      <x:incubating href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316" note="Issue 1316 - Remove the previewImageData for EE data model and add support for data URI">
       <figure><preamble>Display using Base64-encoded binary data in the URL data scheme:</preamble><artwork>
   {
     "gadget" : "...",
@@ -7523,7 +7523,7 @@ assertEquals(0.30, value);
     }
   } 
       </artwork></figure>
-      </x:draft>
+      </x:incubating>
       <t>When "type" equals "image", the additional properties on the 
       display object are:</t>
       
@@ -7747,7 +7747,7 @@ assertEquals(0.30, value);
   </section>
   <section title="Method Details" anchor="methoddetails">
     <section title="registerContextListener" anchor="gadgets.ee.registerContextListener">
-    <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1249" note="Issue 1249:	You have to write a large amount of code to access the embedded experience context">
+    
       <t>&lt;static&gt; gadgets.registerContextListener(listener)</t>
       <t>Description: Registers a function which will be called when the 
       embedded experience gadget recieves its context.</t>
@@ -7778,7 +7778,8 @@ assertEquals(0.30, value);
          &lt;/script&gt;
        </artwork>
        </figure>
-      </x:draft>
+       <xref target="Issue-1249">Discussion</xref>
+      
     </section>
   </section>
   </section> <!-- End embedded experience section -->
@@ -7927,6 +7928,41 @@ assertEquals(0.30, value);
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1283">
     <front>
      <title>Add additional fields to the module section to support use in market places</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1215'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1215">
+    <front>
+     <title>No explanation of callback function for osapi.http methods</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1321'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1321">
+    <front>
+     <title>gadgets.views.openEmbeddedExperience should take the data model as a String or an Object</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1300'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1300">
+    <front>
+     <title>The description of the opt_params parameter for requestNavigateTo appears to be wrong</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1249'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1249">
+    <front>
+     <title>You have to write a large amount of code to access the embedded experience context</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1207'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1207">
+    <front>
+     <title>Core Gadget Section 8 - Versioning Refers To The Wrong Version Of The Spec</title>
     </front>
    </reference>
    
