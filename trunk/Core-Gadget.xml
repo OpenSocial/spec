@@ -4396,7 +4396,6 @@ dataset would contain content resembling:
                 &lt;xs:attribute name="view" type="xs:string" use="optional"/&gt;
                 &lt;xs:attribute name="preferred_height" type="xs:integer" use="optional"/&gt;
                 &lt;xs:attribute name="preferred_width" type="xs:integer" use="optional"/&gt;
-                &lt;xs:attribute name="scrolling" type="xs:boolean" use="optional"/&gt;
               &lt;/xs:extension&gt;
             &lt;/xs:simpleContent&gt;
           &lt;/xs:complexType&gt;
@@ -4459,6 +4458,7 @@ dataset would contain content resembling:
 <xref target="Issue-1142">Discussion</xref>
 <xref target="Issue-1209">Discussion</xref>
 <xref target="Issue-1212">Discussion</xref>
+<xref target="Issue-1234">Discussion</xref>
    </t>
   </section>
   <section title="Message Bundle Schema"
@@ -7966,7 +7966,16 @@ assertEquals(0.30, value);
     </front>
    </reference>
    
+   <reference anchor='Issue-1234'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1234">
+    <front>
+     <title>Gadget XML Schema defines a scrolling attribute for content elements</title>
+    </front>
+   </reference>
+   
   </references>
+  
+  
   <!-- Real references -->
   <references>
    <reference anchor='RFC2119'>
