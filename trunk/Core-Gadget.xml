@@ -4620,9 +4620,9 @@ dataset would contain content resembling:
    &lt;script&gt;
 
 	// Bind javascript function to action ID
-	function mycallback{
-		...
-	}
+  var mycallback = function(){
+    ...
+  };
 	var myaction = {
 		id: "org.samplevoip.callbyperson",
 		callback: mycallback
