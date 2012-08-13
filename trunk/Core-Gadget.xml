@@ -4627,7 +4627,7 @@ dataset would contain content resembling:
 		id: "org.samplevoip.callbyperson",
 		callback: mycallback
 	}
-	container.actions.updateAction(myaction);
+	gadgets.actions.updateAction(myaction);
 
    &lt;/script&gt;
   ]]&gt;
@@ -4698,7 +4698,7 @@ gadgets.actions.updateAction(myaction);
 
 
 	  <section title="removeAction" anchor="gadgets.actions.removeAction">
-	    <t>&lt;static&gt; container.actions.removeAction (actionId)</t>
+	    <t>&lt;static&gt; gadgets.actions.removeAction (actionId)</t>
 	    <t>Description: Removes the specified action from the container</t>
 	    <t>Parameters:</t>
 		<texttable align="left">
@@ -7153,7 +7153,7 @@ assertEquals(0.30, value);
     &lt;Content type="html" view="embedded"&gt;
         &lt;![CDATA[
           &lt;script type="text/javascript"&gt;
-            gadgets.ee.registerOnLoadHandler(function() {
+            gadgets.util.registerOnLoadHandler(function() {
               gadgets.ee.registerContextListener(function(context) {
                 document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
               });
@@ -7764,7 +7764,7 @@ assertEquals(0.30, value);
       <figure>
       <artwork xml:space="preserve">
          &lt;script type="text/javascript"&gt;
-            gadgets.ee.registerOnLoadHandler(function() {
+            gadgets.util.registerOnLoadHandler(function() {
               gadgets.ee.registerContextListener(function(context) {
                 document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
               });
