@@ -5342,16 +5342,13 @@ gadgets.selection.setSelection(selection);
    			</t>
    		</section>
    		<section title="addListener" anchor="gadgets.selection.addListener">
-   			<t>&lt;static&gt; gadgets.selection.addListener(event, callback)</t>
-   			<t>Description: Registers the callback function to be called for the specified selection event.</t>
+   			<t>&lt;static&gt; gadgets.selection.addListener(callback)</t>
+   			<t>Description: Registers the callback function to be called for selection events. <xref target="Issue-1259">Discussion</xref></t>
    			<t>
 				<texttable align="left">
 		         <ttcol>Name</ttcol>
 		         <ttcol>Type</ttcol>
 		         <ttcol>Description</ttcol>
-		         <c>event</c>
-		         <c>String</c>
-		         <c>The type of selection event [selection | preselection | postselection]</c>
 		         <c>callback</c>
 		         <c>Function</c>
 		         <c>The callback function that is called for the specified selection event.</c>
@@ -5359,16 +5356,13 @@ gadgets.selection.setSelection(selection);
    			</t>
    		</section>
    		<section title="removeListener" anchor="gadgets.selection.removeListener">
-   			<t>&lt;static&gt; gadgets.selection.removeListener(event, callback)</t>
-   			<t>Description: Unregisters the callback function to be called whenever for the specified selection event.</t>
+   			<t>&lt;static&gt; gadgets.selection.removeListener(callback)</t>
+   			<t>Description: Unregisters the callback function previously registered by addListener. <xref target="Issue-1259">Discussion</xref></t>
    			<t>Parameters:
 	   			<texttable align="left">
 		         <ttcol>Name</ttcol>
 		         <ttcol>Type</ttcol>
 		         <ttcol>Description</ttcol>
-		         <c>event</c>
-		         <c>String</c>
-		         <c>The type of selection event [selection | preselection | postselection]</c>
 		         <c>callback</c>
 		         <c>Function</c>
 		         <c>The callback function to be unregistered.</c>
@@ -7970,6 +7964,13 @@ assertEquals(0.30, value);
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1234">
     <front>
      <title>Gadget XML Schema defines a scrolling attribute for content elements</title>
+    </front>
+   </reference>
+   
+   <reference anchor='Issue-1259'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1259">
+    <front>
+     <title>Error in selection spec</title>
     </front>
    </reference>
    
