@@ -5,10 +5,10 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-gadget-specification-2-5-0-draft"
+     docName="opensocial-social-gadget-specification-2-5-0"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Social-Gadget">OpenSocial Social Gadget Specification 2.5.0 DRAFT</title>
+  <title abbrev="Social-Gadget">OpenSocial Social Gadget Specification 2.5.0</title>
   <author fullname="OpenSocial and Gadgets Specification Group">
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>

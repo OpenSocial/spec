@@ -8,7 +8,7 @@
      docName="opensocial-core-api-server-specification-2-5-0-draft"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Core-API-Server">OpenSocial Core API Server Specification 2.5.0 DRAFT</title>
+  <title abbrev="Core-API-Server">OpenSocial Core API Server Specification 2.5.0</title>
   <author fullname="OpenSocial and Gadgets Specification Group">
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
