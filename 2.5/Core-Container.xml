@@ -1,0 +1,1945 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type='text/xsl' href='./OpenSocial.xslt' ?>
+<?rfc toc="yes"?>
+<?rfc-ext allow-markup-in-artwork="yes"?>
+<!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
+"http://xml.resource.org/authoring/rfc2629.dtd">
+<rfc ipr="full3978"
+     docName="core-container-specification-2-5-0-draft"
+     xmlns:x="http://purl.org/net/xml2rfc/ext">
+ <front>
+  <title abbrev="Core-Container">Core Container Specification 2.5.0 DRAFT</title>
+  <author fullname='OpenSocial and Container Specification Group'>
+   <address>
+    <email>opensocial-and-gadgets-spec@googlegroups.com</email>
+   </address>
+  </author>
+  <date month="August" year="2012" />
+  <area>General</area>
+  <keyword>OpenSocial</keyword>
+  <keyword>Core Container</keyword>
+ </front>
+ <middle>
+
+  <section title="Notation and Conventions" anchor="NotationAndConventions">
+    <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+    "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+    document are to be interpreted as described in
+    <xref target="RFC2119">RFC2119</xref>.</t>
+    <t>Domain name examples use <xref target="RFC2606">RFC2606</xref>.</t>
+  </section>
+  <section title="Definitions" anchor="Definitions">
+   <section title="Gadget">
+    <t>
+     A web-based software component based on HTML, CSS and JavaScript. It allows
+     developers to write modularized, reusable web applications that work
+     anywhere on the web without modification.
+    </t>
+   </section>
+   <section title="Container" anchor="ContainerDefintion">
+    <t>
+     A context into which a gadget is embedded into. This is typically an HTML
+     page, served by an arbitrary web-service, viewable by a browser.
+    </t>
+   </section>
+  </section>
+
+  <section title="Overview" anchor="Overview">
+   <t>
+    Common container is a lightweight gadget-and-container framework, based on
+    JavaScript and server-driven end-point. Its mission is to simplify container
+    and gadget integration model. It allows container developers to easily
+    transform their page into a gadget-compliant container that can properly
+    embed gadgets rendered by a gadget service. It does not address
+    container-specific business-logic and layout.
+   </t>
+  </section>
+
+  <section title="Compliance" anchor="Compliance">
+   <t>
+    To be a gadget-compliant container, a container MUST be able to satisfy
+    requirements defined in this section.
+   </t>
+   <section title="Lightweight" anchor="Lightweight">
+    <t>
+     The framework is installed in a container page by a script tag, with its
+     source pointing to the common container JS. This also provides a near-zero
+     barrier to entry for new container clients.
+    </t>
+   </section>
+   <section title="Gadget navigation" anchor="GadgetNavigation">
+    <t>
+     The framework lives in the container page to provide API to container
+     developers to navigate/open and close gadgets on the page, in a way that
+     ensures opened gadgets continue to work, until they are closed.
+    </t>
+   </section>
+   <section title="Track latency" anchor="TrackLatency">
+    <t>
+     The framework allows container developers to track the latency times
+     required to do a gadget navigation. This involves starting a timer when a
+     gadget navigation is requested and stopping the timer when a gadget is
+     fully rendered. Latency times can be broadcasted to the container for
+     container-specific consumption.
+    </t>
+   </section>
+   <section title="Promote coherent changes" anchor="PromoteCoherentChanges">
+    <t>
+     Changes in a gadget render may require simultaneous change on the container
+     implementation. This framework will allow new container changes to be
+     picked up at the same time when a gadget render service is updated,
+     avoiding version-skew. Additionally, it will also promote all common-
+     container-enabled pages to become updated at the same time.
+    </t>
+   </section>
+  </section>
+  
+  <section title="Gadget Lifecycle">
+    <section title="Overview" anchor="GadgetLifecycleOverview">
+      <t>
+        When a gadget renders in a container it goes through several stages from the
+        time it is added to the time it is eventually removed from the container.  Some
+        or all of these stages may occur for each gadget in the container.  We refer to 
+        the different stages a gadget goes through as it is rendered in the container
+        lifecycle events.
+      </t>
+    </section>
+    <section title="Listeners" anchor="GadgetLifecycleListeners">
+      <t>
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>osapi.container.CallbackType.ON_BEFORE_PRELOAD</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener before a gadget
+            is <xref target="osapi.container.Container.preloadGadget">preload</xref>.
+            If multiple gadgets are <xref target="osapi.container.Container.preloadGadgets">
+            preloaded at the same time</xref> the container should call this listener once for
+            the set of gadgets that are being preloaded.  The listener function will be passed
+            an array of gadget URLs.
+          </c>
+          <c>osapi.container.CallbackType.ON_PRELOADED</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener after a gadget
+            is <xref target="osapi.container.Container.preloadGadget">preload</xref>.
+            If multiple gadgets are <xref target="osapi.container.Container.preloadGadgets">
+            preloaded at the same time</xref> the container should call this listener once for
+            the set of gadgets that were preloaded.  The listener function will be passed a
+            <xref target="GadgetMetadata">preload</xref> response object.
+          </c>
+          <c>osapi.container.CallbackType.ON_BEFORE_NAVIGATE</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener before a gadget is
+            <xref target="osapi.container.Container.navigateGadget">navigated</xref> to
+            in the container.  The listener function will be passed the URL of the gadget
+            being navigated.
+          </c>
+          <c>osapi.container.CallbackType.ON_NAVIGATED</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener after a gadget is
+            <xref target="osapi.container.Container.navigateGadget">navigated</xref> to
+            in the container.  This listener may be called before the gadget has finished
+            rendering in the container.  See osapi.container.CallbackType.ON_RENDER.  The listener
+            function will be passed the <xref target="osapi.container.GadgetSite">gadget site</xref>.
+          </c>
+          <c>osapi.container.CallbackType.ON_BEFORE_CLOSE</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener before a gadget is 
+            <xref target="osapi.container.Container.closeGadget">closed</xref>
+            in the container.  The listener function will be passed the 
+            <xref target="osapi.container.GadgetSite">gadget site</xref>.
+          </c>
+          <c>osapi.container.CallbackType.ON_CLOSED</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener after a gadget is 
+            <xref target="osapi.container.Container.closeGadget">closed</xref>
+            in the container.  The listener function will be passed the 
+            <xref target="osapi.container.GadgetSite">gadget site</xref>.
+          </c>
+          <c>osapi.container.CallbackType.ON_BEFORE_UNLOAD</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener before a gadget is
+            <xref target="osapi.container.Container.unloadGadget">unloaded</xref> 
+            from the container.  If <xref target="osapi.container.Container.unloadGadget">
+            multiple gadgets</xref> are unloaded at the same time
+            this listener will be called one time for each gadget that is unloaded.
+            The listener function will be passed the gadget URL of the gadget 
+            being unloaded.
+          </c>
+          <c>osapi.container.CallbackType.ON_UNLOADED</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener after a gadget is
+            <xref target="osapi.container.Container.unloadGadget">unloaded</xref> 
+            from the container.  If <xref target="osapi.container.Container.unloadGadget">
+            multiple gadgets</xref> are unloaded at the same time
+            this listener will be called one time for each gadget that is unloaded.
+            The listener function will be passed the gadget URL of the gadget 
+            being unloaded.
+          </c>
+          <c>osapi.container.CallbackType.ON_BEFORE_RENDER</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener before a gadget has rendered.
+            This would typically occur during gadget 
+            <xref target="osapi.container.Container.navigateGadget">navigation</xref>.
+            The listener function will be passed the gadget URL of the gadget being renderd.
+          </c>
+          <c>osapi.container.CallbackType.ON_RENDER</c>
+          <c>String</c>
+          <c>
+            The container MUST call this lifecycle listener after a gadget has rendered.
+            The listener function will be passed the gadget URL of the gadget being renderd.
+            This does not necessarily mean that all the UI of the gadget has finished rendering
+            but that the gadget has finished loading everthing it needs render.  This listener
+            may or may not be called after osapi.container.CallbackType.ON_NAVIGATED. 
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="Example" anchor="GadgetLifecycleExample">
+      <t>This is an example of how to listen for lifecycle events.
+        <figure>
+          <artwork xml:space="preserve">
+......
+var listeners = {};
+listeners[osapi.container.CallbackType.ON_BEFORE_PRELOAD] = function(gadgetUrls) {
+  gadgets.log('osapi.container.CallbackType.ON_BEFORE_PRELOAD called');
+};
+listeners[osapi.container.CallbackType.ON_PRELOADED] = function(response) {
+  gadgets.log('osapi.container.CallbackType.ON_PRELOADED called');
+  gadgets.log(gadgets.json.stringify(response));
+};
+listeners[osapi.container.CallbackType.ON_BEFORE_NAVIGATE] = function(gadgetUrl) {
+  gadgets.log('osapi.container.CallbackType.ON_BEFORE_NAVIGATE called');
+  gadgets.log('About to navigate to ' + gadgetUrl);
+};
+listeners[osapi.container.CallbackType.ON_NAVIGATED] = function(site) {
+ gadgets.log('osapi.container.CallbackType.ON_NAVIGATED called');
+};
+listeners[osapi.container.CallbackType.ON_BEFORE_CLOSE] = function(site) {
+  gadgets.log('osapi.container.CallbackType.ON_BEFORE_CLOSE called');
+};
+listeners[osapi.container.CallbackType.ON_CLOSED] = function(site) {
+  gadgets.log('osapi.container.CallbackType.ON_CLOSED called');
+};
+listeners[osapi.container.CallbackType.ON_BEFORE_RENDER] = function(gadgetUrl) {
+  gadgets.log('osapi.container.CallbackType.ON_BEFORE_RENDER called');
+  gadgets.log('About to render ' + gadgetUrl);
+};
+listeners[osapi.container.CallbackType.ON_RENDER] = function(gadgetUrl) {
+  gadgets.log('osapi.container.CallbackType.ON_RENDER called');
+  gadgets.log('The gadget at the URL ' + gadgetUrl + ' has rendered');
+};
+listeners[osapi.container.CallbackType.ON_BEFORE_UNLOAD] = function(gadgetUri) {
+  gadgets.log('osapi.container.CallbackType.ON_BEFORE_UNLOAD called');
+  gadgets.log('About to unload ' + gadgetUri);
+};
+listeners[osapi.container.CallbackType.ON_UNLOADED] = function(gadgetUri) {
+  gadgets.log('osapi.container.CallbackType.ON_UNLOADED called');
+  gadgets.log(gadgetUri + 'has been unloaded');
+};
+CommonContainer.addGadgetLifecycleCallback('com.example.commoncontainer', lifecycle);
+.....
+          </artwork>
+        </figure>
+      </t>
+    </section>
+  </section>
+  <section title="Gadget Metadata" anchor="GadgetMetadata">
+    <section title="Overview">
+      <t>
+        Containers often need information about the gadget they are going to render, 
+        either before or after the rendering occurs.  In the terms of the container
+        this infomation is typically referred to as the gadget's metadata and MAY contain
+        information such as the gadget's title, the features the gadget uses, and
+        the views a gadget has.  The container can use information such as the gadget
+        title in the chrome around the gadget when it renders.
+      </t>
+    </section>
+    <section title="Usage">
+        <t>
+          Obtaining gadget metadata can be done before or after a gadget has rendered.  
+          To obtain a single gadget's metadata
+          before a gadget is rendered a container can call 
+          <xref target="osapi.container.Container.preloadGadget">
+          osapi.container.Container.preloadGadget</xref>.  To obtain metadata for
+          multiple gadgets at the same time before any of them are rendered
+          a container can all <xref target="osapi.container.Container.preloadGadgets"
+          >osapi.container.Container.preloadGadget</xref>.  A container can also 
+          recieve a gadget's metadata after <xref target="osapi.container.Container.navigateGadget">
+          rendering a gadget</xref>.  The callback passed to navigateGadget takes one 
+          parameter which is the gadget metadata for the gadget that was renderd.
+        </t>
+        <t>
+          Since a gadget's metadata is unlikely to change very often containers
+          SHOULD cache a gadget's metadata in order to avoid making the same 
+          request each time the gadget is rendered.  Containers SHOULD purge a gadget's
+          metadata when <xref target="osapi.container.Container.unloadGadget">
+          osapi.container.Container.unloadGadget</xref> or
+          <xref target="osapi.container.Container.unloadGadgets">
+          osapi.container.Container.unloadGadgets</xref> is called.
+        </t>
+      </section>
+  </section>
+
+  <section title="Javascript API Reference" anchor="JavaScriptAPIReference">
+   <section title="osapi.container" anchor="osapi.container">
+    <t>Namespace for top level container functions.</t>
+   </section>
+   <section title="osapi.container.Container" anchor="osapi.container.Container">
+    <t>
+     This represents the container. This provides a top-level set of APIs for
+     container developers, to accomplish functionalities defined in
+     <xref target="GadgetNavigation">GadgetNavigation</xref> and more.
+     Internally, this manages work required to ensure that navigated gadgets
+     continue to work. There MUST not be more than one instance of this in a
+     page, due to usage of global resources and possible race conditions.
+    </t>
+    <section title="constructor" anchor="Container-Constructor">
+      <t>osapi.container.Container(opt_config)</t>
+      <t>Constructs the container object.</t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>opt_config</c>
+          <c>Object</c>
+          <c>
+            A bag-style JSON object with configuration parameters.  See 
+            <xref target="Configuring-The-Container"></xref>
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="preloadGadget" anchor="osapi.container.Container.preloadGadget">
+      <t>osapi.container.Container.preloadGadget(gadgetUrl, opt_callback)</t>
+      <t>Description: Pre-loads a single gadget in the container.
+        <t>See also:
+          <xref target="osapi.container.Container.preloadGadgets">preloadGadgets</xref> 
+        </t>
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>String</c>
+          <c>A URL to the gadget definition.</c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>
+            A callback function to be called when the gadget metdata is returned.
+            The callback function should have one parameter which is the response from
+            preloading the gadget.
+          </c>
+        </texttable>
+      </t>
+      <t>Example:
+        <figure>
+          <artwork xml:space="preserve">
+...
+CommonContainer.preloadGadget('http://example.com/gadget.xml', function(result) {
+  for (var gadgetURL in result) {
+    if(!result[gadgetURL].error) {
+      var metadata = result[gadgetURL];
+      //do something with the metadata
+    } else {
+      gadgets.error('Error preloading gadget ' + gadgetURL);
+    }
+  }
+});
+...
+          </artwork>
+        </figure>
+      </t>
+    </section>
+    <section title="preloadGadgets" anchor="osapi.container.Container.preloadGadgets">
+      <t>osapi.container.Container.preloadGadgets(gadgetUrls, opt_callback)</t>
+      <t>
+        Pre-load gadgets metadata information.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrls</c>
+          <c>Array</c>
+          <c>Gadget URLs to preload.</c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>
+            A callback function to be called when the gadget metdata is returned.
+            The callback function should have one parameter which is the response from
+            preloading the gadget.
+          </c>
+        </texttable>
+      </t>
+      <t>Example:
+        <figure>
+          <artwork xml:space="preserve">
+...
+CommonContainer.preloadGadgets(['http://example.com/gadget1.xml', 'http://example.com/gadget2.xml'], function(result) {
+  for (var gadgetURL in result) {
+    if(!result[gadgetURL].error) {
+      var metadata = result[gadgetURL];
+      //do something with the metadata
+    } else {
+      gadgets.error('Error preloading gadget ' + gadgetURL);
+    }
+  }
+});
+...
+          </artwork>
+        </figure>
+      </t>    
+    </section>
+    <section title="unloadGadget" anchor="osapi.container.Container.unloadGadget">
+      <t>osapi.container.Container.unloadGadget(gadgetUrl)</t>
+      <t>
+        Unloads a single gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrl</c>
+          <c>String</c>
+          <c>Gadget URL to unload.</c>
+        </texttable>
+      </t>     
+    </section>
+    <section title="unloadGadgets" anchor="osapi.container.Container.unloadGadgets">
+      <t>osapi.container.Container.unloadGadgets(gadgetUrls)</t>
+      <t>
+        Unload preloaded gadgets.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>gadgetUrls</c>
+          <c>Array</c>
+          <c>Gadget URLs to unload.</c>
+        </texttable>
+      </t>    
+    </section>
+    <section title="navigateGadget" anchor="osapi.container.Container.navigateGadget">
+      <t>osapi.container.Container.navigateGadget(site, gadgetUrl, viewParams, 
+      renderParams, opt_callback)</t>
+      <t>
+        Renders (navigates) to the specified gadget.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>site</c>
+          <c>osapi.container.GadgetSite</c>
+          <c>The gadget site to use to render the gadget</c>
+          <c>gadgetUrl</c>
+          <c>string</c>
+          <c>The gadget URL to render (navigate) to.</c>
+          <c>viewParams</c>
+          <c>Object</c>
+          <c>
+            View parameters to pass to the view being specified in the 
+            renderParams.
+          </c>
+          <c>renderParams</c>
+          <c>Object</c>
+          <c>
+            Contains parameters on how the container wants to render this 
+            gadget see <xref target="RenderConfiguration"></xref>.
+          </c>
+          <c>opt_callback</c>
+          <c>function</c>
+          <c>
+            Optional callback function called after the gadget has been rendered.
+            The callback will be called with one parameter containing the metadata for
+            the gadget that was rendered.
+          </c>
+        </texttable>
+      </t>
+      <t>Example:
+        <figure>
+          <artwork xml:space="preserve">
+...
+var el = document.getElementById('gadget-site');
+var gadgetSite = CommonContainer.newGadgetSite(el);
+var params = {};
+params[osapi.container.RenderParam.WIDTH] = '100%';
+params[osapi.container.RenderParam.VIEW] = 'home';
+CommonContainer.navigateGadget(gadgetSite, 'http://example.com/gadget.xml', {}, params, function(metadata){
+  if(metadata.error) {
+    gadgets.error('There was an error rendering http://example.com/gadget.xml');
+  } else {
+    //do something with the gadgets metadata
+  }
+});
+...
+          </artwork>
+        </figure>
+      </t>
+    </section>
+    <section title="navigateUrl" anchor="osapi.container.Container.navigateUrl">
+      <t>osapi.container.Container.navigateUrl(site, url, renderParams)</t>
+      <t>
+        Navigates to an arbitrary URL in the container.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>site</c>
+          <c>osapi.container.UrlSite</c>
+          <c>The URL site to navigate to the URL within.</c>
+          <c>url</c>
+          <c>String</c>
+          <c>The URL to navigate to.</c>
+          <c>renderParams</c>
+          <c>Object</c>
+          <c>Contains parameters for how the container wants to render this URL.
+          See <xref target="RenderConfiguration"></xref>.  This function only
+          accepts osapi.container.RenderParam.HEIGHT 
+          and osapi.container.RenderParam.WIDTH as valid render params.</c>
+        </texttable>
+      </t>
+       <t>Example:
+        <figure>
+          <artwork xml:space="preserve">
+...
+var el = document.getElementById('url-site');
+var urlSite = CommonContainer.newUrlSite(el);
+var params = {};
+params[osapi.container.RenderParam.WIDTH] = '100%';
+CommonContainer.navigateUrl(gadgetSite, 'http://example.com', {}, params);
+...
+          </artwork>
+        </figure>
+      </t>
+    </section>
+    <section title="closeGadget" anchor="osapi.container.Container.closeGadget">
+      <t>osapi.container.Container.closeGadget(site)</t>
+      <t>
+        Closes the gadget in the site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>site</c>
+          <c>osapi.container.GadgetSite</c>
+          <c>The site containing the gadget to close.</c>
+        </texttable>
+      </t>
+    </section>
+    <section title="addGadgetLifecycleCallback" anchor="osapi.container.Container.addGadgetLifecycleCallback">
+    <xref target="Issue-1185">Discussion</xref>
+     <t>osapi.container.Container.addGadgetLifecycleCallback(name, lifeCycleCallback)</t>
+      <t>
+        Add a callback object to be called when a gadget is added, navigated to or closed.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>name</c>
+          <c>String</c>
+          <c>
+            The name of the callback function.  Used to uniquely identify this callback function.
+          </c>
+          <c>lifeCycleCallback</c>
+          <c>function</c>
+          <c>
+            The callback function to call when the gadget lifecycle changes. Needs to have preloaded(metadataResponse), 
+            navigated(gadgetSite), closed(gadgetSite) and unloaded(gadgetURL) methods to react to lifecycle events.
+            These are invoked(respectively) by the <xref target="osapi.container.Container.preloadGadgets">preloadGadgets</xref>, 
+            <xref target="osapi.container.Container.navigateGadget">navigateGadget</xref>, and 
+            <xref target="osapi.container.Container.closeGadget">closeGadget</xref> and 
+            <xref target="osapi.container.Container.unloadGadgets">unloadGadgets</xref> container methods.  Containers may also
+            choose to call some of the 
+            <eref target="./Core-Gadget.xml#LifeCycleEvents">gadget lifecycle events</eref> 
+            in the core gadget spec in order to inform the gadget host
+            that the gadget has been added/removed from the container.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="removeGadgetLifecycleCallback" anchor="container.Container.removeGadgetLifecycleCallback">
+     <t>container.Container.removeGadgetLifecycleCallback(lifeCycleCallback)</t>
+      <t>
+        Remove a lifecycle callback object from the container's registry.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>lifeCycleCallback</c>
+          <c>function</c>
+          <c>
+           remove a lifecycle callback previously registered with the container 
+          </c>
+        </texttable>
+      </t>
+    </section>
+    
+    <section title="newGadgetSite" anchor="container.Container.newGadgetSite">
+     <t>osapi.container.Container.newGadgetSite(element, opt_bufferElement)</t>
+      <t>
+       Creates a new GadgetSite and registers it with the container.  The ID attribute
+       of element will be used as the siteId.  If no ID has been assigned to element
+       you pass in, a unique id will be assigned to the site by the container.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>element</c>
+          <c>Element</c>
+          <c>
+           The element to create a gadget site from. 
+          </c>
+          <c>opt_bufferElement</c>
+          <c>Element</c>
+          <c>
+           The element to use as a buffer when rendering the gadget site.
+          </c>
+        </texttable>
+      </t>
+      <t>Returns:
+        <texttable align="left">
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>osapi.container.GadgetSite</c>
+          <c>
+           A gadget site to render a gadget in. 
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="newUrlSite" anchor="container.Container.newUrlSite">
+     <t>osapi.container.Container.newUrlSite(element)</t>
+      <t>
+       Creates a new UrlSite and registers it with the container.  The ID attribute
+       of element will be used as the siteId.  If no ID has been assigned to element
+       you pass in, a unique id will be assigned to the site by the container.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>element</c>
+          <c>Element</c>
+          <c>
+           The element to create a url site from. 
+          </c>
+        </texttable>
+      </t>
+      <t>Returns:
+        <texttable align="left">
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>osapi.container.UrlSite</c>
+          <c>
+           A URL site to render a URL in. 
+          </c>
+        </texttable>
+      </t>
+      <xref target="Issue-1235">Discussion</xref>
+    </section>
+   
+   </section>
+   <section title="osapi.container.Site" anchor="osapi.container.Site">
+     <t>
+       This represents a spot in the container where either a gadget or a 
+       URL can be rendered.  This is a super class for URL sites and gadget
+       sites.
+     </t>
+     <section title="setHeight" anchor="osapi.container.Site.setHeight">
+     <t>osapi.container.Site.setHeight(height)</t>
+      <t>
+        Sets the height of the site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>height</c>
+          <c>Number</c>
+          <c>
+            Value to set the site height to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="setWidth" anchor="osapi.container.Site.setWidth">
+     <t>osapi.container.Site.setWidth(width)</t>
+      <t>
+        Sets the width of the site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>width</c>
+          <c>Number</c>
+          <c>
+            Value to set the site width to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="close" anchor="osapi.container.Site.close">
+      <t>osapi.container.Site.close()</t>
+      <t>
+        Closes the site in the container.
+      </t>
+    </section>
+   </section>
+   <section title="osapi.container.GadgetSite" anchor="osapi.container.GadgetSite">
+    <t>
+      Represents a spot in the container where a gadget can render.  This is 
+      a subclass of <xref target="osapi.container.Site">osapi.container.Site</xref>.
+    </t>
+    <section title="setHeight" anchor="osapi.container.GadgetSite.setHeight">
+     <t>osapi.container.GadgetSite.setHeight(height)</t>
+      <t>
+        Sets the height of the gadget site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>height</c>
+          <c>Number</c>
+          <c>
+            Value to set the gadget site height to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="setWidth" anchor="osapi.container.GadgetSite.setWidth">
+     <t>osapi.container.GadgetSite.setWidth(width)</t>
+      <t>
+        Sets the width of the gadget site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>width</c>
+          <c>Number</c>
+          <c>
+            Value to set the gadget site width to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="close" anchor="osapi.container.GadgetSite.close">
+      <t>osapi.container.GadgetSite.close()</t>
+      <t>
+        Closes the site in the container.
+      </t>
+    </section>
+   </section>
+   
+   <section title="osapi.container.UrlSite" anchor="osapi.container.UrlSite">
+    <t>
+      Represents a spot in the container where a URL can render.  This is 
+      a subclass of <xref target="osapi.container.Site">osapi.container.Site</xref>.
+    </t>
+    <section title="setHeight" anchor="osapi.container.UrlSite.setHeight">
+     <t>osapi.container.UrlSite.setHeight(height)</t>
+      <t>
+        Sets the height of the URL site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>height</c>
+          <c>Number</c>
+          <c>
+            Value to set the Url site height to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="setWidth" anchor="osapi.container.UrlSite.setWidth">
+     <t>osapi.container.UrlSite.setWidth(width)</t>
+      <t>
+        Sets the width of the URL site.
+      </t>
+      <t>Parameters:
+        <texttable align="left">
+          <ttcol>Name</ttcol>
+          <ttcol>Type</ttcol>
+          <ttcol>Description</ttcol>
+          <c>width</c>
+          <c>Number</c>
+          <c>
+            Value to set the URL site width to.
+          </c>
+        </texttable>
+      </t>
+    </section>
+    <section title="close" anchor="osapi.container.UrlSite.close">
+      <t>osapi.container.UrlSite.close()</t>
+      <t>
+        Closes the site in the container.
+      </t>
+    </section>
+   </section>
+   
+  </section>
+  
+  
+
+  <section title="Configuring The Container" anchor="Configuring-The-Container">
+   <t>
+    Configuring common container is done at instantiation, by passing a
+    bag-style JSON, with keys defined under osapi.container.ContainerConfig.
+    All of these are optional.
+   </t>
+   <t>
+    These affect all rendering, unless overridden by
+    <xref target="RenderConfiguration">Render Configuration</xref>.
+   </t>
+   <t>
+     <texttable align="left">
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>osapi.container.ContainerConfig.ALLOW_DEFAULT_VIEW</c>
+       <c>String</c>
+       <c>Equivalent to the String allowDefaultView.
+       Allow gadgets to render in an unspecified view. Default is true.</c>
+       <c>osapi.container.ContainerConfig.RENDER_DEBUG</c>
+       <c>String</c>
+       <c>Equivalent to the String renderDebug.
+       Indicates whether debug mode is turned on. Default is false.</c>
+       <c>osapi.container.ContainerConfig.RENDER_DEBUG_PARAM</c>
+       <c>String</c>
+       <c>Equivalent to the String renderDebugParam.
+       The name of the query parameter to look for in the container's URL 
+       that indicates whether to put the container in debug mode.  If this config parameter is passed 
+       and the query parameter is present in the container URL the container MUST honor its value over
+       the osapi.container.ContainerConfig.RENDER_DEBUG config parameter.</c>
+       <c>osapi.container.ContainerConfig.RENDER_TEST</c>
+       <c>String</c>
+       <c>Equivalent to the String renderTest.
+       Indicates whether test mode is turned on. Default is false.</c>
+     </texttable>
+   </t>
+   <t>The following parameters do not effect rendering in the container.</t>
+   <t>
+     <texttable align="left">
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>osapi.container.ContainerConfig.GET_LANGUAGE</c>
+       <c>String</c>
+       <c>Equivalent to the String GET_LANGUAGE.
+       A callback function that will return the correct language locale part to use when 
+       asking the server to render a gadget or when asking the server for 1 or more 
+       gadget's metadata.  The callback function should return a string equal to the
+       language locale part.</c>
+       <c>osapi.container.ContainerConfig.GET_COUNTRY</c>
+       <c>String</c>
+       <c>Equivalent to the String GET_COUNTRY.
+       A callback function that will return the correct country locale part to use when 
+       asking the server to render a gadget or when asking the server for 1 or more
+       gadget's metadata.  The callback function should return a String equal to the country
+       locale part.</c>
+       <c>osapi.container.ContainerConfig.GET_PREFERENCES</c>
+       <c>String</c>
+       <c>Equivalent to the String GET_PREFERENCES.
+       A function that will asynchronously fetch the preferences to use when asking the
+       server to render a gadget or when asking the server for gadget metadata. <xref target="Issue-1203">Discussion</xref> It will be 
+       passed the following parameters:
+       <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>siteId</c>
+        <c>string</c>
+        <c>Gadget Site ID</c>
+        <c>gadgetUrl</c>
+        <c>string</c>
+        <c>Gadget Url</c>
+        <c>callback</c>
+        <c>function(Map&lt;String, Object&gt; preferences)</c>
+        <c>An asynchronous callback that will receive the value of the fetched 
+         preferences, if any.  The GET_PREFERENCES function passed in the config
+         should call this callback function with a Map that is constructed just like
+         the Map for <xref target="RenderConfiguration">USER_PREFS</xref> <xref target="Issue-1203">Discussion</xref></c>
+       </texttable>
+       </c>
+       <c>osapi.container.ContainerConfig.SET_PREFERENCES</c>
+       <c>String</c>
+       <c>Equivalent to the String SET_PREFERENCES.
+       A callback function that will persist the preferences.  It will be passed the 
+       following parameters:
+
+       <texttable align="left">
+        <ttcol>Name</ttcol>
+        <ttcol>Type</ttcol>
+        <ttcol>Description</ttcol>
+        <c>siteId</c>
+        <c>string</c>
+        <c>Gadget Site ID</c>
+        <c>gadgetUrl</c>
+        <c>string</c>
+        <c>Gadget Url</c>
+        <c>preferences</c>
+        <c>object</c>
+        <c>Preferences to persist.  The format supplied here will be the same as is 
+        required for <xref target="RenderConfiguration">USER_PREFS</xref>.</c>
+       </texttable>
+       </c>
+     </texttable>
+   </t>
+  </section>
+
+  <section title="Render Configuration" anchor="RenderConfiguration">
+   <t>
+    The following constants my be passed in a bag-style JSON object to 
+    functions in the container which render 
+    <xref target="osapi.container.Container.navigateGadget">gadgets</xref> 
+    and <xref target="osapi.container.Container.navigateUrl">URLs</xref>.
+   </t>
+   <t>
+     <texttable align="left">
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>osapi.container.RenderParam.ALLOW_DEFAULT_VIEW</c>
+       <c>String</c>
+       <c>Equivalent to the String allowDefaultView.  Allow gadgets to render 
+       an unspecified view. The default is true.</c>
+       <c>osapi.container.RenderParam.DEBUG</c>
+       <c>String</c>
+       <c>Equivalent to the String debug.  
+       Indicates whether to turn on debugging mode. The default is false.</c>
+       <c>osapi.container.RenderParam.HEIGHT</c>
+       <c>String</c>
+       <c>Equivalent to the String height.  
+       The starting site height (in pixels). The default is 200.</c>
+       <c>osapi.container.RenderParam.NO_CACHE</c>
+       <c>String</c>
+       <c>Equivalent to the String nocache.  
+       Indicates whether to disable cache. The default is false.</c>
+       <c>osapi.container.RenderParam.TEST_MODE</c>
+       <c>String</c>
+       <c>Equivalent to the String testmode.  
+       Indicates whether to enable test mode. The default is false.</c>
+       <c>osapi.container.RenderParam.USER_PREFS</c>
+       <c>String</c>
+       <c>Equivalent to the String userPrefs.  
+       The gadget user prefs to render with. If undefined, and 
+       <xref target="Configuring-The-Container">GET_PREFERENCES</xref> 
+       has been provided when configuring the container, the container 
+       should use GET_PREFERENCES to obtain preferences.  The value of USER_PREFS should be a Map
+       of preferences keys (Strings) to preference values (String or Array).</c>
+       <c>osapi.container.RenderParam.VIEW</c>
+       <c>String</c>
+       <c>Equivalent to the String view.  
+       The view of the gadget to render.</c>
+       <c>osapi.container.RenderParam.WIDTH</c>
+       <c>String</c>
+       <c>Equivalent to the String width.  
+       The starting site width (in pixels). The default is 320.</c>
+     </texttable>
+   </t>
+  </section>
+  <section title="Complete Common Container Example">
+    <t>Here is an example of how you would render a gadget in a container implementing the common
+    container specification.</t>
+    <t>
+      <figure>
+        <artwork xml:space="preserve">
+//The gadget we are going to navigate to.
+var gadgetUrl = 'http://example.com/gadget.xml';
+
+//The URL we are going to navigate to.
+var url = 'http://opensocial.org';
+
+//Configuration for our container.
+var config = {};
+config[osapi.container.ContainerConfig.RENDER_DEBUG] = true;
+config[osapi.container.ContainerConfig.GET_COUNTRY] = function() { return 'ALL'; };
+config[osapi.container.ContainerConfig.GET_LANGUAGE] = function() { return 'ALL'; };
+
+//Construct the container object
+var container = new osapi.container.Container(config);
+
+//We want to log how long it is taking to preload gadgets so add the necessary preload lifecycle listeners
+var preloadStartTime = 0;
+listeners[osapi.container.CallbackType.ON_BEFORE_PRELOAD] = function(gadgetUrls) {
+  preloadStartTime = new Date().getTime();
+};
+listeners[osapi.container.CallbackType.ON_PRELOADED] = function(response) {
+  var time = new Date().getTime() - preloadStartTime;
+  var urls = [];
+  for(url in response) {
+    urls[urls.length] = url;
+  }
+  
+  gadgets.log('It took ' + time + ' ms to preload the URL(s) ' + urls);
+};
+
+//Create the gadget site that the gadget will render in.
+var gadgetSiteElement = document.getElementById('my_gadget_site');
+var gadgetSite = container.newGadgetSite(gadgetSiteElement);
+
+var renderParams = {};
+renderParams[osapi.container.RenderParam.VIEW] = gadgets.views.ViewType.HOME;
+
+//Render the gadget!
+container.navigateGadget(gadgetSite, gadgetUrl, {}, renderParams, function(gadgetMetadata){
+  if(gadgetMetadata.error) {
+    gadgets.error('There was an error rendering the gadget at ' + gadgetUrl);
+  }
+});
+
+//Create the URL site the URL will render in.
+var urlSiteElement = document.getElementById('my_url_site');
+var urlSite = container.newUrlSite(urlSiteElement);
+
+//Render the URL!
+container.navigateUrl(urlSite, url, {});
+
+        </artwork>
+      </figure>
+    </t>
+  </section>
+  <section title="Highly Recommended Features">
+    <section title="osapi.container.Container.ee">
+    <xref target="Issue-1144">Discussion</xref>
+        <section title="navigate" anchor="osapi.container.Container.ee.navigate">
+          <t>osapi.container.Container.ee.navigate(element, dataModel, renderParams, opt_callback, opt_containerContext)</t>
+          <t>
+            Renders an embedded experience from the given embedded experience
+            data model.
+          </t>
+          <t>Parameters: 
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>element</c>
+              <c>HTMLElement</c>
+              <c>The HTML DOM element in which to render the embedded experience.</c>
+              <c>dataModel</c>
+              <c>Object</c>
+              <c>The embedded experience <eref target="./Core-Gadget.xml#Embedded-Experiences">data model</eref>.</c>
+              <c>renderParams</c>
+              <c>Object</c>
+              <c>The render params to use when rendering this embedded experience.</c>
+              <c>opt_callback</c>
+              <c>function</c>
+              <c>Called when the embedded experience has been rendered.  The 
+              function takes in two parameters, the site and the metadata.</c>
+              <c>opt_containerContext</c>
+              <c>Object</c>
+              <c>This object will be added to the 
+              <eref target="./Core-Gadget.xml#Embedded-Experiences">context property</eref> of the data model
+              parameter under the 'openSocial' namespace.  This
+              object can be used to pass the 
+              <eref target="./Core-Gadget.xml#rootContext">associatedContext</eref> to the 
+              embedded experience gadget.</c>
+            </texttable>
+          </t>
+        </section>
+        <section title="close" anchor="osapi.container.Container.ee.close">
+          <t>osapi.container.Container.ee.close(site)</t>
+          <t>
+            Closes a site containing an embedded experience.  This can close
+            a <xref target="osapi.container.GadgetSite">gadget site</xref> or a 
+            <xref target="osapi.container.UrlSite">URL site</xref>.
+          </t>
+          <t>Parameters: 
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>site</c>
+              <c>osapi.container.Site</c>
+              <c>The site to close.</c>
+            </texttable>
+          </t>
+        </section>
+        <section title="Configuring An Embedded Experience To Render" anchor="EEConfigure">
+          <t>
+          Render params can be passed to the navigate function 
+          (<xref target="osapi.container.Container.ee.navigate"></xref>) to configure how
+          the embedded experience should render.
+          All of these are optional.
+          </t>
+          <t> 
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>osapi.container.ee.RenderParam.GADGET_RENDER_PARAMS</c>
+              <c>String</c>
+              <c>Equivalent to the String gadgetRenderParams.  The value of this parameter should be
+              an object that is made up of parameters from the section on 
+              <xref target="RenderConfiguration">render configuration</xref>.</c>
+              <c>osapi.container.ee.RenderParam.URL_RENDER_PARAMS</c>
+              <c>String</c>
+              <c>Equivalent to the String urlRenderParams.  The value of this parameter should be
+              an object that MUST only be made up of osapi.container.RenderParam.WIDTH and 
+              osapi.container.RenderParam.HEIGHT parameters from the section on 
+              <xref target="RenderConfiguration">render configuration</xref>.</c>
+              <c>osapi.container.ee.RenderParam.GADGET_VIEW_PARAMS</c>
+              <c>String</c>
+              <c>Equivalent to the String gadgetViewParams.  The value of this parameter should be
+              an object that are view params passed to the embedded experience if the embedded
+              experience is a gadget.</c>
+            </texttable>
+          </t>
+        </section>
+    </section>
+    <section title="osapi.container.Container.openSearch">
+    <xref target="Issue-1166">Discussion</xref>
+        <t>
+        The container APIs for OpenSearch allow containers to access 
+        OpenSearch description information contained within the 
+        gadgets which it has loaded or is currently showing on the
+        page.  Containers can use this information in order to allow
+        users of the container to search accross multiple gadgets
+        at the same time.  
+        </t>
+        <section title="getOpenSearchURLs" anchor="osapi.container.Container.opensearch.getOpenSearchURLs">
+        <t>Type: {Array} osapi.container.Container.opensearch.getOpenSearchURLs(mimeType)</t>
+          <t>
+            Description: Retrieves all gadget search URLs based on the 
+            data type parameter.  Containers may support zero or more of 
+            the data types.
+          </t>
+          <t>Parameters:
+            <texttable align="left">
+              <ttcol>Name</ttcol>
+              <ttcol>Type</ttcol>
+              <ttcol>Description</ttcol>
+              <c>mimeType</c>
+              <c>String</c>
+              <c>
+                The type of OpenSearch URLs you want to be returned.  
+                This should be a valid MIME type.
+              </c>
+            </texttable>
+            </t>
+            <t>Returns:
+              <texttable align="left">
+                <ttcol>Type</ttcol>
+                <ttcol>Description</ttcol>
+                <c>Array</c>
+                <c>
+                  An array of name and URL pairs, where name
+                  is the display name, and URL is the OpenSearch template
+                  URL.
+                </c>
+              </texttable>
+            </t>
+          </section>
+          <section title="getOpenSearchDescriptions" anchor="osapi.container.Container.opensearch.getOpenSearchDescriptions">
+            <t>Type: {Array} osapi.container.Container.opensearch.getOpenSearchDescriptions(mimeType)</t>
+              <t>
+                Description: Retrieves all OpenSearch descriptions from gadgets
+                which have OpenSearch feature in their gadget definition.
+              </t>
+              <t>Parameters:
+                <texttable align="left">
+                  <ttcol>Name</ttcol>
+                  <ttcol>Type</ttcol>
+                  <ttcol>Description</ttcol>
+                  <c>mimeType</c>
+                  <c>String</c>
+                  <c>
+                    The MIME type for the OpenSearch template URL within the 
+                    OpenSearch description.  If null all OpenSearch descriptions
+                    will be returned.
+                  </c>
+                </texttable>
+              </t>
+              <t>Returns:
+                <texttable align="left">
+                  <ttcol>Type</ttcol>
+                  <ttcol>Description</ttcol>
+                  <c>Array</c>
+                  <c>
+                    An array of OpenSearch definitions.  The 
+                    definitions should be the JSON representation of the 
+                    OpenSearch definition represented in XML.
+                  </c>
+                </texttable>
+              </t>
+              <t>Example Array Returned By osapi.container.opensearch.getOpenSearchDesription
+                <figure>
+                  <artwork xml:space="preserve">
+[ 
+  {
+    "mimeType" : "application/atom+xml",
+    "OpenSearchDescription : {
+      "ShortName" : "Example Search",
+      "Description" : "Realtime Example Search",
+      "Url" : {
+        "@type" : "application/atom+xml",
+        "@method" : "get",
+        "@template" : "http://search.example.com/search.atom?q={searchTerms}"      
+      },
+      "Image" : {
+        "@width" : "16",
+        "@height" : "16",
+        "#text" : "http://search.example.com/favicon.png"
+      },
+      "InputEncoding" : "UTF-8",
+      "SearchForm" : "http://example.search.com/"
+   }
+  }
+]
+                  </artwork>
+                </figure>
+               </t>
+             </section>
+            <section title="addOpenSearchCallback"
+                anchor="osapi.container.Container.opensearch.addOpenSearchCallback">
+                <t>osapi.container.Container.opensearch.addOpenSearchCallback(callback)
+                </t>
+                <t>
+                    Description: Registers a callback function to be called when a new gadget
+                    containing an opensearch feature is preloaded by the container, or when an existing gadget with an opensearch feature is closed. 
+                          </t>
+                <t>
+                    Parameters:
+                    <texttable align="left">
+                        <ttcol>Name</ttcol>
+                        <ttcol>Type</ttcol>
+                        <ttcol>Description</ttcol>
+                        <c>callback</c>
+                        <c>function(Map&lt;String, Object&gt; descriptions, boolean added)</c>
+                        <c>
+                            A callback function to be called when a new gadget
+                            containing a valid opensearch feature is preloaded
+                            by the container, or a gadget containing a valid opensearch feature is closed.
+                           
+                            descriptions: gadget url as a key, open search description as value.
+                            added: true if gadget is added, false if gadget is removed.
+                            
+                        </c>
+                    </texttable>
+                </t>
+            </section>
+            <section title="removeOpenSearchCallback"
+                anchor="osapi.container.Container.opensearch.removeOpenSearchCallback">
+                <t>osapi.container.Container.opensearch.removeOpenSearchCallback(callback)
+                </t>
+                <t>
+                    Description: Un-registers a callback function registered via
+                    addOpenSearchCallBack()
+                </t>
+                <t>
+                    Parameters:
+                    <texttable align="left">
+                        <ttcol>Name</ttcol>
+                        <ttcol>Type</ttcol>
+                        <ttcol>Description</ttcol>
+                        <c>callback</c>
+                        <c>function</c>
+                        <c>
+                            The callback function to be unregistered
+                        </c>
+                    </texttable>
+                </t>
+            </section>
+    </section>
+    <section title="osapi.container.Container.actions" anchor="osapi.container.Container.actions">
+    <xref target="Issue-1161">Discussion</xref>
+      <t>The actions feature, as described in the <eref target="./Core-Gadget.xml#gadgets.actions.overview">gadgets.actions overview</eref>, 
+      allows gadgets to contribute actions to various parts of a container's user interface.  The container can then render the actions consistently 
+      in context menus or action areas associated with particular data types, in global contribution areas (ie. navigation links at the top), 
+      or as part of the action areas of each gadget's chrome (ie. gadget's dropdown menu). </t>
+      <section title="Method Details">
+        <t>The container can access actions either by retrieving an action from the registry based on a specified identifier, or retrieving all actions 
+        by data type or path specification, via the four getter functions below: 
+          <eref target="#osapi.container.actions.getaction">getAction()</eref>,
+          <eref target="#osapi.container.actions.getallactions">getAllAction()</eref>,
+          <eref target="#osapi.container.actions.getactionsbytype">getActionsByType()</eref>, and
+          <eref target="#osapi.container.actions.getactionsbypath">getActionsByPath()</eref>.  In addition, the container must
+          register a <eref target="#osapi.container.actions.registershowactionshandler">show actions function</eref> in order 
+          to render the actions in its UI, as well as a <eref target="#osapi.container.actions.registerhideactionshandler">hide actions function</eref>
+          to remove the actions from its UI when a contributing gadget has been unloaded.
+          The container must register a <eref target="#osapi.container.actions.registernavigategadgethandler">navigate gadget handler</eref>
+          to render and navigate to the gadget upon action execution if the gadget has not yet been rendered.
+        </t>
+        <section title="getAction" anchor="osapi.container.actions.getaction">
+          <t>{Array} osapi.container.Container.actions.getAction(actionId)</t>
+          <t>Description: Returns the action object (as described in the 
+            <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
+            associated with the specified id.</t>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object</c>
+            <c>An <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">action object</eref> currently in the registry with the specified ID.</c>
+          </texttable>
+        </section>
+        <section title="getAllActions" anchor="osapi.container.actions.getallactions">
+          <t>{Array} osapi.container.Container.actions.getAllActions()</t>
+          <t>Description: Returns an array of action objects (as described in the 
+              <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">gadgets specification</eref>) 
+              currently in the registry.</t>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object[]</c>
+            <c>An array of <eref target="./Core-Gadget.xml#gadgets.actions.actionobjects">action objects</eref> currently in the registry.</c>
+          </texttable>
+        </section>
+        <section title="getActionsByPath" anchor="osapi.container.actions.getactionsbypath">
+          <t>{Array} osapi.container.Container.actions.getActionsByPath(path)</t>
+          <t>Description: Returns an array of action objects bound to a specific <eref target="./Core-Gadget.xml#gadgets.actions.paths">path</eref>.  For gadget-specific contributions 
+            (ie. actions that are to be added to a gadget's chrome), this API returns actions with a global identifier for the path. 
+            For example, if a gadget contributes an action to the path "gadget/menu/myaction1", this function would return 
+            an action with path "&lt;gadgetID&gt;/gadget/menu/myaction1" where &lt;gadgetID&gt; represents the specific gadget site in the container's UI.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>path</c>
+            <c>String</c>
+            <c>Text representation of a path to an action.</c>
+          </texttable>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object[]</c>
+            <c>Array of action objects associated with the given path.</c>
+          </texttable>
+        </section>
+        <section title="getActionsByDataType" anchor="osapi.container.actions.getactionsbytype">
+          <t>{Array} osapi.container.Container.actions.getActionsByObject(dataType)</t>
+          <t>Description: Returns an array of action objects bound to a specific <eref target="./Core-Gadget.xml#gadgets.actions.datatypes">data type</eref>.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>dataType</c>
+            <c>String</c>
+            <c>OpenSocial data type.</c>
+          </texttable>
+          <t>Returns:</t>
+          <texttable align="left">
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>Object[]</c>
+            <c>Array of action objects associated with the given data type.</c>
+          </texttable>
+        </section>
+        <section title="runAction">
+          <t>osapi.container.Container.actions.runAction(actionId, opt_selection)</t>
+          <t>Description: Renders the gadget if it has not yet been rendered, and 
+            executes the action callback associated with the specified actionId in 
+            the context of the gadget.  The container should call this function 
+            whenever an action is triggered by the user.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>actionId</c>
+            <c>String</c>
+            <c>Identifier for the action to be executed.</c>
+            <c>opt_selection</c>
+            <c>Object</c>
+            <c>The current <xref target="osapi.container.selection">selection</xref>.  This is an optional parameter.</c>
+          </texttable>
+        </section>
+        <section title="registerShowActionsHandler" anchor="osapi.container.actions.registershowactionshandler">
+          <t>osapi.container.Container.actions.registerShowActionsHanlder(showActionsHandler)</t>
+          <t>Description: Registers a function to render actions in the container.  
+           The function will be called when the container preloads a gadget(s) containing action contributions,
+           as well as when a gadget programmatically adds an action via the gadgets API.  At this time, the container may 
+           contribute the action to its UI.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>showActionHandler</c>
+            <c>Function</c>
+            <c>The container's function to render actions in its UI. The
+            function takes in one parameter which is an array of action objects to render.</c>
+          </texttable>
+          <t>Parameters for show actions handler function:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>actionObjs</c>
+            <c>Object[]</c>
+            <c>An array of action objects.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork xml:space="preserve">
+var myShowActionsHandler = function(actionObjs){
+       // draw the UI, toolbars menus, etc using your containers JS library
+       // to do the invocation of the action, call the following API:
+       // osapi.container.Container.actions.runAction(actionObject[0].id);  
+}
+osapi.container.Container.actions.registerShowActionsHandler(myShowActionsHandler);
+          </artwork>
+        </section>
+        <section title="registerHideActionsHandler" anchor="osapi.container.actions.registerhideactionshandler">
+          <t>osapi.container.Container.actions.registerHideActionsHanlder(hideActionsHandler)</t>
+          <t>Description: Registers a function to remove actions from the container.  
+           The function will be called when the container unloads a gadget containing action contributions.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>hideActionHandler</c>
+            <c>Function</c>
+            <c>The container's function to remove actions from its UI. The
+            function takes in one parameter which is an array of action objects to remove.</c>
+          </texttable>
+          <t>Parameters for hide actions handler function:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>actionObjs</c>
+            <c>Object[]</c>
+            <c>An array of action objects.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork xml:space="preserve">
+var myHideActionsHandler = function(actionObjs){
+       // remove any UI elements that were created to represent the action  
+}
+osapi.container.Container.actions.registerHideActionsHandler(myHideActionsHandler);
+          </artwork>
+        </section>        
+        <section title="registerNavigateGadgetHandler" anchor="osapi.container.actions.registernavigategadgethandler">
+          <t>osapi.container.Container.actions.registerNavigateGadgetHandler(navigateHandler)</t>
+          <t>Description: Allows the container to implement its specific UI to show a requested gadget as requested 
+          by a declarative action.  The container registers the handler, and the actions feature calls the handler 
+          upon execution of an action, if the gadget is not yet rendered. The container may re-use the gadget site if it 
+          is already visible on the page, or may choose to render it in a new or existing gadget view site.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>navigateHandler</c>
+            <c>Function</c>
+            <c>The container's function to render and navigate to gadgets in its UI.
+            </c>
+          </texttable>
+          <t>Parameters for navigateHandler function:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>gadgetUrl</c>
+            <c>String</c>
+            <c>Gadget Spec URL</c>
+            <c>opt_params</c>
+            <c>Object</c>
+            <c>A bag-style JSON object that contains parameters to indicate 
+               how the container should render the specified gadget.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork xml:space="preserve">
+var myNavigateToHandler = function(gadgetUrl, opt_params){
+// invoke common container APIs to show the appropriate gadget, this could be viewed as a 
+// wrapper call to osapi.container.Container.navigateGadget(site, gadgetUrl, viewParams, renderParams, opt_callback);
+// or return the site ID of an existing visble gadget.
+    return gadgetId;
+}
+osapi.container.Container.actions.registerNavigateGadgetHandler( myNavigateToHandler );
+	      </artwork>
+        </section>
+        <section title="addListener" anchor="osapi.container.actions.addlistener">
+          <t>osapi.container.Container.actions.addListener(listener, opt_actionId)</t>
+          <t>Description: Allows the container to listen for actions firing. The actions feature
+          calls the listener upon execution of an action, with the same arguments as the 
+          <eref target="./Core-Gadget.xml#gadgets.actions.runAction">gadgets.actions.runAction(actionId, opt_selection)</eref>.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>listener</c>
+            <c>Function</c>
+            <c>The listener</c>
+            <c>opt_actionId</c>
+            <c>String</c>
+            <c>An optional action id.  If not provided, listener will be notified for all action ids.</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork xml:space="preserve">
+osapi.container.Container.actions.addListener(function(actionId, opt_selection) {
+  // Possibly handle some ui positioning or other ui related operation when this interesting action is run.
+}, "some.interesting.gadget.action");
+          </artwork>
+          <xref target="Issue-1210">Discussion</xref>
+        </section>
+        <section title="removeListener" anchor="ospai.container.actions.removelistener">
+          <t>osapi.container.Container.actions.removeListener(listener)</t>
+          <t>Description: Remove the listener from the collection of listeners.  The listener will no longer
+          be called by the actions feature.</t>
+          <t>Parameters:</t>
+          <texttable align="left">
+            <ttcol>Name</ttcol>
+            <ttcol>Type</ttcol>
+            <ttcol>Description</ttcol>
+            <c>listener</c>
+            <c>Function</c>
+            <c>The listener to remove</c>
+          </texttable>
+          <t>Example:</t>
+          <artwork xml:space="preserve">
+var listener = function() {
+  // Possibly handle some ui positioning or other ui related operation when this interesting action is run.
+};
+osapi.container.Container.actions.addListener(listener, "some.interesting.gadget.action");
+osapi.container.Container.actions.removeListener(listener);
+          </artwork>
+          <xref target="Issue-1210">Discussion</xref>
+        </section>
+        <section title="Handling the view and view_target Parameters " anchor="ActionsOptParams">
+		   <t>
+		    Actions may specify the view to render or the target location in the container UI to render the gadget.
+		    This information is passed to the navigateHandler registered with 
+		    <xref target="osapi.container.actions.registernavigategadgethandler">osapi.container.Container.actions.registerNavigateGadgetHandler</xref> 
+		    in the form of a bag-style JSON object with keys defined in actions.OptParam.  All of these are optional.
+		   </t>
+		   <t>
+             <texttable align="left">
+               <ttcol>Name</ttcol>
+               <ttcol>Type</ttcol>
+               <ttcol>Description</ttcol>
+               <c>osapi.container.actions.OptParam.VIEW</c>
+               <c>String</c>
+               <c>Equivalent to the String view.  You can use this String to get the value from the opt_params
+               parameter passed the navigation handler.  If there is a value for this property in the opt_params
+               parameter the navigation handler MUST navigate to this view when rendering the gadget.</c>
+               <c>osapi.container.actions.OptParam.VIEW_TARGET</c>
+               <c>String</c>
+               <c>Equivalent to the String viewTarget.  You can use this String to get the value from the opt_params
+               parameter passed the navigation handler.  If there is a value for this property in the opt_params
+               parameter the navigation handler MUST render the gadget in the view target specificed.</c>
+             </texttable>
+           </t>
+	  </section>
+    </section>
+  </section>
+  <section title="osapi.container.Container.selection" anchor="osapi.container.selection">
+  <xref target="Issue-1161">Discussion</xref>
+   <t>The selection feature allows the container to support a singleton selected object, or array of objects,
+   that can be set by the gadget or the container itself.  For more information, please see the 
+   <eref target="./Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref>.</t>
+   <section title="Method Details">
+    <t>The below methods allow the container itself to interact with the selected object(s).</t>
+    <section title="setSelection" anchor="osapi.container.selection.setSelection">
+      <t>osapi.container.Container.selection.setSelection(selectionArray)</t> 
+      <t>Description: Sets the selection in the container.  The selection may be an array of multiple objects.
+      </t>
+      <t>Parameters:</t>
+    <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>selectionArray</c>
+         <c>Object[]</c>
+         <c>Array of object(s) to be set as selected, with attributes defined in table below.</c>
+        </texttable>
+      <t>Each selection object must have the following attributes:</t>
+      <texttable align="left">
+       <ttcol>Name</ttcol>
+       <ttcol>Type</ttcol>
+       <ttcol>Description</ttcol>
+       <c>type</c>
+       <c>String</c>
+       <c>Open Social data type, as specified in the <eref target="./Social-Data.xml">Social Data Specification</eref></c>
+     <c>dataObject</c>
+       <c>Object</c>
+       <c>Object representing the selection.</c>
+      </texttable>
+      </section>
+    <section title="getSelection">
+      <t>{Array} osapi.container.Container.selection.getSelection()</t>
+      <t>Description: Gets the current selection in the container.</t>
+    <t>Returns:</t>
+      <texttable align="left">
+      <ttcol>Type</ttcol>
+      <ttcol>Description</ttcol>
+      <c>Object[]</c>
+      <c>The array of currently selected objects, each with type and dataObject properties, as described
+      in the <eref target="./Core-Gadget.xml#gadgets.selection">gadgets.selection specification</eref></c>
+      </texttable>
+    </section>
+   </section>
+    </section>
+    <section title="osapi.container.Container.views">
+    <xref target="Issue-1167">Discussion</xref>
+     <t>
+      The purpose of these APIs is to add the ability for the gadget to open 
+      and/or close gadget and URL sites within the container which it is rendered. 
+     </t>
+     <section title="Javascript APIs">
+      <section title="createElementForGadget" anchor="osapi.container.Container.views.createElementForGadget">
+       <t>Type: {Element} osapi.container.Container.views.createElementForGadget(metadata, rel, opt_view, opt_viewTarget, opt_coordinates, parentSite, opt_callback)</t>
+       <t>
+        Description: Method called when a gadget wants to open a view of 
+        itself in a new gadget site.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>metadata</c>
+         <c>Object</c>
+         <c>
+          Gadget metadata for the gadget being opened.
+         </c>
+         <c>rel</c>
+         <c>Element</c>
+         <c>The element which the opt_coordinates are relative to.</c>
+         <c>opt_view </c>
+         <c>string</c>
+         <c>
+          Optional parameter, the surface view that indicates the type of gadget site.
+         </c>
+         <c>opt_viewTarget </c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view target that indicates where to open the gadget. 
+          For example, tab, dialog or modaldialog.
+         </c>
+         <c>opt_coordinates </c>
+         <c>Object</c>
+         <c>
+          Object containing the desired absolute positioning css parameters 
+          (top|bottom|left|right) with appropriate values. 
+          
+          Container implementations SHOULD honor optionally specified 
+          coordinates for the FLOAT viewTarget. Containers MAY honor
+          coordinates for any other target they choose.
+         </c>
+         <c>parentSite</c>
+         <c>osapi.container.GadgetSite</c>
+         <c>The site opening the gadget.</c>
+         <c>opt_callback</c>
+         <c>Function</c>
+         <c>If the container needs to asynchronously create the element for the gadget to render in this function
+         MUST call the callback parameter with the element and return undefined.  If the element can be created synchronously
+         than the container MUST just return that element as the return value from this function.</c>
+        </texttable><xref target="Issue-1231">Discussion</xref>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>Element</c>
+         <c>
+          The DOM element to place the gadget site in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="createElementForEmbeddedExperience" anchor="osapi.container.Container.views.createElementForEmbeddedExperience">
+       <t>Type: {Element} osapi.container.Container.views.createElementForEmbeddedExperience(rel, opt_gadgetInfo, opt_viewTarget, opt_coordinates, parentSite, opt_callback)</t>
+       <t>
+        Description: Method called when a gadget wants to open an embedded experience.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>rel</c>
+         <c>Element</c>
+         <c>
+          The element which the opt_coordinates are relative too.
+         </c>
+         <c>opt_gadgetInfo</c>
+         <c>Object</c>
+         <c>
+          If the embedded experience is a gadget the metadata for that gadget will be passed in this parameter.
+         </c>
+         <c>opt_viewTarget</c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view target that indicates where to open the embedded experience. For example, tab, dialog or modaldialog.
+         </c>
+         <c>opt_coordinates </c>
+         <c>Object</c>
+         <c>
+          Object containing the desired absolute positioning css parameters 
+          (top|bottom|left|right) with appropriate values. 
+                    
+          Container implementations SHOULD honor optionally specified 
+          coordinates for the FLOAT viewTarget. Containers MAY honor
+          coordinates for any other target they choose.
+         </c>
+         <c>parentSite </c>
+         <c>osapi.container.GadgetSite</c>
+         <c>
+          The site of the gadget opening the embedded experience
+         </c>
+         <c>opt_callback </c>
+         <c>Function</c>
+         <c>
+          If the container needs to asynchronously create the element for the embedded experience to render in this function
+          MUST call the callback parameter with the element and return undefined.  If the element can be created synchronously
+          than the container MUST just return that element as the return value from this function.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>Element</c>
+         <c>
+          The DOM element to place the site in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="createElementForUrl" anchor="osapi.container.Container.views.createElementForUrl">
+       <t>Type: {Element} osapi.container.Container.views.createElementForUrl(rel, opt_viewTarget, opt_coordinates, parentSite, opt_callback)</t>
+       <t>
+        Description: Method called when a gadget wants to open a URL in a new URL site.
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>rel </c>
+         <c>Element</c>
+         <c>
+          The element to which opt_coordinates values are relative.
+         </c>
+         <c>opt_viewTarget</c>
+         <c>string</c>
+         <c>
+          Optional parameter, the view target to open. If the view target is not included 
+          it is up to the container to choose how to open this URL.
+         </c>
+         <c>opt_coordinates </c>
+         <c>Object</c>
+         <c>
+          Object containing the desired absolute positioning css parameters 
+          (top|bottom|left|right) with appropriate values. 
+          
+          Container implementations SHOULD honor optionally specified 
+          coordinates for the FLOAT viewTarget. Containers MAY honor
+          coordinates for any other target they choose.
+         </c>
+         <c>parentSite</c>
+         <c>osapi.container.GadgetSite</c>
+         <c>The site of the gadget that is opening the URL.</c>
+         <c>opt_callback</c>
+         <c>Function</c>
+         <c>
+          If the container needs to asynchronously create the element for the gadget to render in this function
+          MUST call the callback parameter with the element and return undefined.  If the element can be created synchronously
+          than the container MUST just return that element as the return value from this function.
+         </c>
+        </texttable><xref target="Issue-1231">Discussion</xref>
+       </t>
+       <t>Returns:
+        <texttable align="left">
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>Element</c>
+         <c>
+          The DOM element to place the URL site object in.
+         </c>
+        </texttable>
+       </t>
+      </section>
+      <section title="destroyElement" anchor="osapi.container.Container.views.destroyElement">
+       <t>osapi.container.Container.views.destroyElement(site)</t>
+       <t>
+        Description: Method called when a gadget wants to close, or a gadget that used the open-views 
+        feature to open a gadget view wants to close that gadget view.  This method MUST ultimately call
+        osapi.container.Container.closeGadget(site) so that the gadget's lifecycle events are completed in addition to 
+        any DOM cleanup the container implementation may wish to do. <xref target="Issue-1245">Discussion</xref>
+       </t>
+       <t>Parameters:
+        <texttable align="left">
+         <ttcol>Name</ttcol>
+         <ttcol>Type</ttcol>
+         <ttcol>Description</ttcol>
+         <c>site</c>
+         <c>osapi.container.Site</c>
+         <c>
+          The the gadget or URL site to close.
+         </c>
+        </texttable>
+       </t>
+      </section>
+     </section>
+    </section>
+  </section>
+  <section title="Extensibility">
+   <t>
+    The framework is developed with extensibility in mind.
+   </t>
+   <section title="Namespace Overrides">
+    <t>This is done by namespace assignment and augmenting custom methods.</t>
+    <artwork xml:space="preserve">
+// ensure container is defined here.
+foo.container = container;
+foo.container.prototype.newMethod = function() { ... }
+    </artwork>
+   </section>
+   <section title="Method Overrides">
+    <t>This is done by re-defining overridable methods.</t>
+    <artwork xml:space="preserve">
+foo.osapi.container.Container.prototype.navigateGadget = function(....) { ... }
+foo.osapi.container.Container.prototype.newGadgetSite = function(....) { ... }
+foo.osapi.container.Container.prototype.closeGadget = function(....) { ... }
+    </artwork>
+   </section>
+   <section title="Mixins">
+    <t>This is done by calling static function addMixin.</t>
+    <artwork xml:space="preserve">
+osapi.container.Container.addMixin('foo', function() { ... });
+    </artwork>
+   </section>
+  </section>
+ </middle>
+ <back>
+   <references title="Discussion">
+  <!-- Spec change issues/discussion -->
+   <reference anchor='Issue-1185'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1185">
+    <front>
+     <title>Gadget Lifecycle registry</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1144'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1144">
+    <front>
+     <title>Embedded Experiences</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1166'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1166">
+    <front>
+     <title>OpenSearch Gadget Contributions</title>
+    </front>
+   </reference>   
+   <reference anchor='Issue-1161'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1161">
+    <front>
+     <title>Declarative Actions &amp; Selection</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1167'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1167">
+    <front>
+     <title>View Enhancements To Support Opening Of Gadgets and URLs by the Container</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1231'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1231">
+    <front>
+     <title>Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1210'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1210">
+    <front>
+     <title>Extend actions feature to allow container to register listeners for when actions are run</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1245'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1245">
+    <front>
+     <title>container.views.destroyElement need to be renamed and clarified</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1203'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1203">
+    <front>
+     <title>Update common container GET_PREFERENCES interface to be async</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1235'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1235">
+    <front>
+     <title>newGadgetSite and newUrlSite methods are not listed in the incubating spec for the CommonContainer</title>
+    </front>
+   </reference>
+  </references> 
+  <references title="References">
+    <reference anchor='RFC2119'>
+      <front>
+        <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+        <author initials='S.'
+          surname='Bradner'
+          fullname='Scott Bradner'>
+          <organization abbrev='HarvardU'>Harvard University</organization>
+        </author>
+        <date month='March'
+          year='1997' />
+      </front>
+      <seriesInfo name='RFC' value='2119' />
+    </reference>
+    <reference anchor='RFC2606'>
+      <front>
+        <title>Reserved Top Level DNS Names</title>
+        <author initials='D.' surname='Eastlake' fullname='Donald E. Eastlake 3rd'>
+          <organization abbrev='IBM'>IBM</organization>
+        </author>
+        <author initials='A.' surname='Panitz' fullname='Aliza R. Panitz'></author>
+        <date month='June' year='1999' />
+      </front>
+      <seriesInfo name='RFC' value='2606' />
+   </reference>
+  </references>
+ </back>
+</rfc>
+

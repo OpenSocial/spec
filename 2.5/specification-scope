@@ -1,0 +1,21 @@
+The purpose of this file is to be a marker for voting on proposals to specification changes. 
+Each commit to this file will create a changes record in the opensocial-resources project. 
+Each commit comment MUST include a link to the proposal document on the wiki.
+The community will vote on that change record.
+Please see http://docs.opensocial.org/display/OSD/Spec+Changes for more details
+
+
+OpenSocial 2.5.0 Proposals
+------------------------
+Extend actions feature to allow container to register listeners for when actions are run (http://code.google.com/p/opensocial-resources/issues/detail?id=1210)
+Finalize and move the common container spec out of incubation (http://code.google.com/p/opensocial-resources/issues/detail?id=1248)
+Preferred Experiences and other refinements to Embedded Experiences (http://code.google.com/p/opensocial-resources/issues/detail?id=1284)
+Revision of Embedded Experience preferred experience type proposal to change display type from link to text (http://code.google.com/p/opensocial-resources/issues/detail?id=1313)
+Remove the previewImageData for EE data model and add support for data URI (http://code.google.com/p/opensocial-resources/issues/detail?id=1316)
+Add @followers/@following/@colleagues/@reports/@manager (http://code.google.com/p/opensocial-resources/issues/detail?id=1281)
+Deprecate Tabs, Skins, and WAP extension in OpenSocial 2.5 (http://code.google.com/p/opensocial-resources/issues/detail?id=1275)
+Add icon optional property to the preferred experience display of type text (http://code.google.com/p/opensocial-resources/issues/detail?id=1314)
+Add label to plural fields (http://code.google.com/p/opensocial-resources/issues/detail?id=1282)
+Object Metadata service (http://code.google.com/p/opensocial-resources/issues/detail?id=1261)
+Enhance open-views and CommonContainer apis to allow for opening gadgets/ees/views at specific locations (http://code.google.com/p/opensocial-resources/issues/detail?id=1231)
+Add additional fields to the module section to support use in market places (http://code.google.com/p/opensocial-resources/issues/detail?id=1283)
