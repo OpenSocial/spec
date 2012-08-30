@@ -34,14 +34,14 @@
            for features like in-browser Gadget lifecycle event callbacks, Embedded Experiences, selection handlers, and action handlers.
            </t>
           </section>
-          <section title="Preferred Experiences" anchor="PreferredExperiences">
+          <section title="Incubating Preferred Experiences" anchor="PreferredExperiences">
           <t>
            The Embedded Experience model introduced in OpenSocial 2.0.0 has been enhanced with the addition of Preferred Experiences.
            Preferred Experiences allow Embedded Experience developers to provide hints to the Container about how Embedded Experiences
            should be realized in the user interface.
            </t>
           </section>
-          <section title="Metadata Service" anchor="MetaDataService">
+          <section title="Incubating Metadata Service" anchor="MetaDataService">
           <t>
            A more complete metadata service has been introduced into OpenSocial.  This additional Metadata API allows OpenSocial applications
            to have a more compelling user experience that can better adapt to the capabilities of different OpenSocial containers.
@@ -58,7 +58,7 @@
                List of
                <eref target='http://code.google.com/p/opensocial-resources/'>opensocial-resources</eref>
                project issues published in OpenSocial 2.5.0 is accessible at <eref
-                   target="http://bit.ly/L97zjG">http://bit.ly/L97zjG</eref>.
+                   target="http://bit.ly/os25publishedspecissues">http://bit.ly/os25publishedspecissues</eref>.
            </t>  
         </section>
     </section>
