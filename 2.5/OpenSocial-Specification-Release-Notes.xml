@@ -27,6 +27,7 @@
  </front>
  <middle>
       <section title="Version 2.5.0" anchor="OpenSocial250">
+        <t>Published August 28, 2012</t>
         <section title="Major Changes" anchor="OpenSocial250MajorChanges">
           <section title="Common Container Finalized" anchor="CommonContainerFinal">
            <t>The Common Container which has been incubating since OpenSocial 2.0.0 is now finalized API.

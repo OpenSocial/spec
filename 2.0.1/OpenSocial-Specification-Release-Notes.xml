@@ -27,7 +27,8 @@
  </front>
  <middle>
      <section title="Version 2.0.1" anchor="OpenSocial201">
-        <section title="Major Changes" anchor="OpenSocial201MajorChanges">
+         <t>Published November 23, 2011</t>
+         <section title="Major Changes" anchor="OpenSocial201MajorChanges">
           <section title="OAuth 2.0 Support Finalized" anchor="OAuthFinalizedInOpenSocial201">
               <t>
               OpenSocial 2.0.1 revised the OAuth 2.0 related parts of OpenSocial and moved support out of incubating.
@@ -48,6 +49,7 @@
         </section>
     </section>
     <section title="Version 2.0" anchor="OpenSocial20">
+        <t>Published August 18, 2011</t>
         <section title="Major Changes" anchor="OpenSocial20MajorChanges">
             <section title="Activity Streams Support" anchor="ActivityStreamsSupport">
                 <t>The community determined, that in practice, use of the ATOM serialization format of OpenSocial
