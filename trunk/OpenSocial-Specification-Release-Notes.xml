@@ -14,7 +14,7 @@
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="August" year="2012" />
+  <date month="January" year="2013" />
   <area>General</area>
   <keyword>OpenSocial</keyword>
   <keyword>social networking</keyword>
@@ -26,7 +26,10 @@
   <keyword>Atom</keyword>
  </front>
  <middle>
-      <section title="Version 2.5.0" anchor="OpenSocial250">
+     <section title="Version 2.5.1" anchor="OpenSocial251">
+     <!-- TODO - fill it in -->
+     </section>
+     <section title="Version 2.5.0" anchor="OpenSocial250">
         <section title="Major Changes" anchor="OpenSocial250MajorChanges">
           <section title="Common Container Finalized" anchor="CommonContainerFinal">
            <t>The Common Container which has been incubating since OpenSocial 2.0.0 is now finalized API.
