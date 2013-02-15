@@ -855,17 +855,17 @@ COMMA          = <US-ASCII comma (44)>
       <c>Unique ID for this message.</c>
       <c>inReplyTo</c>
       <c>string</c>
-      <c>Message ID, use for threaded comments/messages. Reference the
-      sematics of the Atom Threading model defined in rfc4685. URLs
-      should be mapped to Atom &lt;link rel="type" .../&gt;</c>
+      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1279" note="Issue 1279: Message-Collection-Id definition">Message ID of a parent resource, use for threaded comments/messages. References the
+      semantics of the Atom Threading model defined in rfc4685. URLs
+      should be mapped to Atom &lt;link rel="type" .../&gt;</x:draft></c>
       <c>recipients</c>
       <c>Array &lt;string&gt;</c>
       <c>Array of person IDs.</c>
       <c>replies</c>
       <c>Array &lt;string&gt;</c>
-      <c>Array of message ids. Reference the sematics of the Atom
-      Threading model defined in rfc4685. URLs should be mapped to
-      Atom &lt;link rel="type" .../&gt;</c>
+      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1279" note="Issue 1279: Message-Collection-Id definition">Array of message ids indicating responses to this message. References the semantics
+      of the Atom Threading model defined in rfc4685. URLs should be mapped to
+      Atom &lt;link rel="type" .../&gt;</x:draft></c>
       <c>senderId</c>
       <c>string</c>
       <c>Id of person who sent the message.</c>
@@ -2359,8 +2359,23 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
      </texttable> 
     </x:incubating>
    </section>
-   
-      
+   <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1279" note="Issue 1279: Message-Collection-Id definition">
+   <section title="Message Collection Id" anchor="Message-Collection-Id">
+     <t>The Message-Collection-Id is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the message collection. There are reserved values for common cases.</t>
+       <artwork type="abnf" xml:space="preserve"><![CDATA[
+Message-Collection-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[ / "@inbox" / "@outbox"
+]]></artwork>
+     <t>The reserved values are defined in the following table:</t>
+     <texttable align="left">
+       <ttcol>Value</ttcol>
+       <ttcol>Description</ttcol>
+       <c>@inbox</c>
+       <c>The user inbox to access incoming messages</c>
+       <c>@outbox</c>
+       <c>The user outbox where to send outgoing messages</c>
+     </texttable>
+   </section>
+   </x:draft>
   </section>
  </middle>
  <back>
@@ -2431,7 +2446,13 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
     <front>
      <title>Relationship indication in Person object</title>
     </front>
-   </reference> 
+   </reference>
+   <reference anchor='Issue-1279'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1279">
+    <front>
+     <title>Message-Collection-Id definition</title>
+    </front>
+   </reference>
   </references>
   <references>
    <reference anchor='RFC2119'>
