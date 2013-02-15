@@ -1062,17 +1062,16 @@ COMMA          = <US-ASCII comma (44)>
       <c>A collection of AppData keys and values.</c>
       <c>connected</c>
       <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
-      <c>Boolean value indicating whether the user and this Person have
+      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1333" note="Issue-1333: relationship indication in Person object">Boolean value indicating whether the user and this Person have
       established a bi-directionally asserted connection of some kind on the
       Service Provider's service. The value MUST be either true or false. The
       value MUST be true if and only if there is at least one value for the
-      relationship field, described below, and is thus intended as a summary
-      value indicating that some type of bi-directional relationship exists,
-      for Consumers that aren't interested in the specific nature of that
-      relationship. For traditional address books, in which a user stores
-      information about other contacts without their explicit acknowledgment,
+      relationships field indicating that some type of bi-directional relationship exists,
+	  and is thus intended as a summary value for Consumers that aren't interested in the
+      specific nature of that relationship. For traditional address books, in which a user
+      stores information about other contacts without their explicit acknowledgment,
       or for services in which users choose to "follow" other users without
-      requiring mutual consent, this value will always be false.</c>
+      requiring mutual consent, this value will always be false. <xref target='Issue-1132'>Discussion</xref></x:draft></c>
       <c>contactPreference</c>
       <c>string</c>
       <c>Human-readable summarization of the Person's contact preferences. For instance,
@@ -1167,12 +1166,12 @@ COMMA          = <US-ASCII comma (44)>
       valid <eref target="./Core-Data.xml#Date">Date</eref>.</c>
       <c>relationships</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c>A relationship type that was established
-      between the user and this person by the Service Provider.
-      Note this field is a parallel set of category labels to the tags field,
-      but relationships MUST have been bi-directionally confirmed, whereas tags
-      are asserted by the user without acknowledgment by this Person. Note that
-      this field consists only of a string value.</c>      
+      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1333" note="Issue-1333: relationship indication in Person object">A string value consisting in one or more relationship types that were established
+      between the user and this person by the Service Provider, which MAY or MAY NOT have been
+      bi-directionally confirmed. Values "friends", "followers" and "following" are reserved
+      and have the same meaning as the corresponding GroupId. Note that this field is a parallel
+      set of category labels to the tags field, but tags are asserted by the user without
+      acknowledgment by this Person. <xref target='Issue-1132'>Discussion</xref></x:draft></c>      
       <c>status</c>
       <c>string</c>
       <c>Person's status, headline or shoutout.</c>
@@ -2425,6 +2424,12 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1239">
     <front>
      <title>Broken links in spec for app id / group id</title>
+    </front>
+   </reference> 
+   <reference anchor='Issue-1333'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1333">
+    <front>
+     <title>Relationship indication in Person object</title>
     </front>
    </reference> 
   </references>
