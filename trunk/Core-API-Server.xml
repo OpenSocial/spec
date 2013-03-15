@@ -283,16 +283,21 @@ http://www.example.com/opensocial/rest/people/@me/@self?fields=name,gender&amp;f
          xml:space="preserve">
 HTTP/1.x <x:ref>HTTP-Status-Code</x:ref> 
 [ "Content-Type: " <x:ref>Content-Type</x:ref> ]
-[ REST-Response-Payload ]
+[ <x:ref>REST-Response-Payload</x:ref> ]
 </artwork>
      <section title="REST-Response-Payload" anchor="REST-Response-Payload">
        <t>A REST request MAY contain a payload.  Each service method defines the object that is included as the Return-Object. The payload uses the following format:</t>
-      <artwork type="example"
+	  <x:draft note="Issue-1326: Response codes using REST protocol" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1326">
+      <artwork type="abnf"
          xml:space="preserve">
-REST-Response-Payload = "&lt;response xmlns='http://ns.opensocial.org/2008/opensocial'&gt;"
-                          <x:ref>Return-Object</x:ref>
-                        "&lt;/response&gt;"
+<x:highlight>REST-Response-Payload</x:highlight> = [ REST-XML-Response-Payload | REST-JSON-Response-Payload ]
+<x:highlight>REST-XML-Response-Payload</x:highlight> = "&lt;response xmlns='http://ns.opensocial.org/2008/opensocial'&gt;"
+                               <x:ref>Return-Object</x:ref>
+                            "&lt;/response&gt;"
+<x:highlight>REST-JSON-Response-Payload</x:highlight> = <x:ref>Return-Object</x:ref> / (&lt;"&gt; "error" &lt;"&gt; ":" <x:ref>RPC-Error</x:ref>)
 </artwork>
+<xref target="Issue-1326">Discussion</xref>
+	 </x:draft>
      </section>
     </section>
    </section>
@@ -1008,7 +1013,7 @@ GIF89....&lt;image data&gt;
 </artwork>
 
     </section>
-    <section title="HTTP-Status-Code">
+    <section title="HTTP-Status-Code" anchor="HTTP-Status-Code">
    <texttable>
     <ttcol align="left">Status Code</ttcol>
     <ttcol align="left">Description</ttcol>
@@ -1595,6 +1600,12 @@ Content-Type: application/json
               target="http://code.google.com/p/opensocial-resources/issues/detail?id=1230">
     <front>
      <title>Align the REST core and social API server spec to follow the core data spec for Collection type wrapped with "list" property</title>
+    </front>
+   </reference>
+   <reference anchor='Issue-1326'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1326">
+    <front>
+     <title>Response codes using REST protocol</title>
     </front>
    </reference>
   </references>
