@@ -534,7 +534,7 @@ Containers MAY support requests to remove a Person or a Relationship. The defaul
 <x:highlight>Related-User-Id</x:highlight>        = <eref target="Core-Data.xml#User-Id">User-Id</eref>
 </x:draft>
 </artwork>
-<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="">
+<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:  Delete a person">
 <t>Note that over REST interface references to the specific person/relationship to be deleted can be included either as Related-User-Id in the REST-URI-Fragment or as Person object in the REST-Request-Payload.
 When neither a Related-User-Id is included in the REST-URI-Fragment nor a Person object is included in the REST-Request-Payload all the relationships of the related Group-Id are deleted (In that case when the Group-Id is @self then the Person account itself is deleted).</t>
 <t>The following example shows an HTTP request to delete a Person account:</t>
