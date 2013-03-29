@@ -167,7 +167,7 @@ COMMA          = <US-ASCII comma (44)>
         <artwork type="example"
          xml:space="preserve">
 GET /rest/people/34KJDCSKJN2HHF0DW20394/@self?fields=name,gender&amp;format=xml HTTP/1.1
-HOST api.example.org
+Host: api.example.org
 Authorization: hh5s93j4hdidpola
 </artwork>
         <t>HTTP Response</t>
@@ -266,7 +266,7 @@ Content-Type: application/json
       <artwork type="example"
          xml:space="preserve">
 GET /rest/people/92WEGDFEWSS2GS0DW274EQ/@friends?fields=name,gender&amp;format=xml HTTP/1.1
-HOST api.example.org
+Host: api.example.org
 Authorization: hh5s93j4hdidpola
 </artwork>
       <t>HTTP Response</t>
@@ -421,7 +421,7 @@ Content-Type: application/json
         <artwork type="example"
          xml:space="preserve">
 POST /rest/people/@self/@friends HTTP/1.1
-HOST api.example.org
+Host: api.example.org
 Authorization: hh5s93j4hdidpola
 Content Type: application/xml
 &lt;entry xmlns="http://ns.opensocial.org/2008/opensocial"&gt;
@@ -466,7 +466,7 @@ Content-Type: application/json
      </section>
     </section>
     </section>
-    <section title="Update a Person" anchor="People-Service-Update">
+    <section title="Update a Person/Relationship" anchor="People-Service-Update">
 
       <t>Containers MAY support updating the properties of a Person object.  If the request is successful, the container MUST return the updated Person object.
 
@@ -476,7 +476,9 @@ Content-Type: application/json
      <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
+<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> ["/" Related-User-Id]
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
 
@@ -484,9 +486,13 @@ Content-Type: application/json
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdatePerson-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Person">Person</eref>
+<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
+<x:highlight>Related-User-Id</x:highlight>        = <eref target="Core-Data.xml#User-Id">User-Id</eref>
+</x:draft>
 </artwork>
+<xref target="Issue-1327">Discussion</xref>
 <xref target="Issue-1233">Discussion</xref>
-     <section title="Update Person Request Parameters" anchor="UpdatePerson-Request-Parameters">
+     <section title="Update Person/Relationship Request Parameters" anchor="UpdatePerson-Request-Parameters">
         <t>A request to update a person MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
          <texttable align="left">
           <ttcol>Name</ttcol>
@@ -514,13 +520,42 @@ Containers MAY support requests to remove a Person or a Relationship. The defaul
      <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref>
+<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> ["/" Related-User-Id]
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
-<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
+<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
+<eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = (<eref target="Social-Data.xml#Person">Person</eref> / null)
+</x:draft>
 <eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.delete"
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteRelationship-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
+<x:highlight>Related-User-Id</x:highlight>        = <eref target="Core-Data.xml#User-Id">User-Id</eref>
+</x:draft>
 </artwork>
+<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="">
+<t>Note that over REST interface references to the specific person/relationship to be deleted can be included either as Related-User-Id in the REST-URI-Fragment or as Person object in the REST-Request-Payload.
+When neither a Related-User-Id is included in the REST-URI-Fragment nor a Person object is included in the REST-Request-Payload all the relationships of the related Group-Id are deleted (In that case when the Group-Id is @self then the Person account itself is deleted).</t>
+<t>The following example shows an HTTP request to delete a Person account:</t>
+        <artwork type="example"
+         xml:space="preserve">
+DELETE /rest/people/@self HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Length: 0
+</artwork>
+<t>The following example shows an HTTP request to delete a relationship with user FF256337 via the Related-User-Id:</t>
+        <artwork type="example"
+         xml:space="preserve">
+DELETE /rest/people/@following/FF256337 HTTP/1.1
+Host: api.example.org
+Authorization: hh5s93j4hdidpola
+Content-Length: 0
+</artwork>
+</x:draft>
+<xref target="Issue-1327">Discussion</xref>
+
 <xref target="Issue-1233">Discussion</xref>
   <section title="Delete Person/Relationship Request Parameters" anchor="DeleteRelationship-Request-Parameters">
         <t>A request to delete a relationship MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref> and the following additional parameters:</t>
@@ -1835,7 +1870,12 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
     </front>
    </reference>
    
-
+   <reference anchor='Issue-1327'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1327">
+    <front>
+     <title>Delete a person</title>
+    </front>
+   </reference>
    
   </references>
   <references>
