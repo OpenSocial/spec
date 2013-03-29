@@ -944,7 +944,9 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" Activity-Id ]
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#ActivityEntry">ActivityEntry</eref>
 
@@ -952,6 +954,10 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateActivityStreams-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#ActivityEntry">ActivityEntry</eref>
+<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
+<x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</x:draft>
+<xref target="Issue-1320">Discussion</xref>
 </artwork>
       <section title="Update ActivityEntries Request Parameters" anchor="UpdateActivityEntries-Request-Parameters">
         <t>A request to update an ActivityEntry MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
@@ -973,7 +979,9 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self"
+<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
+<eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" Activity-Id
+</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -981,6 +989,10 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteActivityEntries-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
+<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
+<x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
+</x:draft>
+<xref target="Issue-1320">Discussion</xref>
 </artwork>
       <section title="Delete ActivityEntries Request Parameters" anchor="DeleteActivityEntries-Request-Parameters">
         <t>A request to delete an ActivityEntry MUST support the <eref target="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</eref>, and the following additional parameters:</t>
@@ -1815,6 +1827,15 @@ http://api.example.org/rpc?method=appdata.update&amp;id=setMyData&amp;appId=app1
      <title>  Person Service clarifications</title>
     </front>
    </reference>
+   
+   <reference anchor='Issue-1320'
+              target="http://code.google.com/p/opensocial-resources/issues/detail?id=1320">
+    <front>
+     <title>ActivityStreams Service defects</title>
+    </front>
+   </reference>
+   
+
    
   </references>
   <references>
