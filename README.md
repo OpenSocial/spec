@@ -6,7 +6,9 @@ OpenSocial Specification
 
 Repository for all versions of the OpenSocial specification.
 
-In order to properly render the OpenSocial specification documents, you need to view them using Github Pages by replacing the http://github.com/OpenSocial/spec/tree/master/ with http://opensocial.github.io/spec/ as the root URL.
+In order to properly render the OpenSocial specification documents, you need
+to view them using Github Pages by replacing http://github.com/OpenSocial/spec/tree/master/ 
+with http://opensocial.github.io/spec/ as the root URL.
 
 
 Making changes to the OpenSocial specification
@@ -28,7 +30,8 @@ Making changes to the OpenSocial specification
    version of the specification, edit the files in the "trunk"
    directory.
    
-3. Commit your changes into your branch and create a Pull Request for that branch.
+3. Commit your changes into your branch, push to your remote, and then use
+   Github to create a Pull Request for your branch.
    
 4. Post the link to your Pull Request from step 3 to the opensocial-and-gadgets-spec
     discussion group.  You may access the group at
