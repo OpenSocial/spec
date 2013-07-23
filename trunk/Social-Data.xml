@@ -1840,7 +1840,10 @@ App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
        <ttcol>Description</ttcol>
        <c>@app</c>
        <c>The application currently in use.</c>
+       <c><x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320" note="Issue 1320: Activity Stream service defects">@all</x:draft></c>
+       <c><x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320" note="Issue 1320: Activity Stream service defects">All (or "any") application(s). For example, using @all when requesting activity streams would return the entries that are visible to the user no matter which application generated it.</x:draft></c>
      </texttable>
+     <xref target="Issue-1320">Discussion</xref>
      <xref target="Issue-1239">Discussion</xref>
      <xref target='Issue-1223'>Discussion</xref>
    </section>
@@ -2453,6 +2456,12 @@ Message-Collection-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</e
      <title>Message-Collection-Id definition</title>
     </front>
    </reference>
+       <reference anchor='Issue-1320'
+                  target="http://code.google.com/p/opensocial-resources/issues/detail?id=1320">
+           <front>
+               <title>Activity Stream service defects</title>
+           </front>
+       </reference>
   </references>
   <references>
    <reference anchor='RFC2119'>
