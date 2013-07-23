@@ -6,9 +6,23 @@ OpenSocial Specification
 
 Repository for all versions of the OpenSocial specification.
 
-In order to properly render the OpenSocial specification documents, you need
-to view them using Github Pages by replacing http://github.com/OpenSocial/spec/tree/master/ 
-with http://opensocial.github.io/spec/ as the root URL.
+For improved readability, the OpenSocial specification XML documents can be rendered in HTML by your browser.
+You can do this by viewing them from this repository's Github Pages.
+Replace http://github.com/OpenSocial/spec/tree/master/ with http://opensocial.github.io/spec/
+as the root URL for any of the XML documents in this repository to view them from your browser.
+
+#### OpenSocial 2.5.1 _(Under Development)_
+
+- [Release Notes](http://opensocial.github.io/spec/trunk/OpenSocial-Specification-Release-Notes.xml)
+- [OpenSocial specification](http://opensocial.github.io/spec/trunk/OpenSocial-Specification.xml)
+- [Core Container specification](http://opensocial.github.io/spec/trunk/Core-Container.xml)
+- [Core Gadget specification](http://opensocial.github.io/spec/trunk/Core-Gadget.xml)
+- [Core API Server specification](http://opensocial.github.io/spec/trunk/Core-API-Server.xml)
+- [Core Data specification](http://opensocial.github.io/spec/trunk/Core-Data.xml)
+- [Social Gadget specification](http://opensocial.github.io/spec/trunk/Social-Gadget.xml)
+- [Social API Server specification](http://opensocial.github.io/spec/trunk/Social-API-Server.xml)
+- [Social Data specification](http://opensocial.github.io/spec/trunk/Social-Data.xml)
+- [Social Templating specification](http://opensocial.github.io/spec/trunk/Social-Templating.xml)
 
 
 Making changes to the OpenSocial specification
