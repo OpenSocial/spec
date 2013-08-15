@@ -29,6 +29,7 @@ as the root URL for any of the XML documents in this repository to view them fro
 
 Making changes to the OpenSocial specification
 ----------------------------------
+ **For full details review the [OpenSocial Specification Process](https://opensocial.atlassian.net/wiki/display/OSD/Specification+Process).**
  
 1. Fork the OpenSocial spec and create a new branch for your changes
    
