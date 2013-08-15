@@ -13,6 +13,8 @@ as the root URL for any of the XML documents in this repository to view them fro
 
 #### OpenSocial 2.5.1 _(Under Development)_
 
+##### OSF WG Administrator:  [Matt Marum](http://github.com/mgmarum/)
+
 - [Release Notes](http://opensocial.github.io/spec/trunk/OpenSocial-Specification-Release-Notes.xml)
 - [OpenSocial specification](http://opensocial.github.io/spec/trunk/OpenSocial-Specification.xml)
 - [Core Container specification](http://opensocial.github.io/spec/trunk/Core-Container.xml)
