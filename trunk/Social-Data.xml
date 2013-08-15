@@ -855,17 +855,17 @@ COMMA          = <US-ASCII comma (44)>
       <c>Unique ID for this message.</c>
       <c>inReplyTo</c>
       <c>string</c>
-      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1279" note="Issue 1279: Message-Collection-Id definition">Message ID of a parent resource, use for threaded comments/messages. References the
+      <c>Message ID of a parent resource, use for threaded comments/messages. References the
       semantics of the Atom Threading model defined in rfc4685. URLs
-      should be mapped to Atom &lt;link rel="type" .../&gt;</x:draft></c>
+      should be mapped to Atom &lt;link rel="type" .../&gt;</c>
       <c>recipients</c>
       <c>Array &lt;string&gt;</c>
       <c>Array of person IDs.</c>
       <c>replies</c>
       <c>Array &lt;string&gt;</c>
-      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1279" note="Issue 1279: Message-Collection-Id definition">Array of message ids indicating responses to this message. References the semantics
+      <c>Array of message ids indicating responses to this message. References the semantics
       of the Atom Threading model defined in rfc4685. URLs should be mapped to
-      Atom &lt;link rel="type" .../&gt;</x:draft></c>
+      Atom &lt;link rel="type" .../&gt;</c>
       <c>senderId</c>
       <c>string</c>
       <c>Id of person who sent the message.</c>
@@ -895,7 +895,7 @@ COMMA          = <US-ASCII comma (44)>
       include 'alternate', alternate for for this mailbox (text/html
       being the most common).</c>
      </texttable>
-     
+     <xref target="Issue-1279">Discussion</xref>
     <t>A Message example follows. For brevity, details of the 'sender' field,
     an OpenSocial Person, are omitted. </t>
     <figure>
@@ -1062,7 +1062,7 @@ COMMA          = <US-ASCII comma (44)>
       <c>A collection of AppData keys and values.</c>
       <c>connected</c>
       <c><eref target="./Core-Data.xml#Boolean">Boolean</eref></c>
-      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1333" note="Issue-1333: relationship indication in Person object">Boolean value indicating whether the user and this Person have
+      <c>Boolean value indicating whether the user and this Person have
       established a bi-directionally asserted connection of some kind on the
       Service Provider's service. The value MUST be either true or false. The
       value MUST be true if and only if there is at least one value for the
@@ -1071,7 +1071,7 @@ COMMA          = <US-ASCII comma (44)>
       specific nature of that relationship. For traditional address books, in which a user
       stores information about other contacts without their explicit acknowledgment,
       or for services in which users choose to "follow" other users without
-      requiring mutual consent, this value will always be false. <xref target='Issue-1132'>Discussion</xref></x:draft></c>
+      requiring mutual consent, this value will always be false. <xref target='Issue-1132'>Discussion</xref><xref target='Issue-1333'>Discussion</xref></c>
       <c>contactPreference</c>
       <c>string</c>
       <c>Human-readable summarization of the Person's contact preferences. For instance,
@@ -1166,12 +1166,12 @@ COMMA          = <US-ASCII comma (44)>
       valid <eref target="./Core-Data.xml#Date">Date</eref>.</c>
       <c>relationships</c>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
-      <c><x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1333" note="Issue-1333: relationship indication in Person object">A string value consisting in one or more relationship types that were established
+      <c>A string value consisting in one or more relationship types that were established
       between the user and this person by the Service Provider, which MAY or MAY NOT have been
       bi-directionally confirmed. Values "friends", "followers" and "following" are reserved
       and have the same meaning as the corresponding GroupId. Note that this field is a parallel
       set of category labels to the tags field, but tags are asserted by the user without
-      acknowledgment by this Person. <xref target='Issue-1132'>Discussion</xref></x:draft></c>      
+      acknowledgment by this Person. <xref target='Issue-1132'>Discussion</xref><xref target='Issue-1333'>Discussion</xref></c>
       <c>status</c>
       <c>string</c>
       <c>Person's status, headline or shoutout.</c>
@@ -1840,8 +1840,8 @@ App-Id = <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> / "@app"
        <ttcol>Description</ttcol>
        <c>@app</c>
        <c>The application currently in use.</c>
-       <c><x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320" note="Issue 1320: Activity Stream service defects">@all</x:draft></c>
-       <c><x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320" note="Issue 1320: Activity Stream service defects">All (or "any") application(s). For example, using @all when requesting activity streams would return the entries that are visible to the user no matter which application generated it.</x:draft></c>
+       <c>@all</c>
+       <c>All (or "any") application(s). For example, using @all when requesting activity streams would return the entries that are visible to the user no matter which application generated it.</c>
      </texttable>
      <xref target="Issue-1320">Discussion</xref>
      <xref target="Issue-1239">Discussion</xref>
@@ -2362,7 +2362,6 @@ Group-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</eref><![CDATA[
      </texttable> 
     </x:incubating>
    </section>
-   <x:draft href="http://code.google.com/p/opensocial-resources/issues/detail?id=1279" note="Issue 1279: Message-Collection-Id definition">
    <section title="Message Collection Id" anchor="Message-Collection-Id">
      <t>The Message-Collection-Id is an <eref target="./Core-Data.xml#Object-Id">Object-Id</eref> for the message collection. There are reserved values for common cases.</t>
        <artwork type="abnf" xml:space="preserve"><![CDATA[
@@ -2378,7 +2377,7 @@ Message-Collection-Id = ]]><eref target="./Core-Data.xml#Object-Id">Object-Id</e
        <c>The user outbox where to send outgoing messages</c>
      </texttable>
    </section>
-   </x:draft>
+   <xref target='Issue-1279'>Discussion</xref>
   </section>
  </middle>
  <back>

@@ -287,7 +287,6 @@ HTTP/1.x <x:ref>HTTP-Status-Code</x:ref>
 </artwork>
      <section title="REST-Response-Payload" anchor="REST-Response-Payload">
        <t>A REST request MAY contain a payload.  Each service method defines the object that is included as the Return-Object. The payload uses the following format:</t>
-	  <x:draft note="Issue-1326: Response codes using REST protocol" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1326">
       <artwork type="abnf"
          xml:space="preserve">
 <x:highlight>REST-Response-Payload</x:highlight> = [ REST-XML-Response-Payload | REST-JSON-Response-Payload ]
@@ -297,7 +296,6 @@ HTTP/1.x <x:ref>HTTP-Status-Code</x:ref>
 <x:highlight>REST-JSON-Response-Payload</x:highlight> = <x:ref>Return-Object</x:ref> / (&lt;"&gt; "error" &lt;"&gt; ":" <x:ref>RPC-Error</x:ref>)
 </artwork>
 <xref target="Issue-1326">Discussion</xref>
-	 </x:draft>
      </section>
     </section>
    </section>
