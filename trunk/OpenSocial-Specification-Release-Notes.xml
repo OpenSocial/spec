@@ -27,7 +27,23 @@
  </front>
  <middle>
      <section title="Version 2.5.1" anchor="OpenSocial251">
-     <!-- TODO - fill it in -->
+         <section title="Major Changes" anchor="OpenSocial251MajorChanges">
+             <section title="Fix REST API defects" anchor="SocialApiDefects251">
+                 <t>
+                     Changes in this release were primarily around the REST API, specifically the Person and Activity
+                     Stream services. The community had identified a number of issues that required changes in the
+                     OpenSocial specification so that it could be used by the Open Mobile Alliance.
+                 </t>
+             </section>
+         </section>
+         <section title="Published Issues" anchor="PublishedInOS251">
+             <t>
+                 List of
+                 <eref target='https://github.com/OpenSocial/spec/'>OpenSocial Spec</eref>
+                 Github respository issues published in OpenSocial 2.5.1 is accessible at <eref
+                     target="http://bit.ly/os251publishedspecissues">http://bit.ly/os251publishedspecissues</eref>.
+             </t>
+         </section>
      </section>
      <section title="Version 2.5.0" anchor="OpenSocial250">
         <section title="Major Changes" anchor="OpenSocial250MajorChanges">
