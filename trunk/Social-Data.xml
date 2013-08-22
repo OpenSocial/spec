@@ -1168,7 +1168,7 @@ COMMA          = <US-ASCII comma (44)>
       <c><eref target="./Core-Data.xml#Plural-Field">Plural-Field</eref> &lt;string&gt;</c>
       <c>A string value consisting in one or more relationship types that were established
       between the user and this person by the Service Provider, which MAY or MAY NOT have been
-      bi-directionally confirmed. Values "friends", "followers" and "following" are reserved
+      bi-directionally confirmed. Values "friends", "followers" and "following" SHOULD be reserved
       and have the same meaning as the corresponding GroupId. Note that this field is a parallel
       set of category labels to the tags field, but tags are asserted by the user without
       acknowledgment by this Person. <xref target='Issue-1132'>Discussion</xref><xref target='Issue-1333'>Discussion</xref></c>
