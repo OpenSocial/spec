@@ -5,16 +5,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-api-server-specification-2-5-1-draft"
+     docName="opensocial-social-api-server-specification-2-5-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title abbrev="Social-API-Server">OpenSocial Social API Server Specification 2.5.1 DRAFT</title>
+  <title abbrev="Social-API-Server">OpenSocial Social API Server Specification 2.5.1</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="January" year="2013" />
+  <date month="August" year="2013" />
   <abstract>
    <t>This document describes a method for making social network information
    and services programatically available on the internet.</t>
@@ -476,9 +476,7 @@ Content-Type: application/json
      <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
-<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
 <eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> ["/" Related-User-Id]
-</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null 
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#Person">Person</eref>
 
@@ -486,9 +484,7 @@ Content-Type: application/json
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdatePerson-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#Person">Person</eref>
-<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
 <x:highlight>Related-User-Id</x:highlight>        = <eref target="Core-Data.xml#User-Id">User-Id</eref>
-</x:draft>
 </artwork>
 <xref target="Issue-1327">Discussion</xref>
 <xref target="Issue-1233">Discussion</xref>
@@ -520,21 +516,14 @@ Containers MAY support requests to remove a Person or a Relationship. The defaul
      <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
 <eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/people/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/" <eref target="Social-Data.xml#Group-Id">Group-Id</eref> ["/" Related-User-Id]
-</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
-<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = (<eref target="Social-Data.xml#Person">Person</eref> / null)
-</x:draft>
 <eref target="Core-API-Server.xml#RPC-Method">RPC-Method</eref>             = "people.delete"
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteRelationship-Request-Parameters</x:ref>)
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
-<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:	Delete a person">
 <x:highlight>Related-User-Id</x:highlight>        = <eref target="Core-Data.xml#User-Id">User-Id</eref>
-</x:draft>
 </artwork>
-<x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1327" note="Issue 1327:  Delete a person">
 <t>Note that over REST interface references to the specific person/relationship to be deleted can be included either as Related-User-Id in the REST-URI-Fragment or as Person object in the REST-Request-Payload.
 When neither a Related-User-Id is included in the REST-URI-Fragment nor a Person object is included in the REST-Request-Payload all the relationships of the related Group-Id are deleted (In that case when the Group-Id is @self then the Person account itself is deleted).</t>
 <t>The following example shows an HTTP request to delete a Person account:</t>
@@ -553,7 +542,6 @@ Host: api.example.org
 Authorization: hh5s93j4hdidpola
 Content-Length: 0
 </artwork>
-</x:draft>
 <xref target="Issue-1327">Discussion</xref>
 
 <xref target="Issue-1233">Discussion</xref>
@@ -921,8 +909,8 @@ http://api.example.org/rest/activitystreams/john.doe/@self/@app/object1,object2<
           <c><eref target="Social-Data.xml#Group-Id">Group-Id</eref></c>
           <c>The group Id of the group of users whose ActivityEntries are to be returned.  Defaults to "@self", which MUST return only the ActivityEntries specified by the userId parameter. In the REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>appId</c>
-          <c><x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320" note="Issue 1320: Activity Stream service defects"><eref target="Social-Data.xml#App-Id">App-Id</eref></x:draft></c>
-          <c><x:draft href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320" note="Issue 1320: Activity Stream service defects">Optional. Specifies that the response should only contain ActivityEntries generated by the given appId. If not included, the container MUST return ActivityEntries created by the currently authenticated app. The "@all" value can be used when the generator of the activity entries of interest is not known or not of interest as filter. In the REST protocol, the appId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters. </x:draft></c>
+          <c><eref target="Social-Data.xml#App-Id">App-Id</eref></c>
+          <c>Optional. Specifies that the response should only contain ActivityEntries generated by the given appId. If not included, the container MUST return ActivityEntries created by the currently authenticated app. The "@all" value can be used when the generator of the activity entries of interest is not known or not of interest as filter. In the REST protocol, the appId is specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
           <c>activityId</c>
           <c><eref target="Core-Data.xml#Array">Array</eref>&lt;<eref target="Core-Data.xml#Object-Id">Object-Id</eref>&gt;</c>
           <c>Optional. Specifies a list of individual ActivityEntries to include in the response. In the REST protocol, the activityIds are specified in the REST-URI-Fragment, rather than in the REST-Query-Parameters.</c>
@@ -980,9 +968,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "PUT"
-<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
 <eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self" [ "/" Activity-Id ]
-</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = <eref target="Social-Data.xml#ActivityEntry">ActivityEntry</eref>
 
@@ -990,9 +976,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>UpdateActivityStreams-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = <eref target="Social-Data.xml#ActivityEntry">ActivityEntry</eref>
-<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
 <x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
-</x:draft>
 <xref target="Issue-1320">Discussion</xref>
 </artwork>
       <section title="Update ActivityEntries Request Parameters" anchor="UpdateActivityEntries-Request-Parameters">
@@ -1015,9 +999,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
       <artwork type="abnf"
          xml:space="preserve">
 <eref target="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</eref>       = "DELETE"
-<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
 <eref target="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</eref>      = "/activitystreams/" <eref target="Core-Data.xml#User-Id">User-Id</eref> "/@self/" Activity-Id
-</x:draft>
 <eref target="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</eref>  = null
 <eref target="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</eref>   = null
 
@@ -1025,9 +1007,7 @@ http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=objec
 <eref target="Core-API-Server.xml#RPC-Request-Parameters">RPC-Request-Parameters</eref> = <x:ref>ENCODE-RPC-PARAMETERS</x:ref>(<x:ref>DeleteActivityEntries-Request-Parameters</x:ref>)
 
 <eref target="Core-API-Server.xml#Return-Object">Return-Object</eref>          = null
-<x:draft note="Issue 1320: ActivityStreams Service defects" href="https://code.google.com/p/opensocial-resources/issues/detail?id=1320">
 <x:highlight>Activity-Id</x:highlight>            = <eref target="Core-Data.xml#Object-Id">Object-Id</eref>
-</x:draft>
 <xref target="Issue-1320">Discussion</xref>
 </artwork>
       <section title="Delete ActivityEntries Request Parameters" anchor="DeleteActivityEntries-Request-Parameters">
