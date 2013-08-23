@@ -5,16 +5,16 @@
 <!DOCTYPE rfc PUBLIC "-//IETF//DTD RFC 2629//EN"
 "http://xml.resource.org/authoring/rfc2629.dtd">
 <rfc ipr="full3978"
-     docName="opensocial-social-data-specification-2-5-1-draft"
+     docName="opensocial-social-data-specification-2-5-1"
      xmlns:x="http://purl.org/net/xml2rfc/ext">
  <front>
-  <title>OpenSocial Social Data Specification 2.5.1 DRAFT</title>
+  <title>OpenSocial Social Data Specification 2.5.1</title>
   <author fullname='OpenSocial and Gadgets Specification Group'>
    <address>
     <email>opensocial-and-gadgets-spec@googlegroups.com</email>
    </address>
   </author>
-  <date month="January" year="2013" />
+  <date month="August" year="2013" />
   <abstract>
    <t>This document defines all the data objects used in the
    OpenSocial APIs. Objects defined here make use of the <xref
