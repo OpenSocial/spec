@@ -16,8 +16,8 @@ as the root URL for any of the XML documents in this repository to view them fro
 ##### OSF WG Administrator:  [Matt Marum](http://github.com/mgmarum/)
 
 - [Release Notes](http://opensocial.github.io/spec/2.5.1/OpenSocial-Specification-Release-Notes.xml)
-- [OpenSocial specification](http://opensocial.github.io/2.5.1/trunk/OpenSocial-Specification.xml)
-- [Core Container specification](http://opensocial.github.io/2.5.1/trunk/Core-Container.xml)
+- [OpenSocial specification](http://opensocial.github.io/spec/2.5.1/OpenSocial-Specification.xml)
+- [Core Container specification](http://opensocial.github.io/spec/2.5.1/Core-Container.xml)
 - [Core Gadget specification](http://opensocial.github.io/spec/2.5.1/Core-Gadget.xml)
 - [Core API Server specification](http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml)
 - [Core Data specification](http://opensocial.github.io/spec/2.5.1/Core-Data.xml)
