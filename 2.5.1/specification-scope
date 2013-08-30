@@ -1,0 +1,9 @@
+The purpose of this file is to be a marker for voting on proposals to specification changes. 
+Each commit to this file will create a changes record in the opensocial-resources project. 
+Each commit comment MUST include a link to the proposal document on the wiki.
+The community will vote on that change record.
+Please see http://docs.opensocial.org/display/OSD/Spec+Changes for more details
+
+
+OpenSocial 2.5.1 Proposals
+------------------------
