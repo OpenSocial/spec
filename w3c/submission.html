@@ -1,7 +1,270 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OpenSocial 2.5.1</title>
+    <title>OpenSocial 2.5.1 Activity Streams and Embedded Experiences APIs</title>
+
+    <style type="text/css" title="Xml2Rfc (sans serif)">
+    a {
+        text-decoration: none;
+    }
+    a.smpl {
+        color: black;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    a:active {
+        text-decoration: underline;
+    }
+    address {
+        margin-top: 1em;
+        margin-left: 2em;
+        font-style: normal;
+    }
+    body {
+        color: black;
+        font-family: verdana, helvetica, arial, sans-serif;
+        font-size: 10pt;
+    }
+    cite {
+        font-style: normal;
+    }
+    dd {
+        margin-right: 2em;
+    }
+    dl {
+        margin-left: 2em;
+    }
+
+    dl.empty dd {
+        margin-top: .5em;
+    }
+    dl p {
+        margin-left: 0em;
+    }
+    dt {
+        margin-top: .5em;
+    }
+    /*h1 {*/
+        /*font-size: 14pt;*/
+        /*line-height: 21pt;*/
+        /*page-break-after: avoid;*/
+    /*}*/
+    /*h1.np {*/
+        /*page-break-before: always;*/
+    /*}*/
+    /*h1 a {*/
+        /*color: #333333;*/
+    /*}*/
+    /*h2 {*/
+        /*font-size: 12pt;*/
+        /*line-height: 15pt;*/
+        /*page-break-after: avoid;*/
+    /*}*/
+    /*h3, h4, h5, h6 {*/
+        /*font-size: 10pt;*/
+        /*page-break-after: avoid;*/
+    /*}*/
+    /*h2 a, h3 a, h4 a, h5 a, h6 a {*/
+        /*color: black;*/
+    /*}*/
+    /*img {*/
+        /*margin-left: 3em;*/
+    /*}*/
+    li {
+        margin-left: 2em;
+        margin-right: 2em;
+    }
+    ol {
+        margin-left: 2em;
+        margin-right: 2em;
+    }
+    ol p {
+        margin-left: 0em;
+    }
+    /*p {*/
+        /*margin-left: 2em;*/
+        /*margin-right: 2em;*/
+    /*}*/
+    pre {
+        margin-left: 3em;
+        background-color: lightyellow;
+        padding: .25em;
+    }
+    pre.text2 {
+        border-style: dotted;
+        border-width: 1px;
+        background-color: #f0f0f0;
+        width: 69em;
+    }
+    pre.inline {
+        background-color: white;
+        padding: 0em;
+    }
+    pre.text {
+        border-style: dotted;
+        border-width: 1px;
+        background-color: #f8f8f8;
+        width: 69em;
+    }
+    pre.drawing {
+        border-style: solid;
+        border-width: 1px;
+        background-color: #f8f8f8;
+        padding: 2em;
+    }
+    table {
+        margin-left: 2em;
+    }
+    table.tt {
+        vertical-align: top;
+    }
+    table.full {
+        border-style: outset;
+        border-width: 1px;
+    }
+    table.headers {
+        border-style: outset;
+        border-width: 1px;
+    }
+    table.tt td {
+        vertical-align: top;
+    }
+    table.full td {
+        border-style: inset;
+        border-width: 1px;
+    }
+    table.tt th {
+        vertical-align: top;
+    }
+    table.full th {
+        border-style: inset;
+        border-width: 1px;
+    }
+    table.headers th {
+        border-style: none none inset none;
+        border-width: 1px;
+    }
+    table.left {
+        margin-right: auto;
+    }
+    table.right {
+        margin-left: auto;
+    }
+    table.center {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    caption {
+        caption-side: bottom;
+        font-weight: bold;
+        font-size: 9pt;
+        margin-top: .5em;
+    }
+
+    table.header {
+        width: 95%;
+        font-size: 10pt;
+        color: white;
+    }
+    td.top {
+        vertical-align: top;
+    }
+    td.topnowrap {
+        vertical-align: top;
+        white-space: nowrap;
+    }
+    td.header {
+        background-color: gray;
+        width: 50%;
+    }
+    td.reference {
+        vertical-align: top;
+        white-space: nowrap;
+        padding-right: 1em;
+    }
+    thead {
+        display:table-header-group;
+    }
+    ul.toc {
+        list-style: none;
+        margin-left: 1.5em;
+        margin-right: 0em;
+        padding-left: 0em;
+    }
+    li.tocline0 {
+        line-height: 150%;
+        font-weight: bold;
+        font-size: 10pt;
+        margin-left: 0em;
+        margin-right: 0em;
+    }
+    li.tocline1 {
+        line-height: normal;
+        font-weight: normal;
+        font-size: 9pt;
+        margin-left: 0em;
+        margin-right: 0em;
+    }
+    li.tocline2 {
+        font-size: 0pt;
+    }
+    ul p {
+        margin-left: 0em;
+    }
+
+    .comment {
+        background-color: yellow;
+    }
+    .center {
+        text-align: center;
+    }
+    .error {
+        color: red;
+        font-style: italic;
+        font-weight: bold;
+    }
+    .figure {
+        font-weight: bold;
+        text-align: center;
+        font-size: 9pt;
+    }
+    .filename {
+        color: #333333;
+        font-weight: bold;
+        font-size: 12pt;
+        line-height: 21pt;
+        text-align: center;
+    }
+    .fn {
+        font-weight: bold;
+    }
+    .hidden {
+        display: none;
+    }
+    .left {
+        text-align: left;
+    }
+    .right {
+        text-align: right;
+    }
+    .title {
+        color: #990000;
+        font-size: 18pt;
+        line-height: 18pt;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 36pt;
+    }
+    .vcardline {
+        display: block;
+    }
+    .warning {
+        font-size: 14pt;
+        background-color: yellow;
+    }
+
+    </style>
 </head>
 <body>
     <div class="head">
@@ -15,13 +278,13 @@
         </p>
 
         <h1 style="clear:both" id="title">
-            OpenSocial 2.5.1
+            OpenSocial 2.5.1 Activity Streams and Embedded Experiences APIs
         </h1>
 
         <h2 id="W3C-doctype">W3C
             Member Submission
-            01 February
-            2013
+            30 January
+            2014
         </h2>
 
 
@@ -30,13 +293,13 @@
             <dt>This version:</dt>
             <dd>
                 <a href="thisversion-uri">
-                    http://www.w3.org/Submission/2013/SUBM-sampleml1-2013MMDD/
+                    http://www.w3.org/Submission/2014/SUBM-osactivitystreams-20140130/
                 </a>
             </dd>
             <dt>Latest version:</dt>
             <dd>
                 <a href="latestversion-uri">
-                    http://www.w3.org/Submission/sampleml1/
+                    http://www.w3.org/Submission/SUBM-osactivitystreams/
                 </a>
             </dd>
         </dl>
@@ -63,7 +326,12 @@
 
     <p>
         <span class="notetoeditor">OpenSocial 2.5.1 provides a basis for building portable social applications.  The
-            OpenSocial Foundation recommends...</span>
+            OpenSocial Foundation would like to provide portions of it for consideration in the W3C Social WG.  What
+            follows is an edited version of the Activity Streams API and Embedded Experiences portions of the OpenSocial
+            2.5.1 specification.  The editing has been done to focus on the content we'd like to focus on.  Where there
+            are concepts that are introduced that are not defined within this document we link to the definition of
+            those terms in the published
+            <a href="http://opensocial.org/documentation/opensocial-2-5-1/">OpenSocial 2.5.1 specification.</a></span>
     </p>
 
     <h2 id="status">Status of this document</h2>
@@ -74,52 +342,6 @@
             document. A list of current W3C publications and the latest
             revision of this technical report can be found in the <a href="http://www.w3.org/TR/">W3C technical reports index</a> at
             http://www.w3.org/TR/.</em>
-    </p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <p>
-        <span class="notetoeditor">...Optional custom paragraph here...</span>
     </p>
 
     <p>
@@ -143,9 +365,1285 @@
 
 
 
-
     <h2 id="toc">Table of Contents</h2>
     <span class="notetoeditor">...table of contents...</span>
+
+<hr>  <!-- section 1 -->
+
+    <h2>1. Notation and Conventions</h2>
+
+    <p>Domain name examples use RFC2606 [RFC2606].</p>
+
+    <h2>1.1 Requirements</h2>
+
+    <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
+        and "OPTIONAL" in this document are to be interpreted as described in RFC2119 [RFC2119].</p>
+
+    <p>An implementation is not compliant if it fails to satisfy one or more of the MUST or REQUIRED level requirements
+        for the protocols it implements.</p>
+
+
+    <h2 id="rfc.section.1.2">1.2&nbsp;Augmented BNF</h2>
+
+    <p id="rfc.section.1.2.p.1">The grammatical rules in this document are to be interpreted as described in <a
+            href="#RFC2234">(Augmented Backus-Naur Form)</a> <cite
+            title="Augmented BNF for Syntax Specifications: ABNF">[RFC2234]</cite>. The following constructs are
+        introduced in this document to augment RFC2234:</p>
+    <dl>
+        <dt>{rule1 rule2}</dt>
+        <dd><p id="rfc.section.1.2.p.1">Elements enclosed in braces (squiggly brackets) are treated as a single,
+            UNORDERED element. Its contents may occur in any order. Hence: </p>
+            <pre class="inline">{elem foo} bar</pre>
+            would match (elem foo bar) and (foo elem bar).<p></p>
+
+            <p id="rfc.section.1.2.p.2">NOTE: Specifying alternatives is quite different from specifying set grouping.
+                Alternatives indicate the matching of exactly one (sub-)rule out of the total grouping. The set
+                mechanism indicates the matching of a string which contains all of the elements within the group;
+                however the elements may occur in any order.</p></dd>
+        <dt>#rule</dt>
+        <dd>A construct "#" is defined, similar to "*", for defining lists of elements. The full form is "&lt;n&gt;#&lt;m&gt;element"
+            indicating at least &lt;n&gt; and at most &lt;m&gt; elements, each separated by one or more commas (",") and
+            OPTIONAL linear white space (LWS). This makes the usual form of lists very easy; a rule such as
+            <pre class="inline">( *LWS element *( *LWS "," *LWS element ))</pre>
+            can be shown as
+            <pre class="inline">1#element</pre>
+            Wherever this construct is used, null elements are allowed, but do not contribute to the count of elements
+            present. That is, "(element), , (element) " is permitted, but counts as only two elements. Therefore, where
+            at least one element is required, at least one non-null element MUST be present. Default values are 0 and
+            infinity so that "#element" allows any number, including zero; "1#element" requires at least one; and
+            "1#2element" allows one or two.
+        </dd>
+        <dt>&amp;rule</dt>
+        <dd>A construct "&amp;" is defined, similar to "#", which uses an ampersand (&amp;) instead of commas, and MUST
+            NOT include linear white space between elements.
+        </dd>
+        <dt>implied *LWS</dt>
+        <dd>The grammar described by this specification is word-based. Except where noted otherwise, linear white space
+            (LWS) can be included between any two adjacent words (token or quoted-string), and between adjacent words
+            and separators, without changing the interpretation of a field. At least one delimiter (LWS and/or
+            separators) MUST exist between any two tokens, since they would otherwise be interpreted as a single token.
+        </dd>
+    </dl>
+
+    <h2 id="rfc.section.1.3">1.3&nbsp;Basic Rules</h2>
+
+    <p id="rfc.section.1.3.p.1">The following rules are used throughout this specification to describe basic parsing
+        constructs. The US-ASCII coded character set is defined by <a href="#RFC20"><cite
+                title="ASCII format for Network Interchange">[RFC20]</cite></a></p>
+
+    <pre class="inline">OCTET          = &lt;any 8-bit sequence of data&gt;
+CHAR           = &lt;any US-ASCII character (octets 0 - 127)&gt;
+UPALPHA        = &lt;any US-ASCII uppercase letter "A".."Z"&gt;
+LOALPHA        = &lt;any US-ASCII lowercase letter "a".."z"&gt;
+ALPHA          = UPALPHA / LOALPHA
+DIGIT          = &lt;any US-ASCII digit "0".."9"&gt;
+CTL            = &lt;any US-ASCII control character (octets 0 - 31) and DEL (127)&gt;
+CR             = &lt;US-ASCII CR, carriage return (13)&gt;
+LF             = &lt;US-ASCII LF, linefeed (10)&gt;
+SP             = &lt;US-ASCII SP, space (32)&gt;
+HT             = &lt;US-ASCII HT, horizontal-tab (9)&gt;
+&lt;"&gt;            = &lt;US-ASCII double-quote mark (34)&gt;
+CRLF           = CR LF
+LWS            = [CRLF] 1*( SP / HT )
+TEXT           = &lt;any OCTET except CTLs, but including LWS&gt;
+COMMA          = &lt;US-ASCII comma (44)&gt;
+
+</pre>
+
+<hr> <!-- Activity Streams API -->
+
+    <h1 id="rfc.section.2" class="np">2.&nbsp;Services</h1>
+
+    <p id="rfc.section.2.p.1">OpenSocial defines several services for providing access to a container's data. Individual
+        services are required or optional as indicated in the sections that follow.</p>
+
+    <h2 id="rfc.section.2.3">2.3&nbsp;Activity Streams</h2>
+
+    <p id="rfc.section.2.3.p.1">Containers MUST support the Activity Streams Service. Individual operations are required
+        or optional as indicated in the sections that follow. Containers MUST use the following values to define the
+        Activity Streams Service:</p>
+<pre class="inline"><a href="./Core-API-Server.xml#Discovery">XRDS-Type</a>    = "http://ns.opensocial.org/2008/opensocial/activitystreams"
+</pre>
+    <h3 id="rfc.section.2.3.1">2.3.1&nbsp;Get Activity Streams</h3>
+
+    <p id="rfc.section.2.3.1.p.1">The Get method supports multiple queries, including requests for one or more Activity
+        Stream entries and what fields are available.</p>
+
+    <p id="rfc.section.2.3.1.p.2">Containers MUST support requests to the Activity Stream service. Requests and
+        responses for retrieving Activity Stream entries use the following values:</p>
+    <pre class="inline"><a href="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "GET"
+<a href="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="Core-Data.xml#User-Id">User-Id</a> "/" <a href="Social-Data.xml#Group-Id">Group-Id</a> [ "/" <a
+                href="Social-Data.xml#App-Id">App-Id</a> [ "/" (Activity-Id / <a href="Core-Data.xml#Array">Array</a>&lt;Activity-Id&gt;) ] ]
+<a href="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = ENCODE-REST-PARAMETERS(<a
+                href="#GetActivityStreams-Request-Parameters" style="text-decoration: underline;">GetActivityStreams-Request-Parameters</a>)
+<a href="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = null
+
+
+<a href="Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="Social-Data.xml#ActivityEntry">ActivityEntry</a>  / <a
+                href="Core-Data.xml#Collection">Collection</a>&lt;<a
+                href="Social-Data.xml#ActivityEntry">ActivityEntry</a>&gt;
+<b>Activity-Id</b>            = <a href="Core-Data.xml#Object-Id">Object-Id</a>
+</pre>
+    <p id="rfc.section.2.3.1.p.3">Example GET request:</p>
+    <pre class="text">http://api.example.org/rest/activitystreams/john.doe/@self/@app/object1,object2</pre>
+    <h4 id="rfc.section.2.3.1.1">2.3.1.1&nbsp;Get Activity Streams Request Parameters</h4>
+
+    <p id="rfc.section.2.3.1.1.p.1">A request for a Collection of ActivityEntry objects MUST support the <a
+            href="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, the <a
+            href="Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</a>, and the
+        following additional parameters:</p>
+
+    <div id="rfc.table.u.14">
+        <table class="tt full left" cellpadding="3" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="left">userId</td>
+                <td class="left"><a href="Core-Data.xml#User-Id">User-Id</a> or <a href="Core-Data.xml#Array">Array</a>&lt;<a
+                        href="Core-Data.xml#User-Id">User-Id</a>&gt;</td>
+                <td class="left">User ID(s) of the person whose activities are to be returned. Defaults to "@me",
+                    indicating the currently authenticated user. In the REST protocol, userId is specified in the
+                    REST-URI-Fragment, rather than in the REST-Query-Parameters.
+                </td>
+            </tr>
+            <tr>
+                <td class="left">groupId</td>
+                <td class="left"><a href="Social-Data.xml#Group-Id">Group-Id</a></td>
+                <td class="left">The group Id of the group of users whose ActivityEntries are to be returned. Defaults
+                    to "@self", which MUST return only the ActivityEntries specified by the userId parameter. In the
+                    REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the
+                    REST-Query-Parameters.
+                </td>
+            </tr>
+            <tr>
+                <td class="left">appId</td>
+                <td class="left"><a href="Social-Data.xml#App-Id">App-Id</a></td>
+                <td class="left">Optional. Specifies that the response should only contain ActivityEntries generated by
+                    the given appId. If not included, the container MUST return ActivityEntries created by the currently
+                    authenticated app. The "@all" value can be used when the generator of the activity entries of
+                    interest is not known or not of interest as filter. In the REST protocol, the appId is specified in
+                    the REST-URI-Fragment, rather than in the REST-Query-Parameters.
+                </td>
+            </tr>
+            <tr>
+                <td class="left">activityId</td>
+                <td class="left"><a href="Core-Data.xml#Array">Array</a>&lt;<a
+                        href="Core-Data.xml#Object-Id">Object-Id</a>&gt;</td>
+                <td class="left">Optional. Specifies a list of individual ActivityEntries to include in the response. In
+                    the REST protocol, the activityIds are specified in the REST-URI-Fragment, rather than in the
+                    REST-Query-Parameters.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p id="rfc.section.2.3.1.1.p.3">Example GET request with parameters:</p>
+    <pre class="text">http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=object1,object2</pre>
+    <h4 id="rfc.section.2.3.1.2">2.3.1.2&nbsp;Retrieve a list of supported Activity Stream fields</h4>
+
+    <p id="rfc.section.2.3.1.2.p.1">Containers MAY support REST requests for supported Activity Stream fields. Requests
+        and responses for retrieving supported Activity Stream fields use the following values:</p>
+    <pre class="inline"><a href="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "GET"
+<a href="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/@supportedFields"
+<a href="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
+<a href="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = null
+<a href="Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="Core-Data.xml#Array">Array</a>&lt;String&gt;
+</pre>
+    <h3 id="rfc.section.2.3.2">2.3.2&nbsp;Create an ActivityEntry</h3>
+
+    <p id="rfc.section.2.3.2.p.1">Containers MUST support creating an ActivityEntry associated with the currently
+        authenticated app. If successful, the container MUST return the ID of the newly-created ActivityEntry. For
+        details on uploading content associated with an ActivityEntry, see the <a
+                href="./Core-API-Server.xml#Content-Upload">Content Upload</a> section of <a
+                href="#Core-API-Server"><cite title="OpenSocial Core API Server Specification">[Core-API-Server]</cite></a>.
+    </p>
+
+    <p id="rfc.section.2.3.2.p.2">Requests and responses to create an ActivityEntry use the following values:</p>
+    <pre class="inline"><a href="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "POST"
+<a href="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="Core-Data.xml#User-Id">User-Id</a> "/@self"
+<a href="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
+<a href="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = <a href="Social-Data.xml#ActivityEntry">ActivityEntry</a>
+
+
+<a href="Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="Social-Data.xml#ActivityEntry">ActivityEntry</a>
+</pre>
+    <h4 id="rfc.section.2.3.2.1">2.3.2.1&nbsp;Create ActivityEntries Request Parameters</h4>
+
+    <p id="rfc.section.2.3.2.1.p.1">A request to create an ActivityEntry MUST support the <a
+            href="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, and the following
+        additional parameters:</p>
+
+    <div id="rfc.table.u.15">
+        <table class="tt full left" cellpadding="3" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="left">userId</td>
+                <td class="left"><a href="Core-Data.xml#User-Id">User-Id</a></td>
+                <td class="left">User ID of the person to associate the ActivityEntry with. Defaults to "@me",
+                    indicating the currently authenticated user. In the REST protocol, userId is specified in the
+                    REST-URI-Fragment, rather than in the REST-Query-Parameters.
+                </td>
+            </tr>
+            <tr>
+                <td class="left">activity</td>
+                <td class="left"><a href="Social-Data.xml#ActivityEntry">ActivityEntry</a></td>
+                <td class="left">The ActivityEntry to associate with the given user.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3 id="rfc.section.2.3.3">2.3.3&nbsp;Update an ActivityEntry</h3>
+
+    <p id="rfc.section.2.3.3.p.1">Containers MAY support updating an ActivityEntry associated with the currently
+        authenticated app. For details on uploading content associated with an Activity Stream, see the <a
+                href="./Core-API-Server.xml#Content-Upload">Content Upload</a> section of <a
+                href="#Core-API-Server"><cite title="OpenSocial Core API Server Specification">[Core-API-Server]</cite></a>.
+    </p>
+
+    <p id="rfc.section.2.3.3.p.2">Requests and responses to update an ActivityEntry use the following values:</p>
+    <pre class="inline"><a href="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "PUT"
+<a href="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="Core-Data.xml#User-Id">User-Id</a> "/@self" [ "/" Activity-Id ]
+<a href="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
+<a href="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = <a href="Social-Data.xml#ActivityEntry">ActivityEntry</a>
+
+
+<a href="Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="Social-Data.xml#ActivityEntry">ActivityEntry</a>
+<b>Activity-Id</b>            = <a href="Core-Data.xml#Object-Id">Object-Id</a>
+
+</pre>
+    <h4 id="rfc.section.2.3.3.1">2.3.3.1&nbsp;Update ActivityEntries Request Parameters</h4>
+
+    <p id="rfc.section.2.3.3.1.p.1">A request to update an ActivityEntry MUST support the <a
+            href="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, and the following
+        additional parameters:</p>
+
+    <div id="rfc.table.u.16">
+        <table class="tt full left" cellpadding="3" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="left">userId</td>
+                <td class="left"><a href="Core-Data.xml#User-Id">User-Id</a></td>
+                <td class="left">User ID(s) of the person the ActivityEntry is associated with. Defaults to "@me",
+                    indicating the currently authenticated user.
+                </td>
+            </tr>
+            <tr>
+                <td class="left">activity</td>
+                <td class="left"><a href="Social-Data.xml#ActivityEntry">ActivityEntry</a></td>
+                <td class="left">The ActivityEntry to update. Only the 'id' field of the ActivityEntry is required.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <h3 id="rfc.section.2.3.4">2.3.4&nbsp;Delete an ActivityEntry</h3>
+
+    <p id="rfc.section.2.3.4.p.1">Containers MAY support deleting an ActivityEntry associated with the currently
+        authenticated app. Requests and responses to update an ActivityEntry use the following values:</p>
+    <pre class="inline"><a href="Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "DELETE"
+<a href="Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="Core-Data.xml#User-Id">User-Id</a> "/@self/" Activity-Id
+<a href="Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
+<a href="Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = null
+
+
+<a href="Core-API-Server.xml#Return-Object">Return-Object</a>          = null
+<b>Activity-Id</b>            = <a href="Core-Data.xml#Object-Id">Object-Id</a>
+
+</pre>
+    <h4 id="rfc.section.2.3.4.1">2.3.4.1&nbsp;Delete ActivityEntries Request Parameters</h4>
+
+    <p id="rfc.section.2.3.4.1.p.1">A request to delete an ActivityEntry MUST support the <a
+            href="Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, and the following
+        additional parameters:</p>
+
+    <div id="rfc.table.u.17">
+        <table class="tt full left" cellpadding="3" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="left">userId</td>
+                <td class="left"><a href="Core-Data.xml#User-Id">User-Id</a></td>
+                <td class="left">User ID(s) of the person the ActivityEntry is associated with. Defaults to "@me",
+                    indicating the currently authenticated user.
+                </td>
+            </tr>
+            <tr>
+                <td class="left">activityId</td>
+                <td class="left">string</td>
+                <td class="left">Identifies the ActivityEntry to delete.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p id="rfc.section.2.3.4.1.p.2">Example DELETE request with parameters:</p>
+    <pre class="text">http://api.example.org/rest/activitystreams?userId=john.doe&amp;activityId=activity123</pre>
+
+<hr> <!-- Embedded Experiences -->
+
+    <h2 id="rfc.section.C.15"><a href="#rfc.section.C.15">C.15</a>&nbsp;<a id="Embedded-Experiences"
+                                                                           href="#Embedded-Experiences">Embedded
+        Experiences</a></h2>
+
+    <p id="rfc.section.C.15.p.1">Embedded experiences provide a mechanism for embedding OpenSocial gadgets and other
+        web-accessible content sources directly into a variety of contexts such as Activity Streams, email messages and
+        Atom feeds. The mechanism works by inserting a small structure of data that includes a reference to the embedded
+        content along with contextual data an OpenSocial container would need to render the content appropriately.</p>
+
+    <p id="rfc.section.C.15.p.2">This data structure can be serialized as either a JSON object or XML and includes the
+        following properties:</p>
+
+    <div id="rfc.table.u.170">
+        <table class="tt full center" cellpadding="3" cellspacing="0">
+            <thead>
+            <tr>
+                <th class="left" style="width: 15%;">Property</th>
+                <th class="left">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="left"><samp>context</samp></td>
+                <td class="left">If the Embedded Experience is used to embed an OpenSocial gadget, the "context" field
+                    is used to pass data to the gadget so that it knows exactly which content to render. For instance, a
+                    gadget that displays a person's profile information will need to know which profile to display; a
+                    gadget that displays an album of recent photos will need to know the identity of the album to
+                    display. The content of the "context" field is undefined and specific to each individual gadget
+                    definition with one exception: the special property name "opensocial" is reserved for use by the
+                    container implementation. The "context" properties JSON object value or XML element structure MUST
+                    NOT contain a property named "opensocial".
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><samp>gadget</samp></td>
+                <td class="left">A URL to an OpenSocial Gadget definition document that defines the gadget to be
+                    embedded.
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><samp>preferredExperience</samp></td>
+                <td class="left">An optional collection of properties that describe the preferred way the creator of the
+                    embedded experience would like containers to render the content.
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><samp>previewImage</samp></td>
+                <td class="left">
+                    <div style="border: 2px solid #0d0">
+                        <div style="background: #0d0; color: #fff; padding: 2px;"><strong style="margin-right: 4px;">Incubating</strong><a
+                                target="_blank" style="color: #fff; text-decoration: underline; margin-right: 4px;"
+                                href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316">Link</a>Issue
+                            1316 - Remove the previewImageData for EE data model and add support for data URI
+                        </div>
+                        <p id="rfc.section.C.15.p.">An optional URI to an image that can be used as a preview for the
+                            embedded content. This property accepts URL data scheme (http://tools.ietf.org/html/rfc2397)
+                            to specify the image as Base64-encoded embedded data.</p></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="left"><samp>url</samp></td>
+                <td class="left">A URL to a web page that allows virtually any web-accessible resource to be used as an
+                    Embedded Experience.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p id="rfc.section.C.15.p.3">The "url" and "gadget" properties each reference content that is to be embedded. At
+        least one of these properties MUST be specified. When both properties are used within the Embedded Experience,
+        the decision about which to render is left to the container.</p>
+
+    <p id="rfc.section.C.15.p.4">When serialized as JSON, the embedded experience take the form of a single JSON Object
+        with four distinct properties: "context", "gadget", "previewImage" and "url". Additional extension properties
+        MAY be included in the JSON object.</p>
+
+    <div id="rfc.figure.u.58"></div>
+    <p>For instance, a simple JSON Embedded Experience that references an OpenSocial gadget:</p>  <pre>  {
+    "gadget" : "http://www.example.com/embedded/gadget.xml",
+    "context" : {
+      "title" : "Hello World",
+      "id" : 123
+    },
+    "previewImage" : "http://www.example.com/embedded/123.png"
+  }
+    </pre>
+    <p id="rfc.section.C.15.p.6">When serialized as XML, it is expressed in the form of a root element &lt;embed&gt;
+        containing four child elements, the order of which is considered insignificant: &lt;context&gt;, &lt;gadget&gt;,
+        &lt;previewImage&gt;, and &lt;url&gt;. Additional extension elements and attributes MAY be included in the XML
+        object.</p>
+
+    <div id="rfc.figure.u.59"></div>
+    <p>For example,</p>  <pre>  &lt;embed&gt;
+    &lt;gadget&gt;http://www.example.com/embedded/gadget.xml&lt;/gadget&gt;
+    &lt;context&gt;
+      &lt;title&gt;Hello World&lt;/title&gt;
+      &lt;id&gt;123&lt;/id&gt;
+    &lt;/context&gt;
+    &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
+  &lt;/embed&gt;
+    </pre>
+    <p id="rfc.section.C.15.p.8">Note that no XML namespace is currently declared for the XML serialization. This means
+        that special care must be taken when including an XML embedded experience into another type of XML document. For
+        example, the following shows an XML embedded experience within a partial Atom Entry Document. Note the addition
+        of <samp>xmlns=""</samp> on the embed element in order to "undeclare" the in-scope default XML namespace.</p>
+
+    <div id="rfc.figure.u.60"></div><pre>  &lt;entry xmlns="http://www.w3.org/2005/Atom"&gt;
+    &lt;id&gt;http://example.org/entries/1&lt;/id&gt;
+    ...
+    &lt;embed xmlns=""&gt;
+      &lt;gadget&gt;http://www.example.com/embedded/gadget.xml&lt;/gadget&gt;
+      &lt;context&gt;
+        &lt;title&gt;Hello World&lt;/title&gt;
+        &lt;id&gt;123&lt;/id&gt;
+      &lt;/context&gt;
+      &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
+    &lt;/embed&gt;
+  &lt;/entry&gt;
+    </pre>
+    <h3 id="rfc.section.C.15.1"><a href="#rfc.section.C.15.1">C.15.1</a>&nbsp;Additional Examples</h3>
+
+    <div id="rfc.figure.u.61"></div>
+    <p>A simple URL embedded experience using the JSON serialization:</p><pre>  {
+    "url" : "http://www.example.org/embed/123.html"
+  }
+      </pre>
+    <div id="rfc.figure.u.62"></div>
+    <p>The same URL embedded experience using the XML serialization:</p><pre>  &lt;embed&gt;
+    &lt;url&gt;http://www.example.org/embed/123.html&lt;/url&gt;
+  &lt;/embed&gt;
+      </pre>
+    <div id="rfc.figure.u.63"></div>
+    <p>An embedded experience that specifies both a gadget and URL serialized as JSON:</p><pre>  {
+    "gadget" : "http://www.example.com/embedded/gadget.xml",
+    "url" : "http://www.example.org/embed/123.html",
+    "context" : {
+      "title" : "Hello World",
+      "id" : 123
+    },
+    "previewImage" : "http://www.example.com/embedded/123.png"
+  }
+      </pre>
+    <div id="rfc.figure.u.64"></div>
+    <p>The same embedded experience serialized as XML:</p>  <pre>  &lt;embed&gt;
+    &lt;gadget&gt;http://www.example.com/embedded/gadget.xml&lt;/gadget&gt;
+    &lt;url&gt;http://www.example.org/embed/123.html&lt;/url&gt;
+    &lt;context&gt;
+      &lt;title&gt;Hello World&lt;/title&gt;
+      &lt;id&gt;123&lt;/id&gt;
+    &lt;/context&gt;
+    &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
+  &lt;/embed&gt;
+    </pre>
+    <h3 id="rfc.section.C.15.2"><a href="#rfc.section.C.15.2">C.15.2</a>&nbsp;Considerations for Embedded Experience
+        Gadgets</h3><h4 id="rfc.section.C.15.2.1"><a href="#rfc.section.C.15.2.1">C.15.2.1</a>&nbsp;Views For Embedded
+        Experiences</h4>
+
+    <div style="border: 2px solid #0d0">
+        <div style="background: #0d0; color: #fff; padding: 2px;"><strong style="margin-right: 4px;">Incubating</strong><a
+                target="_blank" style="color: #fff; text-decoration: underline; margin-right: 4px;"
+                href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284">Link</a>Issue 1284: Preferred
+            Experiences and other refinements to Embedded Experiences
+        </div>
+        <p id="rfc.section.C.15.2.1.p."></p>
+
+        <p id="rfc.section.C.15.2.1.p.1">When rendering a gadget as an embedded experience, the container will look
+            within the embedded experience data model and see if there is a "preferred experience" (<a
+                    href="#preferredExperience" title="Preferred Experiences">Appendix&nbsp;C.15.3</a>) object
+            containing a "target" property. If the target object (<a href="#eeTargetTypes" title="Target Types">Appendix&nbsp;C.15.3.2</a>)
+            type is equal to "gadget" and there is a view property specified, the container will try and render the
+            value of the "view" property. If there is no "view" property in the target object or there is no target
+            object, or if there is no preferred experience in the data model, the container will render a view called
+            "embedded". If an "embedded" view or the view specified within the target object of the embedded experience
+            data model is not found within the gadget definition, the container SHOULD render the gadget's default view.
+        </p>
+
+        <p></p></div>
+    <h4 id="rfc.section.C.15.2.2"><a href="#rfc.section.C.15.2.2">C.15.2.2</a>&nbsp;Accessing The Context</h4>
+
+    <p id="rfc.section.C.15.2.2.p.1">An embedded experience gadget has the option of requiring some contextual
+        information in order to render itself. By abstracting the data from the gadget itself, gadget developers can
+        develop generalized gadgets that can be used for all embedded expereinces of a specific type. For example, a
+        gadget developed to display videos can be built so that the id of the video is contained and extracted from the
+        embedded experience's "context" property.</p>
+
+    <div id="rfc.figure.u.65"></div><pre>  {
+    "gadget" : "http://example.org/embedded/video.xml",
+    "context" : {
+      "video-id" : "abc123"
+    }
+  }
+        </pre>
+    <p id="rfc.section.C.15.2.2.p.3">Gadgets that are written to support embedded experiences MUST require the
+        "embedded-experiences" feature within their gadget definition in order to access the context. The contextual
+        data is stored within the data context (<a href="#DataContext" title="DataContext">Section&nbsp;14.1</a>) object
+        for the gadget. The key, "org.opensocial.ee.context", is used to access the context. Gadgets can add a listener
+        on the data context object for this key, or it may retreive the key's value by using the data context APIs.</p>
+
+    <div id="rfc.figure.u.66"></div>
+    <p>For instance, the Gadget below registers a listener with the data context to retrieve any context data included
+        with the embedded experience:</p>  <pre>  &lt;Module&gt;
+    &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
+      &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html" view="embedded"&gt;
+        &lt;![CDATA[
+          &lt;script type="text/javascript"&gt;
+            function myCallback(key) {
+              var context = opensocial.data.getDataContext().getDataSet(key);
+              document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
+            }
+            function initData() {
+              opensocial.data.getDataContext().registerListener(
+                'org.opensocial.ee.context', myCallback);
+            }
+            gadgets.util.registerOnLoadHandler(initData);
+        &lt;/script&gt;
+         &lt;div id="contextData"&gt;&lt;/div&gt;
+    ]]&gt;
+    &lt;/Content&gt;
+  &lt;/Module&gt;</pre>
+    <div id="rfc.figure.u.67"></div>
+    <p>Instead of using the data context APIs to get the embedded experiences context you may choose to use the
+        gadgets.ee.registerContextListener (<a href="#gadgets.ee.registerContextListener"
+                                               title="registerContextListener">Appendix&nbsp;C.15.7.1</a>) API in order
+        to lessen the amount of code you need to write. The above gadget example can be rewriten to use the
+        registerContextListener API:</p>  <pre>  &lt;Module&gt;
+    &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
+      &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
+    &lt;/ModulePrefs&gt;
+    &lt;Content type="html" view="embedded"&gt;
+        &lt;![CDATA[
+          &lt;script type="text/javascript"&gt;
+            gadgets.util.registerOnLoadHandler(function() {
+              gadgets.ee.registerContextListener(function(context) {
+                document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
+              });
+            });
+        &lt;/script&gt;
+         &lt;div id="contextData"&gt;&lt;/div&gt;
+    ]]&gt;
+    &lt;/Content&gt;
+  &lt;/Module&gt;</pre>
+    <h5 id="rfc.section.C.15.2.2.1"><a href="#rfc.section.C.15.2.2.1">C.15.2.2.1</a>&nbsp;<a id="rootContext"
+                                                                                             href="#rootContext">Additional
+        Container Specific Context</a></h5>
+
+    <div style="border: 2px solid #0d0">
+        <div style="background: #0d0; color: #fff; padding: 2px;"><strong style="margin-right: 4px;">Incubating</strong><a
+                target="_blank" style="color: #fff; text-decoration: underline; margin-right: 4px;"
+                href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284">Link</a>Issue 1284: Preferred
+            Experiences and other refinements to Embedded Experiences
+        </div>
+        <p id="rfc.section.C.15.2.2.1.p."></p>
+
+        <p id="rfc.section.C.15.2.2.1.p.1">While the contextual data associated with the "org.opensocial.ee.context" key
+            will generally originate from the information provided by the "context" property within the Embedded
+            Experience document, containers are free to insert additional, container specific contexual data into the
+            object. For example, a container might wish to communicate information about the type of parent object
+            within which the Embedded Experience information was received. If the "context" property of the embedded
+            experience document is not an object than containers SHOULD NOT add any additional information to the
+            "context" property.</p>
+
+        <p id="rfc.section.C.15.2.2.1.p.2">If such additional information is provided, the object associated with the
+            "org.opensocial.ee.context" key MUST have an additional "openSocial" property.</p>
+
+        <p id="rfc.section.C.15.2.2.1.p.3">Containers MAY use the "openSocial" property to communicate additional
+            information about the object containing the embedded experience being rendered. This information should be
+            added to the "associatedContext" property and MUST contain the following properties:</p>
+
+        <p></p>
+
+        <div id="rfc.table.u.171">
+            <table class="tt full center" cellpadding="3" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="left" style="width: 15%;">Property</th>
+                    <th class="left">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="left"><samp>id</samp></td>
+                    <td class="left">The id of the <a href="Social-Data.xml">OpenSocial Data object</a> containing the
+                        embedded experience. The type of id will depend on the type of OpenSocial Data object containing
+                        the embedded experience.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left"><samp>type</samp></td>
+                    <td class="left">The type of OpenSocial Data object containing the embedded experience.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p></p>
+
+        <div id="rfc.figure.u.68"></div>
+        <p>The following is an example of what the embedded experience data model looks like if the container adds the
+            required fields of the "associatedContext" object.</p><pre>  {
+    "gadget" : "http://example.org/AlbumViewer.xml",
+    "context" : {
+      "albumName": "Germany 2009",
+      "photoUrls": [
+        "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+        "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+        "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
+        "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
+        "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
+        "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+        "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
+      ],
+      "openSocial" : {
+        "associatedContext" : {
+          "id" : "container.com:123abc",
+          "type" : "opensocial.ActivityEntry"
+        }
+      }
+    }
+  }
+          </pre>
+        <p></p>
+
+        <p id="rfc.section.C.15.2.2.1.p.5">Note: As stated above, everything inside the "openSocial" property of the
+            above example was added by the container.</p>
+
+        <p id="rfc.section.C.15.2.2.1.p.6">In addition to the "id" and the "type" properties, containers MAY add an
+            additional property to the associated context called "objectReference". If present, the "objectReference"
+            property will contain the JSON representation of the OpenSocial Data object containing the embedded
+            experience.</p>
+
+        <p></p>
+
+        <div id="rfc.table.u.172">
+            <table class="tt full center" cellpadding="3" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="left" style="width: 15%;">Property</th>
+                    <th class="left">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="left"><samp>objectReference</samp></td>
+                    <td class="left">The JSON representation of the OpenSocial Data object containing the embedded
+                        experience. This OpenSocial Data object MUST contain the complete embedded experience data
+                        model.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p></p>
+
+        <div id="rfc.figure.u.69"></div>
+        <p>The following is an example of what the embedded experience data model would look like if the container added
+            the required and optional fields of the "associatedContext" object.</p><pre>  {
+    "gadget" : "http://example.org/AlbumViewer.xml",
+    "context" : {
+      "albumName": "Germany 2009",
+      "photoUrls": [
+        "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+        "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+        "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
+        "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
+        "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
+        "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+        "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
+      ],
+      "openSocial" : {
+        "associatedContext" : {
+          "id" : "container.com:123abc",
+          "type" : "opensocial.ActivityEntry",
+          "objectReference" : {
+            "postedTime": "2011-02-10T15:04:55Z",
+            "actor": {
+              "objectType" : "person",
+              "id": "tag:example.org,2011:martin",
+              "displayName": "Martin Smith"
+            },
+            "verb": "post",
+            "object" : {
+              "objectType":"collection",
+              "objectTypes":["image"]
+              "id": "http://example.org/albums/germany-2009",
+              "url": "http://example.org/albums/germany-2009",
+            },
+            "openSocial" : {
+              "embed" : {
+                "gadget" : "http://example.org/AlbumViewer.xml",
+                "context" : {
+                  "albumName": "Germany 2009",
+                  "photoUrls": [
+                    "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+                    "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+                    "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
+                    "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
+                    "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
+                    "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+                    "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+          </pre>
+        <p></p>
+
+        <div id="rfc.figure.u.70"></div>
+        <p>The following example illustrates how this additional context information is accessed:</p><pre>  function myCallback(key) {
+    var context = opensocial.data.getDataContext().getDataSet(key);
+    var video_id = context['albumName'];
+
+    var associatedContext = context.openSocial.associatedContext;
+    var ac_id = associatedContext.id;
+    var ac_type = associatedContext.type;
+
+    //The container MAY also add an object reference
+    var obj_ref = associatedContext.objectReference
+    if(typeof obj_ref !== 'undefined') {
+      //Do something with the object reference
+    }
+    // ...
+  }
+  function initData() {
+    opensocial.data.getDataContext().registerListener(
+      'org.opensocial.ee.context', myCallback);
+  }
+  gadgets.util.registerOnLoadHandler(initData);
+          </pre>
+        <p></p>
+
+        <p id="rfc.section.C.15.2.2.1.p.9">Specific container implementations are free to insert any additional
+            information they wish into the and "openSocial" object values. The interpretation and use of any such
+            information is considered out of the scope of this specification.</p>
+
+        <p></p></div>
+    <h3 id="rfc.section.C.15.3"><a href="#rfc.section.C.15.3">C.15.3</a>&nbsp;<a id="preferredExperience"
+                                                                                 href="#preferredExperience">Preferred
+        Experiences</a></h3>
+
+    <div style="border: 2px solid #0d0">
+        <div style="background: #0d0; color: #fff; padding: 2px;"><strong style="margin-right: 4px;">Incubating</strong><a
+                target="_blank" style="color: #fff; text-decoration: underline; margin-right: 4px;"
+                href="http://code.google.com/p/opensocial-resources/issues/detail?id=1284">Link</a>Issue 1284: Preferred
+            Experiences and other refinements to Embedded Experiences
+        </div>
+        <p id="rfc.section.C.15.3.p."></p>
+
+        <p id="rfc.section.C.15.3.p.1">While the container retains control over deciding exactly how an embedded
+            experience is processed and rendered, there are situations where the creator of the embedded experience
+            might wish to provide clues to the container as to how it would prefer the content to be displayed. These
+            clues are included within the Embedded Experience using the "preferredExperience" property.</p>
+
+        <p></p>
+
+        <div id="rfc.figure.u.71"></div>
+        <p>The following illustrates a basic example serialized as JSON:</p>  <pre>  {
+    "gadget" : "http://www.example.com/embedded/gadget.xml",
+    "url" : "http://www.example.com/foo/bar.html",
+    "context" : {
+      "title" : "Hello World",
+      "id" : 123
+    },
+    "previewImage" : "http://www.example.com/embedded/123.png",
+    "preferredExperience" : {
+      "target" : {
+        "type" : "gadget",
+        "view" : "my-ee-view"
+      },
+      "display" : {
+        "type" : "text"
+      }
+  }
+    </pre>
+        <p></p>
+
+        <div id="rfc.figure.u.72"></div>
+        <p>And the same example using the alternative XML serialization:</p>  <pre>  &lt;embed&gt;
+    &lt;gadget&gt;http://www.example.com/embedded/gadget.xml&lt;/gadget&gt;
+    &lt;url&gt;http://www.example.com/foo/bar.html&lt;/url&gt;
+    &lt;context&gt;
+      &lt;title&gt;Hello World&lt;/title&gt;
+      &lt;id&gt;123&lt;/id&gt;
+    &lt;/context&gt;
+    &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
+    &lt;preferredExperience&gt;
+      &lt;target&gt;
+        &lt;type&gt;gadget&lt;/type&gt;
+        &lt;view&gt;my-ee-view&lt;/view&gt;
+      &lt;/target&gt;
+      &lt;display&gt;
+        &lt;type&gt;text&lt;/type&gt;
+      &lt;/display&gt;
+    &lt;/preferredExperience&gt;
+  &lt;/embed&gt;
+    </pre>
+        <p></p>
+
+        <p id="rfc.section.C.15.3.p.4">In this example, we have an embedded experience serialized as JSON. The structure
+            defines both a "url" and a "gadget" property, both of which can be used by the container to display embedded
+            content. Typically, the decision of which to display when the embedded experience is rendered is up to the
+            container. The "preferredExperience.target" property allows the creator of the embedded experience to
+            indicate that it would prefer the container to use the "gadget" property for rendering, and specifically
+            that the "my-ee-view" view within that gadget be used. The "preferredExperience.display" property indicates
+            that rather than simply displaying the gadget automatically, the embedded experience's creator would rather
+            the container initially display a hyperlink that, when clicked, causes the gadget to be displayed.</p>
+
+        <p></p>
+
+        <div id="rfc.table.u.173">
+            <table class="tt full center" cellpadding="3" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="left" style="width: 15%;">Property</th>
+                    <th class="left">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="left"><samp>display</samp></td>
+                    <td class="left">Describes preferences for how the embedded experience should initially be displayed
+                        by the container. The "display" property provides the preferred style to container on how it
+                        should render the hyperlink to open the embedded experience. The value of the "display" property
+                        is an object that contains a required "type" property, the value of which determines what other
+                        properties might appear within the object.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left"><samp>target</samp></td>
+                    <td class="left">Describes preferences for which type of embedded experience the container should
+                        render. For instance, if the embed includes both a "url" and "gadget" property, the "target" is
+                        used to specify which is preferred. The value of the "target" property is an object that
+                        contains a required "type" property, the value of which determines what other properties might
+                        appear within the object.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p></p><h4 id="rfc.section.C.15.3.1"><a href="#rfc.section.C.15.3.1">C.15.3.1</a>&nbsp;Display Types</h4>
+
+        <p id="rfc.section.C.15.3.1.p.1">This specification currently defines two possible values for the required
+            "type" property on the display object: "text", "image". Each of which are illustrated below.</p>
+
+        <div style="border: 2px solid #0d0">
+            <div style="background: #0d0; color: #fff; padding: 2px;"><strong
+                    style="margin-right: 4px;">Incubating</strong><a target="_blank"
+                                                                     style="color: #fff; text-decoration: underline; margin-right: 4px;"
+                                                                     href="http://code.google.com/p/opensocial-resources/issues/detail?id=1314">Link</a>Issue
+                1314 - Add icon optional property to the preferred experience display of type text
+            </div>
+            <p id="rfc.section.C.15.3.1.p."></p>
+
+            <div id="rfc.figure.u.73"></div>
+            <p>Display using a hyperlink:</p><pre>  {
+    "gadget" : "...",
+    ...,
+    "preferredExperience" : {
+      "target": {...},
+      "display": {
+        "type" : "text",
+        "label" : "Click on me!",
+        "title" : "Click on this link!"
+        "icon" : "http://mycontainer.com/app/openissue.jpg"
+      }
+    }
+  }
+      </pre>
+            <p></p>
+
+            <p id="rfc.section.C.15.3.1.p.2">When "type" equals "text", the additional properties on the display object
+                are:</p>
+
+            <p></p>
+
+            <div id="rfc.table.u.174">
+                <table class="tt full center" cellpadding="3" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="left" style="width: 15%;">Property</th>
+                        <th class="left">Description</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td class="left"><samp>label</samp></td>
+                        <td class="left">A required String that provides the text to display with the hyperlink.</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><samp>title</samp></td>
+                        <td class="left">Optional text to display as the "popup help" or "tooltip" of the hyperlink.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="left">icon</td>
+                        <td class="left">The developer MAY provide a URL to an icon that can be used to decorate the
+                            text. For example, an issue management application may provide different icons for open
+                            issues than for those that are closed. Because it is expected that embedded experiences flow
+                            between containers, the URL MUST be absolute. Developers providing embedded experiences
+                            SHOULD ensure that the URL is able to be resolved by any container that will encounter the
+                            embedded experience. The container makes no assumptions about the size of the icon and MAY
+                            resize it to a size appropriate for the display needs. Use of the icon is optional.
+                            Depending on how the text is displayed, the container is not required to display the icon.
+                            The container MAY choose to display the icon in a manner appropriate to the current
+                            rendering of the object that contains the embedded experience. For example, it would be
+                            acceptable for the container to display the link in front of the text, or as a tool tip.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="rfc.figure.u.74"></div>
+        <p>Display using the previewImage:</p><pre>  {
+    "gadget" : "...",
+    ...,
+    "previewImage" : "http://example.org/preview.png",
+    "preferredExperience" : {
+      "target": {...},
+      "display": {
+        "type" : "image",
+        "altText" : "The alt text",
+        "width" : 100,
+        "height" : 100
+      }
+    }
+  }
+      </pre>
+        <div style="border: 2px solid #0d0">
+            <div style="background: #0d0; color: #fff; padding: 2px;"><strong
+                    style="margin-right: 4px;">Incubating</strong><a target="_blank"
+                                                                     style="color: #fff; text-decoration: underline; margin-right: 4px;"
+                                                                     href="http://code.google.com/p/opensocial-resources/issues/detail?id=1316">Link</a>Issue
+                1316 - Remove the previewImageData for EE data model and add support for data URI
+            </div>
+            <p id="rfc.section.C.15.3.1.p."></p>
+
+            <div id="rfc.figure.u.75"></div>
+            <p>Display using Base64-encoded binary data in the URL data scheme:</p><pre>  {
+    "gadget" : "...",
+    ...,
+    "previewImage" : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIA...",
+    "preferredExperience" : {
+      "target": {...},
+      "display": {
+        "type" : "image",
+        "altText" : "The alt text",
+        "width" : 100,
+        "height" : 100
+      }
+    }
+  }
+      </pre>
+        </div>
+        <p id="rfc.section.C.15.3.1.p.3">When "type" equals "image", the additional properties on the display object
+            are:</p>
+
+        <div id="rfc.table.u.175">
+            <table class="tt full center" cellpadding="3" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="left" style="width: 15%;">Property</th>
+                    <th class="left">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="left"><samp>altText</samp></td>
+                    <td class="left">Specifies optional, alternative text to display if the image cannot be displayed.
+                        Equivalent to the HTML image tags alt attribute.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left"><samp>height</samp></td>
+                    <td class="left">Specifies the preferred display height of the image in pixels.</td>
+                </tr>
+                <tr>
+                    <td class="left"><samp>width</samp></td>
+                    <td class="left">Specifies the preferred display width of the image in pixels.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p id="rfc.section.C.15.3.1.p.4">Implementations are free to define additional display types, each with their
+            own properties. If a container encounters an embedded experience that uses an unknown or unsupported display
+            type, the container MUST ignore the display preferences.</p>  <h4 id="rfc.section.C.15.3.2"><a
+            href="#rfc.section.C.15.3.2">C.15.3.2</a>&nbsp;<a id="eeTargetTypes" href="#eeTargetTypes">Target Types</a>
+    </h4>
+
+        <p id="rfc.section.C.15.3.2.p.1">This specification currently defines two possible values for the type property
+            on the target object: "gadget" and "url". Each of which are illustrated below.</p>
+
+        <div id="rfc.figure.u.76"></div>
+        <p>Preferring the gadget target:</p><pre>  {
+    "gadget" : "...",
+    "url" : "...",
+    ...,
+    "preferredExperience" : {
+      "target": {
+        "type" : "gadget",
+        "view" : "my-ee-view"
+      },
+      "display": {
+        ...
+      }
+    }
+  }
+      </pre>
+        <p id="rfc.section.C.15.3.2.p.3">Note that the preferred experience target's "type" property is only required if
+            the preferred target is not obvious within the embedded experience. For instance, if the embedded experience
+            only defines an IRI value for the "gadget" property, then the preferred target type is "gadget". However, if
+            both the "url" and "gadget" properties are specified, as in the example above, the target type in the
+            preferred experience MUST be specified. Containers MUST ignore the preferred experience if the target type
+            value does not match the options specified within the Embedded Experience (e.g. target type specifies "url"
+            but only a "gadget" IRI is provided, etc).</p>
+
+        <p id="rfc.section.C.15.3.2.p.4">When "type" equals "gadget", the additional properties on the target object
+            are:</p>
+
+        <div id="rfc.table.u.176">
+            <table class="tt full center" cellpadding="3" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="left" style="width: 15%;">Property</th>
+                    <th class="left">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="left"><samp>view</samp></td>
+                    <td class="left">The preferred gadget view to render. If not specified, the value "embedded" is
+                        assumed.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="left"><samp>viewTarget</samp></td>
+                    <td class="left">Specifies where the container SHOULD render the view. Possible values are "TAB",
+                        "DIALOG", "MODALDIALOG", "FLOAT", and "SIDEBAR".
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="rfc.figure.u.77"></div>
+        <p>Preferring the url target:</p><pre>  {
+    "gadget" : "...",
+    "url" : "...",
+    ...,
+    "preferredExperience" : {
+      "target": {
+        "type" : "url",
+        "viewTarget" : "_new"
+      },
+      "display": {
+        ...
+      }
+    }
+  }
+      </pre>
+        <p id="rfc.section.C.15.3.2.p.6">When "type" equals "url", the additional properties on the target object
+            are:</p>
+
+        <div id="rfc.table.u.177">
+            <table class="tt full center" cellpadding="3" cellspacing="0">
+                <thead>
+                <tr>
+                    <th class="left" style="width: 15%;">Property</th>
+                    <th class="left">Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="left"><samp>viewTarget</samp></td>
+                    <td class="left">When specifying a URL, rather than being forced to render in an embedded view, the
+                        developer may wish to indicate to the container that the page be opened in a new browser window.
+                        In this case, the target properties for a URL match those that are defined by the HTML spec,
+                        e.g. "_blank".
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p id="rfc.section.C.15.3.2.p.7">Implementations are free to define additional target types, each with their own
+            properties. If a container encounters an embedded experience that uses an unknown or unsupported target
+            type, the container MUST ignore the target preferences.</p>
+
+        <p></p></div>
+    <h3 id="rfc.section.C.15.4"><a href="#rfc.section.C.15.4">C.15.4</a>&nbsp;Security</h3>
+
+    <p id="rfc.section.C.15.4.p.1">Embedded experiences allow content to be rendered on the page that user has not
+        necessarily requested, therefore it needs to be secured. The container SHOULD only ever render content that the
+        user has previously approved. This specification does not dictate how secure rendering of embedded experiences
+        is to be performed.</p>
+
+    <h3 id="rfc.section.C.15.5"><a href="#rfc.section.C.15.5">C.15.5</a>&nbsp;Embedded Experiences within Activity
+        Streams</h3>
+
+    <p id="rfc.section.C.15.5.p.1">Embedded experiences can be used within an Activity Streams document in order to
+        provide a more interactive experience. Whereas the core properties of the Activity provide a textual description
+        of the event, an included embedded experience can provide a direct representation of the object involved.</p>
+
+    <div id="rfc.figure.u.78"></div>
+    <p>For instance, if a user uploads a collection of photos and creates a new photo album, an embedded experience can
+        be used within the activity to provide a representation of the album itself:</p>  <pre>  {
+    "postedTime": "2011-02-10T15:04:55Z",
+    "actor": {
+      "objectType" : "person",
+      "id": "tag:example.org,2011:martin",
+      "displayName": "Martin Smith"
+    },
+    "verb": "post",
+    "object" : {
+      "objectType":"collection",
+      "objectTypes":["image"]
+      "id": "http://example.org/albums/germany-2009",
+      "url": "http://example.org/albums/germany-2009",
+    },
+    "openSocial" : {
+      "embed" : {
+        "gadget" : "http://example.org/AlbumViewer.xml",
+        "context" : {
+          "albumName": "Germany 2009",
+          "photoUrls": [
+            "http://examplephotos.com/3495/3925132517_5959dac775_t.jpg",
+            "http://examplephotos.com/3629/3394799776_47676abb46_t.jpg",
+            "http://examplephotos.com/4009/4413640211_715d924d9b_t.jpg",
+            "http://examplephotos.com/2340/3528537244_d2fb037aba_t.jpg",
+            "http://examplephotos.com/36/98407782_9c4c5866d1_t.jpg",
+            "http://examplephotos.com/48/180544479_bb0d0f6559_t.jpg",
+            "http://examplephotos.com/2668/3858018351_1e7b73c0b7_t.jpg"
+          ]
+        }
+      }
+    }
+  }</pre>
+    <p id="rfc.section.C.15.5.p.3">As illustrated in the example, when included within an activity, the embedded
+        experience MUST appear as the value of the "embed" property as a child of the "openSocial" property.</p>
+
+    <h3 id="rfc.section.C.15.6"><a href="#rfc.section.C.15.6">C.15.6</a>&nbsp;Embedded Experiences within Email</h3>
+
+    <p id="rfc.section.C.15.6.p.1">Numerous services send email notifications to your inbox in order to let you know
+        something took place that you may be interested in. Most of the time however these notifications do not provide
+        much useful information beyond a link back to the service's website. By leveraging embedded experiences,
+        services can send an embedded representation of the object the notification is about, and allow the user to take
+        action on the notification directly from within an embedded experiences enabled email client.</p>
+
+    <p id="rfc.section.C.15.6.p.2">Embedded experiences serialized as either JSON or XML can be embedded Multipart MIME
+        encoded email messages. Such email messages MUST utilize the "multipart/alternative" MIME variant and MUST
+        contain at least two MIME parts -- one containing regular content of the email message encoded as text/html
+        content, and another containing the embedded experience content using either the "application/embed+json" or
+        "application/embed+xml" MIME media type, respectively representing the JSON and XML serializations. Additional
+        MIME parts MAY be included</p>
+
+    <div id="rfc.figure.u.79"></div>
+    <p>For instance,</p>  <pre>  From: notifications@socialnetwork.com
+  To: johndoe@example.com
+  Subject: Social Network: Mary Has Commented On Your Status
+  MIME-Version: 1.0
+  Content-Type: multipart/alternative;
+          boundary="XXXXboundary text"
+
+  Mary has commented on your status.
+
+  --XXXXboundary text
+  Content-Type: text/plain
+
+  Mary has commeneted on your status.
+
+  --XXXXboundary text
+  Content-Type: text/html
+
+  &lt;html&gt;
+  &lt;!-- HTML representation here --&gt;
+  &lt;/html&gt;
+
+  --XXXXboundary text
+  Content-Type: application/embed+json
+  {
+    "gadget" : "http://www.socialnetwork.com/embedded/commentgadget.xml",
+    "context" : 123
+  }</pre>
+    <h3 id="rfc.section.C.15.7"><a href="#rfc.section.C.15.7">C.15.7</a>&nbsp;<a id="methoddetails"
+                                                                                 href="#methoddetails">Method
+        Details</a></h3><h4 id="rfc.section.C.15.7.1"><a href="#rfc.section.C.15.7.1">C.15.7.1</a>&nbsp;<a
+            id="gadgets.ee.registerContextListener"
+            href="#gadgets.ee.registerContextListener">registerContextListener</a></h4>
+
+    <p id="rfc.section.C.15.7.1.p.1">&lt;static&gt; gadgets.registerContextListener(listener)</p>
+
+    <p id="rfc.section.C.15.7.1.p.2">Description: Registers a function which will be called when the embedded experience
+        gadget recieves its context.</p>
+
+    <p id="rfc.section.C.15.7.1.p.3">Parameters: </p>
+
+    <div id="rfc.table.u.178">
+        <table class="tt full left" cellpadding="3" cellspacing="0">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="left">listener</td>
+                <td class="left">Function</td>
+                <td class="left">A function that will be called whenever the embedded experience context is set for this
+                    gadget. The function should take one parameter which is a JSON object representing the embedded
+                    experience context from the gadget. See the embedded experiences data model description (<a
+                            href="#Embedded-Experiences" title="Embedded Experiences">Appendix&nbsp;C.15</a>) for more
+                    information on the context object.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p id="rfc.section.C.15.7.1.p.4">Example:</p>
+
+    <div id="rfc.figure.u.80"></div> <pre>         &lt;script type="text/javascript"&gt;
+            gadgets.util.registerOnLoadHandler(function() {
+              gadgets.ee.registerContextListener(function(context) {
+                document.getElementById('contextData').innerHTML = gadgets.json.stringify(context);
+              });
+            });
+         &lt;/script&gt;
+       </pre>
+</body>
+
+<hr> <!-- End of spec -->
 
 </body>
 </html>
