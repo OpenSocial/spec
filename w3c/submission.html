@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>OpenSocial 2.5.1 Activity Streams and Embedded Experiences APIs</title>
-
     <style type="text/css" title="Xml2Rfc (sans serif)">
     a {
         text-decoration: none;
@@ -186,85 +185,8 @@
     thead {
         display:table-header-group;
     }
-    ul.toc {
-        list-style: none;
-        margin-left: 1.5em;
-        margin-right: 0em;
-        padding-left: 0em;
-    }
-    li.tocline0 {
-        line-height: 150%;
-        font-weight: bold;
-        font-size: 10pt;
-        margin-left: 0em;
-        margin-right: 0em;
-    }
-    li.tocline1 {
-        line-height: normal;
-        font-weight: normal;
-        font-size: 9pt;
-        margin-left: 0em;
-        margin-right: 0em;
-    }
-    li.tocline2 {
-        font-size: 0pt;
-    }
-    ul p {
-        margin-left: 0em;
-    }
-
-    .comment {
-        background-color: yellow;
-    }
-    .center {
-        text-align: center;
-    }
-    .error {
-        color: red;
-        font-style: italic;
-        font-weight: bold;
-    }
-    .figure {
-        font-weight: bold;
-        text-align: center;
-        font-size: 9pt;
-    }
-    .filename {
-        color: #333333;
-        font-weight: bold;
-        font-size: 12pt;
-        line-height: 21pt;
-        text-align: center;
-    }
-    .fn {
-        font-weight: bold;
-    }
-    .hidden {
-        display: none;
-    }
-    .left {
-        text-align: left;
-    }
-    .right {
-        text-align: right;
-    }
-    .title {
-        color: #990000;
-        font-size: 18pt;
-        line-height: 18pt;
-        font-weight: bold;
-        text-align: center;
-        margin-top: 36pt;
-    }
-    .vcardline {
-        display: block;
-    }
-    .warning {
-        font-size: 14pt;
-        background-color: yellow;
-    }
-
     </style>
+    <link rel="stylesheet" type="text/css" href="http://www.w3.org/StyleSheets/TR/W3C-Member-SUBM"/>
 </head>
 <body>
     <div class="head">
@@ -292,14 +214,14 @@
         <dl>
             <dt>This version:</dt>
             <dd>
-                <a href="http://www.w3.org/Submission/2014/SUBM-osapi-20140130/">
-                    http://www.w3.org/Submission/2014/SUBM-osapi-20140130/
+                <a href="http://www.w3.org/Submission/2014/SUBM-osapi-20140130">
+                    http://www.w3.org/Submission/2014/SUBM-osapi-20140130
                 </a>
             </dd>
             <dt>Latest version:</dt>
             <dd>
-                <a href="http://www.w3.org/Submission/SUBM-osapi/">
-                    http://www.w3.org/Submission/SUBM-osapi/
+                <a href="http://www.w3.org/Submission/SUBM-osapi-20140130">
+                    http://www.w3.org/Submission/SUBM-osapi-20140130
                 </a>
             </dd>
         </dl>
@@ -341,13 +263,7 @@
 
     <h2 id="status">Status of this document</h2>
 
-    <p>
-        <em>This section describes the status of this document at the
-            time of its publication. Other documents may supersede this
-            document. A list of current W3C publications and the latest
-            revision of this technical report can be found in the <a href="http://www.w3.org/TR/">W3C technical reports index</a> at
-            http://www.w3.org/TR/.</em>
-    </p>
+    <p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current W3C publications can be found in the <a href="http://www.w3.org/TR/">W3C technical reports index</a> at http://www.w3.org/TR/.</em></p>
 
     <p>
         By publishing this document, W3C acknowledges that the <a href="http://www.w3.org/Submission/@@@submissiondoc@@@">Submitting Members</a>
@@ -375,11 +291,11 @@
 
 <hr>  <!-- section 1 -->
 
-    <h2>1. Notation and Conventions</h2>
+    <h2 id="rfc.section.1">1. Notation and Conventions</h2>
 
     <p>Domain name examples use RFC2606 <a href='http://tools.ietf.org/rfc/rfc2606.txt'>[RFC2606]</a>.</p>
 
-    <h2>1.1 Requirements</h2>
+    <h2 id="rfc.section.1.1">1.1 Requirements</h2>
 
     <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
         and "OPTIONAL" in this document are to be interpreted as described in RFC2119 <a href='http://tools.ietf.org/rfc/rfc2119.txt'>[RFC2119]</a>.</p>
