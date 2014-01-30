@@ -98,7 +98,7 @@
             display:table-header-group;
         }
     </style>
-    <link rel="stylesheet" type="text/css" href="http://www.w3.org/StyleSheets/TR/W3C-Member-SUBM">
+    <link rel="stylesheet" type="text/css" href="http://www.w3.org/StyleSheets/TR/W3C-Member-SUBM"/>
 </head>
 <body>
     <div class="head">
@@ -126,8 +126,8 @@
         <dl>
             <dt>This version:</dt>
             <dd>
-                <a href="http://www.w3.org/Submission/2014/SUBM-osapi-20140130">
-                    http://www.w3.org/Submission/2014/SUBM-osapi-20140130
+                <a href="http://www.w3.org/Submission/2014/SUBM-osapi-20140130/">
+                    http://www.w3.org/Submission/2014/SUBM-osapi-20140130/
                 </a>
             </dd>
             <dt>Latest version:</dt>
@@ -140,13 +140,13 @@
 
         <dl>
             <dt>Authors:</dt>
-            <dd>Matthew Marum (OpenSocial Foundation)</dd>
-            <dd>Andy Smith (OpenSocial Foundation)</dd>
-            <dd>Ryan Baxter</dd>
-            <dd>Laurent Walter Goix</dd>
-            <dd>Henry Saputra</dd>
-            <dd>Mark Weitzel</dd>
-            <dd>Eric Woods</dd>
+            <dd>Matthew Marum (SugarCRM)</dd>
+            <dd>Andy Smith (IBM)</dd>
+            <dd>Ryan Baxter (IBM)</dd>
+            <dd>Laurent Walter Goix (Telecom Italia)</dd>
+            <dd>Henry Saputra (Jive)</dd>
+            <dd>Mark Weitzel (Jive)</dd>
+            <dd>Eric Woods (IBM)</dd>
         </dl>
 
 
@@ -166,10 +166,10 @@
     <p>
         <span class="notetoeditor">OpenSocial 2.5.1 provides a basis for building portable social applications.  The
             OpenSocial Foundation would like to provide portions of it for consideration in the W3C Social WG.  What
-            follows is an edited version of the Activity Streams API and Embedded Experiences portions of the OpenSocial
-            2.5.1 specification.  The editing has been done to focus on the content we'd like to focus on.  Where there
-            are concepts that are introduced that are not defined within this document we link to the definition of
-            those terms in the published
+            follows is a revised version of the Activity Streams API and Embedded Experiences portions of the OpenSocial
+            2.5.1 specification.  The revisions have been made to focus on the content we would like to move forward with
+            in the W3C Social Web WG.  Where there are concepts that are introduced that are not defined within this
+            document we link to the definition of those terms in the published in other documents such as the
             <a href="http://opensocial.org/documentation/opensocial-2-5-1/">OpenSocial 2.5.1 specification.</a></span>
     </p>
 
@@ -201,13 +201,21 @@
     <h2 id="toc">Table of Contents</h2>
     <span class="notetoeditor">...table of contents...</span>
 
-<hr>  <!-- section 1 -->
-
+<hr> <!-- Section 1 -->
     <h2 id="rfc.section.1">1. Notation and Conventions</h2>
 
     <p>Domain name examples use RFC2606 <a href='http://tools.ietf.org/rfc/rfc2606.txt'>[RFC2606]</a>.</p>
 
-    <h2 id="rfc.section.1.1">1.1 Requirements</h2>
+    <h2 id="rfc.section.1.1">1.1&nbsp;Definition of an "App" in this submission</h2>
+    <p id="rfc.section.0.p.1">In the terms of this member submission, we are using the term App as a blanket
+        term for any packaged web application component.  This definition is intended to be broad enough to encompass
+        <a href="http://opensocial.github.io/spec/2.5.1/Core-Gadget.xml">OpenSocial Gadgets</a>,
+        <a href="http://www.w3.org/TR/widgets/">W3C Packaged Web Apps (Widgets)</a>, and any future web application
+        component models.  Note that the OpenSocial Foundation seeks to pursue an updated OpenSocial Gadget model based
+        on <a href="http://www.w3.org/TR/components-intro/">W3C Web Components</a> in the near future.
+    </p>
+
+    <h2 id="rfc.section.1.2">1.2 Requirements</h2>
 
     <p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY",
         and "OPTIONAL" in this document are to be interpreted as described in RFC2119 <a href='http://tools.ietf.org/rfc/rfc2119.txt'>[RFC2119]</a>.</p>
@@ -216,18 +224,18 @@
         for the protocols it implements.</p>
 
 
-    <h2 id="rfc.section.1.2">1.2&nbsp;Augmented BNF</h2>
+    <h2 id="rfc.section.1.3">1.3&nbsp;Augmented BNF</h2>
 
     <p>The grammatical rules in this document are to be interpreted as described in Augmented Backus-Naur Form <a href='http://tools.ietf.org/rfc/rfc2234.txt'>[RFC2234]</a>. The following constructs are
         introduced in this document to augment RFC2234:</p>
     <dl>
         <dt>{rule1 rule2}</dt>
-        <dd><p id="rfc.section.1.2.p.1">Elements enclosed in braces (squiggly brackets) are treated as a single,
+        <dd><p id="rfc.section.1.3.p.1">Elements enclosed in braces (squiggly brackets) are treated as a single,
             UNORDERED element. Its contents may occur in any order. Hence: </p>
             <pre class="inline">{elem foo} bar</pre>
             would match (elem foo bar) and (foo elem bar).<p></p>
 
-            <p id="rfc.section.1.2.p.2">NOTE: Specifying alternatives is quite different from specifying set grouping.
+            <p id="rfc.section.1.3.p.2">NOTE: Specifying alternatives is quite different from specifying set grouping.
                 Alternatives indicate the matching of exactly one (sub-)rule out of the total grouping. The set
                 mechanism indicates the matching of a string which contains all of the elements within the group;
                 however the elements may occur in any order.</p></dd>
@@ -256,9 +264,9 @@
         </dd>
     </dl>
 
-    <h2 id="rfc.section.1.3">1.3&nbsp;Basic Rules</h2>
+    <h2 id="rfc.section.1.4">1.4&nbsp;Basic Rules</h2>
 
-    <p id="rfc.section.1.3.p.1">The following rules are used throughout this specification to describe basic parsing
+    <p id="rfc.section.1.4.p.1">The following rules are used throughout this specification to describe basic parsing
         constructs. The US-ASCII coded character set is defined by <a href='http://tools.ietf.org/rfc/rfc20.txt'>[RFC20]</a></p>
 
     <pre class="inline">OCTET          = &lt;any 8-bit sequence of data&gt;
@@ -357,7 +365,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
                 <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#App-Id">App-Id</a></td>
                 <td class="left">Optional. Specifies that the response should only contain ActivityEntries generated by
                     the given appId. If not included, the container MUST return ActivityEntries created by the currently
-                    authenticated app. The "@all" value can be used when the generator of the activity entries of
+                    authenticated application. The "@all" value can be used when the generator of the activity entries of
                     interest is not known or not of interest as filter. In the REST protocol, the appId is specified in
                     the REST-URI-Fragment, rather than in the REST-Query-Parameters.
                 </td>
@@ -389,7 +397,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     <h3 id="rfc.section.2.3.2">2.3.2&nbsp;Create an ActivityEntry</h3>
 
     <p id="rfc.section.2.3.2.p.1">Containers MUST support creating an ActivityEntry associated with the currently
-        authenticated app. If successful, the container MUST return the ID of the newly-created ActivityEntry. For
+        authenticated application. If successful, the container MUST return the ID of the newly-created ActivityEntry. For
         details on uploading content associated with an ActivityEntry, see the <a
                 href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Content-Upload">Content Upload</a> section of <a
                 href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">[Core-API-Server]</a>.
@@ -440,7 +448,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     <h3 id="rfc.section.2.3.3">2.3.3&nbsp;Update an ActivityEntry</h3>
 
     <p id="rfc.section.2.3.3.p.1">Containers MAY support updating an ActivityEntry associated with the currently
-        authenticated app. For details on uploading content associated with an Activity Stream, see the <a
+        authenticated application. For details on uploading content associated with an Activity Stream, see the <a
                 href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Content-Upload">Content Upload</a> section of <a
                 href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">[Core-API-Server]</a>.
     </p>
@@ -491,7 +499,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     <h3 id="rfc.section.2.3.4">2.3.4&nbsp;Delete an ActivityEntry</h3>
 
     <p id="rfc.section.2.3.4.p.1">Containers MAY support deleting an ActivityEntry associated with the currently
-        authenticated app. Requests and responses to update an ActivityEntry use the following values:</p>
+        authenticated application. Requests and responses to update an ActivityEntry use the following values:</p>
     <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "DELETE"
 <a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
                 href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a> "/@self/" Activity-Id
@@ -541,12 +549,15 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
 
     <h2 id="rfc.section.C.15">C.15&nbsp;Embedded Experiences</h2>
 
-    <p id="rfc.section.C.15.p.1">Embedded experiences provide a mechanism for embedding OpenSocial gadgets and other
+    <p id="rfc.section.C.15.p.1">Embedded experiences provide a mechanism for embedding Apps and other
         web-accessible content sources directly into a variety of contexts such as Activity Streams, email messages and
         Atom feeds. The mechanism works by inserting a small structure of data that includes a reference to the embedded
-        content along with contextual data an OpenSocial container would need to render the content appropriately.</p>
+        content along with contextual data that a host application (like an OpenSocial Gadget container or a W3C Widget
+        server) would need to render the content appropriately.  While some of the concepts and terminology is OpenSocial
+        centric, we do not feel that this approach is necessarily limited in scope to OpenSocial Gadgets as they are
+        defined today.</p>
 
-    <p id="rfc.section.C.15.p.2">This data structure can be serialized as either a JSON object or XML and includes the
+    <p id="rfc.section.C.15.p.2">The Embedded Experience data structure can be serialized as either a JSON object or XML and includes the
         following properties:</p>
 
     <div id="rfc.table.u.170">
@@ -560,11 +571,11 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             <tbody>
             <tr>
                 <td class="left"><samp>context</samp></td>
-                <td class="left">If the Embedded Experience is used to embed an OpenSocial gadget, the "context" field
-                    is used to pass data to the gadget so that it knows exactly which content to render. For instance, a
-                    gadget that displays a person's profile information will need to know which profile to display; a
-                    gadget that displays an album of recent photos will need to know the identity of the album to
-                    display. The content of the "context" field is undefined and specific to each individual gadget
+                <td class="left">If the Embedded Experience is used to embed an App, the "context" field
+                    is used to pass data to the App so that it knows exactly which content to render. For instance, an
+                    App that displays a person's profile information will need to know which profile to display; a
+                    App that displays an album of recent photos will need to know the identity of the album to
+                    display. The content of the "context" field is undefined and specific to each individual app
                     definition with one exception: the special property name "opensocial" is reserved for use by the
                     container implementation. The "context" properties JSON object value or XML element structure MUST
                     NOT contain a property named "opensocial".
@@ -572,7 +583,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             </tr>
             <tr>
                 <td class="left"><samp>gadget</samp></td>
-                <td class="left">A URL to an OpenSocial Gadget definition document that defines the gadget to be
+                <td class="left">A URL to an App definition document that defines the App to be
                     embedded.
                 </td>
             </tr>
@@ -608,7 +619,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
         MAY be included in the JSON object.</p>
 
     <div id="rfc.figure.u.58"></div>
-    <p>For instance, a simple JSON Embedded Experience that references an OpenSocial gadget:</p>  <pre>  {
+    <p>For instance, a simple JSON Embedded Experience that references an App:</p>  <pre>  {
     "gadget" : "http://www.example.com/embedded/gadget.xml",
     "context" : {
       "title" : "Hello World",
@@ -684,11 +695,11 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     &lt;previewImage&gt;http://www.example.com/embedded/123.png&lt;/previewImage&gt;
   &lt;/embed&gt;
     </pre>
-    <h3 id="rfc.section.C.15.2">C.15.2&nbsp;Considerations for Embedded Experience Gadgets</h3>
+    <h3 id="rfc.section.C.15.2">C.15.2&nbsp;Considerations for Embedded Experience Apps</h3>
     <h4 id="rfc.section.C.15.2.1">C.15.2.1&nbsp;Views For Embedded Experiences</h4>
 
 
-        <p id="rfc.section.C.15.2.1.p.1">When rendering a gadget as an embedded experience, the container will look
+        <p id="rfc.section.C.15.2.1.p.1">When rendering an App as an embedded experience, the container will look
             within the embedded experience data model and see if there is a "preferred experience" (<a
                     href="#rfc.section.C.15.3" title="Preferred Experiences">Appendix&nbsp;C.15.3</a>) object
             containing a "target" property. If the target object (<a href="#rfc.section.C.15.3.2" title="Target Types">Appendix&nbsp;C.15.3.2</a>)
@@ -696,14 +707,14 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             value of the "view" property. If there is no "view" property in the target object or there is no target
             object, or if there is no preferred experience in the data model, the container will render a view called
             "embedded". If an "embedded" view or the view specified within the target object of the embedded experience
-            data model is not found within the gadget definition, the container SHOULD render the gadget's default view.
+            data model is not found within the App definition, the container SHOULD render the App's default view.
         </p>
 
     <h4 id="rfc.section.C.15.2.2">C.15.2.2&nbsp;Accessing The Context</h4>
 
-    <p id="rfc.section.C.15.2.2.p.1">An embedded experience gadget has the option of requiring some contextual
-        information in order to render itself. By abstracting the data from the gadget itself, gadget developers can
-        develop generalized gadgets that can be used for all embedded expereinces of a specific type. For example, a
+    <p id="rfc.section.C.15.2.2.p.1">An embedded experience App has the option of requiring some contextual
+        information in order to render itself. By abstracting the data from the gadget itself, App developers can
+        develop generalized Apps that can be used for all embedded experiences of a specific type. For example, a
         gadget developed to display videos can be built so that the id of the video is contained and extracted from the
         embedded experience's "context" property.</p>
 
@@ -714,14 +725,19 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     }
   }
         </pre>
-    <p id="rfc.section.C.15.2.2.p.3">Gadgets that are written to support embedded experiences MUST require the
-        "embedded-experiences" feature within their gadget definition in order to access the context. The contextual
-        data is stored within the data context (<a href="http://opensocial.github.io/spec/2.5.1/Core-Gadget.xml#rfc.section.14.1" title="DataContext">Section&nbsp;14.1 of Core Gadget specification</a>) object
-        for the gadget. The key, "org.opensocial.ee.context", is used to access the context. Gadgets can add a listener
-        on the data context object for this key, or it may retreive the key's value by using the data context APIs.</p>
+    <p id="rfc.section.C.15.2.2.p.3">Apps that are written to support embedded experiences MUST require the
+        "embedded-experiences" feature within their App definition in order to access the context.</p>
+
+
+    <p id="rfc.section.C.15.2.2.p.4">For OpenSocial
+        Gadgets, the contextual data is stored within the data context
+        (<a href="http://opensocial.github.io/spec/2.5.1/Core-Gadget.xml#rfc.section.14.1" title="DataContext">Section&nbsp;14.1 of Core Gadget specification</a>) object
+        for the gadget. The key, "org.opensocial.ee.context", is used to access the context. OpenSocial Gadgets can add
+        a listener on the data context object for this key, or it may retrieve the key's value by using the data context
+        APIs.</p>
 
     <div id="rfc.figure.u.66"></div>
-    <p>For instance, the Gadget below registers a listener with the data context to retrieve any context data included
+    <p>Example: The OpenSocial Gadget below registers a listener with the data context to retrieve any context data included
         with the embedded experience:</p>  <pre>  &lt;Module&gt;
     &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
       &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
@@ -747,7 +763,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     <p>Instead of using the data context APIs to get the embedded experiences context you may choose to use the
         gadgets.ee.registerContextListener (<a href="#rfc.section.C.15.7.1"
                                                title="registerContextListener">Appendix&nbsp;C.15.7.1</a>) API in order
-        to lessen the amount of code you need to write. The above gadget example can be rewriten to use the
+        to lessen the amount of code you need to write. The above OpenSocial Gadget example can be rewritten to use the
         registerContextListener API:</p>  <pre>  &lt;Module&gt;
     &lt;ModulePrefs title="Embedded Experiences Test" description="Tests the embedded experiences APIs."&gt;
       &lt;Require feature="embedded-experiences"&gt;&lt;/Require&gt;
@@ -1015,9 +1031,9 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             content. Typically, the decision of which to display when the embedded experience is rendered is up to the
             container. The "preferredExperience.target" property allows the creator of the embedded experience to
             indicate that it would prefer the container to use the "gadget" property for rendering, and specifically
-            that the "my-ee-view" view within that gadget be used. The "preferredExperience.display" property indicates
-            that rather than simply displaying the gadget automatically, the embedded experience's creator would rather
-            the container initially display a hyperlink that, when clicked, causes the gadget to be displayed.</p>
+            that the "my-ee-view" view within that App be used. The "preferredExperience.display" property indicates
+            that rather than simply displaying the App automatically, the embedded experience's creator would rather
+            the container initially display a hyperlink that, when clicked, causes the App to be displayed.</p>
 
         <p></p>
 
@@ -1189,7 +1205,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             on the target object: "gadget" and "url". Each of which are illustrated below.</p>
 
         <div id="rfc.figure.u.76"></div>
-        <p>Preferring the gadget target:</p><pre>  {
+        <p>Preferring the App target:</p><pre>  {
     "gadget" : "...",
     "url" : "...",
     ...,
@@ -1226,7 +1242,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
                 <tbody>
                 <tr>
                     <td class="left"><samp>view</samp></td>
-                    <td class="left">The preferred gadget view to render. If not specified, the value "embedded" is
+                    <td class="left">The preferred App view to render. If not specified, the value "embedded" is
                         assumed.
                     </td>
                 </tr>
@@ -1362,7 +1378,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
   --XXXXboundary text
   Content-Type: text/plain
 
-  Mary has commeneted on your status.
+  Mary has commented on your status.
 
   --XXXXboundary text
   Content-Type: text/html
@@ -1382,7 +1398,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     <p id="rfc.section.C.15.7.1.p.1">&lt;static&gt; gadgets.registerContextListener(listener)</p>
 
     <p id="rfc.section.C.15.7.1.p.2">Description: Registers a function which will be called when the embedded experience
-        gadget recieves its context.</p>
+        App receives its context.</p>
 
     <p id="rfc.section.C.15.7.1.p.3">Parameters: </p>
 
@@ -1400,8 +1416,8 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
                 <td class="left">listener</td>
                 <td class="left">Function</td>
                 <td class="left">A function that will be called whenever the embedded experience context is set for this
-                    gadget. The function should take one parameter which is a JSON object representing the embedded
-                    experience context from the gadget. See the embedded experiences data model description (<a
+                    App. The function should take one parameter which is a JSON object representing the embedded
+                    experience context from the App. See the embedded experiences data model description (<a
                             href="#rfc.section.C.15" title="Embedded Experiences">Appendix&nbsp;C.15</a>) for more
                     information on the context object.
                 </td>
@@ -1409,7 +1425,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             </tbody>
         </table>
     </div>
-    <p id="rfc.section.C.15.7.1.p.4">Example:</p>
+    <p id="rfc.section.C.15.7.1.p.4">OpenSocial Gadget Example:</p>
 
     <div id="rfc.figure.u.80"></div> <pre>         &lt;script type="text/javascript"&gt;
             gadgets.util.registerOnLoadHandler(function() {
