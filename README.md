@@ -48,7 +48,7 @@ Making changes to the OpenSocial specification
    directory.
    
 3. Commit your changes into your branch, push to your remote, and then use
-   Github to create a Pull Request for your branch. You will also need to <a href="http://www.clahub.com/agreements/OpenSocial/spec">sign the CLA</a>
+   Github to create a Pull Request for your branch. You will also need to <a href="https://docs.google.com/forms/d/1b9tfsUJAs1xF7uyFwpT8yoVH7scOj8uXwQnZdTHHCTM/viewform">sign the CLA</a>
    
 4. Post the link to your Pull Request from step 3 to the opensocial-and-gadgets-spec
     discussion group.  You may access the group at
