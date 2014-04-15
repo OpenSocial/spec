@@ -117,7 +117,7 @@
 
         <h2 id="W3C-doctype">W3C
             Member Submission
-            30 January
+            14 March
             2014
         </h2>
 
@@ -126,14 +126,14 @@
         <dl>
             <dt>This version:</dt>
             <dd>
-                <a href="http://www.w3.org/Submission/2014/SUBM-osapi-20140130/">
-                    http://www.w3.org/Submission/2014/SUBM-osapi-20140130/
+                <a href="http://www.w3.org/Submission/2014/SUBM-osapi-20140314/">
+                    http://www.w3.org/Submission/2014/SUBM-osapi-20140314/
                 </a>
             </dd>
             <dt>Latest version:</dt>
             <dd>
-                <a href="http://www.w3.org/Submission/SUBM-osapi-20140130/">
-                    http://www.w3.org/Submission/SUBM-osapi-20140130/
+                <a href="http://www.w3.org/Submission/osapi/">
+                    http://www.w3.org/Submission/osapi/
                 </a>
             </dd>
         </dl>
@@ -178,15 +178,13 @@
     <p><em>This section describes the status of this document at the time of its publication. Other documents may supersede this document. A list of current W3C publications can be found in the <a href="http://www.w3.org/TR/">W3C technical reports index</a> at http://www.w3.org/TR/.</em></p>
 
     <p>
-        By publishing this document, W3C acknowledges that the <a href="http://www.w3.org/Submission/@@@submissiondoc@@@">Submitting Members</a>
+        By publishing this document, W3C acknowledges that the <a href="http://www.w3.org/Submission/osapi/request.html">Submitting Members</a>
         have made a formal Submission request to W3C for discussion.
         Publication of this document by W3C indicates no endorsement of its
         content by W3C, nor that W3C has, is, or will be allocating any
         resources to the issues addressed by it. This document is not the
         product of a chartered W3C group, but is published as potential input
         to the <a href="http://www.w3.org/Consortium/Process">W3C Process</a>.
-        A <a href="http://www.w3.org/Submission/@@@teamcomment@@@">W3C Team Comment</a> has been published in conjunction
-        with this Member Submission.
         Publication of acknowledged Member Submissions at the W3C site is one
         of the benefits of <a href="http://www.w3.org/Consortium/Prospectus/Joining">W3C
         Membership</a>. Please consult the requirements associated with
@@ -199,7 +197,71 @@
 
 
     <h2 id="toc">Table of Contents</h2>
-    <span class="notetoeditor">...table of contents...</span>
+    <div>
+
+        <ul>
+            <li class="toc">1. <a href="#rfc.section.1">Notation and Conventions</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">1.1 <a href="#rfc.section.1.1">Definition of an "App" in this submission</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">1.2 <a href="#rfc.section.1.2">Requirements</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">1.3 <a href="#rfc.section.1.3">Augmented BNF</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">1.4 <a href="#rfc.section.1.4">Basic Rules</a>
+            </li>
+            <li class="toc">2. <a href="#rfc.section.2">Services</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">2.3 <a href="#rfc.section.2.3">Activity Streams</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">2.3.1 <a href="#rfc.section.2.3.1">Get Activity Streams</a>
+            </li>
+            <li class="toc" style="margin-left: 1.5in">2.3.1.1 <a href="#rfc.section.2.3.1.1">Get Activity Streams Request Parameters</a>
+            </li>
+            <li class="toc" style="margin-left: 1.5in">2.3.1.2 <a href="#rfc.section.2.3.1.2">Retrieve a list of supported Activity Stream fields</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">2.3.2 <a href="#rfc.section.2.3.2">Create an ActivityEntry</a>
+            </li>
+            <li class="toc" style="margin-left: 1.5in">2.3.2.1 <a href="#rfc.section.2.3.2.1">Create ActivityEntries Request Parameters</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">2.3.3 <a href="#rfc.section.2.3.3">Update an ActivityEntry</a>
+            </li>
+            <li class="toc" style="margin-left: 1.5in">2.3.3.1 <a href="#rfc.section.2.3.3.1">Update ActivityEntries Request Parameters</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">2.3.4 <a href="#rfc.section.2.3.4">Delete an ActivityEntry</a>
+            </li>
+            <li class="toc" style="margin-left: 1.5in">2.3.4.1 <a href="#rfc.section.2.3.4.1">Delete ActivityEntries Request Parameters</a>
+            </li>
+            <li class="toc">C. 15 <a href="#rfc.section.C.15">Embedded Experiences</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.1 <a href="#rfc.section.C.15.1">Additional Examples</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.2 <a href="#rfc.section.C.15.2">Considerations for Embedded Experience Apps</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">C.15.2.1 <a href="#rfc.section.C.15.2.1">Views For Embedded Experiences</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">C.15.2.2 <a href="#rfc.section.C.15.2.2">Accessing The Context</a>
+            </li>
+            <li class="toc" style="margin-left: 1.5in">C.15.2.2.1 <a href="#rfc.section.C.15.2.2.1">Additional Container Specific Context</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.3 <a href="#rfc.section.C.15.3">Preferred Experiences</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">C.15.3.1 <a href="#rfc.section.C.15.3.1">Display Types</a>
+            </li>
+            <li class="toc" style="margin-left: 1.0in">C.15.3.2 <a href="#rfc.section.C.15.3.2">Target Types</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.4 <a href="#rfc.section.C.15.4">Security</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.5 <a href="#rfc.section.C.15.5">Embedded Experiences within Activity Streams</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.6 <a href="#rfc.section.C.15.6">Embedded Experiences within Email</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.7 <a href="#rfc.section.C.15.7">Method Details</a>
+            </li>
+            <li class="toc" style="margin-left: .5in">C.15.7.1 <a href="#rfc.section.C.15.7.1">registerContextListener</a>
+            </li>
+        </ul>
+    </div>
 
 <hr> <!-- Section 1 -->
     <h2 id="rfc.section.1">1. Notation and Conventions</h2>
@@ -300,7 +362,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
     <p id="rfc.section.2.3.p.1">Containers MUST support the Activity Streams Service. Individual operations are required
         or optional as indicated in the sections that follow. Containers MUST use the following values to define the
         Activity Streams Service:</p>
-<pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Discovery">XRDS-Type</a>    = "http://ns.opensocial.org/2008/opensocial/activitystreams"
+<pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">XRDS-Type</a>    = "http://ns.opensocial.org/2008/opensocial/activitystreams"
 </pre>
     <h3 id="rfc.section.2.3.1">2.3.1&nbsp;Get Activity Streams</h3>
 
@@ -309,27 +371,27 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
 
     <p id="rfc.section.2.3.1.p.2">Containers MUST support requests to the Activity Stream service. Requests and
         responses for retrieving Activity Stream entries use the following values:</p>
-    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "GET"
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
-                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a> "/" <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#Group-Id">Group-Id</a> [ "/" <a
-                href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#App-Id">App-Id</a> [ "/" (Activity-Id / <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Array">Array</a>&lt;Activity-Id&gt;) ] ]
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = ENCODE-REST-PARAMETERS(<a
+    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-HTTP-Method</a>       = "GET"
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a> "/" <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">Group-Id</a> [ "/" <a
+                href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">App-Id</a> [ "/" (Activity-Id / <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Array</a>&lt;Activity-Id&gt;) ] ]
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Query-Parameters</a>  = ENCODE-REST-PARAMETERS(<a
                 href="#rfc.section.2.3.1.1" style="text-decoration: underline;">GetActivityStreams-Request-Parameters</a>)
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = null
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Request-Payload</a>   = null
 
 
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a>  / <a
-                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Collection">Collection</a>&lt;<a
-                href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a>&gt;
-<b>Activity-Id</b>            = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Object-Id">Object-Id</a>
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a>  / <a
+                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Collection</a>&lt;<a
+                href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a>&gt;
+<b>Activity-Id</b>            = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Object-Id</a>
 </pre>
     <p id="rfc.section.2.3.1.p.3">Example GET request:</p>
     <pre class="text">http://api.example.org/rest/activitystreams/john.doe/@self/@app/object1,object2</pre>
     <h4 id="rfc.section.2.3.1.1">2.3.1.1&nbsp;Get Activity Streams Request Parameters</h4>
 
     <p id="rfc.section.2.3.1.1.p.1">A request for a Collection of ActivityEntry objects MUST support the <a
-            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, the <a
-            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Collection-Request-Parameters">Collection-Request-Parameters</a>, and the
+            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Standard-Request-Parameters</a>, the <a
+            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Collection-Request-Parameters</a>, and the
         following additional parameters:</p>
 
     <div id="rfc.table.u.14">
@@ -344,8 +406,8 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             <tbody>
             <tr>
                 <td class="left">userId</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a> or <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Array">Array</a>&lt;<a
-                        href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a>&gt;</td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a> or <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Array</a>&lt;<a
+                        href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a>&gt;</td>
                 <td class="left">User ID(s) of the person whose activities are to be returned. Defaults to "@me",
                     indicating the currently authenticated user. In the REST protocol, userId is specified in the
                     REST-URI-Fragment, rather than in the REST-Query-Parameters.
@@ -353,7 +415,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             </tr>
             <tr>
                 <td class="left">groupId</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#Group-Id">Group-Id</a></td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">Group-Id</a></td>
                 <td class="left">The group Id of the group of users whose ActivityEntries are to be returned. Defaults
                     to "@self", which MUST return only the ActivityEntries specified by the userId parameter. In the
                     REST protocol, the groupId is specified in the REST-URI-Fragment, rather than in the
@@ -362,7 +424,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             </tr>
             <tr>
                 <td class="left">appId</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#App-Id">App-Id</a></td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">App-Id</a></td>
                 <td class="left">Optional. Specifies that the response should only contain ActivityEntries generated by
                     the given appId. If not included, the container MUST return ActivityEntries created by the currently
                     authenticated application. The "@all" value can be used when the generator of the activity entries of
@@ -372,8 +434,8 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             </tr>
             <tr>
                 <td class="left">activityId</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Array">Array</a>&lt;<a
-                        href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Object-Id">Object-Id</a>&gt;</td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Array</a>&lt;<a
+                        href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Object-Id</a>&gt;</td>
                 <td class="left">Optional. Specifies a list of individual ActivityEntries to include in the response. In
                     the REST protocol, the activityIds are specified in the REST-URI-Fragment, rather than in the
                     REST-Query-Parameters.
@@ -388,35 +450,35 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
 
     <p id="rfc.section.2.3.1.2.p.1">Containers MAY support REST requests for supported Activity Stream fields. Requests
         and responses for retrieving supported Activity Stream fields use the following values:</p>
-    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "GET"
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/@supportedFields"
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = null
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Array">Array</a>&lt;String&gt;
+    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-HTTP-Method</a>       = "GET"
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-URI-Fragment</a>      = "/activitystreams/@supportedFields"
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Query-Parameters</a>  = null
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Request-Payload</a>   = null
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Array</a>&lt;String&gt;
 </pre>
     <h3 id="rfc.section.2.3.2">2.3.2&nbsp;Create an ActivityEntry</h3>
 
     <p id="rfc.section.2.3.2.p.1">Containers MUST support creating an ActivityEntry associated with the currently
         authenticated application. If successful, the container MUST return the ID of the newly-created ActivityEntry. For
         details on uploading content associated with an ActivityEntry, see the <a
-                href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Content-Upload">Content Upload</a> section of <a
+                href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Content Upload</a> section of <a
                 href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">[Core-API-Server]</a>.
     </p>
 
     <p id="rfc.section.2.3.2.p.2">Requests and responses to create an ActivityEntry use the following values:</p>
-    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "POST"
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
-                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a> "/@self"
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a>
+    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-HTTP-Method</a>       = "POST"
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a> "/@self"
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Query-Parameters</a>  = null
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Request-Payload</a>   = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a>
 
 
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a>
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a>
 </pre>
     <h4 id="rfc.section.2.3.2.1">2.3.2.1&nbsp;Create ActivityEntries Request Parameters</h4>
 
     <p id="rfc.section.2.3.2.1.p.1">A request to create an ActivityEntry MUST support the <a
-            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, and the following
+            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Standard-Request-Parameters</a>, and the following
         additional parameters:</p>
 
     <div id="rfc.table.u.15">
@@ -431,7 +493,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             <tbody>
             <tr>
                 <td class="left">userId</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a></td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a></td>
                 <td class="left">User ID of the person to associate the ActivityEntry with. Defaults to "@me",
                     indicating the currently authenticated user. In the REST protocol, userId is specified in the
                     REST-URI-Fragment, rather than in the REST-Query-Parameters.
@@ -439,7 +501,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             </tr>
             <tr>
                 <td class="left">activity</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a></td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a></td>
                 <td class="left">The ActivityEntry to associate with the given user.</td>
             </tr>
             </tbody>
@@ -449,26 +511,26 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
 
     <p id="rfc.section.2.3.3.p.1">Containers MAY support updating an ActivityEntry associated with the currently
         authenticated application. For details on uploading content associated with an Activity Stream, see the <a
-                href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Content-Upload">Content Upload</a> section of <a
+                href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Content Upload</a> section of <a
                 href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">[Core-API-Server]</a>.
     </p>
 
     <p id="rfc.section.2.3.3.p.2">Requests and responses to update an ActivityEntry use the following values:</p>
-    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "PUT"
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
-                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a> "/@self" [ "/" Activity-Id ]
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a>
+    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-HTTP-Method</a>       = "PUT"
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a> "/@self" [ "/" Activity-Id ]
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Query-Parameters</a>  = null
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Request-Payload</a>   = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a>
 
 
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Return-Object">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a>
-<b>Activity-Id</b>            = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Object-Id">Object-Id</a>
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Return-Object</a>          = <a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a>
+<b>Activity-Id</b>            = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Object-Id</a>
 
 </pre>
     <h4 id="rfc.section.2.3.3.1">2.3.3.1&nbsp;Update ActivityEntries Request Parameters</h4>
 
     <p id="rfc.section.2.3.3.1.p.1">A request to update an ActivityEntry MUST support the <a
-            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, and the following
+            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Standard-Request-Parameters</a>, and the following
         additional parameters:</p>
 
     <div id="rfc.table.u.16">
@@ -483,14 +545,14 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             <tbody>
             <tr>
                 <td class="left">userId</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a></td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a></td>
                 <td class="left">User ID(s) of the person the ActivityEntry is associated with. Defaults to "@me",
                     indicating the currently authenticated user.
                 </td>
             </tr>
             <tr>
                 <td class="left">activity</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml#ActivityEntry">ActivityEntry</a></td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Social-Data.xml">ActivityEntry</a></td>
                 <td class="left">The ActivityEntry to update. Only the 'id' field of the ActivityEntry is required.</td>
             </tr>
             </tbody>
@@ -500,21 +562,21 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
 
     <p id="rfc.section.2.3.4.p.1">Containers MAY support deleting an ActivityEntry associated with the currently
         authenticated application. Requests and responses to update an ActivityEntry use the following values:</p>
-    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-HTTP-Method">REST-HTTP-Method</a>       = "DELETE"
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-URI-Fragment">REST-URI-Fragment</a>      = "/activitystreams/" <a
-                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a> "/@self/" Activity-Id
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Query-Parameters">REST-Query-Parameters</a>  = null
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#REST-Request-Payload">REST-Request-Payload</a>   = null
+    <pre class="inline"><a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-HTTP-Method</a>       = "DELETE"
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-URI-Fragment</a>      = "/activitystreams/" <a
+                href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a> "/@self/" Activity-Id
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Query-Parameters</a>  = null
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">REST-Request-Payload</a>   = null
 
 
-<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Return-Object">Return-Object</a>          = null
-<b>Activity-Id</b>            = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#Object-Id">Object-Id</a>
+<a href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Return-Object</a>          = null
+<b>Activity-Id</b>            = <a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">Object-Id</a>
 
 </pre>
     <h4 id="rfc.section.2.3.4.1">2.3.4.1&nbsp;Delete ActivityEntries Request Parameters</h4>
 
     <p id="rfc.section.2.3.4.1.p.1">A request to delete an ActivityEntry MUST support the <a
-            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml#Standard-Request-Parameters">Standard-Request-Parameters</a>, and the following
+            href="http://opensocial.github.io/spec/2.5.1/Core-API-Server.xml">Standard-Request-Parameters</a>, and the following
         additional parameters:</p>
 
     <div id="rfc.table.u.17">
@@ -529,7 +591,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
             <tbody>
             <tr>
                 <td class="left">userId</td>
-                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml#User-Id">User-Id</a></td>
+                <td class="left"><a href="http://opensocial.github.io/spec/2.5.1/Core-Data.xml">User-Id</a></td>
                 <td class="left">User ID(s) of the person the ActivityEntry is associated with. Defaults to "@me",
                     indicating the currently authenticated user.
                 </td>
@@ -731,7 +793,7 @@ COMMA          = &lt;US-ASCII comma (44)&gt;
 
     <p id="rfc.section.C.15.2.2.p.4">For OpenSocial
         Gadgets, the contextual data is stored within the data context
-        (<a href="http://opensocial.github.io/spec/2.5.1/Core-Gadget.xml#rfc.section.14.1" title="DataContext">Section&nbsp;14.1 of Core Gadget specification</a>) object
+        (<a href="http://opensocial.github.io/spec/2.5.1/Core-Gadget.xml" title="DataContext">Section&nbsp;14.1 of Core Gadget specification</a>) object
         for the gadget. The key, "org.opensocial.ee.context", is used to access the context. OpenSocial Gadgets can add
         a listener on the data context object for this key, or it may retrieve the key's value by using the data context
         APIs.</p>
